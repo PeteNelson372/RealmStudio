@@ -83,17 +83,11 @@ namespace RealmStudio
         [XmlIgnore]
         public float MapPixelHeight { get; set; } = 0F;
 
-        [XmlIgnore]
-        public List<int> RenderOnlyLayers { get; set; } = [];
-
         public void Render(SKCanvas canvas)
         {
             foreach (MapLayer mapLayer in MapLayers)
             {
-                if (RenderOnlyLayers.Count == 0 || RenderOnlyLayers.Contains(mapLayer.MapLayerOrder))
-                {
-                    mapLayer.Render(canvas);
-                }
+                mapLayer.Render(canvas);
             }
         }
     }
