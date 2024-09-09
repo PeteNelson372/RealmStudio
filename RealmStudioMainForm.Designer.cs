@@ -29,20 +29,9 @@
         private void InitializeComponent()
         {
             TabPage OceanTab;
+            TabControl MainTab;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RealmStudioMainForm));
             toolStrip1 = new ToolStrip();
-            crownContextMenuStrip1 = new ReaLTaiizor.Controls.CrownContextMenuStrip();
-            RealmStudioForm = new ReaLTaiizor.Forms.DungeonForm();
-            MapRenderHScroll = new ReaLTaiizor.Controls.MaterialScrollBar();
-            MapRenderVScroll = new ReaLTaiizor.Controls.MaterialScrollBar();
-            SaveButton = new FontAwesome.Sharp.IconButton();
-            AutosaveSwitch = new ReaLTaiizor.Controls.CyberSwitch();
-            label1 = new Label();
-            pictureBox1 = new PictureBox();
-            statusStrip3 = new StatusStrip();
-            poisonPanel1 = new ReaLTaiizor.Controls.PoisonPanel();
-            SKGLRenderControl = new SkiaSharp.Views.Desktop.SKGLControl();
-            MainTab = new TabControl();
             BackgroundTab = new TabPage();
             cyberSwitch1 = new ReaLTaiizor.Controls.CyberSwitch();
             label2 = new Label();
@@ -54,6 +43,17 @@
             OverlayTab = new TabPage();
             RegionTab = new TabPage();
             DrawingTab = new TabPage();
+            crownContextMenuStrip1 = new ReaLTaiizor.Controls.CrownContextMenuStrip();
+            RealmStudioForm = new ReaLTaiizor.Forms.DungeonForm();
+            MapRenderHScroll = new ReaLTaiizor.Controls.MaterialScrollBar();
+            MapRenderVScroll = new ReaLTaiizor.Controls.MaterialScrollBar();
+            SaveButton = new FontAwesome.Sharp.IconButton();
+            AutosaveSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label1 = new Label();
+            pictureBox1 = new PictureBox();
+            statusStrip3 = new StatusStrip();
+            poisonPanel1 = new ReaLTaiizor.Controls.PoisonPanel();
+            SKGLRenderControl = new SkiaSharp.Views.Desktop.SKGLControl();
             statusStrip2 = new StatusStrip();
             statusStrip1 = new StatusStrip();
             thunderControlBox1 = new ReaLTaiizor.Controls.ThunderControlBox();
@@ -88,11 +88,12 @@
             toolStripSeparator5 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
             OceanTab = new TabPage();
+            MainTab = new TabControl();
             OceanTab.SuspendLayout();
-            RealmStudioForm.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             MainTab.SuspendLayout();
             BackgroundTab.SuspendLayout();
+            RealmStudioForm.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -119,204 +120,6 @@
             toolStrip1.Stretch = true;
             toolStrip1.TabIndex = 1;
             toolStrip1.Text = "toolStrip1";
-            // 
-            // crownContextMenuStrip1
-            // 
-            crownContextMenuStrip1.BackColor = Color.FromArgb(60, 63, 65);
-            crownContextMenuStrip1.ForeColor = Color.FromArgb(220, 220, 220);
-            crownContextMenuStrip1.Name = "crownContextMenuStrip1";
-            crownContextMenuStrip1.Size = new Size(61, 4);
-            // 
-            // RealmStudioForm
-            // 
-            RealmStudioForm.BackColor = Color.FromArgb(223, 219, 210);
-            RealmStudioForm.BorderColor = Color.FromArgb(38, 38, 38);
-            RealmStudioForm.Controls.Add(MapRenderHScroll);
-            RealmStudioForm.Controls.Add(MapRenderVScroll);
-            RealmStudioForm.Controls.Add(SaveButton);
-            RealmStudioForm.Controls.Add(AutosaveSwitch);
-            RealmStudioForm.Controls.Add(label1);
-            RealmStudioForm.Controls.Add(pictureBox1);
-            RealmStudioForm.Controls.Add(statusStrip3);
-            RealmStudioForm.Controls.Add(poisonPanel1);
-            RealmStudioForm.Controls.Add(SKGLRenderControl);
-            RealmStudioForm.Controls.Add(MainTab);
-            RealmStudioForm.Controls.Add(statusStrip2);
-            RealmStudioForm.Controls.Add(statusStrip1);
-            RealmStudioForm.Controls.Add(thunderControlBox1);
-            RealmStudioForm.Controls.Add(menuStrip1);
-            RealmStudioForm.Dock = DockStyle.Fill;
-            RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
-            RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
-            RealmStudioForm.Font = new Font("Segoe UI", 9F);
-            RealmStudioForm.FooterEdgeColor = Color.FromArgb(69, 68, 63);
-            RealmStudioForm.ForeColor = Color.FromArgb(223, 219, 210);
-            RealmStudioForm.HeaderEdgeColorA = Color.FromArgb(87, 85, 77);
-            RealmStudioForm.HeaderEdgeColorB = Color.FromArgb(69, 68, 63);
-            RealmStudioForm.Location = new Point(0, 0);
-            RealmStudioForm.Name = "RealmStudioForm";
-            RealmStudioForm.Padding = new Padding(20, 56, 20, 16);
-            RealmStudioForm.RoundCorners = true;
-            RealmStudioForm.Sizable = true;
-            RealmStudioForm.Size = new Size(1600, 1024);
-            RealmStudioForm.SmartBounds = true;
-            RealmStudioForm.StartPosition = FormStartPosition.WindowsDefaultLocation;
-            RealmStudioForm.TabIndex = 3;
-            RealmStudioForm.Text = "Realm Studio";
-            RealmStudioForm.TitleColor = Color.FromArgb(223, 219, 210);
-            // 
-            // MapRenderHScroll
-            // 
-            MapRenderHScroll.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            MapRenderHScroll.Depth = 0;
-            MapRenderHScroll.Location = new Point(271, 964);
-            MapRenderHScroll.Margin = new Padding(0);
-            MapRenderHScroll.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
-            MapRenderHScroll.Name = "MapRenderHScroll";
-            MapRenderHScroll.Orientation = ReaLTaiizor.Enum.Material.MateScrollOrientation.Horizontal;
-            MapRenderHScroll.ScrollbarSize = 12;
-            MapRenderHScroll.Size = new Size(1104, 12);
-            MapRenderHScroll.TabIndex = 13;
-            MapRenderHScroll.Text = "materialScrollBar1";
-            MapRenderHScroll.Scroll += MapRenderHScroll_Scroll;
-            // 
-            // MapRenderVScroll
-            // 
-            MapRenderVScroll.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            MapRenderVScroll.Depth = 0;
-            MapRenderVScroll.HighlightOnWheel = true;
-            MapRenderVScroll.Location = new Point(1376, 112);
-            MapRenderVScroll.Margin = new Padding(0);
-            MapRenderVScroll.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
-            MapRenderVScroll.Name = "MapRenderVScroll";
-            MapRenderVScroll.Orientation = ReaLTaiizor.Enum.Material.MateScrollOrientation.Vertical;
-            MapRenderVScroll.ScrollbarSize = 12;
-            MapRenderVScroll.Size = new Size(12, 852);
-            MapRenderVScroll.TabIndex = 12;
-            MapRenderVScroll.Text = "materialScrollBar1";
-            MapRenderVScroll.Scroll += MapRenderVScroll_Scroll;
-            // 
-            // SaveButton
-            // 
-            SaveButton.BackColor = Color.Transparent;
-            SaveButton.FlatAppearance.BorderSize = 0;
-            SaveButton.FlatStyle = FlatStyle.Flat;
-            SaveButton.ForeColor = Color.Orchid;
-            SaveButton.IconChar = FontAwesome.Sharp.IconChar.Save;
-            SaveButton.IconColor = Color.LightSlateGray;
-            SaveButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            SaveButton.IconSize = 32;
-            SaveButton.Location = new Point(185, 4);
-            SaveButton.Name = "SaveButton";
-            SaveButton.Size = new Size(40, 40);
-            SaveButton.TabIndex = 11;
-            SaveButton.UseVisualStyleBackColor = false;
-            // 
-            // AutosaveSwitch
-            // 
-            AutosaveSwitch.Alpha = 50;
-            AutosaveSwitch.BackColor = Color.Transparent;
-            AutosaveSwitch.Background = true;
-            AutosaveSwitch.Background_WidthPen = 2F;
-            AutosaveSwitch.BackgroundPen = false;
-            AutosaveSwitch.Checked = true;
-            AutosaveSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            AutosaveSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            AutosaveSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            AutosaveSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            AutosaveSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            AutosaveSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            AutosaveSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            AutosaveSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            AutosaveSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            AutosaveSwitch.ColorValue = Color.ForestGreen;
-            AutosaveSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            AutosaveSwitch.Font = new Font("Arial", 11F);
-            AutosaveSwitch.ForeColor = Color.FromArgb(245, 245, 245);
-            AutosaveSwitch.Lighting = true;
-            AutosaveSwitch.LinearGradient_Background = false;
-            AutosaveSwitch.LinearGradient_Value = false;
-            AutosaveSwitch.LinearGradientPen = false;
-            AutosaveSwitch.Location = new Point(132, 15);
-            AutosaveSwitch.Name = "AutosaveSwitch";
-            AutosaveSwitch.PenWidth = 10;
-            AutosaveSwitch.RGB = false;
-            AutosaveSwitch.Rounding = true;
-            AutosaveSwitch.RoundingInt = 90;
-            AutosaveSwitch.Size = new Size(35, 20);
-            AutosaveSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            AutosaveSwitch.TabIndex = 10;
-            AutosaveSwitch.Tag = "Cyber";
-            AutosaveSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            AutosaveSwitch.Timer_RGB = 300;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.BackColor = Color.FromArgb(69, 68, 63);
-            label1.ForeColor = Color.White;
-            label1.Location = new Point(70, 17);
-            label1.Name = "label1";
-            label1.Size = new Size(56, 15);
-            label1.TabIndex = 9;
-            label1.Text = "Autosave";
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.BackColor = Color.Transparent;
-            pictureBox1.BackgroundImageLayout = ImageLayout.None;
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.InitialImage = (Image)resources.GetObject("pictureBox1.InitialImage");
-            pictureBox1.Location = new Point(9, 3);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(50, 41);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox1.TabIndex = 8;
-            pictureBox1.TabStop = false;
-            // 
-            // statusStrip3
-            // 
-            statusStrip3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            statusStrip3.AutoSize = false;
-            statusStrip3.BackColor = Color.FromArgb(69, 68, 63);
-            statusStrip3.Dock = DockStyle.None;
-            statusStrip3.Location = new Point(271, 90);
-            statusStrip3.Name = "statusStrip3";
-            statusStrip3.Size = new Size(1117, 22);
-            statusStrip3.SizingGrip = false;
-            statusStrip3.TabIndex = 7;
-            statusStrip3.Text = "statusStrip3";
-            // 
-            // poisonPanel1
-            // 
-            poisonPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            poisonPanel1.HorizontalScrollbarBarColor = true;
-            poisonPanel1.HorizontalScrollbarHighlightOnWheel = false;
-            poisonPanel1.HorizontalScrollbarSize = 10;
-            poisonPanel1.Location = new Point(1388, 90);
-            poisonPanel1.Name = "poisonPanel1";
-            poisonPanel1.Size = new Size(200, 886);
-            poisonPanel1.TabIndex = 6;
-            poisonPanel1.VerticalScrollbarBarColor = true;
-            poisonPanel1.VerticalScrollbarHighlightOnWheel = false;
-            poisonPanel1.VerticalScrollbarSize = 10;
-            // 
-            // SKGLRenderControl
-            // 
-            SKGLRenderControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            SKGLRenderControl.AutoScroll = true;
-            SKGLRenderControl.BackColor = Color.White;
-            SKGLRenderControl.BorderStyle = BorderStyle.FixedSingle;
-            SKGLRenderControl.Location = new Point(272, 112);
-            SKGLRenderControl.Margin = new Padding(0);
-            SKGLRenderControl.Name = "SKGLRenderControl";
-            SKGLRenderControl.Size = new Size(1104, 852);
-            SKGLRenderControl.TabIndex = 5;
-            SKGLRenderControl.VSync = false;
-            SKGLRenderControl.PaintSurface += SKGLRenderControl_PaintSurface;
-            SKGLRenderControl.MouseDown += SKGLRenderControl_MouseDown;
-            SKGLRenderControl.MouseMove += SKGLRenderControl_MouseMove;
-            SKGLRenderControl.MouseUp += SKGLRenderControl_MouseUp;
             // 
             // MainTab
             // 
@@ -476,6 +279,206 @@
             DrawingTab.Text = "Drawing";
             DrawingTab.UseVisualStyleBackColor = true;
             // 
+            // crownContextMenuStrip1
+            // 
+            crownContextMenuStrip1.BackColor = Color.FromArgb(60, 63, 65);
+            crownContextMenuStrip1.ForeColor = Color.FromArgb(220, 220, 220);
+            crownContextMenuStrip1.Name = "crownContextMenuStrip1";
+            crownContextMenuStrip1.Size = new Size(61, 4);
+            // 
+            // RealmStudioForm
+            // 
+            RealmStudioForm.BackColor = Color.FromArgb(223, 219, 210);
+            RealmStudioForm.BorderColor = Color.FromArgb(38, 38, 38);
+            RealmStudioForm.CausesValidation = false;
+            RealmStudioForm.Controls.Add(MapRenderHScroll);
+            RealmStudioForm.Controls.Add(MapRenderVScroll);
+            RealmStudioForm.Controls.Add(SaveButton);
+            RealmStudioForm.Controls.Add(AutosaveSwitch);
+            RealmStudioForm.Controls.Add(label1);
+            RealmStudioForm.Controls.Add(pictureBox1);
+            RealmStudioForm.Controls.Add(statusStrip3);
+            RealmStudioForm.Controls.Add(poisonPanel1);
+            RealmStudioForm.Controls.Add(SKGLRenderControl);
+            RealmStudioForm.Controls.Add(MainTab);
+            RealmStudioForm.Controls.Add(statusStrip2);
+            RealmStudioForm.Controls.Add(statusStrip1);
+            RealmStudioForm.Controls.Add(thunderControlBox1);
+            RealmStudioForm.Controls.Add(menuStrip1);
+            RealmStudioForm.Dock = DockStyle.Fill;
+            RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
+            RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
+            RealmStudioForm.Font = new Font("Segoe UI", 9F);
+            RealmStudioForm.FooterEdgeColor = Color.FromArgb(69, 68, 63);
+            RealmStudioForm.ForeColor = Color.FromArgb(223, 219, 210);
+            RealmStudioForm.HeaderEdgeColorA = Color.FromArgb(87, 85, 77);
+            RealmStudioForm.HeaderEdgeColorB = Color.FromArgb(69, 68, 63);
+            RealmStudioForm.Location = new Point(0, 0);
+            RealmStudioForm.Name = "RealmStudioForm";
+            RealmStudioForm.Padding = new Padding(20, 56, 20, 16);
+            RealmStudioForm.RoundCorners = true;
+            RealmStudioForm.Sizable = true;
+            RealmStudioForm.Size = new Size(1583, 1024);
+            RealmStudioForm.SmartBounds = true;
+            RealmStudioForm.StartPosition = FormStartPosition.CenterScreen;
+            RealmStudioForm.TabIndex = 3;
+            RealmStudioForm.TabStop = false;
+            RealmStudioForm.Text = "Realm Studio";
+            RealmStudioForm.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // MapRenderHScroll
+            // 
+            MapRenderHScroll.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            MapRenderHScroll.Depth = 0;
+            MapRenderHScroll.Location = new Point(271, 964);
+            MapRenderHScroll.Margin = new Padding(0);
+            MapRenderHScroll.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            MapRenderHScroll.Name = "MapRenderHScroll";
+            MapRenderHScroll.Orientation = ReaLTaiizor.Enum.Material.MateScrollOrientation.Horizontal;
+            MapRenderHScroll.ScrollbarSize = 12;
+            MapRenderHScroll.Size = new Size(1087, 12);
+            MapRenderHScroll.TabIndex = 13;
+            MapRenderHScroll.Text = "materialScrollBar1";
+            MapRenderHScroll.Scroll += MapRenderHScroll_Scroll;
+            // 
+            // MapRenderVScroll
+            // 
+            MapRenderVScroll.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            MapRenderVScroll.Depth = 0;
+            MapRenderVScroll.HighlightOnWheel = true;
+            MapRenderVScroll.Location = new Point(1359, 112);
+            MapRenderVScroll.Margin = new Padding(0);
+            MapRenderVScroll.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            MapRenderVScroll.Name = "MapRenderVScroll";
+            MapRenderVScroll.Orientation = ReaLTaiizor.Enum.Material.MateScrollOrientation.Vertical;
+            MapRenderVScroll.ScrollbarSize = 12;
+            MapRenderVScroll.Size = new Size(12, 852);
+            MapRenderVScroll.TabIndex = 12;
+            MapRenderVScroll.Text = "materialScrollBar1";
+            MapRenderVScroll.Scroll += MapRenderVScroll_Scroll;
+            // 
+            // SaveButton
+            // 
+            SaveButton.BackColor = Color.Transparent;
+            SaveButton.FlatAppearance.BorderSize = 0;
+            SaveButton.FlatStyle = FlatStyle.Flat;
+            SaveButton.ForeColor = Color.Orchid;
+            SaveButton.IconChar = FontAwesome.Sharp.IconChar.Save;
+            SaveButton.IconColor = Color.LightSlateGray;
+            SaveButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SaveButton.IconSize = 32;
+            SaveButton.Location = new Point(185, 4);
+            SaveButton.Name = "SaveButton";
+            SaveButton.Size = new Size(40, 40);
+            SaveButton.TabIndex = 11;
+            SaveButton.UseVisualStyleBackColor = false;
+            // 
+            // AutosaveSwitch
+            // 
+            AutosaveSwitch.Alpha = 50;
+            AutosaveSwitch.BackColor = Color.Transparent;
+            AutosaveSwitch.Background = true;
+            AutosaveSwitch.Background_WidthPen = 2F;
+            AutosaveSwitch.BackgroundPen = false;
+            AutosaveSwitch.Checked = true;
+            AutosaveSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            AutosaveSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            AutosaveSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            AutosaveSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            AutosaveSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            AutosaveSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            AutosaveSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            AutosaveSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            AutosaveSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            AutosaveSwitch.ColorValue = Color.ForestGreen;
+            AutosaveSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            AutosaveSwitch.Font = new Font("Arial", 11F);
+            AutosaveSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            AutosaveSwitch.Lighting = true;
+            AutosaveSwitch.LinearGradient_Background = false;
+            AutosaveSwitch.LinearGradient_Value = false;
+            AutosaveSwitch.LinearGradientPen = false;
+            AutosaveSwitch.Location = new Point(132, 15);
+            AutosaveSwitch.Name = "AutosaveSwitch";
+            AutosaveSwitch.PenWidth = 10;
+            AutosaveSwitch.RGB = false;
+            AutosaveSwitch.Rounding = true;
+            AutosaveSwitch.RoundingInt = 90;
+            AutosaveSwitch.Size = new Size(35, 20);
+            AutosaveSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            AutosaveSwitch.TabIndex = 10;
+            AutosaveSwitch.Tag = "Cyber";
+            AutosaveSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            AutosaveSwitch.Timer_RGB = 300;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.BackColor = Color.FromArgb(69, 68, 63);
+            label1.ForeColor = Color.White;
+            label1.Location = new Point(70, 17);
+            label1.Name = "label1";
+            label1.Size = new Size(56, 15);
+            label1.TabIndex = 9;
+            label1.Text = "Autosave";
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.BackColor = Color.Transparent;
+            pictureBox1.BackgroundImageLayout = ImageLayout.None;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.InitialImage = (Image)resources.GetObject("pictureBox1.InitialImage");
+            pictureBox1.Location = new Point(9, 3);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(50, 41);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 8;
+            pictureBox1.TabStop = false;
+            // 
+            // statusStrip3
+            // 
+            statusStrip3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            statusStrip3.AutoSize = false;
+            statusStrip3.BackColor = Color.FromArgb(69, 68, 63);
+            statusStrip3.Dock = DockStyle.None;
+            statusStrip3.Location = new Point(271, 90);
+            statusStrip3.Name = "statusStrip3";
+            statusStrip3.Size = new Size(1100, 22);
+            statusStrip3.SizingGrip = false;
+            statusStrip3.TabIndex = 7;
+            statusStrip3.Text = "statusStrip3";
+            // 
+            // poisonPanel1
+            // 
+            poisonPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            poisonPanel1.HorizontalScrollbarBarColor = true;
+            poisonPanel1.HorizontalScrollbarHighlightOnWheel = false;
+            poisonPanel1.HorizontalScrollbarSize = 10;
+            poisonPanel1.Location = new Point(1371, 90);
+            poisonPanel1.Name = "poisonPanel1";
+            poisonPanel1.Size = new Size(200, 886);
+            poisonPanel1.TabIndex = 6;
+            poisonPanel1.VerticalScrollbarBarColor = true;
+            poisonPanel1.VerticalScrollbarHighlightOnWheel = false;
+            poisonPanel1.VerticalScrollbarSize = 10;
+            // 
+            // SKGLRenderControl
+            // 
+            SKGLRenderControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            SKGLRenderControl.AutoScroll = true;
+            SKGLRenderControl.BackColor = Color.White;
+            SKGLRenderControl.BorderStyle = BorderStyle.FixedSingle;
+            SKGLRenderControl.Location = new Point(272, 112);
+            SKGLRenderControl.Margin = new Padding(0);
+            SKGLRenderControl.Name = "SKGLRenderControl";
+            SKGLRenderControl.Size = new Size(1087, 852);
+            SKGLRenderControl.TabIndex = 5;
+            SKGLRenderControl.VSync = false;
+            SKGLRenderControl.PaintSurface += SKGLRenderControl_PaintSurface;
+            SKGLRenderControl.MouseDown += SKGLRenderControl_MouseDown;
+            SKGLRenderControl.MouseMove += SKGLRenderControl_MouseMove;
+            SKGLRenderControl.MouseUp += SKGLRenderControl_MouseUp;
+            // 
             // statusStrip2
             // 
             statusStrip2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -486,7 +489,7 @@
             statusStrip2.Location = new Point(9, 976);
             statusStrip2.Name = "statusStrip2";
             statusStrip2.RenderMode = ToolStripRenderMode.Professional;
-            statusStrip2.Size = new Size(1582, 22);
+            statusStrip2.Size = new Size(1565, 22);
             statusStrip2.SizingGrip = false;
             statusStrip2.TabIndex = 3;
             statusStrip2.Text = "statusStrip2";
@@ -500,7 +503,7 @@
             statusStrip1.Location = new Point(9, 996);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.RenderMode = ToolStripRenderMode.ManagerRenderMode;
-            statusStrip1.Size = new Size(1582, 22);
+            statusStrip1.Size = new Size(1565, 22);
             statusStrip1.SizingGrip = false;
             statusStrip1.TabIndex = 2;
             statusStrip1.Text = "statusStrip1";
@@ -511,7 +514,7 @@
             thunderControlBox1.BackColor = Color.Transparent;
             thunderControlBox1.DefaultLocation = true;
             thunderControlBox1.ForeColor = SystemColors.ControlLight;
-            thunderControlBox1.Location = new Point(1522, 3);
+            thunderControlBox1.Location = new Point(1505, 3);
             thunderControlBox1.Name = "thunderControlBox1";
             thunderControlBox1.Size = new Size(75, 23);
             thunderControlBox1.TabIndex = 0;
@@ -523,7 +526,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, toolsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(20, 56);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1560, 24);
+            menuStrip1.Size = new Size(1543, 24);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -726,10 +729,11 @@
             // 
             // RealmStudioMainForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoSize = true;
             BackColor = Color.FromArgb(223, 219, 210);
-            ClientSize = new Size(1600, 1024);
+            ClientSize = new Size(1583, 1024);
             Controls.Add(RealmStudioForm);
             DoubleBuffered = true;
             ForeColor = SystemColors.Control;
@@ -739,17 +743,18 @@
             MinimumSize = new Size(261, 65);
             Name = "RealmStudioMainForm";
             ShowIcon = false;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Realm Studio";
             TransparencyKey = Color.Fuchsia;
             Load += RealmStudioMainForm_Load;
             Shown += RealmStudioMainForm_Shown;
             OceanTab.ResumeLayout(false);
-            RealmStudioForm.ResumeLayout(false);
-            RealmStudioForm.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             MainTab.ResumeLayout(false);
             BackgroundTab.ResumeLayout(false);
             BackgroundTab.PerformLayout();
+            RealmStudioForm.ResumeLayout(false);
+            RealmStudioForm.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);

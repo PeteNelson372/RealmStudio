@@ -169,4 +169,16 @@ namespace RealmStudio
         World,
         Equirectangular
     }
+
+    public enum RealmTypeEnum
+    {
+        World,
+        Region,
+        City,
+        Interior,
+        Dungeon,
+        SolarSystem,
+        Ship,
+        Other
+    }
 }

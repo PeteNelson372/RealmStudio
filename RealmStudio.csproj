@@ -8,6 +8,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <IncrementVersionOnBuild>1.yyyy.Mdd.Hmm</IncrementVersionOnBuild>
     <Version>1.2024.908.932</Version>
+    <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
+    <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>    
   </PropertyGroup>
 
   <ItemGroup>

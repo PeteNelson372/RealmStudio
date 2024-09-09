@@ -294,6 +294,7 @@
             SwapResolutionButton.Size = new Size(25, 25);
             SwapResolutionButton.TabIndex = 5;
             SwapResolutionButton.UseVisualStyleBackColor = true;
+            SwapResolutionButton.Click += SwapResolutionButton_Click;
             // 
             // LockAspectRatioButton
             // 
@@ -307,6 +308,7 @@
             LockAspectRatioButton.Size = new Size(25, 25);
             LockAspectRatioButton.TabIndex = 4;
             LockAspectRatioButton.UseVisualStyleBackColor = true;
+            LockAspectRatioButton.Click += LockAspectRatioButton_Click;
             // 
             // label2
             // 
@@ -610,6 +612,7 @@
             OtherRadioButton.TabStop = true;
             OtherRadioButton.Text = "Other";
             OtherRadioButton.UseVisualStyleBackColor = true;
+            OtherRadioButton.Click += OtherRadioButton_Click;
             // 
             // ShipRadioButton
             // 
@@ -622,6 +625,7 @@
             ShipRadioButton.TabStop = true;
             ShipRadioButton.Text = "Ship";
             ShipRadioButton.UseVisualStyleBackColor = true;
+            ShipRadioButton.Click += ShipRadioButton_Click;
             // 
             // SolarSystemRadioButton
             // 
@@ -634,6 +638,7 @@
             SolarSystemRadioButton.TabStop = true;
             SolarSystemRadioButton.Text = "Solar System";
             SolarSystemRadioButton.UseVisualStyleBackColor = true;
+            SolarSystemRadioButton.Click += SolarSystemRadioButton_Click;
             // 
             // DungeonRadioButton
             // 
@@ -646,6 +651,7 @@
             DungeonRadioButton.TabStop = true;
             DungeonRadioButton.Text = "Dungeon";
             DungeonRadioButton.UseVisualStyleBackColor = true;
+            DungeonRadioButton.Click += DungeonRadioButton_Click;
             // 
             // InteriorRadioButton
             // 
@@ -658,6 +664,7 @@
             InteriorRadioButton.TabStop = true;
             InteriorRadioButton.Text = "Interior";
             InteriorRadioButton.UseVisualStyleBackColor = true;
+            InteriorRadioButton.Click += InteriorRadioButton_Click;
             // 
             // CityRadioButton
             // 
@@ -670,6 +677,7 @@
             CityRadioButton.TabStop = true;
             CityRadioButton.Text = "City";
             CityRadioButton.UseVisualStyleBackColor = true;
+            CityRadioButton.Click += CityRadioButton_Click;
             // 
             // RegionRadioButton
             // 
@@ -682,6 +690,7 @@
             RegionRadioButton.TabStop = true;
             RegionRadioButton.Text = "Region";
             RegionRadioButton.UseVisualStyleBackColor = true;
+            RegionRadioButton.Click += RegionRadioButton_Click;
             // 
             // WorldRadioButton
             // 
@@ -694,6 +703,7 @@
             WorldRadioButton.TabStop = true;
             WorldRadioButton.Text = "World";
             WorldRadioButton.UseVisualStyleBackColor = true;
+            WorldRadioButton.Click += WorldRadioButton_Click;
             // 
             // RealmNameTextBox
             // 

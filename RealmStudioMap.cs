@@ -33,10 +33,10 @@ namespace RealmStudio
     public class RealmStudioMap
     {
         [XmlIgnore]
-        private ushort mapWidth = 0;
+        private int mapWidth = 0;
 
         [XmlIgnore]
-        private ushort mapHeight = 0;
+        private int mapHeight = 0;
 
         [XmlIgnore]
         private float mapAreaWidth = 0;
@@ -55,10 +55,10 @@ namespace RealmStudio
 
         // MapHeight and MapWidth are the size of the map in pixels (e.g. 1200 x 800)
         [XmlAttribute]
-        public ushort MapWidth { get => mapWidth; set => mapWidth = value; }
+        public int MapWidth { get => mapWidth; set => mapWidth = value; }
 
         [XmlAttribute]
-        public ushort MapHeight { get => mapHeight; set => mapHeight = value; }
+        public int MapHeight { get => mapHeight; set => mapHeight = value; }
 
         // MapAreaWidth and MapAreaHeight are the size of the map in MapUnits (e.g. 1000 miles x 500 miles)
         [XmlAttribute]
@@ -69,6 +69,9 @@ namespace RealmStudio
 
         [XmlAttribute]
         public string MapAreaUnits { get; set; } = string.Empty;
+
+        [XmlAttribute]
+        public RealmTypeEnum RealmType { get; set; } = RealmTypeEnum.World;
 
         [XmlArray("MapLayers")]
         public List<MapLayer> MapLayers = new(MapBuilder.MAP_LAYER_COUNT);
