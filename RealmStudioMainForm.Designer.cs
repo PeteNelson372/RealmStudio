@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             TabPage OceanTab;
-            TabControl MainTab;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RealmStudioMainForm));
             toolStrip1 = new ToolStrip();
+            MainTab = new TabControl();
             BackgroundTab = new TabPage();
             cyberSwitch1 = new ReaLTaiizor.Controls.CyberSwitch();
             label2 = new Label();
@@ -88,7 +88,6 @@
             toolStripSeparator5 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
             OceanTab = new TabPage();
-            MainTab = new TabControl();
             OceanTab.SuspendLayout();
             MainTab.SuspendLayout();
             BackgroundTab.SuspendLayout();
@@ -317,7 +316,7 @@
             RealmStudioForm.Name = "RealmStudioForm";
             RealmStudioForm.Padding = new Padding(20, 56, 20, 16);
             RealmStudioForm.RoundCorners = true;
-            RealmStudioForm.Sizable = true;
+            RealmStudioForm.Sizable = false;
             RealmStudioForm.Size = new Size(1583, 1024);
             RealmStudioForm.SmartBounds = true;
             RealmStudioForm.StartPosition = FormStartPosition.CenterScreen;
@@ -465,7 +464,6 @@
             // SKGLRenderControl
             // 
             SKGLRenderControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            SKGLRenderControl.AutoScroll = true;
             SKGLRenderControl.BackColor = Color.White;
             SKGLRenderControl.BorderStyle = BorderStyle.FixedSingle;
             SKGLRenderControl.Location = new Point(272, 112);
@@ -512,9 +510,9 @@
             // 
             thunderControlBox1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             thunderControlBox1.BackColor = Color.Transparent;
-            thunderControlBox1.DefaultLocation = true;
+            thunderControlBox1.DefaultLocation = false;
             thunderControlBox1.ForeColor = SystemColors.ControlLight;
-            thunderControlBox1.Location = new Point(1505, 3);
+            thunderControlBox1.Location = new Point(1498, 12);
             thunderControlBox1.Name = "thunderControlBox1";
             thunderControlBox1.Size = new Size(75, 23);
             thunderControlBox1.TabIndex = 0;
@@ -729,9 +727,9 @@
             // 
             // RealmStudioMainForm
             // 
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
-            AutoSize = true;
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            AutoValidate = AutoValidate.Disable;
             BackColor = Color.FromArgb(223, 219, 210);
             ClientSize = new Size(1583, 1024);
             Controls.Add(RealmStudioForm);

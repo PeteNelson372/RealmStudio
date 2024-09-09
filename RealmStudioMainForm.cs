@@ -60,7 +60,6 @@ namespace RealmStudio
         public RealmStudioMainForm()
         {
             InitializeComponent();
-
             SKGLRenderControl.MouseWheel += SKGLRenderControl_MouseWheel;
         }
 

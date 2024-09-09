@@ -8,8 +8,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <IncrementVersionOnBuild>1.yyyy.Mdd.Hmm</IncrementVersionOnBuild>
     <Version>1.2024.908.932</Version>
-    <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
-    <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>    
+    <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
+    <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
+    <PackageReadmeFile>README.md</PackageReadmeFile>  
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,6 +34,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +46,17 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
