@@ -36,7 +36,7 @@
             groupBox4 = new GroupBox();
             label6 = new Label();
             label5 = new Label();
-            comboBox1 = new ComboBox();
+            MapAreaUnitCombo = new ComboBox();
             label4 = new Label();
             label7 = new Label();
             numericUpDown1 = new NumericUpDown();
@@ -174,7 +174,7 @@
             // 
             groupBox4.Controls.Add(label6);
             groupBox4.Controls.Add(label5);
-            groupBox4.Controls.Add(comboBox1);
+            groupBox4.Controls.Add(MapAreaUnitCombo);
             groupBox4.Controls.Add(label4);
             groupBox4.Controls.Add(label7);
             groupBox4.Controls.Add(numericUpDown1);
@@ -205,15 +205,15 @@
             label5.TabIndex = 5;
             label5.Text = "Map Area Height";
             // 
-            // comboBox1
+            // MapAreaUnitCombo
             // 
-            comboBox1.DropDownWidth = 120;
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "Centimeters", "Inches", "Feet", "Yards", "Meters", "Kilometers", "Miles", "Astronomical Units (AU)", "Light Years", "Parsecs" });
-            comboBox1.Location = new Point(114, 26);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(85, 23);
-            comboBox1.TabIndex = 4;
+            MapAreaUnitCombo.DropDownWidth = 120;
+            MapAreaUnitCombo.FormattingEnabled = true;
+            MapAreaUnitCombo.Items.AddRange(new object[] { "Centimeters", "Inches", "Feet", "Yards", "Meters", "Kilometers", "Miles", "Astronomical Units (AU)", "Light Years", "Parsecs" });
+            MapAreaUnitCombo.Location = new Point(114, 26);
+            MapAreaUnitCombo.Name = "MapAreaUnitCombo";
+            MapAreaUnitCombo.Size = new Size(85, 23);
+            MapAreaUnitCombo.TabIndex = 4;
             // 
             // label4
             // 
@@ -270,6 +270,7 @@
             AspectRatioLabel.Name = "AspectRatioLabel";
             AspectRatioLabel.Size = new Size(100, 15);
             AspectRatioLabel.TabIndex = 7;
+            AspectRatioLabel.Text = "1.78";
             // 
             // label3
             // 
@@ -384,7 +385,6 @@
             WH7680x4320Radio.Name = "WH7680x4320Radio";
             WH7680x4320Radio.Size = new Size(137, 19);
             WH7680x4320Radio.TabIndex = 17;
-            WH7680x4320Radio.TabStop = true;
             WH7680x4320Radio.Text = "7680 x 4320 (8K UHD)";
             WH7680x4320Radio.UseVisualStyleBackColor = true;
             WH7680x4320Radio.Click += WH7680x4320Radio_Click;
@@ -397,7 +397,6 @@
             WH7016x4960Radio.Name = "WH7016x4960Radio";
             WH7016x4960Radio.Size = new Size(152, 19);
             WH7016x4960Radio.TabIndex = 16;
-            WH7016x4960Radio.TabStop = true;
             WH7016x4960Radio.Text = "7016 x 4960 (A2 300 DPI)";
             WH7016x4960Radio.UseVisualStyleBackColor = true;
             WH7016x4960Radio.Click += WH7016x4960Radio_Click;
@@ -410,7 +409,6 @@
             WH4960x3508Radio.Name = "WH4960x3508Radio";
             WH4960x3508Radio.Size = new Size(152, 19);
             WH4960x3508Radio.TabIndex = 15;
-            WH4960x3508Radio.TabStop = true;
             WH4960x3508Radio.Text = "4960 x 3508 (A3 300 DPI)";
             WH4960x3508Radio.UseVisualStyleBackColor = true;
             WH4960x3508Radio.Click += WH4960x3508Radio_Click;
@@ -423,7 +421,6 @@
             WH3508x2480Radio.Name = "WH3508x2480Radio";
             WH3508x2480Radio.Size = new Size(152, 19);
             WH3508x2480Radio.TabIndex = 14;
-            WH3508x2480Radio.TabStop = true;
             WH3508x2480Radio.Text = "3508 x 2480 (A4 300 DPI)";
             WH3508x2480Radio.UseVisualStyleBackColor = true;
             WH3508x2480Radio.Click += WH3508x2480Radio_Click;
@@ -436,7 +433,6 @@
             WH2840x1754Radio.Name = "WH2840x1754Radio";
             WH2840x1754Radio.Size = new Size(152, 19);
             WH2840x1754Radio.TabIndex = 13;
-            WH2840x1754Radio.TabStop = true;
             WH2840x1754Radio.Text = "2480 x 1754 (A5 300 DPI)";
             WH2840x1754Radio.UseVisualStyleBackColor = true;
             WH2840x1754Radio.Click += WH2840x1754Radio_Click;
@@ -449,7 +445,6 @@
             WH1754x1240Radio.Name = "WH1754x1240Radio";
             WH1754x1240Radio.Size = new Size(152, 19);
             WH1754x1240Radio.TabIndex = 12;
-            WH1754x1240Radio.TabStop = true;
             WH1754x1240Radio.Text = "1754 x 1240 (A6 300 DPI)";
             WH1754x1240Radio.UseVisualStyleBackColor = true;
             WH1754x1240Radio.Click += WH1754x1240Radio_Click;
@@ -462,7 +457,6 @@
             WH3300x2250Radio.Name = "WH3300x2250Radio";
             WH3300x2250Radio.Size = new Size(185, 19);
             WH3300x2250Radio.TabIndex = 11;
-            WH3300x2250Radio.TabStop = true;
             WH3300x2250Radio.Text = "3300 x 2250 (US Letter 300 DPI)";
             WH3300x2250Radio.UseVisualStyleBackColor = true;
             WH3300x2250Radio.Click += WH3300x2250Radio_Click;
@@ -475,7 +469,6 @@
             WH1280x720Radio.Name = "WH1280x720Radio";
             WH1280x720Radio.Size = new Size(115, 19);
             WH1280x720Radio.TabIndex = 10;
-            WH1280x720Radio.TabStop = true;
             WH1280x720Radio.Text = "1280 x 720 (720P)";
             WH1280x720Radio.UseVisualStyleBackColor = true;
             WH1280x720Radio.Click += WH1280x720Radio_Click;
@@ -488,7 +481,6 @@
             WH4096x2048Radio.Name = "WH4096x2048Radio";
             WH4096x2048Radio.Size = new Size(195, 19);
             WH4096x2048Radio.TabIndex = 9;
-            WH4096x2048Radio.TabStop = true;
             WH4096x2048Radio.Text = "4096 x 2048 (Equirectangular 4K)";
             WH4096x2048Radio.UseVisualStyleBackColor = true;
             WH4096x2048Radio.Click += WH4096x2048Radio_Click;
@@ -501,7 +493,6 @@
             WH3840x2160Radio.Name = "WH3840x2160Radio";
             WH3840x2160Radio.Size = new Size(157, 19);
             WH3840x2160Radio.TabIndex = 8;
-            WH3840x2160Radio.TabStop = true;
             WH3840x2160Radio.Text = "3840 x 2160 (4K Ultra HD)";
             WH3840x2160Radio.UseVisualStyleBackColor = true;
             WH3840x2160Radio.Click += WH3840x2160Radio_Click;
@@ -514,7 +505,6 @@
             WH2048x1024Radio.Name = "WH2048x1024Radio";
             WH2048x1024Radio.Size = new Size(194, 19);
             WH2048x1024Radio.TabIndex = 7;
-            WH2048x1024Radio.TabStop = true;
             WH2048x1024Radio.Text = "2048 x 1024 (Equirectangular 2k)";
             WH2048x1024Radio.UseVisualStyleBackColor = true;
             WH2048x1024Radio.Click += WH2048x1024Radio_Click;
@@ -527,7 +517,6 @@
             WH2560x1080Radio.Name = "WH2560x1080Radio";
             WH2560x1080Radio.Size = new Size(109, 19);
             WH2560x1080Radio.TabIndex = 6;
-            WH2560x1080Radio.TabStop = true;
             WH2560x1080Radio.Text = "2560 x 1080 (2K)";
             WH2560x1080Radio.UseVisualStyleBackColor = true;
             WH2560x1080Radio.Click += WH2560x1080Radio_Click;
@@ -535,6 +524,7 @@
             // WH1920x1080Radio
             // 
             WH1920x1080Radio.AutoSize = true;
+            WH1920x1080Radio.Checked = true;
             WH1920x1080Radio.ForeColor = SystemColors.ControlDarkDark;
             WH1920x1080Radio.Location = new Point(6, 122);
             WH1920x1080Radio.Name = "WH1920x1080Radio";
@@ -553,7 +543,6 @@
             WH1600x1200Radio.Name = "WH1600x1200Radio";
             WH1600x1200Radio.Size = new Size(127, 19);
             WH1600x1200Radio.TabIndex = 4;
-            WH1600x1200Radio.TabStop = true;
             WH1600x1200Radio.Text = "1600 x 1200 (UXGA)";
             WH1600x1200Radio.UseVisualStyleBackColor = true;
             WH1600x1200Radio.Click += WH1600x1200Radio_Click;
@@ -566,7 +555,6 @@
             WH1280x1024Radio.Name = "WH1280x1024Radio";
             WH1280x1024Radio.Size = new Size(125, 19);
             WH1280x1024Radio.TabIndex = 3;
-            WH1280x1024Radio.TabStop = true;
             WH1280x1024Radio.Text = "1280 x 1024 (SXGA)";
             WH1280x1024Radio.UseVisualStyleBackColor = true;
             WH1280x1024Radio.Click += WH1280x1024Radio_Click;
@@ -579,7 +567,6 @@
             WH1024x768Radio.Name = "WH1024x768Radio";
             WH1024x768Radio.Size = new Size(113, 19);
             WH1024x768Radio.TabIndex = 2;
-            WH1024x768Radio.TabStop = true;
             WH1024x768Radio.Text = "1024 x 768 (XGA)";
             WH1024x768Radio.UseVisualStyleBackColor = true;
             WH1024x768Radio.Click += WH1024x768Radio_Click;
@@ -609,7 +596,6 @@
             OtherRadioButton.Name = "OtherRadioButton";
             OtherRadioButton.Size = new Size(55, 19);
             OtherRadioButton.TabIndex = 9;
-            OtherRadioButton.TabStop = true;
             OtherRadioButton.Text = "Other";
             OtherRadioButton.UseVisualStyleBackColor = true;
             OtherRadioButton.Click += OtherRadioButton_Click;
@@ -622,7 +608,6 @@
             ShipRadioButton.Name = "ShipRadioButton";
             ShipRadioButton.Size = new Size(48, 19);
             ShipRadioButton.TabIndex = 8;
-            ShipRadioButton.TabStop = true;
             ShipRadioButton.Text = "Ship";
             ShipRadioButton.UseVisualStyleBackColor = true;
             ShipRadioButton.Click += ShipRadioButton_Click;
@@ -635,7 +620,6 @@
             SolarSystemRadioButton.Name = "SolarSystemRadioButton";
             SolarSystemRadioButton.Size = new Size(92, 19);
             SolarSystemRadioButton.TabIndex = 7;
-            SolarSystemRadioButton.TabStop = true;
             SolarSystemRadioButton.Text = "Solar System";
             SolarSystemRadioButton.UseVisualStyleBackColor = true;
             SolarSystemRadioButton.Click += SolarSystemRadioButton_Click;
@@ -648,7 +632,6 @@
             DungeonRadioButton.Name = "DungeonRadioButton";
             DungeonRadioButton.Size = new Size(74, 19);
             DungeonRadioButton.TabIndex = 6;
-            DungeonRadioButton.TabStop = true;
             DungeonRadioButton.Text = "Dungeon";
             DungeonRadioButton.UseVisualStyleBackColor = true;
             DungeonRadioButton.Click += DungeonRadioButton_Click;
@@ -661,7 +644,6 @@
             InteriorRadioButton.Name = "InteriorRadioButton";
             InteriorRadioButton.Size = new Size(63, 19);
             InteriorRadioButton.TabIndex = 5;
-            InteriorRadioButton.TabStop = true;
             InteriorRadioButton.Text = "Interior";
             InteriorRadioButton.UseVisualStyleBackColor = true;
             InteriorRadioButton.Click += InteriorRadioButton_Click;
@@ -674,7 +656,6 @@
             CityRadioButton.Name = "CityRadioButton";
             CityRadioButton.Size = new Size(46, 19);
             CityRadioButton.TabIndex = 4;
-            CityRadioButton.TabStop = true;
             CityRadioButton.Text = "City";
             CityRadioButton.UseVisualStyleBackColor = true;
             CityRadioButton.Click += CityRadioButton_Click;
@@ -687,7 +668,6 @@
             RegionRadioButton.Name = "RegionRadioButton";
             RegionRadioButton.Size = new Size(62, 19);
             RegionRadioButton.TabIndex = 3;
-            RegionRadioButton.TabStop = true;
             RegionRadioButton.Text = "Region";
             RegionRadioButton.UseVisualStyleBackColor = true;
             RegionRadioButton.Click += RegionRadioButton_Click;
@@ -695,6 +675,7 @@
             // WorldRadioButton
             // 
             WorldRadioButton.AutoSize = true;
+            WorldRadioButton.Checked = true;
             WorldRadioButton.ForeColor = SystemColors.ControlDarkDark;
             WorldRadioButton.Location = new Point(6, 22);
             WorldRadioButton.Name = "WorldRadioButton";
@@ -814,7 +795,7 @@
         private Label label4;
         private Label label6;
         private Label label5;
-        private ComboBox comboBox1;
+        private ComboBox MapAreaUnitCombo;
         private GroupBox groupBox5;
         private ReaLTaiizor.Controls.DungeonListBox dungeonListBox1;
         private FontAwesome.Sharp.IconButton CancelConfigButton;

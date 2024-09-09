@@ -28,8 +28,8 @@ namespace RealmStudio
     internal class MapBuilder
     {
         public static readonly Color DEFAULT_BACKGROUND_COLOR = Color.Transparent;
-        public static readonly ushort MAP_DEFAULT_WIDTH = 1024;
-        public static readonly ushort MAP_DEFAULT_HEIGHT = 768;
+        public static readonly ushort MAP_DEFAULT_WIDTH = 1920;
+        public static readonly ushort MAP_DEFAULT_HEIGHT = 1080;
 
         public static readonly int BASELAYER = 0;
         public static readonly int OCEANTEXTURELAYER = 1;
@@ -93,35 +93,6 @@ namespace RealmStudio
             l.ShowLayer = false;
         }
 
-        public static SKCanvas GetLayerCanvas(RealmStudioMap map, int layerIndex)
-        {
-            if (map == null)
-            {
-                throw new ArgumentNullException(nameof(map), "map is null");
-            }
-
-            MapLayer layer = GetMapLayerByIndex(map, layerIndex);
-
-            return layer.LayerCanvas;
-        }
-
-        public static SKCanvas GetLayerCanvas(RealmStudioMap map, MapLayer layer)
-        {
-            if (map == null)
-            {
-                throw new ArgumentNullException(nameof(map), "map is null");
-            }
-
-            return layer.LayerCanvas;
-        }
-
-        public static void ClearLayerCanvas(RealmStudioMap map, int layerIndex)
-        {
-            MapLayer layer = GetMapLayerByIndex(map, layerIndex);
-
-            layer.LayerCanvas.Clear();
-        }
-
         private static MapLayer ConstructMapLayer(string layerName, ushort layerOrder, uint x, uint y, int width, int height, SKColor clearColor)
         {
             SKImageInfo imageInfo = new(width, height);
@@ -158,7 +129,7 @@ namespace RealmStudio
             map.MapPixelWidth = map.MapAreaWidth / map.MapWidth;
             map.MapPixelHeight = map.MapAreaHeight / map.MapHeight;
 
-            CreateMapLayers(map);
+            CreateMapLayers(ref map);
 
             if (MAP_LAYER_COUNT != map.MapLayers.Count)
             {
@@ -168,7 +139,7 @@ namespace RealmStudio
             return map;
         }
 
-        internal static RealmStudioMap? CreateMap(string mapPath, string mapName, ushort width, ushort height)
+        internal static RealmStudioMap? CreateMap(string mapPath, string mapName, int width, int height)
         {
             RealmStudioMap map = new()
             {
@@ -185,7 +156,7 @@ namespace RealmStudio
             map.MapPixelWidth = map.MapAreaWidth / map.MapWidth;
             map.MapPixelHeight = map.MapAreaHeight / map.MapHeight;
 
-            CreateMapLayers(map);
+            CreateMapLayers(ref map);
 
             if (MAP_LAYER_COUNT != map.MapLayers.Count)
             {
@@ -194,7 +165,7 @@ namespace RealmStudio
             return map;
         }
 
-        private static void CreateMapLayers(RealmStudioMap map)
+        private static void CreateMapLayers(ref RealmStudioMap map)
         {
             // create the map layers and add them to the map
             MapLayer layer = ConstructMapLayer("base", (ushort)BASELAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.White);

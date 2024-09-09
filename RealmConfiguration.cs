@@ -9,6 +9,17 @@
         public RealmConfiguration()
         {
             InitializeComponent();
+
+            WidthUpDown.Value = 1920;
+            HeightUpDown.Value = 1080;
+
+            map.MapWidth = (int)WidthUpDown.Value;
+            map.MapHeight = (int)HeightUpDown.Value;
+
+            CalculateAspectRatio();
+
+            map.RealmType = RealmTypeEnum.World;
+            map.MapAreaUnits = "Miles";
         }
 
         private void WH1024x768Radio_Click(object sender, EventArgs e)

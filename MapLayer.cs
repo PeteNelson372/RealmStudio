@@ -41,18 +41,14 @@ namespace RealmStudio
         public ushort MapLayerOrder { get => mapLayerOrder; set => mapLayerOrder = value; }
 
         [XmlIgnore]
-        public SKSurface LayerSurface { get; set; }
+        public SKSurface? LayerSurface { get; set; } = null;
 
-        [XmlIgnore]
-        public SKCanvas LayerCanvas { get; set; }
 
         [XmlIgnore]
         public bool ShowLayer { get; set; } = true;
 
         public MapLayer(SKImageInfo imageInfo)
         {
-            LayerSurface = SKSurface.Create(imageInfo);
-            LayerCanvas = LayerSurface.Canvas;
         }
 
         public override void Render(SKCanvas canvas)
@@ -65,7 +61,6 @@ namespace RealmStudio
                     {
                         if (component.RenderComponent)
                         {
-                            component.Render(LayerCanvas);
                             canvas.DrawSurface(LayerSurface, 0, 0);
                         }
                     }

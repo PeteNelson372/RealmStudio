@@ -1,14 +1,19 @@
 using SkiaSharp;
+using SkiaSharp.Components;
 using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
     public partial class RealmStudioMainForm : Form
     {
+        private int MAP_WIDTH = MapBuilder.MAP_DEFAULT_WIDTH;
+        private int MAP_HEIGHT = MapBuilder.MAP_DEFAULT_HEIGHT;
+
         private static DrawingModeEnum CURRENT_DRAWING_MODE = DrawingModeEnum.LandPaint;
 
-        private static int MAP_WIDTH = 8000;
-        private static int MAP_HEIGHT = 8000;
+        private static RealmStudioMap? CURRENT_MAP = null;
+
+        private static Landform? CURRENT_LANDFORM = null;
 
         private static SKSurface? BackgroundSurface = null;
         private static SKSurface? LandSurface = null;
@@ -17,7 +22,6 @@ namespace RealmStudio
 
         private static SKPoint ScrollPoint = new(0, 0);
         private static SKPoint DrawingPoint = new(0, 0);
-        private static SKPoint ZoomPoint = new(0, 0);
 
         private static float DrawingZoom = 1.0f;
 
@@ -78,6 +82,16 @@ namespace RealmStudio
             if (result == DialogResult.OK)
             {
                 // create the map from the settings on the dialog
+                CURRENT_MAP = MapBuilder.CreateMap(rcd.map);
+
+                MAP_WIDTH = CURRENT_MAP.MapWidth;
+                MAP_HEIGHT = CURRENT_MAP.MapHeight;
+
+                if (CURRENT_MAP.MapLayers.Count == 0)
+                {
+                    MessageBox.Show("MapLayers not created.");
+                    Application.Exit();
+                }
             }
         }
 
@@ -87,32 +101,45 @@ namespace RealmStudio
 
         private void SKGLRenderControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
         {
-            // if the surfaces haven't been created, create them
-            BackgroundSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, true, new SKImageInfo(MAP_WIDTH, MAP_HEIGHT));
+            if (CURRENT_MAP != null)
+            {
+                BackgroundSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, true, new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
 
-            LandSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, true, new SKImageInfo(MAP_WIDTH, MAP_HEIGHT));
+                foreach (MapLayer layer in CURRENT_MAP.MapLayers)
+                {
+                    // if the surfaces haven't been created, create them
+                    // TODO: for landform and land coastline,
+                    // create multiple layers or create multiple surfaces in a single layer?
+                    layer.LayerSurface??= SKSurface.Create(SKGLRenderControl.GRContext, true, new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+                }
 
-            CoastSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, true, new SKImageInfo(MAP_WIDTH, MAP_HEIGHT));
 
-            CoastSurface2 ??= SKSurface.Create(SKGLRenderControl.GRContext, true, new SKImageInfo(MAP_WIDTH, MAP_HEIGHT));
+                // handle zoom-in and zoom-out (TODO: zoom in and out from center of map - how?)
+                e.Surface.Canvas.Scale(DrawingZoom);
 
-            // handle zoom-in and zoom-out (zoom in and out from center of map - how?)
-            e.Surface.Canvas.Scale(DrawingZoom);
+                // paint the SKGLRenderControl surface, compositing the surfaces from all of the layers
+                e.Surface.Canvas.Clear(SKColors.Black);
 
-            // paint the SKGLRenderControl surface, compositing the surfaces from all of the layers
-            e.Surface.Canvas.Clear(SKColors.Black);
+                //LandSurface?.Canvas.DrawPath(LandformPath, LandformPaint);
+                //CoastSurface?.Canvas.DrawPath(CoastPath, CoastlinePaint);
+                //CoastSurface2?.Canvas.DrawPath(CoastPath2, CoastlinePaint2);
 
-            LandSurface?.Canvas.DrawPath(LandformPath, LandformPaint);
-            CoastSurface?.Canvas.DrawPath(CoastPath, CoastlinePaint);
-            CoastSurface2?.Canvas.DrawPath(CoastPath2, CoastlinePaint2);
+                BackgroundSurface.Canvas.Clear(SKColors.White);
 
-            BackgroundSurface.Canvas.Clear(SKColors.White);
+                e.Surface.Canvas.DrawSurface(BackgroundSurface, ScrollPoint);
 
-            e.Surface.Canvas.DrawSurface(BackgroundSurface, ScrollPoint);
+                //e.Surface.Canvas.DrawSurface(CoastSurface2, ScrollPoint);
+                //e.Surface.Canvas.DrawSurface(CoastSurface, ScrollPoint);
 
-            e.Surface.Canvas.DrawSurface(CoastSurface2, ScrollPoint);
-            e.Surface.Canvas.DrawSurface(CoastSurface, ScrollPoint);
-            e.Surface.Canvas.DrawSurface(LandSurface, ScrollPoint);
+                if (CURRENT_LANDFORM != null)
+                {
+                    MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+                    landformLayer.LayerSurface?.Canvas.DrawPath(CURRENT_LANDFORM.DrawPath, LandformPaint);
+
+                    e.Surface.Canvas.DrawSurface(landformLayer.LayerSurface, ScrollPoint);
+                }                
+            }
+
         }
 
         private void SKGLRenderControl_MouseDown(object sender, MouseEventArgs e)
@@ -153,6 +180,18 @@ namespace RealmStudio
         private void SKGLRenderControl_MouseUp(object sender, MouseEventArgs e)
         {
             // objects are finalized or reset on mouse up
+            if (e.Button == MouseButtons.Left)
+            {
+                LeftButtonMouseUpHandler(sender, e);
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                RightButtonMouseUpHandler(sender, e);
+            }
+            else if (e.Button == MouseButtons.None)
+            {
+                NoButtonMouseUpHandler(sender, e);
+            }
 
         }
 
@@ -176,23 +215,7 @@ namespace RealmStudio
             {
                 case DrawingModeEnum.LandPaint:
                     {
-                        LandformPath?.Dispose();
-                        LandformPath = new()
-                        {
-                            FillType = SKPathFillType.Winding,
-                        };
-
-                        CoastPath?.Dispose();
-                        CoastPath = new()
-                        {
-                            FillType = SKPathFillType.Winding,
-                        };
-
-                        CoastPath2?.Dispose();
-                        CoastPath2 = new()
-                        {
-                            FillType = SKPathFillType.Winding,
-                        };
+                        CURRENT_LANDFORM = new();
                     }
                     break;
             }
@@ -209,7 +232,7 @@ namespace RealmStudio
 
         #region Left Button Down Handler Method
 
-        private void LeftButtonMouseMoveHandler(MouseEventArgs e, object brushRadius)
+        private void LeftButtonMouseMoveHandler(MouseEventArgs e, int brushRadius)
         {
             switch (CURRENT_DRAWING_MODE)
             {
@@ -217,9 +240,13 @@ namespace RealmStudio
                     {
                         SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
 
-                        LandformPath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, 30);
-                        CoastPath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, 36);
-                        CoastPath2.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, 42);
+                        if (CURRENT_LANDFORM != null && CURRENT_MAP != null)
+                        {
+                            CURRENT_LANDFORM.DrawPath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
+                            //CURRENT_LANDFORM.ContourPath = DrawingMethods.GetContourPathFromPath(CURRENT_LANDFORM.DrawPath,
+                            //    CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight, out List<SKPoint> contourPoints);
+
+                        }
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -249,6 +276,41 @@ namespace RealmStudio
 
         #endregion
 
+        #region SKGLRenderControl Mouse Up Event Handling Methods (called from event handers)
+
+        private void LeftButtonMouseUpHandler(object sender, MouseEventArgs e)
+        {
+            switch (CURRENT_DRAWING_MODE)
+            {
+                case DrawingModeEnum.LandPaint:
+                    {
+                        SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
+
+                        if (CURRENT_LANDFORM != null && CURRENT_MAP != null)
+                        {
+                            CURRENT_LANDFORM.ContourPath = DrawingMethods.GetContourPathFromPath(CURRENT_LANDFORM.DrawPath,
+                                CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight, out List<SKPoint> contourPoints);
+
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+            }
+
+        }
+
+        private void RightButtonMouseUpHandler(object sender, MouseEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void NoButtonMouseUpHandler(object sender, MouseEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
         #region ScrollBar Event Handlers
         private void MapRenderVScroll_Scroll(object sender, ScrollEventArgs e)
@@ -279,4 +341,5 @@ namespace RealmStudio
 
         #endregion
     }
+
 }
