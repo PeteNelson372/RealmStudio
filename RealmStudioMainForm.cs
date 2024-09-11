@@ -1,5 +1,4 @@
 using SkiaSharp;
-using SkiaSharp.Components;
 using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
@@ -95,6 +94,74 @@ namespace RealmStudio
             }
         }
 
+        #region Main Menu Event Handlers
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void printToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void printPreviewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void themeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
+
         #endregion
 
         #region SKGLRenderControl Event Handlers
@@ -110,7 +177,7 @@ namespace RealmStudio
                     // if the surfaces haven't been created, create them
                     // TODO: for landform and land coastline,
                     // create multiple layers or create multiple surfaces in a single layer?
-                    layer.LayerSurface??= SKSurface.Create(SKGLRenderControl.GRContext, true, new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+                    layer.LayerSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, true, new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
                 }
 
 
@@ -137,7 +204,7 @@ namespace RealmStudio
                     landformLayer.LayerSurface?.Canvas.DrawPath(CURRENT_LANDFORM.DrawPath, LandformPaint);
 
                     e.Surface.Canvas.DrawSurface(landformLayer.LayerSurface, ScrollPoint);
-                }                
+                }
             }
 
         }
@@ -340,6 +407,9 @@ namespace RealmStudio
         }
 
         #endregion
+
+
+
     }
 
 }
