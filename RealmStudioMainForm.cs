@@ -75,6 +75,8 @@ namespace RealmStudio
 
         private void RealmStudioMainForm_Shown(object sender, EventArgs e)
         {
+            SKGLRenderControl.Invalidate();
+
             RealmConfiguration rcd = new();
             DialogResult result = rcd.ShowDialog();
 
@@ -187,23 +189,25 @@ namespace RealmStudio
                 // paint the SKGLRenderControl surface, compositing the surfaces from all of the layers
                 e.Surface.Canvas.Clear(SKColors.Black);
 
-                //LandSurface?.Canvas.DrawPath(LandformPath, LandformPaint);
-                //CoastSurface?.Canvas.DrawPath(CoastPath, CoastlinePaint);
-                //CoastSurface2?.Canvas.DrawPath(CoastPath2, CoastlinePaint2);
-
                 BackgroundSurface.Canvas.Clear(SKColors.White);
 
                 e.Surface.Canvas.DrawSurface(BackgroundSurface, ScrollPoint);
 
-                //e.Surface.Canvas.DrawSurface(CoastSurface2, ScrollPoint);
-                //e.Surface.Canvas.DrawSurface(CoastSurface, ScrollPoint);
+                MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
 
-                if (CURRENT_LANDFORM != null)
+                if (CURRENT_LANDFORM != null && landformLayer.LayerSurface != null)
                 {
-                    MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
-                    landformLayer.LayerSurface?.Canvas.DrawPath(CURRENT_LANDFORM.DrawPath, LandformPaint);
-
+                    CURRENT_LANDFORM.Render(landformLayer.LayerSurface.Canvas);
                     e.Surface.Canvas.DrawSurface(landformLayer.LayerSurface, ScrollPoint);
+                }
+
+                foreach (MapLayer ml in CURRENT_MAP.MapLayers)
+                {
+                    if (ml.LayerSurface != null)
+                    {
+                        ml.Render(ml.LayerSurface.Canvas);
+                        e.Surface.Canvas.DrawSurface(ml.LayerSurface, ScrollPoint);
+                    }
                 }
             }
 
@@ -310,9 +314,15 @@ namespace RealmStudio
                         if (CURRENT_LANDFORM != null && CURRENT_MAP != null)
                         {
                             CURRENT_LANDFORM.DrawPath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
-                            //CURRENT_LANDFORM.ContourPath = DrawingMethods.GetContourPathFromPath(CURRENT_LANDFORM.DrawPath,
-                            //    CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight, out List<SKPoint> contourPoints);
 
+                            CURRENT_LANDFORM.OuterPath1.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius + (LandformMethods.CoastlineEffectDistance / 8));
+                            CURRENT_LANDFORM.OuterPath2.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius + (2 * LandformMethods.CoastlineEffectDistance / 8));
+                            CURRENT_LANDFORM.OuterPath3.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius + (3 * LandformMethods.CoastlineEffectDistance / 8));
+                            CURRENT_LANDFORM.OuterPath4.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius + (4 * LandformMethods.CoastlineEffectDistance / 8));
+                            CURRENT_LANDFORM.OuterPath5.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius + (5 * LandformMethods.CoastlineEffectDistance / 8));
+                            CURRENT_LANDFORM.OuterPath6.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius + (6 * LandformMethods.CoastlineEffectDistance / 8));
+                            CURRENT_LANDFORM.OuterPath7.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius + (7 * LandformMethods.CoastlineEffectDistance / 8));
+                            CURRENT_LANDFORM.OuterPath8.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius + (8 * LandformMethods.CoastlineEffectDistance / 8));
                         }
 
                         SKGLRenderControl.Invalidate();
@@ -358,6 +368,8 @@ namespace RealmStudio
                             CURRENT_LANDFORM.ContourPath = DrawingMethods.GetContourPathFromPath(CURRENT_LANDFORM.DrawPath,
                                 CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight, out List<SKPoint> contourPoints);
 
+                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(CURRENT_LANDFORM);
+                            CURRENT_LANDFORM = null;
                         }
 
                         SKGLRenderControl.Invalidate();
