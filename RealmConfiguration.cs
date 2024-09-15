@@ -5,6 +5,8 @@
         public RealmStudioMap map = new();
         public float MapAspectRatio { get; set; } = 1.0F;
         public bool AspectRatioLocked = true;
+        private bool WidthChanging = false;
+        private bool HeightChanging = false;
 
         public RealmConfiguration()
         {
@@ -335,6 +337,50 @@
             var temp = WidthUpDown.Value;
             WidthUpDown.Value = HeightUpDown.Value;
             HeightUpDown.Value = temp;
+        }
+
+        private void WidthUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            if (!HeightChanging)
+            {
+                WidthChanging = true;
+                map.MapWidth = (int)WidthUpDown.Value;
+
+                if (AspectRatioLocked)
+                {
+                    HeightUpDown.Value = (decimal)(map.MapWidth / MapAspectRatio);
+                }
+
+                map.MapHeight = (int)HeightUpDown.Value;
+
+                CalculateAspectRatio();
+                WidthChanging = false;
+            }
+        }
+
+        private void HeightUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WidthChanging)
+            {
+                HeightChanging = true;
+                map.MapHeight = (int)HeightUpDown.Value;
+
+                if (AspectRatioLocked)
+                {
+                    WidthUpDown.Value = (decimal)(map.MapHeight * MapAspectRatio);
+                }
+
+                map.MapWidth = (int)WidthUpDown.Value;
+
+                CalculateAspectRatio();
+                HeightChanging = false;
+            }
+        }
+
+        private void OkayButton_Click(object sender, EventArgs e)
+        {
+            map.MapName = RealmNameTextBox.Text;
+            Close();
         }
     }
 }

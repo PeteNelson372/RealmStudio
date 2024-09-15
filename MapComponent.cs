@@ -35,7 +35,7 @@ namespace RealmStudio
 
         [XmlArray("MapLayerComponents")]
         //[XmlArrayItem("MapBitmap", Type = typeof(MapBitmap))]
-        //[XmlArrayItem("MapLandform", Type = typeof(MapLandformType2))]
+        [XmlArrayItem("Landform", Type = typeof(Landform))]
         //[XmlArrayItem("MapPaintedWaterFeature", Type = typeof(MapPaintedWaterFeature))]
         //[XmlArrayItem("MapPath", Type = typeof(MapPath))]
         //[XmlArrayItem("MapSymbol", Type = typeof(MapSymbol))]

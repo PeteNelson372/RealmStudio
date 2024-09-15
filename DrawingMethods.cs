@@ -29,8 +29,107 @@ namespace RealmStudio
 {
     internal class DrawingMethods
     {
+        public static bool IsPaintableImage(Bitmap bitmap)
+        {
+            bool isPaintableImage = true;
+
+            if (bitmap != null)
+            {
+                var lockedBitmap = new LockBitmap(bitmap);
+                lockedBitmap.LockBits();
+
+                for (int y = 0; y < lockedBitmap.Height; y++)
+                {
+                    for (int x = 0; x < lockedBitmap.Width; x++)
+                    {
+                        Color pixelColor = lockedBitmap.GetPixel(x, y);
+
+                        byte rValue = pixelColor.R;
+                        byte gValue = pixelColor.G;
+                        byte bValue = pixelColor.B;
+
+                        if (rValue > 64 && (gValue != 0 || bValue != 0))
+                        {
+                            continue;
+                        }
+                        else if (gValue > 64 && rValue == 0 && bValue == 0)
+                        {
+                            continue;
+                        }
+                        else if (bValue > 64 && rValue == 3 && gValue == 3)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            isPaintableImage = false;
+                            break;
+                        }
+                    }
+                }
+
+                lockedBitmap.UnlockBits();
+            }
+
+            return isPaintableImage;
+        }
+
+        public static bool IsGrayScaleImage(Bitmap bitmap)
+        {
+            bool IsGrayScaleImage = true;
+
+            if (bitmap != null)
+            {
+                var lockedBitmap = new LockBitmap(bitmap);
+                lockedBitmap.LockBits();
+
+                for (int y = 0; y < lockedBitmap.Height; y++)
+                {
+                    for (int x = 0; x < lockedBitmap.Width; x++)
+                    {
+                        Color pixelColor = lockedBitmap.GetPixel(x, y);
+
+                        if (pixelColor.R != pixelColor.G || pixelColor.G != pixelColor.B || pixelColor.R != pixelColor.B)
+                        {
+                            IsGrayScaleImage = false;
+                            break;
+                        }
+                    }
+                }
+
+                lockedBitmap.UnlockBits();
+            }
+
+            return IsGrayScaleImage;
+        }
+
+        internal static SKPath GetInnerOrOuterPath(List<SKPoint> pathPoints, float distance, ParallelEnum location)
+        {
+            List<SKPoint> newPoints = GetParallelPoints(pathPoints, distance, location);
+            SKPath newPath = new();
+
+            if (newPoints.Count > 0)
+            {
+                newPath.MoveTo(newPoints[0]);
+
+                for (int i = 1; i < newPoints.Count; i++)
+                {
+                    if (newPoints[i] != SKPoint.Empty)
+                    {
+                        newPath.LineTo(newPoints[i]);
+                    }
+                }
+
+                newPath.Close();
+            }
+
+            return newPath;
+        }
+
         internal static List<SKPoint> GetParallelPoints(List<SKPoint> points, double distance, ParallelEnum location)
         {
+            if (points.Count == 0) return points;
+
             PathD clipperPath = [];
 
             foreach (SKPoint point in points)

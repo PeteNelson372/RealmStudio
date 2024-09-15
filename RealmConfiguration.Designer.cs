@@ -146,6 +146,7 @@
             OkayButton.TabIndex = 21;
             OkayButton.Text = "O&K";
             OkayButton.UseVisualStyleBackColor = true;
+            OkayButton.Click += OkayButton_Click;
             // 
             // groupBox5
             // 
@@ -341,6 +342,7 @@
             WidthUpDown.TabIndex = 1;
             WidthUpDown.TextAlign = HorizontalAlignment.Center;
             WidthUpDown.Value = new decimal(new int[] { 1920, 0, 0, 0 });
+            WidthUpDown.ValueChanged += WidthUpDown_ValueChanged;
             // 
             // HeightUpDown
             // 
@@ -351,6 +353,7 @@
             HeightUpDown.TabIndex = 0;
             HeightUpDown.TextAlign = HorizontalAlignment.Center;
             HeightUpDown.Value = new decimal(new int[] { 1080, 0, 0, 0 });
+            HeightUpDown.ValueChanged += HeightUpDown_ValueChanged;
             // 
             // groupBox2
             // 
@@ -719,7 +722,6 @@
             // 
             // RealmConfiguration
             // 
-            AcceptButton = OkayButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = CancelConfigButton;

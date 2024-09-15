@@ -59,5 +59,24 @@ namespace RealmStudio.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to D:\The Brookmonte Group\Brookmonte Software\Map Creator\Assets.
+        /// </summary>
+        internal static string ASSET_DIRECTORY {
+            get {
+                return ResourceManager.GetString("ASSET_DIRECTORY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Eye_Dropper {
+            get {
+                object obj = ResourceManager.GetObject("Eye Dropper", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }
