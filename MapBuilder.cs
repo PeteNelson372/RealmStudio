@@ -67,21 +67,6 @@ namespace RealmStudio
             return map.MapLayers[index];
         }
 
-        public static MapLayer? GetMapLayerByName(RealmStudioMap map, string layerName)
-        {
-            if (map == null)
-            {
-                throw new ArgumentNullException(nameof(map), "map is null");
-            }
-
-            if (string.IsNullOrEmpty(layerName))
-            {
-                throw new ArgumentNullException(nameof(layerName), "layerName is null or empty");
-            }
-
-            return map.MapLayers.Find(x => x.MapLayerName == layerName);
-        }
-
         public static void ShowLayer(RealmStudioMap map, int layerIndex)
         {
             MapLayer l = GetMapLayerByIndex(map, layerIndex);
@@ -98,7 +83,7 @@ namespace RealmStudio
         {
             SKImageInfo imageInfo = new(width, height);
 
-            MapLayer ml = new(imageInfo)
+            MapLayer ml = new()
             {
                 MapLayerName = layerName,
                 MapLayerOrder = layerOrder,
@@ -249,6 +234,17 @@ namespace RealmStudio
 
             layer = ConstructMapLayer("work", (ushort)WORKLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
             map.MapLayers.Add(layer);
+        }
+
+        public static void DisposeMap(RealmStudioMap map)
+        {
+            if (map != null)
+            {
+                foreach (MapLayer ml in map.MapLayers)
+                {
+                    ml.LayerSurface?.Dispose();
+                }
+            }
         }
 
     }

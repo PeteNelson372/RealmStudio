@@ -134,7 +134,7 @@ namespace RealmStudio
                 {
                     // draw line around bitmap to show it is selected
                     SKRect selectRect = new(X, Y, X + Width, Y + Height);
-                    canvas.DrawRect(selectRect, SymbolMethods.MAPSYMBOL_SELECT_PAINT);
+                    canvas.DrawRect(selectRect, PaintObjects.MapSymbolSelectPaint);
                 }
             }
         }

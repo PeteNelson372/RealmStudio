@@ -28,6 +28,9 @@
         {
             if (WH1024x768Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 1024;
                 HeightUpDown.Value = 768;
 
@@ -35,6 +38,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -42,6 +47,9 @@
         {
             if (WH1280x720Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 1280;
                 HeightUpDown.Value = 720;
 
@@ -49,6 +57,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -56,6 +66,9 @@
         {
             if (WH1280x1024Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 1280;
                 HeightUpDown.Value = 1024;
 
@@ -63,6 +76,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -70,6 +85,9 @@
         {
             if (WH1600x1200Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 1600;
                 HeightUpDown.Value = 1200;
 
@@ -77,6 +95,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -84,6 +104,9 @@
         {
             if (WH1920x1080Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 1920;
                 HeightUpDown.Value = 1080;
 
@@ -91,6 +114,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -98,6 +123,9 @@
         {
             if (WH2560x1080Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 2560;
                 HeightUpDown.Value = 1080;
 
@@ -105,6 +133,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -112,6 +142,9 @@
         {
             if (WH2048x1024Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 2048;
                 HeightUpDown.Value = 1024;
 
@@ -119,6 +152,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -126,6 +161,9 @@
         {
             if (WH3840x2160Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 3840;
                 HeightUpDown.Value = 2160;
 
@@ -133,6 +171,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -140,6 +180,9 @@
         {
             if (WH4096x2048Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 4096;
                 HeightUpDown.Value = 2048;
 
@@ -147,6 +190,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -154,6 +199,9 @@
         {
             if (WH3300x2250Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 3300;
                 HeightUpDown.Value = 2250;
 
@@ -161,6 +209,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -168,6 +218,9 @@
         {
             if (WH1754x1240Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 1754;
                 HeightUpDown.Value = 1240;
 
@@ -175,6 +228,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -182,6 +237,9 @@
         {
             if (WH2840x1754Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 2840;
                 HeightUpDown.Value = 1754;
 
@@ -189,6 +247,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -196,6 +256,9 @@
         {
             if (WH3508x2480Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 3508;
                 HeightUpDown.Value = 2480;
 
@@ -203,6 +266,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -210,6 +275,9 @@
         {
             if (WH4960x3508Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 4960;
                 HeightUpDown.Value = 3508;
 
@@ -217,6 +285,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -224,6 +294,9 @@
         {
             if (WH7016x4960Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 7016;
                 HeightUpDown.Value = 4960;
 
@@ -231,6 +304,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 
@@ -238,6 +313,9 @@
         {
             if (WH7680x4320Radio.Checked)
             {
+                bool aspectLocked = AspectRatioLocked;
+                AspectRatioLocked = false;
+
                 WidthUpDown.Value = 7680;
                 HeightUpDown.Value = 4320;
 
@@ -245,6 +323,8 @@
                 map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
+
+                AspectRatioLocked = aspectLocked;
             }
         }
 

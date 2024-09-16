@@ -7,7 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <IncrementVersionOnBuild>1.yyyy.Mdd.Hmm</IncrementVersionOnBuild>
-    <Version>1.2024.915.144</Version>
+    <Version>1.2024.916.44</Version>
     <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>  

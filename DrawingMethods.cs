@@ -182,58 +182,38 @@ namespace RealmStudio
             using SKCanvas canvas = new(contourBitmap);
 
             canvas.Clear();
-
-            using SKPaint paint = new();
-            paint.Style = SKPaintStyle.Fill;
-            paint.IsAntialias = false;
-            paint.Color = SKColors.Black;
-            paint.StrokeWidth = 1;
-
-            canvas.DrawPath(path, paint);
+            canvas.DrawPath(path, PaintObjects.ContourPathPaint);
 
             // make sure the bitmap has a 2-pixel wide margin of empty pixels
             // so that the contour points can be found
-            using SKPath marginPath = new SKPath();
+            using SKPath marginPath = new();
             marginPath.MoveTo(1, 1);
             marginPath.LineTo(width - 1, 1);
             marginPath.LineTo(width - 1, height - 1);
             marginPath.LineTo(1, height - 1);
             marginPath.Close();
 
-            using SKPaint marginpaint = new();
-            marginpaint.Style = SKPaintStyle.Stroke;
-            marginpaint.IsAntialias = false;
-            marginpaint.Color = SKColors.White;
-            marginpaint.StrokeWidth = 2;
-
-            canvas.DrawPath(marginPath, marginpaint);
-
-            //Bitmap b = Extensions.ToBitmap(contourBitmap);
-            //b.Save("C:\\Users\\Pete Nelson\\OneDrive\\Desktop\\contour.bmp");
+            canvas.DrawPath(marginPath, PaintObjects.ContourMarginPaint);
 
             contourPoints = GetBitmapContourPoints(Extensions.ToBitmap(contourBitmap));
 
             SKPath contourPath = new();
 
-            if (contourPoints.Count > 1)
+            if (contourPoints.Count > 2)
             {
                 // the Moore-Neighbor algorithm sets the first (0th) pixel in the list of contour points to
                 // an empty pixel, so remove it before constructing the path from the contour points
                 contourPoints.RemoveAt(0);
 
-                if (contourPoints.Count > 0)
+                contourPath.MoveTo(contourPoints[0]);
+
+                for (int i = 1; i < contourPoints.Count; i++)
                 {
-                    contourPath.MoveTo(contourPoints[0]);
-
-                    for (int i = 1; i < contourPoints.Count; i++)
-                    {
-                        contourPath.LineTo(contourPoints[i]);
-                    }
-
-                    contourPath.Close();
+                    contourPath.LineTo(contourPoints[i]);
                 }
-            }
 
+                contourPath.Close();
+            }
 
             return contourPath;
         }
@@ -257,7 +237,6 @@ namespace RealmStudio
                 {
                     Program.LOGGER.Error(e);
                 }
-
             }
 
             return contourPoints;

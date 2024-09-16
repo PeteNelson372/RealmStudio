@@ -47,10 +47,6 @@ namespace RealmStudio
         [XmlIgnore]
         public bool ShowLayer { get; set; } = true;
 
-        public MapLayer(SKImageInfo imageInfo)
-        {
-        }
-
         public override void Render(SKCanvas canvas)
         {
             if (ShowLayer)
@@ -61,7 +57,7 @@ namespace RealmStudio
                     {
                         if (component.RenderComponent)
                         {
-                            canvas.DrawSurface(LayerSurface, 0, 0);
+                            component.Render(canvas);
                         }
                     }
                 }

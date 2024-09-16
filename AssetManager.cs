@@ -34,6 +34,9 @@ namespace RealmStudio
 
         public static MapTheme? CURRENT_THEME { get; set; } = null;
 
+        public static int SELECTED_LAND_TEXTURE_INDEX { get; set; } = 0;
+        public static int SELECTED_BACKGROUND_TEXTURE_INDEX { get; set; } = 0;
+
         public static readonly string DefaultSymbolDirectory = Resources.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols";
 
         private static readonly string SymbolTagsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";

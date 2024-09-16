@@ -4,20 +4,10 @@ namespace RealmStudio
 {
     internal class LandformMethods
     {
-        public static int LandformBrushSize { get; set; } = 64;
-
         public static SKPath LandformErasePath { get; set; } = new SKPath();
 
-        public static Color LandformOutlineColor { get; set; } = ColorTranslator.FromHtml("#3D3728");
-        public static int LandformOutlineWidth { get; set; } = 2;
-        public static GradientDirectionEnum ShorelineStyle { get; set; } = GradientDirectionEnum.None;
-        public static Color CoastlineColor { get; set; } = ColorTranslator.FromHtml("#BB9CC3B7");
-        public static int CoastlineEffectDistance { get; set; } = 16;
-        public static string CoastlineStyleName { get; set; } = "Dash Pattern";
-        public static string? CoastlineHatchPattern { get; set; } = string.Empty;
-        public static int CoastlineHatchOpacity { get; set; } = 0;
-        public static int CoastlineHatchScale { get; set; } = 0;
-        public static string? CoastlineHatchBlendMode { get; set; } = string.Empty;
+        public static int LandformBrushSize { get; set; } = 64;
+        public static int LandformEraserSize { get; set; } = 64;
 
         internal static void CreateInnerAndOuterPaths(RealmStudioMap map, Landform landform)
         {
@@ -28,7 +18,7 @@ namespace RealmStudio
 
             landform.ContourPoints = contourPoints;
 
-            int pathDistance = CoastlineEffectDistance / 8;
+            int pathDistance = landform.CoastlineEffectDistance / 8;
 
             landform.InnerPath1 = DrawingMethods.GetInnerOrOuterPath(contourPoints, pathDistance, ParallelEnum.Below);
             landform.InnerPath2 = DrawingMethods.GetInnerOrOuterPath(contourPoints, 2 * pathDistance, ParallelEnum.Below);
@@ -116,7 +106,7 @@ namespace RealmStudio
             }
         }
 
-        internal static bool MergeLandformPaths(SKPath landformPath2, ref SKPath landformPath1)
+        private static bool MergeLandformPaths(SKPath landformPath2, ref SKPath landformPath1)
         {
             // merge paths from two landforms; if the paths overlap, then landformPath1
             // is modified to include landformPath2 (landformPath1 becomes the union

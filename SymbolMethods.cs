@@ -13,16 +13,6 @@ namespace RealmStudio
 
         private static readonly List<Tuple<string, List<MapSymbol>>> TagSymbolAssociationList = [];
 
-        // the SKPaint object used to draw the box around the selected symbol
-        public static SKPaint MAPSYMBOL_SELECT_PAINT { get; set; } = new()
-        {
-            Style = SKPaintStyle.Stroke,
-            IsAntialias = true,
-            Color = SKColors.LawnGreen,
-            StrokeWidth = 1,
-            PathEffect = SKPathEffect.CreateDash([3F, 3F], 6F),
-        };
-
         public static void LoadSymbolTags()
         {
             SymbolTags.Clear();
