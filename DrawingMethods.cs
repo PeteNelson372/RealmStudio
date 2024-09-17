@@ -29,6 +29,49 @@ namespace RealmStudio
 {
     internal class DrawingMethods
     {
+        const float PI_OVER_180 = (float)Math.PI / 180F;
+        const float D180_OVER_PI = (float)((float)180.0F / Math.PI);
+
+
+        public static SKPoint[] GetPoints(uint quantity, SKPoint p1, SKPoint p2)
+        {
+            var points = new SKPoint[quantity];
+
+            double distance = DistanceBetween(p1, p2);
+
+            points[0] = p1;
+            points[quantity - 1] = p2;
+
+            double tdelta = distance / quantity;
+
+            for (int i = 1; i < quantity; i++)
+            {
+                //t = dt / d
+                //(xt, yt) = (((1 - t) * x0 + t * x1), ((1 - t) * y0 + t * y1))
+                double t = (i * tdelta) / distance;
+                points[i].X = (int)Math.Ceiling((1 - t) * p1.X + t * p2.X);
+                points[i].Y = (int)Math.Ceiling((1 - t) * p1.Y + t * p2.Y);
+            }
+
+            return points;
+        }
+
+        public static SKPoint PointOnCircle(float radius, float angleInDegrees, SKPoint origin)
+        {
+            float angleInRadians = angleInDegrees * PI_OVER_180;
+
+            // Convert from degrees to radians via multiplication by PI/180        
+            float x = (float)(radius * Math.Cos(angleInRadians)) + origin.X;
+            float y = (float)(radius * Math.Sin(angleInRadians)) + origin.Y;
+
+            return new SKPoint(x, y);
+        }
+
+        public static float DistanceBetween(SKPoint from, SKPoint to)
+        {
+            return SKPoint.Distance(from, to);
+        }
+
         public static bool IsPaintableImage(Bitmap bitmap)
         {
             bool isPaintableImage = true;

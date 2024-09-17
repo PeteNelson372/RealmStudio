@@ -30,16 +30,36 @@
         {
             TabPage OceanTab;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RealmStudioMainForm));
-            groupBox6 = new GroupBox();
-            label30 = new Label();
+            WindroseGroup = new GroupBox();
+            label36 = new Label();
+            WindroseFadeOutSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label35 = new Label();
+            WindroseInnerCircleTrack = new TrackBar();
+            label34 = new Label();
+            WindroseOuterRadiusUpDown = new NumericUpDown();
+            label33 = new Label();
+            WindroseInnerRadiusUpDown = new NumericUpDown();
             label31 = new Label();
-            iconButton1 = new FontAwesome.Sharp.IconButton();
-            iconButton2 = new FontAwesome.Sharp.IconButton();
+            WindroseLineWidthUpDown = new NumericUpDown();
+            label30 = new Label();
+            WindroseDirectionsUpDown = new NumericUpDown();
+            WindroseColorSelectButton = new FontAwesome.Sharp.IconButton();
+            OceanColorGroup = new GroupBox();
+            OceanColorSelectButton = new FontAwesome.Sharp.IconButton();
+            OceanTextureGroup = new GroupBox();
+            OceanTextureNameLabel = new Label();
+            PreviousOceanTextureButton = new FontAwesome.Sharp.IconButton();
+            NextOceanTextureButton = new FontAwesome.Sharp.IconButton();
             OceanTextureBox = new PictureBox();
             label32 = new Label();
             OceanTextureOpacityTrack = new TrackBar();
             OceanToolStrip = new ToolStrip();
-            iconToolStripButton1 = new FontAwesome.Sharp.IconToolStripButton();
+            OceanApplyTextureButton = new FontAwesome.Sharp.IconToolStripButton();
+            OceanRemoveTextureButton = new FontAwesome.Sharp.IconToolStripButton();
+            OceanColorFillButton = new FontAwesome.Sharp.IconToolStripButton();
+            OceanColorClearButton = new FontAwesome.Sharp.IconToolStripButton();
+            WindrosePlaceButton = new FontAwesome.Sharp.IconToolStripButton();
+            WindroseClearButton = new FontAwesome.Sharp.IconToolStripButton();
             ShowOceanLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label3 = new Label();
             MainTab = new TabControl();
@@ -86,28 +106,48 @@
             ShowLandLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label4 = new Label();
             WaterTab = new TabPage();
+            groupBox8 = new GroupBox();
+            label42 = new Label();
+            label43 = new Label();
+            WaterEraseSizeTrack = new TrackBar();
+            groupBox7 = new GroupBox();
+            label41 = new Label();
+            RiverSourceFadeInSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label40 = new Label();
+            RiverWidthTrack = new TrackBar();
+            groupBox6 = new GroupBox();
+            label38 = new Label();
+            ShorelineColorSelectionButton = new FontAwesome.Sharp.IconButton();
+            label37 = new Label();
+            WaterColorSelectionButton = new FontAwesome.Sharp.IconButton();
+            label39 = new Label();
+            WaterBrushSizeTrack = new TrackBar();
             WaterToolStrip = new ToolStrip();
-            iconToolStripButton2 = new FontAwesome.Sharp.IconToolStripButton();
+            WaterFeatureSelectButton = new FontAwesome.Sharp.IconToolStripButton();
+            WaterFeaturePaintButton = new FontAwesome.Sharp.IconToolStripButton();
+            WaterFeatureLakeButton = new FontAwesome.Sharp.IconToolStripButton();
+            WaterFeatureRiverButton = new FontAwesome.Sharp.IconToolStripButton();
+            WaterFeatureEraseButton = new FontAwesome.Sharp.IconToolStripButton();
             cyberSwitch1 = new ReaLTaiizor.Controls.CyberSwitch();
             label5 = new Label();
             PathTab = new TabPage();
             PathToolStrip = new ToolStrip();
-            iconToolStripButton3 = new FontAwesome.Sharp.IconToolStripButton();
+            PathSelectButton = new FontAwesome.Sharp.IconToolStripButton();
             cyberSwitch2 = new ReaLTaiizor.Controls.CyberSwitch();
             label6 = new Label();
             SymbolTab = new TabPage();
             SymbolToolStrip = new ToolStrip();
-            iconToolStripButton4 = new FontAwesome.Sharp.IconToolStripButton();
+            SymbolSelectButton = new FontAwesome.Sharp.IconToolStripButton();
             cyberSwitch3 = new ReaLTaiizor.Controls.CyberSwitch();
             label7 = new Label();
             LabelTab = new TabPage();
             LabelToolStrip = new ToolStrip();
-            iconToolStripButton5 = new FontAwesome.Sharp.IconToolStripButton();
+            LabelSelectButton = new FontAwesome.Sharp.IconToolStripButton();
             cyberSwitch4 = new ReaLTaiizor.Controls.CyberSwitch();
             label8 = new Label();
             OverlayTab = new TabPage();
             OverlayToolStrip = new ToolStrip();
-            iconToolStripButton6 = new FontAwesome.Sharp.IconToolStripButton();
+            ScaleButton = new FontAwesome.Sharp.IconToolStripButton();
             cyberSwitch5 = new ReaLTaiizor.Controls.CyberSwitch();
             label9 = new Label();
             RegionTab = new TabPage();
@@ -205,7 +245,14 @@
             BackgroundToolPanel = new Panel();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
-            groupBox6.SuspendLayout();
+            WindroseGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)WindroseInnerCircleTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WindroseOuterRadiusUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WindroseInnerRadiusUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WindroseLineWidthUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WindroseDirectionsUpDown).BeginInit();
+            OceanColorGroup.SuspendLayout();
+            OceanTextureGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)OceanTextureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanTextureOpacityTrack).BeginInit();
             OceanToolStrip.SuspendLayout();
@@ -226,6 +273,12 @@
             ((System.ComponentModel.ISupportInitialize)LandformTexturePreviewPicture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LandBrushSizeTrack).BeginInit();
             WaterTab.SuspendLayout();
+            groupBox8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)WaterEraseSizeTrack).BeginInit();
+            groupBox7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)RiverWidthTrack).BeginInit();
+            groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)WaterBrushSizeTrack).BeginInit();
             WaterToolStrip.SuspendLayout();
             PathTab.SuspendLayout();
             PathToolStrip.SuspendLayout();
@@ -260,7 +313,9 @@
             // OceanTab
             // 
             OceanTab.BackColor = SystemColors.Control;
-            OceanTab.Controls.Add(groupBox6);
+            OceanTab.Controls.Add(WindroseGroup);
+            OceanTab.Controls.Add(OceanColorGroup);
+            OceanTab.Controls.Add(OceanTextureGroup);
             OceanTab.Controls.Add(OceanToolStrip);
             OceanTab.Controls.Add(ShowOceanLayerSwitch);
             OceanTab.Controls.Add(label3);
@@ -272,79 +327,297 @@
             OceanTab.TabIndex = 1;
             OceanTab.Text = "Ocean";
             // 
-            // groupBox6
+            // WindroseGroup
             // 
-            groupBox6.BackColor = Color.Transparent;
-            groupBox6.Controls.Add(label30);
-            groupBox6.Controls.Add(label31);
-            groupBox6.Controls.Add(iconButton1);
-            groupBox6.Controls.Add(iconButton2);
-            groupBox6.Controls.Add(OceanTextureBox);
-            groupBox6.Controls.Add(label32);
-            groupBox6.Controls.Add(OceanTextureOpacityTrack);
-            groupBox6.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox6.ForeColor = SystemColors.ControlText;
-            groupBox6.Location = new Point(6, 32);
-            groupBox6.Name = "groupBox6";
-            groupBox6.Size = new Size(148, 270);
-            groupBox6.TabIndex = 18;
-            groupBox6.TabStop = false;
-            groupBox6.Text = "Texture";
+            WindroseGroup.BackColor = Color.Transparent;
+            WindroseGroup.Controls.Add(label36);
+            WindroseGroup.Controls.Add(WindroseFadeOutSwitch);
+            WindroseGroup.Controls.Add(label35);
+            WindroseGroup.Controls.Add(WindroseInnerCircleTrack);
+            WindroseGroup.Controls.Add(label34);
+            WindroseGroup.Controls.Add(WindroseOuterRadiusUpDown);
+            WindroseGroup.Controls.Add(label33);
+            WindroseGroup.Controls.Add(WindroseInnerRadiusUpDown);
+            WindroseGroup.Controls.Add(label31);
+            WindroseGroup.Controls.Add(WindroseLineWidthUpDown);
+            WindroseGroup.Controls.Add(label30);
+            WindroseGroup.Controls.Add(WindroseDirectionsUpDown);
+            WindroseGroup.Controls.Add(WindroseColorSelectButton);
+            WindroseGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            WindroseGroup.ForeColor = SystemColors.ControlText;
+            WindroseGroup.Location = new Point(6, 442);
+            WindroseGroup.Name = "WindroseGroup";
+            WindroseGroup.Size = new Size(148, 281);
+            WindroseGroup.TabIndex = 21;
+            WindroseGroup.TabStop = false;
+            WindroseGroup.Text = "Wind Rose";
             // 
-            // label30
+            // label36
             // 
-            label30.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label30.Location = new Point(6, 180);
-            label30.Name = "label30";
-            label30.Size = new Size(136, 15);
-            label30.TabIndex = 24;
-            label30.TextAlign = ContentAlignment.MiddleCenter;
+            label36.AutoSize = true;
+            label36.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label36.Location = new Point(27, 248);
+            label36.Name = "label36";
+            label36.Size = new Size(55, 15);
+            label36.TabIndex = 33;
+            label36.Text = "Fade Out";
+            // 
+            // WindroseFadeOutSwitch
+            // 
+            WindroseFadeOutSwitch.Alpha = 50;
+            WindroseFadeOutSwitch.BackColor = Color.Transparent;
+            WindroseFadeOutSwitch.Background = true;
+            WindroseFadeOutSwitch.Background_WidthPen = 2F;
+            WindroseFadeOutSwitch.BackgroundPen = false;
+            WindroseFadeOutSwitch.Checked = false;
+            WindroseFadeOutSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            WindroseFadeOutSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            WindroseFadeOutSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            WindroseFadeOutSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            WindroseFadeOutSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            WindroseFadeOutSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            WindroseFadeOutSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            WindroseFadeOutSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            WindroseFadeOutSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            WindroseFadeOutSwitch.ColorValue = Color.ForestGreen;
+            WindroseFadeOutSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            WindroseFadeOutSwitch.Font = new Font("Arial", 11F);
+            WindroseFadeOutSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            WindroseFadeOutSwitch.Lighting = true;
+            WindroseFadeOutSwitch.LinearGradient_Background = false;
+            WindroseFadeOutSwitch.LinearGradient_Value = false;
+            WindroseFadeOutSwitch.LinearGradientPen = false;
+            WindroseFadeOutSwitch.Location = new Point(88, 243);
+            WindroseFadeOutSwitch.Name = "WindroseFadeOutSwitch";
+            WindroseFadeOutSwitch.PenWidth = 10;
+            WindroseFadeOutSwitch.RGB = false;
+            WindroseFadeOutSwitch.Rounding = true;
+            WindroseFadeOutSwitch.RoundingInt = 90;
+            WindroseFadeOutSwitch.Size = new Size(35, 20);
+            WindroseFadeOutSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            WindroseFadeOutSwitch.TabIndex = 32;
+            WindroseFadeOutSwitch.Tag = "Cyber";
+            WindroseFadeOutSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            WindroseFadeOutSwitch.Timer_RGB = 300;
+            WindroseFadeOutSwitch.CheckedChanged += WindroseFadeOutSwitch_CheckedChanged;
+            // 
+            // label35
+            // 
+            label35.AutoSize = true;
+            label35.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label35.Location = new Point(10, 217);
+            label35.Name = "label35";
+            label35.Size = new Size(72, 15);
+            label35.TabIndex = 31;
+            label35.Text = "Inner Circles";
+            // 
+            // WindroseInnerCircleTrack
+            // 
+            WindroseInnerCircleTrack.AutoSize = false;
+            WindroseInnerCircleTrack.BackColor = SystemColors.Control;
+            WindroseInnerCircleTrack.Location = new Point(88, 217);
+            WindroseInnerCircleTrack.Maximum = 2;
+            WindroseInnerCircleTrack.Name = "WindroseInnerCircleTrack";
+            WindroseInnerCircleTrack.Size = new Size(54, 20);
+            WindroseInnerCircleTrack.TabIndex = 30;
+            WindroseInnerCircleTrack.ValueChanged += WindroseInnerCircleTrack_ValueChanged;
+            // 
+            // label34
+            // 
+            label34.AutoSize = true;
+            label34.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label34.Location = new Point(10, 190);
+            label34.Name = "label34";
+            label34.Size = new Size(75, 15);
+            label34.TabIndex = 29;
+            label34.Text = "Outer Radius";
+            // 
+            // WindroseOuterRadiusUpDown
+            // 
+            WindroseOuterRadiusUpDown.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            WindroseOuterRadiusUpDown.Location = new Point(88, 188);
+            WindroseOuterRadiusUpDown.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+            WindroseOuterRadiusUpDown.Name = "WindroseOuterRadiusUpDown";
+            WindroseOuterRadiusUpDown.Size = new Size(54, 23);
+            WindroseOuterRadiusUpDown.TabIndex = 28;
+            WindroseOuterRadiusUpDown.TextAlign = HorizontalAlignment.Center;
+            WindroseOuterRadiusUpDown.Value = new decimal(new int[] { 1000, 0, 0, 0 });
+            WindroseOuterRadiusUpDown.VisibleChanged += WindroseOuterRadiusUpDown_VisibleChanged;
+            // 
+            // label33
+            // 
+            label33.AutoSize = true;
+            label33.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label33.Location = new Point(10, 161);
+            label33.Name = "label33";
+            label33.Size = new Size(72, 15);
+            label33.TabIndex = 27;
+            label33.Text = "Inner Radius";
+            // 
+            // WindroseInnerRadiusUpDown
+            // 
+            WindroseInnerRadiusUpDown.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            WindroseInnerRadiusUpDown.Location = new Point(88, 159);
+            WindroseInnerRadiusUpDown.Maximum = new decimal(new int[] { 1024, 0, 0, 0 });
+            WindroseInnerRadiusUpDown.Name = "WindroseInnerRadiusUpDown";
+            WindroseInnerRadiusUpDown.Size = new Size(54, 23);
+            WindroseInnerRadiusUpDown.TabIndex = 26;
+            WindroseInnerRadiusUpDown.TextAlign = HorizontalAlignment.Center;
+            WindroseInnerRadiusUpDown.ValueChanged += WindroseInnerRadiusUpDown_ValueChanged;
             // 
             // label31
             // 
             label31.AutoSize = true;
-            label31.BackColor = Color.Transparent;
             label31.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label31.ForeColor = SystemColors.ControlDarkDark;
-            label31.Location = new Point(6, 23);
+            label31.Location = new Point(18, 132);
             label31.Name = "label31";
-            label31.Size = new Size(45, 15);
-            label31.TabIndex = 23;
-            label31.Text = "Texture";
+            label31.Size = new Size(64, 15);
+            label31.TabIndex = 25;
+            label31.Text = "Line Width";
             // 
-            // iconButton1
+            // WindroseLineWidthUpDown
             // 
-            iconButton1.FlatStyle = FlatStyle.Flat;
-            iconButton1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconButton1.IconChar = FontAwesome.Sharp.IconChar.AngleLeft;
-            iconButton1.IconColor = Color.Black;
-            iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton1.IconSize = 24;
-            iconButton1.Location = new Point(6, 153);
-            iconButton1.Name = "iconButton1";
-            iconButton1.Size = new Size(24, 24);
-            iconButton1.TabIndex = 22;
-            iconButton1.TextImageRelation = TextImageRelation.TextBeforeImage;
-            iconButton1.UseVisualStyleBackColor = true;
+            WindroseLineWidthUpDown.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            WindroseLineWidthUpDown.Location = new Point(88, 130);
+            WindroseLineWidthUpDown.Maximum = new decimal(new int[] { 16, 0, 0, 0 });
+            WindroseLineWidthUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            WindroseLineWidthUpDown.Name = "WindroseLineWidthUpDown";
+            WindroseLineWidthUpDown.Size = new Size(54, 23);
+            WindroseLineWidthUpDown.TabIndex = 24;
+            WindroseLineWidthUpDown.TextAlign = HorizontalAlignment.Center;
+            WindroseLineWidthUpDown.Value = new decimal(new int[] { 2, 0, 0, 0 });
+            WindroseLineWidthUpDown.ValueChanged += WindroseLineWidthUpDOwn_ValueChanged;
             // 
-            // iconButton2
+            // label30
             // 
-            iconButton2.FlatStyle = FlatStyle.Flat;
-            iconButton2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconButton2.IconChar = FontAwesome.Sharp.IconChar.AngleRight;
-            iconButton2.IconColor = Color.Black;
-            iconButton2.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton2.IconSize = 24;
-            iconButton2.Location = new Point(118, 153);
-            iconButton2.Name = "iconButton2";
-            iconButton2.Size = new Size(24, 24);
-            iconButton2.TabIndex = 21;
-            iconButton2.TextImageRelation = TextImageRelation.TextBeforeImage;
-            iconButton2.UseVisualStyleBackColor = true;
+            label30.AutoSize = true;
+            label30.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label30.Location = new Point(22, 103);
+            label30.Name = "label30";
+            label30.Size = new Size(60, 15);
+            label30.TabIndex = 23;
+            label30.Text = "Directions";
+            // 
+            // WindroseDirectionsUpDown
+            // 
+            WindroseDirectionsUpDown.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            WindroseDirectionsUpDown.Location = new Point(88, 101);
+            WindroseDirectionsUpDown.Maximum = new decimal(new int[] { 32, 0, 0, 0 });
+            WindroseDirectionsUpDown.Minimum = new decimal(new int[] { 4, 0, 0, 0 });
+            WindroseDirectionsUpDown.Name = "WindroseDirectionsUpDown";
+            WindroseDirectionsUpDown.Size = new Size(54, 23);
+            WindroseDirectionsUpDown.TabIndex = 22;
+            WindroseDirectionsUpDown.TextAlign = HorizontalAlignment.Center;
+            WindroseDirectionsUpDown.Value = new decimal(new int[] { 16, 0, 0, 0 });
+            WindroseDirectionsUpDown.ValueChanged += WindroseDirectionsUpDown_ValueChanged;
+            // 
+            // WindroseColorSelectButton
+            // 
+            WindroseColorSelectButton.BackColor = Color.FromArgb(127, 61, 55, 40);
+            WindroseColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WindroseColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            WindroseColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            WindroseColorSelectButton.IconColor = Color.Tan;
+            WindroseColorSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            WindroseColorSelectButton.Location = new Point(6, 26);
+            WindroseColorSelectButton.Name = "WindroseColorSelectButton";
+            WindroseColorSelectButton.Size = new Size(136, 60);
+            WindroseColorSelectButton.TabIndex = 21;
+            WindroseColorSelectButton.Text = "Click to Select";
+            WindroseColorSelectButton.UseVisualStyleBackColor = false;
+            WindroseColorSelectButton.Click += WindroseColorSelectButton_Click;
+            // 
+            // OceanColorGroup
+            // 
+            OceanColorGroup.BackColor = Color.Transparent;
+            OceanColorGroup.Controls.Add(OceanColorSelectButton);
+            OceanColorGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            OceanColorGroup.ForeColor = SystemColors.ControlText;
+            OceanColorGroup.Location = new Point(6, 317);
+            OceanColorGroup.Name = "OceanColorGroup";
+            OceanColorGroup.Size = new Size(148, 103);
+            OceanColorGroup.TabIndex = 20;
+            OceanColorGroup.TabStop = false;
+            OceanColorGroup.Text = "Color";
+            // 
+            // OceanColorSelectButton
+            // 
+            OceanColorSelectButton.BackColor = SystemColors.ControlLight;
+            OceanColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            OceanColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            OceanColorSelectButton.IconColor = Color.Tan;
+            OceanColorSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            OceanColorSelectButton.Location = new Point(6, 26);
+            OceanColorSelectButton.Name = "OceanColorSelectButton";
+            OceanColorSelectButton.Size = new Size(136, 60);
+            OceanColorSelectButton.TabIndex = 21;
+            OceanColorSelectButton.Text = "Click to Select";
+            OceanColorSelectButton.UseVisualStyleBackColor = false;
+            OceanColorSelectButton.Click += OceanColorSelectButton_Click;
+            // 
+            // OceanTextureGroup
+            // 
+            OceanTextureGroup.BackColor = Color.Transparent;
+            OceanTextureGroup.Controls.Add(OceanTextureNameLabel);
+            OceanTextureGroup.Controls.Add(PreviousOceanTextureButton);
+            OceanTextureGroup.Controls.Add(NextOceanTextureButton);
+            OceanTextureGroup.Controls.Add(OceanTextureBox);
+            OceanTextureGroup.Controls.Add(label32);
+            OceanTextureGroup.Controls.Add(OceanTextureOpacityTrack);
+            OceanTextureGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            OceanTextureGroup.ForeColor = SystemColors.ControlText;
+            OceanTextureGroup.Location = new Point(6, 32);
+            OceanTextureGroup.Name = "OceanTextureGroup";
+            OceanTextureGroup.Size = new Size(148, 270);
+            OceanTextureGroup.TabIndex = 18;
+            OceanTextureGroup.TabStop = false;
+            OceanTextureGroup.Text = "Texture";
+            // 
+            // OceanTextureNameLabel
+            // 
+            OceanTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanTextureNameLabel.Location = new Point(6, 180);
+            OceanTextureNameLabel.Name = "OceanTextureNameLabel";
+            OceanTextureNameLabel.Size = new Size(136, 15);
+            OceanTextureNameLabel.TabIndex = 24;
+            OceanTextureNameLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // PreviousOceanTextureButton
+            // 
+            PreviousOceanTextureButton.FlatStyle = FlatStyle.Flat;
+            PreviousOceanTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            PreviousOceanTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleLeft;
+            PreviousOceanTextureButton.IconColor = Color.Black;
+            PreviousOceanTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PreviousOceanTextureButton.IconSize = 24;
+            PreviousOceanTextureButton.Location = new Point(6, 151);
+            PreviousOceanTextureButton.Name = "PreviousOceanTextureButton";
+            PreviousOceanTextureButton.Size = new Size(24, 24);
+            PreviousOceanTextureButton.TabIndex = 22;
+            PreviousOceanTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
+            PreviousOceanTextureButton.UseVisualStyleBackColor = true;
+            PreviousOceanTextureButton.Click += PreviousOceanTextureButton_Click;
+            // 
+            // NextOceanTextureButton
+            // 
+            NextOceanTextureButton.FlatStyle = FlatStyle.Flat;
+            NextOceanTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NextOceanTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleRight;
+            NextOceanTextureButton.IconColor = Color.Black;
+            NextOceanTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            NextOceanTextureButton.IconSize = 24;
+            NextOceanTextureButton.Location = new Point(118, 151);
+            NextOceanTextureButton.Name = "NextOceanTextureButton";
+            NextOceanTextureButton.Size = new Size(24, 24);
+            NextOceanTextureButton.TabIndex = 21;
+            NextOceanTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
+            NextOceanTextureButton.UseVisualStyleBackColor = true;
+            NextOceanTextureButton.Click += NextOceanTextureButton_Click;
             // 
             // OceanTextureBox
             // 
-            OceanTextureBox.Location = new Point(6, 41);
+            OceanTextureBox.Location = new Point(6, 39);
             OceanTextureBox.Name = "OceanTextureBox";
             OceanTextureBox.Size = new Size(136, 136);
             OceanTextureBox.TabIndex = 20;
@@ -367,13 +640,13 @@
             OceanTextureOpacityTrack.AutoSize = false;
             OceanTextureOpacityTrack.BackColor = SystemColors.Control;
             OceanTextureOpacityTrack.Location = new Point(6, 229);
-            OceanTextureOpacityTrack.Maximum = 512;
-            OceanTextureOpacityTrack.Minimum = 4;
+            OceanTextureOpacityTrack.Maximum = 100;
             OceanTextureOpacityTrack.Name = "OceanTextureOpacityTrack";
             OceanTextureOpacityTrack.Size = new Size(136, 20);
             OceanTextureOpacityTrack.TabIndex = 0;
             OceanTextureOpacityTrack.TickStyle = TickStyle.None;
-            OceanTextureOpacityTrack.Value = 64;
+            OceanTextureOpacityTrack.Value = 100;
+            OceanTextureOpacityTrack.ValueChanged += OceanTextureOpacityTrack_ValueChanged;
             // 
             // OceanToolStrip
             // 
@@ -382,8 +655,9 @@
             OceanToolStrip.AutoSize = false;
             OceanToolStrip.BackColor = SystemColors.Control;
             OceanToolStrip.Dock = DockStyle.None;
+            OceanToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             OceanToolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            OceanToolStrip.Items.AddRange(new ToolStripItem[] { iconToolStripButton1 });
+            OceanToolStrip.Items.AddRange(new ToolStripItem[] { OceanApplyTextureButton, OceanRemoveTextureButton, OceanColorFillButton, OceanColorClearButton, WindrosePlaceButton, WindroseClearButton });
             OceanToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
             OceanToolStrip.Location = new Point(158, 0);
             OceanToolStrip.Name = "OceanToolStrip";
@@ -391,22 +665,111 @@
             OceanToolStrip.TabIndex = 15;
             OceanToolStrip.Text = "LandformTools";
             // 
-            // iconToolStripButton1
+            // OceanApplyTextureButton
             // 
-            iconToolStripButton1.AutoSize = false;
-            iconToolStripButton1.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconToolStripButton1.ForeColor = SystemColors.ControlDarkDark;
-            iconToolStripButton1.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
-            iconToolStripButton1.IconColor = Color.Black;
-            iconToolStripButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconToolStripButton1.IconSize = 24;
-            iconToolStripButton1.ImageScaling = ToolStripItemImageScaling.None;
-            iconToolStripButton1.ImageTransparentColor = Color.Magenta;
-            iconToolStripButton1.Margin = new Padding(0, 25, 0, 2);
-            iconToolStripButton1.Name = "iconToolStripButton1";
-            iconToolStripButton1.Size = new Size(60, 60);
-            iconToolStripButton1.Text = "Select";
-            iconToolStripButton1.TextImageRelation = TextImageRelation.TextAboveImage;
+            OceanApplyTextureButton.AutoSize = false;
+            OceanApplyTextureButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanApplyTextureButton.ForeColor = SystemColors.ControlDarkDark;
+            OceanApplyTextureButton.IconChar = FontAwesome.Sharp.IconChar.PaintRoller;
+            OceanApplyTextureButton.IconColor = Color.Black;
+            OceanApplyTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            OceanApplyTextureButton.IconSize = 24;
+            OceanApplyTextureButton.ImageScaling = ToolStripItemImageScaling.None;
+            OceanApplyTextureButton.ImageTransparentColor = Color.Magenta;
+            OceanApplyTextureButton.Margin = new Padding(0, 25, 0, 2);
+            OceanApplyTextureButton.Name = "OceanApplyTextureButton";
+            OceanApplyTextureButton.Size = new Size(60, 60);
+            OceanApplyTextureButton.Text = "Apply";
+            OceanApplyTextureButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            OceanApplyTextureButton.ToolTipText = "Apply Texture";
+            OceanApplyTextureButton.Click += OceanApplyTextureButton_Click;
+            // 
+            // OceanRemoveTextureButton
+            // 
+            OceanRemoveTextureButton.AutoSize = false;
+            OceanRemoveTextureButton.ForeColor = SystemColors.ControlDarkDark;
+            OceanRemoveTextureButton.IconChar = FontAwesome.Sharp.IconChar.SquareMinus;
+            OceanRemoveTextureButton.IconColor = Color.Black;
+            OceanRemoveTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            OceanRemoveTextureButton.IconSize = 24;
+            OceanRemoveTextureButton.ImageScaling = ToolStripItemImageScaling.None;
+            OceanRemoveTextureButton.ImageTransparentColor = Color.Magenta;
+            OceanRemoveTextureButton.Margin = new Padding(0, 25, 0, 2);
+            OceanRemoveTextureButton.Name = "OceanRemoveTextureButton";
+            OceanRemoveTextureButton.Size = new Size(60, 60);
+            OceanRemoveTextureButton.Text = "Remove";
+            OceanRemoveTextureButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            OceanRemoveTextureButton.ToolTipText = "Remove Texture";
+            OceanRemoveTextureButton.Click += OceanRemoveTextureButton_Click;
+            // 
+            // OceanColorFillButton
+            // 
+            OceanColorFillButton.AutoSize = false;
+            OceanColorFillButton.ForeColor = SystemColors.ControlDarkDark;
+            OceanColorFillButton.IconChar = FontAwesome.Sharp.IconChar.FillDrip;
+            OceanColorFillButton.IconColor = Color.Black;
+            OceanColorFillButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            OceanColorFillButton.IconSize = 24;
+            OceanColorFillButton.ImageScaling = ToolStripItemImageScaling.None;
+            OceanColorFillButton.ImageTransparentColor = Color.Magenta;
+            OceanColorFillButton.Margin = new Padding(0, 120, 0, 2);
+            OceanColorFillButton.Name = "OceanColorFillButton";
+            OceanColorFillButton.Size = new Size(60, 60);
+            OceanColorFillButton.Text = "Fill";
+            OceanColorFillButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            OceanColorFillButton.Click += OceanColorFillButton_Click;
+            // 
+            // OceanColorClearButton
+            // 
+            OceanColorClearButton.AutoSize = false;
+            OceanColorClearButton.ForeColor = SystemColors.ControlDarkDark;
+            OceanColorClearButton.IconChar = FontAwesome.Sharp.IconChar.Square;
+            OceanColorClearButton.IconColor = Color.Black;
+            OceanColorClearButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            OceanColorClearButton.IconSize = 24;
+            OceanColorClearButton.ImageScaling = ToolStripItemImageScaling.None;
+            OceanColorClearButton.ImageTransparentColor = Color.Magenta;
+            OceanColorClearButton.Margin = new Padding(0, 25, 0, 2);
+            OceanColorClearButton.Name = "OceanColorClearButton";
+            OceanColorClearButton.Size = new Size(60, 60);
+            OceanColorClearButton.Text = "Clear";
+            OceanColorClearButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            OceanColorClearButton.Click += OceanColorClearButton_Click;
+            // 
+            // WindrosePlaceButton
+            // 
+            WindrosePlaceButton.AutoSize = false;
+            WindrosePlaceButton.ForeColor = SystemColors.ControlDarkDark;
+            WindrosePlaceButton.IconChar = FontAwesome.Sharp.IconChar.Compass;
+            WindrosePlaceButton.IconColor = Color.Black;
+            WindrosePlaceButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            WindrosePlaceButton.IconSize = 28;
+            WindrosePlaceButton.ImageScaling = ToolStripItemImageScaling.None;
+            WindrosePlaceButton.ImageTransparentColor = Color.Magenta;
+            WindrosePlaceButton.Margin = new Padding(0, 40, 0, 2);
+            WindrosePlaceButton.Name = "WindrosePlaceButton";
+            WindrosePlaceButton.Size = new Size(60, 60);
+            WindrosePlaceButton.Text = "Windrose";
+            WindrosePlaceButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            WindrosePlaceButton.Click += WindrosePlaceButton_Click;
+            // 
+            // WindroseClearButton
+            // 
+            WindroseClearButton.AutoSize = false;
+            WindroseClearButton.ForeColor = SystemColors.ControlDarkDark;
+            WindroseClearButton.IconChar = FontAwesome.Sharp.IconChar.XmarkCircle;
+            WindroseClearButton.IconColor = Color.Black;
+            WindroseClearButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            WindroseClearButton.IconSize = 28;
+            WindroseClearButton.ImageScaling = ToolStripItemImageScaling.None;
+            WindroseClearButton.ImageTransparentColor = Color.Magenta;
+            WindroseClearButton.Margin = new Padding(0, 25, 0, 2);
+            WindroseClearButton.Name = "WindroseClearButton";
+            WindroseClearButton.Size = new Size(60, 60);
+            WindroseClearButton.Text = "Remove";
+            WindroseClearButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            WindroseClearButton.ToolTipText = "Remove all Wind Roses";
+            WindroseClearButton.Click += WindroseClearButton_Click;
             // 
             // ShowOceanLayerSwitch
             // 
@@ -627,6 +990,7 @@
             BackgroundToolStrip.AutoSize = false;
             BackgroundToolStrip.BackColor = SystemColors.Control;
             BackgroundToolStrip.Dock = DockStyle.None;
+            BackgroundToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             BackgroundToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             BackgroundToolStrip.Items.AddRange(new ToolStripItem[] { FillBackgroundButton, ClearBackgroundButton });
             BackgroundToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
@@ -744,6 +1108,7 @@
             LandToolStrip.AutoSize = false;
             LandToolStrip.BackColor = SystemColors.Control;
             LandToolStrip.Dock = DockStyle.None;
+            LandToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             LandToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             LandToolStrip.Items.AddRange(new ToolStripItem[] { LandformSelectButton, LandformPaintButton, LandformEraseButton });
             LandToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
@@ -901,7 +1266,6 @@
             CoastlineStyleList.Name = "CoastlineStyleList";
             CoastlineStyleList.Size = new Size(136, 139);
             CoastlineStyleList.TabIndex = 23;
-            CoastlineStyleList.SelectedIndexChanged += CoastlineStyleList_SelectedIndexChanged;
             // 
             // CoastlineColorSelectionButton
             // 
@@ -1119,6 +1483,9 @@
             // WaterTab
             // 
             WaterTab.BackColor = SystemColors.Control;
+            WaterTab.Controls.Add(groupBox8);
+            WaterTab.Controls.Add(groupBox7);
+            WaterTab.Controls.Add(groupBox6);
             WaterTab.Controls.Add(WaterToolStrip);
             WaterTab.Controls.Add(cyberSwitch1);
             WaterTab.Controls.Add(label5);
@@ -1128,6 +1495,244 @@
             WaterTab.TabIndex = 3;
             WaterTab.Text = "Water";
             // 
+            // groupBox8
+            // 
+            groupBox8.Controls.Add(label42);
+            groupBox8.Controls.Add(label43);
+            groupBox8.Controls.Add(WaterEraseSizeTrack);
+            groupBox8.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox8.Location = new Point(12, 435);
+            groupBox8.Name = "groupBox8";
+            groupBox8.Size = new Size(148, 82);
+            groupBox8.TabIndex = 20;
+            groupBox8.TabStop = false;
+            groupBox8.Text = "Eraser";
+            // 
+            // label42
+            // 
+            label42.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label42.Location = new Point(6, 397);
+            label42.Name = "label42";
+            label42.Size = new Size(136, 15);
+            label42.TabIndex = 29;
+            label42.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // label43
+            // 
+            label43.AutoSize = true;
+            label43.BackColor = Color.Transparent;
+            label43.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label43.ForeColor = SystemColors.ControlDarkDark;
+            label43.Location = new Point(6, 27);
+            label43.Name = "label43";
+            label43.Size = new Size(27, 15);
+            label43.TabIndex = 21;
+            label43.Text = "Size";
+            // 
+            // WaterEraseSizeTrack
+            // 
+            WaterEraseSizeTrack.AutoSize = false;
+            WaterEraseSizeTrack.BackColor = SystemColors.Control;
+            WaterEraseSizeTrack.Location = new Point(6, 45);
+            WaterEraseSizeTrack.Maximum = 256;
+            WaterEraseSizeTrack.Minimum = 4;
+            WaterEraseSizeTrack.Name = "WaterEraseSizeTrack";
+            WaterEraseSizeTrack.Size = new Size(136, 20);
+            WaterEraseSizeTrack.TabIndex = 20;
+            WaterEraseSizeTrack.TickStyle = TickStyle.None;
+            WaterEraseSizeTrack.Value = 20;
+            WaterEraseSizeTrack.ValueChanged += WaterEraseSizeTrack_ValueChanged;
+            // 
+            // groupBox7
+            // 
+            groupBox7.Controls.Add(label41);
+            groupBox7.Controls.Add(RiverSourceFadeInSwitch);
+            groupBox7.Controls.Add(label40);
+            groupBox7.Controls.Add(RiverWidthTrack);
+            groupBox7.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox7.Location = new Point(6, 305);
+            groupBox7.Name = "groupBox7";
+            groupBox7.Size = new Size(148, 111);
+            groupBox7.TabIndex = 19;
+            groupBox7.TabStop = false;
+            groupBox7.Text = "River";
+            // 
+            // label41
+            // 
+            label41.AutoSize = true;
+            label41.BackColor = Color.Transparent;
+            label41.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label41.ForeColor = SystemColors.ControlDarkDark;
+            label41.Location = new Point(12, 73);
+            label41.Name = "label41";
+            label41.Size = new Size(86, 15);
+            label41.TabIndex = 22;
+            label41.Text = "Source Fade-In";
+            // 
+            // RiverSourceFadeInSwitch
+            // 
+            RiverSourceFadeInSwitch.Alpha = 50;
+            RiverSourceFadeInSwitch.BackColor = Color.Transparent;
+            RiverSourceFadeInSwitch.Background = true;
+            RiverSourceFadeInSwitch.Background_WidthPen = 2F;
+            RiverSourceFadeInSwitch.BackgroundPen = false;
+            RiverSourceFadeInSwitch.Checked = true;
+            RiverSourceFadeInSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            RiverSourceFadeInSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            RiverSourceFadeInSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            RiverSourceFadeInSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            RiverSourceFadeInSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            RiverSourceFadeInSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            RiverSourceFadeInSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            RiverSourceFadeInSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            RiverSourceFadeInSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            RiverSourceFadeInSwitch.ColorValue = Color.ForestGreen;
+            RiverSourceFadeInSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            RiverSourceFadeInSwitch.Font = new Font("Arial", 11F);
+            RiverSourceFadeInSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            RiverSourceFadeInSwitch.Lighting = true;
+            RiverSourceFadeInSwitch.LinearGradient_Background = false;
+            RiverSourceFadeInSwitch.LinearGradient_Value = false;
+            RiverSourceFadeInSwitch.LinearGradientPen = false;
+            RiverSourceFadeInSwitch.Location = new Point(101, 70);
+            RiverSourceFadeInSwitch.Name = "RiverSourceFadeInSwitch";
+            RiverSourceFadeInSwitch.PenWidth = 10;
+            RiverSourceFadeInSwitch.RGB = false;
+            RiverSourceFadeInSwitch.Rounding = true;
+            RiverSourceFadeInSwitch.RoundingInt = 90;
+            RiverSourceFadeInSwitch.Size = new Size(41, 20);
+            RiverSourceFadeInSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            RiverSourceFadeInSwitch.TabIndex = 21;
+            RiverSourceFadeInSwitch.Tag = "Cyber";
+            RiverSourceFadeInSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            RiverSourceFadeInSwitch.Timer_RGB = 300;
+            // 
+            // label40
+            // 
+            label40.AutoSize = true;
+            label40.BackColor = Color.Transparent;
+            label40.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label40.ForeColor = SystemColors.ControlDarkDark;
+            label40.Location = new Point(6, 26);
+            label40.Name = "label40";
+            label40.Size = new Size(39, 15);
+            label40.TabIndex = 20;
+            label40.Text = "Width";
+            // 
+            // RiverWidthTrack
+            // 
+            RiverWidthTrack.AutoSize = false;
+            RiverWidthTrack.BackColor = SystemColors.Control;
+            RiverWidthTrack.Location = new Point(6, 44);
+            RiverWidthTrack.Maximum = 16;
+            RiverWidthTrack.Minimum = 2;
+            RiverWidthTrack.Name = "RiverWidthTrack";
+            RiverWidthTrack.Size = new Size(136, 20);
+            RiverWidthTrack.TabIndex = 19;
+            RiverWidthTrack.TickStyle = TickStyle.None;
+            RiverWidthTrack.Value = 4;
+            RiverWidthTrack.ValueChanged += RiverWidthTrack_ValueChanged;
+            // 
+            // groupBox6
+            // 
+            groupBox6.BackColor = Color.Transparent;
+            groupBox6.Controls.Add(label38);
+            groupBox6.Controls.Add(ShorelineColorSelectionButton);
+            groupBox6.Controls.Add(label37);
+            groupBox6.Controls.Add(WaterColorSelectionButton);
+            groupBox6.Controls.Add(label39);
+            groupBox6.Controls.Add(WaterBrushSizeTrack);
+            groupBox6.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox6.ForeColor = SystemColors.ControlText;
+            groupBox6.Location = new Point(6, 32);
+            groupBox6.Name = "groupBox6";
+            groupBox6.Size = new Size(148, 257);
+            groupBox6.TabIndex = 18;
+            groupBox6.TabStop = false;
+            groupBox6.Text = "Water";
+            // 
+            // label38
+            // 
+            label38.AutoSize = true;
+            label38.BackColor = Color.Transparent;
+            label38.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label38.ForeColor = SystemColors.ControlDarkDark;
+            label38.Location = new Point(6, 165);
+            label38.Name = "label38";
+            label38.Size = new Size(88, 15);
+            label38.TabIndex = 22;
+            label38.Text = "Shoreline Color";
+            // 
+            // ShorelineColorSelectionButton
+            // 
+            ShorelineColorSelectionButton.BackColor = Color.FromArgb(161, 144, 118);
+            ShorelineColorSelectionButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ShorelineColorSelectionButton.ForeColor = SystemColors.HighlightText;
+            ShorelineColorSelectionButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            ShorelineColorSelectionButton.IconColor = Color.Tan;
+            ShorelineColorSelectionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ShorelineColorSelectionButton.Location = new Point(6, 183);
+            ShorelineColorSelectionButton.Name = "ShorelineColorSelectionButton";
+            ShorelineColorSelectionButton.Size = new Size(136, 60);
+            ShorelineColorSelectionButton.TabIndex = 21;
+            ShorelineColorSelectionButton.Text = "Click to Select";
+            ShorelineColorSelectionButton.UseVisualStyleBackColor = false;
+            ShorelineColorSelectionButton.Click += ShorelineColorSelectionButton_Click;
+            // 
+            // label37
+            // 
+            label37.AutoSize = true;
+            label37.BackColor = Color.Transparent;
+            label37.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label37.ForeColor = SystemColors.ControlDarkDark;
+            label37.Location = new Point(6, 72);
+            label37.Name = "label37";
+            label37.Size = new Size(70, 15);
+            label37.TabIndex = 20;
+            label37.Text = "Water Color";
+            // 
+            // WaterColorSelectionButton
+            // 
+            WaterColorSelectionButton.BackColor = Color.FromArgb(101, 140, 191, 197);
+            WaterColorSelectionButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterColorSelectionButton.ForeColor = SystemColors.HighlightText;
+            WaterColorSelectionButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            WaterColorSelectionButton.IconColor = Color.Tan;
+            WaterColorSelectionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            WaterColorSelectionButton.Location = new Point(6, 90);
+            WaterColorSelectionButton.Name = "WaterColorSelectionButton";
+            WaterColorSelectionButton.Size = new Size(136, 60);
+            WaterColorSelectionButton.TabIndex = 19;
+            WaterColorSelectionButton.Text = "Click to Select";
+            WaterColorSelectionButton.UseVisualStyleBackColor = false;
+            WaterColorSelectionButton.Click += WaterColorSelectionButton_Click;
+            // 
+            // label39
+            // 
+            label39.AutoSize = true;
+            label39.BackColor = Color.Transparent;
+            label39.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label39.ForeColor = SystemColors.ControlDarkDark;
+            label39.Location = new Point(6, 23);
+            label39.Name = "label39";
+            label39.Size = new Size(60, 15);
+            label39.TabIndex = 18;
+            label39.Text = "Brush Size";
+            // 
+            // WaterBrushSizeTrack
+            // 
+            WaterBrushSizeTrack.AutoSize = false;
+            WaterBrushSizeTrack.BackColor = SystemColors.Control;
+            WaterBrushSizeTrack.Location = new Point(6, 41);
+            WaterBrushSizeTrack.Maximum = 256;
+            WaterBrushSizeTrack.Minimum = 4;
+            WaterBrushSizeTrack.Name = "WaterBrushSizeTrack";
+            WaterBrushSizeTrack.Size = new Size(136, 20);
+            WaterBrushSizeTrack.TabIndex = 0;
+            WaterBrushSizeTrack.TickStyle = TickStyle.None;
+            WaterBrushSizeTrack.Value = 20;
+            WaterBrushSizeTrack.ValueChanged += WaterBrushSizeTrack_ValueChanged;
+            // 
             // WaterToolStrip
             // 
             WaterToolStrip.AllowMerge = false;
@@ -1135,8 +1740,9 @@
             WaterToolStrip.AutoSize = false;
             WaterToolStrip.BackColor = SystemColors.Control;
             WaterToolStrip.Dock = DockStyle.None;
+            WaterToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             WaterToolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            WaterToolStrip.Items.AddRange(new ToolStripItem[] { iconToolStripButton2 });
+            WaterToolStrip.Items.AddRange(new ToolStripItem[] { WaterFeatureSelectButton, WaterFeaturePaintButton, WaterFeatureLakeButton, WaterFeatureRiverButton, WaterFeatureEraseButton });
             WaterToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
             WaterToolStrip.Location = new Point(158, 0);
             WaterToolStrip.Name = "WaterToolStrip";
@@ -1144,22 +1750,91 @@
             WaterToolStrip.TabIndex = 16;
             WaterToolStrip.Text = "LandformTools";
             // 
-            // iconToolStripButton2
+            // WaterFeatureSelectButton
             // 
-            iconToolStripButton2.AutoSize = false;
-            iconToolStripButton2.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconToolStripButton2.ForeColor = SystemColors.ControlDarkDark;
-            iconToolStripButton2.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
-            iconToolStripButton2.IconColor = Color.Black;
-            iconToolStripButton2.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconToolStripButton2.IconSize = 24;
-            iconToolStripButton2.ImageScaling = ToolStripItemImageScaling.None;
-            iconToolStripButton2.ImageTransparentColor = Color.Magenta;
-            iconToolStripButton2.Margin = new Padding(0, 25, 0, 2);
-            iconToolStripButton2.Name = "iconToolStripButton2";
-            iconToolStripButton2.Size = new Size(60, 60);
-            iconToolStripButton2.Text = "Select";
-            iconToolStripButton2.TextImageRelation = TextImageRelation.TextAboveImage;
+            WaterFeatureSelectButton.AutoSize = false;
+            WaterFeatureSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterFeatureSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            WaterFeatureSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
+            WaterFeatureSelectButton.IconColor = Color.Black;
+            WaterFeatureSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            WaterFeatureSelectButton.IconSize = 24;
+            WaterFeatureSelectButton.ImageScaling = ToolStripItemImageScaling.None;
+            WaterFeatureSelectButton.ImageTransparentColor = Color.Magenta;
+            WaterFeatureSelectButton.Margin = new Padding(0, 25, 0, 2);
+            WaterFeatureSelectButton.Name = "WaterFeatureSelectButton";
+            WaterFeatureSelectButton.Size = new Size(60, 60);
+            WaterFeatureSelectButton.Text = "Select";
+            WaterFeatureSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            WaterFeatureSelectButton.Click += WaterFeatureSelectButton_Click;
+            // 
+            // WaterFeaturePaintButton
+            // 
+            WaterFeaturePaintButton.AutoSize = false;
+            WaterFeaturePaintButton.ForeColor = SystemColors.ControlDarkDark;
+            WaterFeaturePaintButton.IconChar = FontAwesome.Sharp.IconChar.Paintbrush;
+            WaterFeaturePaintButton.IconColor = Color.Black;
+            WaterFeaturePaintButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            WaterFeaturePaintButton.IconSize = 24;
+            WaterFeaturePaintButton.ImageScaling = ToolStripItemImageScaling.None;
+            WaterFeaturePaintButton.ImageTransparentColor = Color.Magenta;
+            WaterFeaturePaintButton.Margin = new Padding(0, 25, 0, 2);
+            WaterFeaturePaintButton.Name = "WaterFeaturePaintButton";
+            WaterFeaturePaintButton.Size = new Size(60, 60);
+            WaterFeaturePaintButton.Text = "Paint";
+            WaterFeaturePaintButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            WaterFeaturePaintButton.Click += WaterFeaturePaintButton_Click;
+            // 
+            // WaterFeatureLakeButton
+            // 
+            WaterFeatureLakeButton.AutoSize = false;
+            WaterFeatureLakeButton.ForeColor = SystemColors.ControlDarkDark;
+            WaterFeatureLakeButton.IconChar = FontAwesome.Sharp.IconChar.Splotch;
+            WaterFeatureLakeButton.IconColor = Color.Black;
+            WaterFeatureLakeButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            WaterFeatureLakeButton.IconSize = 24;
+            WaterFeatureLakeButton.ImageScaling = ToolStripItemImageScaling.None;
+            WaterFeatureLakeButton.ImageTransparentColor = Color.Magenta;
+            WaterFeatureLakeButton.Margin = new Padding(0, 25, 0, 2);
+            WaterFeatureLakeButton.Name = "WaterFeatureLakeButton";
+            WaterFeatureLakeButton.Size = new Size(60, 60);
+            WaterFeatureLakeButton.Text = "Lake";
+            WaterFeatureLakeButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            WaterFeatureLakeButton.Click += WaterFeatureLakeButton_Click;
+            // 
+            // WaterFeatureRiverButton
+            // 
+            WaterFeatureRiverButton.AutoSize = false;
+            WaterFeatureRiverButton.ForeColor = SystemColors.ControlDarkDark;
+            WaterFeatureRiverButton.IconChar = FontAwesome.Sharp.IconChar.Stream;
+            WaterFeatureRiverButton.IconColor = Color.Black;
+            WaterFeatureRiverButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            WaterFeatureRiverButton.IconSize = 24;
+            WaterFeatureRiverButton.ImageScaling = ToolStripItemImageScaling.None;
+            WaterFeatureRiverButton.ImageTransparentColor = Color.Magenta;
+            WaterFeatureRiverButton.Margin = new Padding(0, 25, 0, 2);
+            WaterFeatureRiverButton.Name = "WaterFeatureRiverButton";
+            WaterFeatureRiverButton.Size = new Size(60, 60);
+            WaterFeatureRiverButton.Text = "River";
+            WaterFeatureRiverButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            WaterFeatureRiverButton.Click += WaterFeatureRiverButton_Click;
+            // 
+            // WaterFeatureEraseButton
+            // 
+            WaterFeatureEraseButton.AutoSize = false;
+            WaterFeatureEraseButton.ForeColor = SystemColors.ControlDarkDark;
+            WaterFeatureEraseButton.IconChar = FontAwesome.Sharp.IconChar.Eraser;
+            WaterFeatureEraseButton.IconColor = Color.Black;
+            WaterFeatureEraseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            WaterFeatureEraseButton.IconSize = 24;
+            WaterFeatureEraseButton.ImageScaling = ToolStripItemImageScaling.None;
+            WaterFeatureEraseButton.ImageTransparentColor = Color.Magenta;
+            WaterFeatureEraseButton.Margin = new Padding(0, 25, 0, 2);
+            WaterFeatureEraseButton.Name = "WaterFeatureEraseButton";
+            WaterFeatureEraseButton.Size = new Size(60, 60);
+            WaterFeatureEraseButton.Text = "Erase";
+            WaterFeatureEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            WaterFeatureEraseButton.Click += WaterFeatureEraseButton_Click;
             // 
             // cyberSwitch1
             // 
@@ -1229,8 +1904,9 @@
             PathToolStrip.AutoSize = false;
             PathToolStrip.BackColor = SystemColors.Control;
             PathToolStrip.Dock = DockStyle.None;
+            PathToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             PathToolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            PathToolStrip.Items.AddRange(new ToolStripItem[] { iconToolStripButton3 });
+            PathToolStrip.Items.AddRange(new ToolStripItem[] { PathSelectButton });
             PathToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
             PathToolStrip.Location = new Point(158, 0);
             PathToolStrip.Name = "PathToolStrip";
@@ -1238,22 +1914,22 @@
             PathToolStrip.TabIndex = 17;
             PathToolStrip.Text = "LandformTools";
             // 
-            // iconToolStripButton3
+            // PathSelectButton
             // 
-            iconToolStripButton3.AutoSize = false;
-            iconToolStripButton3.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconToolStripButton3.ForeColor = SystemColors.ControlDarkDark;
-            iconToolStripButton3.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
-            iconToolStripButton3.IconColor = Color.Black;
-            iconToolStripButton3.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconToolStripButton3.IconSize = 24;
-            iconToolStripButton3.ImageScaling = ToolStripItemImageScaling.None;
-            iconToolStripButton3.ImageTransparentColor = Color.Magenta;
-            iconToolStripButton3.Margin = new Padding(0, 25, 0, 2);
-            iconToolStripButton3.Name = "iconToolStripButton3";
-            iconToolStripButton3.Size = new Size(60, 60);
-            iconToolStripButton3.Text = "Select";
-            iconToolStripButton3.TextImageRelation = TextImageRelation.TextAboveImage;
+            PathSelectButton.AutoSize = false;
+            PathSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            PathSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            PathSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
+            PathSelectButton.IconColor = Color.Black;
+            PathSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PathSelectButton.IconSize = 24;
+            PathSelectButton.ImageScaling = ToolStripItemImageScaling.None;
+            PathSelectButton.ImageTransparentColor = Color.Magenta;
+            PathSelectButton.Margin = new Padding(0, 25, 0, 2);
+            PathSelectButton.Name = "PathSelectButton";
+            PathSelectButton.Size = new Size(60, 60);
+            PathSelectButton.Text = "Select";
+            PathSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
             // 
             // cyberSwitch2
             // 
@@ -1323,8 +1999,9 @@
             SymbolToolStrip.AutoSize = false;
             SymbolToolStrip.BackColor = SystemColors.Control;
             SymbolToolStrip.Dock = DockStyle.None;
+            SymbolToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             SymbolToolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            SymbolToolStrip.Items.AddRange(new ToolStripItem[] { iconToolStripButton4 });
+            SymbolToolStrip.Items.AddRange(new ToolStripItem[] { SymbolSelectButton });
             SymbolToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
             SymbolToolStrip.Location = new Point(158, 0);
             SymbolToolStrip.Name = "SymbolToolStrip";
@@ -1332,22 +2009,22 @@
             SymbolToolStrip.TabIndex = 19;
             SymbolToolStrip.Text = "LandformTools";
             // 
-            // iconToolStripButton4
+            // SymbolSelectButton
             // 
-            iconToolStripButton4.AutoSize = false;
-            iconToolStripButton4.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconToolStripButton4.ForeColor = SystemColors.ControlDarkDark;
-            iconToolStripButton4.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
-            iconToolStripButton4.IconColor = Color.Black;
-            iconToolStripButton4.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconToolStripButton4.IconSize = 24;
-            iconToolStripButton4.ImageScaling = ToolStripItemImageScaling.None;
-            iconToolStripButton4.ImageTransparentColor = Color.Magenta;
-            iconToolStripButton4.Margin = new Padding(0, 25, 0, 2);
-            iconToolStripButton4.Name = "iconToolStripButton4";
-            iconToolStripButton4.Size = new Size(60, 60);
-            iconToolStripButton4.Text = "Select";
-            iconToolStripButton4.TextImageRelation = TextImageRelation.TextAboveImage;
+            SymbolSelectButton.AutoSize = false;
+            SymbolSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            SymbolSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
+            SymbolSelectButton.IconColor = Color.Black;
+            SymbolSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SymbolSelectButton.IconSize = 24;
+            SymbolSelectButton.ImageScaling = ToolStripItemImageScaling.None;
+            SymbolSelectButton.ImageTransparentColor = Color.Magenta;
+            SymbolSelectButton.Margin = new Padding(0, 25, 0, 2);
+            SymbolSelectButton.Name = "SymbolSelectButton";
+            SymbolSelectButton.Size = new Size(60, 60);
+            SymbolSelectButton.Text = "Select";
+            SymbolSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
             // 
             // cyberSwitch3
             // 
@@ -1417,8 +2094,9 @@
             LabelToolStrip.AutoSize = false;
             LabelToolStrip.BackColor = SystemColors.Control;
             LabelToolStrip.Dock = DockStyle.None;
+            LabelToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             LabelToolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            LabelToolStrip.Items.AddRange(new ToolStripItem[] { iconToolStripButton5 });
+            LabelToolStrip.Items.AddRange(new ToolStripItem[] { LabelSelectButton });
             LabelToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
             LabelToolStrip.Location = new Point(158, 0);
             LabelToolStrip.Name = "LabelToolStrip";
@@ -1426,22 +2104,22 @@
             LabelToolStrip.TabIndex = 21;
             LabelToolStrip.Text = "LandformTools";
             // 
-            // iconToolStripButton5
+            // LabelSelectButton
             // 
-            iconToolStripButton5.AutoSize = false;
-            iconToolStripButton5.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconToolStripButton5.ForeColor = SystemColors.ControlDarkDark;
-            iconToolStripButton5.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
-            iconToolStripButton5.IconColor = Color.Black;
-            iconToolStripButton5.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconToolStripButton5.IconSize = 24;
-            iconToolStripButton5.ImageScaling = ToolStripItemImageScaling.None;
-            iconToolStripButton5.ImageTransparentColor = Color.Magenta;
-            iconToolStripButton5.Margin = new Padding(0, 25, 0, 2);
-            iconToolStripButton5.Name = "iconToolStripButton5";
-            iconToolStripButton5.Size = new Size(60, 60);
-            iconToolStripButton5.Text = "Select";
-            iconToolStripButton5.TextImageRelation = TextImageRelation.TextAboveImage;
+            LabelSelectButton.AutoSize = false;
+            LabelSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LabelSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            LabelSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
+            LabelSelectButton.IconColor = Color.Black;
+            LabelSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LabelSelectButton.IconSize = 24;
+            LabelSelectButton.ImageScaling = ToolStripItemImageScaling.None;
+            LabelSelectButton.ImageTransparentColor = Color.Magenta;
+            LabelSelectButton.Margin = new Padding(0, 25, 0, 2);
+            LabelSelectButton.Name = "LabelSelectButton";
+            LabelSelectButton.Size = new Size(60, 60);
+            LabelSelectButton.Text = "Select";
+            LabelSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
             // 
             // cyberSwitch4
             // 
@@ -1511,8 +2189,9 @@
             OverlayToolStrip.AutoSize = false;
             OverlayToolStrip.BackColor = SystemColors.Control;
             OverlayToolStrip.Dock = DockStyle.None;
+            OverlayToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             OverlayToolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            OverlayToolStrip.Items.AddRange(new ToolStripItem[] { iconToolStripButton6 });
+            OverlayToolStrip.Items.AddRange(new ToolStripItem[] { ScaleButton });
             OverlayToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
             OverlayToolStrip.Location = new Point(158, 0);
             OverlayToolStrip.Name = "OverlayToolStrip";
@@ -1520,22 +2199,22 @@
             OverlayToolStrip.TabIndex = 21;
             OverlayToolStrip.Text = "LandformTools";
             // 
-            // iconToolStripButton6
+            // ScaleButton
             // 
-            iconToolStripButton6.AutoSize = false;
-            iconToolStripButton6.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconToolStripButton6.ForeColor = SystemColors.ControlDarkDark;
-            iconToolStripButton6.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
-            iconToolStripButton6.IconColor = Color.Black;
-            iconToolStripButton6.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconToolStripButton6.IconSize = 24;
-            iconToolStripButton6.ImageScaling = ToolStripItemImageScaling.None;
-            iconToolStripButton6.ImageTransparentColor = Color.Magenta;
-            iconToolStripButton6.Margin = new Padding(0, 25, 0, 2);
-            iconToolStripButton6.Name = "iconToolStripButton6";
-            iconToolStripButton6.Size = new Size(60, 60);
-            iconToolStripButton6.Text = "Select";
-            iconToolStripButton6.TextImageRelation = TextImageRelation.TextAboveImage;
+            ScaleButton.AutoSize = false;
+            ScaleButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ScaleButton.ForeColor = SystemColors.ControlDarkDark;
+            ScaleButton.IconChar = FontAwesome.Sharp.IconChar.RulerHorizontal;
+            ScaleButton.IconColor = Color.Black;
+            ScaleButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ScaleButton.IconSize = 32;
+            ScaleButton.ImageScaling = ToolStripItemImageScaling.None;
+            ScaleButton.ImageTransparentColor = Color.Magenta;
+            ScaleButton.Margin = new Padding(0, 25, 0, 2);
+            ScaleButton.Name = "ScaleButton";
+            ScaleButton.Size = new Size(60, 60);
+            ScaleButton.Text = "Scale";
+            ScaleButton.TextImageRelation = TextImageRelation.TextAboveImage;
             // 
             // cyberSwitch5
             // 
@@ -1605,6 +2284,7 @@
             RegionToolStrip.AutoSize = false;
             RegionToolStrip.BackColor = SystemColors.Control;
             RegionToolStrip.Dock = DockStyle.None;
+            RegionToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             RegionToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             RegionToolStrip.Items.AddRange(new ToolStripItem[] { iconToolStripButton7 });
             RegionToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
@@ -1699,6 +2379,7 @@
             DrawingToolStrip.AutoSize = false;
             DrawingToolStrip.BackColor = SystemColors.Control;
             DrawingToolStrip.Dock = DockStyle.None;
+            DrawingToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             DrawingToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             DrawingToolStrip.Items.AddRange(new ToolStripItem[] { iconToolStripButton8 });
             DrawingToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
@@ -2677,8 +3358,16 @@
             Shown += RealmStudioMainForm_Shown;
             OceanTab.ResumeLayout(false);
             OceanTab.PerformLayout();
-            groupBox6.ResumeLayout(false);
-            groupBox6.PerformLayout();
+            WindroseGroup.ResumeLayout(false);
+            WindroseGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)WindroseInnerCircleTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WindroseOuterRadiusUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WindroseInnerRadiusUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WindroseLineWidthUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WindroseDirectionsUpDown).EndInit();
+            OceanColorGroup.ResumeLayout(false);
+            OceanTextureGroup.ResumeLayout(false);
+            OceanTextureGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)OceanTextureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)OceanTextureOpacityTrack).EndInit();
             OceanToolStrip.ResumeLayout(false);
@@ -2709,6 +3398,15 @@
             ((System.ComponentModel.ISupportInitialize)LandBrushSizeTrack).EndInit();
             WaterTab.ResumeLayout(false);
             WaterTab.PerformLayout();
+            groupBox8.ResumeLayout(false);
+            groupBox8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)WaterEraseSizeTrack).EndInit();
+            groupBox7.ResumeLayout(false);
+            groupBox7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)RiverWidthTrack).EndInit();
+            groupBox6.ResumeLayout(false);
+            groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)WaterBrushSizeTrack).EndInit();
             WaterToolStrip.ResumeLayout(false);
             WaterToolStrip.PerformLayout();
             PathTab.ResumeLayout(false);
@@ -2888,22 +3586,20 @@
         private Label label20;
         private Panel OceanToolPanel;
         private Label label18;
-        private ToolStrip OceanToolStrip;
-        private FontAwesome.Sharp.IconToolStripButton iconToolStripButton1;
         private ToolStrip LandToolStrip;
         private FontAwesome.Sharp.IconToolStripButton LandformSelectButton;
         private FontAwesome.Sharp.IconToolStripButton LandformPaintButton;
         private FontAwesome.Sharp.IconToolStripButton LandformEraseButton;
         private ToolStrip WaterToolStrip;
-        private FontAwesome.Sharp.IconToolStripButton iconToolStripButton2;
+        private FontAwesome.Sharp.IconToolStripButton WaterFeatureSelectButton;
         private ToolStrip PathToolStrip;
-        private FontAwesome.Sharp.IconToolStripButton iconToolStripButton3;
+        private FontAwesome.Sharp.IconToolStripButton PathSelectButton;
         private ToolStrip SymbolToolStrip;
-        private FontAwesome.Sharp.IconToolStripButton iconToolStripButton4;
+        private FontAwesome.Sharp.IconToolStripButton SymbolSelectButton;
         private ToolStrip LabelToolStrip;
-        private FontAwesome.Sharp.IconToolStripButton iconToolStripButton5;
+        private FontAwesome.Sharp.IconToolStripButton LabelSelectButton;
         private ToolStrip OverlayToolStrip;
-        private FontAwesome.Sharp.IconToolStripButton iconToolStripButton6;
+        private FontAwesome.Sharp.IconToolStripButton ScaleButton;
         private ToolStrip RegionToolStrip;
         private FontAwesome.Sharp.IconToolStripButton iconToolStripButton7;
         private ToolStrip DrawingToolStrip;
@@ -2914,7 +3610,7 @@
         private FontAwesome.Sharp.IconButton NextBackgroundTextureButton;
         private PictureBox pictureBox2;
         private FontAwesome.Sharp.IconButton iconButton3;
-        private TrackBar trackBar1;
+        private TrackBar WindroseInnerCircleTrack;
         private ToolStrip BackgroundToolStrip;
         private FontAwesome.Sharp.IconToolStripButton FillBackgroundButton;
         private Label label12;
@@ -2938,13 +3634,54 @@
         private Label label27;
         private TrackBar VignetteStrengthTrack;
         private FontAwesome.Sharp.IconButton VignetteColorSelectionButton;
-        private GroupBox groupBox6;
-        private Label label30;
+        private GroupBox OceanTextureGroup;
+        private Label OceanTextureNameLabel;
         private Label label31;
-        private FontAwesome.Sharp.IconButton iconButton1;
-        private FontAwesome.Sharp.IconButton iconButton2;
+        private FontAwesome.Sharp.IconButton PreviousOceanTextureButton;
+        private FontAwesome.Sharp.IconButton NextOceanTextureButton;
         private PictureBox OceanTextureBox;
         private Label label32;
         private TrackBar OceanTextureOpacityTrack;
+        private ToolStrip OceanToolStrip;
+        private FontAwesome.Sharp.IconToolStripButton OceanApplyTextureButton;
+        private FontAwesome.Sharp.IconToolStripButton OceanRemoveTextureButton;
+        private GroupBox OceanColorGroup;
+        private FontAwesome.Sharp.IconButton OceanColorSelectButton;
+        private FontAwesome.Sharp.IconToolStripButton OceanColorFillButton;
+        private FontAwesome.Sharp.IconToolStripButton OceanColorClearButton;
+        private GroupBox WindroseGroup;
+        private FontAwesome.Sharp.IconButton WindroseColorSelectButton;
+        private FontAwesome.Sharp.IconToolStripButton WindrosePlaceButton;
+        private NumericUpDown WindroseLineWidthUpDown;
+        private Label label30;
+        private NumericUpDown WindroseDirectionsUpDown;
+        private Label label35;
+        private Label label34;
+        private NumericUpDown WindroseOuterRadiusUpDown;
+        private Label label33;
+        private NumericUpDown WindroseInnerRadiusUpDown;
+        private Label label36;
+        private ReaLTaiizor.Controls.CyberSwitch WindroseFadeOutSwitch;
+        private FontAwesome.Sharp.IconToolStripButton WindroseClearButton;
+        private GroupBox groupBox6;
+        private Label label38;
+        private FontAwesome.Sharp.IconButton ShorelineColorSelectionButton;
+        private Label label37;
+        private FontAwesome.Sharp.IconButton WaterColorSelectionButton;
+        private Label label39;
+        private TrackBar WaterBrushSizeTrack;
+        private FontAwesome.Sharp.IconToolStripButton WaterFeaturePaintButton;
+        private FontAwesome.Sharp.IconToolStripButton WaterFeatureLakeButton;
+        private FontAwesome.Sharp.IconToolStripButton WaterFeatureRiverButton;
+        private FontAwesome.Sharp.IconToolStripButton WaterFeatureEraseButton;
+        private GroupBox groupBox8;
+        private Label label42;
+        private Label label43;
+        private TrackBar WaterEraseSizeTrack;
+        private GroupBox groupBox7;
+        private Label label41;
+        private ReaLTaiizor.Controls.CyberSwitch RiverSourceFadeInSwitch;
+        private Label label40;
+        private TrackBar RiverWidthTrack;
     }
 }

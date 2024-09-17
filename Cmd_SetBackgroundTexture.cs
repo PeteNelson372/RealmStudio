@@ -4,17 +4,17 @@ using System.Drawing;
 
 namespace RealmStudio
 {
-    internal class Cmd_SetBackgroundBitmap(RealmStudioMap map, SKBitmap bitmap) : IMapOperation
+    internal class Cmd_SetBackgroundTexture(RealmStudioMap map, SKBitmap textureBitmap) : IMapOperation
     {
         public RealmStudioMap Map { get; set; } = map;
-        private SKBitmap LayerBitmap { get; set; } = bitmap;
+        private SKBitmap LayerBitmap { get; set; } = textureBitmap;
         private MapImage? BackgroundTexture { get; set; }
 
         public void DoOperation()
         {
             MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BASELAYER);
 
-            if (baseLayer.MapLayerComponents.Count() < 1)
+            if (baseLayer.MapLayerComponents.Count < 1)
             {
                 BackgroundTexture = new()
                 {
@@ -28,15 +28,14 @@ namespace RealmStudio
 
         public void UndoOperation()
         {
-            MapLayer backgroundLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BASELAYER);
+            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BASELAYER);
 
             if (BackgroundTexture != null)
             {
-                backgroundLayer.MapLayerComponents.Remove(BackgroundTexture);
+                baseLayer.MapLayerComponents.Remove(BackgroundTexture);
             }
 
             // base layer is cleared to WHITE, not transparent or empty
-            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BASELAYER);
             baseLayer.LayerSurface?.Canvas.Clear(SKColors.White);
         }
     }

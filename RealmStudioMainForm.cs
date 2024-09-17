@@ -1,5 +1,6 @@
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using System.Drawing.Imaging;
 
 namespace RealmStudio
 {
@@ -13,6 +14,7 @@ namespace RealmStudio
         private static RealmStudioMap CURRENT_MAP = new();
 
         private static Landform? CURRENT_LANDFORM = null;
+        private MapWindrose? CURRENT_WINDROSE = null;
 
         private static int SELECTED_BRUSH_SIZE = 0;
 
@@ -24,6 +26,8 @@ namespace RealmStudio
         private readonly ToolTip TOOLTIP = new();
 
         private bool AUTOSAVE = true;
+
+        // 
 
         #region Constructor
         /******************************************************************************************************* 
@@ -472,6 +476,14 @@ namespace RealmStudio
             LandformTexturePreviewPicture.Image = AssetManager.LAND_TEXTURE_LIST.First().TextureBitmap;
             LandTextureNameLabel.Text = AssetManager.LAND_TEXTURE_LIST.First().TextureName;
 
+            if (AssetManager.WATER_TEXTURE_LIST.First().TextureBitmap == null)
+            {
+                AssetManager.WATER_TEXTURE_LIST.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.WATER_TEXTURE_LIST.First().TexturePath);
+            }
+
+            OceanTextureBox.Image = AssetManager.WATER_TEXTURE_LIST.First().TextureBitmap;
+            OceanTextureNameLabel.Text = AssetManager.WATER_TEXTURE_LIST.First().TextureName;
+
             CoastlineStyleList.SelectedIndex = 6;  // default is dash pattern
 
             foreach (MapSymbolCollection collection in AssetManager.MAP_SYMBOL_COLLECTIONS)
@@ -832,9 +844,9 @@ namespace RealmStudio
             MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.SELECTIONLAYER);
             selectionLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-            MapLayer cursorLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.CURSORLAYER);
 
 
+            // render base layer
             MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BASELAYER);
             if (baseLayer.LayerSurface != null)
             {
@@ -843,7 +855,7 @@ namespace RealmStudio
                 e.Surface.Canvas.DrawSurface(baseLayer.LayerSurface, ScrollPoint);
             }
 
-
+            // render ocean texture layer
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANTEXTURELAYER);
             if (oceanTextureLayer.LayerSurface != null)
             {
@@ -852,6 +864,7 @@ namespace RealmStudio
                 e.Surface.Canvas.DrawSurface(oceanTextureLayer.LayerSurface, ScrollPoint);
             }
 
+            // render ocean texture overlay layer (ocean color fill)
             MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
             if (oceanTextureOverlayLayer.LayerSurface != null)
             {
@@ -860,6 +873,7 @@ namespace RealmStudio
                 e.Surface.Canvas.DrawSurface(oceanTextureOverlayLayer.LayerSurface, ScrollPoint);
             }
 
+            // render ocean drawing layer (user-painted color)
             MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANDRAWINGLAYER);
             if (oceanDrawingLayer.LayerSurface != null)
             {
@@ -867,15 +881,19 @@ namespace RealmStudio
                 oceanDrawingLayer.Render(oceanDrawingLayer.LayerSurface.Canvas);
                 e.Surface.Canvas.DrawSurface(oceanDrawingLayer.LayerSurface, ScrollPoint);
             }
-
+            // render wind rose layer
             MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WINDROSELAYER);
             if (windroseLayer.LayerSurface != null)
             {
                 windroseLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+
+                CURRENT_WINDROSE?.Render(windroseLayer.LayerSurface.Canvas);
+
                 windroseLayer.Render(windroseLayer.LayerSurface.Canvas);
                 e.Surface.Canvas.DrawSurface(windroseLayer.LayerSurface, ScrollPoint);
             }
 
+            // render grid layer above ocean
             MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.ABOVEOCEANGRIDLAYER);
             if (aboveOceanGridLayer.LayerSurface != null)
             {
@@ -884,21 +902,28 @@ namespace RealmStudio
                 e.Surface.Canvas.DrawSurface(aboveOceanGridLayer.LayerSurface, ScrollPoint);
             }
 
-            // paint landforms
+            // render landforms
             MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER);
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
-            if (landformLayer.LayerSurface != null && landCoastlineLayer.LayerSurface != null)
+            MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDDRAWINGLAYER);
+
+            if (landformLayer.LayerSurface != null && landCoastlineLayer.LayerSurface != null && landDrawingLayer.LayerSurface != null)
             {
                 landCoastlineLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 landformLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+                landDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
                 CURRENT_LANDFORM?.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
                 CURRENT_LANDFORM?.RenderLandform(landformLayer.LayerSurface.Canvas);
+
+                // TODO: render CURRENT_LANDFORM landform drawing
 
                 foreach (Landform l in landformLayer.MapLayerComponents.Cast<Landform>())
                 {
                     l.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
                     l.RenderLandform(landformLayer.LayerSurface.Canvas);
+
+                    // TODO: render landform drawing
 
                     if (l.IsSelected)
                     {
@@ -910,11 +935,57 @@ namespace RealmStudio
                         selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
                     }
                 }
-            };
 
-            e.Surface.Canvas.DrawSurface(landCoastlineLayer.LayerSurface, ScrollPoint);
-            e.Surface.Canvas.DrawSurface(landformLayer.LayerSurface, ScrollPoint);
+                // paint landform coastline layer
+                e.Surface.Canvas.DrawSurface(landCoastlineLayer.LayerSurface, ScrollPoint);
 
+                // paint landform layer
+                e.Surface.Canvas.DrawSurface(landformLayer.LayerSurface, ScrollPoint);
+
+                // paint land drawing layer
+                e.Surface.Canvas.DrawSurface(landDrawingLayer.LayerSurface, ScrollPoint);
+            }
+
+
+            // TODO: render water features
+
+            // TODO: paint water layer
+
+            // TODO: paint water drawing layer
+
+
+            // render grid below symbols
+            MapLayer belowSymbolGridLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BELOWSYMBOLSGRIDLAYER);
+            if (belowSymbolGridLayer.LayerSurface != null)
+            {
+                belowSymbolGridLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+                belowSymbolGridLayer.Render(belowSymbolGridLayer.LayerSurface.Canvas);
+                e.Surface.Canvas.DrawSurface(aboveOceanGridLayer.LayerSurface, ScrollPoint);
+            }
+
+            // TODO: path lower layer
+
+            // TODO: symbol layer
+
+            // TODO: path upper layer
+
+            // TODO: region layer
+
+            // TODO: region overlay layer
+
+            // TODO: default grid layer
+
+            // TODO: box layer
+
+            // TODO: label layer
+
+            // TODO: overlay layer
+
+            // TODO: measure layer
+
+            // TODO: drawing layer
+
+            // render and paint vignette
             MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.VIGNETTELAYER);
             if (vignetteLayer.LayerSurface != null)
             {
@@ -923,9 +994,14 @@ namespace RealmStudio
                 e.Surface.Canvas.DrawSurface(vignetteLayer.LayerSurface, ScrollPoint);
             }
 
-
+            // paint selection layer
             e.Surface.Canvas.DrawSurface(selectionLayer.LayerSurface, ScrollPoint);
+
+            // paint cursor layer
+            MapLayer cursorLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.CURSORLAYER);
             e.Surface.Canvas.DrawSurface(cursorLayer.LayerSurface, ScrollPoint);
+
+            // TODO: work layer
         }
 
         private void SKGLRenderControl_MouseDown(object sender, MouseEventArgs e)
@@ -1098,16 +1174,28 @@ namespace RealmStudio
 
         private void RightButtonMouseMoveHandler(object sender, MouseEventArgs e)
         {
-            //throw new NotImplementedException();
-        }
 
+        }
         #endregion
 
         #region No Button Down Handler Method
 
         private void NoButtonMouseMoveHandler(object sender, MouseEventArgs e, int brushRadius)
         {
-            //throw new NotImplementedException();
+            SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
+
+            switch (CURRENT_DRAWING_MODE)
+            {
+                case DrawingModeEnum.PlaceWindrose:
+                    if (CURRENT_WINDROSE != null)
+                    {
+                        CURRENT_WINDROSE.X = (int)zoomedScrolledPoint.X;
+                        CURRENT_WINDROSE.Y = (int)zoomedScrolledPoint.Y;
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+            }
         }
 
         #endregion
@@ -1135,6 +1223,17 @@ namespace RealmStudio
 
                             SKGLRenderControl.Invalidate();
                         }
+                    }
+                    break;
+                case DrawingModeEnum.PlaceWindrose:
+                    if (CURRENT_WINDROSE != null)
+                    {
+                        Cmd_AddWindrose cmd = new(CURRENT_MAP, CURRENT_WINDROSE);
+                        CommandManager.AddCommand(cmd);
+                        cmd.DoOperation();
+
+                        CURRENT_MAP.IsSaved = false;
+                        CURRENT_WINDROSE = CreateWindrose();
                     }
                     break;
             }
@@ -1214,7 +1313,7 @@ namespace RealmStudio
                 Bitmap resizedBitmap = new(AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TextureBitmap,
                     CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
 
-                Cmd_SetBackgroundBitmap cmd = new(CURRENT_MAP, Extensions.ToSKBitmap(resizedBitmap));
+                Cmd_SetBackgroundTexture cmd = new(CURRENT_MAP, Extensions.ToSKBitmap(resizedBitmap));
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 
@@ -1231,9 +1330,9 @@ namespace RealmStudio
 
             if (backgroundLayer.MapLayerComponents.Count > 0)
             {
-                MapImage layerBitmap = (MapImage)MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BASELAYER).MapLayerComponents.First();
+                MapImage layerTexture = (MapImage)MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BASELAYER).MapLayerComponents.First();
 
-                Cmd_ClearBackgroundBitmap cmd = new(CURRENT_MAP, layerBitmap);
+                Cmd_ClearBackgroundTexture cmd = new(CURRENT_MAP, layerTexture);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 
@@ -1277,6 +1376,163 @@ namespace RealmStudio
             SKGLRenderControl.Invalidate();
         }
 
+        #endregion
+
+        #region Ocean Tab Event Handlers
+        private void OceanTextureOpacityTrack_ValueChanged(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(OceanTextureOpacityTrack.Value.ToString(), OceanTextureGroup, new Point(OceanTextureGroup.Left + 120, OceanTextureGroup.Bottom - 90), 2000);
+
+            Bitmap b = new(AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TexturePath);
+
+            if (b != null)
+            {
+                Bitmap newB = new(b.Width, b.Height, PixelFormat.Format32bppArgb);
+
+                using Graphics g = Graphics.FromImage(newB);
+
+                //create a color matrix object  
+                ColorMatrix matrix = new()
+                {
+                    //set the opacity  
+                    Matrix33 = OceanTextureOpacityTrack.Value / 100F
+                };
+
+                //create image attributes  
+                ImageAttributes attributes = new ImageAttributes();
+
+                //set the color(opacity) of the image  
+                attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+
+                //now draw the image
+                g.DrawImage(b, new Rectangle(0, 0, b.Width, b.Height), 0, 0, b.Width, b.Height, GraphicsUnit.Pixel, attributes);
+
+                OceanTextureBox.Image = newB;
+            }
+
+            OceanTextureBox.Refresh();
+        }
+
+
+        private void PreviousOceanTextureButton_Click(object sender, EventArgs e)
+        {
+            if (AssetManager.SELECTED_OCEAN_TEXTURE_INDEX > 0)
+            {
+                AssetManager.SELECTED_OCEAN_TEXTURE_INDEX--;
+            }
+
+            if (AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TextureBitmap == null)
+            {
+                AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TexturePath);
+            }
+
+            OceanTextureBox.Image = AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TextureBitmap;
+            OceanTextureNameLabel.Text = AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TextureName;
+        }
+
+        private void NextOceanTextureButton_Click(object sender, EventArgs e)
+        {
+            if (AssetManager.SELECTED_OCEAN_TEXTURE_INDEX < AssetManager.WATER_TEXTURE_LIST.Count - 1)
+            {
+                AssetManager.SELECTED_OCEAN_TEXTURE_INDEX++;
+            }
+
+            if (AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TextureBitmap == null)
+            {
+                AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TexturePath);
+            }
+
+            OceanTextureBox.Image = AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TextureBitmap;
+            OceanTextureNameLabel.Text = AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TextureName;
+        }
+
+        private void OceanApplyTextureButton_Click(object sender, EventArgs e)
+        {
+#pragma warning disable CS8604 // Possible null reference argument
+            CURRENT_MAP.IsSaved = false;
+
+            MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANTEXTURELAYER);
+
+            if (oceanTextureLayer.MapLayerComponents.Count < 1
+                && OceanTextureBox.Image != null)
+            {
+                Bitmap resizedBitmap = new(OceanTextureBox.Image, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+
+                Cmd_SetOceanTexture cmd = new(CURRENT_MAP, Extensions.ToSKBitmap(resizedBitmap));
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                SKGLRenderControl.Invalidate();
+            }
+#pragma warning restore CS8604 // Possible null reference argument.
+        }
+
+        private void OceanRemoveTextureButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_MAP.IsSaved = false;
+
+            MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANTEXTURELAYER);
+
+            if (oceanTextureLayer.MapLayerComponents.Count > 0)
+            {
+                MapImage layerTexture = (MapImage)MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANTEXTURELAYER).MapLayerComponents.First();
+
+                Cmd_ClearOceanTexture cmd = new(CURRENT_MAP, layerTexture);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void OceanColorSelectButton_Click(object sender, EventArgs e)
+        {
+            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, OceanColorSelectButton.BackColor);
+
+            if (selectedColor != Color.Empty)
+            {
+                OceanColorSelectButton.BackColor = selectedColor;
+                OceanColorSelectButton.Refresh();
+            }
+        }
+
+        private void OceanColorFillButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_MAP.IsSaved = false;
+
+            // get the user-selected ocean color
+            Color fillColor = OceanColorSelectButton.BackColor;
+            SKBitmap b = new(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+
+            using (SKCanvas canvas = new(b))
+            {
+                canvas.Clear(Extensions.ToSKColor(fillColor));
+            }
+
+            Cmd_SetOceanColor cmd = new(CURRENT_MAP, b);
+            CommandManager.AddCommand(cmd);
+            cmd.DoOperation();
+
+            SKGLRenderControl.Invalidate();
+        }
+
+        private void OceanColorClearButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_MAP.IsSaved = false;
+
+            MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
+
+            if (oceanTextureOverlayLayer.MapLayerComponents.Count > 0)
+            {
+                MapImage layerColor = (MapImage)MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANTEXTUREOVERLAYLAYER).MapLayerComponents.First();
+
+                Cmd_ClearOceanColor cmd = new(CURRENT_MAP, layerColor);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
         #endregion
 
         #region Land Tab Event Handlers
@@ -1368,11 +1624,6 @@ namespace RealmStudio
                 CoastlineColorSelectionButton.BackColor = selectedColor;
                 CoastlineColorSelectionButton.Refresh();
             }
-        }
-
-        private void CoastlineStyleList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void LandEraserSizeTrack_ValueChanged(object sender, EventArgs e)
@@ -1491,6 +1742,206 @@ namespace RealmStudio
 
         #endregion
 
+        #region Windrose Event Handlers
 
+        private void WindrosePlaceButton_Click(object sender, EventArgs e)
+        {
+            if (CURRENT_DRAWING_MODE != DrawingModeEnum.PlaceWindrose)
+            {
+                CURRENT_DRAWING_MODE = DrawingModeEnum.PlaceWindrose;
+                CURRENT_WINDROSE = CreateWindrose();
+            }
+            else
+            {
+                CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+                CURRENT_WINDROSE = null;
+
+                SetDrawingModeLabel();
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void WindroseColorSelectButton_Click(object sender, EventArgs e)
+        {
+            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, WindroseColorSelectButton.BackColor);
+
+            if (selectedColor != Color.Empty)
+            {
+                WindroseColorSelectButton.BackColor = selectedColor;
+                WindroseColorSelectButton.Refresh();
+
+                UpdateCurrentWindrose();
+            }
+        }
+
+        private void WindroseClearButton_Click(object sender, EventArgs e)
+        {
+            for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WINDROSELAYER).MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WINDROSELAYER).MapLayerComponents[i] is MapWindrose)
+                {
+                    MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WINDROSELAYER).MapLayerComponents.RemoveAt(i);
+                }
+            }
+
+            SKGLRenderControl.Invalidate();
+        }
+
+        private void WindroseDirectionsUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateCurrentWindrose();
+        }
+
+        private void WindroseLineWidthUpDOwn_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateCurrentWindrose();
+        }
+
+        private void WindroseInnerRadiusUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateCurrentWindrose();
+        }
+
+        private void WindroseOuterRadiusUpDown_VisibleChanged(object sender, EventArgs e)
+        {
+            UpdateCurrentWindrose();
+        }
+
+        private void WindroseInnerCircleTrack_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateCurrentWindrose();
+        }
+
+        private void WindroseFadeOutSwitch_CheckedChanged()
+        {
+            UpdateCurrentWindrose();
+        }
+        #endregion
+
+        #region Windrose Methods
+
+        private MapWindrose CreateWindrose()
+        {
+            MapWindrose windrose = new()
+            {
+                InnerCircles = WindroseInnerCircleTrack.Value,
+                InnerRadius = (int)WindroseInnerRadiusUpDown.Value,
+                FadeOut = WindroseFadeOutSwitch.Checked,
+                LineWidth = (int)WindroseLineWidthUpDown.Value,
+                OuterRadius = (int)WindroseOuterRadiusUpDown.Value,
+                WindroseColor = WindroseColorSelectButton.BackColor,
+                DirectionCount = (int)WindroseDirectionsUpDown.Value,
+            };
+
+            windrose.WindrosePaint = new()
+            {
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = windrose.LineWidth,
+                Color = windrose.WindroseColor.ToSKColor(),
+                IsAntialias = true,
+            };
+
+            return windrose;
+        }
+
+        private void UpdateCurrentWindrose()
+        {
+            if (CURRENT_WINDROSE != null)
+            {
+                CURRENT_WINDROSE.InnerCircles = WindroseInnerCircleTrack.Value;
+                CURRENT_WINDROSE.InnerRadius = (int)WindroseInnerRadiusUpDown.Value;
+                CURRENT_WINDROSE.FadeOut = WindroseFadeOutSwitch.Checked;
+                CURRENT_WINDROSE.LineWidth = (int)WindroseLineWidthUpDown.Value;
+                CURRENT_WINDROSE.OuterRadius = (int)WindroseOuterRadiusUpDown.Value;
+                CURRENT_WINDROSE.WindroseColor = WindroseColorSelectButton.BackColor;
+                CURRENT_WINDROSE.DirectionCount = (int)WindroseDirectionsUpDown.Value;
+
+                CURRENT_WINDROSE.WindrosePaint = new()
+                {
+                    Style = SKPaintStyle.Stroke,
+                    StrokeWidth = CURRENT_WINDROSE.LineWidth,
+                    Color = CURRENT_WINDROSE.WindroseColor.ToSKColor(),
+                    IsAntialias = true,
+                };
+            }
+        }
+
+        #endregion
+
+        #region Water Tab Event Handlers
+
+        private void WaterFeatureSelectButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.WaterFeatureSelect;
+            SetDrawingModeLabel();
+        }
+
+        private void WaterFeaturePaintButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.WaterPaint;
+            SetDrawingModeLabel();
+        }
+
+        private void WaterFeatureLakeButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.LakePaint;
+            SetDrawingModeLabel();
+        }
+
+        private void WaterFeatureRiverButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.RiverPaint;
+            SetDrawingModeLabel();
+        }
+
+        private void WaterFeatureEraseButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.WaterErase;
+            SetDrawingModeLabel();
+        }
+
+        private void WaterBrushSizeTrack_ValueChanged(object sender, EventArgs e)
+        {
+            WaterFeatureMethods.WaterFeatureBrushSize = WaterBrushSizeTrack.Value;
+            TOOLTIP.Show(WaterFeatureMethods.WaterFeatureBrushSize.ToString(), WaterBrushSizeTrack, new Point(WaterBrushSizeTrack.Right - 42, WaterBrushSizeTrack.Top - 58), 2000);
+            SetSelectedBrushSize(WaterFeatureMethods.WaterFeatureBrushSize);
+        }
+
+        private void WaterColorSelectionButton_Click(object sender, EventArgs e)
+        {
+            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, WaterColorSelectionButton.BackColor);
+
+            if (selectedColor != Color.Empty)
+            {
+                WaterColorSelectionButton.BackColor = selectedColor;
+                WaterColorSelectionButton.Refresh();
+            }
+        }
+
+        private void ShorelineColorSelectionButton_Click(object sender, EventArgs e)
+        {
+            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, ShorelineColorSelectionButton.BackColor);
+
+            if (selectedColor != Color.Empty)
+            {
+                ShorelineColorSelectionButton.BackColor = selectedColor;
+                ShorelineColorSelectionButton.Refresh();
+            }
+        }
+
+        private void RiverWidthTrack_ValueChanged(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(RiverWidthTrack.Value.ToString(), RiverWidthTrack, new Point(RiverWidthTrack.Right - 42, RiverWidthTrack.Top - 58), 2000);
+        }
+
+        private void WaterEraseSizeTrack_ValueChanged(object sender, EventArgs e)
+        {
+            WaterFeatureMethods.WaterFeatureEraserSize = WaterEraseSizeTrack.Value;
+            TOOLTIP.Show(WaterFeatureMethods.WaterFeatureEraserSize.ToString(), WaterEraseSizeTrack, new Point(WaterEraseSizeTrack.Right - 42, WaterEraseSizeTrack.Top - 58), 2000);
+            SetSelectedBrushSize(WaterFeatureMethods.WaterFeatureEraserSize);
+        }
+
+        #endregion
     }
 }
