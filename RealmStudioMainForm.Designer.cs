@@ -243,6 +243,20 @@
             OceanToolPanel = new Panel();
             label18 = new Label();
             BackgroundToolPanel = new Panel();
+            groupBox9 = new GroupBox();
+            label44 = new Label();
+            label45 = new Label();
+            iconButton1 = new FontAwesome.Sharp.IconButton();
+            iconButton2 = new FontAwesome.Sharp.IconButton();
+            pictureBox3 = new PictureBox();
+            iconButton4 = new FontAwesome.Sharp.IconButton();
+            label46 = new Label();
+            trackBar1 = new TrackBar();
+            label47 = new Label();
+            cyberSwitch9 = new ReaLTaiizor.Controls.CyberSwitch();
+            label48 = new Label();
+            cyberSwitch10 = new ReaLTaiizor.Controls.CyberSwitch();
+            DrawPathButton = new FontAwesome.Sharp.IconToolStripButton();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -308,6 +322,9 @@
             WaterToolPanel.SuspendLayout();
             LandToolPanel.SuspendLayout();
             OceanToolPanel.SuspendLayout();
+            groupBox9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
             SuspendLayout();
             // 
             // OceanTab
@@ -1888,6 +1905,7 @@
             // PathTab
             // 
             PathTab.BackColor = SystemColors.Control;
+            PathTab.Controls.Add(groupBox9);
             PathTab.Controls.Add(PathToolStrip);
             PathTab.Controls.Add(cyberSwitch2);
             PathTab.Controls.Add(label6);
@@ -1906,7 +1924,7 @@
             PathToolStrip.Dock = DockStyle.None;
             PathToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             PathToolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            PathToolStrip.Items.AddRange(new ToolStripItem[] { PathSelectButton });
+            PathToolStrip.Items.AddRange(new ToolStripItem[] { PathSelectButton, DrawPathButton });
             PathToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
             PathToolStrip.Location = new Point(158, 0);
             PathToolStrip.Name = "PathToolStrip";
@@ -3335,6 +3353,245 @@
             BackgroundToolPanel.Size = new Size(152, 836);
             BackgroundToolPanel.TabIndex = 15;
             // 
+            // groupBox9
+            // 
+            groupBox9.BackColor = Color.Transparent;
+            groupBox9.Controls.Add(label48);
+            groupBox9.Controls.Add(cyberSwitch10);
+            groupBox9.Controls.Add(label47);
+            groupBox9.Controls.Add(cyberSwitch9);
+            groupBox9.Controls.Add(label44);
+            groupBox9.Controls.Add(label45);
+            groupBox9.Controls.Add(iconButton1);
+            groupBox9.Controls.Add(iconButton2);
+            groupBox9.Controls.Add(pictureBox3);
+            groupBox9.Controls.Add(iconButton4);
+            groupBox9.Controls.Add(label46);
+            groupBox9.Controls.Add(trackBar1);
+            groupBox9.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox9.ForeColor = SystemColors.ControlText;
+            groupBox9.Location = new Point(6, 32);
+            groupBox9.Name = "groupBox9";
+            groupBox9.Size = new Size(148, 439);
+            groupBox9.TabIndex = 18;
+            groupBox9.TabStop = false;
+            groupBox9.Text = "Path";
+            // 
+            // label44
+            // 
+            label44.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label44.Location = new Point(6, 399);
+            label44.Name = "label44";
+            label44.Size = new Size(136, 15);
+            label44.TabIndex = 24;
+            label44.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // label45
+            // 
+            label45.AutoSize = true;
+            label45.BackColor = Color.Transparent;
+            label45.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label45.ForeColor = SystemColors.ControlDarkDark;
+            label45.Location = new Point(6, 242);
+            label45.Name = "label45";
+            label45.Size = new Size(45, 15);
+            label45.TabIndex = 23;
+            label45.Text = "Texture";
+            // 
+            // iconButton1
+            // 
+            iconButton1.FlatStyle = FlatStyle.Flat;
+            iconButton1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            iconButton1.IconChar = FontAwesome.Sharp.IconChar.AngleLeft;
+            iconButton1.IconColor = Color.Black;
+            iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton1.IconSize = 24;
+            iconButton1.Location = new Point(6, 372);
+            iconButton1.Name = "iconButton1";
+            iconButton1.Size = new Size(24, 24);
+            iconButton1.TabIndex = 22;
+            iconButton1.TextImageRelation = TextImageRelation.TextBeforeImage;
+            iconButton1.UseVisualStyleBackColor = true;
+            // 
+            // iconButton2
+            // 
+            iconButton2.FlatStyle = FlatStyle.Flat;
+            iconButton2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            iconButton2.IconChar = FontAwesome.Sharp.IconChar.AngleRight;
+            iconButton2.IconColor = Color.Black;
+            iconButton2.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton2.IconSize = 24;
+            iconButton2.Location = new Point(118, 372);
+            iconButton2.Name = "iconButton2";
+            iconButton2.Size = new Size(24, 24);
+            iconButton2.TabIndex = 21;
+            iconButton2.TextImageRelation = TextImageRelation.TextBeforeImage;
+            iconButton2.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox3
+            // 
+            pictureBox3.Location = new Point(6, 260);
+            pictureBox3.Name = "pictureBox3";
+            pictureBox3.Size = new Size(136, 136);
+            pictureBox3.TabIndex = 20;
+            pictureBox3.TabStop = false;
+            // 
+            // iconButton4
+            // 
+            iconButton4.BackColor = Color.FromArgb(75, 49, 26);
+            iconButton4.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            iconButton4.ForeColor = SystemColors.HighlightText;
+            iconButton4.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            iconButton4.IconColor = Color.Tan;
+            iconButton4.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton4.Location = new Point(6, 67);
+            iconButton4.Name = "iconButton4";
+            iconButton4.Size = new Size(136, 60);
+            iconButton4.TabIndex = 19;
+            iconButton4.Text = "Click to Select";
+            iconButton4.UseVisualStyleBackColor = false;
+            // 
+            // label46
+            // 
+            label46.AutoSize = true;
+            label46.BackColor = Color.Transparent;
+            label46.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label46.ForeColor = SystemColors.ControlDarkDark;
+            label46.Location = new Point(6, 23);
+            label46.Name = "label46";
+            label46.Size = new Size(39, 15);
+            label46.TabIndex = 18;
+            label46.Text = "Width";
+            // 
+            // trackBar1
+            // 
+            trackBar1.AutoSize = false;
+            trackBar1.BackColor = SystemColors.Control;
+            trackBar1.Location = new Point(6, 41);
+            trackBar1.Maximum = 512;
+            trackBar1.Minimum = 4;
+            trackBar1.Name = "trackBar1";
+            trackBar1.Size = new Size(136, 20);
+            trackBar1.TabIndex = 0;
+            trackBar1.TickStyle = TickStyle.None;
+            trackBar1.Value = 64;
+            // 
+            // label47
+            // 
+            label47.AutoSize = true;
+            label47.BackColor = Color.Transparent;
+            label47.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label47.ForeColor = SystemColors.ControlDarkDark;
+            label47.Location = new Point(6, 140);
+            label47.Name = "label47";
+            label47.Size = new Size(110, 15);
+            label47.TabIndex = 26;
+            label47.Text = "Draw Over Symbols";
+            // 
+            // cyberSwitch9
+            // 
+            cyberSwitch9.Alpha = 50;
+            cyberSwitch9.BackColor = Color.Transparent;
+            cyberSwitch9.Background = true;
+            cyberSwitch9.Background_WidthPen = 2F;
+            cyberSwitch9.BackgroundPen = false;
+            cyberSwitch9.Checked = false;
+            cyberSwitch9.ColorBackground = Color.FromArgb(223, 219, 210);
+            cyberSwitch9.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            cyberSwitch9.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            cyberSwitch9.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            cyberSwitch9.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            cyberSwitch9.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            cyberSwitch9.ColorLighting = Color.FromArgb(223, 219, 210);
+            cyberSwitch9.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            cyberSwitch9.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            cyberSwitch9.ColorValue = Color.ForestGreen;
+            cyberSwitch9.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            cyberSwitch9.Font = new Font("Arial", 11F);
+            cyberSwitch9.ForeColor = Color.FromArgb(245, 245, 245);
+            cyberSwitch9.Lighting = true;
+            cyberSwitch9.LinearGradient_Background = false;
+            cyberSwitch9.LinearGradient_Value = false;
+            cyberSwitch9.LinearGradientPen = false;
+            cyberSwitch9.Location = new Point(6, 158);
+            cyberSwitch9.Name = "cyberSwitch9";
+            cyberSwitch9.PenWidth = 10;
+            cyberSwitch9.RGB = false;
+            cyberSwitch9.Rounding = true;
+            cyberSwitch9.RoundingInt = 90;
+            cyberSwitch9.Size = new Size(41, 20);
+            cyberSwitch9.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            cyberSwitch9.TabIndex = 25;
+            cyberSwitch9.Tag = "Cyber";
+            cyberSwitch9.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            cyberSwitch9.Timer_RGB = 300;
+            // 
+            // label48
+            // 
+            label48.AutoSize = true;
+            label48.BackColor = Color.Transparent;
+            label48.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label48.ForeColor = SystemColors.ControlDarkDark;
+            label48.Location = new Point(6, 191);
+            label48.Name = "label48";
+            label48.Size = new Size(90, 15);
+            label48.TabIndex = 28;
+            label48.Text = "Edit Path Points";
+            // 
+            // cyberSwitch10
+            // 
+            cyberSwitch10.Alpha = 50;
+            cyberSwitch10.BackColor = Color.Transparent;
+            cyberSwitch10.Background = true;
+            cyberSwitch10.Background_WidthPen = 2F;
+            cyberSwitch10.BackgroundPen = false;
+            cyberSwitch10.Checked = false;
+            cyberSwitch10.ColorBackground = Color.FromArgb(223, 219, 210);
+            cyberSwitch10.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            cyberSwitch10.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            cyberSwitch10.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            cyberSwitch10.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            cyberSwitch10.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            cyberSwitch10.ColorLighting = Color.FromArgb(223, 219, 210);
+            cyberSwitch10.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            cyberSwitch10.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            cyberSwitch10.ColorValue = Color.ForestGreen;
+            cyberSwitch10.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            cyberSwitch10.Font = new Font("Arial", 11F);
+            cyberSwitch10.ForeColor = Color.FromArgb(245, 245, 245);
+            cyberSwitch10.Lighting = true;
+            cyberSwitch10.LinearGradient_Background = false;
+            cyberSwitch10.LinearGradient_Value = false;
+            cyberSwitch10.LinearGradientPen = false;
+            cyberSwitch10.Location = new Point(6, 209);
+            cyberSwitch10.Name = "cyberSwitch10";
+            cyberSwitch10.PenWidth = 10;
+            cyberSwitch10.RGB = false;
+            cyberSwitch10.Rounding = true;
+            cyberSwitch10.RoundingInt = 90;
+            cyberSwitch10.Size = new Size(41, 20);
+            cyberSwitch10.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            cyberSwitch10.TabIndex = 27;
+            cyberSwitch10.Tag = "Cyber";
+            cyberSwitch10.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            cyberSwitch10.Timer_RGB = 300;
+            // 
+            // DrawPathButton
+            // 
+            DrawPathButton.AutoSize = false;
+            DrawPathButton.ForeColor = SystemColors.ControlDarkDark;
+            DrawPathButton.IconChar = FontAwesome.Sharp.IconChar.BezierCurve;
+            DrawPathButton.IconColor = Color.Black;
+            DrawPathButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            DrawPathButton.IconSize = 24;
+            DrawPathButton.ImageScaling = ToolStripItemImageScaling.None;
+            DrawPathButton.ImageTransparentColor = Color.Magenta;
+            DrawPathButton.Margin = new Padding(0, 25, 0, 2);
+            DrawPathButton.Name = "DrawPathButton";
+            DrawPathButton.Size = new Size(60, 60);
+            DrawPathButton.Text = "Draw";
+            DrawPathButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
             // RealmStudioMainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -3463,6 +3720,10 @@
             LandToolPanel.PerformLayout();
             OceanToolPanel.ResumeLayout(false);
             OceanToolPanel.PerformLayout();
+            groupBox9.ResumeLayout(false);
+            groupBox9.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
             ResumeLayout(false);
         }
 
@@ -3683,5 +3944,19 @@
         private ReaLTaiizor.Controls.CyberSwitch RiverSourceFadeInSwitch;
         private Label label40;
         private TrackBar RiverWidthTrack;
+        private GroupBox groupBox9;
+        private Label label47;
+        private ReaLTaiizor.Controls.CyberSwitch cyberSwitch9;
+        private Label label44;
+        private Label label45;
+        private FontAwesome.Sharp.IconButton iconButton1;
+        private FontAwesome.Sharp.IconButton iconButton2;
+        private PictureBox pictureBox3;
+        private FontAwesome.Sharp.IconButton iconButton4;
+        private Label label46;
+        private TrackBar trackBar1;
+        private Label label48;
+        private ReaLTaiizor.Controls.CyberSwitch cyberSwitch10;
+        private FontAwesome.Sharp.IconToolStripButton DrawPathButton;
     }
 }

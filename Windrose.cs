@@ -116,7 +116,7 @@ namespace RealmStudio
 #pragma warning disable CS8604 // Possible null reference argument.
 #pragma warning disable CS8601 // Possible null reference assignment.
 
-            XNamespace ns = "MapCreator";
+            XNamespace ns = "RealmStudio";
             string content = reader.ReadOuterXml();
             XDocument mapRoseDoc = XDocument.Parse(content);
 

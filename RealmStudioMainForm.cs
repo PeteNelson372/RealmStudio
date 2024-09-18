@@ -1,4 +1,5 @@
 using SkiaSharp;
+using SkiaSharp.Components;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
 
@@ -14,7 +15,9 @@ namespace RealmStudio
         private static RealmStudioMap CURRENT_MAP = new();
 
         private static Landform? CURRENT_LANDFORM = null;
-        private MapWindrose? CURRENT_WINDROSE = null;
+        private static MapWindrose? CURRENT_WINDROSE = null;
+        private static WaterFeature? CURRENT_WATERFEATURE = null;
+        private static River? CURRENT_RIVER = null;
 
         private static int SELECTED_BRUSH_SIZE = 0;
 
@@ -695,19 +698,37 @@ namespace RealmStudio
                 l.IsSelected = false;
             }
 
+            MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER);
+            foreach (IWaterFeature w in waterLayer.MapLayerComponents)
+            {
+                if (selectedComponent != null)
+                {
+                    if (w is WaterFeature wf)
+                    {
+                        if (wf == selectedComponent)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            wf.IsSelected = false;
+                        }
+                    }
+                    else if (w is River r)
+                    {
+                        if (r == selectedComponent)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            r.IsSelected = false;
+                        }
+                    }
+                }
+            }
+
             /*
-            foreach (MapPaintedWaterFeature w in WaterFeatureMethods.PAINTED_WATERFEATURE_LIST)
-            {
-                if (selectedComponent != null && selectedComponent is MapPaintedWaterFeature waterFeature && waterFeature == w) continue;
-                w.IsSelected = false;
-            }
-
-            foreach (MapRiver r in WaterFeatureMethods.MAP_RIVER_LIST)
-            {
-                if (selectedComponent != null && selectedComponent is MapRiver river && river == r) continue;
-                r.IsSelected = false;
-            }
-
             foreach (MapPath p in MapPathMethods.GetMapPathList())
             {
                 if (selectedComponent != null && selectedComponent is MapPath mapPath && mapPath == p) continue;
@@ -745,6 +766,16 @@ namespace RealmStudio
             SELECTED_BRUSH_SIZE = brushSize;
         }
 
+        private static void DrawCircleCursor(SKPoint point, int brushSize)
+        {
+            MapLayer cursorLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.CURSORLAYER);
+            cursorLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+            if (brushSize > 0)
+            {
+                cursorLayer.LayerSurface?.Canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+            }
+        }
         #endregion
 
         #region Map File Open and Save Methods
@@ -843,7 +874,6 @@ namespace RealmStudio
 
             MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.SELECTIONLAYER);
             selectionLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
-
 
 
             // render base layer
@@ -947,11 +977,75 @@ namespace RealmStudio
             }
 
 
-            // TODO: render water features
+            // render water features and rivers
+            MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER);
+            MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERDRAWINGLAYER);
 
-            // TODO: paint water layer
+            if (waterLayer.LayerSurface != null && waterDrawingLayer.LayerSurface != null)
+            {
+                waterLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+                waterDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
-            // TODO: paint water drawing layer
+                // water features
+                CURRENT_WATERFEATURE?.Render(waterLayer.LayerSurface.Canvas);
+                CURRENT_RIVER?.Render(waterLayer.LayerSurface.Canvas);
+
+                foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
+                {
+                    if (w is WaterFeature wf)
+                    {
+                        wf.Render(waterLayer.LayerSurface.Canvas);
+
+                        if (wf.IsSelected)
+                        {
+                            // draw an outline around the landform to show that it is selected
+                            wf.WaterFeaturePath.GetBounds(out SKRect boundRect);
+                            using SKPath boundsPath = new();
+                            boundsPath.AddRect(boundRect);
+
+                            selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.WaterFeatureSelectPaint);
+                        }
+                    }
+                    else if (w is River r)
+                    {
+                        r.Render(waterLayer.LayerSurface.Canvas);
+
+                        // TODO: render river drawing (
+
+                        if (r.IsSelected)
+                        {
+                            if (r.RiverBoundaryPath != null)
+                            {
+                                // draw an outline around the path to show that it is selected
+                                r.RiverBoundaryPath.GetTightBounds(out SKRect boundRect);
+                                using SKPath boundsPath = new();
+                                boundsPath.AddRect(boundRect);
+
+                                waterDrawingLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.RiverSelectPaint);
+                            }
+                        }
+
+                        if (r.ShowRiverPoints)
+                        {
+                            List<MapRiverPoint> controlPoints = r.GetRiverControlPoints();
+
+                            foreach (MapRiverPoint p in controlPoints)
+                            {
+                                waterDrawingLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, 2.0F, PaintObjects.RiverControlPointPaint);
+                                waterDrawingLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, 2.0F, PaintObjects.RiverControlPointOutlinePaint);
+                            }
+                        }
+                    }
+                }
+
+                // TODO: render water feature drawing on water drawing layer
+
+                // paint water layer
+                e.Surface.Canvas.DrawSurface(waterLayer.LayerSurface, ScrollPoint);
+
+                // paint water drawing layer
+                e.Surface.Canvas.DrawSurface(waterDrawingLayer.LayerSurface, ScrollPoint);
+            }
 
 
             // render grid below symbols
@@ -1009,7 +1103,7 @@ namespace RealmStudio
             // objects are created and/or initialized on mouse down
             if (e.Button == MouseButtons.Left)
             {
-                LeftButtonMouseDownHandler(sender, e);
+                LeftButtonMouseDownHandler(sender, e, SELECTED_BRUSH_SIZE);
             }
 
             if (e.Button == MouseButtons.Right)
@@ -1054,9 +1148,9 @@ namespace RealmStudio
             {
                 RightButtonMouseUpHandler(sender, e);
             }
-            else if (e.Button == MouseButtons.None)
+            else if (e.Button == MouseButtons.Middle)
             {
-                NoButtonMouseUpHandler(sender, e);
+                MiddleButtonMouseUpHandler(sender, e);
             }
 
         }
@@ -1095,7 +1189,7 @@ namespace RealmStudio
 
         #region SKGLRenderControl Mouse Down Event Handling Methods (called from event handlers)
 
-        private void LeftButtonMouseDownHandler(object sender, MouseEventArgs e)
+        private void LeftButtonMouseDownHandler(object sender, MouseEventArgs e, int brushSize)
         {
             SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
 
@@ -1117,19 +1211,90 @@ namespace RealmStudio
                         SetLandformData(CURRENT_LANDFORM);
                     }
                     break;
+                case DrawingModeEnum.WaterFeatureSelect:
+                    {
+                        SelectWaterFeatureAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.WaterPaint:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        CURRENT_WATERFEATURE = new()
+                        {
+                            ParentMap = CURRENT_MAP,
+                            WaterFeatureType = WaterFeatureTypeEnum.Other,
+                            WaterFeatureColor = WaterColorSelectionButton.BackColor,
+                            WaterFeatureShorelineColor = ShorelineColorSelectionButton.BackColor
+                        };
+
+                        WaterFeatureMethods.ConstructWaterFeaturePaintObjects(CURRENT_WATERFEATURE);
+                    }
+                    break;
+                case DrawingModeEnum.LakePaint:
+                    {
+                        // TODO: undo/redo
+                        Cursor = Cursors.Cross;
+
+                        CURRENT_WATERFEATURE = new()
+                        {
+                            ParentMap = CURRENT_MAP,
+                            WaterFeatureType = WaterFeatureTypeEnum.Lake,
+                            WaterFeatureColor = WaterColorSelectionButton.BackColor,
+                            WaterFeatureShorelineColor = ShorelineColorSelectionButton.BackColor,
+                        };
+
+                        WaterFeatureMethods.ConstructWaterFeaturePaintObjects(CURRENT_WATERFEATURE);
+
+                        SKPath? lakePath = WaterFeatureMethods.GenerateRandomLakePath(zoomedScrolledPoint, brushSize);
+
+                        if (lakePath != null)
+                        {
+                            CURRENT_WATERFEATURE.WaterFeaturePath = lakePath;
+                        }
+                        else
+                        {
+                            CURRENT_WATERFEATURE = null;
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.RiverPaint:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_RIVER == null)
+                        {
+                            // initialize river
+                            CURRENT_RIVER = new River()
+                            {
+                                ParentMap = CURRENT_MAP,
+                                RiverColor = WaterColorSelectionButton.BackColor,
+                                RiverShorelineColor = ShorelineColorSelectionButton.BackColor,
+                                RiverWidth = RiverWidthTrack.Value,
+                                RiverSourceFadeIn = RiverSourceFadeInSwitch.Checked,
+                            };
+
+                            WaterFeatureMethods.ConstructRiverPaintObjects(CURRENT_RIVER);
+                            CURRENT_RIVER.RiverPoints.Add(new MapRiverPoint(zoomedScrolledPoint));
+                        }
+                    }
+                    break;
             }
         }
 
         private void RightButtonMouseDownHandler(object sender, MouseEventArgs e)
         {
-            throw new NotImplementedException();
+            // no right mouse button down events yet
         }
 
         #endregion
 
         #region SKGLRenderControl Mouse Move Event Handling Methods (called from event handlers)
 
-        #region Left Button Down Handler Method
+        #region Left Button Move Handler Method
 
         private void LeftButtonMouseMoveHandler(MouseEventArgs e, int brushRadius)
         {
@@ -1141,12 +1306,15 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        // TODO: undo/redo
                         if (CURRENT_LANDFORM != null)
                         {
                             CURRENT_LANDFORM.DrawPath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
 
                             // compute contour path and inner and outer paths in a separate thread
+
+                            // TODO: can the creation of paths be divided up to more tasks?
+                            // perhaps await a task to create the contour path, then when it is complete,
+                            // create separate tasks to compute each inner and outer path
                             Task.Run(() => LandformMethods.CreateInnerAndOuterPaths(CURRENT_MAP, CURRENT_LANDFORM));
                         }
 
@@ -1157,7 +1325,6 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        // TODO: undo/redo
                         LandformMethods.LandformErasePath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
 
                         LandformMethods.EraseLandForm(CURRENT_MAP);
@@ -1165,12 +1332,36 @@ namespace RealmStudio
 
                     }
                     break;
+                case DrawingModeEnum.WaterPaint:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_WATERFEATURE != null)
+                        {
+                            CURRENT_WATERFEATURE.WaterFeaturePath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
+
+                            // compute contour path and inner and outer paths in a separate thread
+                            Task.Run(() => WaterFeatureMethods.CreateInnerAndOuterPaths(CURRENT_MAP, CURRENT_WATERFEATURE));
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.RiverPaint:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        CURRENT_RIVER?.RiverPoints.Add(new MapRiverPoint(zoomedScrolledPoint));
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
             }
         }
 
         #endregion
 
-        #region Right Button Down Handler Method
+        #region Right Button Move Handler Method
 
         private void RightButtonMouseMoveHandler(object sender, MouseEventArgs e)
         {
@@ -1178,7 +1369,7 @@ namespace RealmStudio
         }
         #endregion
 
-        #region No Button Down Handler Method
+        #region No Button Move Handler Method
 
         private void NoButtonMouseMoveHandler(object sender, MouseEventArgs e, int brushRadius)
         {
@@ -1206,23 +1397,22 @@ namespace RealmStudio
 
         private void LeftButtonMouseUpHandler(object sender, MouseEventArgs e)
         {
+            Cursor = Cursors.Default;
+
             switch (CURRENT_DRAWING_MODE)
             {
                 case DrawingModeEnum.LandPaint:
+                    if (CURRENT_LANDFORM != null)
                     {
-                        Cursor = Cursors.Default;
+                        // TODO: undo/redo
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(CURRENT_LANDFORM);
+                        LandformMethods.MergeLandforms(CURRENT_MAP);
 
-                        SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
+                        CURRENT_LANDFORM = null;
 
-                        if (CURRENT_LANDFORM != null)
-                        {
-                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(CURRENT_LANDFORM);
-                            LandformMethods.MergeLandforms(CURRENT_MAP);
+                        CURRENT_MAP.IsSaved = false;
 
-                            CURRENT_LANDFORM = null;
-
-                            SKGLRenderControl.Invalidate();
-                        }
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.PlaceWindrose:
@@ -1233,7 +1423,46 @@ namespace RealmStudio
                         cmd.DoOperation();
 
                         CURRENT_MAP.IsSaved = false;
-                        CURRENT_WINDROSE = CreateWindrose();
+                    }
+                    break;
+                case DrawingModeEnum.WaterPaint:
+                    if (CURRENT_WATERFEATURE != null)
+                    {
+                        // TODO: undo/redo
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER).MapLayerComponents.Add(CURRENT_WATERFEATURE);
+                        WaterFeatureMethods.MergeWaterFeatures(CURRENT_MAP);
+
+                        CURRENT_WATERFEATURE = null;
+
+                        CURRENT_MAP.IsSaved = false;
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.LakePaint:
+                    if (CURRENT_WATERFEATURE != null)
+                    {
+                        // TODO: undo/redo
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER).MapLayerComponents.Add(CURRENT_WATERFEATURE);
+                        WaterFeatureMethods.MergeWaterFeatures(CURRENT_MAP);
+
+                        CURRENT_WATERFEATURE = null;
+
+                        CURRENT_MAP.IsSaved = false;
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.RiverPaint:
+                    if (CURRENT_RIVER != null)
+                    {
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER).MapLayerComponents.Add(CURRENT_RIVER);
+
+                        CURRENT_RIVER = null;
+
+                        CURRENT_MAP.IsSaved = false;
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
             }
@@ -1242,23 +1471,12 @@ namespace RealmStudio
 
         private void RightButtonMouseUpHandler(object sender, MouseEventArgs e)
         {
-            throw new NotImplementedException();
+            // no right button mouse up events yet
         }
 
-        private void NoButtonMouseUpHandler(object sender, MouseEventArgs e)
+        private void MiddleButtonMouseUpHandler(object sender, MouseEventArgs e)
         {
-            throw new NotImplementedException();
-        }
-
-        private static void DrawCircleCursor(SKPoint point, int brushSize)
-        {
-            MapLayer cursorLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.CURSORLAYER);
-            cursorLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
-
-            if (brushSize > 0)
-            {
-                cursorLayer.LayerSurface?.Canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
-            }
+            // no middle button mouse up events yet
         }
 
         #endregion
@@ -1543,7 +1761,7 @@ namespace RealmStudio
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.LandformSelect;
             SetDrawingModeLabel();
-            SELECTED_BRUSH_SIZE = 0;
+            SetSelectedBrushSize(0);
         }
 
         private void LandformPaintButton_Click(object sender, EventArgs e)
@@ -1875,30 +2093,35 @@ namespace RealmStudio
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.WaterFeatureSelect;
             SetDrawingModeLabel();
+            SetSelectedBrushSize(0);
         }
 
         private void WaterFeaturePaintButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.WaterPaint;
             SetDrawingModeLabel();
+            SetSelectedBrushSize(WaterFeatureMethods.WaterFeatureBrushSize);
         }
 
         private void WaterFeatureLakeButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.LakePaint;
             SetDrawingModeLabel();
+            SetSelectedBrushSize(WaterFeatureMethods.WaterFeatureBrushSize);
         }
 
         private void WaterFeatureRiverButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.RiverPaint;
             SetDrawingModeLabel();
+            SetSelectedBrushSize(0);
         }
 
         private void WaterFeatureEraseButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.WaterErase;
             SetDrawingModeLabel();
+            SetSelectedBrushSize(WaterFeatureMethods.WaterFeatureEraserSize);
         }
 
         private void WaterBrushSizeTrack_ValueChanged(object sender, EventArgs e)
@@ -1941,6 +2164,64 @@ namespace RealmStudio
             TOOLTIP.Show(WaterFeatureMethods.WaterFeatureEraserSize.ToString(), WaterEraseSizeTrack, new Point(WaterEraseSizeTrack.Right - 42, WaterEraseSizeTrack.Top - 58), 2000);
             SetSelectedBrushSize(WaterFeatureMethods.WaterFeatureEraserSize);
         }
+
+        #endregion
+
+        #region Water Feature Methods
+
+        internal static MapComponent? SelectWaterFeatureAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
+        {
+            MapComponent? selectedWaterFeature = null;
+
+            List<MapComponent> waterFeatureComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER).MapLayerComponents;
+
+            for (int i = 0; i < waterFeatureComponents.Count; i++)
+            {
+                if (waterFeatureComponents[i] is WaterFeature waterFeature)
+                {
+                    SKPath boundaryPath = waterFeature.WaterFeaturePath;
+
+                    if (boundaryPath != null && boundaryPath.PointCount > 0)
+                    {
+                        if (boundaryPath.Contains(mapClickPoint.X, mapClickPoint.Y))
+                        {
+                            waterFeature.IsSelected = !waterFeature.IsSelected;
+
+                            if (waterFeature.IsSelected)
+                            {
+                                selectedWaterFeature = waterFeature;
+                            }
+                            break;
+                        }
+                    }
+                }
+                else if (waterFeatureComponents[i] is River river)
+                {
+                    SKPath? boundaryPath = river.RiverBoundaryPath;
+
+                    if (boundaryPath != null && boundaryPath.PointCount > 0)
+                    {
+                        if (boundaryPath.Contains(mapClickPoint.X, mapClickPoint.Y))
+                        {
+                            river.IsSelected = !river.IsSelected;
+
+                            if (river.IsSelected)
+                            {
+                                selectedWaterFeature = river;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+#pragma warning disable CS8604 // Possible null reference argument.
+            DeselectAllMapComponents(selectedWaterFeature);
+#pragma warning restore CS8604 // Possible null reference argument.
+
+            return selectedWaterFeature;
+        }
+
 
         #endregion
     }

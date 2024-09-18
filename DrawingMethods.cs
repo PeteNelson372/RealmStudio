@@ -21,9 +21,15 @@
 * contact@brookmonte.com
 *
 ***************************************************************************************************************************/
+using AForge.Imaging;
+using AForge.Imaging.Filters;
 using Clipper2Lib;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using System;
+using System.Drawing.Imaging;
+using System.Reflection.Metadata;
+using Blob = AForge.Imaging.Blob;
 
 namespace RealmStudio
 {
@@ -31,7 +37,6 @@ namespace RealmStudio
     {
         const float PI_OVER_180 = (float)Math.PI / 180F;
         const float D180_OVER_PI = (float)((float)180.0F / Math.PI);
-
 
         public static SKPoint[] GetPoints(uint quantity, SKPoint p1, SKPoint p2)
         {
@@ -71,6 +76,15 @@ namespace RealmStudio
         {
             return SKPoint.Distance(from, to);
         }
+
+        public static float CalculateLineAngle(SKPoint start, SKPoint end)
+        {
+            float xDiff = end.X - start.X;
+            float yDiff = end.Y - start.Y;
+
+            return (float)((float)Math.Atan2(yDiff, xDiff) * D180_OVER_PI);
+        }
+
 
         public static bool IsPaintableImage(Bitmap bitmap)
         {
@@ -117,6 +131,51 @@ namespace RealmStudio
             return isPaintableImage;
         }
 
+        public static Bitmap MakeGrayscale(Bitmap original, float threshold, bool makeMonochrome)
+        {
+            //create a blank bitmap the same size as original
+            Bitmap grayScaleBitmap = new(original.Width, original.Height);
+
+            //get a graphics object from the new image
+            using (Graphics g = Graphics.FromImage(grayScaleBitmap))
+            {
+
+                //create the grayscale ColorMatrix
+                ColorMatrix colorMatrix = new ColorMatrix(
+                    [
+                        [0.299f, 0.299f, 0.299f, 0, 0],
+                        [0.587f, 0.587f, 0.587f, 0, 0],
+                        [0.114f, 0.114f, 0.114f, 0, 0],
+                        [0,      0,      0,      1, 0],
+                        [0,      0,      0,      0, 1]
+                    ]);
+
+                //create some image attributes
+                using ImageAttributes attributes = new ImageAttributes();
+
+                if (makeMonochrome)
+                {
+                    // set threshold to convert grayscale to monochrome
+                    attributes.SetThreshold(threshold);
+                }
+
+                //set the color matrix attribute so colors from light gray to white are set to transparent
+                attributes.SetColorMatrix(colorMatrix);
+
+                Color lowerColor = Color.LightGray;
+                Color upperColor = Color.White;
+
+                attributes.SetColorKey(lowerColor, upperColor, ColorAdjustType.Default);
+
+                //draw the original image on the new image
+                //using the grayscale color matrix
+                g.DrawImage(original, new Rectangle(0, 0, original.Width, original.Height),
+                            0, 0, original.Width, original.Height, GraphicsUnit.Pixel, attributes);
+            }
+
+            return grayScaleBitmap;
+        }
+
         public static bool IsGrayScaleImage(Bitmap bitmap)
         {
             bool IsGrayScaleImage = true;
@@ -144,6 +203,56 @@ namespace RealmStudio
             }
 
             return IsGrayScaleImage;
+        }
+
+        internal static Bitmap? ExtractLargestBlob(Bitmap b)
+        {
+            if (b.PixelFormat != PixelFormat.Format8bppIndexed)
+            {
+                // convert the bitmap to an 8bpp grayscale image for processing
+                b = Grayscale.CommonAlgorithms.BT709.Apply(b);
+            }
+
+            // invert the bitmap colors white -> black; black -> white
+            Invert invert = new();
+            using Bitmap invertedBitmap = invert.Apply(b);
+
+            // extract the largest blob; this will be the landform to be created
+            // create an instance of blob counter algorithm
+            BlobCounterBase bc = new BlobCounter
+            {
+                // set filtering options
+                FilterBlobs = true,
+                MinWidth = 5,
+                MinHeight = 5,
+
+                // set ordering options
+                ObjectsOrder = ObjectsOrder.Size
+            };
+
+            // process binary image
+            bc.ProcessImage(invertedBitmap);
+
+            //bc.ProcessImage(b);
+
+            Blob[] blobs = bc.GetObjectsInformation();
+
+            // extract the biggest blob
+            if (blobs.Length > 0)
+            {
+                bc.ExtractBlobsImage(b, blobs[0], true);
+
+                Blob biggestBlob = blobs[0];
+                Bitmap managedImage = biggestBlob.Image.ToManagedImage();
+
+                // re-invert the colors
+                Bitmap invertedBlobBitmap = invert.Apply(managedImage);
+
+                //return managedImage;
+                return invertedBlobBitmap;
+            }
+
+            return null;
         }
 
         internal static SKPath GetInnerOrOuterPath(List<SKPoint> pathPoints, float distance, ParallelEnum location)
