@@ -1,8 +1,30 @@
-﻿using AForge.Imaging.Filters;
+﻿/**************************************************************************************************************************
+* Copyright 2024, Peter R. Nelson
+*
+* This file is part of the RealmStudio application. The RealmStudio application is intended
+* for creating fantasy maps for gaming and world building.
+*
+* RealmStudio is free software: you can redistribute it and/or modify it under the terms
+* of the GNU General Public License as published by the Free Software Foundation,
+* either version 3 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+* without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+* See the GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+* The text of the GNU General Public License (GPL) is found in the LICENSE.txt file.
+* If the LICENSE.txt file is not present or the text of the GNU GPL is not present in the LICENSE.txt file,
+* see https://www.gnu.org/licenses/.
+*
+* For questions about the RealmStudio application or about licensing, please email
+* contact@brookmonte.com
+*
+***************************************************************************************************************************/
+using AForge.Imaging.Filters;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
-using System.Windows.Media.Media3D;
 
 namespace RealmStudio
 {
@@ -327,7 +349,7 @@ namespace RealmStudio
         {
             if (mapRiver.RiverPaint != null) return;
 
-            float strokeWidth = mapRiver.RiverWidth;
+            float strokeWidth = mapRiver.RiverWidth / 2;
 
             SKShader colorShader = SKShader.CreateColor(Extensions.ToSKColor(mapRiver.RiverColor));
 
@@ -353,20 +375,32 @@ namespace RealmStudio
                 combinedShader = colorShader;
             }
 
+            SKColor riverColor = Extensions.ToSKColor(Color.FromArgb(mapRiver.RiverColor.A, mapRiver.RiverColor));
+
             mapRiver.RiverPaint = new()
             {
-                Color = Extensions.ToSKColor(mapRiver.RiverColor),
+                Color = riverColor,
                 StrokeWidth = strokeWidth,
                 Style = SKPaintStyle.Stroke,
                 StrokeCap = SKStrokeCap.Butt,
                 StrokeJoin = SKStrokeJoin.Round,
                 IsAntialias = true,
+                BlendMode = SKBlendMode.SrcATop,
+                Shader = combinedShader
+            };
+
+            mapRiver.RiverFillPaint = new()
+            {
+                Color = riverColor,
+                Style = SKPaintStyle.Fill,
+                IsAntialias = true,
+                BlendMode = SKBlendMode.Src,
                 Shader = combinedShader
             };
 
             mapRiver.RiverShorelinePaint = new()
             {
-                StrokeWidth = strokeWidth,
+                StrokeWidth = strokeWidth - 2,
                 Style = SKPaintStyle.Stroke,
                 BlendMode = SKBlendMode.Src,
                 Color = Extensions.ToSKColor(mapRiver.RiverShorelineColor),
@@ -374,7 +408,7 @@ namespace RealmStudio
             };
 
             // shallow water is a lighter shade of river color
-            SKColor shallowWaterColor = Extensions.ToSKColor(mapRiver.RiverColor);
+            SKColor shallowWaterColor = Extensions.ToSKColor(Color.FromArgb(mapRiver.RiverShorelineColor.A / 4, mapRiver.RiverColor));
 
             shallowWaterColor.ToHsl(out float hue, out float saturation, out float luminance);
             luminance *= 1.1F;
@@ -384,7 +418,7 @@ namespace RealmStudio
             mapRiver.RiverShallowWaterPaint = new()
             {
                 Color = shallowWaterColor,
-                StrokeWidth = strokeWidth / 1.5F,
+                StrokeWidth = strokeWidth / 2F,
                 Style = SKPaintStyle.Stroke,
                 BlendMode = SKBlendMode.SrcATop,
                 IsAntialias = true

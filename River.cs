@@ -1,5 +1,27 @@
-﻿using SkiaSharp;
-using SkiaSharp.Components;
+﻿/**************************************************************************************************************************
+* Copyright 2024, Peter R. Nelson
+*
+* This file is part of the RealmStudio application. The RealmStudio application is intended
+* for creating fantasy maps for gaming and world building.
+*
+* RealmStudio is free software: you can redistribute it and/or modify it under the terms
+* of the GNU General Public License as published by the Free Software Foundation,
+* either version 3 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+* without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+* See the GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+* The text of the GNU General Public License (GPL) is found in the LICENSE.txt file.
+* If the LICENSE.txt file is not present or the text of the GNU GPL is not present in the LICENSE.txt file,
+* see https://www.gnu.org/licenses/.
+*
+* For questions about the RealmStudio application or about licensing, please email
+* contact@brookmonte.com
+*
+***************************************************************************************************************************/
+using SkiaSharp;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -28,7 +50,9 @@ namespace RealmStudio
 
         public bool IsSelected { get; set; } = false;
 
-        public SKPaint? RiverPaint { get; set; }
+        public SKPaint? RiverPaint { get; set; } = null;
+
+        public SKPaint? RiverFillPaint { get; set; } = null;
 
         public SKPaint? RiverShorelinePaint { get; set; } = null;
 
@@ -63,10 +87,85 @@ namespace RealmStudio
                     // use multiple paths and multiple sets of parallel points and paint objects
                     // to draw lines as gradients to shade rivers
 
+                    // river
+                    using SKPath riverPath = new();
+
+                    List<MapRiverPoint> parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth / 2.0F, ParallelEnum.Above, RiverSourceFadeIn);
+
+                    if (parallelPoints.Count > 2)
+                    {
+                        riverPath.MoveTo(parallelPoints[0].RiverPoint);
+
+                        for (int j = 0; j < parallelPoints.Count; j += 3)
+                        {
+                            if (j < parallelPoints.Count - 2)
+                            {
+                                riverPath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
+                            }
+                        }
+                    }
+
+
+                    List<MapRiverPoint> parallelPoints2 = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth / 2.0F, ParallelEnum.Below, RiverSourceFadeIn);
+
+                    if (parallelPoints2.Count > 2)
+                    {
+                        riverPath.MoveTo(parallelPoints2[0].RiverPoint);
+
+                        for (int j = 0; j < parallelPoints2.Count; j += 3)
+                        {
+                            if (j < parallelPoints2.Count - 2)
+                            {
+                                riverPath.CubicTo(parallelPoints2[j].RiverPoint, parallelPoints2[j + 1].RiverPoint, parallelPoints2[j + 2].RiverPoint);
+                            }
+                        }
+                    }
+
+                    canvas.DrawPath(riverPath, RiverPaint);
+
+                    // fill path
+                    using SKPath riverFillPath = new();
+
+                    if (parallelPoints.Count > 2)
+                    {
+                        riverFillPath.MoveTo(parallelPoints[0].RiverPoint);
+
+                        for (int j = 0; j < parallelPoints.Count; j += 3)
+                        {
+                            if (j < parallelPoints.Count - 2)
+                            {
+                                riverFillPath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
+                            }
+                        }
+                    }
+
+                    if (parallelPoints2.Count > 2)
+                    {
+                        riverFillPath.MoveTo(parallelPoints.Last().RiverPoint);
+                        riverFillPath.LineTo(parallelPoints2.Last().RiverPoint);
+
+                        for (int j = parallelPoints2.Count - 1; j >= 2; j -= 3)
+                        {
+                            if (j < parallelPoints2.Count - 2)
+                            {
+                                riverFillPath.CubicTo(parallelPoints2[j].RiverPoint, parallelPoints2[j - 1].RiverPoint, parallelPoints2[j - 2].RiverPoint);
+                            }
+                        }
+                    }
+
+                    if (parallelPoints.Count > 2 && parallelPoints2.Count > 2)
+                    {
+                        riverFillPath.MoveTo(parallelPoints2[0].RiverPoint);
+                        riverFillPath.LineTo(parallelPoints[0].RiverPoint);
+
+                        canvas.DrawPath(riverFillPath, RiverFillPaint);
+                    }
+
                     // shoreline
                     using SKPath shorelinePath = new();
 
-                    List<MapRiverPoint> parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth * 1.1F, ParallelEnum.Below, RiverSourceFadeIn);
+                    parallelPoints.Clear();
+                    parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth * 1.1F, ParallelEnum.Below, RiverSourceFadeIn);
 
                     if (parallelPoints.Count > 2)
                     {
@@ -105,7 +204,7 @@ namespace RealmStudio
                     };
 
                     parallelPoints.Clear();
-                    parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth, ParallelEnum.Above, RiverSourceFadeIn);
+                    parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth * 0.9F, ParallelEnum.Above, RiverSourceFadeIn);
 
                     // shallow water
                     using SKPath shallowWaterPath = new();
@@ -124,7 +223,7 @@ namespace RealmStudio
                     }
 
                     parallelPoints.Clear();
-                    parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth, ParallelEnum.Below, RiverSourceFadeIn);
+                    parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth * 0.9F, ParallelEnum.Below, RiverSourceFadeIn);
 
                     if (parallelPoints.Count > 2)
                     {
@@ -140,43 +239,6 @@ namespace RealmStudio
                     }
 
                     canvas.DrawPath(shallowWaterPath, RiverShallowWaterPaint);
-
-                    // river
-                    using SKPath riverPath = new();
-
-                    parallelPoints.Clear();
-                    parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth / 2.0F, ParallelEnum.Above, RiverSourceFadeIn);
-
-                    if (parallelPoints.Count > 2)
-                    {
-                        riverPath.MoveTo(parallelPoints[0].RiverPoint);
-
-                        for (int j = 0; j < parallelPoints.Count; j += 3)
-                        {
-                            if (j < parallelPoints.Count - 2)
-                            {
-                                riverPath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
-                            }
-                        }
-                    }
-
-                    parallelPoints.Clear();
-                    parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth / 2.0F, ParallelEnum.Below, RiverSourceFadeIn);
-
-                    if (parallelPoints.Count > 2)
-                    {
-                        riverPath.MoveTo(parallelPoints[0].RiverPoint);
-
-                        for (int j = 0; j < parallelPoints.Count; j += 3)
-                        {
-                            if (j < parallelPoints.Count - 2)
-                            {
-                                riverPath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
-                            }
-                        }
-                    }
-
-                    canvas.DrawPath(riverPath, RiverPaint);
 
                     canvas.Restore();
                 }

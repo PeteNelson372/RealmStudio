@@ -13,8 +13,8 @@
 * See the GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License along with this program.
-* The text of the GNU General Public License (GPL) is found in the LICENSE file.
-* If the LICENSE file is not present or the text of the GNU GPL is not present in the LICENSE file,
+* The text of the GNU General Public License (GPL) is found in the LICENSE.txt file.
+* If the LICENSE.txt file is not present or the text of the GNU GPL is not present in the LICENSE.txt file,
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
@@ -26,9 +26,7 @@ using AForge.Imaging.Filters;
 using Clipper2Lib;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
-using System;
 using System.Drawing.Imaging;
-using System.Reflection.Metadata;
 using Blob = AForge.Imaging.Blob;
 
 namespace RealmStudio
@@ -51,8 +49,6 @@ namespace RealmStudio
 
             for (int i = 1; i < quantity; i++)
             {
-                //t = dt / d
-                //(xt, yt) = (((1 - t) * x0 + t * x1), ((1 - t) * y0 + t * y1))
                 double t = (i * tdelta) / distance;
                 points[i].X = (int)Math.Ceiling((1 - t) * p1.X + t * p2.X);
                 points[i].Y = (int)Math.Ceiling((1 - t) * p1.Y + t * p2.Y);

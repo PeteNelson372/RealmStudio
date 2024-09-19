@@ -1,3 +1,26 @@
+/**************************************************************************************************************************
+* Copyright 2024, Peter R. Nelson
+*
+* This file is part of the RealmStudio application. The RealmStudio application is intended
+* for creating fantasy maps for gaming and world building.
+*
+* RealmStudio is free software: you can redistribute it and/or modify it under the terms
+* of the GNU General Public License as published by the Free Software Foundation,
+* either version 3 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+* without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+* See the GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+* The text of the GNU General Public License (GPL) is found in the LICENSE.txt file.
+* If the LICENSE.txt file is not present or the text of the GNU GPL is not present in the LICENSE.txt file,
+* see https://www.gnu.org/licenses/.
+*
+* For questions about the RealmStudio application or about licensing, please email
+* contact@brookmonte.com
+*
+***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Components;
 using SkiaSharp.Views.Desktop;
@@ -14,10 +37,12 @@ namespace RealmStudio
 
         private static RealmStudioMap CURRENT_MAP = new();
 
+        // the objects currently being drawn, before being added to map layers
         private static Landform? CURRENT_LANDFORM = null;
         private static MapWindrose? CURRENT_WINDROSE = null;
         private static WaterFeature? CURRENT_WATERFEATURE = null;
         private static River? CURRENT_RIVER = null;
+        private static MapPath? CURRENT_PATH = null;
 
         private static int SELECTED_BRUSH_SIZE = 0;
 
@@ -463,6 +488,7 @@ namespace RealmStudio
         {
             SetStatusText("Loaded: " + assetCount + " assets.");
 
+            // background texture
             if (AssetManager.BACKGROUND_TEXTURE_LIST.First().TextureBitmap == null)
             {
                 AssetManager.BACKGROUND_TEXTURE_LIST.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.BACKGROUND_TEXTURE_LIST.First().TexturePath);
@@ -471,6 +497,7 @@ namespace RealmStudio
             BackgroundTextureBox.Image = AssetManager.BACKGROUND_TEXTURE_LIST.First().TextureBitmap;
             BackgroundTextureNameLabel.Text = AssetManager.BACKGROUND_TEXTURE_LIST.First().TextureName;
 
+            // landform texture
             if (AssetManager.LAND_TEXTURE_LIST.First().TextureBitmap == null)
             {
                 AssetManager.LAND_TEXTURE_LIST.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.LAND_TEXTURE_LIST.First().TexturePath);
@@ -479,6 +506,7 @@ namespace RealmStudio
             LandformTexturePreviewPicture.Image = AssetManager.LAND_TEXTURE_LIST.First().TextureBitmap;
             LandTextureNameLabel.Text = AssetManager.LAND_TEXTURE_LIST.First().TextureName;
 
+            // ocean texture
             if (AssetManager.WATER_TEXTURE_LIST.First().TextureBitmap == null)
             {
                 AssetManager.WATER_TEXTURE_LIST.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.WATER_TEXTURE_LIST.First().TexturePath);
@@ -486,6 +514,15 @@ namespace RealmStudio
 
             OceanTextureBox.Image = AssetManager.WATER_TEXTURE_LIST.First().TextureBitmap;
             OceanTextureNameLabel.Text = AssetManager.WATER_TEXTURE_LIST.First().TextureName;
+
+            // path texture
+            if (AssetManager.PATH_TEXTURE_LIST.First().TextureBitmap == null)
+            {
+                AssetManager.PATH_TEXTURE_LIST.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.PATH_TEXTURE_LIST.First().TexturePath);
+            }
+
+            PathTexturePreviewPicture.Image = AssetManager.PATH_TEXTURE_LIST.First().TextureBitmap;
+            PathTextureNameLabel.Text = AssetManager.PATH_TEXTURE_LIST.First().TextureName;
 
             CoastlineStyleList.SelectedIndex = 6;  // default is dash pattern
 
@@ -1010,7 +1047,7 @@ namespace RealmStudio
                     {
                         r.Render(waterLayer.LayerSurface.Canvas);
 
-                        // TODO: render river drawing (
+                        // TODO: render river drawing
 
                         if (r.IsSelected)
                         {
@@ -1021,7 +1058,7 @@ namespace RealmStudio
                                 using SKPath boundsPath = new();
                                 boundsPath.AddRect(boundRect);
 
-                                waterDrawingLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.RiverSelectPaint);
+                                selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.RiverSelectPaint);
                             }
                         }
 
@@ -1057,11 +1094,94 @@ namespace RealmStudio
                 e.Surface.Canvas.DrawSurface(aboveOceanGridLayer.LayerSurface, ScrollPoint);
             }
 
-            // TODO: path lower layer
+            // path lower layer
+            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+            if (pathLowerLayer.LayerSurface != null)
+            {
+                pathLowerLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+
+                if (CURRENT_PATH != null && !CURRENT_PATH.DrawOverSymbols)
+                {
+                    CURRENT_PATH.Render(pathLowerLayer.LayerSurface.Canvas);                    
+                }
+
+                foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                {
+                    mp.Render(pathLowerLayer.LayerSurface.Canvas);
+
+                    if (mp.IsSelected)
+                    {
+                        if (mp.BoundaryPath != null)
+                        {
+                            // draw an outline around the path to show that it is selected
+                            mp.BoundaryPath.GetTightBounds(out SKRect boundRect);
+                            using SKPath boundsPath = new();
+                            boundsPath.AddRect(boundRect);
+
+                            selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.MapPathSelectPaint);
+                        }
+                    }
+
+                    if (mp.ShowPathPoints)
+                    {
+                        List<MapPathPoint> controlPoints = mp.GetMapPathControlPoints();
+
+                        foreach (MapPathPoint p in controlPoints)
+                        {
+                            pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointPaint);
+                            pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointOutlinePaint);
+                        }
+                    }
+                }
+
+                e.Surface.Canvas.DrawSurface(pathLowerLayer.LayerSurface, ScrollPoint);
+            }
+
 
             // TODO: symbol layer
 
             // TODO: path upper layer
+            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+            if (pathUpperLayer.LayerSurface != null)
+            {
+                pathUpperLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+
+                if (CURRENT_PATH != null && CURRENT_PATH.DrawOverSymbols)
+                {
+                    CURRENT_PATH.Render(pathUpperLayer.LayerSurface.Canvas);
+                }
+
+                foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                {
+                    mp.Render(pathUpperLayer.LayerSurface.Canvas);
+
+                    if (mp.IsSelected)
+                    {
+                        if (mp.BoundaryPath != null)
+                        {
+                            // draw an outline around the path to show that it is selected
+                            mp.BoundaryPath.GetTightBounds(out SKRect boundRect);
+                            using SKPath boundsPath = new();
+                            boundsPath.AddRect(boundRect);
+
+                            selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.MapPathSelectPaint);
+                        }
+                    }
+
+                    if (mp.ShowPathPoints)
+                    {
+                        List<MapPathPoint> controlPoints = mp.GetMapPathControlPoints();
+
+                        foreach (MapPathPoint p in controlPoints)
+                        {
+                            pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointPaint);
+                            pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointOutlinePaint);
+                        }
+                    }
+                }
+
+                e.Surface.Canvas.DrawSurface(pathUpperLayer.LayerSurface, ScrollPoint);
+            }
 
             // TODO: region layer
 
@@ -1282,8 +1402,36 @@ namespace RealmStudio
                         }
                     }
                     break;
+                case DrawingModeEnum.PathPaint:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_PATH == null)
+                        {
+                            // initialize map path
+                            CURRENT_PATH = new MapPath
+                            {
+                                ParentMap = CURRENT_MAP,
+                                PathType = GetSelectedPathType(),
+                                PathColor = PathColorSelectButton.BackColor,
+                                PathWidth = PathWidthTrack.Value,
+                                DrawOverSymbols = DrawOverSymbolsSwitch.Checked,
+                            };
+
+                            if (PathTexturePreviewPicture.Image != null)
+                            {
+                                CURRENT_PATH.PathTexture = new Bitmap(PathTexturePreviewPicture.Image, PathWidthTrack.Value, PathWidthTrack.Value).ToSKBitmap();
+                            }
+
+                            MapPathMethods.ConstructPathPaint(CURRENT_PATH);
+                            CURRENT_PATH.PathPoints.Add(new MapPathPoint(zoomedScrolledPoint));
+                        }
+                    }
+                    break;
             }
         }
+
+
 
         private void RightButtonMouseDownHandler(object sender, MouseEventArgs e)
         {
@@ -1352,6 +1500,15 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
 
                         CURRENT_RIVER?.RiverPoints.Add(new MapRiverPoint(zoomedScrolledPoint));
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.PathPaint:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        CURRENT_PATH?.PathPoints.Add(new MapPathPoint(zoomedScrolledPoint));
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -1459,6 +1616,25 @@ namespace RealmStudio
                         MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER).MapLayerComponents.Add(CURRENT_RIVER);
 
                         CURRENT_RIVER = null;
+
+                        CURRENT_MAP.IsSaved = false;
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.PathPaint:
+                    if (CURRENT_PATH != null)
+                    {
+                        if (CURRENT_PATH.DrawOverSymbols)
+                        {
+                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER).MapLayerComponents.Add(CURRENT_PATH);
+                        }
+                        else
+                        {
+                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER).MapLayerComponents.Add(CURRENT_PATH);
+                        }
+
+                        CURRENT_PATH = null;
 
                         CURRENT_MAP.IsSaved = false;
 
@@ -1641,7 +1817,7 @@ namespace RealmStudio
 
             if (AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TextureBitmap == null)
             {
-                AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TexturePath);
+                AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TexturePath);
             }
 
             OceanTextureBox.Image = AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TextureBitmap;
@@ -2224,5 +2400,177 @@ namespace RealmStudio
 
 
         #endregion
+
+        #region Path Tab Event Handlers
+
+        private void DrawPathButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.PathPaint;
+            SetSelectedBrushSize(0);
+        }
+
+        private void PathWidthTrack_ValueChanged(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(PathWidthTrack.Value.ToString(), PathWidthTrack, new Point(PathWidthTrack.Right - 42, PathWidthTrack.Top - 58), 2000);
+        }
+
+        private void PathColorSelectButton_Click(object sender, EventArgs e)
+        {
+            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, PathColorSelectButton.BackColor);
+
+            if (selectedColor != Color.Empty)
+            {
+                PathColorSelectButton.BackColor = selectedColor;
+            }
+        }
+
+        private void PreviousPathTextureButton_Click(object sender, EventArgs e)
+        {
+            if (AssetManager.SELECTED_PATH_TEXTURE_INDEX > 0)
+            {
+                AssetManager.SELECTED_PATH_TEXTURE_INDEX--;
+            }
+
+            if (AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap == null)
+            {
+                AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TexturePath);
+            }
+
+            PathTexturePreviewPicture.Image = AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap;
+            PathTextureNameLabel.Text = AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureName;
+        }
+
+        private void NextPathTextureButton_Click(object sender, EventArgs e)
+        {
+            if (AssetManager.SELECTED_PATH_TEXTURE_INDEX < AssetManager.PATH_TEXTURE_LIST.Count - 1)
+            {
+                AssetManager.SELECTED_PATH_TEXTURE_INDEX++;
+            }
+
+            if (AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap == null)
+            {
+                AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TexturePath);
+            }
+
+            PathTexturePreviewPicture.Image = AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap;
+            PathTextureNameLabel.Text = AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureName;
+        }
+
+        private void SolidLinePictureBox_Click(object sender, EventArgs e)
+        {
+            SolidLineRadio.Checked = !SolidLineRadio.Checked;
+        }
+
+        private void DottedLinePictureBox_Click(object sender, EventArgs e)
+        {
+            DottedLineRadio.Checked = !DottedLineRadio.Checked;
+        }
+
+        private void DashedLinePictureBox_Click(object sender, EventArgs e)
+        {
+            DashedLineRadio.Checked = !DashedLineRadio.Checked;
+        }
+
+        private void DashDotPictureBox_Click(object sender, EventArgs e)
+        {
+            DashDotLineRadio.Checked = !DashDotLineRadio.Checked;
+        }
+
+        private void DashDotDotPictureBox_Click(object sender, EventArgs e)
+        {
+            DashDotDotLineRadio.Checked = !DashDotDotLineRadio.Checked;
+        }
+
+        private void DoubleSolidBorderPictureBox_Click(object sender, EventArgs e)
+        {
+            DoubleSolidBorderRadio.Checked = !DoubleSolidBorderRadio.Checked;
+        }
+
+        private void ChevronPictureBox_Click(object sender, EventArgs e)
+        {
+            ChevronLineRadio.Checked = !ChevronLineRadio.Checked;
+        }
+
+        private void LineDashPictureBox_Click(object sender, EventArgs e)
+        {
+            LineAndDashesRadio.Checked = !LineAndDashesRadio.Checked;
+        }
+
+        private void SmallDashesPictureBox_Click(object sender, EventArgs e)
+        {
+            SmallDashesRadio.Checked = !SmallDashesRadio.Checked;
+        }
+
+        private void ThickLinePictureBox_Click(object sender, EventArgs e)
+        {
+            ThickLineRadio.Checked = !ThickLineRadio.Checked;
+        }
+
+        private void BlackBorderLinePictureBox_Click(object sender, EventArgs e)
+        {
+            BlackBorderPathRadio.Checked = !BlackBorderPathRadio.Checked;
+        }
+
+        private void BorderedGradientPictureBox_Click(object sender, EventArgs e)
+        {
+            BorderedGradientRadio.Checked = !BorderedGradientRadio.Checked;
+        }
+
+        private void BorderedLightSolidPictureBox_Click(object sender, EventArgs e)
+        {
+            BorderedLightSolidRadio.Checked = !BorderedLightSolidRadio.Checked;
+        }
+
+        private void BearTracksPictureBox_Click(object sender, EventArgs e)
+        {
+            BearTracksRadio.Checked = !BearTracksRadio.Checked;
+        }
+
+        private void BirdTracksPictureBox_Click(object sender, EventArgs e)
+        {
+            BirdTracksRadio.Checked = !BirdTracksRadio.Checked;
+        }
+
+        private void FootPrintsPictureBox_Click(object sender, EventArgs e)
+        {
+            FootPrintsRadio.Checked = !FootPrintsRadio.Checked;
+        }
+
+        private void RailroadTracksPictureBox_Click(object sender, EventArgs e)
+        {
+            RailroadTracksRadio.Checked = !RailroadTracksRadio.Checked;
+        }
+
+        #endregion
+
+        #region Path Tab Methods
+        private PathTypeEnum GetSelectedPathType()
+        {
+            if (SolidLineRadio.Checked) return PathTypeEnum.SolidLinePath;
+            if (DottedLineRadio.Checked) return PathTypeEnum.DottedLinePath;
+            if (DashedLineRadio.Checked) return PathTypeEnum.DashedLinePath;
+            if (DashDotLineRadio.Checked) return PathTypeEnum.DashDotLinePath;
+            if (DashDotDotLineRadio.Checked) return PathTypeEnum.DashDotDotLinePath;
+            if (ChevronLineRadio.Checked) return PathTypeEnum.ChevronLinePath;
+            if (LineAndDashesRadio.Checked) return PathTypeEnum.LineAndDashesPath;
+            if (SmallDashesRadio.Checked) return PathTypeEnum.ShortIrregularDashPath;
+            if (ThickLineRadio.Checked) return PathTypeEnum.ThickSolidLinePath;
+            if (BlackBorderPathRadio.Checked) return PathTypeEnum.SolidBlackBorderPath;
+            if (BorderedGradientRadio.Checked) return PathTypeEnum.BorderedGradientPath;
+            if (BorderedLightSolidRadio.Checked) return PathTypeEnum.BorderedLightSolidPath;
+            if (DoubleSolidBorderRadio.Checked) return PathTypeEnum.DoubleSolidBorderPath;
+            if (BearTracksRadio.Checked) return PathTypeEnum.BearTracksPath;
+            if (BirdTracksRadio.Checked) return PathTypeEnum.BirdTracksPath;
+            if (FootPrintsRadio.Checked) return PathTypeEnum.FootprintsPath;
+            if (RailroadTracksRadio.Checked) return PathTypeEnum.RailroadTracksPath;
+            if (TexturePathRadio.Checked) return PathTypeEnum.TexturedPath;
+            if (BorderTexturePathRadio.Checked) return PathTypeEnum.BorderAndTexturePath;
+
+            return PathTypeEnum.SolidLinePath;
+        }
+
+        #endregion
+
+
     }
 }

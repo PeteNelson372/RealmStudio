@@ -29,18 +29,19 @@ using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    internal class MapImage : MapComponent, IXmlSerializable
+    public class MapPathPoint : IXmlSerializable
     {
-        public SKBitmap? MapImageBitmap { get; set; }
+        public Guid PointGuid { get; set; } = Guid.NewGuid();
+        public SKPoint MapPoint { get; set; }
 
-        public MapImage() { }
+        [XmlIgnore]
+        public bool IsSelected { get; set; } = false;
 
-        public override void Render(SKCanvas canvas)
+        public MapPathPoint() { }
+
+        public MapPathPoint(SKPoint point)
         {
-            if (MapImageBitmap != null)
-            {
-                canvas.DrawBitmap(MapImageBitmap, 0, 0);
-            }
+            MapPoint = point;
         }
 
         public XmlSchema? GetSchema()
@@ -56,25 +57,41 @@ namespace RealmStudio
 
             XNamespace ns = "RealmStudio";
             string content = reader.ReadOuterXml();
-            XDocument mapBitmapDoc = XDocument.Parse(content);
+            XDocument mapPathPointDoc = XDocument.Parse(content);
 
-            string? base64String = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "Bitmap").Value).FirstOrDefault();
 
-            if (!string.IsNullOrEmpty(base64String))
+            IEnumerable<XElement?> guidElemEnum = mapPathPointDoc.Descendants().Select(x => x.Element(ns + "PointGuid"));
+            if (guidElemEnum.First() != null)
             {
-                // Convert Base64 string to byte array
-                byte[] imageBytes = Convert.FromBase64String(base64String);
-
-                // Create an image from the byte array
-                using (MemoryStream ms = new(imageBytes))
-                {
-                    MapImageBitmap = SKBitmap.Decode(ms);
-
-                    Width = MapImageBitmap.Width;
-                    Height = MapImageBitmap.Height;
-                }
+                string? mapGuid = mapPathPointDoc.Descendants().Select(x => x.Element(ns + "PointGuid").Value).FirstOrDefault();
+                PointGuid = Guid.Parse(mapGuid);
             }
 
+            IEnumerable<XElement?> xyElemEnum = mapPathPointDoc.Descendants().Select(x => x.Element(ns + "MapPoint"));
+            if (xyElemEnum.First() != null)
+            {
+                List<XElement> elemList = xyElemEnum.Descendants().ToList();
+
+                if (elemList != null)
+                {
+                    float x = 0;
+                    float y = 0;
+
+                    foreach (XElement elem in elemList)
+                    {
+                        if (elem.Name.LocalName.ToString() == "X")
+                        {
+                            x = float.Parse(elem.Value);
+                        }
+
+                        if (elem.Name.LocalName.ToString() == "Y")
+                        {
+                            y = float.Parse(elem.Value);
+                            MapPoint = new SKPoint(x, y);
+                        }
+                    }
+                }
+            }
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -82,16 +99,18 @@ namespace RealmStudio
 
         public void WriteXml(XmlWriter writer)
         {
-            if (MapImageBitmap != null)
-            {
-                using MemoryStream ms = new();
-                using SKManagedWStream wstream = new(ms);
-                MapImageBitmap.Encode(wstream, SKEncodedImageFormat.Png, 100);
-                byte[] bitmapData = ms.ToArray();
-                writer.WriteStartElement("Bitmap");
-                writer.WriteBase64(bitmapData, 0, bitmapData.Length);
-                writer.WriteEndElement();
-            }
+            writer.WriteStartElement("PointGuid");
+            writer.WriteString(PointGuid.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("MapPoint");
+            writer.WriteStartElement("X");
+            writer.WriteValue(MapPoint.X.ToString());
+            writer.WriteEndElement();
+            writer.WriteStartElement("Y");
+            writer.WriteValue(MapPoint.Y.ToString());
+            writer.WriteEndElement();
+            writer.WriteEndElement();
         }
     }
 }
