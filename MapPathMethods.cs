@@ -280,5 +280,159 @@ namespace RealmStudio
                 canvas.DrawPath(path, paint);
             }
         }
+
+        public static SKPath GenerateMapPathBoundaryPath(List<MapPathPoint> points)
+        {
+            SKPath path = new();
+
+            if (points.Count < 3) return path;
+
+            path.MoveTo(points[0].MapPoint);
+
+            for (int j = 0; j < points.Count; j += 3)
+            {
+                if (j < points.Count - 2)
+                {
+                    path.CubicTo(points[j].MapPoint, points[j + 1].MapPoint, points[j + 2].MapPoint);
+                }
+            }
+
+            return path;
+        }
+
+        public static MapPathPoint? SelectMapPathPointAtPoint(MapPath mapPath, SKPoint mapClickPoint)
+        {
+            MapPathPoint? selectedPoint = null;
+
+            for (int i = 0; i < mapPath.PathPoints.Count; i++)
+            {
+                using SKPath controlPointPath = new();
+                controlPointPath.AddCircle(mapPath.PathPoints[i].MapPoint.X, mapPath.PathPoints[i].MapPoint.Y, mapPath.PathWidth);
+
+                if (controlPointPath.Contains(mapClickPoint.X, mapClickPoint.Y))
+                {
+                    selectedPoint = mapPath.PathPoints[i];
+                    break;
+                }
+            }
+
+            if (selectedPoint != null)
+            {
+                selectedPoint.IsSelected = true;
+            }
+
+            return selectedPoint;
+        }
+
+        internal static void MoveSelectedMapPathPoint(MapPath? selectedMapPath, MapPathPoint mapPathPoint, SKPoint movePoint)
+        {
+            if (selectedMapPath != null && mapPathPoint != null)
+            {
+                int selectedIndex = GetMapPathPointIndexById(selectedMapPath, mapPathPoint.PointGuid);
+
+                if (selectedIndex > -1)
+                {
+                    // move the selected mappath point and the 4 points before and after it
+                    if (selectedIndex - 4 > 0)
+                    {
+                        float xDelta = (movePoint.X - selectedMapPath.PathPoints[selectedIndex].MapPoint.X) * 0.2F;
+                        float yDelta = (movePoint.Y - selectedMapPath.PathPoints[selectedIndex].MapPoint.Y) * 0.2F;
+                        SKPoint newPoint = new(movePoint.X - xDelta, movePoint.Y - yDelta);
+                        selectedMapPath.PathPoints[selectedIndex - 4].MapPoint = newPoint;
+                    }
+
+                    if (selectedIndex - 3 > 0)
+                    {
+                        float xDelta = (movePoint.X - selectedMapPath.PathPoints[selectedIndex].MapPoint.X) * 0.4F;
+                        float yDelta = (movePoint.Y - selectedMapPath.PathPoints[selectedIndex].MapPoint.Y) * 0.4F;
+                        SKPoint newPoint = new(movePoint.X - xDelta, movePoint.Y - yDelta);
+                        selectedMapPath.PathPoints[selectedIndex - 3].MapPoint = newPoint;
+                    }
+
+                    if (selectedIndex - 2 > 0)
+                    {
+                        float xDelta = (movePoint.X - selectedMapPath.PathPoints[selectedIndex].MapPoint.X) * 0.6F;
+                        float yDelta = (movePoint.Y - selectedMapPath.PathPoints[selectedIndex].MapPoint.Y) * 0.6F;
+                        SKPoint newPoint = new(movePoint.X - xDelta, movePoint.Y - yDelta);
+                        selectedMapPath.PathPoints[selectedIndex - 2].MapPoint = newPoint;
+                    }
+
+                    if (selectedIndex - 1 > 0)
+                    {
+                        float xDelta = (movePoint.X - selectedMapPath.PathPoints[selectedIndex].MapPoint.X) * 0.8F;
+                        float yDelta = (movePoint.Y - selectedMapPath.PathPoints[selectedIndex].MapPoint.Y) * 0.8F;
+                        SKPoint newPoint = new(movePoint.X - xDelta, movePoint.Y - yDelta);
+                        selectedMapPath.PathPoints[selectedIndex - 1].MapPoint = newPoint;
+                    }
+
+                    selectedMapPath.PathPoints[selectedIndex].MapPoint = movePoint;
+
+                    if (selectedIndex + 1 < selectedMapPath.PathPoints.Count - 1)
+                    {
+                        float xDelta = (movePoint.X - selectedMapPath.PathPoints[selectedIndex].MapPoint.X) * 0.2F;
+                        float yDelta = (movePoint.Y - selectedMapPath.PathPoints[selectedIndex].MapPoint.Y) * 0.2F;
+                        SKPoint newPoint = new(movePoint.X + xDelta, movePoint.Y + yDelta);
+                        selectedMapPath.PathPoints[selectedIndex + 1].MapPoint = newPoint;
+                    }
+
+                    if (selectedIndex + 2 < selectedMapPath.PathPoints.Count - 1)
+                    {
+                        float xDelta = (movePoint.X - selectedMapPath.PathPoints[selectedIndex].MapPoint.X) * 0.4F;
+                        float yDelta = (movePoint.Y - selectedMapPath.PathPoints[selectedIndex].MapPoint.Y) * 0.4F;
+                        SKPoint newPoint = new(movePoint.X + xDelta, movePoint.Y + yDelta);
+                        selectedMapPath.PathPoints[selectedIndex + 2].MapPoint = newPoint;
+                    }
+
+                    if (selectedIndex + 3 < selectedMapPath.PathPoints.Count - 1)
+                    {
+                        float xDelta = (movePoint.X - selectedMapPath.PathPoints[selectedIndex].MapPoint.X) * 0.6F;
+                        float yDelta = (movePoint.Y - selectedMapPath.PathPoints[selectedIndex].MapPoint.Y) * 0.6F;
+                        SKPoint newPoint = new(movePoint.X + xDelta, movePoint.Y + yDelta);
+                        selectedMapPath.PathPoints[selectedIndex + 3].MapPoint = newPoint;
+                    }
+
+                    if (selectedIndex + 4 < selectedMapPath.PathPoints.Count - 1)
+                    {
+                        float xDelta = (movePoint.X - selectedMapPath.PathPoints[selectedIndex].MapPoint.X) * 0.8F;
+                        float yDelta = (movePoint.Y - selectedMapPath.PathPoints[selectedIndex].MapPoint.Y) * 0.8F;
+                        SKPoint newPoint = new(movePoint.X + xDelta, movePoint.Y + yDelta);
+                        selectedMapPath.PathPoints[selectedIndex + 4].MapPoint = newPoint;
+                    }
+
+                }
+
+                SKPath path = GenerateMapPathBoundaryPath(selectedMapPath.PathPoints);
+                selectedMapPath.BoundaryPath?.Dispose();
+                selectedMapPath.BoundaryPath = new(path);
+                path.Dispose();
+
+            }
+        }
+
+        public static int GetMapPathPointIndexById(MapPath mapPath, Guid guid)
+        {
+            for (int i = 0; i < mapPath.PathPoints.Count; i++)
+            {
+                if (mapPath.PathPoints[i].PointGuid == guid)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        public static MapPathPoint? GetMapPathPointById(MapPath mapPath, Guid guid)
+        {
+            foreach (MapPathPoint point in mapPath.PathPoints)
+            {
+                if (point.PointGuid == guid)
+                {
+                    return point;
+                }
+            }
+
+            return null;
+        }
     }
 }

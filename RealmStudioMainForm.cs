@@ -44,10 +44,15 @@ namespace RealmStudio
         private static River? CURRENT_RIVER = null;
         private static MapPath? CURRENT_PATH = null;
 
+        private static MapPath? SELECTED_PATH = null;
+        private static MapPathPoint? SELECTED_PATHPOINT = null;
+
         private static int SELECTED_BRUSH_SIZE = 0;
 
         private static SKPoint ScrollPoint = new(0, 0);
         private static SKPoint DrawingPoint = new(0, 0);
+
+        private static SKPoint PREVIOUS_CLICK_POINT = new(0, 0);
 
         private static float DrawingZoom = 1.0f;
 
@@ -725,7 +730,7 @@ namespace RealmStudio
         }
 
 
-        public static void DeselectAllMapComponents(MapComponent selectedComponent)
+        public static void DeselectAllMapComponents(MapComponent? selectedComponent)
         {
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
 
@@ -736,7 +741,7 @@ namespace RealmStudio
             }
 
             MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER);
-            foreach (IWaterFeature w in waterLayer.MapLayerComponents)
+            foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
             {
                 if (selectedComponent != null)
                 {
@@ -765,12 +770,25 @@ namespace RealmStudio
                 }
             }
 
-            /*
-            foreach (MapPath p in MapPathMethods.GetMapPathList())
+            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+
+            foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
             {
-                if (selectedComponent != null && selectedComponent is MapPath mapPath && mapPath == p) continue;
-                p.IsSelected = false;
+                if (selectedComponent != null && selectedComponent is MapPath mapPath && mapPath == mp) continue;
+                mp.IsSelected = false;
+                mp.ShowPathPoints = false;
             }
+
+            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+
+            foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+            {
+                if (selectedComponent != null && selectedComponent is MapPath mapPath && mapPath == mp) continue;
+                mp.IsSelected = false;
+                mp.ShowPathPoints = false;
+            }
+
+            /*
 
             foreach (MapSymbol s in SymbolMethods.PlacedSymbolList)
             {
@@ -1102,7 +1120,7 @@ namespace RealmStudio
 
                 if (CURRENT_PATH != null && !CURRENT_PATH.DrawOverSymbols)
                 {
-                    CURRENT_PATH.Render(pathLowerLayer.LayerSurface.Canvas);                    
+                    CURRENT_PATH.Render(pathLowerLayer.LayerSurface.Canvas);
                 }
 
                 foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
@@ -1128,7 +1146,15 @@ namespace RealmStudio
 
                         foreach (MapPathPoint p in controlPoints)
                         {
-                            pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointPaint);
+                            if (p.IsSelected)
+                            {
+                                pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathSelectedControlPointPaint);
+                            }
+                            else
+                            {
+                                pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointPaint);
+                            }
+
                             pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointOutlinePaint);
                         }
                     }
@@ -1140,7 +1166,7 @@ namespace RealmStudio
 
             // TODO: symbol layer
 
-            // TODO: path upper layer
+            // path upper layer
             MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
             if (pathUpperLayer.LayerSurface != null)
             {
@@ -1174,7 +1200,15 @@ namespace RealmStudio
 
                         foreach (MapPathPoint p in controlPoints)
                         {
-                            pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointPaint);
+                            if (p.IsSelected)
+                            {
+                                pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathSelectedControlPointPaint);
+                            }
+                            else
+                            {
+                                pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointPaint);
+                            }
+
                             pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointOutlinePaint);
                         }
                     }
@@ -1405,6 +1439,7 @@ namespace RealmStudio
                 case DrawingModeEnum.PathPaint:
                     {
                         Cursor = Cursors.Cross;
+                        PREVIOUS_CLICK_POINT = zoomedScrolledPoint;
 
                         if (CURRENT_PATH == null)
                         {
@@ -1428,6 +1463,7 @@ namespace RealmStudio
                         }
                     }
                     break;
+
             }
         }
 
@@ -1513,6 +1549,37 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case DrawingModeEnum.PathSelect:
+                    {
+                        if (SELECTED_PATH != null)
+                        {
+                            SizeF delta = new()
+                            {
+                                Width = zoomedScrolledPoint.X - PREVIOUS_CLICK_POINT.X,
+                                Height = zoomedScrolledPoint.Y - PREVIOUS_CLICK_POINT.Y,
+                            };
+
+                            foreach (MapPathPoint point in SELECTED_PATH.PathPoints)
+                            {
+                                SKPoint p = point.MapPoint;
+                                p.X += delta.Width;
+                                p.Y += delta.Height;
+                                point.MapPoint = p;
+                            }
+
+                            SELECTED_PATH.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(SELECTED_PATH.PathPoints);
+                            PREVIOUS_CLICK_POINT = zoomedScrolledPoint;
+                        }
+                    }
+                    break;
+                case DrawingModeEnum.PathEdit:
+                    if (SELECTED_PATHPOINT != null)
+                    {
+                        MapPathMethods.MoveSelectedMapPathPoint(SELECTED_PATH, SELECTED_PATHPOINT, zoomedScrolledPoint);
+
+                        CURRENT_MAP.IsSaved = false;
+                    }
+                    break;
             }
         }
 
@@ -1543,6 +1610,19 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case DrawingModeEnum.PathEdit:
+                    {
+                        if (SELECTED_PATH != null)
+                        {
+                            foreach (MapPathPoint mp in SELECTED_PATH.PathPoints)
+                            {
+                                mp.IsSelected = false;
+                            }
+
+                            SELECTED_PATHPOINT = MapPathMethods.SelectMapPathPointAtPoint(SELECTED_PATH, zoomedScrolledPoint);
+                        }
+                    }
+                    break;
             }
         }
 
@@ -1554,6 +1634,7 @@ namespace RealmStudio
 
         private void LeftButtonMouseUpHandler(object sender, MouseEventArgs e)
         {
+            SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
             Cursor = Cursors.Default;
 
             switch (CURRENT_DRAWING_MODE)
@@ -1625,6 +1706,8 @@ namespace RealmStudio
                 case DrawingModeEnum.PathPaint:
                     if (CURRENT_PATH != null)
                     {
+                        CURRENT_PATH.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(CURRENT_PATH.PathPoints);
+
                         if (CURRENT_PATH.DrawOverSymbols)
                         {
                             MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER).MapLayerComponents.Add(CURRENT_PATH);
@@ -1641,6 +1724,16 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case DrawingModeEnum.PathSelect:
+                    {
+                        SELECTED_PATH = SelectMapPathAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+                    }
+                    break;
+                case DrawingModeEnum.PathEdit:
+                    {
+                        SELECTED_PATHPOINT = null;
+                    }
+                    break;
             }
 
         }
@@ -1655,6 +1748,43 @@ namespace RealmStudio
             // no middle button mouse up events yet
         }
 
+        #endregion
+
+        #region SKGLRenderControl KeyDown Handler
+        private void SKGLRenderControl_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                switch (CURRENT_DRAWING_MODE)
+                {
+                    case DrawingModeEnum.PathSelect:
+                        if (SELECTED_PATH != null)
+                        {
+                            Cmd_RemoveMapPath cmd = new(CURRENT_MAP, SELECTED_PATH);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            CURRENT_MAP.IsSaved = false;
+                            SKGLRenderControl.Invalidate();
+                        }
+
+                        break;
+                    case DrawingModeEnum.PathEdit:
+                        {
+                            if (SELECTED_PATH != null && SELECTED_PATHPOINT != null)
+                            {
+                                Cmd_RemovePathPoint cmd = new(SELECTED_PATH, SELECTED_PATHPOINT);
+                                CommandManager.AddCommand(cmd);
+                                cmd.DoOperation();
+
+                                CURRENT_MAP.IsSaved = false;
+                                SKGLRenderControl.Invalidate();
+                            }
+                        }
+                        break;
+                }
+            }
+        }
         #endregion
 
         #region Background Tab Event Handlers
@@ -2403,10 +2533,161 @@ namespace RealmStudio
 
         #region Path Tab Event Handlers
 
+        private void PathSelectButton_Click(object sender, EventArgs e)
+        {
+            if (CURRENT_DRAWING_MODE != DrawingModeEnum.PathSelect && CURRENT_DRAWING_MODE != DrawingModeEnum.PathEdit)
+            {
+                CURRENT_DRAWING_MODE = DrawingModeEnum.PathSelect;
+            }
+            else
+            {
+                CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+            }
+
+            if (CURRENT_DRAWING_MODE == DrawingModeEnum.PathSelect)
+            {
+                if (EditPathPointSwitch.Checked)
+                {
+                    CURRENT_DRAWING_MODE = DrawingModeEnum.PathEdit;
+
+                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        if (mp.IsSelected)
+                        {
+                            mp.ShowPathPoints = true;
+                        }
+                    }
+
+                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        if (mp.IsSelected)
+                        {
+                            mp.ShowPathPoints = true;
+                        }
+                    }
+                }
+                else
+                {
+                    CURRENT_DRAWING_MODE = DrawingModeEnum.PathSelect;
+
+                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        mp.ShowPathPoints = false;
+                    }
+
+                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        mp.ShowPathPoints = false;
+                    }
+                }
+            }
+            else if (CURRENT_DRAWING_MODE == DrawingModeEnum.PathEdit)
+            {
+                if (EditPathPointSwitch.Checked)
+                {
+                    CURRENT_DRAWING_MODE = DrawingModeEnum.PathEdit;
+
+                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        if (mp.IsSelected)
+                        {
+                            mp.ShowPathPoints = true;
+                        }
+                    }
+
+                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        if (mp.IsSelected)
+                        {
+                            mp.ShowPathPoints = true;
+                        }
+                    }
+                }
+                else
+                {
+                    CURRENT_DRAWING_MODE = DrawingModeEnum.PathSelect;
+
+                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        mp.ShowPathPoints = false;
+                    }
+
+                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        mp.ShowPathPoints = false;
+                    }
+                }
+            }
+            else
+            {
+                MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+                foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                {
+                    mp.ShowPathPoints = false;
+                }
+
+                MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+                foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                {
+                    mp.ShowPathPoints = false;
+                }
+            }
+
+            if (CURRENT_DRAWING_MODE == DrawingModeEnum.None)
+            {
+                SELECTED_PATH = null;
+                MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+                foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                {
+                    mp.IsSelected = false;
+                    mp.ShowPathPoints = false;
+                }
+
+                MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+                foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                {
+                    mp.IsSelected = false;
+                    mp.ShowPathPoints = false;
+                }
+            }
+
+            SetDrawingModeLabel();
+
+            SKGLRenderControl.Invalidate();
+        }
+
         private void DrawPathButton_Click(object sender, EventArgs e)
         {
+            Cursor = Cursors.Cross;
             CURRENT_DRAWING_MODE = DrawingModeEnum.PathPaint;
             SetSelectedBrushSize(0);
+
+            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+            foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+            {
+                mp.IsSelected = false;
+                mp.ShowPathPoints = false;
+            }
+
+            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+            foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+            {
+                mp.IsSelected = false;
+                mp.ShowPathPoints = false;
+            }
+
+            SetDrawingModeLabel();
+
+            Refresh();
+            SKGLRenderControl.Invalidate();
         }
 
         private void PathWidthTrack_ValueChanged(object sender, EventArgs e)
@@ -2422,6 +2703,132 @@ namespace RealmStudio
             {
                 PathColorSelectButton.BackColor = selectedColor;
             }
+        }
+
+        private void EditPathPointSwitch_CheckedChanged()
+        {
+            Cursor = Cursors.Default;
+            SetSelectedBrushSize(0);
+
+            if (CURRENT_DRAWING_MODE == DrawingModeEnum.PathSelect)
+            {
+                if (EditPathPointSwitch.Checked)
+                {
+                    CURRENT_DRAWING_MODE = DrawingModeEnum.PathEdit;
+
+                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        if (mp.IsSelected)
+                        {
+                            mp.ShowPathPoints = true;
+                        }
+                    }
+
+                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        if (mp.IsSelected)
+                        {
+                            mp.ShowPathPoints = true;
+                        }
+                    }
+                }
+                else
+                {
+                    CURRENT_DRAWING_MODE = DrawingModeEnum.PathSelect;
+
+                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        mp.ShowPathPoints = false;
+                    }
+
+                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        mp.ShowPathPoints = false;
+                    }
+                }
+            }
+            else if (CURRENT_DRAWING_MODE == DrawingModeEnum.PathEdit)
+            {
+                if (EditPathPointSwitch.Checked)
+                {
+                    CURRENT_DRAWING_MODE = DrawingModeEnum.PathEdit;
+
+                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        if (mp.IsSelected)
+                        {
+                            mp.ShowPathPoints = true;
+                        }
+                    }
+
+                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        if (mp.IsSelected)
+                        {
+                            mp.ShowPathPoints = true;
+                        }
+                    }
+                }
+                else
+                {
+                    CURRENT_DRAWING_MODE = DrawingModeEnum.PathSelect;
+
+                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        mp.ShowPathPoints = false;
+                    }
+
+                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                    {
+                        mp.ShowPathPoints = false;
+                    }
+                }
+            }
+            else
+            {
+                MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+                foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                {
+                    mp.ShowPathPoints = false;
+                }
+
+                MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+                foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                {
+                    mp.ShowPathPoints = false;
+                }
+            }
+
+            if (CURRENT_DRAWING_MODE == DrawingModeEnum.None)
+            {
+                SELECTED_PATH = null;
+                MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+                foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                {
+                    mp.IsSelected = false;
+                    mp.ShowPathPoints = false;
+                }
+
+                MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+                foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                {
+                    mp.IsSelected = false;
+                    mp.ShowPathPoints = false;
+                }
+            }
+
+            SetDrawingModeLabel();
+
+            Refresh();
+            SKGLRenderControl.Invalidate();
         }
 
         private void PreviousPathTextureButton_Click(object sender, EventArgs e)
@@ -2569,8 +2976,65 @@ namespace RealmStudio
             return PathTypeEnum.SolidLinePath;
         }
 
-        #endregion
+        internal static MapPath? SelectMapPathAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
+        {
+            MapPath? selectedMapPath = null;
 
+            List<MapComponent> mapPathUpperComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER).MapLayerComponents;
+
+            for (int i = 0; i < mapPathUpperComponents.Count; i++)
+            {
+                if (mapPathUpperComponents[i] is MapPath mapPath)
+                {
+                    SKPath? boundaryPath = mapPath.BoundaryPath;
+
+                    if (boundaryPath != null && boundaryPath.PointCount > 0)
+                    {
+                        if (boundaryPath.Contains(mapClickPoint.X, mapClickPoint.Y))
+                        {
+                            mapPath.IsSelected = !mapPath.IsSelected;
+
+                            if (mapPath.IsSelected)
+                            {
+                                selectedMapPath = mapPath;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            List<MapComponent> mapPathLowerComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER).MapLayerComponents;
+
+            for (int i = 0; i < mapPathLowerComponents.Count; i++)
+            {
+                if (mapPathLowerComponents[i] is MapPath mapPath)
+                {
+                    SKPath? boundaryPath = mapPath.BoundaryPath;
+
+                    if (boundaryPath != null && boundaryPath.PointCount > 0)
+                    {
+                        if (boundaryPath.Contains(mapClickPoint.X, mapClickPoint.Y))
+                        {
+                            mapPath.IsSelected = !mapPath.IsSelected;
+
+                            if (mapPath.IsSelected)
+                            {
+                                selectedMapPath = mapPath;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+#pragma warning disable CS8604 // Possible null reference argument.
+            DeselectAllMapComponents(selectedMapPath);
+#pragma warning restore CS8604 // Possible null reference argument.
+
+            return selectedMapPath;
+        }
+        #endregion
 
     }
 }
