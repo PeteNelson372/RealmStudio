@@ -53,7 +53,11 @@ namespace RealmStudio
         public static List<MapSymbolCollection> MAP_SYMBOL_COLLECTIONS = [];
 
         // the symbols read from symbol collections
-        private static List<MapSymbol> MAP_SYMBOL_LIST { get; set; } = [];
+        public static List<MapSymbol> MAP_SYMBOL_LIST { get; set; } = [];
+
+        // the tags that can be selected in the UI to filter the tags in the tag list box on the UI
+        public static readonly List<string> ORIGINAL_SYMBOL_TAGS = [];
+        public static readonly List<string> SYMBOL_TAGS = [];
 
         public static MapTheme? CURRENT_THEME { get; set; } = null;
 
@@ -79,7 +83,7 @@ namespace RealmStudio
             EYEDROPPER_CURSOR = new Cursor(Resources.Eye_Dropper.Handle);
 
             // load symbol tags
-            SymbolMethods.LoadSymbolTags();
+            LoadSymbolTags();
 
             // load name generator files
             MapToolMethods.LoadNameGeneratorFiles();
@@ -359,6 +363,35 @@ namespace RealmStudio
             }
 
             return numFrames;
+        }
+
+        public static void LoadSymbolTags()
+        {
+            SYMBOL_TAGS.Clear();
+            ORIGINAL_SYMBOL_TAGS.Clear();
+
+            IEnumerable<string> tags = File.ReadLines(SymbolTagsFilePath);
+            foreach (string tag in tags)
+            {
+                if (!string.IsNullOrEmpty(tag))
+                {
+                    AddSymbolTag(tag);
+                }
+            }
+
+            SYMBOL_TAGS.Sort();
+
+            foreach (string tag in SYMBOL_TAGS)
+            {
+                ORIGINAL_SYMBOL_TAGS.Add(tag);
+            }
+        }
+
+        public static void AddSymbolTag(string tag)
+        {
+            tag = tag.Trim([' ', ',']).ToLower();
+            if (SYMBOL_TAGS.Contains(tag)) return;
+            SYMBOL_TAGS.Add(tag);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace RealmStudio
 {
     public class MapSymbol : MapComponent, IXmlSerializable
     {
-        private Guid SymbolGuid { get; set; } = Guid.NewGuid();
+        public Guid SymbolGuid { get; set; } = Guid.NewGuid();
 
         public int SymbolWidth { get; set; } = 0;
 
@@ -58,7 +58,7 @@ namespace RealmStudio
 
         public bool UseCustomColors { get; set; } = false;
 
-        public readonly SKColor[] CustomSymbolColors = new SKColor[4];
+        public readonly SKColor[] CustomSymbolColors = new SKColor[3];
 
         public SKPaint? SymbolPaint { get; set; } = null;
 
@@ -109,18 +109,6 @@ namespace RealmStudio
             SymbolTags.Add(tag);
         }
 
-        public void SetSymbolCustomColorAtIndex(SKColor color, int index)
-        {
-            if (index < 0 || index > CustomSymbolColors.Length - 1) return;
-            CustomSymbolColors[index] = color;
-        }
-
-        public SKColor? GetSymbolCustomColorAtIndex(int index)
-        {
-            if (index < 0 || index > CustomSymbolColors.Length - 1) return null;
-            return CustomSymbolColors[index];
-        }
-
         public void SetSymbolBitmapFromPath(string path)
         {
             if (File.Exists(path))
@@ -150,13 +138,6 @@ namespace RealmStudio
                 else
                 {
                     canvas.DrawBitmap(PlacedBitmap, point, null);
-                }
-
-                if (IsSelected)
-                {
-                    // draw line around bitmap to show it is selected
-                    SKRect selectRect = new(X, Y, X + Width, Y + Height);
-                    canvas.DrawRect(selectRect, PaintObjects.MapSymbolSelectPaint);
                 }
             }
         }
@@ -293,10 +274,6 @@ namespace RealmStudio
                     colorELem = elemList[2];
                     colorString = colorELem.Value;
                     CustomSymbolColors[2] = Extensions.ToSKColor(ColorTranslator.FromHtml(colorString));
-
-                    colorELem = elemList[3];
-                    colorString = colorELem.Value;
-                    CustomSymbolColors[3] = Extensions.ToSKColor(ColorTranslator.FromHtml(colorString));
                 }
             }
 

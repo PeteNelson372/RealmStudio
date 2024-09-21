@@ -68,9 +68,44 @@ namespace RealmStudio
             return new SKPoint(x, y);
         }
 
+        internal static List<SKPoint> GetPointsInCircle(SKPoint cursorPoint, int radius, int stepSize)
+        {
+            if (radius <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(radius), "Argument must be positive.");
+            }
+
+            List<SKPoint> pointsInCircle = [];
+
+            int minX = (int)Math.Max(0, cursorPoint.X - radius);
+            int maxX = (int)(cursorPoint.X + radius);
+            int minY = (int)Math.Max(0, cursorPoint.Y - radius);
+            int maxY = (int)(cursorPoint.Y + radius);
+
+            for (int i = minX; i <= maxX; i += stepSize)
+            {
+                for (int j = minY; j <= maxY; j += stepSize)
+                {
+                    SKPoint p = new(i, j);
+                    if (PointInCircle(radius, cursorPoint, p))
+                    {
+                        pointsInCircle.Add(p);
+                    }
+                }
+            }
+
+            return pointsInCircle;
+        }
+
         public static float DistanceBetween(SKPoint from, SKPoint to)
         {
             return SKPoint.Distance(from, to);
+        }
+
+        public static bool PointInCircle(float radius, SKPoint origin, SKPoint pointToTest)
+        {
+            float square_dist = SKPoint.DistanceSquared(origin, pointToTest);
+            return square_dist < (radius * radius);
         }
 
         public static float CalculateLineAngle(SKPoint start, SKPoint end)
@@ -80,7 +115,6 @@ namespace RealmStudio
 
             return (float)((float)Math.Atan2(yDiff, xDiff) * D180_OVER_PI);
         }
-
 
         public static bool IsPaintableImage(Bitmap bitmap)
         {
@@ -199,6 +233,45 @@ namespace RealmStudio
             }
 
             return IsGrayScaleImage;
+        }
+
+        internal static SKBitmap ScaleBitmap(SKBitmap bitmap, float scale)
+        {
+            int bitmapWidth = (int)Math.Round(bitmap.Width * scale);
+            int bitmapHeight = (int)Math.Round(bitmap.Height * scale);
+
+            SKBitmap resizedSKBitmap = new(bitmapWidth, bitmapHeight);
+            bitmap.ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
+
+            return resizedSKBitmap;
+        }
+
+        internal static SKBitmap RotateBitmap(SKBitmap bmp, float angle, bool flipX)
+        {
+            Bitmap bitmap = Extensions.ToBitmap(bmp);
+            double radianAngle = angle / 180.0 * Math.PI;
+            double cosA = Math.Abs(Math.Cos(radianAngle));
+            double sinA = Math.Abs(Math.Sin(radianAngle));
+
+            int newWidth = (int)Math.Ceiling(cosA * bitmap.Width + sinA * bitmap.Height);
+            int newHeight = (int)Math.Ceiling(sinA * bitmap.Width + cosA * bitmap.Height);
+
+            Bitmap rotatedBitmap = new(newWidth, newHeight);
+            rotatedBitmap.SetResolution(bitmap.HorizontalResolution, bitmap.VerticalResolution);
+
+            using Graphics g = Graphics.FromImage(rotatedBitmap);
+            g.TranslateTransform((float)(newWidth - bitmap.Width) / 2, (float)(newHeight - bitmap.Height) / 2);
+            g.TranslateTransform(bitmap.Width / 2, bitmap.Height / 2);
+            g.RotateTransform(angle);
+            g.TranslateTransform(-bitmap.Width / 2, -bitmap.Height / 2);
+            g.DrawImage(bitmap, new Point(0, 0));
+
+            if (flipX)
+            {
+                rotatedBitmap.RotateFlip(RotateFlipType.RotateNoneFlipX);
+            }
+
+            return Extensions.ToSKBitmap(rotatedBitmap);
         }
 
         internal static Bitmap? ExtractLargestBlob(Bitmap b)

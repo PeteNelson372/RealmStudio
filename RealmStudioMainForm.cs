@@ -25,11 +25,16 @@ using SkiaSharp;
 using SkiaSharp.Components;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
+using Control = System.Windows.Forms.Control;
 
 namespace RealmStudio
 {
     public partial class RealmStudioMainForm : Form
     {
+        private Thread? RENDER_THREAD = null;
+        private AutoResetEvent? THREAD_GATE = null;
+        private bool CONTINUE_PROCESSING = true;
+
         private int MAP_WIDTH = MapBuilder.MAP_DEFAULT_WIDTH;
         private int MAP_HEIGHT = MapBuilder.MAP_DEFAULT_HEIGHT;
 
@@ -44,22 +49,29 @@ namespace RealmStudio
         private static River? CURRENT_RIVER = null;
         private static MapPath? CURRENT_PATH = null;
 
+        // objects that are currently selected
         private static MapPath? SELECTED_PATH = null;
         private static MapPathPoint? SELECTED_PATHPOINT = null;
+        private static MapSymbol? SELECTED_MAP_SYMBOL = null;
+
+        private static SymbolTypeEnum SELECTED_SYMBOL_TYPE = SymbolTypeEnum.NotSet;
 
         private static int SELECTED_BRUSH_SIZE = 0;
+
+        private static float PLACEMENT_RATE = 1.0F;
+        private static float PLACEMENT_DENSITY = 1.0F;
 
         private static SKPoint ScrollPoint = new(0, 0);
         private static SKPoint DrawingPoint = new(0, 0);
 
-        private static SKPoint PREVIOUS_CLICK_POINT = new(0, 0);
+        private static SKPoint PREVIOUS_CURSOR_POINT = new(0, 0);
 
         private static float DrawingZoom = 1.0f;
 
         private readonly ToolTip TOOLTIP = new();
 
         private bool AUTOSAVE = true;
-
+        private bool SYMBOL_SCALE_LOCKED = false;
         // 
 
         #region Constructor
@@ -531,9 +543,16 @@ namespace RealmStudio
 
             CoastlineStyleList.SelectedIndex = 6;  // default is dash pattern
 
+            // symbol collections
             foreach (MapSymbolCollection collection in AssetManager.MAP_SYMBOL_COLLECTIONS)
             {
-                //SymbolCollectionsListBox.Items.Add(collection.GetCollectionName());
+                SymbolCollectionsListBox.Items.Add(collection.GetCollectionName());
+            }
+
+            // symbol tags
+            foreach (string tag in AssetManager.SYMBOL_TAGS)
+            {
+                SymbolTagsListBox.Items.Add(tag);
             }
 
             //AddMapBoxesToLabelBoxTable(MapLabelMethods.MAP_BOX_TEXTURES);
@@ -821,15 +840,53 @@ namespace RealmStudio
             SELECTED_BRUSH_SIZE = brushSize;
         }
 
-        private static void DrawCircleCursor(SKPoint point, int brushSize)
+        private void DrawCursor(SKPoint point, int brushSize)
         {
             MapLayer cursorLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.CURSORLAYER);
             cursorLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-            if (brushSize > 0)
+            switch (CURRENT_DRAWING_MODE)
             {
-                cursorLayer.LayerSurface?.Canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                case DrawingModeEnum.SymbolPlace:
+                    {
+                        if (SELECTED_MAP_SYMBOL != null && !AreaBrushSwitch.Checked)
+                        {
+                            SKBitmap? symbolBitmap = SELECTED_MAP_SYMBOL.ColorMappedBitmap;
+                            if (symbolBitmap != null)
+                            {
+                                float symbolScale = (float)(SymbolScaleTrack.Value / 100.0F * DrawingZoom);
+                                float symbolRotation = SymbolRotationTrack.Value;
+                                SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleBitmap(symbolBitmap, symbolScale);
+
+                                SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateBitmap(scaledSymbolBitmap, symbolRotation, MirrorSymbolSwitch.Checked);
+
+                                if (rotatedAndScaledBitmap != null)
+                                {                                    
+                                    cursorLayer.LayerSurface?.Canvas.DrawBitmap(rotatedAndScaledBitmap,
+                                        new SKPoint(point.X - (rotatedAndScaledBitmap.Width / 2), point.Y - (rotatedAndScaledBitmap.Height / 2)), null);
+                                }
+                            }
+                        }
+                        else if (AreaBrushSwitch.Checked)
+                        {
+                            cursorLayer.LayerSurface?.Canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                        }
+                        else
+                        {
+                            cursorLayer.LayerSurface?.Canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                        }
+                    }
+                    break;
+                default:
+                    {
+                        if (brushSize > 0)
+                        {
+                            cursorLayer.LayerSurface?.Canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                        }
+                    }
+                    break;
             }
+
         }
         #endregion
 
@@ -914,12 +971,14 @@ namespace RealmStudio
         *******************************************************************************************************/
         private void SKGLRenderControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
         {
-            foreach (MapLayer layer in CURRENT_MAP.MapLayers)
-            {
-                // if the surfaces haven't been created, create them
-                layer.LayerSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, false, new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
-            }
+            // TODO: can rendering be reworked similar to what is described
+            // here: https://stackoverflow.com/questions/64737621/c-sharp-skiasharp-opentk-winform-how-to-draw-from-a-background-thread
+            // to improve performance of rendering? (rendering when many (1000's) of symbols
+            // have been added is slow)
 
+
+            // create the map layers, if needed
+            MapRenderMethods.CreateMapLayers(CURRENT_MAP, SKGLRenderControl.GRContext);
 
             // handle zoom-in and zoom-out (TODO: zoom in and out from center of map - how?)
             e.Surface.Canvas.Scale(DrawingZoom);
@@ -927,327 +986,53 @@ namespace RealmStudio
             // paint the SKGLRenderControl surface, compositing the surfaces from all of the layers
             e.Surface.Canvas.Clear(SKColors.Black);
 
-            MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.SELECTIONLAYER);
-            selectionLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            // TODO: does the order that the layers are rendered here matter?
+            // i.e. does each layer have to be rendered separately in the correct order,
+            // or can they be grouped and rendered together by function? (e.g. grid, paths)
+            MapRenderMethods.ClearSelectionLayer(CURRENT_MAP);
 
+            MapRenderMethods.RenderBackground(CURRENT_MAP, e, ScrollPoint);
 
-            // render base layer
-            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BASELAYER);
-            if (baseLayer.LayerSurface != null)
-            {
-                baseLayer.LayerSurface.Canvas.Clear(SKColors.White);
-                baseLayer.Render(baseLayer.LayerSurface.Canvas);
-                e.Surface.Canvas.DrawSurface(baseLayer.LayerSurface, ScrollPoint);
-            }
+            MapRenderMethods.RenderOcean(CURRENT_MAP, e, ScrollPoint);
 
-            // render ocean texture layer
-            MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANTEXTURELAYER);
-            if (oceanTextureLayer.LayerSurface != null)
-            {
-                oceanTextureLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                oceanTextureLayer.Render(oceanTextureLayer.LayerSurface.Canvas);
-                e.Surface.Canvas.DrawSurface(oceanTextureLayer.LayerSurface, ScrollPoint);
-            }
+            MapRenderMethods.RenderWindroses(CURRENT_MAP, CURRENT_WINDROSE, e, ScrollPoint);
 
-            // render ocean texture overlay layer (ocean color fill)
-            MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
-            if (oceanTextureOverlayLayer.LayerSurface != null)
-            {
-                oceanTextureOverlayLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                oceanTextureOverlayLayer.Render(oceanTextureOverlayLayer.LayerSurface.Canvas);
-                e.Surface.Canvas.DrawSurface(oceanTextureOverlayLayer.LayerSurface, ScrollPoint);
-            }
+            MapRenderMethods.RenderLandforms(CURRENT_MAP, CURRENT_LANDFORM, e, ScrollPoint);
 
-            // render ocean drawing layer (user-painted color)
-            MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANDRAWINGLAYER);
-            if (oceanDrawingLayer.LayerSurface != null)
-            {
-                oceanDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                oceanDrawingLayer.Render(oceanDrawingLayer.LayerSurface.Canvas);
-                e.Surface.Canvas.DrawSurface(oceanDrawingLayer.LayerSurface, ScrollPoint);
-            }
-            // render wind rose layer
-            MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WINDROSELAYER);
-            if (windroseLayer.LayerSurface != null)
-            {
-                windroseLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+            MapRenderMethods.RenderWaterFeatures(CURRENT_MAP, CURRENT_WATERFEATURE, CURRENT_RIVER, e, ScrollPoint);
 
-                CURRENT_WINDROSE?.Render(windroseLayer.LayerSurface.Canvas);
+            MapRenderMethods.RenderGrid(CURRENT_MAP, e, ScrollPoint);
 
-                windroseLayer.Render(windroseLayer.LayerSurface.Canvas);
-                e.Surface.Canvas.DrawSurface(windroseLayer.LayerSurface, ScrollPoint);
-            }
+            MapRenderMethods.RenderMapPaths(CURRENT_MAP, CURRENT_PATH, e, ScrollPoint);
 
-            // render grid layer above ocean
-            MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.ABOVEOCEANGRIDLAYER);
-            if (aboveOceanGridLayer.LayerSurface != null)
-            {
-                aboveOceanGridLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                aboveOceanGridLayer.Render(aboveOceanGridLayer.LayerSurface.Canvas);
-                e.Surface.Canvas.DrawSurface(aboveOceanGridLayer.LayerSurface, ScrollPoint);
-            }
-
-            // render landforms
-            MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER);
-            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
-            MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDDRAWINGLAYER);
-
-            if (landformLayer.LayerSurface != null && landCoastlineLayer.LayerSurface != null && landDrawingLayer.LayerSurface != null)
-            {
-                landCoastlineLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                landformLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                landDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-
-                CURRENT_LANDFORM?.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
-                CURRENT_LANDFORM?.RenderLandform(landformLayer.LayerSurface.Canvas);
-
-                // TODO: render CURRENT_LANDFORM landform drawing
-
-                foreach (Landform l in landformLayer.MapLayerComponents.Cast<Landform>())
-                {
-                    l.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
-                    l.RenderLandform(landformLayer.LayerSurface.Canvas);
-
-                    // TODO: render landform drawing
-
-                    if (l.IsSelected)
-                    {
-                        // draw an outline around the landform to show that it is selected
-                        l.ContourPath.GetBounds(out SKRect boundRect);
-                        using SKPath boundsPath = new();
-                        boundsPath.AddRect(boundRect);
-
-                        selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
-                    }
-                }
-
-                // paint landform coastline layer
-                e.Surface.Canvas.DrawSurface(landCoastlineLayer.LayerSurface, ScrollPoint);
-
-                // paint landform layer
-                e.Surface.Canvas.DrawSurface(landformLayer.LayerSurface, ScrollPoint);
-
-                // paint land drawing layer
-                e.Surface.Canvas.DrawSurface(landDrawingLayer.LayerSurface, ScrollPoint);
-            }
-
-
-            // render water features and rivers
-            MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER);
-            MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERDRAWINGLAYER);
-
-            if (waterLayer.LayerSurface != null && waterDrawingLayer.LayerSurface != null)
-            {
-                waterLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                waterDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-
-                // water features
-                CURRENT_WATERFEATURE?.Render(waterLayer.LayerSurface.Canvas);
-                CURRENT_RIVER?.Render(waterLayer.LayerSurface.Canvas);
-
-                foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
-                {
-                    if (w is WaterFeature wf)
-                    {
-                        wf.Render(waterLayer.LayerSurface.Canvas);
-
-                        if (wf.IsSelected)
-                        {
-                            // draw an outline around the landform to show that it is selected
-                            wf.WaterFeaturePath.GetBounds(out SKRect boundRect);
-                            using SKPath boundsPath = new();
-                            boundsPath.AddRect(boundRect);
-
-                            selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.WaterFeatureSelectPaint);
-                        }
-                    }
-                    else if (w is River r)
-                    {
-                        r.Render(waterLayer.LayerSurface.Canvas);
-
-                        // TODO: render river drawing
-
-                        if (r.IsSelected)
-                        {
-                            if (r.RiverBoundaryPath != null)
-                            {
-                                // draw an outline around the path to show that it is selected
-                                r.RiverBoundaryPath.GetTightBounds(out SKRect boundRect);
-                                using SKPath boundsPath = new();
-                                boundsPath.AddRect(boundRect);
-
-                                selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.RiverSelectPaint);
-                            }
-                        }
-
-                        if (r.ShowRiverPoints)
-                        {
-                            List<MapRiverPoint> controlPoints = r.GetRiverControlPoints();
-
-                            foreach (MapRiverPoint p in controlPoints)
-                            {
-                                waterDrawingLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, 2.0F, PaintObjects.RiverControlPointPaint);
-                                waterDrawingLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, 2.0F, PaintObjects.RiverControlPointOutlinePaint);
-                            }
-                        }
-                    }
-                }
-
-                // TODO: render water feature drawing on water drawing layer
-
-                // paint water layer
-                e.Surface.Canvas.DrawSurface(waterLayer.LayerSurface, ScrollPoint);
-
-                // paint water drawing layer
-                e.Surface.Canvas.DrawSurface(waterDrawingLayer.LayerSurface, ScrollPoint);
-            }
-
-
-            // render grid below symbols
-            MapLayer belowSymbolGridLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BELOWSYMBOLSGRIDLAYER);
-            if (belowSymbolGridLayer.LayerSurface != null)
-            {
-                belowSymbolGridLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                belowSymbolGridLayer.Render(belowSymbolGridLayer.LayerSurface.Canvas);
-                e.Surface.Canvas.DrawSurface(aboveOceanGridLayer.LayerSurface, ScrollPoint);
-            }
-
-            // path lower layer
-            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
-            if (pathLowerLayer.LayerSurface != null)
-            {
-                pathLowerLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-
-                if (CURRENT_PATH != null && !CURRENT_PATH.DrawOverSymbols)
-                {
-                    CURRENT_PATH.Render(pathLowerLayer.LayerSurface.Canvas);
-                }
-
-                foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-                {
-                    mp.Render(pathLowerLayer.LayerSurface.Canvas);
-
-                    if (mp.IsSelected)
-                    {
-                        if (mp.BoundaryPath != null)
-                        {
-                            // draw an outline around the path to show that it is selected
-                            mp.BoundaryPath.GetTightBounds(out SKRect boundRect);
-                            using SKPath boundsPath = new();
-                            boundsPath.AddRect(boundRect);
-
-                            selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.MapPathSelectPaint);
-                        }
-                    }
-
-                    if (mp.ShowPathPoints)
-                    {
-                        List<MapPathPoint> controlPoints = mp.GetMapPathControlPoints();
-
-                        foreach (MapPathPoint p in controlPoints)
-                        {
-                            if (p.IsSelected)
-                            {
-                                pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathSelectedControlPointPaint);
-                            }
-                            else
-                            {
-                                pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointPaint);
-                            }
-
-                            pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointOutlinePaint);
-                        }
-                    }
-                }
-
-                e.Surface.Canvas.DrawSurface(pathLowerLayer.LayerSurface, ScrollPoint);
-            }
-
-
-            // TODO: symbol layer
-
-            // path upper layer
-            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
-            if (pathUpperLayer.LayerSurface != null)
-            {
-                pathUpperLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-
-                if (CURRENT_PATH != null && CURRENT_PATH.DrawOverSymbols)
-                {
-                    CURRENT_PATH.Render(pathUpperLayer.LayerSurface.Canvas);
-                }
-
-                foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-                {
-                    mp.Render(pathUpperLayer.LayerSurface.Canvas);
-
-                    if (mp.IsSelected)
-                    {
-                        if (mp.BoundaryPath != null)
-                        {
-                            // draw an outline around the path to show that it is selected
-                            mp.BoundaryPath.GetTightBounds(out SKRect boundRect);
-                            using SKPath boundsPath = new();
-                            boundsPath.AddRect(boundRect);
-
-                            selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.MapPathSelectPaint);
-                        }
-                    }
-
-                    if (mp.ShowPathPoints)
-                    {
-                        List<MapPathPoint> controlPoints = mp.GetMapPathControlPoints();
-
-                        foreach (MapPathPoint p in controlPoints)
-                        {
-                            if (p.IsSelected)
-                            {
-                                pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathSelectedControlPointPaint);
-                            }
-                            else
-                            {
-                                pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointPaint);
-                            }
-
-                            pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointOutlinePaint);
-                        }
-                    }
-                }
-
-                e.Surface.Canvas.DrawSurface(pathUpperLayer.LayerSurface, ScrollPoint);
-            }
+            MapRenderMethods.RenderSymbols(CURRENT_MAP, e, ScrollPoint);
 
             // TODO: region layer
 
             // TODO: region overlay layer
-
-            // TODO: default grid layer
+            MapRenderMethods.RenderRegions(CURRENT_MAP, e, ScrollPoint);
 
             // TODO: box layer
+            MapRenderMethods.RenderBoxes(CURRENT_MAP, e, ScrollPoint);
 
             // TODO: label layer
+            MapRenderMethods.RenderLabels(CURRENT_MAP, e, ScrollPoint);
 
             // TODO: overlay layer
+            MapRenderMethods.RenderOverlays(CURRENT_MAP, e, ScrollPoint);
 
             // TODO: measure layer
+            MapRenderMethods.RenderMeasures(CURRENT_MAP, e, ScrollPoint);
 
             // TODO: drawing layer
+            MapRenderMethods.RenderDrawing(CURRENT_MAP, e, ScrollPoint);
 
-            // render and paint vignette
-            MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.VIGNETTELAYER);
-            if (vignetteLayer.LayerSurface != null)
-            {
-                vignetteLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                vignetteLayer.Render(vignetteLayer.LayerSurface.Canvas);
-                e.Surface.Canvas.DrawSurface(vignetteLayer.LayerSurface, ScrollPoint);
-            }
+            MapRenderMethods.RenderVignette(CURRENT_MAP, e, ScrollPoint);
 
-            // paint selection layer
-            e.Surface.Canvas.DrawSurface(selectionLayer.LayerSurface, ScrollPoint);
+            MapRenderMethods.RenderSelections(CURRENT_MAP, e, ScrollPoint);
 
-            // paint cursor layer
-            MapLayer cursorLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.CURSORLAYER);
-            e.Surface.Canvas.DrawSurface(cursorLayer.LayerSurface, ScrollPoint);
+            MapRenderMethods.RenderCursor(CURRENT_MAP, e, ScrollPoint);
+
 
             // TODO: work layer
         }
@@ -1272,8 +1057,6 @@ namespace RealmStudio
             SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
             Task.Run(() => UpdateDrawingPointLabel(e.Location.ToSKPoint(), zoomedScrolledPoint));
 
-            DrawCircleCursor(zoomedScrolledPoint, SELECTED_BRUSH_SIZE);
-
             // objects are drawn or moved on mouse move
             if (e.Button == MouseButtons.Left)
             {
@@ -1287,6 +1070,8 @@ namespace RealmStudio
             {
                 NoButtonMouseMoveHandler(sender, e, SELECTED_BRUSH_SIZE / 2);
             }
+
+            DrawCursor(zoomedScrolledPoint, SELECTED_BRUSH_SIZE);
 
             SKGLRenderControl.Invalidate();
         }
@@ -1439,7 +1224,7 @@ namespace RealmStudio
                 case DrawingModeEnum.PathPaint:
                     {
                         Cursor = Cursors.Cross;
-                        PREVIOUS_CLICK_POINT = zoomedScrolledPoint;
+                        PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
 
                         if (CURRENT_PATH == null)
                         {
@@ -1461,6 +1246,27 @@ namespace RealmStudio
                             MapPathMethods.ConstructPathPaint(CURRENT_PATH);
                             CURRENT_PATH.PathPoints.Add(new MapPathPoint(zoomedScrolledPoint));
                         }
+                    }
+                    break;
+                case DrawingModeEnum.SymbolPlace:
+                    {
+                        if (AreaBrushSwitch.Checked)
+                        {
+                            SELECTED_BRUSH_SIZE = AreaBrushSizeTrack.Value;
+                            SKGLRenderControl.Invalidate();
+
+                            float symbolScale = SymbolScaleTrack.Value / 100.0F;
+                            float symbolRotation = SymbolRotationTrack.Value;
+                            float areaBrushSize = AreaBrushSizeTrack.Value / 2.0F;
+
+                            Task.Run(() => PlaceSelectedSymbolInArea(new SKPoint(zoomedScrolledPoint.X, zoomedScrolledPoint.Y), symbolScale, symbolRotation, (int)areaBrushSize));
+                        }
+                        else
+                        {
+                            PlaceSelectedSymbolAtCursor(zoomedScrolledPoint);
+                        }
+
+                        PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
                     }
                     break;
 
@@ -1555,8 +1361,8 @@ namespace RealmStudio
                         {
                             SizeF delta = new()
                             {
-                                Width = zoomedScrolledPoint.X - PREVIOUS_CLICK_POINT.X,
-                                Height = zoomedScrolledPoint.Y - PREVIOUS_CLICK_POINT.Y,
+                                Width = zoomedScrolledPoint.X - PREVIOUS_CURSOR_POINT.X,
+                                Height = zoomedScrolledPoint.Y - PREVIOUS_CURSOR_POINT.Y,
                             };
 
                             foreach (MapPathPoint point in SELECTED_PATH.PathPoints)
@@ -1568,7 +1374,7 @@ namespace RealmStudio
                             }
 
                             SELECTED_PATH.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(SELECTED_PATH.PathPoints);
-                            PREVIOUS_CLICK_POINT = zoomedScrolledPoint;
+                            PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
                         }
                     }
                     break;
@@ -1580,6 +1386,25 @@ namespace RealmStudio
                         CURRENT_MAP.IsSaved = false;
                     }
                     break;
+                case DrawingModeEnum.SymbolPlace:
+                    if (AreaBrushSwitch.Checked)
+                    {
+                        float symbolScale = SymbolScaleTrack.Value / 100.0F;
+                        float symbolRotation = SymbolRotationTrack.Value;
+                        SELECTED_BRUSH_SIZE = AreaBrushSizeTrack.Value;
+
+                        PlaceSelectedSymbolInArea(zoomedScrolledPoint, symbolScale, symbolRotation, (int)(AreaBrushSizeTrack.Value / 2.0F));
+                    }
+                    else
+                    {
+                        SELECTED_BRUSH_SIZE = 0;
+                        PlaceSelectedSymbolAtCursor(zoomedScrolledPoint);
+                    }
+
+                    PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
+                    SKGLRenderControl.Invalidate();
+                    break;
+
             }
         }
 
@@ -1656,9 +1481,13 @@ namespace RealmStudio
                 case DrawingModeEnum.PlaceWindrose:
                     if (CURRENT_WINDROSE != null)
                     {
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WINDROSELAYER).MapLayerComponents.Add(CURRENT_WINDROSE);
+
                         Cmd_AddWindrose cmd = new(CURRENT_MAP, CURRENT_WINDROSE);
                         CommandManager.AddCommand(cmd);
                         cmd.DoOperation();
+
+                        CURRENT_WINDROSE = CreateWindrose();
 
                         CURRENT_MAP.IsSaved = false;
                     }
@@ -1757,6 +1586,7 @@ namespace RealmStudio
             {
                 switch (CURRENT_DRAWING_MODE)
                 {
+                    // TODO: delete water features, rivers
                     case DrawingModeEnum.PathSelect:
                         if (SELECTED_PATH != null)
                         {
@@ -3036,5 +2866,465 @@ namespace RealmStudio
         }
         #endregion
 
+        #region Symbol Tab Event Handlers
+        private void SymbolSelectButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void EraseSymbolsButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ColorSymbolsButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void StructuresSymbolButton_Click(object sender, EventArgs e)
+        {
+            SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Structure;
+            List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+
+            AddSymbolsToSymbolTable(selectedSymbols);
+            AreaBrushSwitch.Checked = false;
+            AreaBrushSwitch.Enabled = false;
+        }
+
+        private void VegetationSymbolsButton_Click(object sender, EventArgs e)
+        {
+            SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Vegetation;
+            List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+
+            AddSymbolsToSymbolTable(selectedSymbols);
+            AreaBrushSwitch.Enabled = true;
+        }
+
+        private void TerrainSymbolsButton_Click(object sender, EventArgs e)
+        {
+            SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Terrain;
+            List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+
+            AddSymbolsToSymbolTable(selectedSymbols);
+            AreaBrushSwitch.Enabled = true;
+        }
+
+        private void OtherSymbolsButton_Click(object sender, EventArgs e)
+        {
+            SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Other;
+            List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+
+            AddSymbolsToSymbolTable(selectedSymbols);
+            AreaBrushSwitch.Checked = false;
+            AreaBrushSwitch.Enabled = false;
+        }
+
+        private void SymbolScaleTrack_Scroll(object sender, EventArgs e)
+        {
+            if (!SYMBOL_SCALE_LOCKED)
+            {
+                SymbolScaleUpDown.Value = SymbolScaleTrack.Value;
+                SymbolScaleUpDown.Refresh();
+            }
+        }
+
+        private void SymbolScaleUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            if (!SYMBOL_SCALE_LOCKED)
+            {
+                SymbolScaleTrack.Value = (int)SymbolScaleUpDown.Value;
+                SymbolScaleTrack.Refresh();
+            }
+        }
+
+        private void LockSymbolScaleButton_Click(object sender, EventArgs e)
+        {
+            SYMBOL_SCALE_LOCKED = !SYMBOL_SCALE_LOCKED;
+
+            if (SYMBOL_SCALE_LOCKED)
+            {
+                LockSymbolScaleButton.IconChar = FontAwesome.Sharp.IconChar.Lock;
+                SymbolScaleTrack.Enabled = false;
+                SymbolScaleUpDown.Enabled = false;
+            }
+            else
+            {
+                LockSymbolScaleButton.IconChar = FontAwesome.Sharp.IconChar.LockOpen;
+                SymbolScaleTrack.Enabled = true;
+                SymbolScaleUpDown.Enabled = true;
+            }
+
+            LockSymbolScaleButton.Refresh();
+            SymbolScaleTrack.Refresh();
+            SymbolScaleUpDown.Refresh();
+        }
+
+        private void ResetSymbolColorsButton_Click(object sender, EventArgs e)
+        {
+            // TODO: default symbol colors are set from selected theme
+            SymbolColor1Button.BackColor = Color.FromArgb(255, 85, 44, 36);
+            SymbolColor1Button.Refresh();
+
+            SymbolColor2Button.BackColor = Color.FromArgb(255, 53, 45, 32);
+            SymbolColor2Button.Refresh();
+
+            SymbolColor3Button.BackColor = Color.FromArgb(161, 214, 202, 171);
+            SymbolColor3Button.Refresh();
+
+        }
+
+        private void SymbolColor1Button_Click(object sender, EventArgs e)
+        {
+            Color c = UtilityMethods.SelectColorFromDialog(this, SymbolColor1Button.BackColor);
+
+            SymbolColor1Button.BackColor = c;
+            SymbolColor1Button.Refresh();
+
+            List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+            AddSymbolsToSymbolTable(selectedSymbols);
+        }
+
+        private void SymbolColor2Button_Click(object sender, EventArgs e)
+        {
+            Color c = UtilityMethods.SelectColorFromDialog(this, SymbolColor2Button.BackColor);
+
+            SymbolColor2Button.BackColor = c;
+            SymbolColor2Button.Refresh();
+
+            List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+            AddSymbolsToSymbolTable(selectedSymbols);
+        }
+
+        private void SymbolColor3Button_Click(object sender, EventArgs e)
+        {
+            Color c = UtilityMethods.SelectColorFromDialog(this, SymbolColor3Button.BackColor);
+
+            SymbolColor3Button.BackColor = c;
+            SymbolColor3Button.Refresh();
+
+            List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+            AddSymbolsToSymbolTable(selectedSymbols);
+        }
+
+        private void AreaBrushSwitch_CheckedChanged()
+        {
+            if (AreaBrushSwitch.Checked)
+            {
+                SetSelectedBrushSize(AreaBrushSizeTrack.Value);
+            }
+            else
+            {
+                SetSelectedBrushSize(0);
+            }
+        }
+
+        private void AreaBrushSizeTrack_ValueChanged(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(AreaBrushSizeTrack.Value.ToString(), AreaBrushSizeTrack, new Point(AreaBrushSizeTrack.Right - 42, AreaBrushSizeTrack.Top - 94), 2000);
+        }
+
+        private void SymbolRotationTrack_Scroll(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(SymbolRotationTrack.Value.ToString(), SymbolRotationTrack, new Point(SymbolRotationTrack.Right - 38, SymbolRotationTrack.Top - 170), 2000);
+        }
+
+        private void SymbolPlacementRateUpDown_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ResetSymbolPlacementRateButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ResetSymbolPlacementDensityButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SymbolCollectionsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+
+        }
+
+        private void SymbolTagsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+
+        }
+
+        private void SymbolSearchTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // TODO: filter symbol list based on text entered by the user
+        }
+
+        #endregion
+
+        #region Symbol Tab Methods
+        private List<MapSymbol> GetFilteredMapSymbols()
+        {
+            List<string> selectedCollections = SymbolCollectionsListBox.CheckedItems.Cast<string>().ToList();
+            List<string> selectedTags = SymbolTagsListBox.CheckedItems.Cast<string>().ToList();
+            List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SELECTED_SYMBOL_TYPE, selectedCollections, selectedTags);
+
+            return filteredSymbols;
+        }
+
+        private void AddSymbolsToSymbolTable(List<MapSymbol> symbols)
+        {
+            SymbolTable.Hide();
+            SymbolTable.Controls.Clear();
+            foreach (MapSymbol symbol in symbols)
+            {
+#pragma warning disable CS8604 // Possible null reference argument.
+                symbol.ColorMappedBitmap = symbol.SymbolBitmap;
+#pragma warning restore CS8604 // Possible null reference argument.
+
+                Bitmap colorMappedBitmap = Extensions.ToBitmap(symbol.ColorMappedBitmap);
+
+                if (symbol.UseCustomColors)
+                {
+                    SymbolMethods.MapCustomColorsToColorableBitmap(ref colorMappedBitmap, SymbolColor1Button.BackColor, SymbolColor2Button.BackColor, SymbolColor3Button.BackColor);
+                }
+
+                symbol.ColorMappedBitmap = Extensions.ToSKBitmap(colorMappedBitmap);
+
+                PictureBox pb = new()
+                {
+                    Tag = symbol,
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    Image = colorMappedBitmap,
+                };
+
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+                pb.MouseHover += SymbolPictureBox_MouseHover;
+                pb.MouseClick += SymbolPictureBox_MouseClick;
+#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+
+                SymbolTable.Controls.Add(pb);
+            }
+            SymbolTable.Show();
+
+            Refresh();
+        }
+
+        private void SymbolPictureBox_MouseHover(object sender, EventArgs e)
+        {
+            PictureBox pb = (PictureBox)sender;
+
+            if (pb.Tag is MapSymbol s)
+            {
+                TOOLTIP.Show(s.SymbolName, pb);
+            }
+        }
+
+        private void SymbolPictureBox_MouseClick(object sender, EventArgs e)
+        {
+            if (((MouseEventArgs)e).Button == MouseButtons.Left)
+            {
+                if (ModifierKeys == Keys.Shift)
+                {
+                    // secondary symbol selection - for additional symbols to be used when painting symbols to the map (forests, etc.)
+                    if (CURRENT_DRAWING_MODE == DrawingModeEnum.SymbolPlace)
+                    {
+                        PictureBox pb = (PictureBox)sender;
+
+                        if (pb.BackColor == Color.AliceBlue)
+                        {
+                            pb.BackColor = SystemColors.Control;
+                            pb.Refresh();
+
+                            if (pb.Tag is MapSymbol s)
+                            {
+                                SymbolMethods.SecondarySelectedSymbols.Remove(s);
+                            }
+                        }
+                        else
+                        {
+                            pb.BackColor = Color.AliceBlue;
+                            pb.Refresh();
+
+                            if (pb.Tag is MapSymbol s)
+                            {
+                                SymbolMethods.SecondarySelectedSymbols.Add(s);
+                            }
+                        }
+                    }
+                }
+                else if (ModifierKeys == Keys.None)
+                {
+                    // primary symbol selection                    
+
+                    PictureBox pb = (PictureBox)sender;
+
+                    if (pb.Tag is MapSymbol s)
+                    {
+                        foreach (Control control in SymbolTable.Controls)
+                        {
+                            if (control != pb)
+                            {
+                                control.BackColor = SystemColors.Control;
+                                control.Refresh();
+                            }
+                        }
+
+                        SymbolMethods.SecondarySelectedSymbols.Clear();
+                        Color pbBackColor = pb.BackColor;
+
+                        if (pbBackColor == SystemColors.Control)
+                        {
+                            // clicked symbol is not selected, so select it
+                            pb.BackColor = Color.LightSkyBlue;
+                            pb.Refresh();
+
+                            SELECTED_MAP_SYMBOL = s;
+
+                            CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolPlace;
+                        }
+                        else
+                        {
+                            // clicked symbol is already selected, so deselect it
+                            pb.BackColor = SystemColors.Control;
+                            pb.Refresh();
+
+                            SELECTED_MAP_SYMBOL = null;
+                            CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+                        }
+                    }
+                }
+            }
+            else if (((MouseEventArgs)e).Button == MouseButtons.Right)
+            {
+                PictureBox pb = (PictureBox)sender;
+                if (pb.Tag is MapSymbol s)
+                {
+                    SymbolInfo si = new(s);
+                    si.ShowDialog();
+                }
+            }
+        }
+
+        private void PlaceSelectedSymbolAtCursor(SKPoint mouseCursorPoint)
+        {
+            if (SELECTED_MAP_SYMBOL != null)
+            {
+                SKBitmap? symbolBitmap = SELECTED_MAP_SYMBOL.SymbolBitmap;
+                if (symbolBitmap != null)
+                {
+                    float symbolScale = SymbolScaleTrack.Value / 100.0F;
+                    float symbolRotation = SymbolRotationTrack.Value;
+
+                    SKBitmap rotatedAndScaledBitmap = RotateAndScaleSymbolBitmap(symbolBitmap, symbolScale, symbolRotation);
+                    SKPoint cursorPoint = new(mouseCursorPoint.X - (rotatedAndScaledBitmap.Width / 2), mouseCursorPoint.Y - (rotatedAndScaledBitmap.Height / 2));
+
+                    PlaceSelectedMapSymbolAtPoint(cursorPoint, PREVIOUS_CURSOR_POINT, symbolScale, symbolRotation);
+                }
+            }
+        }
+
+        private void PlaceSelectedMapSymbolAtPoint(SKPoint cursorPoint, SKPoint previousPoint, float symbolScale, float symbolRotation)
+        {
+            MapSymbol? symbolToPlace = SELECTED_MAP_SYMBOL;
+
+            if (symbolToPlace != null)
+            {
+                if (SymbolMethods.SecondarySelectedSymbols.Count > 0)
+                {
+                    int selectedIndex = Random.Shared.Next(0, SymbolMethods.SecondarySelectedSymbols.Count + 1);
+
+                    if (selectedIndex > 0)
+                    {
+                        symbolToPlace = SymbolMethods.SecondarySelectedSymbols[selectedIndex - 1];
+                    }
+                }
+
+                symbolToPlace.X = (int)cursorPoint.X;
+                symbolToPlace.Y = (int)cursorPoint.Y;
+
+                SKBitmap? symbolBitmap = symbolToPlace.ColorMappedBitmap;
+
+                if (symbolBitmap != null)
+                {
+                    SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleBitmap(symbolBitmap, symbolScale);
+                    SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateBitmap(scaledSymbolBitmap, symbolRotation, MirrorSymbolSwitch.Checked);
+
+                    if (rotatedAndScaledBitmap != null)
+                    {
+                        float bitmapSize = rotatedAndScaledBitmap.Width + rotatedAndScaledBitmap.Height;
+
+                        // increasing this value reduces the rate of symbol placement on the map
+                        // so high values of placement rate on the placement rate trackbar or updown increase placement rate on the map
+                        float placementRateSize = bitmapSize / PLACEMENT_RATE;
+
+                        float pointDistanceSquared = SKPoint.DistanceSquared(previousPoint, cursorPoint);
+
+                        if (pointDistanceSquared > placementRateSize)
+                        {
+                            bool canPlaceSymbol = SymbolMethods.CanPlaceSymbol(CURRENT_MAP, symbolToPlace, rotatedAndScaledBitmap, cursorPoint, PLACEMENT_DENSITY);
+
+                            if (canPlaceSymbol)
+                            {
+                                symbolToPlace.CustomSymbolColors[0] = SymbolColor1Button.BackColor.ToSKColor();
+                                symbolToPlace.CustomSymbolColors[1] = SymbolColor2Button.BackColor.ToSKColor();
+                                symbolToPlace.CustomSymbolColors[2] = SymbolColor3Button.BackColor.ToSKColor();
+
+                                symbolToPlace.Width = rotatedAndScaledBitmap.Width;
+                                symbolToPlace.Height = rotatedAndScaledBitmap.Height;
+
+                                SymbolMethods.PlaceSymbolOnMap(CURRENT_MAP, symbolToPlace, rotatedAndScaledBitmap, cursorPoint);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        symbolToPlace.CustomSymbolColors[0] = SymbolColor1Button.BackColor.ToSKColor();
+                        symbolToPlace.CustomSymbolColors[1] = SymbolColor2Button.BackColor.ToSKColor();
+                        symbolToPlace.CustomSymbolColors[2] = SymbolColor3Button.BackColor.ToSKColor();
+
+                        SymbolMethods.PlaceSymbolOnMap(CURRENT_MAP, symbolToPlace, rotatedAndScaledBitmap, cursorPoint);
+                    }
+                }
+            }
+        }
+
+        private void PlaceSelectedSymbolInArea(SKPoint mouseCursorPoint, float symbolScale, float symbolRotation, int areaBrushSize)
+        {
+            if (SELECTED_MAP_SYMBOL != null)
+            {
+                SKBitmap? symbolBitmap = SELECTED_MAP_SYMBOL.SymbolBitmap;
+                if (symbolBitmap != null)
+                {
+                    SKBitmap rotatedAndScaledBitmap = RotateAndScaleSymbolBitmap(symbolBitmap, symbolScale, symbolRotation);
+
+                    SKPoint cursorPoint = new(mouseCursorPoint.X - (rotatedAndScaledBitmap.Width / 2), mouseCursorPoint.Y - (rotatedAndScaledBitmap.Height / 2));
+
+                    int exclusionRadius = (int)Math.Ceiling(PLACEMENT_DENSITY * ((rotatedAndScaledBitmap.Width + rotatedAndScaledBitmap.Height) / 2.0F));
+
+                    List<SKPoint> areaPoints = DrawingMethods.GetPointsInCircle(cursorPoint, (int)Math.Ceiling((double)areaBrushSize), exclusionRadius);
+
+                    foreach (SKPoint p in areaPoints)
+                    {
+                        SKPoint point = p;
+
+                        // 1% randomization of point location
+                        point.X = Random.Shared.Next((int)(p.X * 0.99F), (int)(p.X * 1.01F));
+                        point.Y = Random.Shared.Next((int)(p.Y * 0.99F), (int)(p.Y * 1.01F));
+
+                        PlaceSelectedMapSymbolAtPoint(point, PREVIOUS_CURSOR_POINT, symbolScale, symbolRotation);
+                    }
+                }
+            }
+        }
+
+        private SKBitmap RotateAndScaleSymbolBitmap(SKBitmap symbolBitmap, float symbolScale, float symbolRotation)
+        {
+            SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleBitmap(symbolBitmap, symbolScale);
+
+            SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateBitmap(scaledSymbolBitmap, symbolRotation, MirrorSymbolSwitch.Checked);
+
+            return rotatedAndScaledBitmap;
+        }
+        #endregion
     }
 }

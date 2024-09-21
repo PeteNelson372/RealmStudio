@@ -43,6 +43,8 @@ namespace RealmStudio
         [XmlIgnore]
         public SKSurface? LayerSurface { get; set; } = null;
 
+        [XmlIgnore]
+        public SKPicture? RenderPicture { get; set; } = null;
 
         [XmlIgnore]
         public bool ShowLayer { get; set; } = true;

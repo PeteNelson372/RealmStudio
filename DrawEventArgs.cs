@@ -25,36 +25,15 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class Cmd_SetBackgroundTexture(RealmStudioMap map, SKBitmap textureBitmap) : IMapOperation
+    public class DrawEventArgs : EventArgs
     {
-        public RealmStudioMap Map { get; set; } = map;
-        private SKBitmap LayerBitmap { get; set; } = textureBitmap;
-        private MapImage? BackgroundTexture { get; set; }
+        public SKRect Bounds { get; set; }
+        public SKCanvas Canvas { get; set; }
 
-        public void DoOperation()
+        public DrawEventArgs(SKCanvas canvas, SKRect bounds)
         {
-            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BASELAYER);
-
-            if (baseLayer.MapLayerComponents.Count < 1)
-            {
-                BackgroundTexture = new()
-                {
-                    Width = LayerBitmap.Width,
-                    Height = LayerBitmap.Height,
-                    MapImageBitmap = LayerBitmap.Copy()
-                };
-                baseLayer.MapLayerComponents.Add(BackgroundTexture);
-            }
-        }
-
-        public void UndoOperation()
-        {
-            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BASELAYER);
-
-            if (BackgroundTexture != null)
-            {
-                baseLayer.MapLayerComponents.Remove(BackgroundTexture);
-            }
+            Canvas = canvas;
+            Bounds = bounds;
         }
     }
 }

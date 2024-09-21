@@ -28,41 +28,35 @@ namespace RealmStudio
 {
     internal class SymbolMethods
     {
-        // the tags that can be selected in the UI to filter the tags in the tag list box on the UI
-        private static readonly List<string> OriginalSymbolTags = [];
-        private static readonly List<string> SymbolTags = [];
-
         private static readonly string SymbolTagsFilePath = AssetManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
 
         private static readonly List<Tuple<string, List<MapSymbol>>> TagSymbolAssociationList = [];
 
-        public static void LoadSymbolTags()
-        {
-            SymbolTags.Clear();
-            OriginalSymbolTags.Clear();
+        // additional symbols selected by the user from the SymbolTable control on the UI
+        public static readonly List<MapSymbol> SecondarySelectedSymbols = [];
 
-            IEnumerable<string> tags = File.ReadLines(SymbolTagsFilePath);
-            foreach (string tag in tags)
+        internal static void PlaceSymbolOnMap(RealmStudioMap map, MapSymbol? mapSymbol, SKBitmap? bitmap, SKPoint cursorPoint)
+        {
+            if (mapSymbol != null && bitmap != null)
             {
-                if (!string.IsNullOrEmpty(tag))
+                map.IsSaved = false;
+
+                MapSymbol placedSymbol = new(mapSymbol)
                 {
-                    AddSymbolTag(tag);
-                }
+                    X = (int)cursorPoint.X,
+                    Y = (int)cursorPoint.Y,
+                    Width = bitmap.Width,
+                    SymbolWidth = bitmap.Width,
+                    Height = bitmap.Height,
+                    SymbolHeight = bitmap.Height,
+                };
+
+                placedSymbol.SetPlacedBitmap(bitmap);
+
+                Cmd_PlaceSymbol cmd = new(map, placedSymbol);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
             }
-
-            SymbolTags.Sort();
-
-            foreach (string tag in SymbolTags)
-            {
-                OriginalSymbolTags.Add(tag);
-            }
-        }
-
-        public static void AddSymbolTag(string tag)
-        {
-            tag = tag.Trim([' ', ',']).ToLower();
-            if (SymbolTags.Contains(tag)) return;
-            SymbolTags.Add(tag);
         }
 
         internal static void AnalyzeSymbolBitmapColors(MapSymbol symbol)
@@ -108,6 +102,133 @@ namespace RealmStudio
 
                 TagSymbolAssociationList.Add(newTagAssociation);
             }
+        }
+
+        public static void MapCustomColorsToColorableBitmap(ref Bitmap bitmap, Color customColor1, Color customColor2, Color customColor3)
+        {
+            if (bitmap == null)
+            {
+                return;
+            }
+
+            var lockedBitmap = new LockBitmap(bitmap);
+            lockedBitmap.LockBits();
+
+            for (int y = 0; y < lockedBitmap.Height; y++)
+            {
+                for (int x = 0; x < lockedBitmap.Width; x++)
+                {
+                    Color pixelColor = lockedBitmap.GetPixel(x, y);
+
+                    byte rValue = pixelColor.R;
+                    byte gValue = pixelColor.G;
+                    byte bValue = pixelColor.B;
+
+                    if (rValue > 64 && gValue == 0 && bValue == 0)
+                    {
+                        float colorScale = rValue / 255F;
+                        SKColor newColor = customColor1.ToSKColor();
+
+                        newColor.ToHsl(out float hue, out float saturation, out float brightness);
+                        brightness *= colorScale;
+
+                        Color scaledColor = SKColor.FromHsl(hue, saturation, brightness).ToDrawingColor();
+                        lockedBitmap.SetPixel(x, y, scaledColor);
+                    }
+                    else if (gValue > 64 && rValue == 0 && bValue == 0)
+                    {
+                        float colorScale = gValue / 255F;
+                        SKColor newColor = customColor2.ToSKColor();
+
+                        newColor.ToHsl(out float hue, out float saturation, out float brightness);
+                        brightness *= colorScale;
+
+                        Color scaledColor = SKColor.FromHsl(hue, saturation, brightness).ToDrawingColor();
+                        lockedBitmap.SetPixel(x, y, scaledColor);
+                    }
+                    else if (bValue > 64 && rValue == 3 && gValue == 3)
+                    {
+                        float colorScale = bValue / 255F;
+                        SKColor newColor = customColor3.ToSKColor();
+
+                        newColor.ToHsl(out float hue, out float saturation, out float brightness);
+                        brightness *= colorScale;
+
+                        Color scaledColor = SKColor.FromHsl(hue, saturation, brightness).ToDrawingColor();
+                        lockedBitmap.SetPixel(x, y, scaledColor);
+                    }
+                }
+            }
+
+            lockedBitmap.UnlockBits();
+        }
+
+        internal static List<MapSymbol> GetFilteredSymbolList(SymbolTypeEnum selectedSymbolType, List<string> selectedCollections, List<string> selectedTags)
+        {
+            List<MapSymbol> filteredSymbols = GetMapSymbolsWithType(selectedSymbolType);
+
+            if (selectedCollections.Count > 0)
+            {
+                for (int i = filteredSymbols.Count - 1; i >= 0; i--)
+                {
+
+                    if (!selectedCollections.Contains(filteredSymbols[i].CollectionName))
+                    {
+                        filteredSymbols.RemoveAt(i);
+                    }
+                }
+            }
+
+            if (selectedTags.Count > 0)
+            {
+                foreach (string tag in selectedTags)
+                {
+                    for (int i = filteredSymbols.Count - 1; i >= 0; i--)
+                    {
+                        if (!filteredSymbols[i].SymbolTags.Contains(tag))
+                        {
+                            filteredSymbols.RemoveAt(i);
+                        }
+                    }
+                }
+            }
+
+            return filteredSymbols;
+        }
+
+        internal static List<MapSymbol> GetMapSymbolsWithType(SymbolTypeEnum symbolType)
+        {
+            List<MapSymbol> typeSymbols = AssetManager.MAP_SYMBOL_LIST.FindAll(x => x.SymbolType == symbolType);
+            return typeSymbols;
+        }
+
+        internal static bool CanPlaceSymbol(RealmStudioMap map, MapSymbol? mapSymbol, SKBitmap rotatedAndScaledBitmap, SKPoint cursorPoint, float placementDensity)
+        {
+            // if the symbol is within the excluded radius from any other symbols, then the symbol cannot be placed at the cursor point
+            if (mapSymbol == null) return false;
+
+            bool canPlace = true;
+
+            float exclusionRadius = ((rotatedAndScaledBitmap.Width + rotatedAndScaledBitmap.Height) / 2.0F) / placementDensity;
+
+            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER);
+            if (symbolLayer.LayerSurface != null)
+            {
+                for (int i = 0; i < symbolLayer.MapLayerComponents.Count; i++)
+                {
+                    MapSymbol symbol = (MapSymbol)symbolLayer.MapLayerComponents[i];
+                    SKPoint symbolPoint = new(symbol.X, symbol.Y);
+                    bool placeAllowed = !DrawingMethods.PointInCircle(exclusionRadius, symbolPoint, cursorPoint);
+
+                    if (!placeAllowed)
+                    {
+                        canPlace = false;
+                        break;
+                    }
+                }
+            }
+
+            return canPlace;
         }
     }
 }

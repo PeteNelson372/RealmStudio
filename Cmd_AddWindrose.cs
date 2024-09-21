@@ -21,8 +21,6 @@
 * contact@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
-
 namespace RealmStudio
 {
     internal class Cmd_AddWindrose(RealmStudioMap map, MapWindrose windrose) : IMapOperation
@@ -32,13 +30,14 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WINDROSELAYER).MapLayerComponents.Add(Windrose);
+            MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WINDROSELAYER);
+            windroseLayer.MapLayerComponents.Add(Windrose);
         }
 
         public void UndoOperation()
         {
-            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WINDROSELAYER).MapLayerComponents.Remove(Windrose);
-            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WINDROSELAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WINDROSELAYER);
+            windroseLayer.MapLayerComponents.Remove(Windrose);
         }
     }
 }

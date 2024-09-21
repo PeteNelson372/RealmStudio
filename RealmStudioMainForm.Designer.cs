@@ -150,9 +150,38 @@
             cyberSwitch2 = new ReaLTaiizor.Controls.CyberSwitch();
             label6 = new Label();
             SymbolTab = new TabPage();
+            groupBox14 = new GroupBox();
+            SymbolTagsListBox = new CheckedListBox();
+            groupBox13 = new GroupBox();
+            SymbolCollectionsListBox = new CheckedListBox();
+            groupBox12 = new GroupBox();
+            label53 = new Label();
+            AreaBrushSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label52 = new Label();
+            AreaBrushSizeTrack = new TrackBar();
+            label50 = new Label();
+            ResetSymbolPlacementDensityButton = new FontAwesome.Sharp.IconButton();
+            SymbolPlacementDensityUpDown = new NumericUpDown();
+            label49 = new Label();
+            ResetSymbolPlacementRateButton = new FontAwesome.Sharp.IconButton();
+            SymbolPlacementRateUpDown = new NumericUpDown();
+            label21 = new Label();
+            SymbolRotationTrack = new TrackBar();
+            label44 = new Label();
+            MirrorSymbolSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            groupBox11 = new GroupBox();
+            ResetSymbolColorsButton = new FontAwesome.Sharp.IconButton();
+            SymbolColor3Button = new FontAwesome.Sharp.IconButton();
+            SymbolColor2Button = new FontAwesome.Sharp.IconButton();
+            SymbolColor1Button = new FontAwesome.Sharp.IconButton();
+            groupBox10 = new GroupBox();
+            SymbolScaleUpDown = new NumericUpDown();
+            LockSymbolScaleButton = new FontAwesome.Sharp.IconButton();
+            SymbolScaleTrack = new TrackBar();
             SymbolToolStrip = new ToolStrip();
             SymbolSelectButton = new FontAwesome.Sharp.IconToolStripButton();
             EraseSymbolsButton = new FontAwesome.Sharp.IconToolStripButton();
+            ColorSymbolsButton = new FontAwesome.Sharp.IconToolStripButton();
             toolStripSeparator4 = new ToolStripSeparator();
             StructuresSymbolButton = new FontAwesome.Sharp.IconToolStripButton();
             VegetationSymbolsButton = new FontAwesome.Sharp.IconToolStripButton();
@@ -244,6 +273,10 @@
             HelpContentsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
+            SymbolToolPanel = new Panel();
+            label22 = new Label();
+            SymbolSearchTextBox = new TextBox();
+            SymbolTable = new TableLayoutPanel();
             PathToolPanel = new Panel();
             RailroadTracksPictureBox = new PictureBox();
             FootPrintsPictureBox = new PictureBox();
@@ -297,20 +330,8 @@
             label24 = new Label();
             LabelToolPanel = new Panel();
             label23 = new Label();
-            SymbolToolPanel = new Panel();
-            label22 = new Label();
-            ColorSymbolsButton = new FontAwesome.Sharp.IconToolStripButton();
-            label44 = new Label();
-            MirrorSymbolSwitch = new ReaLTaiizor.Controls.CyberSwitch();
-            groupBox10 = new GroupBox();
-            SymbolScaleTrack = new TrackBar();
-            LockAspectRatioButton = new FontAwesome.Sharp.IconButton();
-            SymbolScaleUpDown = new NumericUpDown();
-            groupBox11 = new GroupBox();
-            ResetSymbolColorsButton = new FontAwesome.Sharp.IconButton();
-            SymbolColor3Button = new FontAwesome.Sharp.IconButton();
-            SymbolColor2Button = new FontAwesome.Sharp.IconButton();
-            SymbolColor1Button = new FontAwesome.Sharp.IconButton();
+            materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
+            materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -354,6 +375,17 @@
             ((System.ComponentModel.ISupportInitialize)PathWidthTrack).BeginInit();
             PathToolStrip.SuspendLayout();
             SymbolTab.SuspendLayout();
+            groupBox14.SuspendLayout();
+            groupBox13.SuspendLayout();
+            groupBox12.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)AreaBrushSizeTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SymbolPlacementDensityUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SymbolPlacementRateUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SymbolRotationTrack).BeginInit();
+            groupBox11.SuspendLayout();
+            groupBox10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)SymbolScaleUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SymbolScaleTrack).BeginInit();
             SymbolToolStrip.SuspendLayout();
             LabelTab.SuspendLayout();
             LabelToolStrip.SuspendLayout();
@@ -370,6 +402,7 @@
             MapStatusStrip.SuspendLayout();
             ApplicationStatusStrip.SuspendLayout();
             MainMenuStrip.SuspendLayout();
+            SymbolToolPanel.SuspendLayout();
             PathToolPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RailroadTracksPictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)FootPrintsPictureBox).BeginInit();
@@ -395,11 +428,6 @@
             RegionToolPanel.SuspendLayout();
             OverlayToolPanel.SuspendLayout();
             LabelToolPanel.SuspendLayout();
-            SymbolToolPanel.SuspendLayout();
-            groupBox10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)SymbolScaleTrack).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)SymbolScaleUpDown).BeginInit();
-            groupBox11.SuspendLayout();
             SuspendLayout();
             // 
             // OceanTab
@@ -2322,10 +2350,11 @@
             // SymbolTab
             // 
             SymbolTab.BackColor = SystemColors.Control;
+            SymbolTab.Controls.Add(groupBox14);
+            SymbolTab.Controls.Add(groupBox13);
+            SymbolTab.Controls.Add(groupBox12);
             SymbolTab.Controls.Add(groupBox11);
             SymbolTab.Controls.Add(groupBox10);
-            SymbolTab.Controls.Add(label44);
-            SymbolTab.Controls.Add(MirrorSymbolSwitch);
             SymbolTab.Controls.Add(SymbolToolStrip);
             SymbolTab.Controls.Add(cyberSwitch3);
             SymbolTab.Controls.Add(label7);
@@ -2334,6 +2363,445 @@
             SymbolTab.Size = new Size(230, 878);
             SymbolTab.TabIndex = 9;
             SymbolTab.Text = "Symbols";
+            // 
+            // groupBox14
+            // 
+            groupBox14.Controls.Add(SymbolTagsListBox);
+            groupBox14.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox14.Location = new Point(7, 674);
+            groupBox14.Name = "groupBox14";
+            groupBox14.Size = new Size(148, 174);
+            groupBox14.TabIndex = 32;
+            groupBox14.TabStop = false;
+            groupBox14.Text = "Tags";
+            // 
+            // SymbolTagsListBox
+            // 
+            SymbolTagsListBox.CheckOnClick = true;
+            SymbolTagsListBox.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolTagsListBox.ForeColor = SystemColors.ControlDarkDark;
+            SymbolTagsListBox.FormattingEnabled = true;
+            SymbolTagsListBox.Location = new Point(6, 28);
+            SymbolTagsListBox.Name = "SymbolTagsListBox";
+            SymbolTagsListBox.Size = new Size(135, 130);
+            SymbolTagsListBox.TabIndex = 0;
+            SymbolTagsListBox.ItemCheck += SymbolTagsListBox_ItemCheck;
+            // 
+            // groupBox13
+            // 
+            groupBox13.Controls.Add(SymbolCollectionsListBox);
+            groupBox13.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox13.Location = new Point(9, 492);
+            groupBox13.Name = "groupBox13";
+            groupBox13.Size = new Size(148, 170);
+            groupBox13.TabIndex = 31;
+            groupBox13.TabStop = false;
+            groupBox13.Text = "Collections";
+            // 
+            // SymbolCollectionsListBox
+            // 
+            SymbolCollectionsListBox.CheckOnClick = true;
+            SymbolCollectionsListBox.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolCollectionsListBox.ForeColor = SystemColors.ControlDarkDark;
+            SymbolCollectionsListBox.FormattingEnabled = true;
+            SymbolCollectionsListBox.Location = new Point(6, 28);
+            SymbolCollectionsListBox.Name = "SymbolCollectionsListBox";
+            SymbolCollectionsListBox.Size = new Size(135, 130);
+            SymbolCollectionsListBox.TabIndex = 0;
+            SymbolCollectionsListBox.ItemCheck += SymbolCollectionsListBox_ItemCheck;
+            // 
+            // groupBox12
+            // 
+            groupBox12.Controls.Add(label53);
+            groupBox12.Controls.Add(AreaBrushSwitch);
+            groupBox12.Controls.Add(label52);
+            groupBox12.Controls.Add(AreaBrushSizeTrack);
+            groupBox12.Controls.Add(label50);
+            groupBox12.Controls.Add(ResetSymbolPlacementDensityButton);
+            groupBox12.Controls.Add(SymbolPlacementDensityUpDown);
+            groupBox12.Controls.Add(label49);
+            groupBox12.Controls.Add(ResetSymbolPlacementRateButton);
+            groupBox12.Controls.Add(SymbolPlacementRateUpDown);
+            groupBox12.Controls.Add(label21);
+            groupBox12.Controls.Add(SymbolRotationTrack);
+            groupBox12.Controls.Add(label44);
+            groupBox12.Controls.Add(MirrorSymbolSwitch);
+            groupBox12.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox12.Location = new Point(9, 234);
+            groupBox12.Name = "groupBox12";
+            groupBox12.Size = new Size(148, 246);
+            groupBox12.TabIndex = 30;
+            groupBox12.TabStop = false;
+            groupBox12.Text = "Placement";
+            // 
+            // label53
+            // 
+            label53.AutoSize = true;
+            label53.BackColor = Color.Transparent;
+            label53.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label53.ForeColor = SystemColors.ControlDarkDark;
+            label53.Location = new Point(30, 29);
+            label53.Name = "label53";
+            label53.Size = new Size(64, 15);
+            label53.TabIndex = 40;
+            label53.Text = "Area Brush";
+            // 
+            // AreaBrushSwitch
+            // 
+            AreaBrushSwitch.Alpha = 50;
+            AreaBrushSwitch.BackColor = Color.Transparent;
+            AreaBrushSwitch.Background = true;
+            AreaBrushSwitch.Background_WidthPen = 2F;
+            AreaBrushSwitch.BackgroundPen = false;
+            AreaBrushSwitch.Checked = false;
+            AreaBrushSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            AreaBrushSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            AreaBrushSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            AreaBrushSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            AreaBrushSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            AreaBrushSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            AreaBrushSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            AreaBrushSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            AreaBrushSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            AreaBrushSwitch.ColorValue = Color.ForestGreen;
+            AreaBrushSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            AreaBrushSwitch.Enabled = false;
+            AreaBrushSwitch.Font = new Font("Arial", 11F);
+            AreaBrushSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            AreaBrushSwitch.Lighting = true;
+            AreaBrushSwitch.LinearGradient_Background = false;
+            AreaBrushSwitch.LinearGradient_Value = false;
+            AreaBrushSwitch.LinearGradientPen = false;
+            AreaBrushSwitch.Location = new Point(100, 24);
+            AreaBrushSwitch.Name = "AreaBrushSwitch";
+            AreaBrushSwitch.PenWidth = 10;
+            AreaBrushSwitch.RGB = false;
+            AreaBrushSwitch.Rounding = true;
+            AreaBrushSwitch.RoundingInt = 90;
+            AreaBrushSwitch.Size = new Size(41, 20);
+            AreaBrushSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            AreaBrushSwitch.TabIndex = 39;
+            AreaBrushSwitch.Tag = "Cyber";
+            AreaBrushSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            AreaBrushSwitch.Timer_RGB = 300;
+            AreaBrushSwitch.CheckedChanged += AreaBrushSwitch_CheckedChanged;
+            // 
+            // label52
+            // 
+            label52.AutoSize = true;
+            label52.BackColor = Color.Transparent;
+            label52.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label52.ForeColor = SystemColors.ControlDarkDark;
+            label52.Location = new Point(6, 54);
+            label52.Name = "label52";
+            label52.Size = new Size(87, 15);
+            label52.TabIndex = 38;
+            label52.Text = "Area Brush Size";
+            // 
+            // AreaBrushSizeTrack
+            // 
+            AreaBrushSizeTrack.AutoSize = false;
+            AreaBrushSizeTrack.BackColor = SystemColors.Control;
+            AreaBrushSizeTrack.Location = new Point(6, 72);
+            AreaBrushSizeTrack.Maximum = 512;
+            AreaBrushSizeTrack.Minimum = 4;
+            AreaBrushSizeTrack.Name = "AreaBrushSizeTrack";
+            AreaBrushSizeTrack.Size = new Size(136, 20);
+            AreaBrushSizeTrack.TabIndex = 37;
+            AreaBrushSizeTrack.TickStyle = TickStyle.None;
+            AreaBrushSizeTrack.Value = 64;
+            AreaBrushSizeTrack.ValueChanged += AreaBrushSizeTrack_ValueChanged;
+            // 
+            // label50
+            // 
+            label50.AutoSize = true;
+            label50.BackColor = Color.Transparent;
+            label50.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label50.ForeColor = SystemColors.ControlDarkDark;
+            label50.Location = new Point(18, 210);
+            label50.Name = "label50";
+            label50.Size = new Size(46, 15);
+            label50.TabIndex = 36;
+            label50.Text = "Density";
+            // 
+            // ResetSymbolPlacementDensityButton
+            // 
+            ResetSymbolPlacementDensityButton.BackColor = SystemColors.Control;
+            ResetSymbolPlacementDensityButton.IconChar = FontAwesome.Sharp.IconChar.RotateBack;
+            ResetSymbolPlacementDensityButton.IconColor = Color.Black;
+            ResetSymbolPlacementDensityButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ResetSymbolPlacementDensityButton.IconSize = 14;
+            ResetSymbolPlacementDensityButton.Location = new Point(117, 208);
+            ResetSymbolPlacementDensityButton.Margin = new Padding(0);
+            ResetSymbolPlacementDensityButton.Name = "ResetSymbolPlacementDensityButton";
+            ResetSymbolPlacementDensityButton.Size = new Size(24, 24);
+            ResetSymbolPlacementDensityButton.TabIndex = 35;
+            ResetSymbolPlacementDensityButton.UseVisualStyleBackColor = false;
+            ResetSymbolPlacementDensityButton.Click += ResetSymbolPlacementDensityButton_Click;
+            // 
+            // SymbolPlacementDensityUpDown
+            // 
+            SymbolPlacementDensityUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolPlacementDensityUpDown.Location = new Point(70, 208);
+            SymbolPlacementDensityUpDown.Maximum = new decimal(new int[] { 200, 0, 0, 0 });
+            SymbolPlacementDensityUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            SymbolPlacementDensityUpDown.Name = "SymbolPlacementDensityUpDown";
+            SymbolPlacementDensityUpDown.Size = new Size(44, 23);
+            SymbolPlacementDensityUpDown.TabIndex = 34;
+            SymbolPlacementDensityUpDown.TextAlign = HorizontalAlignment.Center;
+            SymbolPlacementDensityUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
+            // 
+            // label49
+            // 
+            label49.AutoSize = true;
+            label49.BackColor = Color.Transparent;
+            label49.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label49.ForeColor = SystemColors.ControlDarkDark;
+            label49.Location = new Point(34, 182);
+            label49.Name = "label49";
+            label49.Size = new Size(30, 15);
+            label49.TabIndex = 33;
+            label49.Text = "Rate";
+            // 
+            // ResetSymbolPlacementRateButton
+            // 
+            ResetSymbolPlacementRateButton.BackColor = SystemColors.Control;
+            ResetSymbolPlacementRateButton.IconChar = FontAwesome.Sharp.IconChar.RotateBack;
+            ResetSymbolPlacementRateButton.IconColor = Color.Black;
+            ResetSymbolPlacementRateButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ResetSymbolPlacementRateButton.IconSize = 14;
+            ResetSymbolPlacementRateButton.Location = new Point(117, 177);
+            ResetSymbolPlacementRateButton.Margin = new Padding(0);
+            ResetSymbolPlacementRateButton.Name = "ResetSymbolPlacementRateButton";
+            ResetSymbolPlacementRateButton.Size = new Size(24, 24);
+            ResetSymbolPlacementRateButton.TabIndex = 32;
+            ResetSymbolPlacementRateButton.UseVisualStyleBackColor = false;
+            ResetSymbolPlacementRateButton.Click += ResetSymbolPlacementRateButton_Click;
+            // 
+            // SymbolPlacementRateUpDown
+            // 
+            SymbolPlacementRateUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolPlacementRateUpDown.Location = new Point(70, 177);
+            SymbolPlacementRateUpDown.Maximum = new decimal(new int[] { 200, 0, 0, 0 });
+            SymbolPlacementRateUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            SymbolPlacementRateUpDown.Name = "SymbolPlacementRateUpDown";
+            SymbolPlacementRateUpDown.Size = new Size(44, 23);
+            SymbolPlacementRateUpDown.TabIndex = 31;
+            SymbolPlacementRateUpDown.TextAlign = HorizontalAlignment.Center;
+            SymbolPlacementRateUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
+            SymbolPlacementRateUpDown.ValueChanged += SymbolPlacementRateUpDown_ValueChanged;
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.BackColor = Color.Transparent;
+            label21.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label21.ForeColor = SystemColors.ControlDarkDark;
+            label21.Location = new Point(6, 133);
+            label21.Name = "label21";
+            label21.Size = new Size(52, 15);
+            label21.TabIndex = 30;
+            label21.Text = "Rotation";
+            // 
+            // SymbolRotationTrack
+            // 
+            SymbolRotationTrack.AutoSize = false;
+            SymbolRotationTrack.BackColor = SystemColors.Control;
+            SymbolRotationTrack.Location = new Point(0, 151);
+            SymbolRotationTrack.Maximum = 359;
+            SymbolRotationTrack.Name = "SymbolRotationTrack";
+            SymbolRotationTrack.Size = new Size(141, 20);
+            SymbolRotationTrack.TabIndex = 29;
+            SymbolRotationTrack.TickStyle = TickStyle.None;
+            SymbolRotationTrack.Scroll += SymbolRotationTrack_Scroll;
+            // 
+            // label44
+            // 
+            label44.AutoSize = true;
+            label44.BackColor = Color.Transparent;
+            label44.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label44.ForeColor = SystemColors.ControlDarkDark;
+            label44.Location = new Point(11, 104);
+            label44.Name = "label44";
+            label44.Size = new Size(83, 15);
+            label44.TabIndex = 28;
+            label44.Text = "Mirror Symbol";
+            // 
+            // MirrorSymbolSwitch
+            // 
+            MirrorSymbolSwitch.Alpha = 50;
+            MirrorSymbolSwitch.BackColor = Color.Transparent;
+            MirrorSymbolSwitch.Background = true;
+            MirrorSymbolSwitch.Background_WidthPen = 2F;
+            MirrorSymbolSwitch.BackgroundPen = false;
+            MirrorSymbolSwitch.Checked = false;
+            MirrorSymbolSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            MirrorSymbolSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            MirrorSymbolSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            MirrorSymbolSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            MirrorSymbolSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            MirrorSymbolSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            MirrorSymbolSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            MirrorSymbolSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            MirrorSymbolSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            MirrorSymbolSwitch.ColorValue = Color.ForestGreen;
+            MirrorSymbolSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            MirrorSymbolSwitch.Font = new Font("Arial", 11F);
+            MirrorSymbolSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            MirrorSymbolSwitch.Lighting = true;
+            MirrorSymbolSwitch.LinearGradient_Background = false;
+            MirrorSymbolSwitch.LinearGradient_Value = false;
+            MirrorSymbolSwitch.LinearGradientPen = false;
+            MirrorSymbolSwitch.Location = new Point(101, 99);
+            MirrorSymbolSwitch.Name = "MirrorSymbolSwitch";
+            MirrorSymbolSwitch.PenWidth = 10;
+            MirrorSymbolSwitch.RGB = false;
+            MirrorSymbolSwitch.Rounding = true;
+            MirrorSymbolSwitch.RoundingInt = 90;
+            MirrorSymbolSwitch.Size = new Size(41, 20);
+            MirrorSymbolSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            MirrorSymbolSwitch.TabIndex = 27;
+            MirrorSymbolSwitch.Tag = "Cyber";
+            MirrorSymbolSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            MirrorSymbolSwitch.Timer_RGB = 300;
+            // 
+            // groupBox11
+            // 
+            groupBox11.Controls.Add(ResetSymbolColorsButton);
+            groupBox11.Controls.Add(SymbolColor3Button);
+            groupBox11.Controls.Add(SymbolColor2Button);
+            groupBox11.Controls.Add(SymbolColor1Button);
+            groupBox11.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox11.Location = new Point(7, 116);
+            groupBox11.Name = "groupBox11";
+            groupBox11.Size = new Size(148, 106);
+            groupBox11.TabIndex = 29;
+            groupBox11.TabStop = false;
+            groupBox11.Text = "Color";
+            // 
+            // ResetSymbolColorsButton
+            // 
+            ResetSymbolColorsButton.BackColor = SystemColors.Control;
+            ResetSymbolColorsButton.IconChar = FontAwesome.Sharp.IconChar.RotateBack;
+            ResetSymbolColorsButton.IconColor = Color.Black;
+            ResetSymbolColorsButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ResetSymbolColorsButton.IconSize = 14;
+            ResetSymbolColorsButton.Location = new Point(120, 15);
+            ResetSymbolColorsButton.Margin = new Padding(0);
+            ResetSymbolColorsButton.Name = "ResetSymbolColorsButton";
+            ResetSymbolColorsButton.Size = new Size(24, 24);
+            ResetSymbolColorsButton.TabIndex = 29;
+            ResetSymbolColorsButton.UseVisualStyleBackColor = false;
+            ResetSymbolColorsButton.Click += ResetSymbolColorsButton_Click;
+            // 
+            // SymbolColor3Button
+            // 
+            SymbolColor3Button.BackColor = Color.FromArgb(161, 214, 202, 171);
+            SymbolColor3Button.FlatStyle = FlatStyle.Flat;
+            SymbolColor3Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolColor3Button.ForeColor = SystemColors.HighlightText;
+            SymbolColor3Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SymbolColor3Button.IconColor = Color.Tan;
+            SymbolColor3Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SymbolColor3Button.IconSize = 24;
+            SymbolColor3Button.Location = new Point(98, 45);
+            SymbolColor3Button.Margin = new Padding(1, 3, 3, 3);
+            SymbolColor3Button.Name = "SymbolColor3Button";
+            SymbolColor3Button.Size = new Size(46, 46);
+            SymbolColor3Button.TabIndex = 27;
+            SymbolColor3Button.UseVisualStyleBackColor = false;
+            SymbolColor3Button.Click += SymbolColor3Button_Click;
+            // 
+            // SymbolColor2Button
+            // 
+            SymbolColor2Button.BackColor = Color.FromArgb(53, 45, 32);
+            SymbolColor2Button.FlatStyle = FlatStyle.Flat;
+            SymbolColor2Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolColor2Button.ForeColor = SystemColors.HighlightText;
+            SymbolColor2Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SymbolColor2Button.IconColor = Color.Tan;
+            SymbolColor2Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SymbolColor2Button.IconSize = 24;
+            SymbolColor2Button.Location = new Point(50, 45);
+            SymbolColor2Button.Margin = new Padding(1, 3, 1, 3);
+            SymbolColor2Button.Name = "SymbolColor2Button";
+            SymbolColor2Button.Size = new Size(46, 46);
+            SymbolColor2Button.TabIndex = 26;
+            SymbolColor2Button.UseVisualStyleBackColor = false;
+            SymbolColor2Button.Click += SymbolColor2Button_Click;
+            // 
+            // SymbolColor1Button
+            // 
+            SymbolColor1Button.BackColor = Color.FromArgb(85, 44, 36);
+            SymbolColor1Button.FlatStyle = FlatStyle.Flat;
+            SymbolColor1Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolColor1Button.ForeColor = SystemColors.HighlightText;
+            SymbolColor1Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SymbolColor1Button.IconColor = Color.Tan;
+            SymbolColor1Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SymbolColor1Button.IconSize = 24;
+            SymbolColor1Button.Location = new Point(2, 45);
+            SymbolColor1Button.Margin = new Padding(1, 3, 1, 3);
+            SymbolColor1Button.Name = "SymbolColor1Button";
+            SymbolColor1Button.Size = new Size(46, 46);
+            SymbolColor1Button.TabIndex = 25;
+            SymbolColor1Button.UseVisualStyleBackColor = false;
+            SymbolColor1Button.Click += SymbolColor1Button_Click;
+            // 
+            // groupBox10
+            // 
+            groupBox10.Controls.Add(SymbolScaleUpDown);
+            groupBox10.Controls.Add(LockSymbolScaleButton);
+            groupBox10.Controls.Add(SymbolScaleTrack);
+            groupBox10.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox10.Location = new Point(6, 32);
+            groupBox10.Name = "groupBox10";
+            groupBox10.Size = new Size(148, 75);
+            groupBox10.TabIndex = 28;
+            groupBox10.TabStop = false;
+            groupBox10.Text = "Scale";
+            // 
+            // SymbolScaleUpDown
+            // 
+            SymbolScaleUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolScaleUpDown.Location = new Point(100, 43);
+            SymbolScaleUpDown.Maximum = new decimal(new int[] { 200, 0, 0, 0 });
+            SymbolScaleUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            SymbolScaleUpDown.Name = "SymbolScaleUpDown";
+            SymbolScaleUpDown.Size = new Size(44, 23);
+            SymbolScaleUpDown.TabIndex = 6;
+            SymbolScaleUpDown.TextAlign = HorizontalAlignment.Center;
+            SymbolScaleUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
+            SymbolScaleUpDown.ValueChanged += SymbolScaleUpDown_ValueChanged;
+            // 
+            // LockSymbolScaleButton
+            // 
+            LockSymbolScaleButton.FlatStyle = FlatStyle.Flat;
+            LockSymbolScaleButton.IconChar = FontAwesome.Sharp.IconChar.LockOpen;
+            LockSymbolScaleButton.IconColor = SystemColors.ControlDarkDark;
+            LockSymbolScaleButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LockSymbolScaleButton.IconSize = 14;
+            LockSymbolScaleButton.Location = new Point(120, 15);
+            LockSymbolScaleButton.Margin = new Padding(0);
+            LockSymbolScaleButton.Name = "LockSymbolScaleButton";
+            LockSymbolScaleButton.Size = new Size(24, 24);
+            LockSymbolScaleButton.TabIndex = 5;
+            LockSymbolScaleButton.UseVisualStyleBackColor = true;
+            LockSymbolScaleButton.Click += LockSymbolScaleButton_Click;
+            // 
+            // SymbolScaleTrack
+            // 
+            SymbolScaleTrack.AutoSize = false;
+            SymbolScaleTrack.BackColor = SystemColors.Control;
+            SymbolScaleTrack.Location = new Point(-3, 46);
+            SymbolScaleTrack.Maximum = 200;
+            SymbolScaleTrack.Minimum = 1;
+            SymbolScaleTrack.Name = "SymbolScaleTrack";
+            SymbolScaleTrack.Size = new Size(101, 20);
+            SymbolScaleTrack.TabIndex = 1;
+            SymbolScaleTrack.TickStyle = TickStyle.None;
+            SymbolScaleTrack.Value = 100;
+            SymbolScaleTrack.Scroll += SymbolScaleTrack_Scroll;
             // 
             // SymbolToolStrip
             // 
@@ -2368,6 +2836,7 @@
             SymbolSelectButton.Size = new Size(60, 60);
             SymbolSelectButton.Text = "Select";
             SymbolSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            SymbolSelectButton.Click += SymbolSelectButton_Click;
             // 
             // EraseSymbolsButton
             // 
@@ -2383,6 +2852,24 @@
             EraseSymbolsButton.Size = new Size(60, 60);
             EraseSymbolsButton.Text = "Erase";
             EraseSymbolsButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            EraseSymbolsButton.Click += EraseSymbolsButton_Click;
+            // 
+            // ColorSymbolsButton
+            // 
+            ColorSymbolsButton.AutoSize = false;
+            ColorSymbolsButton.ForeColor = SystemColors.ControlDarkDark;
+            ColorSymbolsButton.IconChar = FontAwesome.Sharp.IconChar.Brush;
+            ColorSymbolsButton.IconColor = Color.Black;
+            ColorSymbolsButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ColorSymbolsButton.IconSize = 22;
+            ColorSymbolsButton.ImageScaling = ToolStripItemImageScaling.None;
+            ColorSymbolsButton.ImageTransparentColor = Color.Magenta;
+            ColorSymbolsButton.Margin = new Padding(0, 25, 0, 2);
+            ColorSymbolsButton.Name = "ColorSymbolsButton";
+            ColorSymbolsButton.Size = new Size(60, 60);
+            ColorSymbolsButton.Text = "Paint";
+            ColorSymbolsButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            ColorSymbolsButton.Click += ColorSymbolsButton_Click;
             // 
             // toolStripSeparator4
             // 
@@ -2408,6 +2895,7 @@
             StructuresSymbolButton.Text = "Structures";
             StructuresSymbolButton.TextImageRelation = TextImageRelation.TextAboveImage;
             StructuresSymbolButton.ToolTipText = "Structures Symbols";
+            StructuresSymbolButton.Click += StructuresSymbolButton_Click;
             // 
             // VegetationSymbolsButton
             // 
@@ -2424,6 +2912,8 @@
             VegetationSymbolsButton.Margin = new Padding(0, 25, 0, 2);
             VegetationSymbolsButton.Name = "VegetationSymbolsButton";
             VegetationSymbolsButton.Size = new Size(60, 60);
+            VegetationSymbolsButton.ToolTipText = "Trees and Vegetation Symbols";
+            VegetationSymbolsButton.Click += VegetationSymbolsButton_Click;
             // 
             // TerrainSymbolsButton
             // 
@@ -2438,7 +2928,8 @@
             TerrainSymbolsButton.Margin = new Padding(0, 25, 0, 2);
             TerrainSymbolsButton.Name = "TerrainSymbolsButton";
             TerrainSymbolsButton.Size = new Size(60, 60);
-            TerrainSymbolsButton.Text = "iconToolStripButton1";
+            TerrainSymbolsButton.ToolTipText = "Mountains and Terrain Symbols";
+            TerrainSymbolsButton.Click += TerrainSymbolsButton_Click;
             // 
             // OtherSymbolsButton
             // 
@@ -2453,7 +2944,8 @@
             OtherSymbolsButton.Margin = new Padding(0, 25, 0, 2);
             OtherSymbolsButton.Name = "OtherSymbolsButton";
             OtherSymbolsButton.Size = new Size(60, 60);
-            OtherSymbolsButton.Text = "iconToolStripButton1";
+            OtherSymbolsButton.ToolTipText = "Other Symbols";
+            OtherSymbolsButton.Click += OtherSymbolsButton_Click;
             // 
             // cyberSwitch3
             // 
@@ -2915,6 +3407,7 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(MainMenuStrip);
+            RealmStudioForm.Controls.Add(SymbolToolPanel);
             RealmStudioForm.Controls.Add(PathToolPanel);
             RealmStudioForm.Controls.Add(WaterToolPanel);
             RealmStudioForm.Controls.Add(LandToolPanel);
@@ -2924,7 +3417,6 @@
             RealmStudioForm.Controls.Add(RegionToolPanel);
             RealmStudioForm.Controls.Add(OverlayToolPanel);
             RealmStudioForm.Controls.Add(LabelToolPanel);
-            RealmStudioForm.Controls.Add(SymbolToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
             RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
             RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
@@ -3575,6 +4067,54 @@
             AboutToolStripMenuItem.Text = "&About...";
             AboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
             // 
+            // SymbolToolPanel
+            // 
+            SymbolToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            SymbolToolPanel.BackColor = SystemColors.Control;
+            SymbolToolPanel.Controls.Add(label22);
+            SymbolToolPanel.Controls.Add(SymbolSearchTextBox);
+            SymbolToolPanel.Controls.Add(SymbolTable);
+            SymbolToolPanel.Location = new Point(1422, 90);
+            SymbolToolPanel.Margin = new Padding(0);
+            SymbolToolPanel.Name = "SymbolToolPanel";
+            SymbolToolPanel.Size = new Size(152, 836);
+            SymbolToolPanel.TabIndex = 22;
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label22.ForeColor = SystemColors.ControlDarkDark;
+            label22.Location = new Point(10, 13);
+            label22.Name = "label22";
+            label22.Size = new Size(47, 17);
+            label22.TabIndex = 79;
+            label22.Text = "Search";
+            // 
+            // SymbolSearchTextBox
+            // 
+            SymbolSearchTextBox.BorderStyle = BorderStyle.FixedSingle;
+            SymbolSearchTextBox.Location = new Point(10, 33);
+            SymbolSearchTextBox.Name = "SymbolSearchTextBox";
+            SymbolSearchTextBox.Size = new Size(132, 23);
+            SymbolSearchTextBox.TabIndex = 78;
+            SymbolSearchTextBox.KeyPress += SymbolSearchTextBox_KeyPress;
+            // 
+            // SymbolTable
+            // 
+            SymbolTable.AutoScroll = true;
+            SymbolTable.CausesValidation = false;
+            SymbolTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
+            SymbolTable.ColumnCount = 1;
+            SymbolTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 44F));
+            SymbolTable.ForeColor = SystemColors.ControlDarkDark;
+            SymbolTable.Location = new Point(10, 62);
+            SymbolTable.Name = "SymbolTable";
+            SymbolTable.RowCount = 1;
+            SymbolTable.RowStyles.Add(new RowStyle());
+            SymbolTable.Size = new Size(132, 747);
+            SymbolTable.TabIndex = 77;
+            // 
             // PathToolPanel
             // 
             PathToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
@@ -4182,222 +4722,39 @@
             label23.TabIndex = 0;
             label23.Text = "Labels";
             // 
-            // SymbolToolPanel
+            // materialCheckBox1
             // 
-            SymbolToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            SymbolToolPanel.BackColor = SystemColors.Control;
-            SymbolToolPanel.Controls.Add(label22);
-            SymbolToolPanel.Location = new Point(1422, 90);
-            SymbolToolPanel.Margin = new Padding(0);
-            SymbolToolPanel.Name = "SymbolToolPanel";
-            SymbolToolPanel.Size = new Size(152, 836);
-            SymbolToolPanel.TabIndex = 22;
+            materialCheckBox1.AutoSize = true;
+            materialCheckBox1.Depth = 0;
+            materialCheckBox1.Location = new Point(0, 0);
+            materialCheckBox1.Margin = new Padding(0);
+            materialCheckBox1.MouseLocation = new Point(-1, -1);
+            materialCheckBox1.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            materialCheckBox1.Name = "materialCheckBox1";
+            materialCheckBox1.ReadOnly = false;
+            materialCheckBox1.Ripple = true;
+            materialCheckBox1.Size = new Size(10, 10);
+            materialCheckBox1.TabIndex = 0;
+            materialCheckBox1.Text = "Item1";
+            materialCheckBox1.UseAccentColor = false;
+            materialCheckBox1.UseVisualStyleBackColor = true;
             // 
-            // label22
+            // materialCheckBox2
             // 
-            label22.AutoSize = true;
-            label22.Location = new Point(22, 15);
-            label22.Name = "label22";
-            label22.Size = new Size(52, 15);
-            label22.TabIndex = 0;
-            label22.Text = "Symbols";
-            // 
-            // ColorSymbolsButton
-            // 
-            ColorSymbolsButton.AutoSize = false;
-            ColorSymbolsButton.ForeColor = SystemColors.ControlDarkDark;
-            ColorSymbolsButton.IconChar = FontAwesome.Sharp.IconChar.Brush;
-            ColorSymbolsButton.IconColor = Color.Black;
-            ColorSymbolsButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ColorSymbolsButton.IconSize = 22;
-            ColorSymbolsButton.ImageScaling = ToolStripItemImageScaling.None;
-            ColorSymbolsButton.ImageTransparentColor = Color.Magenta;
-            ColorSymbolsButton.Margin = new Padding(0, 25, 0, 2);
-            ColorSymbolsButton.Name = "ColorSymbolsButton";
-            ColorSymbolsButton.Size = new Size(60, 60);
-            ColorSymbolsButton.Text = "Paint";
-            ColorSymbolsButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            // 
-            // label44
-            // 
-            label44.AutoSize = true;
-            label44.BackColor = Color.Transparent;
-            label44.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label44.ForeColor = SystemColors.ControlDarkDark;
-            label44.Location = new Point(21, 464);
-            label44.Name = "label44";
-            label44.Size = new Size(83, 15);
-            label44.TabIndex = 26;
-            label44.Text = "Mirror Symbol";
-            // 
-            // MirrorSymbolSwitch
-            // 
-            MirrorSymbolSwitch.Alpha = 50;
-            MirrorSymbolSwitch.BackColor = Color.Transparent;
-            MirrorSymbolSwitch.Background = true;
-            MirrorSymbolSwitch.Background_WidthPen = 2F;
-            MirrorSymbolSwitch.BackgroundPen = false;
-            MirrorSymbolSwitch.Checked = false;
-            MirrorSymbolSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            MirrorSymbolSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            MirrorSymbolSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            MirrorSymbolSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            MirrorSymbolSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            MirrorSymbolSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            MirrorSymbolSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            MirrorSymbolSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            MirrorSymbolSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            MirrorSymbolSwitch.ColorValue = Color.ForestGreen;
-            MirrorSymbolSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            MirrorSymbolSwitch.Font = new Font("Arial", 11F);
-            MirrorSymbolSwitch.ForeColor = Color.FromArgb(245, 245, 245);
-            MirrorSymbolSwitch.Lighting = true;
-            MirrorSymbolSwitch.LinearGradient_Background = false;
-            MirrorSymbolSwitch.LinearGradient_Value = false;
-            MirrorSymbolSwitch.LinearGradientPen = false;
-            MirrorSymbolSwitch.Location = new Point(110, 460);
-            MirrorSymbolSwitch.Name = "MirrorSymbolSwitch";
-            MirrorSymbolSwitch.PenWidth = 10;
-            MirrorSymbolSwitch.RGB = false;
-            MirrorSymbolSwitch.Rounding = true;
-            MirrorSymbolSwitch.RoundingInt = 90;
-            MirrorSymbolSwitch.Size = new Size(41, 20);
-            MirrorSymbolSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            MirrorSymbolSwitch.TabIndex = 25;
-            MirrorSymbolSwitch.Tag = "Cyber";
-            MirrorSymbolSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            MirrorSymbolSwitch.Timer_RGB = 300;
-            // 
-            // groupBox10
-            // 
-            groupBox10.Controls.Add(SymbolScaleUpDown);
-            groupBox10.Controls.Add(LockAspectRatioButton);
-            groupBox10.Controls.Add(SymbolScaleTrack);
-            groupBox10.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox10.Location = new Point(6, 32);
-            groupBox10.Name = "groupBox10";
-            groupBox10.Size = new Size(148, 75);
-            groupBox10.TabIndex = 28;
-            groupBox10.TabStop = false;
-            groupBox10.Text = "Scale";
-            // 
-            // SymbolScaleTrack
-            // 
-            SymbolScaleTrack.AutoSize = false;
-            SymbolScaleTrack.BackColor = SystemColors.Control;
-            SymbolScaleTrack.Location = new Point(-3, 46);
-            SymbolScaleTrack.Maximum = 200;
-            SymbolScaleTrack.Minimum = 1;
-            SymbolScaleTrack.Name = "SymbolScaleTrack";
-            SymbolScaleTrack.Size = new Size(101, 20);
-            SymbolScaleTrack.TabIndex = 1;
-            SymbolScaleTrack.TickStyle = TickStyle.None;
-            SymbolScaleTrack.Value = 100;
-            // 
-            // LockAspectRatioButton
-            // 
-            LockAspectRatioButton.FlatStyle = FlatStyle.Flat;
-            LockAspectRatioButton.IconChar = FontAwesome.Sharp.IconChar.Lock;
-            LockAspectRatioButton.IconColor = SystemColors.ControlDarkDark;
-            LockAspectRatioButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            LockAspectRatioButton.IconSize = 14;
-            LockAspectRatioButton.Location = new Point(120, 15);
-            LockAspectRatioButton.Margin = new Padding(0);
-            LockAspectRatioButton.Name = "LockAspectRatioButton";
-            LockAspectRatioButton.Size = new Size(24, 24);
-            LockAspectRatioButton.TabIndex = 5;
-            LockAspectRatioButton.UseVisualStyleBackColor = true;
-            // 
-            // SymbolScaleUpDown
-            // 
-            SymbolScaleUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            SymbolScaleUpDown.Location = new Point(100, 43);
-            SymbolScaleUpDown.Maximum = new decimal(new int[] { 200, 0, 0, 0 });
-            SymbolScaleUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            SymbolScaleUpDown.Name = "SymbolScaleUpDown";
-            SymbolScaleUpDown.Size = new Size(44, 23);
-            SymbolScaleUpDown.TabIndex = 6;
-            SymbolScaleUpDown.TextAlign = HorizontalAlignment.Center;
-            SymbolScaleUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
-            // 
-            // groupBox11
-            // 
-            groupBox11.Controls.Add(ResetSymbolColorsButton);
-            groupBox11.Controls.Add(SymbolColor3Button);
-            groupBox11.Controls.Add(SymbolColor2Button);
-            groupBox11.Controls.Add(SymbolColor1Button);
-            groupBox11.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox11.Location = new Point(7, 119);
-            groupBox11.Name = "groupBox11";
-            groupBox11.Size = new Size(148, 106);
-            groupBox11.TabIndex = 29;
-            groupBox11.TabStop = false;
-            groupBox11.Text = "Color";
-            // 
-            // ResetSymbolColorsButton
-            // 
-            ResetSymbolColorsButton.BackColor = SystemColors.Control;
-            ResetSymbolColorsButton.IconChar = FontAwesome.Sharp.IconChar.RotateBack;
-            ResetSymbolColorsButton.IconColor = Color.Black;
-            ResetSymbolColorsButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ResetSymbolColorsButton.IconSize = 14;
-            ResetSymbolColorsButton.Location = new Point(120, 15);
-            ResetSymbolColorsButton.Margin = new Padding(0);
-            ResetSymbolColorsButton.Name = "ResetSymbolColorsButton";
-            ResetSymbolColorsButton.Size = new Size(24, 24);
-            ResetSymbolColorsButton.TabIndex = 29;
-            ResetSymbolColorsButton.UseVisualStyleBackColor = false;
-            // 
-            // SymbolColor3Button
-            // 
-            SymbolColor3Button.BackColor = Color.FromArgb(161, 214, 202, 171);
-            SymbolColor3Button.FlatStyle = FlatStyle.Flat;
-            SymbolColor3Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            SymbolColor3Button.ForeColor = SystemColors.HighlightText;
-            SymbolColor3Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            SymbolColor3Button.IconColor = Color.Tan;
-            SymbolColor3Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            SymbolColor3Button.IconSize = 24;
-            SymbolColor3Button.Location = new Point(98, 45);
-            SymbolColor3Button.Margin = new Padding(1, 3, 3, 3);
-            SymbolColor3Button.Name = "SymbolColor3Button";
-            SymbolColor3Button.Size = new Size(46, 46);
-            SymbolColor3Button.TabIndex = 27;
-            SymbolColor3Button.UseVisualStyleBackColor = false;
-            // 
-            // SymbolColor2Button
-            // 
-            SymbolColor2Button.BackColor = Color.FromArgb(53, 45, 32);
-            SymbolColor2Button.FlatStyle = FlatStyle.Flat;
-            SymbolColor2Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            SymbolColor2Button.ForeColor = SystemColors.HighlightText;
-            SymbolColor2Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            SymbolColor2Button.IconColor = Color.Tan;
-            SymbolColor2Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            SymbolColor2Button.IconSize = 24;
-            SymbolColor2Button.Location = new Point(50, 45);
-            SymbolColor2Button.Margin = new Padding(1, 3, 1, 3);
-            SymbolColor2Button.Name = "SymbolColor2Button";
-            SymbolColor2Button.Size = new Size(46, 46);
-            SymbolColor2Button.TabIndex = 26;
-            SymbolColor2Button.UseVisualStyleBackColor = false;
-            // 
-            // SymbolColor1Button
-            // 
-            SymbolColor1Button.BackColor = Color.FromArgb(85, 44, 36);
-            SymbolColor1Button.FlatStyle = FlatStyle.Flat;
-            SymbolColor1Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            SymbolColor1Button.ForeColor = SystemColors.HighlightText;
-            SymbolColor1Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            SymbolColor1Button.IconColor = Color.Tan;
-            SymbolColor1Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            SymbolColor1Button.IconSize = 24;
-            SymbolColor1Button.Location = new Point(2, 45);
-            SymbolColor1Button.Margin = new Padding(1, 3, 1, 3);
-            SymbolColor1Button.Name = "SymbolColor1Button";
-            SymbolColor1Button.Size = new Size(46, 46);
-            SymbolColor1Button.TabIndex = 25;
-            SymbolColor1Button.UseVisualStyleBackColor = false;
+            materialCheckBox2.AutoSize = true;
+            materialCheckBox2.Depth = 0;
+            materialCheckBox2.Location = new Point(0, 0);
+            materialCheckBox2.Margin = new Padding(0);
+            materialCheckBox2.MouseLocation = new Point(-1, -1);
+            materialCheckBox2.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            materialCheckBox2.Name = "materialCheckBox2";
+            materialCheckBox2.ReadOnly = false;
+            materialCheckBox2.Ripple = true;
+            materialCheckBox2.Size = new Size(10, 10);
+            materialCheckBox2.TabIndex = 0;
+            materialCheckBox2.Text = "materialCheckBox2";
+            materialCheckBox2.UseAccentColor = false;
+            materialCheckBox2.UseVisualStyleBackColor = true;
             // 
             // RealmStudioMainForm
             // 
@@ -4483,6 +4840,18 @@
             PathToolStrip.PerformLayout();
             SymbolTab.ResumeLayout(false);
             SymbolTab.PerformLayout();
+            groupBox14.ResumeLayout(false);
+            groupBox13.ResumeLayout(false);
+            groupBox12.ResumeLayout(false);
+            groupBox12.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)AreaBrushSizeTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SymbolPlacementDensityUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SymbolPlacementRateUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SymbolRotationTrack).EndInit();
+            groupBox11.ResumeLayout(false);
+            groupBox10.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)SymbolScaleUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SymbolScaleTrack).EndInit();
             SymbolToolStrip.ResumeLayout(false);
             SymbolToolStrip.PerformLayout();
             LabelTab.ResumeLayout(false);
@@ -4513,6 +4882,8 @@
             ApplicationStatusStrip.PerformLayout();
             MainMenuStrip.ResumeLayout(false);
             MainMenuStrip.PerformLayout();
+            SymbolToolPanel.ResumeLayout(false);
+            SymbolToolPanel.PerformLayout();
             PathToolPanel.ResumeLayout(false);
             PathToolPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)RailroadTracksPictureBox).EndInit();
@@ -4546,12 +4917,6 @@
             OverlayToolPanel.PerformLayout();
             LabelToolPanel.ResumeLayout(false);
             LabelToolPanel.PerformLayout();
-            SymbolToolPanel.ResumeLayout(false);
-            SymbolToolPanel.PerformLayout();
-            groupBox10.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)SymbolScaleTrack).EndInit();
-            ((System.ComponentModel.ISupportInitialize)SymbolScaleUpDown).EndInit();
-            groupBox11.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -4658,7 +5023,6 @@
         private Label label19;
         private TrackBar LandEraserSizeTrack;
         private Panel SymbolToolPanel;
-        private Label label22;
         private Panel PathToolPanel;
         private Panel LandToolPanel;
         private Label LandToolsPanel;
@@ -4697,7 +5061,6 @@
         private FontAwesome.Sharp.IconButton PreviousBackgroundTextureButton;
         private FontAwesome.Sharp.IconButton NextBackgroundTextureButton;
         private PictureBox pictureBox2;
-        private FontAwesome.Sharp.IconButton iconButton3;
         private TrackBar WindroseInnerCircleTrack;
         private ToolStrip BackgroundToolStrip;
         private FontAwesome.Sharp.IconToolStripButton FillBackgroundButton;
@@ -4829,16 +5192,38 @@
         private FontAwesome.Sharp.IconToolStripButton EraseSymbolsButton;
         private ToolStripSeparator toolStripSeparator4;
         private FontAwesome.Sharp.IconToolStripButton ColorSymbolsButton;
-        private Label label44;
-        private ReaLTaiizor.Controls.CyberSwitch MirrorSymbolSwitch;
         private GroupBox groupBox10;
         private TrackBar SymbolScaleTrack;
-        private FontAwesome.Sharp.IconButton LockAspectRatioButton;
+        private FontAwesome.Sharp.IconButton LockSymbolScaleButton;
         private NumericUpDown SymbolScaleUpDown;
         private GroupBox groupBox11;
         private FontAwesome.Sharp.IconButton ResetSymbolColorsButton;
         private FontAwesome.Sharp.IconButton SymbolColor3Button;
         private FontAwesome.Sharp.IconButton SymbolColor2Button;
         private FontAwesome.Sharp.IconButton SymbolColor1Button;
+        private GroupBox groupBox12;
+        private Label label21;
+        private TrackBar SymbolRotationTrack;
+        private Label label44;
+        private ReaLTaiizor.Controls.CyberSwitch MirrorSymbolSwitch;
+        private Label label50;
+        private FontAwesome.Sharp.IconButton ResetSymbolPlacementDensityButton;
+        private NumericUpDown SymbolPlacementDensityUpDown;
+        private Label label49;
+        private FontAwesome.Sharp.IconButton ResetSymbolPlacementRateButton;
+        private NumericUpDown SymbolPlacementRateUpDown;
+        private Label label53;
+        private ReaLTaiizor.Controls.CyberSwitch AreaBrushSwitch;
+        private Label label52;
+        private TrackBar AreaBrushSizeTrack;
+        private GroupBox groupBox13;
+        private ReaLTaiizor.Controls.MaterialCheckBox materialCheckBox1;
+        private GroupBox groupBox14;
+        private CheckedListBox SymbolTagsListBox;
+        private CheckedListBox SymbolCollectionsListBox;
+        private ReaLTaiizor.Controls.MaterialCheckBox materialCheckBox2;
+        private Label label22;
+        private TextBox SymbolSearchTextBox;
+        private TableLayoutPanel SymbolTable;
     }
 }

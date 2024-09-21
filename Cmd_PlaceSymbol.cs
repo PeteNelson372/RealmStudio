@@ -21,39 +21,30 @@
 * contact@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
-
 namespace RealmStudio
 {
-    internal class Cmd_SetBackgroundTexture(RealmStudioMap map, SKBitmap textureBitmap) : IMapOperation
+    internal class Cmd_PlaceSymbol(RealmStudioMap map, MapSymbol placedSymbol) : IMapOperation
     {
-        public RealmStudioMap Map { get; set; } = map;
-        private SKBitmap LayerBitmap { get; set; } = textureBitmap;
-        private MapImage? BackgroundTexture { get; set; }
+        private readonly RealmStudioMap Map = map;
+        private readonly MapSymbol PlacedSymbol = placedSymbol;
 
         public void DoOperation()
         {
-            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BASELAYER);
+            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.SYMBOLLAYER);
 
-            if (baseLayer.MapLayerComponents.Count < 1)
-            {
-                BackgroundTexture = new()
-                {
-                    Width = LayerBitmap.Width,
-                    Height = LayerBitmap.Height,
-                    MapImageBitmap = LayerBitmap.Copy()
-                };
-                baseLayer.MapLayerComponents.Add(BackgroundTexture);
-            }
+            symbolLayer.MapLayerComponents.Add(PlacedSymbol);
         }
 
         public void UndoOperation()
         {
-            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BASELAYER);
+            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.SYMBOLLAYER);
 
-            if (BackgroundTexture != null)
+            for (int i = symbolLayer.MapLayerComponents.Count - 1; i >= 0; i--)
             {
-                baseLayer.MapLayerComponents.Remove(BackgroundTexture);
+                if (symbolLayer.MapLayerComponents[i] is MapSymbol ms && ms.SymbolGuid.ToString() == PlacedSymbol.SymbolGuid.ToString())
+                {
+                    symbolLayer.MapLayerComponents.RemoveAt(i);
+                }
             }
         }
     }
