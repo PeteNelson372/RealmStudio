@@ -243,8 +243,6 @@ namespace RealmStudio
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
 
-
-
             numAssets += files.Count();
 
             int numSymbols = LoadSymbolCollections();
@@ -255,10 +253,6 @@ namespace RealmStudio
             numAssets += numFrames;
 
             return numAssets;
-
-
-
-
         }
 
         private static void ResetAssets()

@@ -109,7 +109,7 @@
             groupBox8 = new GroupBox();
             label42 = new Label();
             label43 = new Label();
-            WaterEraseSizeTrack = new TrackBar();
+            WaterEraserSizeTrack = new TrackBar();
             groupBox7 = new GroupBox();
             label41 = new Label();
             RiverSourceFadeInSwitch = new ReaLTaiizor.Controls.CyberSwitch();
@@ -190,8 +190,32 @@
             cyberSwitch3 = new ReaLTaiizor.Controls.CyberSwitch();
             label7 = new Label();
             LabelTab = new TabPage();
+            groupBox20 = new GroupBox();
+            BezierTextPathButton = new FontAwesome.Sharp.IconButton();
+            CircleTextPathButton = new FontAwesome.Sharp.IconButton();
+            groupBox19 = new GroupBox();
+            trackBar3 = new TrackBar();
+            groupBox18 = new GroupBox();
+            label56 = new Label();
+            trackBar2 = new TrackBar();
+            iconButton2 = new FontAwesome.Sharp.IconButton();
+            groupBox17 = new GroupBox();
+            label55 = new Label();
+            trackBar1 = new TrackBar();
+            iconButton3 = new FontAwesome.Sharp.IconButton();
+            groupBox16 = new GroupBox();
+            SelectLabelFontButton = new FontAwesome.Sharp.IconButton();
+            iconButton1 = new FontAwesome.Sharp.IconButton();
+            groupBox15 = new GroupBox();
+            RemovePresetButton = new FontAwesome.Sharp.IconButton();
+            AddPresetButton = new FontAwesome.Sharp.IconButton();
+            label54 = new Label();
+            LabelPresetsListBox = new ListBox();
             LabelToolStrip = new ToolStrip();
             LabelSelectButton = new FontAwesome.Sharp.IconToolStripButton();
+            PlaceLabelButton = new FontAwesome.Sharp.IconToolStripButton();
+            CreateBoxButton = new FontAwesome.Sharp.IconToolStripButton();
+            GenerateNameButton = new FontAwesome.Sharp.IconToolStripButton();
             cyberSwitch4 = new ReaLTaiizor.Controls.CyberSwitch();
             label8 = new Label();
             OverlayTab = new TabPage();
@@ -211,15 +235,15 @@
             label11 = new Label();
             crownContextMenuStrip1 = new ReaLTaiizor.Controls.CrownContextMenuStrip();
             RealmStudioForm = new ReaLTaiizor.Forms.DungeonForm();
+            MapRenderHScroll = new HScrollBar();
+            MapRenderVScroll = new VScrollBar();
             label29 = new Label();
             label28 = new Label();
             cyberSwitch8 = new ReaLTaiizor.Controls.CyberSwitch();
             ZoomToFitButton = new FontAwesome.Sharp.IconButton();
             ResetButton = new FontAwesome.Sharp.IconButton();
             LogoPictureBox = new PictureBox();
-            MapRenderHScroll = new ReaLTaiizor.Controls.MaterialScrollBar();
             SKGLRenderControl = new SkiaSharp.Views.Desktop.SKGLControl();
-            MapRenderVScroll = new ReaLTaiizor.Controls.MaterialScrollBar();
             SaveButton = new FontAwesome.Sharp.IconButton();
             AutosaveSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label1 = new Label();
@@ -273,6 +297,9 @@
             HelpContentsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
+            LabelToolPanel = new Panel();
+            SelectBoxTintButton = new FontAwesome.Sharp.IconButton();
+            LabelBoxStyleTable = new TableLayoutPanel();
             SymbolToolPanel = new Panel();
             label22 = new Label();
             SymbolSearchTextBox = new TextBox();
@@ -328,8 +355,6 @@
             label25 = new Label();
             OverlayToolPanel = new Panel();
             label24 = new Label();
-            LabelToolPanel = new Panel();
-            label23 = new Label();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
             OceanTab = new TabPage();
@@ -363,7 +388,7 @@
             ((System.ComponentModel.ISupportInitialize)LandBrushSizeTrack).BeginInit();
             WaterTab.SuspendLayout();
             groupBox8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)WaterEraseSizeTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WaterEraserSizeTrack).BeginInit();
             groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RiverWidthTrack).BeginInit();
             groupBox6.SuspendLayout();
@@ -388,6 +413,15 @@
             ((System.ComponentModel.ISupportInitialize)SymbolScaleTrack).BeginInit();
             SymbolToolStrip.SuspendLayout();
             LabelTab.SuspendLayout();
+            groupBox20.SuspendLayout();
+            groupBox19.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar3).BeginInit();
+            groupBox18.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar2).BeginInit();
+            groupBox17.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
+            groupBox16.SuspendLayout();
+            groupBox15.SuspendLayout();
             LabelToolStrip.SuspendLayout();
             OverlayTab.SuspendLayout();
             OverlayToolStrip.SuspendLayout();
@@ -402,6 +436,7 @@
             MapStatusStrip.SuspendLayout();
             ApplicationStatusStrip.SuspendLayout();
             MainMenuStrip.SuspendLayout();
+            LabelToolPanel.SuspendLayout();
             SymbolToolPanel.SuspendLayout();
             PathToolPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RailroadTracksPictureBox).BeginInit();
@@ -427,7 +462,6 @@
             DrawingToolPanel.SuspendLayout();
             RegionToolPanel.SuspendLayout();
             OverlayToolPanel.SuspendLayout();
-            LabelToolPanel.SuspendLayout();
             SuspendLayout();
             // 
             // OceanTab
@@ -965,6 +999,7 @@
             MainTab.SizeMode = TabSizeMode.Fixed;
             MainTab.TabIndex = 4;
             MainTab.SelectedIndexChanged += MainTabControl_SelectedIndexChanged;
+            MainTab.KeyDown += MainTab_KeyDown;
             // 
             // BackgroundTab
             // 
@@ -1619,7 +1654,7 @@
             // 
             groupBox8.Controls.Add(label42);
             groupBox8.Controls.Add(label43);
-            groupBox8.Controls.Add(WaterEraseSizeTrack);
+            groupBox8.Controls.Add(WaterEraserSizeTrack);
             groupBox8.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             groupBox8.Location = new Point(12, 435);
             groupBox8.Name = "groupBox8";
@@ -1649,19 +1684,19 @@
             label43.TabIndex = 21;
             label43.Text = "Size";
             // 
-            // WaterEraseSizeTrack
+            // WaterEraserSizeTrack
             // 
-            WaterEraseSizeTrack.AutoSize = false;
-            WaterEraseSizeTrack.BackColor = SystemColors.Control;
-            WaterEraseSizeTrack.Location = new Point(6, 45);
-            WaterEraseSizeTrack.Maximum = 256;
-            WaterEraseSizeTrack.Minimum = 4;
-            WaterEraseSizeTrack.Name = "WaterEraseSizeTrack";
-            WaterEraseSizeTrack.Size = new Size(136, 20);
-            WaterEraseSizeTrack.TabIndex = 20;
-            WaterEraseSizeTrack.TickStyle = TickStyle.None;
-            WaterEraseSizeTrack.Value = 20;
-            WaterEraseSizeTrack.ValueChanged += WaterEraseSizeTrack_ValueChanged;
+            WaterEraserSizeTrack.AutoSize = false;
+            WaterEraserSizeTrack.BackColor = SystemColors.Control;
+            WaterEraserSizeTrack.Location = new Point(6, 45);
+            WaterEraserSizeTrack.Maximum = 256;
+            WaterEraserSizeTrack.Minimum = 4;
+            WaterEraserSizeTrack.Name = "WaterEraserSizeTrack";
+            WaterEraserSizeTrack.Size = new Size(136, 20);
+            WaterEraserSizeTrack.TabIndex = 20;
+            WaterEraserSizeTrack.TickStyle = TickStyle.None;
+            WaterEraserSizeTrack.Value = 20;
+            WaterEraserSizeTrack.ValueChanged += WaterEraseSizeTrack_ValueChanged;
             // 
             // groupBox7
             // 
@@ -2541,15 +2576,18 @@
             // 
             // SymbolPlacementDensityUpDown
             // 
+            SymbolPlacementDensityUpDown.DecimalPlaces = 2;
             SymbolPlacementDensityUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolPlacementDensityUpDown.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
             SymbolPlacementDensityUpDown.Location = new Point(70, 208);
-            SymbolPlacementDensityUpDown.Maximum = new decimal(new int[] { 200, 0, 0, 0 });
-            SymbolPlacementDensityUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            SymbolPlacementDensityUpDown.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
+            SymbolPlacementDensityUpDown.Minimum = new decimal(new int[] { 25, 0, 0, 131072 });
             SymbolPlacementDensityUpDown.Name = "SymbolPlacementDensityUpDown";
             SymbolPlacementDensityUpDown.Size = new Size(44, 23);
             SymbolPlacementDensityUpDown.TabIndex = 34;
             SymbolPlacementDensityUpDown.TextAlign = HorizontalAlignment.Center;
-            SymbolPlacementDensityUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
+            SymbolPlacementDensityUpDown.Value = new decimal(new int[] { 10, 0, 0, 65536 });
+            SymbolPlacementDensityUpDown.ValueChanged += SymbolPlacementDensityUpDown_ValueChanged;
             // 
             // label49
             // 
@@ -2580,15 +2618,17 @@
             // 
             // SymbolPlacementRateUpDown
             // 
+            SymbolPlacementRateUpDown.DecimalPlaces = 2;
             SymbolPlacementRateUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolPlacementRateUpDown.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
             SymbolPlacementRateUpDown.Location = new Point(70, 177);
-            SymbolPlacementRateUpDown.Maximum = new decimal(new int[] { 200, 0, 0, 0 });
-            SymbolPlacementRateUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            SymbolPlacementRateUpDown.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
+            SymbolPlacementRateUpDown.Minimum = new decimal(new int[] { 25, 0, 0, 131072 });
             SymbolPlacementRateUpDown.Name = "SymbolPlacementRateUpDown";
             SymbolPlacementRateUpDown.Size = new Size(44, 23);
             SymbolPlacementRateUpDown.TabIndex = 31;
             SymbolPlacementRateUpDown.TextAlign = HorizontalAlignment.Center;
-            SymbolPlacementRateUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
+            SymbolPlacementRateUpDown.Value = new decimal(new int[] { 1, 0, 0, 0 });
             SymbolPlacementRateUpDown.ValueChanged += SymbolPlacementRateUpDown_ValueChanged;
             // 
             // label21
@@ -2999,6 +3039,12 @@
             // LabelTab
             // 
             LabelTab.BackColor = SystemColors.Control;
+            LabelTab.Controls.Add(groupBox20);
+            LabelTab.Controls.Add(groupBox19);
+            LabelTab.Controls.Add(groupBox18);
+            LabelTab.Controls.Add(groupBox17);
+            LabelTab.Controls.Add(groupBox16);
+            LabelTab.Controls.Add(groupBox15);
             LabelTab.Controls.Add(LabelToolStrip);
             LabelTab.Controls.Add(cyberSwitch4);
             LabelTab.Controls.Add(label8);
@@ -3007,6 +3053,292 @@
             LabelTab.Size = new Size(230, 878);
             LabelTab.TabIndex = 5;
             LabelTab.Text = "Labels";
+            // 
+            // groupBox20
+            // 
+            groupBox20.Controls.Add(BezierTextPathButton);
+            groupBox20.Controls.Add(CircleTextPathButton);
+            groupBox20.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox20.Location = new Point(7, 733);
+            groupBox20.Name = "groupBox20";
+            groupBox20.Size = new Size(148, 106);
+            groupBox20.TabIndex = 27;
+            groupBox20.TabStop = false;
+            groupBox20.Text = "Path";
+            // 
+            // BezierTextPathButton
+            // 
+            BezierTextPathButton.BackColor = SystemColors.ControlLightLight;
+            BezierTextPathButton.FlatAppearance.BorderColor = Color.LightGray;
+            BezierTextPathButton.FlatStyle = FlatStyle.Flat;
+            BezierTextPathButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            BezierTextPathButton.ForeColor = SystemColors.ControlDarkDark;
+            BezierTextPathButton.IconChar = FontAwesome.Sharp.IconChar.BezierCurve;
+            BezierTextPathButton.IconColor = Color.Black;
+            BezierTextPathButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            BezierTextPathButton.IconSize = 32;
+            BezierTextPathButton.Location = new Point(78, 26);
+            BezierTextPathButton.Name = "BezierTextPathButton";
+            BezierTextPathButton.Size = new Size(60, 60);
+            BezierTextPathButton.TabIndex = 91;
+            BezierTextPathButton.Text = "Curve";
+            BezierTextPathButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            BezierTextPathButton.UseVisualStyleBackColor = false;
+            // 
+            // CircleTextPathButton
+            // 
+            CircleTextPathButton.BackColor = SystemColors.ControlLightLight;
+            CircleTextPathButton.FlatAppearance.BorderColor = Color.LightGray;
+            CircleTextPathButton.FlatStyle = FlatStyle.Flat;
+            CircleTextPathButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            CircleTextPathButton.ForeColor = SystemColors.ControlDarkDark;
+            CircleTextPathButton.IconChar = FontAwesome.Sharp.IconChar.Circle;
+            CircleTextPathButton.IconColor = Color.Black;
+            CircleTextPathButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            CircleTextPathButton.IconSize = 32;
+            CircleTextPathButton.Location = new Point(12, 26);
+            CircleTextPathButton.Name = "CircleTextPathButton";
+            CircleTextPathButton.Size = new Size(60, 60);
+            CircleTextPathButton.TabIndex = 90;
+            CircleTextPathButton.Text = "Arc";
+            CircleTextPathButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            CircleTextPathButton.UseVisualStyleBackColor = false;
+            // 
+            // groupBox19
+            // 
+            groupBox19.Controls.Add(trackBar3);
+            groupBox19.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox19.Location = new Point(6, 663);
+            groupBox19.Name = "groupBox19";
+            groupBox19.Size = new Size(148, 60);
+            groupBox19.TabIndex = 26;
+            groupBox19.TabStop = false;
+            groupBox19.Text = "Rotation";
+            // 
+            // trackBar3
+            // 
+            trackBar3.AutoSize = false;
+            trackBar3.BackColor = SystemColors.Control;
+            trackBar3.Location = new Point(6, 26);
+            trackBar3.Maximum = 359;
+            trackBar3.Name = "trackBar3";
+            trackBar3.Size = new Size(136, 20);
+            trackBar3.TabIndex = 30;
+            trackBar3.TickStyle = TickStyle.None;
+            // 
+            // groupBox18
+            // 
+            groupBox18.Controls.Add(label56);
+            groupBox18.Controls.Add(trackBar2);
+            groupBox18.Controls.Add(iconButton2);
+            groupBox18.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox18.Location = new Point(7, 528);
+            groupBox18.Name = "groupBox18";
+            groupBox18.Size = new Size(148, 124);
+            groupBox18.TabIndex = 25;
+            groupBox18.TabStop = false;
+            groupBox18.Text = "Glow";
+            // 
+            // label56
+            // 
+            label56.AutoSize = true;
+            label56.BackColor = Color.Transparent;
+            label56.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label56.ForeColor = SystemColors.ControlDarkDark;
+            label56.Location = new Point(12, 94);
+            label56.Name = "label56";
+            label56.Size = new Size(39, 15);
+            label56.TabIndex = 31;
+            label56.Text = "Width";
+            // 
+            // trackBar2
+            // 
+            trackBar2.AutoSize = false;
+            trackBar2.BackColor = SystemColors.Control;
+            trackBar2.Location = new Point(50, 92);
+            trackBar2.Maximum = 32;
+            trackBar2.Name = "trackBar2";
+            trackBar2.Size = new Size(91, 20);
+            trackBar2.TabIndex = 30;
+            trackBar2.TickStyle = TickStyle.None;
+            // 
+            // iconButton2
+            // 
+            iconButton2.BackColor = Color.White;
+            iconButton2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            iconButton2.ForeColor = SystemColors.ControlDarkDark;
+            iconButton2.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            iconButton2.IconColor = Color.Tan;
+            iconButton2.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton2.Location = new Point(6, 26);
+            iconButton2.Name = "iconButton2";
+            iconButton2.Size = new Size(136, 60);
+            iconButton2.TabIndex = 20;
+            iconButton2.Text = "Select Color";
+            iconButton2.UseVisualStyleBackColor = false;
+            // 
+            // groupBox17
+            // 
+            groupBox17.Controls.Add(label55);
+            groupBox17.Controls.Add(trackBar1);
+            groupBox17.Controls.Add(iconButton3);
+            groupBox17.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox17.Location = new Point(7, 395);
+            groupBox17.Name = "groupBox17";
+            groupBox17.Size = new Size(148, 124);
+            groupBox17.TabIndex = 24;
+            groupBox17.TabStop = false;
+            groupBox17.Text = "Outline";
+            // 
+            // label55
+            // 
+            label55.AutoSize = true;
+            label55.BackColor = Color.Transparent;
+            label55.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label55.ForeColor = SystemColors.ControlDarkDark;
+            label55.Location = new Point(12, 94);
+            label55.Name = "label55";
+            label55.Size = new Size(39, 15);
+            label55.TabIndex = 31;
+            label55.Text = "Width";
+            // 
+            // trackBar1
+            // 
+            trackBar1.AutoSize = false;
+            trackBar1.BackColor = SystemColors.Control;
+            trackBar1.Location = new Point(50, 92);
+            trackBar1.Maximum = 32;
+            trackBar1.Name = "trackBar1";
+            trackBar1.Size = new Size(91, 20);
+            trackBar1.TabIndex = 30;
+            trackBar1.TickStyle = TickStyle.None;
+            // 
+            // iconButton3
+            // 
+            iconButton3.BackColor = Color.FromArgb(161, 214, 202, 171);
+            iconButton3.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            iconButton3.ForeColor = SystemColors.ControlDarkDark;
+            iconButton3.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            iconButton3.IconColor = Color.Tan;
+            iconButton3.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton3.Location = new Point(6, 26);
+            iconButton3.Name = "iconButton3";
+            iconButton3.Size = new Size(136, 60);
+            iconButton3.TabIndex = 20;
+            iconButton3.Text = "Select Color";
+            iconButton3.UseVisualStyleBackColor = false;
+            // 
+            // groupBox16
+            // 
+            groupBox16.Controls.Add(SelectLabelFontButton);
+            groupBox16.Controls.Add(iconButton1);
+            groupBox16.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox16.Location = new Point(7, 214);
+            groupBox16.Name = "groupBox16";
+            groupBox16.Size = new Size(148, 169);
+            groupBox16.TabIndex = 23;
+            groupBox16.TabStop = false;
+            groupBox16.Text = "Font";
+            // 
+            // SelectLabelFontButton
+            // 
+            SelectLabelFontButton.BackColor = SystemColors.ControlLightLight;
+            SelectLabelFontButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SelectLabelFontButton.ForeColor = SystemColors.ControlDarkDark;
+            SelectLabelFontButton.IconChar = FontAwesome.Sharp.IconChar.Font;
+            SelectLabelFontButton.IconColor = Color.Tan;
+            SelectLabelFontButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectLabelFontButton.Location = new Point(6, 26);
+            SelectLabelFontButton.Name = "SelectLabelFontButton";
+            SelectLabelFontButton.Size = new Size(136, 60);
+            SelectLabelFontButton.TabIndex = 21;
+            SelectLabelFontButton.Text = "Select Font";
+            SelectLabelFontButton.UseVisualStyleBackColor = false;
+            SelectLabelFontButton.Click += SelectLabelFontButton_Click;
+            // 
+            // iconButton1
+            // 
+            iconButton1.BackColor = Color.FromArgb(61, 53, 30);
+            iconButton1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            iconButton1.ForeColor = SystemColors.HighlightText;
+            iconButton1.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            iconButton1.IconColor = Color.Tan;
+            iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton1.Location = new Point(5, 99);
+            iconButton1.Name = "iconButton1";
+            iconButton1.Size = new Size(136, 60);
+            iconButton1.TabIndex = 20;
+            iconButton1.Text = "Select Color";
+            iconButton1.UseVisualStyleBackColor = false;
+            // 
+            // groupBox15
+            // 
+            groupBox15.Controls.Add(RemovePresetButton);
+            groupBox15.Controls.Add(AddPresetButton);
+            groupBox15.Controls.Add(label54);
+            groupBox15.Controls.Add(LabelPresetsListBox);
+            groupBox15.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox15.Location = new Point(6, 32);
+            groupBox15.Name = "groupBox15";
+            groupBox15.Size = new Size(148, 169);
+            groupBox15.TabIndex = 22;
+            groupBox15.TabStop = false;
+            groupBox15.Text = "Presets";
+            // 
+            // RemovePresetButton
+            // 
+            RemovePresetButton.BackColor = SystemColors.ControlLightLight;
+            RemovePresetButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
+            RemovePresetButton.FlatStyle = FlatStyle.Flat;
+            RemovePresetButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            RemovePresetButton.ForeColor = SystemColors.HighlightText;
+            RemovePresetButton.IconChar = FontAwesome.Sharp.IconChar.Subtract;
+            RemovePresetButton.IconColor = SystemColors.ControlDarkDark;
+            RemovePresetButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            RemovePresetButton.IconSize = 24;
+            RemovePresetButton.Location = new Point(96, 111);
+            RemovePresetButton.Margin = new Padding(1, 3, 1, 3);
+            RemovePresetButton.Name = "RemovePresetButton";
+            RemovePresetButton.Size = new Size(46, 46);
+            RemovePresetButton.TabIndex = 31;
+            RemovePresetButton.UseVisualStyleBackColor = false;
+            // 
+            // AddPresetButton
+            // 
+            AddPresetButton.BackColor = SystemColors.ControlLightLight;
+            AddPresetButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
+            AddPresetButton.FlatStyle = FlatStyle.Flat;
+            AddPresetButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            AddPresetButton.ForeColor = SystemColors.HighlightText;
+            AddPresetButton.IconChar = FontAwesome.Sharp.IconChar.Add;
+            AddPresetButton.IconColor = SystemColors.ControlDarkDark;
+            AddPresetButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            AddPresetButton.IconSize = 24;
+            AddPresetButton.Location = new Point(6, 111);
+            AddPresetButton.Margin = new Padding(1, 3, 1, 3);
+            AddPresetButton.Name = "AddPresetButton";
+            AddPresetButton.Size = new Size(46, 46);
+            AddPresetButton.TabIndex = 30;
+            AddPresetButton.UseVisualStyleBackColor = false;
+            // 
+            // label54
+            // 
+            label54.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label54.Location = new Point(6, 397);
+            label54.Name = "label54";
+            label54.Size = new Size(136, 15);
+            label54.TabIndex = 29;
+            label54.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // LabelPresetsListBox
+            // 
+            LabelPresetsListBox.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LabelPresetsListBox.FormattingEnabled = true;
+            LabelPresetsListBox.ItemHeight = 15;
+            LabelPresetsListBox.Location = new Point(6, 26);
+            LabelPresetsListBox.Name = "LabelPresetsListBox";
+            LabelPresetsListBox.Size = new Size(136, 79);
+            LabelPresetsListBox.TabIndex = 23;
             // 
             // LabelToolStrip
             // 
@@ -3017,7 +3349,7 @@
             LabelToolStrip.Dock = DockStyle.None;
             LabelToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             LabelToolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            LabelToolStrip.Items.AddRange(new ToolStripItem[] { LabelSelectButton });
+            LabelToolStrip.Items.AddRange(new ToolStripItem[] { LabelSelectButton, PlaceLabelButton, CreateBoxButton, GenerateNameButton });
             LabelToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
             LabelToolStrip.Location = new Point(158, 0);
             LabelToolStrip.Name = "LabelToolStrip";
@@ -3041,6 +3373,55 @@
             LabelSelectButton.Size = new Size(60, 60);
             LabelSelectButton.Text = "Select";
             LabelSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // PlaceLabelButton
+            // 
+            PlaceLabelButton.AutoSize = false;
+            PlaceLabelButton.ForeColor = SystemColors.ControlDarkDark;
+            PlaceLabelButton.IconChar = FontAwesome.Sharp.IconChar.ICursor;
+            PlaceLabelButton.IconColor = Color.Black;
+            PlaceLabelButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PlaceLabelButton.IconSize = 24;
+            PlaceLabelButton.ImageScaling = ToolStripItemImageScaling.None;
+            PlaceLabelButton.ImageTransparentColor = Color.Magenta;
+            PlaceLabelButton.Margin = new Padding(0, 25, 0, 2);
+            PlaceLabelButton.Name = "PlaceLabelButton";
+            PlaceLabelButton.Size = new Size(60, 60);
+            PlaceLabelButton.Text = "Label";
+            PlaceLabelButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // CreateBoxButton
+            // 
+            CreateBoxButton.AutoSize = false;
+            CreateBoxButton.ForeColor = SystemColors.ControlDarkDark;
+            CreateBoxButton.IconChar = FontAwesome.Sharp.IconChar.Square;
+            CreateBoxButton.IconColor = Color.Black;
+            CreateBoxButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            CreateBoxButton.IconSize = 28;
+            CreateBoxButton.ImageScaling = ToolStripItemImageScaling.None;
+            CreateBoxButton.ImageTransparentColor = Color.Magenta;
+            CreateBoxButton.Margin = new Padding(0, 25, 0, 2);
+            CreateBoxButton.Name = "CreateBoxButton";
+            CreateBoxButton.Size = new Size(60, 60);
+            CreateBoxButton.Text = "Box";
+            CreateBoxButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            CreateBoxButton.ToolTipText = "Create Box";
+            // 
+            // GenerateNameButton
+            // 
+            GenerateNameButton.AutoSize = false;
+            GenerateNameButton.ForeColor = SystemColors.ControlDarkDark;
+            GenerateNameButton.IconChar = FontAwesome.Sharp.IconChar.FileSignature;
+            GenerateNameButton.IconColor = Color.Black;
+            GenerateNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            GenerateNameButton.IconSize = 24;
+            GenerateNameButton.ImageScaling = ToolStripItemImageScaling.None;
+            GenerateNameButton.ImageTransparentColor = Color.Magenta;
+            GenerateNameButton.Margin = new Padding(0, 25, 0, 2);
+            GenerateNameButton.Name = "GenerateNameButton";
+            GenerateNameButton.Size = new Size(60, 60);
+            GenerateNameButton.Text = "Name";
+            GenerateNameButton.TextImageRelation = TextImageRelation.TextAboveImage;
             // 
             // cyberSwitch4
             // 
@@ -3388,15 +3769,15 @@
             RealmStudioForm.BackColor = Color.FromArgb(223, 219, 210);
             RealmStudioForm.BorderColor = Color.FromArgb(38, 38, 38);
             RealmStudioForm.CausesValidation = false;
+            RealmStudioForm.Controls.Add(MapRenderHScroll);
+            RealmStudioForm.Controls.Add(MapRenderVScroll);
             RealmStudioForm.Controls.Add(label29);
             RealmStudioForm.Controls.Add(label28);
             RealmStudioForm.Controls.Add(cyberSwitch8);
             RealmStudioForm.Controls.Add(ZoomToFitButton);
             RealmStudioForm.Controls.Add(ResetButton);
             RealmStudioForm.Controls.Add(LogoPictureBox);
-            RealmStudioForm.Controls.Add(MapRenderHScroll);
             RealmStudioForm.Controls.Add(SKGLRenderControl);
-            RealmStudioForm.Controls.Add(MapRenderVScroll);
             RealmStudioForm.Controls.Add(SaveButton);
             RealmStudioForm.Controls.Add(AutosaveSwitch);
             RealmStudioForm.Controls.Add(label1);
@@ -3407,6 +3788,7 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(MainMenuStrip);
+            RealmStudioForm.Controls.Add(LabelToolPanel);
             RealmStudioForm.Controls.Add(SymbolToolPanel);
             RealmStudioForm.Controls.Add(PathToolPanel);
             RealmStudioForm.Controls.Add(WaterToolPanel);
@@ -3416,7 +3798,6 @@
             RealmStudioForm.Controls.Add(DrawingToolPanel);
             RealmStudioForm.Controls.Add(RegionToolPanel);
             RealmStudioForm.Controls.Add(OverlayToolPanel);
-            RealmStudioForm.Controls.Add(LabelToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
             RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
             RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
@@ -3437,6 +3818,23 @@
             RealmStudioForm.TabStop = false;
             RealmStudioForm.Text = "Realm Studio";
             RealmStudioForm.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // MapRenderHScroll
+            // 
+            MapRenderHScroll.Location = new Point(272, 960);
+            MapRenderHScroll.Name = "MapRenderHScroll";
+            MapRenderHScroll.Size = new Size(1128, 17);
+            MapRenderHScroll.TabIndex = 34;
+            MapRenderHScroll.Scroll += MapRenderHScroll_Scroll;
+            // 
+            // MapRenderVScroll
+            // 
+            MapRenderVScroll.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            MapRenderVScroll.Location = new Point(1403, 112);
+            MapRenderVScroll.Name = "MapRenderVScroll";
+            MapRenderVScroll.Size = new Size(17, 848);
+            MapRenderVScroll.TabIndex = 33;
+            MapRenderVScroll.Scroll += MapRenderVScroll_Scroll;
             // 
             // label29
             // 
@@ -3544,21 +3942,6 @@
             LogoPictureBox.TabIndex = 14;
             LogoPictureBox.TabStop = false;
             // 
-            // MapRenderHScroll
-            // 
-            MapRenderHScroll.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            MapRenderHScroll.Depth = 0;
-            MapRenderHScroll.Location = new Point(271, 964);
-            MapRenderHScroll.Margin = new Padding(0);
-            MapRenderHScroll.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
-            MapRenderHScroll.Name = "MapRenderHScroll";
-            MapRenderHScroll.Orientation = ReaLTaiizor.Enum.Material.MateScrollOrientation.Horizontal;
-            MapRenderHScroll.ScrollbarSize = 12;
-            MapRenderHScroll.Size = new Size(1138, 12);
-            MapRenderHScroll.TabIndex = 13;
-            MapRenderHScroll.Text = "materialScrollBar1";
-            MapRenderHScroll.Scroll += MapRenderHScroll_Scroll;
-            // 
             // SKGLRenderControl
             // 
             SKGLRenderControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -3567,7 +3950,7 @@
             SKGLRenderControl.Location = new Point(272, 112);
             SKGLRenderControl.Margin = new Padding(0);
             SKGLRenderControl.Name = "SKGLRenderControl";
-            SKGLRenderControl.Size = new Size(1137, 852);
+            SKGLRenderControl.Size = new Size(1128, 848);
             SKGLRenderControl.TabIndex = 5;
             SKGLRenderControl.Visible = false;
             SKGLRenderControl.VSync = false;
@@ -3580,22 +3963,7 @@
             SKGLRenderControl.MouseLeave += SKGLRenderControl_MouseLeave;
             SKGLRenderControl.MouseMove += SKGLRenderControl_MouseMove;
             SKGLRenderControl.MouseUp += SKGLRenderControl_MouseUp;
-            // 
-            // MapRenderVScroll
-            // 
-            MapRenderVScroll.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            MapRenderVScroll.Depth = 0;
-            MapRenderVScroll.HighlightOnWheel = true;
-            MapRenderVScroll.Location = new Point(1409, 112);
-            MapRenderVScroll.Margin = new Padding(0);
-            MapRenderVScroll.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
-            MapRenderVScroll.Name = "MapRenderVScroll";
-            MapRenderVScroll.Orientation = ReaLTaiizor.Enum.Material.MateScrollOrientation.Vertical;
-            MapRenderVScroll.ScrollbarSize = 12;
-            MapRenderVScroll.Size = new Size(12, 852);
-            MapRenderVScroll.TabIndex = 12;
-            MapRenderVScroll.Text = "materialScrollBar1";
-            MapRenderVScroll.Scroll += MapRenderVScroll_Scroll;
+            SKGLRenderControl.PreviewKeyDown += SKGLRenderControl_PreviewKeyDown;
             // 
             // SaveButton
             // 
@@ -4067,6 +4435,47 @@
             AboutToolStripMenuItem.Text = "&About...";
             AboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
             // 
+            // LabelToolPanel
+            // 
+            LabelToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            LabelToolPanel.BackColor = SystemColors.Control;
+            LabelToolPanel.Controls.Add(SelectBoxTintButton);
+            LabelToolPanel.Controls.Add(LabelBoxStyleTable);
+            LabelToolPanel.Location = new Point(1422, 90);
+            LabelToolPanel.Margin = new Padding(0);
+            LabelToolPanel.Name = "LabelToolPanel";
+            LabelToolPanel.Size = new Size(152, 836);
+            LabelToolPanel.TabIndex = 27;
+            // 
+            // SelectBoxTintButton
+            // 
+            SelectBoxTintButton.BackColor = Color.White;
+            SelectBoxTintButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SelectBoxTintButton.ForeColor = SystemColors.ControlDarkDark;
+            SelectBoxTintButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SelectBoxTintButton.IconColor = Color.Tan;
+            SelectBoxTintButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectBoxTintButton.Location = new Point(15, 20);
+            SelectBoxTintButton.Name = "SelectBoxTintButton";
+            SelectBoxTintButton.Size = new Size(120, 60);
+            SelectBoxTintButton.TabIndex = 113;
+            SelectBoxTintButton.Text = "Select Tint Color";
+            SelectBoxTintButton.UseVisualStyleBackColor = false;
+            // 
+            // LabelBoxStyleTable
+            // 
+            LabelBoxStyleTable.AutoScroll = true;
+            LabelBoxStyleTable.CausesValidation = false;
+            LabelBoxStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
+            LabelBoxStyleTable.ColumnCount = 1;
+            LabelBoxStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
+            LabelBoxStyleTable.Location = new Point(15, 86);
+            LabelBoxStyleTable.Name = "LabelBoxStyleTable";
+            LabelBoxStyleTable.RowCount = 1;
+            LabelBoxStyleTable.RowStyles.Add(new RowStyle());
+            LabelBoxStyleTable.Size = new Size(122, 723);
+            LabelBoxStyleTable.TabIndex = 112;
+            // 
             // SymbolToolPanel
             // 
             SymbolToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
@@ -4098,7 +4507,7 @@
             SymbolSearchTextBox.Name = "SymbolSearchTextBox";
             SymbolSearchTextBox.Size = new Size(132, 23);
             SymbolSearchTextBox.TabIndex = 78;
-            SymbolSearchTextBox.KeyPress += SymbolSearchTextBox_KeyPress;
+            SymbolSearchTextBox.TextChanged += SymbolSearchTextBox_TextChanged;
             // 
             // SymbolTable
             // 
@@ -4702,26 +5111,6 @@
             label24.TabIndex = 0;
             label24.Text = "Overlays";
             // 
-            // LabelToolPanel
-            // 
-            LabelToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            LabelToolPanel.BackColor = SystemColors.Control;
-            LabelToolPanel.Controls.Add(label23);
-            LabelToolPanel.Location = new Point(1422, 90);
-            LabelToolPanel.Margin = new Padding(0);
-            LabelToolPanel.Name = "LabelToolPanel";
-            LabelToolPanel.Size = new Size(152, 836);
-            LabelToolPanel.TabIndex = 27;
-            // 
-            // label23
-            // 
-            label23.AutoSize = true;
-            label23.Location = new Point(22, 15);
-            label23.Name = "label23";
-            label23.Size = new Size(40, 15);
-            label23.TabIndex = 0;
-            label23.Text = "Labels";
-            // 
             // materialCheckBox1
             // 
             materialCheckBox1.AutoSize = true;
@@ -4821,7 +5210,7 @@
             WaterTab.PerformLayout();
             groupBox8.ResumeLayout(false);
             groupBox8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)WaterEraseSizeTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WaterEraserSizeTrack).EndInit();
             groupBox7.ResumeLayout(false);
             groupBox7.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)RiverWidthTrack).EndInit();
@@ -4856,6 +5245,17 @@
             SymbolToolStrip.PerformLayout();
             LabelTab.ResumeLayout(false);
             LabelTab.PerformLayout();
+            groupBox20.ResumeLayout(false);
+            groupBox19.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)trackBar3).EndInit();
+            groupBox18.ResumeLayout(false);
+            groupBox18.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar2).EndInit();
+            groupBox17.ResumeLayout(false);
+            groupBox17.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
+            groupBox16.ResumeLayout(false);
+            groupBox15.ResumeLayout(false);
             LabelToolStrip.ResumeLayout(false);
             LabelToolStrip.PerformLayout();
             OverlayTab.ResumeLayout(false);
@@ -4882,6 +5282,7 @@
             ApplicationStatusStrip.PerformLayout();
             MainMenuStrip.ResumeLayout(false);
             MainMenuStrip.PerformLayout();
+            LabelToolPanel.ResumeLayout(false);
             SymbolToolPanel.ResumeLayout(false);
             SymbolToolPanel.PerformLayout();
             PathToolPanel.ResumeLayout(false);
@@ -4915,8 +5316,6 @@
             RegionToolPanel.PerformLayout();
             OverlayToolPanel.ResumeLayout(false);
             OverlayToolPanel.PerformLayout();
-            LabelToolPanel.ResumeLayout(false);
-            LabelToolPanel.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -4966,8 +5365,6 @@
         private ReaLTaiizor.Controls.CyberSwitch AutosaveSwitch;
         private FontAwesome.Sharp.IconButton SaveButton;
         private TabPage SymbolTab;
-        private ReaLTaiizor.Controls.MaterialScrollBar MapRenderHScroll;
-        private ReaLTaiizor.Controls.MaterialScrollBar MapRenderVScroll;
         private ReaLTaiizor.Controls.CyberSwitch ShowBaseLayerSwitch;
         private Label label2;
         private ToolStripMenuItem RealmToolStripMenuItem;
@@ -5033,7 +5430,6 @@
         private Panel DrawingToolPanel;
         private Label label26;
         private Panel LabelToolPanel;
-        private Label label23;
         private Panel WaterToolPanel;
         private Label label20;
         private Panel OceanToolPanel;
@@ -5128,7 +5524,7 @@
         private GroupBox groupBox8;
         private Label label42;
         private Label label43;
-        private TrackBar WaterEraseSizeTrack;
+        private TrackBar WaterEraserSizeTrack;
         private GroupBox groupBox7;
         private Label label41;
         private ReaLTaiizor.Controls.CyberSwitch RiverSourceFadeInSwitch;
@@ -5225,5 +5621,33 @@
         private Label label22;
         private TextBox SymbolSearchTextBox;
         private TableLayoutPanel SymbolTable;
+        private VScrollBar MapRenderVScroll;
+        private HScrollBar MapRenderHScroll;
+        private GroupBox groupBox15;
+        private FontAwesome.Sharp.IconButton AddPresetButton;
+        private Label label54;
+        private ListBox LabelPresetsListBox;
+        private FontAwesome.Sharp.IconButton RemovePresetButton;
+        private GroupBox groupBox16;
+        private FontAwesome.Sharp.IconButton iconButton1;
+        private GroupBox groupBox17;
+        private FontAwesome.Sharp.IconButton iconButton3;
+        private FontAwesome.Sharp.IconButton SelectLabelFontButton;
+        private GroupBox groupBox18;
+        private Label label56;
+        private TrackBar trackBar2;
+        private FontAwesome.Sharp.IconButton iconButton2;
+        private Label label55;
+        private TrackBar trackBar1;
+        private GroupBox groupBox20;
+        private FontAwesome.Sharp.IconButton BezierTextPathButton;
+        private FontAwesome.Sharp.IconButton CircleTextPathButton;
+        private GroupBox groupBox19;
+        private TrackBar trackBar3;
+        private FontAwesome.Sharp.IconToolStripButton PlaceLabelButton;
+        private FontAwesome.Sharp.IconToolStripButton CreateBoxButton;
+        private FontAwesome.Sharp.IconToolStripButton GenerateNameButton;
+        private TableLayoutPanel LabelBoxStyleTable;
+        private FontAwesome.Sharp.IconButton SelectBoxTintButton;
     }
 }

@@ -32,6 +32,9 @@ namespace RealmStudio
 
         private static readonly List<Tuple<string, List<MapSymbol>>> TagSymbolAssociationList = [];
 
+        // the symbol selected by the user from the SymbolTable control on the UI
+        public static MapSymbol? SelectedSymbolTableMapSymbol = null;
+
         // additional symbols selected by the user from the SymbolTable control on the UI
         public static readonly List<MapSymbol> SecondarySelectedSymbols = [];
 
@@ -163,7 +166,7 @@ namespace RealmStudio
             lockedBitmap.UnlockBits();
         }
 
-        internal static List<MapSymbol> GetFilteredSymbolList(SymbolTypeEnum selectedSymbolType, List<string> selectedCollections, List<string> selectedTags)
+        internal static List<MapSymbol> GetFilteredSymbolList(SymbolTypeEnum selectedSymbolType, List<string> selectedCollections, List<string> selectedTags, string filterText = "")
         {
             List<MapSymbol> filteredSymbols = GetMapSymbolsWithType(selectedSymbolType);
 
@@ -189,6 +192,35 @@ namespace RealmStudio
                         {
                             filteredSymbols.RemoveAt(i);
                         }
+                    }
+                }
+            }
+
+            // filter the sybol list by text entered in the search box
+            if (!string.IsNullOrEmpty(filterText))
+            {
+                for (int i = filteredSymbols.Count - 1; i >= 0; i--)
+                {
+                    bool removeSymbol = true;
+
+                    // keep the symbol if the symbol name contains the filter text
+                    if (filteredSymbols[i].SymbolName.Contains(filterText))
+                    {
+                        removeSymbol = false;
+                    }
+
+                    // keep the symbol if any of its tags contains the filter text
+                    for (int j = 0; j < filteredSymbols[i].SymbolTags.Count; j++)
+                    {
+                        if (filteredSymbols[i].SymbolTags[j].Contains(filterText))
+                        {
+                            removeSymbol = false;
+                        }
+                    }
+
+                    if (removeSymbol)
+                    {
+                        filteredSymbols.RemoveAt(i);
                     }
                 }
             }
@@ -229,6 +261,37 @@ namespace RealmStudio
             }
 
             return canPlace;
+        }
+
+        internal static void ColorSymbolsInArea(RealmStudioMap map, SKPoint colorCursorPoint, int colorBrushRadius, Color[] symbolColors)
+        {
+            List<MapComponent> components = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER).MapLayerComponents;
+
+            foreach (MapComponent component in components)
+            {
+                MapSymbol symbol = (MapSymbol)component;
+
+                SKPoint symbolPoint = new(symbol.X, symbol.Y);
+
+                if (DrawingMethods.PointInCircle(colorBrushRadius, colorCursorPoint, symbolPoint))
+                {
+                    if (symbol.IsGrayscale)
+                    {
+                        SKPaint paint = new()
+                        {
+                            ColorFilter = SKColorFilter.CreateBlendMode(
+                                Extensions.ToSKColor(symbolColors[0]),
+                                SKBlendMode.Modulate) // combine the selected color with the bitmap colors
+                        };
+
+                        symbol.SymbolPaint = paint;
+                    }
+
+                    symbol.CustomSymbolColors[0] = Extensions.ToSKColor(symbolColors[0]);
+                    symbol.CustomSymbolColors[1] = Extensions.ToSKColor(symbolColors[1]);
+                    symbol.CustomSymbolColors[2] = Extensions.ToSKColor(symbolColors[2]);
+                }
+            }
         }
     }
 }

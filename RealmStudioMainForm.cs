@@ -53,6 +53,11 @@ namespace RealmStudio
         private static MapPath? SELECTED_PATH = null;
         private static MapPathPoint? SELECTED_PATHPOINT = null;
         private static MapSymbol? SELECTED_MAP_SYMBOL = null;
+        private static MapBox? SELECTED_MAP_BOX = null;
+
+        private static Font? SELECTED_LABEL_FONT = new("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
+
+        private FontSelectionDialog? FONT_SELECTION_DIALOG = null;
 
         private static SymbolTypeEnum SELECTED_SYMBOL_TYPE = SymbolTypeEnum.NotSet;
 
@@ -205,6 +210,13 @@ namespace RealmStudio
 
             SKGLRenderControl.Invalidate();
         }
+
+        private void MainTab_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.SuppressKeyPress = true;
+        }
+
+        #endregion
 
         #region Main Menu Event Handlers
 
@@ -383,8 +395,6 @@ namespace RealmStudio
         }
         #endregion
 
-        #endregion
-
         #region Main Form Methods
         /******************************************************************************************************* 
          * MAIN FORM METHODS
@@ -437,6 +447,7 @@ namespace RealmStudio
         {
             // clear the drawing mode (and uncheck all drawing, paint, and erase buttons) when switching tabs
             CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+            SetDrawingModeLabel();
 
             BackgroundToolPanel.Visible = true;
             OceanToolPanel.Visible = false;
@@ -555,33 +566,33 @@ namespace RealmStudio
                 SymbolTagsListBox.Items.Add(tag);
             }
 
-            //AddMapBoxesToLabelBoxTable(MapLabelMethods.MAP_BOX_TEXTURES);
-
-            //AddMapFramesToFrameTable(OverlayMethods.MAP_FRAME_TEXTURES);
-
             foreach (LabelPreset preset in AssetManager.LABEL_PRESETS)
             {
                 if (!string.IsNullOrEmpty(preset.LabelPresetTheme)
                     && AssetManager.CURRENT_THEME != null
                     && preset.LabelPresetTheme == AssetManager.CURRENT_THEME.ThemeName)
                 {
-                    //LabelPresetCombo.Items.Add(preset.LabelPresetName);
+                    LabelPresetsListBox.Items.Add(preset.LabelPresetName);
                 }
             }
 
-            /*
-            if (LabelPresetCombo.Items.Count > 0)
+            if (LabelPresetsListBox.Items.Count > 0)
             {
-                LabelPresetCombo.SelectedIndex = 0;
+                LabelPresetsListBox.SelectedIndex = 0;
 
-                LabelPreset? selectedPreset = AssetManager.LABEL_PRESETS.Find(x => !string.IsNullOrEmpty((string?)LabelPresetCombo.Items[0]) && x.LabelPresetName == (string?)LabelPresetCombo.Items[0]);
+                LabelPreset? selectedPreset =
+                    AssetManager.LABEL_PRESETS.Find(x => !string.IsNullOrEmpty((string?)LabelPresetsListBox.Items[0])
+                        && x.LabelPresetName == (string?)LabelPresetsListBox.Items[0]);
 
                 if (selectedPreset != null)
                 {
-                    SetLabelValuesFromPreset(selectedPreset);
+                    //SetLabelValuesFromPreset(selectedPreset);
                 }
             }
-            */
+
+            AddMapBoxesToLabelBoxTable(AssetManager.MAP_BOX_TEXTURE_LIST);
+
+            //AddMapFramesToFrameTable(OverlayMethods.MAP_FRAME_TEXTURES);
         }
 
         public void SetStatusText(string text)
@@ -807,13 +818,15 @@ namespace RealmStudio
                 mp.ShowPathPoints = false;
             }
 
-            /*
+            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.SYMBOLLAYER);
 
-            foreach (MapSymbol s in SymbolMethods.PlacedSymbolList)
+            foreach (MapSymbol symbol in symbolLayer.MapLayerComponents.Cast<MapSymbol>())
             {
-                if (selectedComponent != null && selectedComponent is MapSymbol mapSymbol && mapSymbol == s) continue;
-                s.SetIsSelected(false);
+                if (selectedComponent != null && selectedComponent is MapSymbol s && s == symbol) continue;
+                symbol.IsSelected = false;
             }
+
+            /*
 
             foreach (MapLabel l in MapLabelMethods.MAP_LABELS)
             {
@@ -849,9 +862,9 @@ namespace RealmStudio
             {
                 case DrawingModeEnum.SymbolPlace:
                     {
-                        if (SELECTED_MAP_SYMBOL != null && !AreaBrushSwitch.Checked)
+                        if (SymbolMethods.SelectedSymbolTableMapSymbol != null && !AreaBrushSwitch.Checked)
                         {
-                            SKBitmap? symbolBitmap = SELECTED_MAP_SYMBOL.ColorMappedBitmap;
+                            SKBitmap? symbolBitmap = SymbolMethods.SelectedSymbolTableMapSymbol.ColorMappedBitmap;
                             if (symbolBitmap != null)
                             {
                                 float symbolScale = (float)(SymbolScaleTrack.Value / 100.0F * DrawingZoom);
@@ -861,7 +874,7 @@ namespace RealmStudio
                                 SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateBitmap(scaledSymbolBitmap, symbolRotation, MirrorSymbolSwitch.Checked);
 
                                 if (rotatedAndScaledBitmap != null)
-                                {                                    
+                                {
                                     cursorLayer.LayerSurface?.Canvas.DrawBitmap(rotatedAndScaledBitmap,
                                         new SKPoint(point.X - (rotatedAndScaledBitmap.Width / 2), point.Y - (rotatedAndScaledBitmap.Height / 2)), null);
                                 }
@@ -1106,7 +1119,140 @@ namespace RealmStudio
 
         private void SKGLRenderControl_MouseWheel(object? sender, MouseEventArgs e)
         {
-            if (ModifierKeys == Keys.Shift)
+            int cursorDelta = 5;
+
+            if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.LandErase)
+            {
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                int newValue = LandEraserSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(LandEraserSizeTrack.Minimum, Math.Min(newValue, LandEraserSizeTrack.Maximum));
+
+                // landform eraser
+                LandEraserSizeTrack.Value = newValue;
+                SELECTED_BRUSH_SIZE = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.LandPaint)
+            {
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                int newValue = LandBrushSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(LandBrushSizeTrack.Minimum, Math.Min(newValue, LandBrushSizeTrack.Maximum));
+
+                LandBrushSizeTrack.Value = newValue;
+                SELECTED_BRUSH_SIZE = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.LandColor)
+            {
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                //int newValue = LandColorBrushSizeTrack.Value + sizeDelta;
+                //newValue = Math.Max(LandColorBrushSizeTrack.Minimum, Math.Min(newValue, LandColorBrushSizeTrack.Maximum));
+
+                //LandColorBrushSizeTrack.Value = newValue;
+                //SELECTED_BRUSH_SIZE = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.LandColorErase)
+            {
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                //int newValue = LandColorEraserSizeTrack.Value + sizeDelta;
+                //newValue = Math.Max(LandColorEraserSizeTrack.Minimum, Math.Min(newValue, LandColorEraserSizeTrack.Maximum));
+
+                // land color eraser
+                //LandColorEraserSizeTrack.Value = newValue;
+                //SELECTED_BRUSH_SIZE = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.OceanErase)
+            {
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                //int newValue = OceanBrushSizeTrack.Value + sizeDelta;
+                //newValue = Math.Max(OceanBrushSizeTrack.Minimum, Math.Min(newValue, OceanBrushSizeTrack.Maximum));
+
+                //OceanEraserSizeTrack.Value = newValue;
+                //SELECTED_BRUSH_SIZE = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.OceanPaint)
+            {
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                //int newValue = OceanBrushSizeTrack.Value + sizeDelta;
+                //newValue = Math.Max(OceanBrushSizeTrack.Minimum, Math.Min(newValue, OceanBrushSizeTrack.Maximum));
+
+                //OceanBrushSizeTrack.Value = newValue;
+                //SELECTED_BRUSH_SIZE = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterPaint)
+            {
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                int newValue = WaterBrushSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(WaterBrushSizeTrack.Minimum, Math.Min(newValue, WaterBrushSizeTrack.Maximum));
+
+                WaterBrushSizeTrack.Value = newValue;
+                SELECTED_BRUSH_SIZE = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterErase)
+            {
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                int newValue = WaterEraserSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(WaterEraserSizeTrack.Minimum, Math.Min(newValue, WaterEraserSizeTrack.Maximum));
+
+                WaterEraserSizeTrack.Value = newValue;
+                SELECTED_BRUSH_SIZE = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.LakePaint)
+            {
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                int newValue = WaterBrushSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(WaterBrushSizeTrack.Minimum, Math.Min(newValue, WaterBrushSizeTrack.Maximum));
+
+                WaterBrushSizeTrack.Value = newValue;
+                SELECTED_BRUSH_SIZE = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterColor)
+            {
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                //int newValue = WaterColorBrushSizeTrack.Value + sizeDelta;
+                //newValue = Math.Max(WaterColorBrushSizeTrack.Minimum, Math.Min(newValue, WaterColorBrushSizeTrack.Maximum));
+
+                //WaterColorBrushSizeTrack.Value = newValue;
+                //SELECTED_BRUSH_SIZE = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterColorErase)
+            {
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                //int newValue = WaterColorBrushSizeTrack.Value + sizeDelta;
+                //newValue = Math.Max(WaterColorBrushSizeTrack.Minimum, Math.Min(newValue, WaterColorBrushSizeTrack.Maximum));
+
+                //WaterColorBrushSizeTrack.Value = newValue;
+                //SELECTED_BRUSH_SIZE = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (CURRENT_DRAWING_MODE == DrawingModeEnum.SymbolPlace)
+            {
+                // TODO: should area brush size be changed when AreaBrushSwitch is checked?
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                int newValue = (int)Math.Max(SymbolScaleUpDown.Minimum, SymbolScaleUpDown.Value + sizeDelta);
+                newValue = (int)Math.Min(SymbolScaleUpDown.Maximum, newValue);
+
+                SymbolScaleUpDown.Value = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (CURRENT_DRAWING_MODE == DrawingModeEnum.LabelSelect)
+            {
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                //int newValue = (int)Math.Max(LabelRotationUpDown.Minimum, LabelRotationUpDown.Value + sizeDelta);
+                //newValue = (int)Math.Min(LabelRotationUpDown.Maximum, newValue);
+
+                //SELECTED_BRUSH_SIZE = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (ModifierKeys == Keys.Shift)
             {
                 SetZoomLevel(e.Delta);
 
@@ -1124,6 +1270,14 @@ namespace RealmStudio
             Cursor = Cursors.Default;
         }
 
+        private void SKGLRenderControl_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            // this is needed to allow keydown events for arrow keys to be sent
+            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
+            {
+                e.IsInputKey = true;
+            }
+        }
         #endregion
 
         #region SKGLRenderControl Mouse Down Event Handling Methods (called from event handlers)
@@ -1395,14 +1549,28 @@ namespace RealmStudio
 
                         PlaceSelectedSymbolInArea(zoomedScrolledPoint, symbolScale, symbolRotation, (int)(AreaBrushSizeTrack.Value / 2.0F));
                     }
-                    else
-                    {
-                        SELECTED_BRUSH_SIZE = 0;
-                        PlaceSelectedSymbolAtCursor(zoomedScrolledPoint);
-                    }
 
                     PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
                     SKGLRenderControl.Invalidate();
+                    break;
+                case DrawingModeEnum.SymbolColor:
+
+                    int colorBrushRadius = AreaBrushSizeTrack.Value / 2;
+
+                    Color[] symbolColors = { SymbolColor1Button.BackColor, SymbolColor2Button.BackColor, SymbolColor3Button.BackColor };
+                    SymbolMethods.ColorSymbolsInArea(CURRENT_MAP, zoomedScrolledPoint, colorBrushRadius, symbolColors);
+
+                    CURRENT_MAP.IsSaved = false;
+                    break;
+                case DrawingModeEnum.SymbolSelect:
+                    if (SELECTED_MAP_SYMBOL != null && SELECTED_MAP_SYMBOL.IsSelected)
+                    {
+                        SELECTED_MAP_SYMBOL.X = (int)zoomedScrolledPoint.X - SELECTED_MAP_SYMBOL.Width / 2;
+                        SELECTED_MAP_SYMBOL.Y = (int)zoomedScrolledPoint.Y - SELECTED_MAP_SYMBOL.Height / 2;
+
+                        CURRENT_MAP.IsSaved = false;
+                    }
+
                     break;
 
             }
@@ -1563,13 +1731,76 @@ namespace RealmStudio
                         SELECTED_PATHPOINT = null;
                     }
                     break;
+                case DrawingModeEnum.SymbolSelect:
+                    {
+                        SELECTED_MAP_SYMBOL = SelectMapSymbolAtPoint(CURRENT_MAP, zoomedScrolledPoint.ToDrawingPoint());
+
+                        if (SELECTED_MAP_SYMBOL != null)
+                        {
+                            SELECTED_MAP_SYMBOL.IsSelected = !SELECTED_MAP_SYMBOL.IsSelected;
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
             }
 
         }
 
         private void RightButtonMouseUpHandler(object sender, MouseEventArgs e)
         {
-            // no right button mouse up events yet
+            SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
+
+            switch (CURRENT_DRAWING_MODE)
+            {
+                case DrawingModeEnum.LandformSelect:
+
+                    LandformSelectButton.Checked = false;
+
+                    Landform? selectedLandform = SelectLandformAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+                    SKGLRenderControl.Invalidate();
+
+                    if (selectedLandform != null)
+                    {
+                        //LandformData landformData = new();
+                        //landformData.SetMapLandform(selectedLandform);
+                        //landformData.ShowDialog(this);
+                    }
+                    break;
+                case DrawingModeEnum.WaterFeatureSelect:
+                    MapComponent? selectedWaterFeature = SelectWaterFeatureAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+
+                    if (selectedWaterFeature != null && selectedWaterFeature is WaterFeature)
+                    {
+                        // TODO: info dialog for water feature
+                        //MessageBox.Show("selected water feature");
+                    }
+                    else if (selectedWaterFeature != null && selectedWaterFeature is River)
+                    {
+                        // TODO: info dialog for river
+                        //MessageBox.Show("selected river");
+                    }
+                    break;
+                case DrawingModeEnum.PathSelect:
+                    MapPath? selectedPath = SelectMapPathAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+
+                    if (selectedPath != null)
+                    {
+                        // TODO: info dialog for path
+                        //MessageBox.Show("selected path");
+                    }
+                    break;
+                case DrawingModeEnum.SymbolSelect:
+                    MapSymbol? selectedSymbol = SelectMapSymbolAtPoint(CURRENT_MAP, zoomedScrolledPoint.ToDrawingPoint());
+                    if (selectedSymbol != null)
+                    {
+                        MapSymbolInfo msi = new(selectedSymbol);
+                        msi.ShowDialog();
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+            }
         }
 
         private void MiddleButtonMouseUpHandler(object sender, MouseEventArgs e)
@@ -1594,6 +1825,9 @@ namespace RealmStudio
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
+                            SELECTED_PATH = null;
+                            SELECTED_PATHPOINT = null;
+
                             CURRENT_MAP.IsSaved = false;
                             SKGLRenderControl.Invalidate();
                         }
@@ -1607,13 +1841,182 @@ namespace RealmStudio
                                 CommandManager.AddCommand(cmd);
                                 cmd.DoOperation();
 
+                                SELECTED_PATHPOINT = null;
+
                                 CURRENT_MAP.IsSaved = false;
+                                SKGLRenderControl.Invalidate();
+                            }
+                        }
+                        break;
+                    case DrawingModeEnum.SymbolSelect:
+                        {
+                            if (SELECTED_MAP_SYMBOL != null)
+                            {
+                                Cmd_RemoveSymbol cmd = new(CURRENT_MAP, SELECTED_MAP_SYMBOL);
+                                CommandManager.AddCommand(cmd);
+                                cmd.DoOperation();
+
+                                SELECTED_MAP_SYMBOL = null;
+                                CURRENT_MAP.IsSaved = false;
+
+                                SKGLRenderControl.Invalidate();
+                            }
+                        }
+
+                        break;
+                }
+            }
+
+            if (e.KeyCode == Keys.PageUp)
+            {
+                switch (CURRENT_DRAWING_MODE)
+                {
+                    case DrawingModeEnum.SymbolSelect:
+                        {
+                            if (ModifierKeys == Keys.Control)
+                            {
+                                MoveSelectedSymbolInRenderOrder(ComponentMoveDirectionEnum.Up, 5);
+                            }
+                            else if (ModifierKeys == Keys.None)
+                            {
+                                MoveSelectedSymbolInRenderOrder(ComponentMoveDirectionEnum.Up, 1);
+                            }
+
+                            SKGLRenderControl.Invalidate();
+                        }
+                        break;
+                    case DrawingModeEnum.RegionSelect:
+                        {
+                            //MoveSelectedRegionInRenderOrder(ComponentMoveDirectionEnum.Up);
+                        }
+                        break;
+
+                }
+            }
+
+            if (e.KeyCode == Keys.PageDown)
+            {
+                switch (CURRENT_DRAWING_MODE)
+                {
+                    case DrawingModeEnum.SymbolSelect:
+                        {
+                            if (ModifierKeys == Keys.Control)
+                            {
+                                MoveSelectedSymbolInRenderOrder(ComponentMoveDirectionEnum.Down, 5);
+                            }
+                            else if (ModifierKeys == Keys.None)
+                            {
+                                MoveSelectedSymbolInRenderOrder(ComponentMoveDirectionEnum.Down, 1);
+                            }
+
+                            SKGLRenderControl.Invalidate();
+                        }
+                        break;
+                    case DrawingModeEnum.RegionSelect:
+                        {
+                            //MoveSelectedRegionInRenderOrder(ComponentMoveDirectionEnum.Down);
+                        }
+                        break;
+
+                }
+            }
+
+            if (e.KeyCode == Keys.End)
+            {
+                switch (CURRENT_DRAWING_MODE)
+                {
+                    case DrawingModeEnum.SymbolSelect:
+                        {
+                            // move symbol to bottom of render order
+                            MoveSelectedSymbolInRenderOrder(ComponentMoveDirectionEnum.Down, 1, true);
+                            SKGLRenderControl.Invalidate();
+                        }
+                        break;
+                }
+            }
+
+            if (e.KeyCode == Keys.Home)
+            {
+                switch (CURRENT_DRAWING_MODE)
+                {
+                    case DrawingModeEnum.SymbolSelect:
+                        {
+                            // move symbol to top of render order
+                            MoveSelectedSymbolInRenderOrder(ComponentMoveDirectionEnum.Up, 1, true);
+                            SKGLRenderControl.Invalidate();
+                        }
+                        break;
+                }
+            }
+
+            if (e.KeyCode == Keys.Down)
+            {
+                switch (CURRENT_DRAWING_MODE)
+                {
+                    case DrawingModeEnum.SymbolSelect:
+                        {
+                            if (SELECTED_MAP_SYMBOL != null)
+                            {
+                                SELECTED_MAP_SYMBOL.Y = Math.Min(SELECTED_MAP_SYMBOL.Y + 1, CURRENT_MAP.MapHeight);
                                 SKGLRenderControl.Invalidate();
                             }
                         }
                         break;
                 }
             }
+
+            if (e.KeyCode == Keys.Up)
+            {
+                switch (CURRENT_DRAWING_MODE)
+                {
+                    case DrawingModeEnum.SymbolSelect:
+                        {
+                            if (SELECTED_MAP_SYMBOL != null)
+                            {
+                                SELECTED_MAP_SYMBOL.Y = Math.Max(0, SELECTED_MAP_SYMBOL.Y - 1);
+                                SKGLRenderControl.Invalidate();
+                            }
+                        }
+                        break;
+                }
+            }
+
+            if (e.KeyCode == Keys.Left)
+            {
+                switch (CURRENT_DRAWING_MODE)
+                {
+                    case DrawingModeEnum.SymbolSelect:
+                        {
+                            if (SELECTED_MAP_SYMBOL != null)
+                            {
+                                if (SELECTED_MAP_SYMBOL != null)
+                                {
+                                    SELECTED_MAP_SYMBOL.X = Math.Max(0, SELECTED_MAP_SYMBOL.X - 1);
+                                    SKGLRenderControl.Invalidate();
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+
+            if (e.KeyCode == Keys.Right)
+            {
+                switch (CURRENT_DRAWING_MODE)
+                {
+                    case DrawingModeEnum.SymbolSelect:
+                        {
+                            if (SELECTED_MAP_SYMBOL != null)
+                            {
+                                SELECTED_MAP_SYMBOL.X = Math.Min(SELECTED_MAP_SYMBOL.X + 1, CURRENT_MAP.MapWidth);
+                                SKGLRenderControl.Invalidate();
+                            }
+                        }
+                        break;
+                }
+            }
+
+            e.Handled = true;
         }
         #endregion
 
@@ -2103,17 +2506,19 @@ namespace RealmStudio
             if (CURRENT_DRAWING_MODE != DrawingModeEnum.PlaceWindrose)
             {
                 CURRENT_DRAWING_MODE = DrawingModeEnum.PlaceWindrose;
+                SetDrawingModeLabel();
+
                 CURRENT_WINDROSE = CreateWindrose();
             }
             else
             {
                 CURRENT_DRAWING_MODE = DrawingModeEnum.None;
-                CURRENT_WINDROSE = null;
-
                 SetDrawingModeLabel();
 
-                SKGLRenderControl.Invalidate();
+                CURRENT_WINDROSE = null;
             }
+
+            SKGLRenderControl.Invalidate();
         }
 
         private void WindroseColorSelectButton_Click(object sender, EventArgs e)
@@ -2296,8 +2701,8 @@ namespace RealmStudio
 
         private void WaterEraseSizeTrack_ValueChanged(object sender, EventArgs e)
         {
-            WaterFeatureMethods.WaterFeatureEraserSize = WaterEraseSizeTrack.Value;
-            TOOLTIP.Show(WaterFeatureMethods.WaterFeatureEraserSize.ToString(), WaterEraseSizeTrack, new Point(WaterEraseSizeTrack.Right - 42, WaterEraseSizeTrack.Top - 58), 2000);
+            WaterFeatureMethods.WaterFeatureEraserSize = WaterEraserSizeTrack.Value;
+            TOOLTIP.Show(WaterFeatureMethods.WaterFeatureEraserSize.ToString(), WaterEraserSizeTrack, new Point(WaterEraserSizeTrack.Right - 42, WaterEraserSizeTrack.Top - 58), 2000);
             SetSelectedBrushSize(WaterFeatureMethods.WaterFeatureEraserSize);
         }
 
@@ -2869,17 +3274,45 @@ namespace RealmStudio
         #region Symbol Tab Event Handlers
         private void SymbolSelectButton_Click(object sender, EventArgs e)
         {
-
+            CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolSelect;
+            SELECTED_BRUSH_SIZE = 0;
+            SetDrawingModeLabel();
         }
 
         private void EraseSymbolsButton_Click(object sender, EventArgs e)
         {
-
+            CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolErase;
+            SetDrawingModeLabel();
         }
 
         private void ColorSymbolsButton_Click(object sender, EventArgs e)
         {
+            if (SELECTED_MAP_SYMBOL != null)
+            {
+                // if a symbol has been selected and is grayscale, then color it with the
+                // selected custom color
 
+                SKColor paintColor = SymbolColor1Button.BackColor.ToSKColor();
+
+                if (SELECTED_MAP_SYMBOL.IsGrayscale)
+                {
+                    Cmd_PaintSymbol cmd = new(SELECTED_MAP_SYMBOL, paintColor);
+                    CommandManager.AddCommand(cmd);
+                    cmd.DoOperation();
+
+                    SKGLRenderControl.Invalidate();
+                }
+            }
+            else
+            {
+                CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolColor;
+                SetDrawingModeLabel();
+
+                if (AreaBrushSwitch.Checked)
+                {
+                    SELECTED_BRUSH_SIZE = AreaBrushSizeTrack.Value;
+                }
+            }
         }
 
         private void StructuresSymbolButton_Click(object sender, EventArgs e)
@@ -3022,6 +3455,9 @@ namespace RealmStudio
         private void AreaBrushSizeTrack_ValueChanged(object sender, EventArgs e)
         {
             TOOLTIP.Show(AreaBrushSizeTrack.Value.ToString(), AreaBrushSizeTrack, new Point(AreaBrushSizeTrack.Right - 42, AreaBrushSizeTrack.Top - 94), 2000);
+
+            SELECTED_BRUSH_SIZE = AreaBrushSizeTrack.Value;
+            SKGLRenderControl.Invalidate();
         }
 
         private void SymbolRotationTrack_Scroll(object sender, EventArgs e)
@@ -3031,33 +3467,101 @@ namespace RealmStudio
 
         private void SymbolPlacementRateUpDown_ValueChanged(object sender, EventArgs e)
         {
+            PLACEMENT_RATE = (float)SymbolPlacementRateUpDown.Value;
+        }
 
+        private void SymbolPlacementDensityUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            PLACEMENT_DENSITY = (float)SymbolPlacementDensityUpDown.Value;
         }
 
         private void ResetSymbolPlacementRateButton_Click(object sender, EventArgs e)
         {
+            SymbolPlacementRateUpDown.Value = 1.0M;
+            SymbolPlacementRateUpDown.Refresh();
 
+            PLACEMENT_RATE = (float)SymbolPlacementRateUpDown.Value;
         }
 
         private void ResetSymbolPlacementDensityButton_Click(object sender, EventArgs e)
         {
+            SymbolPlacementDensityUpDown.Value = 1.0M;
+            SymbolPlacementDensityUpDown.Refresh();
 
+            PLACEMENT_DENSITY = (float)SymbolPlacementDensityUpDown.Value;
         }
 
         private void SymbolCollectionsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+#pragma warning disable CS8604 // Possible null reference argument.
+            List<string> checkedCollections = [];
+            foreach (var item in SymbolCollectionsListBox.CheckedItems)
+            {
+                checkedCollections.Add(item.ToString());
 
+            }
+
+            if (e.NewValue == CheckState.Checked)
+            {
+                checkedCollections.Add(SymbolCollectionsListBox.Items[e.Index].ToString());
+            }
+            else
+            {
+                checkedCollections.Remove(SymbolCollectionsListBox.Items[e.Index].ToString());
+            }
+
+#pragma warning restore CS8604 // Possible null reference argument.
+            List<string> selectedTags = SymbolTagsListBox.CheckedItems.Cast<string>().ToList();
+            List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SELECTED_SYMBOL_TYPE, checkedCollections, selectedTags);
+            AddSymbolsToSymbolTable(filteredSymbols);
         }
 
         private void SymbolTagsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+#pragma warning disable CS8604 // Possible null reference argument.
+            List<string> checkedTags = [];
+            foreach (var item in SymbolTagsListBox.CheckedItems)
+            {
+                checkedTags.Add(item.ToString());
+            }
 
+            if (e.NewValue == CheckState.Checked)
+            {
+                checkedTags.Add(SymbolTagsListBox.Items[e.Index].ToString());
+            }
+            else
+            {
+                checkedTags.Remove(SymbolTagsListBox.Items[e.Index].ToString());
+            }
+
+#pragma warning restore CS8604 // Possible null reference argument.
+            List<string> selectedCollections = SymbolCollectionsListBox.CheckedItems.Cast<string>().ToList();
+            List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SELECTED_SYMBOL_TYPE, selectedCollections, checkedTags);
+            AddSymbolsToSymbolTable(filteredSymbols);
         }
 
-        private void SymbolSearchTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        private void SymbolSearchTextBox_TextChanged(object sender, EventArgs e)
         {
-            // TODO: filter symbol list based on text entered by the user
+            // filter symbol list based on text entered by the user
+
+            if (SymbolSearchTextBox.Text.Length > 2)
+            {
+                List<string> selectedCollections = SymbolCollectionsListBox.CheckedItems.Cast<string>().ToList();
+                List<string> selectedTags = SymbolTagsListBox.CheckedItems.Cast<string>().ToList();
+                List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SELECTED_SYMBOL_TYPE, selectedCollections, selectedTags, SymbolSearchTextBox.Text);
+
+                AddSymbolsToSymbolTable(filteredSymbols);
+            }
+            else if (SymbolSearchTextBox.Text.Length == 0)
+            {
+                List<string> selectedCollections = SymbolCollectionsListBox.CheckedItems.Cast<string>().ToList();
+                List<string> selectedTags = SymbolTagsListBox.CheckedItems.Cast<string>().ToList();
+                List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SELECTED_SYMBOL_TYPE, selectedCollections, selectedTags);
+
+                AddSymbolsToSymbolTable(filteredSymbols);
+            }
         }
+
 
         #endregion
 
@@ -3178,9 +3682,10 @@ namespace RealmStudio
                             pb.BackColor = Color.LightSkyBlue;
                             pb.Refresh();
 
-                            SELECTED_MAP_SYMBOL = s;
+                            SymbolMethods.SelectedSymbolTableMapSymbol = s;
 
                             CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolPlace;
+                            SetDrawingModeLabel();
                         }
                         else
                         {
@@ -3188,8 +3693,9 @@ namespace RealmStudio
                             pb.BackColor = SystemColors.Control;
                             pb.Refresh();
 
-                            SELECTED_MAP_SYMBOL = null;
+                            SymbolMethods.SelectedSymbolTableMapSymbol = null;
                             CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+                            SetDrawingModeLabel();
                         }
                     }
                 }
@@ -3207,9 +3713,9 @@ namespace RealmStudio
 
         private void PlaceSelectedSymbolAtCursor(SKPoint mouseCursorPoint)
         {
-            if (SELECTED_MAP_SYMBOL != null)
+            if (SymbolMethods.SelectedSymbolTableMapSymbol != null)
             {
-                SKBitmap? symbolBitmap = SELECTED_MAP_SYMBOL.SymbolBitmap;
+                SKBitmap? symbolBitmap = SymbolMethods.SelectedSymbolTableMapSymbol.SymbolBitmap;
                 if (symbolBitmap != null)
                 {
                     float symbolScale = SymbolScaleTrack.Value / 100.0F;
@@ -3225,7 +3731,7 @@ namespace RealmStudio
 
         private void PlaceSelectedMapSymbolAtPoint(SKPoint cursorPoint, SKPoint previousPoint, float symbolScale, float symbolRotation)
         {
-            MapSymbol? symbolToPlace = SELECTED_MAP_SYMBOL;
+            MapSymbol? symbolToPlace = SymbolMethods.SelectedSymbolTableMapSymbol;
 
             if (symbolToPlace != null)
             {
@@ -3249,7 +3755,7 @@ namespace RealmStudio
                     SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleBitmap(symbolBitmap, symbolScale);
                     SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateBitmap(scaledSymbolBitmap, symbolRotation, MirrorSymbolSwitch.Checked);
 
-                    if (rotatedAndScaledBitmap != null)
+                    if (rotatedAndScaledBitmap != null && AreaBrushSwitch.Checked)
                     {
                         float bitmapSize = rotatedAndScaledBitmap.Width + rotatedAndScaledBitmap.Height;
 
@@ -3290,9 +3796,9 @@ namespace RealmStudio
 
         private void PlaceSelectedSymbolInArea(SKPoint mouseCursorPoint, float symbolScale, float symbolRotation, int areaBrushSize)
         {
-            if (SELECTED_MAP_SYMBOL != null)
+            if (SymbolMethods.SelectedSymbolTableMapSymbol != null)
             {
-                SKBitmap? symbolBitmap = SELECTED_MAP_SYMBOL.SymbolBitmap;
+                SKBitmap? symbolBitmap = SymbolMethods.SelectedSymbolTableMapSymbol.SymbolBitmap;
                 if (symbolBitmap != null)
                 {
                     SKBitmap rotatedAndScaledBitmap = RotateAndScaleSymbolBitmap(symbolBitmap, symbolScale, symbolRotation);
@@ -3325,6 +3831,228 @@ namespace RealmStudio
 
             return rotatedAndScaledBitmap;
         }
+
+        internal static MapSymbol? SelectMapSymbolAtPoint(RealmStudioMap map, PointF mapClickPoint)
+        {
+            MapSymbol? selectedSymbol = null;
+
+            List<MapComponent> mapSymbolComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER).MapLayerComponents;
+
+            for (int i = 0; i < mapSymbolComponents.Count; i++)
+            {
+                if (mapSymbolComponents[i] is MapSymbol mapSymbol)
+                {
+                    RectangleF symbolRect = new(mapSymbol.X, mapSymbol.Y, mapSymbol.Width, mapSymbol.Height);
+
+                    if (symbolRect.Contains(mapClickPoint))
+                    {
+                        selectedSymbol = mapSymbol;
+                    }
+                }
+            }
+
+#pragma warning disable CS8604 // Possible null reference argument.
+            DeselectAllMapComponents(selectedSymbol);
+#pragma warning restore CS8604 // Possible null reference argument.
+
+            return selectedSymbol;
+        }
+
+        private static void MoveSelectedSymbolInRenderOrder(ComponentMoveDirectionEnum direction, int amount = 1, bool toTopBottom = false)
+        {
+            if (SELECTED_MAP_SYMBOL != null)
+            {
+                // find the selected symbol in the Symbol Layer MapComponents
+                MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.SYMBOLLAYER);
+
+                List<MapComponent> symbolComponents = symbolLayer.MapLayerComponents;
+                MapSymbol? selectedSymbol = null;
+
+                int selectedSymbolIndex = 0;
+
+                for (int i = 0; i < symbolComponents.Count; i++)
+                {
+                    MapComponent symbolComponent = symbolComponents[i];
+                    if (symbolComponent is MapSymbol symbol && symbol.SymbolGuid.ToString() == SELECTED_MAP_SYMBOL.SymbolGuid.ToString())
+                    {
+                        selectedSymbolIndex = i;
+                        selectedSymbol = symbol;
+                        break;
+                    }
+                }
+
+                if (direction == ComponentMoveDirectionEnum.Up)
+                {
+                    // moving a symbol up in render order means increasing its index
+                    if (selectedSymbol != null && selectedSymbolIndex < symbolComponents.Count - 1)
+                    {
+                        if (toTopBottom)
+                        {
+                            symbolComponents.RemoveAt(selectedSymbolIndex);
+                            symbolComponents.Add(selectedSymbol);
+                        }
+                        else
+                        {
+                            int moveLocation;
+
+                            if (selectedSymbolIndex + amount < symbolComponents.Count - 1)
+                            {
+                                moveLocation = selectedSymbolIndex + amount;
+                            }
+                            else
+                            {
+                                moveLocation = symbolComponents.Count - 1;
+                            }
+
+                            symbolComponents[selectedSymbolIndex] = symbolComponents[moveLocation];
+                            symbolComponents[moveLocation] = selectedSymbol;
+                        }
+                    }
+                }
+                else if (direction == ComponentMoveDirectionEnum.Down)
+                {
+                    // moving a symbol down in render order means decreasing its index
+                    if (selectedSymbol != null && selectedSymbolIndex > 0)
+                    {
+                        if (toTopBottom)
+                        {
+                            symbolComponents.RemoveAt(selectedSymbolIndex);
+                            symbolComponents.Insert(0, selectedSymbol);
+                        }
+                        else
+                        {
+                            int moveLocation;
+
+                            if (selectedSymbolIndex - amount >= 0)
+                            {
+                                moveLocation = selectedSymbolIndex - amount;
+                            }
+                            else
+                            {
+                                moveLocation = 0;
+                            }
+
+                            symbolComponents[selectedSymbolIndex] = symbolComponents[moveLocation];
+                            symbolComponents[moveLocation] = selectedSymbol;
+                        }
+                    }
+                }
+            }
+        }
         #endregion
+
+        #region Label Tab Methods
+
+        private void AddMapBoxesToLabelBoxTable(List<MapBox> mapBoxes)
+        {
+            LabelBoxStyleTable.Hide();
+            LabelBoxStyleTable.Controls.Clear();
+            foreach (MapBox box in mapBoxes)
+            {
+                if (box.BoxBitmap == null && box.BoxBitmapPath != null)
+                {
+                    box.BoxBitmap ??= new Bitmap(box.BoxBitmapPath);
+                }
+
+                if (box.BoxBitmap != null)
+                {
+                    PictureBox pb = new()
+                    {
+                        Tag = box,
+                        SizeMode = PictureBoxSizeMode.Zoom,
+                        Image = (Image)box.BoxBitmap.Clone(),
+                    };
+
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+                    pb.MouseClick += MapBoxPictureBox_MouseClick;
+#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+
+                    LabelBoxStyleTable.Controls.Add(pb);
+                }
+
+            }
+            LabelBoxStyleTable.Show();
+            LabelBoxStyleTable.Refresh();
+        }
+
+
+        #endregion
+
+        #region Label Tab Event Handlers
+        private void MapBoxPictureBox_MouseClick(object sender, EventArgs e)
+        {
+            if (((MouseEventArgs)e).Button == MouseButtons.Left)
+            {
+                if (ModifierKeys == Keys.None)
+                {
+                    PictureBox pb = (PictureBox)sender;
+
+                    if (pb.Tag is MapBox b)
+                    {
+                        foreach (Control control in LabelBoxStyleTable.Controls)
+                        {
+                            if (control != pb)
+                            {
+                                control.BackColor = SystemColors.Control;
+                            }
+                        }
+
+                        Color pbBackColor = pb.BackColor;
+
+                        if (pbBackColor.ToArgb() == SystemColors.Control.ToArgb())
+                        {
+                            // clicked symbol is not selected, so select it
+                            pb.BackColor = Color.LightSkyBlue;
+                            SELECTED_MAP_BOX = b;
+                        }
+                        else
+                        {
+                            // clicked symbol is already selected, so deselect it
+                            pb.BackColor = SystemColors.Control;
+                            SELECTED_MAP_BOX = null;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SelectLabelFontButton_Click(object sender, EventArgs e)
+        {
+            if (FONT_SELECTION_DIALOG == null)
+            {
+                FONT_SELECTION_DIALOG = new FontSelectionDialog(this, SELECTED_LABEL_FONT);
+                FONT_SELECTION_DIALOG.FontSelected += new EventHandler(FontSelector_FontSelected);
+            }
+
+            if (FONT_SELECTION_DIALOG != null)
+            {
+                if (!FONT_SELECTION_DIALOG.Visible)
+                {
+                    FONT_SELECTION_DIALOG.Show(this);
+                }
+                else
+                {
+                    FONT_SELECTION_DIALOG.Hide();
+                }
+            }
+
+        }
+
+        private void FontSelector_FontSelected(object? sender, EventArgs e)
+        {
+            if (FONT_SELECTION_DIALOG != null)
+            {
+                if (FONT_SELECTION_DIALOG.SelectedFont != null)
+                {
+                    SelectLabelFontButton.Font = new Font(FONT_SELECTION_DIALOG.SelectedFont.FontFamily, 14);
+                    SelectLabelFontButton.Refresh();
+
+                    SELECTED_LABEL_FONT = FONT_SELECTION_DIALOG.SelectedFont;
+                }
+            }
+        }
+
+        #endregion
+
     }
 }

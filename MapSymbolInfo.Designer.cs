@@ -1,6 +1,6 @@
 ﻿namespace RealmStudio
 {
-    partial class SymbolInfo
+    partial class MapSymbolInfo
     {
         /// <summary>
         /// Required designer variable.
@@ -31,6 +31,10 @@
             dungeonForm1 = new ReaLTaiizor.Forms.DungeonForm();
             CloseFormButton = new Button();
             OceanTextureGroup = new GroupBox();
+            ResetSymbolColorsButton = new FontAwesome.Sharp.IconButton();
+            SymbolColor3Button = new FontAwesome.Sharp.IconButton();
+            SymbolColor2Button = new FontAwesome.Sharp.IconButton();
+            SymbolColor1Button = new FontAwesome.Sharp.IconButton();
             SymbolFormatLabel = new Label();
             SymbolGuidLabel = new Label();
             SymbolPathLabel = new Label();
@@ -96,10 +100,15 @@
             CloseFormButton.TabIndex = 35;
             CloseFormButton.Text = "&Close";
             CloseFormButton.UseVisualStyleBackColor = true;
+            CloseFormButton.Click += CloseFormButton_Click;
             // 
             // OceanTextureGroup
             // 
             OceanTextureGroup.BackColor = Color.Transparent;
+            OceanTextureGroup.Controls.Add(ResetSymbolColorsButton);
+            OceanTextureGroup.Controls.Add(SymbolColor3Button);
+            OceanTextureGroup.Controls.Add(SymbolColor2Button);
+            OceanTextureGroup.Controls.Add(SymbolColor1Button);
             OceanTextureGroup.Controls.Add(SymbolFormatLabel);
             OceanTextureGroup.Controls.Add(SymbolGuidLabel);
             OceanTextureGroup.Controls.Add(SymbolPathLabel);
@@ -120,10 +129,79 @@
             OceanTextureGroup.ForeColor = SystemColors.ControlText;
             OceanTextureGroup.Location = new Point(23, 59);
             OceanTextureGroup.Name = "OceanTextureGroup";
-            OceanTextureGroup.Size = new Size(304, 228);
+            OceanTextureGroup.Size = new Size(304, 294);
             OceanTextureGroup.TabIndex = 34;
             OceanTextureGroup.TabStop = false;
             OceanTextureGroup.Text = "Symbol Data";
+            // 
+            // ResetSymbolColorsButton
+            // 
+            ResetSymbolColorsButton.BackColor = SystemColors.Control;
+            ResetSymbolColorsButton.IconChar = FontAwesome.Sharp.IconChar.RotateBack;
+            ResetSymbolColorsButton.IconColor = Color.Black;
+            ResetSymbolColorsButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ResetSymbolColorsButton.IconSize = 14;
+            ResetSymbolColorsButton.Location = new Point(195, 234);
+            ResetSymbolColorsButton.Margin = new Padding(0);
+            ResetSymbolColorsButton.Name = "ResetSymbolColorsButton";
+            ResetSymbolColorsButton.Size = new Size(46, 46);
+            ResetSymbolColorsButton.TabIndex = 59;
+            ResetSymbolColorsButton.UseVisualStyleBackColor = false;
+            ResetSymbolColorsButton.Click += ResetSymbolColorsButton_Click;
+            // 
+            // SymbolColor3Button
+            // 
+            SymbolColor3Button.BackColor = Color.FromArgb(161, 214, 202, 171);
+            SymbolColor3Button.FlatStyle = FlatStyle.Flat;
+            SymbolColor3Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolColor3Button.ForeColor = SystemColors.HighlightText;
+            SymbolColor3Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SymbolColor3Button.IconColor = Color.Tan;
+            SymbolColor3Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SymbolColor3Button.IconSize = 24;
+            SymbolColor3Button.Location = new Point(146, 234);
+            SymbolColor3Button.Margin = new Padding(1, 3, 3, 3);
+            SymbolColor3Button.Name = "SymbolColor3Button";
+            SymbolColor3Button.Size = new Size(46, 46);
+            SymbolColor3Button.TabIndex = 58;
+            SymbolColor3Button.UseVisualStyleBackColor = false;
+            SymbolColor3Button.Click += SymbolColor3Button_Click;
+            // 
+            // SymbolColor2Button
+            // 
+            SymbolColor2Button.BackColor = Color.FromArgb(53, 45, 32);
+            SymbolColor2Button.FlatStyle = FlatStyle.Flat;
+            SymbolColor2Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolColor2Button.ForeColor = SystemColors.HighlightText;
+            SymbolColor2Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SymbolColor2Button.IconColor = Color.Tan;
+            SymbolColor2Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SymbolColor2Button.IconSize = 24;
+            SymbolColor2Button.Location = new Point(98, 234);
+            SymbolColor2Button.Margin = new Padding(1, 3, 1, 3);
+            SymbolColor2Button.Name = "SymbolColor2Button";
+            SymbolColor2Button.Size = new Size(46, 46);
+            SymbolColor2Button.TabIndex = 57;
+            SymbolColor2Button.UseVisualStyleBackColor = false;
+            SymbolColor2Button.Click += SymbolColor2Button_Click;
+            // 
+            // SymbolColor1Button
+            // 
+            SymbolColor1Button.BackColor = Color.FromArgb(85, 44, 36);
+            SymbolColor1Button.FlatStyle = FlatStyle.Flat;
+            SymbolColor1Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolColor1Button.ForeColor = SystemColors.HighlightText;
+            SymbolColor1Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SymbolColor1Button.IconColor = Color.Tan;
+            SymbolColor1Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SymbolColor1Button.IconSize = 24;
+            SymbolColor1Button.Location = new Point(50, 234);
+            SymbolColor1Button.Margin = new Padding(1, 3, 1, 3);
+            SymbolColor1Button.Name = "SymbolColor1Button";
+            SymbolColor1Button.Size = new Size(46, 46);
+            SymbolColor1Button.TabIndex = 56;
+            SymbolColor1Button.UseVisualStyleBackColor = false;
+            SymbolColor1Button.Click += SymbolColor1Button_Click;
             // 
             // SymbolFormatLabel
             // 
@@ -394,7 +472,7 @@
             CheckedTagsListBox.Size = new Size(135, 130);
             CheckedTagsListBox.TabIndex = 0;
             // 
-            // SymbolInfo
+            // MapSymbolInfo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -405,7 +483,7 @@
             FormBorderStyle = FormBorderStyle.None;
             MaximumSize = new Size(1920, 1200);
             MinimumSize = new Size(261, 65);
-            Name = "SymbolInfo";
+            Name = "MapSymbolInfo";
             ShowIcon = false;
             SizeGripStyle = SizeGripStyle.Hide;
             StartPosition = FormStartPosition.CenterParent;
@@ -449,5 +527,9 @@
         private Label CollectionNameLabel;
         private Label SymbolNameLabel;
         private Button CloseFormButton;
+        private FontAwesome.Sharp.IconButton ResetSymbolColorsButton;
+        private FontAwesome.Sharp.IconButton SymbolColor3Button;
+        private FontAwesome.Sharp.IconButton SymbolColor2Button;
+        private FontAwesome.Sharp.IconButton SymbolColor1Button;
     }
 }
