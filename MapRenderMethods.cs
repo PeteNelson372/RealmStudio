@@ -24,8 +24,6 @@
 using SkiaSharp;
 using SkiaSharp.Components;
 using SkiaSharp.Views.Desktop;
-using System.Windows.Controls;
-using System.Windows.Media.Media3D;
 
 namespace RealmStudio
 {
@@ -108,9 +106,23 @@ namespace RealmStudio
             }
         }
 
-        internal static void RenderLabels(RealmStudioMap cURRENT_MAP, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
+        internal static void RenderLabels(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
         {
-            // TODO
+            MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LABELLAYER);
+
+            // Create an SKPictureRecorder to record the Canvas Draw commands to an SKPicture
+            using var recorder = new SKPictureRecorder();
+            SKRect clippingBounds = new(0, 0, map.MapWidth, map.MapHeight);
+
+            // Start recording 
+            recorder.BeginRecording(clippingBounds);
+
+            labelLayer.Render(recorder.RecordingCanvas);
+
+            // Create a new SKPicture with recorded Draw commands 
+            labelLayer.RenderPicture = recorder.EndRecording();
+
+            e.Surface.Canvas.DrawPicture(labelLayer.RenderPicture, scrollPoint);
         }
 
         internal static void RenderLandforms(RealmStudioMap map, Landform? currentLandform, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
@@ -121,6 +133,7 @@ namespace RealmStudio
             MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDDRAWINGLAYER);
             MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
 
+            // TODO: change to use picture recorder for rendering
             if (landformLayer.LayerSurface != null && landCoastlineLayer.LayerSurface != null && landDrawingLayer.LayerSurface != null)
             {
                 landCoastlineLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
@@ -165,6 +178,7 @@ namespace RealmStudio
         {
             MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
 
+            // TODO: change to use picture recorder for rendering
             // path lower layer
             MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
             MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER);
@@ -383,6 +397,7 @@ namespace RealmStudio
 
         internal static void RenderWaterFeatures(RealmStudioMap map, WaterFeature? currentWaterFeature, River? currentRiver, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
         {
+            // TODO: change to user picture recorder for rendering
             // render water features and rivers
             MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER);
             MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERDRAWINGLAYER);
@@ -477,6 +492,12 @@ namespace RealmStudio
             windroseLayer.RenderPicture = recorder.EndRecording();
 
             e.Surface.Canvas.DrawPicture(windroseLayer.RenderPicture, scrollPoint);           
+        }
+
+        internal static void RenderWorkLayer(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
+        {
+            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
+            e.Surface.Canvas.DrawSurface(workLayer.LayerSurface, scrollPoint);
         }
     }
 }

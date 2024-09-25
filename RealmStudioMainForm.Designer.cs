@@ -194,18 +194,18 @@
             BezierTextPathButton = new FontAwesome.Sharp.IconButton();
             CircleTextPathButton = new FontAwesome.Sharp.IconButton();
             groupBox19 = new GroupBox();
-            trackBar3 = new TrackBar();
+            LabelRotationTrack = new TrackBar();
             groupBox18 = new GroupBox();
             label56 = new Label();
-            trackBar2 = new TrackBar();
-            iconButton2 = new FontAwesome.Sharp.IconButton();
+            GlowStrengthTrack = new TrackBar();
+            GlowColorSelectButton = new FontAwesome.Sharp.IconButton();
             groupBox17 = new GroupBox();
             label55 = new Label();
-            trackBar1 = new TrackBar();
-            iconButton3 = new FontAwesome.Sharp.IconButton();
+            OutlineWidthTrack = new TrackBar();
+            OutlineColorSelectButton = new FontAwesome.Sharp.IconButton();
             groupBox16 = new GroupBox();
             SelectLabelFontButton = new FontAwesome.Sharp.IconButton();
-            iconButton1 = new FontAwesome.Sharp.IconButton();
+            FontColorSelectButton = new FontAwesome.Sharp.IconButton();
             groupBox15 = new GroupBox();
             RemovePresetButton = new FontAwesome.Sharp.IconButton();
             AddPresetButton = new FontAwesome.Sharp.IconButton();
@@ -247,7 +247,7 @@
             SaveButton = new FontAwesome.Sharp.IconButton();
             AutosaveSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label1 = new Label();
-            pictureBox1 = new PictureBox();
+            TopLogoPictureBox = new PictureBox();
             RealmDataStatusStrip = new StatusStrip();
             MapNameLabel = new ToolStripStatusLabel();
             MapPathLabel = new ToolStripStatusLabel();
@@ -415,11 +415,11 @@
             LabelTab.SuspendLayout();
             groupBox20.SuspendLayout();
             groupBox19.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)LabelRotationTrack).BeginInit();
             groupBox18.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)GlowStrengthTrack).BeginInit();
             groupBox17.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)OutlineWidthTrack).BeginInit();
             groupBox16.SuspendLayout();
             groupBox15.SuspendLayout();
             LabelToolStrip.SuspendLayout();
@@ -431,7 +431,7 @@
             DrawingToolStrip.SuspendLayout();
             RealmStudioForm.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)LogoPictureBox).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)TopLogoPictureBox).BeginInit();
             RealmDataStatusStrip.SuspendLayout();
             MapStatusStrip.SuspendLayout();
             ApplicationStatusStrip.SuspendLayout();
@@ -3084,6 +3084,7 @@
             BezierTextPathButton.Text = "Curve";
             BezierTextPathButton.TextImageRelation = TextImageRelation.TextAboveImage;
             BezierTextPathButton.UseVisualStyleBackColor = false;
+            BezierTextPathButton.Click += BezierTextPathButton_Click;
             // 
             // CircleTextPathButton
             // 
@@ -3103,10 +3104,11 @@
             CircleTextPathButton.Text = "Arc";
             CircleTextPathButton.TextImageRelation = TextImageRelation.TextAboveImage;
             CircleTextPathButton.UseVisualStyleBackColor = false;
+            CircleTextPathButton.Click += CircleTextPathButton_Click;
             // 
             // groupBox19
             // 
-            groupBox19.Controls.Add(trackBar3);
+            groupBox19.Controls.Add(LabelRotationTrack);
             groupBox19.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             groupBox19.Location = new Point(6, 663);
             groupBox19.Name = "groupBox19";
@@ -3115,22 +3117,23 @@
             groupBox19.TabStop = false;
             groupBox19.Text = "Rotation";
             // 
-            // trackBar3
+            // LabelRotationTrack
             // 
-            trackBar3.AutoSize = false;
-            trackBar3.BackColor = SystemColors.Control;
-            trackBar3.Location = new Point(6, 26);
-            trackBar3.Maximum = 359;
-            trackBar3.Name = "trackBar3";
-            trackBar3.Size = new Size(136, 20);
-            trackBar3.TabIndex = 30;
-            trackBar3.TickStyle = TickStyle.None;
+            LabelRotationTrack.AutoSize = false;
+            LabelRotationTrack.BackColor = SystemColors.Control;
+            LabelRotationTrack.Location = new Point(6, 26);
+            LabelRotationTrack.Maximum = 359;
+            LabelRotationTrack.Name = "LabelRotationTrack";
+            LabelRotationTrack.Size = new Size(136, 20);
+            LabelRotationTrack.TabIndex = 30;
+            LabelRotationTrack.TickStyle = TickStyle.None;
+            LabelRotationTrack.ValueChanged += LabelRotationTrack_ValueChanged;
             // 
             // groupBox18
             // 
             groupBox18.Controls.Add(label56);
-            groupBox18.Controls.Add(trackBar2);
-            groupBox18.Controls.Add(iconButton2);
+            groupBox18.Controls.Add(GlowStrengthTrack);
+            groupBox18.Controls.Add(GlowColorSelectButton);
             groupBox18.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             groupBox18.Location = new Point(7, 528);
             groupBox18.Name = "groupBox18";
@@ -3145,43 +3148,45 @@
             label56.BackColor = Color.Transparent;
             label56.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label56.ForeColor = SystemColors.ControlDarkDark;
-            label56.Location = new Point(12, 94);
+            label56.Location = new Point(0, 92);
             label56.Name = "label56";
-            label56.Size = new Size(39, 15);
+            label56.Size = new Size(52, 15);
             label56.TabIndex = 31;
-            label56.Text = "Width";
+            label56.Text = "Strength";
             // 
-            // trackBar2
+            // GlowStrengthTrack
             // 
-            trackBar2.AutoSize = false;
-            trackBar2.BackColor = SystemColors.Control;
-            trackBar2.Location = new Point(50, 92);
-            trackBar2.Maximum = 32;
-            trackBar2.Name = "trackBar2";
-            trackBar2.Size = new Size(91, 20);
-            trackBar2.TabIndex = 30;
-            trackBar2.TickStyle = TickStyle.None;
+            GlowStrengthTrack.AutoSize = false;
+            GlowStrengthTrack.BackColor = SystemColors.Control;
+            GlowStrengthTrack.Location = new Point(50, 92);
+            GlowStrengthTrack.Maximum = 32;
+            GlowStrengthTrack.Name = "GlowStrengthTrack";
+            GlowStrengthTrack.Size = new Size(91, 20);
+            GlowStrengthTrack.TabIndex = 30;
+            GlowStrengthTrack.TickStyle = TickStyle.None;
+            GlowStrengthTrack.ValueChanged += GlowWidthTrack_ValueChanged;
             // 
-            // iconButton2
+            // GlowColorSelectButton
             // 
-            iconButton2.BackColor = Color.White;
-            iconButton2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconButton2.ForeColor = SystemColors.ControlDarkDark;
-            iconButton2.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            iconButton2.IconColor = Color.Tan;
-            iconButton2.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton2.Location = new Point(6, 26);
-            iconButton2.Name = "iconButton2";
-            iconButton2.Size = new Size(136, 60);
-            iconButton2.TabIndex = 20;
-            iconButton2.Text = "Select Color";
-            iconButton2.UseVisualStyleBackColor = false;
+            GlowColorSelectButton.BackColor = Color.White;
+            GlowColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            GlowColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            GlowColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            GlowColorSelectButton.IconColor = Color.Tan;
+            GlowColorSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            GlowColorSelectButton.Location = new Point(6, 26);
+            GlowColorSelectButton.Name = "GlowColorSelectButton";
+            GlowColorSelectButton.Size = new Size(136, 60);
+            GlowColorSelectButton.TabIndex = 20;
+            GlowColorSelectButton.Text = "Select Color";
+            GlowColorSelectButton.UseVisualStyleBackColor = false;
+            GlowColorSelectButton.Click += GlowColorSelectButton_Click;
             // 
             // groupBox17
             // 
             groupBox17.Controls.Add(label55);
-            groupBox17.Controls.Add(trackBar1);
-            groupBox17.Controls.Add(iconButton3);
+            groupBox17.Controls.Add(OutlineWidthTrack);
+            groupBox17.Controls.Add(OutlineColorSelectButton);
             groupBox17.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             groupBox17.Location = new Point(7, 395);
             groupBox17.Name = "groupBox17";
@@ -3202,36 +3207,38 @@
             label55.TabIndex = 31;
             label55.Text = "Width";
             // 
-            // trackBar1
+            // OutlineWidthTrack
             // 
-            trackBar1.AutoSize = false;
-            trackBar1.BackColor = SystemColors.Control;
-            trackBar1.Location = new Point(50, 92);
-            trackBar1.Maximum = 32;
-            trackBar1.Name = "trackBar1";
-            trackBar1.Size = new Size(91, 20);
-            trackBar1.TabIndex = 30;
-            trackBar1.TickStyle = TickStyle.None;
+            OutlineWidthTrack.AutoSize = false;
+            OutlineWidthTrack.BackColor = SystemColors.Control;
+            OutlineWidthTrack.Location = new Point(50, 92);
+            OutlineWidthTrack.Maximum = 320;
+            OutlineWidthTrack.Name = "OutlineWidthTrack";
+            OutlineWidthTrack.Size = new Size(91, 20);
+            OutlineWidthTrack.TabIndex = 30;
+            OutlineWidthTrack.TickStyle = TickStyle.None;
+            OutlineWidthTrack.ValueChanged += OutlineWidthTrack_ValueChanged;
             // 
-            // iconButton3
+            // OutlineColorSelectButton
             // 
-            iconButton3.BackColor = Color.FromArgb(161, 214, 202, 171);
-            iconButton3.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconButton3.ForeColor = SystemColors.ControlDarkDark;
-            iconButton3.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            iconButton3.IconColor = Color.Tan;
-            iconButton3.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton3.Location = new Point(6, 26);
-            iconButton3.Name = "iconButton3";
-            iconButton3.Size = new Size(136, 60);
-            iconButton3.TabIndex = 20;
-            iconButton3.Text = "Select Color";
-            iconButton3.UseVisualStyleBackColor = false;
+            OutlineColorSelectButton.BackColor = Color.FromArgb(161, 214, 202, 171);
+            OutlineColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OutlineColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            OutlineColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            OutlineColorSelectButton.IconColor = Color.Tan;
+            OutlineColorSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            OutlineColorSelectButton.Location = new Point(6, 26);
+            OutlineColorSelectButton.Name = "OutlineColorSelectButton";
+            OutlineColorSelectButton.Size = new Size(136, 60);
+            OutlineColorSelectButton.TabIndex = 20;
+            OutlineColorSelectButton.Text = "Select Color";
+            OutlineColorSelectButton.UseVisualStyleBackColor = false;
+            OutlineColorSelectButton.Click += OutlineColorSelectButton_Click;
             // 
             // groupBox16
             // 
             groupBox16.Controls.Add(SelectLabelFontButton);
-            groupBox16.Controls.Add(iconButton1);
+            groupBox16.Controls.Add(FontColorSelectButton);
             groupBox16.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             groupBox16.Location = new Point(7, 214);
             groupBox16.Name = "groupBox16";
@@ -3243,7 +3250,7 @@
             // SelectLabelFontButton
             // 
             SelectLabelFontButton.BackColor = SystemColors.ControlLightLight;
-            SelectLabelFontButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SelectLabelFontButton.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             SelectLabelFontButton.ForeColor = SystemColors.ControlDarkDark;
             SelectLabelFontButton.IconChar = FontAwesome.Sharp.IconChar.Font;
             SelectLabelFontButton.IconColor = Color.Tan;
@@ -3256,20 +3263,21 @@
             SelectLabelFontButton.UseVisualStyleBackColor = false;
             SelectLabelFontButton.Click += SelectLabelFontButton_Click;
             // 
-            // iconButton1
+            // FontColorSelectButton
             // 
-            iconButton1.BackColor = Color.FromArgb(61, 53, 30);
-            iconButton1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconButton1.ForeColor = SystemColors.HighlightText;
-            iconButton1.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            iconButton1.IconColor = Color.Tan;
-            iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton1.Location = new Point(5, 99);
-            iconButton1.Name = "iconButton1";
-            iconButton1.Size = new Size(136, 60);
-            iconButton1.TabIndex = 20;
-            iconButton1.Text = "Select Color";
-            iconButton1.UseVisualStyleBackColor = false;
+            FontColorSelectButton.BackColor = Color.FromArgb(61, 53, 30);
+            FontColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FontColorSelectButton.ForeColor = SystemColors.HighlightText;
+            FontColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            FontColorSelectButton.IconColor = Color.Tan;
+            FontColorSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            FontColorSelectButton.Location = new Point(5, 99);
+            FontColorSelectButton.Name = "FontColorSelectButton";
+            FontColorSelectButton.Size = new Size(136, 60);
+            FontColorSelectButton.TabIndex = 20;
+            FontColorSelectButton.Text = "Select Color";
+            FontColorSelectButton.UseVisualStyleBackColor = false;
+            FontColorSelectButton.Click += FontColorSelectButton_Click;
             // 
             // groupBox15
             // 
@@ -3302,6 +3310,7 @@
             RemovePresetButton.Size = new Size(46, 46);
             RemovePresetButton.TabIndex = 31;
             RemovePresetButton.UseVisualStyleBackColor = false;
+            RemovePresetButton.Click += RemovePresetButton_Click;
             // 
             // AddPresetButton
             // 
@@ -3320,6 +3329,7 @@
             AddPresetButton.Size = new Size(46, 46);
             AddPresetButton.TabIndex = 30;
             AddPresetButton.UseVisualStyleBackColor = false;
+            AddPresetButton.Click += AddPresetButton_Click;
             // 
             // label54
             // 
@@ -3373,6 +3383,7 @@
             LabelSelectButton.Size = new Size(60, 60);
             LabelSelectButton.Text = "Select";
             LabelSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            LabelSelectButton.Click += LabelSelectButton_Click;
             // 
             // PlaceLabelButton
             // 
@@ -3389,6 +3400,7 @@
             PlaceLabelButton.Size = new Size(60, 60);
             PlaceLabelButton.Text = "Label";
             PlaceLabelButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            PlaceLabelButton.Click += PlaceLabelButton_Click;
             // 
             // CreateBoxButton
             // 
@@ -3406,6 +3418,7 @@
             CreateBoxButton.Text = "Box";
             CreateBoxButton.TextImageRelation = TextImageRelation.TextAboveImage;
             CreateBoxButton.ToolTipText = "Create Box";
+            CreateBoxButton.Click += CreateBoxButton_Click;
             // 
             // GenerateNameButton
             // 
@@ -3422,6 +3435,7 @@
             GenerateNameButton.Size = new Size(60, 60);
             GenerateNameButton.Text = "Name";
             GenerateNameButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            GenerateNameButton.Click += GenerateNameButton_Click;
             // 
             // cyberSwitch4
             // 
@@ -3781,7 +3795,7 @@
             RealmStudioForm.Controls.Add(SaveButton);
             RealmStudioForm.Controls.Add(AutosaveSwitch);
             RealmStudioForm.Controls.Add(label1);
-            RealmStudioForm.Controls.Add(pictureBox1);
+            RealmStudioForm.Controls.Add(TopLogoPictureBox);
             RealmStudioForm.Controls.Add(RealmDataStatusStrip);
             RealmStudioForm.Controls.Add(MainTab);
             RealmStudioForm.Controls.Add(MapStatusStrip);
@@ -4032,18 +4046,18 @@
             label1.TabIndex = 9;
             label1.Text = "Autosave";
             // 
-            // pictureBox1
+            // TopLogoPictureBox
             // 
-            pictureBox1.BackColor = Color.Transparent;
-            pictureBox1.BackgroundImageLayout = ImageLayout.None;
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.InitialImage = (Image)resources.GetObject("pictureBox1.InitialImage");
-            pictureBox1.Location = new Point(9, 3);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(50, 41);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox1.TabIndex = 8;
-            pictureBox1.TabStop = false;
+            TopLogoPictureBox.BackColor = Color.Transparent;
+            TopLogoPictureBox.BackgroundImageLayout = ImageLayout.None;
+            TopLogoPictureBox.Image = (Image)resources.GetObject("TopLogoPictureBox.Image");
+            TopLogoPictureBox.InitialImage = (Image)resources.GetObject("TopLogoPictureBox.InitialImage");
+            TopLogoPictureBox.Location = new Point(9, 3);
+            TopLogoPictureBox.Name = "TopLogoPictureBox";
+            TopLogoPictureBox.Size = new Size(55, 41);
+            TopLogoPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            TopLogoPictureBox.TabIndex = 8;
+            TopLogoPictureBox.TabStop = false;
             // 
             // RealmDataStatusStrip
             // 
@@ -5247,13 +5261,13 @@
             LabelTab.PerformLayout();
             groupBox20.ResumeLayout(false);
             groupBox19.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)trackBar3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)LabelRotationTrack).EndInit();
             groupBox18.ResumeLayout(false);
             groupBox18.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)GlowStrengthTrack).EndInit();
             groupBox17.ResumeLayout(false);
             groupBox17.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)OutlineWidthTrack).EndInit();
             groupBox16.ResumeLayout(false);
             groupBox15.ResumeLayout(false);
             LabelToolStrip.ResumeLayout(false);
@@ -5273,7 +5287,7 @@
             RealmStudioForm.ResumeLayout(false);
             RealmStudioForm.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)LogoPictureBox).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)TopLogoPictureBox).EndInit();
             RealmDataStatusStrip.ResumeLayout(false);
             RealmDataStatusStrip.PerformLayout();
             MapStatusStrip.ResumeLayout(false);
@@ -5360,7 +5374,6 @@
         private TabPage RegionTab;
         private StatusStrip RealmDataStatusStrip;
         private TabPage DrawingTab;
-        private PictureBox pictureBox1;
         private Label label1;
         private ReaLTaiizor.Controls.CyberSwitch AutosaveSwitch;
         private FontAwesome.Sharp.IconButton SaveButton;
@@ -5629,25 +5642,26 @@
         private ListBox LabelPresetsListBox;
         private FontAwesome.Sharp.IconButton RemovePresetButton;
         private GroupBox groupBox16;
-        private FontAwesome.Sharp.IconButton iconButton1;
+        private FontAwesome.Sharp.IconButton FontColorSelectButton;
         private GroupBox groupBox17;
-        private FontAwesome.Sharp.IconButton iconButton3;
+        private FontAwesome.Sharp.IconButton OutlineColorSelectButton;
         private FontAwesome.Sharp.IconButton SelectLabelFontButton;
         private GroupBox groupBox18;
         private Label label56;
-        private TrackBar trackBar2;
-        private FontAwesome.Sharp.IconButton iconButton2;
+        private TrackBar GlowStrengthTrack;
+        private FontAwesome.Sharp.IconButton GlowColorSelectButton;
         private Label label55;
-        private TrackBar trackBar1;
+        private TrackBar OutlineWidthTrack;
         private GroupBox groupBox20;
         private FontAwesome.Sharp.IconButton BezierTextPathButton;
         private FontAwesome.Sharp.IconButton CircleTextPathButton;
         private GroupBox groupBox19;
-        private TrackBar trackBar3;
+        private TrackBar LabelRotationTrack;
         private FontAwesome.Sharp.IconToolStripButton PlaceLabelButton;
         private FontAwesome.Sharp.IconToolStripButton CreateBoxButton;
         private FontAwesome.Sharp.IconToolStripButton GenerateNameButton;
         private TableLayoutPanel LabelBoxStyleTable;
         private FontAwesome.Sharp.IconButton SelectBoxTintButton;
+        private PictureBox TopLogoPictureBox;
     }
 }

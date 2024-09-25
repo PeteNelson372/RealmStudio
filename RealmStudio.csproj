@@ -27,6 +27,7 @@
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
     <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.0.0-preview.4.1" />
     <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.0.0-preview.4.1" />
+    <PackageReference Include="Topten.RichTextKit" Version="0.4.167" />
     <PackageReference Include="WinFormAnimation" Version="1.6.0.4" />
   </ItemGroup>
 

@@ -10,8 +10,6 @@ namespace RealmStudio
 
         private bool isBold = false;
         private bool isItalic = false;
-        private bool isUnderline = false;
-        private bool isStrikeout = false;
 
         public Font? SelectedFont = null;
 
@@ -108,14 +106,17 @@ namespace RealmStudio
 
         private void FontFamilyCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Font? selectedFont = (Font?)FontFamilyCombo.Items[FontFamilyCombo.SelectedIndex];
-
-            if (selectedFont != null)
+            if (FontFamilyCombo.SelectedIndex >= 0)
             {
-                FontFamilyCombo.Text = selectedFont.Name;
+                Font? selectedFont = (Font?)FontFamilyCombo.Items[FontFamilyCombo.SelectedIndex];
 
-                SetFont();
-                SetExampleText();
+                if (selectedFont != null)
+                {
+                    FontFamilyCombo.Text = selectedFont.Name;
+
+                    SetFont();
+                    SetExampleText();
+                }
             }
         }
 
@@ -132,37 +133,37 @@ namespace RealmStudio
             if (selectedFont != null)
             {
                 FontFamily ff = selectedFont.FontFamily;
-                if (float.TryParse(FontSizeCombo.Text, out float fontSize))
+
+                if (FontSizeCombo.SelectedIndex >= 0)
                 {
-                    FontStyle fs = FontStyle.Regular;
+                    string? selectedFontSize = (string?)FontSizeCombo.Items[FontSizeCombo.SelectedIndex];
 
-                    if (isBold)
+                    if (float.TryParse(selectedFontSize, out float fontSize))
                     {
-                        fs |= FontStyle.Bold;
-                    }
+                        fontSize *= 1.33F;
 
-                    if (isItalic)
-                    {
-                        fs |= FontStyle.Italic;
-                    }
+                        FontStyle fs = FontStyle.Regular;
 
-                    if (isUnderline)
-                    {
-                        fs |= FontStyle.Underline;
-                    }
+                        if (isBold)
+                        {
+                            fs = fs | FontStyle.Bold;
+                        }
 
-                    if (isStrikeout)
-                    {
-                        fs |= FontStyle.Strikeout;
-                    }
+                        if (isItalic)
+                        {
+                            fs = fs | FontStyle.Italic;
+                        }
 
-                    try
-                    {
-                        SelectedFont = new Font(ff, fontSize, fs);
+                        try
+                        {
+                            SelectedFont = new Font(ff, fontSize, fs, GraphicsUnit.Point);
+                        }
+                        catch { }
                     }
-                    catch { }
                 }
             }
+
+            OnFontSelected(EventArgs.Empty);
         }
 
         private void BoldFontButton_Click(object sender, EventArgs e)
@@ -193,40 +194,6 @@ namespace RealmStudio
             else
             {
                 ItalicFontButton.BackColor = Color.White;
-            }
-
-            SetFont();
-            SetExampleText();
-        }
-
-        private void UnderlineFontButton_Click(object sender, EventArgs e)
-        {
-            isUnderline = !isUnderline;
-
-            if (isUnderline)
-            {
-                UnderlineFontButton.BackColor = ColorTranslator.FromHtml("#D2F1C1");
-            }
-            else
-            {
-                UnderlineFontButton.BackColor = Color.White;
-            }
-
-            SetFont();
-            SetExampleText();
-        }
-
-        private void StrikethroughFontButton_Click(object sender, EventArgs e)
-        {
-            isStrikeout = !isStrikeout;
-
-            if (isStrikeout)
-            {
-                StrikethroughFontButton.BackColor = ColorTranslator.FromHtml("#D2F1C1");
-            }
-            else
-            {
-                StrikethroughFontButton.BackColor = Color.White;
             }
 
             SetFont();
@@ -270,23 +237,6 @@ namespace RealmStudio
         private void CloseFormButton_Click(object sender, EventArgs e)
         {
             Hide();
-        }
-
-        private void FontSelectionDialog_VisibleChanged(object sender, EventArgs e)
-        {
-            if (FormParentForm != null && Visible)
-            {
-                Height = 0;
-
-                int xsize = 524;
-                int initial_y = 0;
-                int ysize = 116;
-
-                Location = new Point(FormParentForm.Location.X + 274, FormParentForm.Location.Y + 114);
-                new Animator2D(
-                    new Path2D(xsize, xsize, initial_y, ysize, 100))
-                  .Play(this, Animator2D.KnownProperties.Size);
-            }
         }
     }
 }

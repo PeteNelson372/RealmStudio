@@ -21,6 +21,8 @@
 * contact@brookmonte.com
 *
 ***************************************************************************************************************************/
+using SkiaSharp;
+
 namespace RealmStudio
 {
     internal class UtilityMethods
@@ -42,6 +44,67 @@ namespace RealmStudio
             {
                 return Color.Empty;
             }
+        }
+
+        public static SKFont CreateSkFontFromFont(Font font)
+        {
+            string familyName = font.FontFamily.Name;
+
+            SKFontStyleWeight weight = SKFontStyleWeight.Normal;
+
+            if (font.Bold)
+            {
+                weight = SKFontStyleWeight.Bold;
+            }
+
+            SKFontStyleWidth width = SKFontStyleWidth.Normal;
+
+            if (font.Name.Contains("condensed", StringComparison.CurrentCultureIgnoreCase))
+            {
+                width = SKFontStyleWidth.Condensed;
+            }
+            else if (font.Name.ToLower().Contains("expanded"))
+            {
+                width = SKFontStyleWidth.Expanded;
+            }
+
+            SKFontStyleSlant slant = SKFontStyleSlant.Upright;
+
+            if (font.Italic)
+            {
+                slant = SKFontStyleSlant.Italic;
+            }
+
+            SKFontStyle fs = new(weight, width, slant);
+
+
+            SKTypeface tf = SKTypeface.FromFamilyName(familyName, fs);
+
+
+            SKFont sKFont = new(tf, font.SizeInPoints * 1.33F);
+
+            return sKFont;            
+        }
+
+        internal static SKPath ConstructBezierPathFromPoints(SKPath path, List<SKPoint> points)
+        {
+            path.Dispose();
+            path = new();
+
+            if (points.Count > 2)
+            {
+                path.MoveTo(points[0]);
+
+                for (int j = 0; j < points.Count; j += 3)
+                {
+                    if (j < points.Count - 2)
+                    {
+                        path.CubicTo(points[j], points[j + 1], points[j + 2]);
+                    }
+                }
+            }
+
+            return path;
         }
     }
 }

@@ -1317,7 +1317,7 @@
         VUMAAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="TopLogoPictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAB9AAAAYnCAYAAAA02OZsAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAABc
         RAAAXEQBa2qAyAAA+JhJREFUeF7s3X+03XV95/ttUDn+aI9gyyl6SdW55mpXsrRLsmwXYXSEpWtp69hQ
@@ -2384,7 +2384,7 @@
         VUMAAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="pictureBox1.InitialImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="TopLogoPictureBox.InitialImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAB9AAAAYnCAYAAAA02OZsAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAABc
         RAAAXEQBa2qAyAAA+JhJREFUeF7s3X+03XV95/ttUDn+aI9gyyl6SdW55mpXsrRLsmwXYXSEpWtp69hQ

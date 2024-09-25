@@ -154,5 +154,23 @@ namespace RealmStudio
             Color = SKColors.Black,
         };
 
+        public static SKPaint LabelSelectPaint = new()
+        {
+            Style = SKPaintStyle.Stroke,
+            IsAntialias = true,
+            Color = SKColors.Coral,
+            StrokeWidth = 1,
+            PathEffect = SKPathEffect.CreateDash([4F, 2F], 6F),
+        };
+
+        public static SKPaint LabelPathPaint = new()
+        {
+            Style = SKPaintStyle.Stroke,
+            IsAntialias = true,
+            Color = SKColors.Gray,
+            StrokeWidth = 1,
+            PathEffect = SKPathEffect.CreateDash([2F, 2F], 4F)
+        };
+
     }
 }

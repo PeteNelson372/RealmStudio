@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FontSelectionDialog));
             FontSizeCombo = new ComboBox();
             FontFamilyCombo = new ComboBox();
             toolStrip1 = new ToolStrip();
@@ -36,8 +37,8 @@
             toolStripSeparator1 = new ToolStripSeparator();
             BoldFontButton = new FontAwesome.Sharp.IconToolStripButton();
             ItalicFontButton = new FontAwesome.Sharp.IconToolStripButton();
-            UnderlineFontButton = new FontAwesome.Sharp.IconToolStripButton();
-            StrikethroughFontButton = new FontAwesome.Sharp.IconToolStripButton();
+            toolStripSeparator2 = new ToolStripSeparator();
+            toolStripButton1 = new ToolStripButton();
             ExampleTextLabel = new Label();
             CloseFormButton = new Button();
             OKButton = new Button();
@@ -72,10 +73,11 @@
             toolStrip1.CanOverflow = false;
             toolStrip1.Dock = DockStyle.None;
             toolStrip1.GripStyle = ToolStripGripStyle.Hidden;
-            toolStrip1.Items.AddRange(new ToolStripItem[] { BigFontButton, SmallFontButton, toolStripSeparator1, BoldFontButton, ItalicFontButton, UnderlineFontButton, StrikethroughFontButton });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { BigFontButton, SmallFontButton, toolStripSeparator1, BoldFontButton, ItalicFontButton, toolStripSeparator2, toolStripButton1 });
             toolStrip1.Location = new Point(335, 10);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(332, 32);
+            toolStrip1.RenderMode = ToolStripRenderMode.System;
+            toolStrip1.Size = new Size(134, 32);
             toolStrip1.TabIndex = 39;
             // 
             // BigFontButton
@@ -146,39 +148,19 @@
             ItalicFontButton.Text = "iconToolStripButton2";
             ItalicFontButton.Click += ItalicFontButton_Click;
             // 
-            // UnderlineFontButton
+            // toolStripSeparator2
             // 
-            UnderlineFontButton.AutoSize = false;
-            UnderlineFontButton.BackColor = SystemColors.ControlLightLight;
-            UnderlineFontButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            UnderlineFontButton.IconChar = FontAwesome.Sharp.IconChar.Underline;
-            UnderlineFontButton.IconColor = Color.Black;
-            UnderlineFontButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            UnderlineFontButton.IconSize = 18;
-            UnderlineFontButton.ImageScaling = ToolStripItemImageScaling.None;
-            UnderlineFontButton.ImageTransparentColor = Color.Magenta;
-            UnderlineFontButton.Name = "UnderlineFontButton";
-            UnderlineFontButton.Size = new Size(29, 29);
-            UnderlineFontButton.Text = "iconToolStripButton1";
-            UnderlineFontButton.Click += UnderlineFontButton_Click;
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(6, 32);
             // 
-            // StrikethroughFontButton
+            // toolStripButton1
             // 
-            StrikethroughFontButton.AutoSize = false;
-            StrikethroughFontButton.BackColor = SystemColors.ControlLightLight;
-            StrikethroughFontButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            StrikethroughFontButton.IconChar = FontAwesome.Sharp.IconChar.Strikethrough;
-            StrikethroughFontButton.IconColor = Color.Black;
-            StrikethroughFontButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            StrikethroughFontButton.IconSize = 18;
-            StrikethroughFontButton.ImageScaling = ToolStripItemImageScaling.None;
-            StrikethroughFontButton.ImageTransparentColor = Color.Magenta;
-            StrikethroughFontButton.Margin = new Padding(0);
-            StrikethroughFontButton.Name = "StrikethroughFontButton";
-            StrikethroughFontButton.Size = new Size(29, 29);
-            StrikethroughFontButton.TextAlign = ContentAlignment.TopLeft;
-            StrikethroughFontButton.ToolTipText = "Strikethrough";
-            StrikethroughFontButton.Click += StrikethroughFontButton_Click;
+            toolStripButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButton1.Image = (Image)resources.GetObject("toolStripButton1.Image");
+            toolStripButton1.ImageTransparentColor = Color.Magenta;
+            toolStripButton1.Name = "toolStripButton1";
+            toolStripButton1.Size = new Size(23, 29);
+            toolStripButton1.Text = "toolStripButton1";
             // 
             // ExampleTextLabel
             // 
@@ -192,7 +174,7 @@
             // CloseFormButton
             // 
             CloseFormButton.DialogResult = DialogResult.Cancel;
-            CloseFormButton.Location = new Point(458, 50);
+            CloseFormButton.Location = new Point(404, 54);
             CloseFormButton.Name = "CloseFormButton";
             CloseFormButton.Size = new Size(54, 50);
             CloseFormButton.TabIndex = 42;
@@ -203,7 +185,7 @@
             // OKButton
             // 
             OKButton.DialogResult = DialogResult.OK;
-            OKButton.Location = new Point(398, 50);
+            OKButton.Location = new Point(344, 54);
             OKButton.Name = "OKButton";
             OKButton.Size = new Size(54, 50);
             OKButton.TabIndex = 41;
@@ -218,7 +200,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.WhiteSmoke;
             CancelButton = CloseFormButton;
-            ClientSize = new Size(524, 116);
+            ClientSize = new Size(468, 116);
             Controls.Add(CloseFormButton);
             Controls.Add(OKButton);
             Controls.Add(ExampleTextLabel);
@@ -236,7 +218,6 @@
             SizeGripStyle = SizeGripStyle.Hide;
             StartPosition = FormStartPosition.Manual;
             Text = "Select Font";
-            VisibleChanged += FontSelectionDialog_VisibleChanged;
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             ResumeLayout(false);
@@ -250,11 +231,11 @@
         private FontAwesome.Sharp.IconToolStripButton SmallFontButton;
         private FontAwesome.Sharp.IconToolStripButton BoldFontButton;
         private FontAwesome.Sharp.IconToolStripButton ItalicFontButton;
-        private FontAwesome.Sharp.IconToolStripButton UnderlineFontButton;
-        private FontAwesome.Sharp.IconToolStripButton StrikethroughFontButton;
         private Label ExampleTextLabel;
         private Button CloseFormButton;
         private Button OKButton;
         private ToolStripSeparator toolStripSeparator1;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripButton toolStripButton1;
     }
 }
