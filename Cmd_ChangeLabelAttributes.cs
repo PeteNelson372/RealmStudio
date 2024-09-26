@@ -8,20 +8,20 @@ namespace RealmStudio
         private readonly MapLabel Label;
         private readonly Color LabelColor;
         private readonly Color OutlineColor;
-        private readonly int OutlineWidth;
+        private readonly float OutlineWidth;
         private readonly Color GlowColor;
         private readonly int GlowStrength;
         private readonly Font SelectedFont;
 
         private readonly Color StoredLabelColor;
         private readonly Color StoredOutlineColor;
-        private readonly int StoredOutlineWidth;
+        private readonly float StoredOutlineWidth;
         private readonly Color StoredGlowColor;
         private readonly int StoredGlowStrength;
         private readonly Font StoredSelectedFont;
 
 
-        public Cmd_ChangeLabelAttributes(MapLabel label, Color labelColor, Color outlineColor, int outlineWidth, Color glowColor, int glowStrength, Font selectedFont)
+        public Cmd_ChangeLabelAttributes(MapLabel label, Color labelColor, Color outlineColor, float outlineWidth, Color glowColor, int glowStrength, Font selectedFont)
         {
             Label = label;
             LabelColor = labelColor;

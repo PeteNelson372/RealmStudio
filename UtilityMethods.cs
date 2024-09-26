@@ -85,26 +85,5 @@ namespace RealmStudio
 
             return sKFont;            
         }
-
-        internal static SKPath ConstructBezierPathFromPoints(SKPath path, List<SKPoint> points)
-        {
-            path.Dispose();
-            path = new();
-
-            if (points.Count > 2)
-            {
-                path.MoveTo(points[0]);
-
-                for (int j = 0; j < points.Count; j += 3)
-                {
-                    if (j < points.Count - 2)
-                    {
-                        path.CubicTo(points[j], points[j + 1], points[j + 2]);
-                    }
-                }
-            }
-
-            return path;
-        }
     }
 }

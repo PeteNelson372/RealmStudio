@@ -21,32 +21,34 @@
 * contact@brookmonte.com
 *
 ***************************************************************************************************************************/
-using System.Xml.Serialization;
-
 namespace RealmStudio
 {
-    [XmlRoot("LabelPreset", Namespace = "RealmStudio", IsNullable = false)]
-    public class LabelPreset
+    internal class Cmd_DeleteLabelBox(RealmStudioMap map, PlacedMapBox selectedBox) : IMapOperation
     {
-        [XmlAttribute]
-        public bool IsDefault { get; set; } = false;
-        [XmlElement]
-        public string PresetXmlFilePath { get; set; } = string.Empty;
-        [XmlElement]
-        public string LabelPresetName { get; set; } = string.Empty;
-        [XmlElement]
-        public string LabelPresetTheme { get; set; } = string.Empty;
-        [XmlElement]
-        public int LabelColor { get; set; } = Color.Empty.ToArgb();
-        [XmlElement]
-        public int LabelOutlineColor { get; set; } = Color.Empty.ToArgb();
-        [XmlElement]
-        public float LabelOutlineWidth { get; set; } = 0;
-        [XmlElement]
-        public int LabelGlowColor { get; set; } = Color.Empty.ToArgb();
-        [XmlElement]
-        public int LabelGlowStrength { get; set; } = 0;
-        [XmlElement]
-        public string LabelFontString = string.Empty;
+        private readonly RealmStudioMap Map = map;
+        private PlacedMapBox SelectedBox = selectedBox;
+
+        public void DoOperation()
+        {
+            // remove the selected box
+            MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER);
+
+            for (int i = boxLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (boxLayer.MapLayerComponents[i] is PlacedMapBox box && box.BoxGuid.ToString() == SelectedBox.BoxGuid.ToString())
+                {
+                    boxLayer.MapLayerComponents.RemoveAt(i);
+                }
+            }
+        }
+
+        public void UndoOperation()
+        {
+            SelectedBox.IsSelected = false;
+
+            MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER);
+
+            boxLayer.MapLayerComponents.Add(SelectedBox);
+        }
     }
 }

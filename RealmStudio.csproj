@@ -21,12 +21,11 @@
     <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
     <PackageReference Include="log4net" Version="2.0.17" />
     <PackageReference Include="ReaLTaiizor" Version="3.8.0.7" />
-    <PackageReference Include="SkiaSharp" Version="3.0.0-preview.4.1" />
-    <PackageReference Include="SkiaSharp.Components" Version="0.7.2" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.0.0-preview.4.1" />
+    <PackageReference Include="SkiaSharp" Version="2.88.8" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="2.88.8" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
-    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.0.0-preview.4.1" />
-    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.0.0-preview.4.1" />
+    <PackageReference Include="SkiaSharp.Views" Version="2.88.8" />
+    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="2.88.8" />
     <PackageReference Include="Topten.RichTextKit" Version="0.4.167" />
     <PackageReference Include="WinFormAnimation" Version="1.6.0.4" />
   </ItemGroup>

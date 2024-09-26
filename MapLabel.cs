@@ -42,13 +42,13 @@ namespace RealmStudio
 
         public Color LabelOutlineColor { get; set; } = ColorTranslator.FromHtml("#A1D6CAAB");
 
-        public int LabelOutlineWidth { get; set; } = 0;
+        public float LabelOutlineWidth { get; set; } = 0;
 
         public Color LabelGlowColor { get; set; } = Color.White;
 
         public int LabelGlowStrength { get; set; } = 0;
 
-        public Font LabelFont { get; set; } = new Font("Segoe", 9.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
+        public Font LabelFont { get; set; } = new Font("Segoe", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
 
         public float LabelRotationDegrees { get; set; } = 0.0F;
 
@@ -73,7 +73,7 @@ namespace RealmStudio
 
                         if (LabelGlowStrength > 0)
                         {
-                            SKPaint glowPaint = LabelPaint.Clone();
+                            using SKPaint glowPaint = LabelPaint.Clone();
                             glowPaint.Color = LabelGlowColor.ToSKColor();
                             glowPaint.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Solid, LabelGlowStrength, true);
                             canvas.DrawText(LabelText, point, glowPaint);
@@ -81,9 +81,9 @@ namespace RealmStudio
 
                         if (LabelOutlineWidth > 0)
                         {
-                            SKPaint outlinePaint = LabelPaint.Clone();
+                            using SKPaint outlinePaint = LabelPaint.Clone();
                             outlinePaint.Color = LabelOutlineColor.ToSKColor();
-                            outlinePaint.ImageFilter = SKImageFilter.CreateDilate(LabelOutlineWidth / 100, LabelOutlineWidth / 100);
+                            outlinePaint.ImageFilter = SKImageFilter.CreateDilate(LabelOutlineWidth, LabelOutlineWidth);
                             canvas.DrawText(LabelText, point, outlinePaint);
                         }
 
@@ -103,7 +103,7 @@ namespace RealmStudio
                 {
                     using (new SKAutoCanvasRestore(canvas))
                     {
-                        using SKTextBlob? sKTextBlob = SKTextBlob.CreatePathPositioned(LabelText, LabelSKFont, LabelPath, LabelPaint.TextAlign, new SKPoint(0, 0));
+                        using SKTextBlob sKTextBlob = SKTextBlob.CreatePathPositioned(LabelText, LabelSKFont, LabelPath, LabelPaint.TextAlign, new SKPoint(0, 0));
                         if (sKTextBlob != null)
                         {
                             SKRect boundsRect = sKTextBlob.Bounds;
@@ -116,11 +116,11 @@ namespace RealmStudio
                             // do any transformations
                             canvas.RotateDegrees(LabelRotationDegrees, X + Width / 2, Y + Height / 2);
 
-                            LabelPaint.TextAlign = SKTextAlign.Center;
+                            LabelPaint.TextAlign = SKTextAlign.Left;
 
                             if (LabelGlowStrength > 0)
                             {
-                                SKPaint glowPaint = LabelPaint.Clone();
+                                using SKPaint glowPaint = LabelPaint.Clone();
                                 glowPaint.Color = LabelGlowColor.ToSKColor();
                                 glowPaint.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Outer, LabelGlowStrength, true);
                                 canvas.DrawTextOnPath(LabelText, LabelPath, new SKPoint(0, 0), false, glowPaint);
@@ -128,7 +128,7 @@ namespace RealmStudio
 
                             if (LabelOutlineWidth > 0)
                             {
-                                SKPaint outlinePaint = LabelPaint.Clone();
+                                using SKPaint outlinePaint = LabelPaint.Clone();
                                 outlinePaint.Color = LabelOutlineColor.ToSKColor();
                                 outlinePaint.ImageFilter = SKImageFilter.CreateDilate(LabelOutlineWidth, LabelOutlineWidth);
                                 canvas.DrawTextOnPath(LabelText, LabelPath, new SKPoint(0, 0), false, outlinePaint);

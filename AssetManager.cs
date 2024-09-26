@@ -209,10 +209,6 @@ namespace RealmStudio
 
                         if (t.IsDefaultTheme)
                         {
-                            ThemeFilter tf = new();
-
-                            // TODO: apply default theme in main form
-                            //ApplyTheme(t, tf);
                             CURRENT_THEME = t;
                         }
                     }

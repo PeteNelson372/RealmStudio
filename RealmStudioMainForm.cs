@@ -21,8 +21,8 @@
 * contact@brookmonte.com
 *
 ***************************************************************************************************************************/
+using RealmStudio.Properties;
 using SkiaSharp;
-using SkiaSharp.Components;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
 using Control = System.Windows.Forms.Control;
@@ -50,6 +50,7 @@ namespace RealmStudio
         private static MapPathPoint? SELECTED_PATHPOINT = null;
         private static MapSymbol? SELECTED_MAP_SYMBOL = null;
         private static MapBox? SELECTED_MAP_BOX = null;
+        private static PlacedMapBox? SELECTED_PLACED_MAP_BOX = null;
         private static MapLabel? SELECTED_MAP_LABEL = null;
 
         private static Font SELECTED_LABEL_FONT = new("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -109,10 +110,6 @@ namespace RealmStudio
             OverlayToolPanel.Visible = false;
             RegionToolPanel.Visible = false;
             DrawingToolPanel.Visible = false;
-
-            int assetCount = AssetManager.LoadAllAssets();
-
-            PopulateControlsWithAssets(assetCount);
         }
 
         private void RealmStudioMainForm_Shown(object sender, EventArgs e)
@@ -120,17 +117,28 @@ namespace RealmStudio
             MapBuilder.DisposeMap(CURRENT_MAP);
 
             // this creates the CURRENT_MAP
-            OpenRealmConfigurationDialog();
+            DialogResult result = OpenRealmConfigurationDialog();
 
-            LogoPictureBox.Hide();
-            SKGLRenderControl.Show();
-            SKGLRenderControl.Select();
-            SKGLRenderControl.Refresh();
-            SKGLRenderControl.Invalidate();
+            if (result == DialogResult.OK)
+            {
+                Cursor = Cursors.WaitCursor;
 
-            Activate();
+                SetDrawingModeLabel();
 
-            SetDrawingModeLabel();
+                int assetCount = AssetManager.LoadAllAssets();
+
+                PopulateControlsWithAssets(assetCount);
+
+                LogoPictureBox.Hide();
+                SKGLRenderControl.Show();
+                SKGLRenderControl.Select();
+                SKGLRenderControl.Refresh();
+                SKGLRenderControl.Invalidate();
+
+                Activate();
+            }
+
+            Cursor = Cursors.Default;
         }
 
         private void RealmStudioMainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -235,26 +243,92 @@ namespace RealmStudio
 
                     if (saveResult == DialogResult.OK)
                     {
+                        // this creates the CURRENT_MAP
                         MapBuilder.DisposeMap(CURRENT_MAP);
 
                         // this creates the CURRENT_MAP
-                        OpenRealmConfigurationDialog();
+                        DialogResult newResult = OpenRealmConfigurationDialog();
+
+                        if (newResult == DialogResult.OK)
+                        {
+                            Cursor = Cursors.WaitCursor;
+
+                            SetDrawingModeLabel();
+
+                            int assetCount = AssetManager.LoadAllAssets();
+
+                            PopulateControlsWithAssets(assetCount);
+
+                            LogoPictureBox.Hide();
+                            SKGLRenderControl.Show();
+                            SKGLRenderControl.Select();
+                            SKGLRenderControl.Refresh();
+                            SKGLRenderControl.Invalidate();
+
+                            Activate();
+                        }
+
+                        Cursor = Cursors.Default;
                     }
                 }
                 else if (result == DialogResult.No)
                 {
+                    // this creates the CURRENT_MAP
                     MapBuilder.DisposeMap(CURRENT_MAP);
 
                     // this creates the CURRENT_MAP
-                    OpenRealmConfigurationDialog();
+                    DialogResult newResult = OpenRealmConfigurationDialog();
+
+                    if (newResult == DialogResult.OK)
+                    {
+                        Cursor = Cursors.WaitCursor;
+
+                        SetDrawingModeLabel();
+
+                        int assetCount = AssetManager.LoadAllAssets();
+
+                        PopulateControlsWithAssets(assetCount);
+
+                        LogoPictureBox.Hide();
+                        SKGLRenderControl.Show();
+                        SKGLRenderControl.Select();
+                        SKGLRenderControl.Refresh();
+                        SKGLRenderControl.Invalidate();
+
+                        Activate();
+                    }
+
+                    Cursor = Cursors.Default;
                 }
             }
             else
             {
+                // this creates the CURRENT_MAP
                 MapBuilder.DisposeMap(CURRENT_MAP);
 
                 // this creates the CURRENT_MAP
-                OpenRealmConfigurationDialog();
+                DialogResult newResult = OpenRealmConfigurationDialog();
+
+                if (newResult == DialogResult.OK)
+                {
+                    Cursor = Cursors.WaitCursor;
+
+                    SetDrawingModeLabel();
+
+                    int assetCount = AssetManager.LoadAllAssets();
+
+                    PopulateControlsWithAssets(assetCount);
+
+                    LogoPictureBox.Hide();
+                    SKGLRenderControl.Show();
+                    SKGLRenderControl.Select();
+                    SKGLRenderControl.Refresh();
+                    SKGLRenderControl.Invalidate();
+
+                    Activate();
+                }
+
+                Cursor = Cursors.Default;
             }
         }
 
@@ -402,7 +476,7 @@ namespace RealmStudio
          * MAIN FORM METHODS
          *******************************************************************************************************/
 
-        private void OpenRealmConfigurationDialog()
+        private DialogResult OpenRealmConfigurationDialog()
         {
             RealmConfiguration rcd = new();
             DialogResult result = rcd.ShowDialog();
@@ -443,6 +517,8 @@ namespace RealmStudio
 
                 MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.VIGNETTELAYER).MapLayerComponents.Add(vignette);
             }
+
+            return result;
         }
 
         private void MainTabControl_SelectedIndexChanged(object sender, EventArgs e)
@@ -556,17 +632,23 @@ namespace RealmStudio
 
             CoastlineStyleList.SelectedIndex = 6;  // default is dash pattern
 
+
             // symbol collections
+            SymbolCollectionsListBox.Items.Clear();
             foreach (MapSymbolCollection collection in AssetManager.MAP_SYMBOL_COLLECTIONS)
             {
                 SymbolCollectionsListBox.Items.Add(collection.GetCollectionName());
             }
 
             // symbol tags
+            SymbolTagsListBox.Items.Clear();
             foreach (string tag in AssetManager.SYMBOL_TAGS)
             {
                 SymbolTagsListBox.Items.Add(tag);
             }
+
+            LabelPresetsListBox.DisplayMember = "LabelPresetName";
+            LabelPresetsListBox.Items.Clear();
 
             foreach (LabelPreset preset in AssetManager.LABEL_PRESETS)
             {
@@ -574,7 +656,7 @@ namespace RealmStudio
                     && AssetManager.CURRENT_THEME != null
                     && preset.LabelPresetTheme == AssetManager.CURRENT_THEME.ThemeName)
                 {
-                    LabelPresetsListBox.Items.Add(preset.LabelPresetName);
+                    LabelPresetsListBox.Items.Add(preset);
                 }
             }
 
@@ -582,19 +664,27 @@ namespace RealmStudio
             {
                 LabelPresetsListBox.SelectedIndex = 0;
 
-                LabelPreset? selectedPreset =
-                    AssetManager.LABEL_PRESETS.Find(x => !string.IsNullOrEmpty((string?)LabelPresetsListBox.Items[0])
-                        && x.LabelPresetName == (string?)LabelPresetsListBox.Items[0]);
+                LabelPreset? selectedPreset = AssetManager.LABEL_PRESETS.Find(x => !string.IsNullOrEmpty(((LabelPreset?)LabelPresetsListBox.Items[0])?.LabelPresetName)
+                    && x.LabelPresetName == ((LabelPreset?)LabelPresetsListBox.Items[0])?.LabelPresetName);
 
                 if (selectedPreset != null)
                 {
-                    //SetLabelValuesFromPreset(selectedPreset);
+                    SetLabelValuesFromPreset(selectedPreset);
                 }
             }
+
+            LabelPresetsListBox.Refresh();
 
             AddMapBoxesToLabelBoxTable(AssetManager.MAP_BOX_TEXTURE_LIST);
 
             //AddMapFramesToFrameTable(OverlayMethods.MAP_FRAME_TEXTURES);
+
+            // TODO: apply default theme in main form
+            if (AssetManager.CURRENT_THEME != null)
+            {
+                ThemeFilter tf = new();
+                ApplyTheme(AssetManager.CURRENT_THEME, tf);
+            }
         }
 
         public void SetStatusText(string text)
@@ -959,6 +1049,479 @@ namespace RealmStudio
 
         #endregion
 
+        #region Theme Methods
+
+        private void ApplyTheme(MapTheme theme, ThemeFilter themeFilter)
+        {
+            if (theme == null || themeFilter == null) return;
+
+            if (themeFilter.ApplyBackgroundSettings)
+            {
+                if (theme.BackgroundTexture != null)
+                {
+                    // background texture
+                    if (AssetManager.BACKGROUND_TEXTURE_LIST.First().TextureBitmap == null)
+                    {
+                        AssetManager.BACKGROUND_TEXTURE_LIST.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.BACKGROUND_TEXTURE_LIST.First().TexturePath);
+                    }
+
+                    BackgroundTextureBox.Image = AssetManager.BACKGROUND_TEXTURE_LIST.First().TextureBitmap;
+                    BackgroundTextureNameLabel.Text = AssetManager.BACKGROUND_TEXTURE_LIST.First().TextureName;
+
+                    for (int i = 0; i < AssetManager.BACKGROUND_TEXTURE_LIST.Count; i++)
+                    {
+                        if (AssetManager.BACKGROUND_TEXTURE_LIST[i].TextureName == theme.BackgroundTexture.TextureName)
+                        {
+                            AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX = i;
+                            break;
+                        }
+                    }
+
+                    if (AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TextureBitmap == null)
+                    {
+                        AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TextureBitmap
+                            = (Bitmap?)Bitmap.FromFile(AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TexturePath);
+                    }
+
+                    BackgroundTextureBox.Image = AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TextureBitmap;
+                    BackgroundTextureNameLabel.Text = AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TextureName;
+                }
+
+                if (theme.VignetteColor != null)
+                {
+                    VignetteColorSelectionButton.BackColor = (Color)theme.VignetteColor;
+                    VignetteColorSelectionButton.Refresh();
+                }
+
+                if (theme.VignetteStrength != null)
+                {
+                    VignetteStrengthTrack.Value = (int)theme.VignetteStrength;
+                    VignetteStrengthTrack.Refresh();
+                }
+
+                for (int i = 0; i < MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.VIGNETTELAYER).MapLayerComponents.Count; i++)
+                {
+                    if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.VIGNETTELAYER).MapLayerComponents[i] is MapVignette v)
+                    {
+                        v.VignetteColor = VignetteColorSelectionButton.BackColor;
+                        v.VignetteStrength = VignetteStrengthTrack.Value;
+                    }
+                }
+            }
+
+            if (themeFilter.ApplyOceanSettings)
+            {
+                if (AssetManager.WATER_TEXTURE_LIST.First().TextureBitmap == null)
+                {
+                    AssetManager.WATER_TEXTURE_LIST.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.WATER_TEXTURE_LIST.First().TexturePath);
+                }
+
+                OceanTextureBox.Image = AssetManager.WATER_TEXTURE_LIST.First().TextureBitmap;
+                OceanTextureNameLabel.Text = AssetManager.WATER_TEXTURE_LIST.First().TextureName;
+
+                if (theme.OceanTextureOpacity != null)
+                {
+                    OceanTextureOpacityTrack.Value = (int)theme.OceanTextureOpacity;
+                    OceanTextureOpacityTrack.Refresh();
+                }
+
+                if (theme.OceanColor != null)
+                {
+                    OceanColorSelectButton.BackColor = (Color)theme.OceanColor;
+                    OceanColorSelectButton.Refresh();
+                }
+            }
+
+            if (themeFilter.ApplyOceanColorPaletteSettings)
+            {
+                if (theme.OceanColorPalette.Count > 0)
+                {
+                    OceanCustomColorButton1.BackColor = theme.OceanColorPalette[0];
+                    OceanCustomColorButton1.ForeColor = SystemColors.ControlDark;
+                    OceanCustomColorButton1.Text = ColorTranslator.ToHtml(OceanCustomColorButton1.BackColor);
+
+                    OceanCustomColorButton1.Refresh();
+                }
+
+                if (theme.OceanColorPalette.Count > 1)
+                {
+                    OceanCustomColorButton2.BackColor = theme.OceanColorPalette[1];
+                    OceanCustomColorButton2.ForeColor = SystemColors.ControlDark;
+                    OceanCustomColorButton2.Text = ColorTranslator.ToHtml(OceanCustomColorButton2.BackColor);
+
+                    OceanCustomColorButton2.Refresh();
+                }
+
+                if (theme.OceanColorPalette.Count > 2)
+                {
+                    OceanCustomColorButton3.BackColor = theme.OceanColorPalette[2];
+                    OceanCustomColorButton3.ForeColor = SystemColors.ControlDark;
+                    OceanCustomColorButton3.Text = ColorTranslator.ToHtml(OceanCustomColorButton3.BackColor);
+
+                    OceanCustomColorButton3.Refresh();
+                }
+
+                if (theme.OceanColorPalette.Count > 3)
+                {
+                    OceanCustomColorButton4.BackColor = theme.OceanColorPalette[3];
+                    OceanCustomColorButton4.ForeColor = SystemColors.ControlDark;
+                    OceanCustomColorButton4.Text = ColorTranslator.ToHtml(OceanCustomColorButton4.BackColor);
+
+                    OceanCustomColorButton4.Refresh();
+                }
+
+                if (theme.OceanColorPalette.Count > 4)
+                {
+                    OceanCustomColorButton5.BackColor = theme.OceanColorPalette[4];
+                    OceanCustomColorButton5.ForeColor = SystemColors.ControlDark;
+                    OceanCustomColorButton5.Text = ColorTranslator.ToHtml(OceanCustomColorButton5.BackColor);
+
+                    OceanCustomColorButton5.Refresh();
+                }
+
+                if (theme.OceanColorPalette.Count > 5)
+                {
+                    OceanCustomColorButton6.BackColor = theme.OceanColorPalette[5];
+                    OceanCustomColorButton6.ForeColor = SystemColors.ControlDark;
+                    OceanCustomColorButton6.Text = ColorTranslator.ToHtml(OceanCustomColorButton6.BackColor);
+
+                    OceanCustomColorButton6.Refresh();
+                }
+
+                if (theme.OceanColorPalette.Count > 6)
+                {
+                    OceanCustomColorButton7.BackColor = theme.OceanColorPalette[6];
+                    OceanCustomColorButton7.ForeColor = SystemColors.ControlDark;
+                    OceanCustomColorButton7.Text = ColorTranslator.ToHtml(OceanCustomColorButton7.BackColor);
+
+                    OceanCustomColorButton7.Refresh();
+                }
+
+                if (theme.OceanColorPalette.Count > 7)
+                {
+                    OceanCustomColorButton8.BackColor = theme.OceanColorPalette[7];
+                    OceanCustomColorButton8.ForeColor = SystemColors.ControlDark;
+                    OceanCustomColorButton8.Text = ColorTranslator.ToHtml(OceanCustomColorButton8.BackColor);
+
+                    OceanCustomColorButton8.Refresh();
+                }
+            }
+
+            if (themeFilter.ApplyLandSettings)
+            {
+                if (theme.LandformOutlineColor != null)
+                {
+                    LandformOutlineColorSelectButton.BackColor = (Color)theme.LandformOutlineColor;
+                    LandformOutlineColorSelectButton.Refresh();
+                }
+
+                if (AssetManager.LAND_TEXTURE_LIST.First().TextureBitmap == null)
+                {
+                    AssetManager.LAND_TEXTURE_LIST.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.LAND_TEXTURE_LIST.First().TexturePath);
+                }
+
+                LandformTexturePreviewPicture.Image = AssetManager.LAND_TEXTURE_LIST.First().TextureBitmap;
+                LandTextureNameLabel.Text = AssetManager.LAND_TEXTURE_LIST.First().TextureName;
+
+                if (theme.LandformTexture != null)
+                {
+                    for (int i = 0; i < AssetManager.LAND_TEXTURE_LIST.Count; i++)
+                    {
+                        if (AssetManager.LAND_TEXTURE_LIST[i].TextureName == theme.LandformTexture.TextureName)
+                        {
+                            AssetManager.SELECTED_LAND_TEXTURE_INDEX = i;
+                            break;
+                        }
+                    }
+
+                    if (AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TextureBitmap == null)
+                    {
+                        AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TextureBitmap
+                            = (Bitmap?)Bitmap.FromFile(AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TexturePath);
+                    }
+
+                    LandformTexturePreviewPicture.Image = AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TextureBitmap;
+                    LandTextureNameLabel.Text = AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TextureName;
+                }
+
+                LandformTexturePreviewPicture.Refresh();
+
+
+                if (theme.LandformCoastlineColor != null)
+                {
+                    CoastlineColorSelectionButton.BackColor = (Color)theme.LandformCoastlineColor;
+                    CoastlineColorSelectionButton.Refresh();
+                }
+
+                if (theme.LandformCoastlineEffectDistance != null)
+                {
+                    CoastlineEffectDistanceTrack.Value = (int)theme.LandformCoastlineEffectDistance;
+                    CoastlineEffectDistanceTrack.Refresh();
+                }
+
+                if (theme.LandformCoastlineStyle != null)
+                {
+                    for (int i = 0; i < CoastlineStyleList.Items.Count; i++)
+                    {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                        if (CoastlineStyleList.Items[i].ToString() == theme.LandformCoastlineStyle)
+                        {
+                            CoastlineStyleList.SelectedIndex = i;
+                            break;
+                        }
+
+                        CoastlineStyleList.Refresh();
+
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                    }
+                }
+            }
+
+            if (themeFilter.ApplyLandformColorPaletteSettings)
+            {
+                if (theme.LandformColorPalette.Count > 0)
+                {
+                    LandCustomColorButton1.BackColor = theme.LandformColorPalette[0];
+                    LandCustomColorButton1.ForeColor = SystemColors.ControlDark;
+                    LandCustomColorButton1.Text = ColorTranslator.ToHtml(LandCustomColorButton1.BackColor);
+
+                    LandCustomColorButton1.Refresh();
+                }
+
+                if (theme.LandformColorPalette.Count > 1)
+                {
+                    LandCustomColorButton2.BackColor = theme.LandformColorPalette[1];
+                    LandCustomColorButton2.ForeColor = SystemColors.ControlDark;
+                    LandCustomColorButton2.Text = ColorTranslator.ToHtml(LandCustomColorButton2.BackColor);
+
+                    LandCustomColorButton2.Refresh();
+                }
+
+                if (theme.LandformColorPalette.Count > 2)
+                {
+                    LandCustomColorButton3.BackColor = theme.LandformColorPalette[2];
+                    LandCustomColorButton3.ForeColor = SystemColors.ControlDark;
+                    LandCustomColorButton3.Text = ColorTranslator.ToHtml(LandCustomColorButton3.BackColor);
+
+                    LandCustomColorButton3.Refresh();
+                }
+
+                if (theme.LandformColorPalette.Count > 3)
+                {
+                    LandCustomColorButton4.BackColor = theme.LandformColorPalette[3];
+                    LandCustomColorButton4.ForeColor = SystemColors.ControlDark;
+                    LandCustomColorButton4.Text = ColorTranslator.ToHtml(LandCustomColorButton4.BackColor);
+
+                    LandCustomColorButton4.Refresh();
+                }
+
+                if (theme.LandformColorPalette.Count > 4)
+                {
+                    LandCustomColorButton5.BackColor = theme.LandformColorPalette[4];
+                    LandCustomColorButton5.ForeColor = SystemColors.ControlDark;
+                    LandCustomColorButton5.Text = ColorTranslator.ToHtml(LandCustomColorButton5.BackColor);
+
+                    LandCustomColorButton5.Refresh();
+                }
+
+                if (theme.LandformColorPalette.Count > 5)
+                {
+                    LandCustomColorButton6.BackColor = theme.LandformColorPalette[5];
+                    LandCustomColorButton6.ForeColor = SystemColors.ControlDark;
+                    LandCustomColorButton6.Text = ColorTranslator.ToHtml(LandCustomColorButton6.BackColor);
+
+                    LandCustomColorButton6.Refresh();
+                }
+            }
+
+            if (themeFilter.ApplyFreshwaterSettings)
+            {
+                if (theme.FreshwaterColor != null)
+                {
+                    WaterColorSelectionButton.BackColor = (Color)theme.FreshwaterColor;
+                    WaterColorSelectionButton.Refresh();
+                }
+                else
+                {
+                    WaterColorSelectionButton.BackColor = WaterFeatureMethods.DEFAULT_WATER_COLOR;
+                    WaterColorSelectionButton.Refresh();
+                }
+
+                if (theme.FreshwaterShorelineColor != null)
+                {
+                    ShorelineColorSelectionButton.BackColor = (Color)theme.FreshwaterShorelineColor;
+                    ShorelineColorSelectionButton.Refresh();
+                }
+                else
+                {
+                    ShorelineColorSelectionButton.BackColor = WaterFeatureMethods.DEFAULT_WATER_OUTLINE_COLOR;
+                    ShorelineColorSelectionButton.Refresh();
+                }
+
+                if (theme.RiverWidth != null)
+                {
+                    RiverWidthTrack.Value = (int)theme.RiverWidth;
+                    RiverWidthTrack.Refresh();
+                }
+
+                if (theme.RiverSourceFadeIn != null)
+                {
+                    RiverSourceFadeInSwitch.Checked = (bool)theme.RiverSourceFadeIn;
+                }
+            }
+            else
+            {
+                ShorelineColorSelectionButton.BackColor = WaterFeatureMethods.DEFAULT_WATER_OUTLINE_COLOR;
+                ShorelineColorSelectionButton.Refresh();
+
+                WaterColorSelectionButton.BackColor = WaterFeatureMethods.DEFAULT_WATER_COLOR;
+                WaterColorSelectionButton.Refresh();
+            }
+
+            if (themeFilter.ApplyFreshwaterColorPaletteSettings)
+            {
+                if (theme.FreshwaterColorPalette.Count > 0)
+                {
+                    WaterCustomColor1.BackColor = theme.FreshwaterColorPalette[0];
+                    WaterCustomColor1.ForeColor = SystemColors.ControlDark;
+                    WaterCustomColor1.Text = ColorTranslator.ToHtml(WaterCustomColor1.BackColor);
+
+                    WaterCustomColor1.Refresh();
+                }
+
+                if (theme.FreshwaterColorPalette.Count > 1)
+                {
+                    WaterCustomColor2.BackColor = theme.FreshwaterColorPalette[1];
+                    WaterCustomColor2.ForeColor = SystemColors.ControlDark;
+                    WaterCustomColor2.Text = ColorTranslator.ToHtml(WaterCustomColor2.BackColor);
+
+                    WaterCustomColor2.Refresh();
+                }
+
+                if (theme.FreshwaterColorPalette.Count > 2)
+                {
+                    WaterCustomColor3.BackColor = theme.FreshwaterColorPalette[2];
+                    WaterCustomColor3.ForeColor = SystemColors.ControlDark;
+                    WaterCustomColor3.Text = ColorTranslator.ToHtml(WaterCustomColor3.BackColor);
+
+                    WaterCustomColor3.Refresh();
+                }
+
+                if (theme.FreshwaterColorPalette.Count > 3)
+                {
+                    WaterCustomColor4.BackColor = theme.FreshwaterColorPalette[3];
+                    WaterCustomColor4.ForeColor = SystemColors.ControlDark;
+                    WaterCustomColor4.Text = ColorTranslator.ToHtml(WaterCustomColor4.BackColor);
+
+                    WaterCustomColor4.Refresh();
+                }
+
+                if (theme.FreshwaterColorPalette.Count > 4)
+                {
+                    WaterCustomColor5.BackColor = theme.FreshwaterColorPalette[4];
+                    WaterCustomColor5.ForeColor = SystemColors.ControlDark;
+                    WaterCustomColor5.Text = ColorTranslator.ToHtml(WaterCustomColor5.BackColor);
+
+                    WaterCustomColor5.Refresh();
+                }
+
+                if (theme.FreshwaterColorPalette.Count > 5)
+                {
+                    WaterCustomColor6.BackColor = theme.FreshwaterColorPalette[5];
+                    WaterCustomColor6.ForeColor = SystemColors.ControlDark;
+                    WaterCustomColor6.Text = ColorTranslator.ToHtml(WaterCustomColor6.BackColor);
+
+                    WaterCustomColor6.Refresh();
+                }
+
+                if (theme.FreshwaterColorPalette.Count > 6)
+                {
+                    WaterCustomColor7.BackColor = theme.FreshwaterColorPalette[6];
+                    WaterCustomColor7.ForeColor = SystemColors.ControlDark;
+                    WaterCustomColor7.Text = ColorTranslator.ToHtml(WaterCustomColor7.BackColor);
+
+                    WaterCustomColor7.Refresh();
+                }
+
+                if (theme.FreshwaterColorPalette.Count > 7)
+                {
+                    WaterCustomColor8.BackColor = theme.FreshwaterColorPalette[7];
+                    WaterCustomColor8.ForeColor = SystemColors.ControlDark;
+                    WaterCustomColor8.Text = ColorTranslator.ToHtml(WaterCustomColor8.BackColor);
+
+                    WaterCustomColor8.Refresh();
+                }
+            }
+
+            if (themeFilter.ApplyPathSetSettings)
+            {
+                if (theme.PathColor != null && !((Color)theme.PathColor).IsEmpty)
+                {
+                    PathColorSelectButton.BackColor = (Color)theme.PathColor;
+                    PathColorSelectButton.Refresh();
+                }
+
+                if (theme.PathWidth != null)
+                {
+                    PathWidthTrack.Value = (int)theme.PathWidth;
+                    PathWidthTrack.Refresh();
+                }
+            }
+
+            if (themeFilter.ApplySymbolSettings)
+            {
+                if (theme.SymbolCustomColors != null && theme.SymbolCustomColors[0] != Color.Empty)
+                {
+                    SymbolColor1Button.BackColor = theme.SymbolCustomColors[0];
+                    SymbolColor1Button.Refresh();
+                }
+
+                if (theme.SymbolCustomColors != null && theme.SymbolCustomColors[1] != Color.Empty)
+                {
+                    SymbolColor2Button.BackColor = theme.SymbolCustomColors[1];
+                    SymbolColor2Button.Refresh();
+                }
+
+                if (theme.SymbolCustomColors != null && theme.SymbolCustomColors[2] != Color.Empty)
+                {
+                    SymbolColor3Button.BackColor = theme.SymbolCustomColors[2];
+                    SymbolColor3Button.Refresh();
+                }
+            }
+
+            if (themeFilter.ApplyLabelPresetSettings)
+            {
+                LabelPresetsListBox.Items.Clear();
+
+                foreach (LabelPreset preset in AssetManager.LABEL_PRESETS)
+                {
+                    if (!string.IsNullOrEmpty(preset.LabelPresetTheme)
+                        && AssetManager.CURRENT_THEME != null
+                        && preset.LabelPresetTheme == AssetManager.CURRENT_THEME.ThemeName)
+                    {
+                        LabelPresetsListBox.Items.Add(preset);
+                    }
+                }
+
+                if (LabelPresetsListBox.Items.Count > 0)
+                {
+                    LabelPresetsListBox.SelectedIndex = 0;
+
+                    LabelPreset? selectedPreset = AssetManager.LABEL_PRESETS.Find(x => !string.IsNullOrEmpty(((LabelPreset?)LabelPresetsListBox.Items[0])?.LabelPresetName)
+                        && x.LabelPresetName == ((LabelPreset?)LabelPresetsListBox.Items[0])?.LabelPresetName);
+
+                    if (selectedPreset != null)
+                    {
+                        SetLabelValuesFromPreset(selectedPreset);
+                    }
+                }
+
+                LabelPresetsListBox.Refresh();
+            }
+        }
+
+        #endregion
+
         #region ScrollBar Event Handlers
         /******************************************************************************************************* 
         * SCROLLBAR EVENT HANDLERS
@@ -1002,9 +1565,8 @@ namespace RealmStudio
             // paint the SKGLRenderControl surface, compositing the surfaces from all of the layers
             e.Surface.Canvas.Clear(SKColors.Black);
 
-            // TODO: does the order that the layers are rendered here matter?
-            // i.e. does each layer have to be rendered separately in the correct order,
-            // or can they be grouped and rendered together by function? (e.g. grid, paths)
+            // The order that the layers are rendered here matters;
+            // each layer has to be rendered separately in the correct order
             MapRenderMethods.ClearSelectionLayer(CURRENT_MAP);
 
             MapRenderMethods.RenderBackground(CURRENT_MAP, e, ScrollPoint);
@@ -1013,26 +1575,35 @@ namespace RealmStudio
 
             MapRenderMethods.RenderWindroses(CURRENT_MAP, CURRENT_WINDROSE, e, ScrollPoint);
 
+            // TODO: lower grid layer (above ocean)
+            MapRenderMethods.RenderLowerGrid(CURRENT_MAP, e, ScrollPoint);
+
             MapRenderMethods.RenderLandforms(CURRENT_MAP, CURRENT_LANDFORM, e, ScrollPoint);
 
             MapRenderMethods.RenderWaterFeatures(CURRENT_MAP, CURRENT_WATERFEATURE, CURRENT_RIVER, e, ScrollPoint);
 
-            MapRenderMethods.RenderGrid(CURRENT_MAP, e, ScrollPoint);
+            // TODO: upper grid layer (above water features)
+            MapRenderMethods.RenderUpperGrid(CURRENT_MAP, e, ScrollPoint);
 
-            MapRenderMethods.RenderMapPaths(CURRENT_MAP, CURRENT_PATH, e, ScrollPoint);
+            MapRenderMethods.RenderLowerMapPaths(CURRENT_MAP, CURRENT_PATH, e, ScrollPoint);
 
             MapRenderMethods.RenderSymbols(CURRENT_MAP, e, ScrollPoint);
+
+            MapRenderMethods.RenderUpperMapPaths(CURRENT_MAP, CURRENT_PATH, e, ScrollPoint);
 
             // TODO: region layer
 
             // TODO: region overlay layer
             MapRenderMethods.RenderRegions(CURRENT_MAP, e, ScrollPoint);
 
-            // TODO: box layer
+            // box layer
             MapRenderMethods.RenderBoxes(CURRENT_MAP, e, ScrollPoint);
 
-            // TODO: label layer
+            // label layer
             MapRenderMethods.RenderLabels(CURRENT_MAP, e, ScrollPoint);
+
+            // TODO: default grid layer
+            MapRenderMethods.RenderDefaultGrid(CURRENT_MAP, e, ScrollPoint);
 
             // TODO: overlay layer
             MapRenderMethods.RenderOverlays(CURRENT_MAP, e, ScrollPoint);
@@ -1049,8 +1620,7 @@ namespace RealmStudio
 
             MapRenderMethods.RenderCursor(CURRENT_MAP, e, ScrollPoint);
 
-
-            // TODO: work layer
+            // work layer
             MapRenderMethods.RenderWorkLayer(CURRENT_MAP, e, ScrollPoint);
         }
 
@@ -1430,10 +2000,35 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        CURRENT_MAP_LABEL_PATH.Reset();
+                        CURRENT_MAP_LABEL_PATH.Dispose();
+                        CURRENT_MAP_LABEL_PATH = new();
 
                         PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
                         MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+                    }
+                    break;
+                case DrawingModeEnum.DrawBezierLabelPath:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        CURRENT_MAP_LABEL_PATH.Dispose();
+                        CURRENT_MAP_LABEL_PATH = new();
+
+                        CURRENT_MAP_LABEL_PATH_POINTS.Clear();
+
+                        PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
+
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+                    }
+                    break;
+                case DrawingModeEnum.DrawBox:
+                    {
+                        // initialize new box
+                        Cursor = Cursors.Cross;
+
+                        PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
+
+                        SELECTED_PLACED_MAP_BOX = new();
                     }
                     break;
 
@@ -1660,20 +2255,19 @@ namespace RealmStudio
                             SELECTED_MAP_LABEL.Y = (int)zoomedScrolledPoint.Y;
                         }
                     }
-                    /*
-                    else if (UISelectedBox != null)
+                    else if (SELECTED_PLACED_MAP_BOX != null)
                     {
-                        MapBuilder.GetLayerCanvas(CURRENT_MAP, MapBuilder.BOXLAYER)?.Clear();
-                        UISelectedBox.X = (int)LAYER_CLICK_POINT.X;
-                        UISelectedBox.Y = (int)LAYER_CLICK_POINT.Y;
+                        SELECTED_PLACED_MAP_BOX.X = (int)zoomedScrolledPoint.X;
+                        SELECTED_PLACED_MAP_BOX.Y = (int)zoomedScrolledPoint.Y;
                     }
-                    */
                     CURRENT_MAP.IsSaved = false;
                     break;
                 case DrawingModeEnum.DrawArcLabelPath:
                     {
                         SKRect r = new(PREVIOUS_CURSOR_POINT.X, PREVIOUS_CURSOR_POINT.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
-                        CURRENT_MAP_LABEL_PATH.Reset();
+                        CURRENT_MAP_LABEL_PATH.Dispose();
+                        CURRENT_MAP_LABEL_PATH = new();
+
                         CURRENT_MAP_LABEL_PATH.AddArc(r, 180, 180);
 
                         MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
@@ -1681,7 +2275,58 @@ namespace RealmStudio
                         MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawPath(CURRENT_MAP_LABEL_PATH, PaintObjects.LabelPathPaint);
                     }
                     break;
+                case DrawingModeEnum.DrawBezierLabelPath:
+                    {
+                        CURRENT_MAP_LABEL_PATH_POINTS.Add(zoomedScrolledPoint);
+                        ConstructBezierPathFromPoints();
 
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawPath(CURRENT_MAP_LABEL_PATH, PaintObjects.LabelPathPaint);
+                    }
+                    break;
+                case DrawingModeEnum.DrawBox:
+                    // draw box as mouse is moved
+                    if (SELECTED_MAP_BOX != null)
+                    {
+                        SKRect boxRect = new(PREVIOUS_CURSOR_POINT.X, PREVIOUS_CURSOR_POINT.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
+
+                        if (boxRect.Width > 0 && boxRect.Height > 0)
+                        {
+                            Bitmap? b = SELECTED_MAP_BOX.BoxBitmap;
+
+                            if (b != null)
+                            {
+                                using Bitmap resizedBitmap = new(b, (int)boxRect.Width, (int)boxRect.Height);
+
+                                SELECTED_PLACED_MAP_BOX ??= new();
+
+                                SELECTED_PLACED_MAP_BOX.SetBoxBitmap(new(resizedBitmap));
+                                SELECTED_PLACED_MAP_BOX.X = (int)PREVIOUS_CURSOR_POINT.X;
+                                SELECTED_PLACED_MAP_BOX.Y = (int)PREVIOUS_CURSOR_POINT.Y;
+                                SELECTED_PLACED_MAP_BOX.Width = resizedBitmap.Width;
+                                SELECTED_PLACED_MAP_BOX.Height = resizedBitmap.Height;
+
+                                SELECTED_PLACED_MAP_BOX.BoxTint = SelectBoxTintButton.BackColor;
+
+                                using SKPaint boxPaint = new()
+                                {
+                                    Style = SKPaintStyle.Fill,
+                                    ColorFilter = SKColorFilter.CreateBlendMode(
+                                        Extensions.ToSKColor(SELECTED_PLACED_MAP_BOX.BoxTint),
+                                        SKBlendMode.Modulate) // combine the tint with the bitmap color
+                                };
+
+                                MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+
+                                MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas
+                                    .DrawBitmap(Extensions.ToSKBitmap(resizedBitmap), PREVIOUS_CURSOR_POINT, boxPaint);
+
+                                SKGLRenderControl.Invalidate();
+                            }
+                        }
+                    }
+                    break;
             }
         }
 
@@ -1920,28 +2565,41 @@ namespace RealmStudio
                         }
                         else
                         {
-                            /*
-                            PlacedMapBox? selectedMapBox = MapLabelMethods.SelectMapBoxAtPoint(mapClickPoint);
+                            PlacedMapBox? selectedMapBox = SelectMapBoxAtPoint(CURRENT_MAP, zoomedScrolledPoint);
 
                             if (selectedMapBox != null)
                             {
                                 bool isSelected = selectedMapBox.IsSelected;
                                 selectedMapBox.IsSelected = !isSelected;
 
-                                MapPaintMethods.DeselectAllMapComponents(selectedMapBox);
-
                                 if (selectedMapBox.IsSelected)
                                 {
-                                    UISelectedBox = selectedMapBox;
+                                    SELECTED_PLACED_MAP_BOX = selectedMapBox;
                                 }
                                 else
                                 {
-                                    UISelectedBox = null;
+                                    SELECTED_PLACED_MAP_BOX = null;
                                 }
                             }
-                            */
                         }
                     }
+                    break;
+                case DrawingModeEnum.DrawBox:
+                    // finalize box drawing
+                    if (SELECTED_PLACED_MAP_BOX != null)
+                    {
+                        Cmd_AddLabelBox cmd = new Cmd_AddLabelBox(CURRENT_MAP, SELECTED_PLACED_MAP_BOX);
+                        CommandManager.AddCommand(cmd);
+                        cmd.DoOperation();
+
+                        CURRENT_MAP.IsSaved = false;
+                        SELECTED_PLACED_MAP_BOX = null;
+
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+
+                        SKGLRenderControl.Invalidate();
+                    }
+
                     break;
             }
 
@@ -2075,8 +2733,19 @@ namespace RealmStudio
                                 CURRENT_MAP.IsSaved = false;
                                 SELECTED_MAP_LABEL = null;
 
-                                SKGLRenderControl.Invalidate();
                             }
+
+                            if (SELECTED_PLACED_MAP_BOX != null)
+                            {
+                                Cmd_DeleteLabelBox cmd = new(CURRENT_MAP, SELECTED_PLACED_MAP_BOX);
+                                CommandManager.AddCommand(cmd);
+                                cmd.DoOperation();
+
+                                CURRENT_MAP.IsSaved = false;
+                                SELECTED_PLACED_MAP_BOX = null;
+                            }
+
+                            SKGLRenderControl.Invalidate();
                         }
                         break;
                 }
@@ -2641,7 +3310,7 @@ namespace RealmStudio
 
                 SKBitmap resizedSKBitmap = new(100, 100);
 
-                Extensions.ToSKBitmap(dashTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
+                Extensions.ToSKBitmap(dashTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKFilterQuality.High);
 
                 landform.DashShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
             }
@@ -2654,7 +3323,7 @@ namespace RealmStudio
 
                 SKBitmap resizedSKBitmap = new(100, 100);
 
-                Extensions.ToSKBitmap(lineHatchTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
+                Extensions.ToSKBitmap(lineHatchTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKFilterQuality.High);
 
                 landform.LineHatchBitmapShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
             }
@@ -4173,7 +4842,7 @@ namespace RealmStudio
                     CREATING_LABEL = false;
 
                     Color outlineColor = OutlineColorSelectButton.BackColor;
-                    int outlineWidth = OutlineWidthTrack.Value;
+                    float outlineWidth = OutlineWidthTrack.Value / 100F;
 
                     Color glowColor = GlowColorSelectButton.BackColor;
                     int glowStrength = GlowStrengthTrack.Value;
@@ -4203,7 +4872,8 @@ namespace RealmStudio
                         label.LabelSKFont.Dispose();
                         label.LabelSKFont = paintFont;
 
-                        label.LabelSKFont.MeasureText(label.LabelText, out SKRect bounds);
+                        SKRect bounds = new();
+                        paint.MeasureText(label.LabelText, ref bounds);
 
                         Point labelPoint = new(tb.Left, tb.Top);
 
@@ -4219,8 +4889,10 @@ namespace RealmStudio
                         else if (CURRENT_MAP_LABEL_PATH?.PointCount > 0)
                         {
                             label.LabelPath = new(CURRENT_MAP_LABEL_PATH);
+
                             CURRENT_MAP_LABEL_PATH.Dispose();
                             CURRENT_MAP_LABEL_PATH = new();
+
                             MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
                         }
 
@@ -4302,7 +4974,7 @@ namespace RealmStudio
             {
                 Color labelColor = FontColorSelectButton.BackColor;
                 Color outlineColor = OutlineColorSelectButton.BackColor;
-                int outlineWidth = OutlineWidthTrack.Value;
+                float outlineWidth = OutlineWidthTrack.Value / 100F;
                 Color glowColor = GlowColorSelectButton.BackColor;
                 int glowStrength = GlowStrengthTrack.Value;
 
@@ -4314,7 +4986,7 @@ namespace RealmStudio
             }
         }
 
-        private MapLabel? SelectLabelAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
+        private static MapLabel? SelectLabelAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
         {
             MapLabel? selectedLabel = null;
 
@@ -4333,11 +5005,81 @@ namespace RealmStudio
                 }
             }
 
-#pragma warning disable CS8604 // Possible null reference argument.
             DeselectAllMapComponents(selectedLabel);
-#pragma warning restore CS8604 // Possible null reference argument.
 
             return selectedLabel;
+        }
+
+        private PlacedMapBox? SelectMapBoxAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
+        {
+            PlacedMapBox? selectedBox = null;
+
+            List<MapComponent> mapLabelComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BOXLAYER).MapLayerComponents;
+
+            for (int i = 0; i < mapLabelComponents.Count; i++)
+            {
+                if (mapLabelComponents[i] is PlacedMapBox mapBox)
+                {
+                    SKRect boxRect = new(mapBox.X, mapBox.Y, mapBox.X + mapBox.Width, mapBox.Y + mapBox.Height);
+
+                    if (boxRect.Contains(zoomedScrolledPoint))
+                    {
+                        selectedBox = mapBox;
+                    }
+                }
+            }
+
+            DeselectAllMapComponents(selectedBox);
+
+            return selectedBox;
+        }
+
+        private static void ConstructBezierPathFromPoints()
+        {
+            CURRENT_MAP_LABEL_PATH.Dispose();
+            CURRENT_MAP_LABEL_PATH = new();
+
+            if (CURRENT_MAP_LABEL_PATH_POINTS.Count > 2)
+            {
+                CURRENT_MAP_LABEL_PATH.MoveTo(CURRENT_MAP_LABEL_PATH_POINTS[0]);
+
+                for (int j = 0; j < CURRENT_MAP_LABEL_PATH_POINTS.Count; j += 3)
+                {
+                    if (j < CURRENT_MAP_LABEL_PATH_POINTS.Count - 2)
+                    {
+                        CURRENT_MAP_LABEL_PATH.CubicTo(CURRENT_MAP_LABEL_PATH_POINTS[j], CURRENT_MAP_LABEL_PATH_POINTS[j + 1], CURRENT_MAP_LABEL_PATH_POINTS[j + 2]);
+                    }
+                }
+            }
+        }
+
+        private void SetLabelValuesFromPreset(LabelPreset preset)
+        {
+            FontColorSelectButton.BackColor = Color.FromArgb(preset.LabelColor);
+            FontColorSelectButton.Refresh();
+
+            OutlineColorSelectButton.BackColor = Color.FromArgb(preset.LabelOutlineColor);
+            OutlineColorSelectButton.Refresh();
+
+            OutlineWidthTrack.Value = (int)(preset.LabelOutlineWidth * 100F);
+            OutlineWidthTrack.Refresh();
+
+            GlowColorSelectButton.BackColor = Color.FromArgb(preset.LabelGlowColor);
+            GlowColorSelectButton.Refresh();
+
+            GlowStrengthTrack.Value = preset.LabelGlowStrength;
+            GlowStrengthTrack.Refresh();
+
+            string fontString = preset.LabelFontString;
+            FontConverter cvt = new();
+            Font? font = (Font?)cvt.ConvertFromString(fontString);
+
+            if (font != null)
+            {
+                SELECTED_LABEL_FONT = font;
+                SelectLabelFontButton.Font = new Font(font.FontFamily, 14);
+                SelectLabelFontButton.Refresh();
+            }
         }
 
         #endregion
@@ -4380,14 +5122,153 @@ namespace RealmStudio
             }
         }
 
+        private void LabelPresetsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LabelPresetsListBox.SelectedIndex >= 0 && LabelPresetsListBox.SelectedIndex < AssetManager.LABEL_PRESETS.Count)
+            {
+                LabelPreset selectedPreset = (LabelPreset)LabelPresetsListBox.Items[LabelPresetsListBox.SelectedIndex];
+                SetLabelValuesFromPreset(selectedPreset);
+            }
+        }
+
         private void AddPresetButton_Click(object sender, EventArgs e)
         {
+            LabelPresetNameEntry presetDialog = new();
+            DialogResult result = presetDialog.ShowDialog();
 
+            if (result == DialogResult.OK)
+            {
+                string presetName = presetDialog.PresetNameTextBox.Text;
+
+                string currentThemeName = string.Empty;
+
+                if (AssetManager.CURRENT_THEME != null && !string.IsNullOrEmpty(AssetManager.CURRENT_THEME.ThemeName))
+                {
+                    currentThemeName = AssetManager.CURRENT_THEME.ThemeName;
+                }
+                else
+                {
+                    currentThemeName = "DEFAULT";
+                }
+
+                string presetFileName = Resources.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "LabelPresets" + Path.DirectorySeparatorChar + Guid.NewGuid().ToString() + ".mclblprst";
+
+                bool makeNewPreset = true;
+
+                if (File.Exists(presetFileName))
+                {
+                    LabelPreset? existingPreset = AssetManager.LABEL_PRESETS.Find(x => x.LabelPresetName == presetName && x.LabelPresetTheme == currentThemeName);
+                    if (existingPreset != null && existingPreset.IsDefault)
+                    {
+                        makeNewPreset = false;
+                    }
+                    else
+                    {
+                        DialogResult r = MessageBox.Show("A label preset named " + presetName + " for theme " + currentThemeName + " already exists. Replace it?", "Replace Preset", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        if (r == DialogResult.No)
+                        {
+                            makeNewPreset = false;
+                        }
+                    }
+                }
+
+                if (makeNewPreset)
+                {
+                    LabelPreset preset = new();
+
+                    FontConverter cvt = new();
+                    string? fontString = cvt.ConvertToString(SELECTED_LABEL_FONT);
+
+                    if (!string.IsNullOrEmpty(fontString))
+                    {
+                        preset.LabelPresetName = presetName;
+                        if (AssetManager.CURRENT_THEME != null && !string.IsNullOrEmpty(AssetManager.CURRENT_THEME.ThemeName))
+                        {
+                            preset.LabelPresetTheme = AssetManager.CURRENT_THEME.ThemeName;
+                        }
+                        else
+                        {
+                            preset.LabelPresetTheme = "DEFAULT";
+                        }
+
+                        preset.LabelFontString = fontString;
+                        preset.LabelColor = FontColorSelectButton.BackColor.ToArgb();
+                        preset.LabelOutlineColor = OutlineColorSelectButton.BackColor.ToArgb();
+                        preset.LabelOutlineWidth = OutlineWidthTrack.Value / 100F;
+                        preset.LabelGlowColor = GlowColorSelectButton.BackColor.ToArgb();
+                        preset.LabelGlowStrength = GlowStrengthTrack.Value;
+
+                        preset.PresetXmlFilePath = presetFileName;
+
+                        MapFileMethods.SerializeLabelPreset(preset);
+
+                        int assetCount = AssetManager.LoadAllAssets();
+
+                        PopulateControlsWithAssets(assetCount);
+                    }
+                }
+            }
         }
 
         private void RemovePresetButton_Click(object sender, EventArgs e)
         {
+            //remove a preset (prevent default presets from being deleted or changed)
 
+            if (LabelPresetsListBox.SelectedIndex >= 0)
+            {
+                string? presetName = (string?)LabelPresetsListBox.SelectedItem;
+
+                if (!string.IsNullOrEmpty(presetName))
+                {
+                    string currentThemeName = string.Empty;
+
+                    if (AssetManager.CURRENT_THEME != null && !string.IsNullOrEmpty(AssetManager.CURRENT_THEME.ThemeName))
+                    {
+                        currentThemeName = AssetManager.CURRENT_THEME.ThemeName;
+                    }
+                    else
+                    {
+                        currentThemeName = "DEFAULT";
+                    }
+
+                    LabelPreset? existingPreset = AssetManager.LABEL_PRESETS.Find(x => x.LabelPresetName == presetName && x.LabelPresetTheme == currentThemeName);
+
+                    if (existingPreset != null && !existingPreset.IsDefault)
+                    {
+                        if (!string.IsNullOrEmpty(existingPreset.PresetXmlFilePath))
+                        {
+                            if (File.Exists(existingPreset.PresetXmlFilePath))
+                            {
+                                DialogResult r = MessageBox.Show("The label preset named " + presetName + " for theme " + currentThemeName + " will be deleted. Continue?", "Delete Label Preset",
+                                    MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+                                if (r == DialogResult.Yes)
+                                {
+                                    try
+                                    {
+                                        File.Delete(existingPreset.PresetXmlFilePath);
+
+                                        int assetCount = AssetManager.LoadAllAssets();
+
+                                        PopulateControlsWithAssets(assetCount);
+
+                                        MessageBox.Show("The label preset has been deleted.", "Preset Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Program.LOGGER.Error(ex);
+                                        MessageBox.Show("The label preset could not be deleted.", "Preset Not Deleted", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("The selected label preset cannot be deleted.", "Preset Not Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    }
+                }
+            }
         }
 
         private void SelectLabelFontButton_Click(object sender, EventArgs e)
@@ -4427,7 +5308,7 @@ namespace RealmStudio
                     {
                         Color labelColor = FontColorSelectButton.BackColor;
                         Color outlineColor = OutlineColorSelectButton.BackColor;
-                        int outlineWidth = OutlineWidthTrack.Value;
+                        float outlineWidth = OutlineWidthTrack.Value / 100F;
                         Color glowColor = GlowColorSelectButton.BackColor;
                         int glowStrength = GlowStrengthTrack.Value;
 
@@ -4535,6 +5416,27 @@ namespace RealmStudio
             SetDrawingModeLabel();
         }
 
+        private void SelectBoxTintButton_Click(object sender, EventArgs e)
+        {
+            Color boxColor = UtilityMethods.SelectColorFromDialog(this, SelectBoxTintButton.BackColor);
+
+            if (boxColor.ToArgb() != Color.Empty.ToArgb())
+            {
+                SelectBoxTintButton.BackColor = boxColor;
+
+                SelectBoxTintButton.Refresh();
+
+                if (SELECTED_PLACED_MAP_BOX != null)
+                {
+                    Cmd_ChangeBoxColor cmd = new(SELECTED_PLACED_MAP_BOX, boxColor);
+                    CommandManager.AddCommand(cmd);
+                    cmd.DoOperation();
+
+                    SKGLRenderControl.Invalidate();
+                }
+            }
+        }
+
         private void GenerateNameButton_Click(object sender, EventArgs e)
         {
             /*
@@ -4558,5 +5460,7 @@ namespace RealmStudio
             */
         }
         #endregion
+
+
     }
 }

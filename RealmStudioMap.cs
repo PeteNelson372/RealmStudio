@@ -45,7 +45,7 @@ namespace RealmStudio
         private float mapAreaHeight = 0;
 
         [XmlIgnore]
-        private bool isSaved = false;
+        private bool isSaved = true;
 
         [XmlAttribute]
         public string MapName { get; set; } = "";

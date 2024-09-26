@@ -21,32 +21,21 @@
 * contact@brookmonte.com
 *
 ***************************************************************************************************************************/
-using System.Xml.Serialization;
-
 namespace RealmStudio
 {
-    [XmlRoot("LabelPreset", Namespace = "RealmStudio", IsNullable = false)]
-    public class LabelPreset
+    internal class Cmd_AddLabelBox(RealmStudioMap map, PlacedMapBox mapBox) : IMapOperation
     {
-        [XmlAttribute]
-        public bool IsDefault { get; set; } = false;
-        [XmlElement]
-        public string PresetXmlFilePath { get; set; } = string.Empty;
-        [XmlElement]
-        public string LabelPresetName { get; set; } = string.Empty;
-        [XmlElement]
-        public string LabelPresetTheme { get; set; } = string.Empty;
-        [XmlElement]
-        public int LabelColor { get; set; } = Color.Empty.ToArgb();
-        [XmlElement]
-        public int LabelOutlineColor { get; set; } = Color.Empty.ToArgb();
-        [XmlElement]
-        public float LabelOutlineWidth { get; set; } = 0;
-        [XmlElement]
-        public int LabelGlowColor { get; set; } = Color.Empty.ToArgb();
-        [XmlElement]
-        public int LabelGlowStrength { get; set; } = 0;
-        [XmlElement]
-        public string LabelFontString = string.Empty;
+        private RealmStudioMap Map = map;
+        private PlacedMapBox MapBox = mapBox;
+
+        public void DoOperation()
+        {
+            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER).MapLayerComponents.Add(MapBox);
+        }
+
+        public void UndoOperation()
+        {
+            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER).MapLayerComponents.Remove(MapBox);
+        }
     }
 }

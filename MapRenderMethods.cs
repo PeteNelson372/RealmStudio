@@ -22,7 +22,6 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
-using SkiaSharp.Components;
 using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
@@ -68,9 +67,23 @@ namespace RealmStudio
             e.Surface.Canvas.DrawPicture(baseLayer.RenderPicture, scrollPoint);
         }
 
-        internal static void RenderBoxes(RealmStudioMap cURRENT_MAP, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
+        internal static void RenderBoxes(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
         {
-            // TODO
+            MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BOXLAYER);
+
+            // Create an SKPictureRecorder to record the Canvas Draw commands to an SKPicture
+            using var recorder = new SKPictureRecorder();
+            SKRect clippingBounds = new(0, 0, map.MapWidth, map.MapHeight);
+
+            // Start recording 
+            recorder.BeginRecording(clippingBounds);
+
+            boxLayer.Render(recorder.RecordingCanvas);
+
+            // Create a new SKPicture with recorded Draw commands 
+            boxLayer.RenderPicture = recorder.EndRecording();
+
+            e.Surface.Canvas.DrawPicture(boxLayer.RenderPicture, scrollPoint);
         }
 
         internal static void RenderCursor(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
@@ -80,13 +93,27 @@ namespace RealmStudio
             e.Surface.Canvas.DrawSurface(cursorLayer.LayerSurface, scrollPoint);
         }
 
-        internal static void RenderDrawing(RealmStudioMap cURRENT_MAP, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
+        internal static void RenderDrawing(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
         {
             // TODO
         }
 
-        internal static void RenderGrid(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
+        internal static void RenderLowerGrid(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
         {
+            // TODO: change to use picture recorder
+            // render grid below symbols
+            MapLayer belowSymbolGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER);
+            if (belowSymbolGridLayer.LayerSurface != null)
+            {
+                belowSymbolGridLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+                belowSymbolGridLayer.Render(belowSymbolGridLayer.LayerSurface.Canvas);
+                e.Surface.Canvas.DrawSurface(belowSymbolGridLayer.LayerSurface, scrollPoint);
+            }
+        }
+
+        internal static void RenderUpperGrid(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
+        {
+            // TODO: change to use picture recorder
             // render grid layer above ocean
             MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER);
             if (aboveOceanGridLayer.LayerSurface != null)
@@ -95,14 +122,18 @@ namespace RealmStudio
                 aboveOceanGridLayer.Render(aboveOceanGridLayer.LayerSurface.Canvas);
                 e.Surface.Canvas.DrawSurface(aboveOceanGridLayer.LayerSurface, scrollPoint);
             }
+        }
 
-            // render grid below symbols
-            MapLayer belowSymbolGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER);
-            if (belowSymbolGridLayer.LayerSurface != null)
+        internal static void RenderDefaultGrid(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
+        {
+            // TODO: change to use picture recorder
+            // render default grid layer
+            MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER);
+            if (defaultGridLayer.LayerSurface != null)
             {
-                belowSymbolGridLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                belowSymbolGridLayer.Render(belowSymbolGridLayer.LayerSurface.Canvas);
-                e.Surface.Canvas.DrawSurface(aboveOceanGridLayer.LayerSurface, scrollPoint);
+                defaultGridLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+                defaultGridLayer.Render(defaultGridLayer.LayerSurface.Canvas);
+                e.Surface.Canvas.DrawSurface(defaultGridLayer.LayerSurface, scrollPoint);
             }
         }
 
@@ -174,14 +205,13 @@ namespace RealmStudio
             }
         }
 
-        internal static void RenderMapPaths(RealmStudioMap map, MapPath? currentPath, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
+        internal static void RenderLowerMapPaths(RealmStudioMap map, MapPath? currentPath, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
         {
             MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
 
             // TODO: change to use picture recorder for rendering
             // path lower layer
             MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
-            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER);
 
             if (pathLowerLayer.LayerSurface != null)
             {
@@ -231,6 +261,14 @@ namespace RealmStudio
 
                 e.Surface.Canvas.DrawSurface(pathLowerLayer.LayerSurface, scrollPoint);
             }
+        }
+
+        internal static void RenderUpperMapPaths(RealmStudioMap map, MapPath? currentPath, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
+        {
+            MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
+
+            // TODO: change to use picture recorder for rendering
+            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER);
 
             // path upper layer
 
@@ -474,7 +512,7 @@ namespace RealmStudio
         {
             // render wind rose layer
             MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WINDROSELAYER);
-                        
+
             // Dispose of any previous Pictures
             windroseLayer.RenderPicture?.Dispose();
 
@@ -491,7 +529,7 @@ namespace RealmStudio
             // Create a new SKPicture with recorded Draw commands 
             windroseLayer.RenderPicture = recorder.EndRecording();
 
-            e.Surface.Canvas.DrawPicture(windroseLayer.RenderPicture, scrollPoint);           
+            e.Surface.Canvas.DrawPicture(windroseLayer.RenderPicture, scrollPoint);
         }
 
         internal static void RenderWorkLayer(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)

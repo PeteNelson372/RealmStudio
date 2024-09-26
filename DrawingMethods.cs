@@ -241,7 +241,7 @@ namespace RealmStudio
             int bitmapHeight = (int)Math.Round(bitmap.Height * scale);
 
             SKBitmap resizedSKBitmap = new(bitmapWidth, bitmapHeight);
-            bitmap.ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
+            bitmap.ScalePixels(resizedSKBitmap, SKFilterQuality.High);
 
             return resizedSKBitmap;
         }

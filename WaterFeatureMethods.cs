@@ -33,6 +33,9 @@ namespace RealmStudio
         public static int WaterFeatureBrushSize { get; set; } = 20;
         public static int WaterFeatureEraserSize { get; set; } = 20;
 
+        public static Color DEFAULT_WATER_OUTLINE_COLOR { get; } = ColorTranslator.FromHtml("#A19076");
+        public static Color DEFAULT_WATER_COLOR { get; } = ColorTranslator.FromHtml("#658CBFC5");
+
         internal static void MergeWaterFeatures(RealmStudioMap map)
         {
             MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER);
@@ -364,7 +367,7 @@ namespace RealmStudio
                 SKBitmap bitmap = Extensions.ToSKBitmap(riverTexture.TextureBitmap);
                 SKBitmap resizedSKBitmap = new((int)mapRiver.RiverWidth, (int)mapRiver.RiverWidth);
 
-                bitmap.ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
+                bitmap.ScalePixels(resizedSKBitmap, SKFilterQuality.High);
 
                 SKShader bitmapShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
 
