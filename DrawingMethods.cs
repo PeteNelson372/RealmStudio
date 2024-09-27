@@ -116,6 +116,28 @@ namespace RealmStudio
             return (float)((float)Math.Atan2(yDiff, xDiff) * D180_OVER_PI);
         }
 
+        internal static float CalculatePolygonArea(List<SKPoint> polygonPoints)
+        {
+            if (polygonPoints.Count < 3)
+            {
+                return 0;
+            }
+
+            // use shoelace algorithm to calculate area of the polygon
+            float area = 0;
+
+            int j = polygonPoints.Count - 1;
+            for (int i = 0; i < polygonPoints.Count; i++)
+            {
+                area += (polygonPoints[j].X + polygonPoints[i].X) * (polygonPoints[j].Y - polygonPoints[i].Y);
+                j = i;  // j is previous vertex to i
+            }
+
+            area = Math.Abs(area / 2.0F);
+
+            return area;
+        }
+
         public static bool IsPaintableImage(Bitmap bitmap)
         {
             bool isPaintableImage = true;

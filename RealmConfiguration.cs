@@ -44,6 +44,10 @@ namespace RealmStudio
             CalculateAspectRatio();
 
             map.RealmType = RealmTypeEnum.World;
+
+
+            MapAreaUnitCombo.SelectedIndex = 6;  // miles
+
             map.MapAreaUnits = "Miles";
         }
 
@@ -355,6 +359,21 @@ namespace RealmStudio
         {
             MapAspectRatio = (float)(WidthUpDown.Value / HeightUpDown.Value);
             AspectRatioLabel.Text = MapAspectRatio.ToString("F2");
+
+            MapAreaHeightLabel.Text = ((float)MapAreaWidthUpDown.Value / MapAspectRatio).ToString("F2");
+
+            // MapAreaWidth and MapAreaHeight are the size of the map in MapAreaUnits (e.g. 1000 miles x 500 miles)
+            map.MapAreaWidth = (float)MapAreaWidthUpDown.Value;
+            map.MapAreaHeight = float.Parse(MapAreaHeightLabel.Text);
+
+            // MapPixelWidth and MapPixelHeight are the size of one pixel in MapAreaUnits
+            map.MapPixelWidth = map.MapAreaWidth / map.MapWidth;
+            map.MapPixelHeight = map.MapAreaHeight / map.MapHeight;
+        }
+
+        private void MapAreaWidthUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            CalculateAspectRatio();
         }
 
         private void WorldRadioButton_Click(object sender, EventArgs e)

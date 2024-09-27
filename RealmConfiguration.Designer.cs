@@ -34,12 +34,12 @@
             groupBox5 = new GroupBox();
             dungeonListBox1 = new ReaLTaiizor.Controls.DungeonListBox();
             groupBox4 = new GroupBox();
-            label6 = new Label();
+            MapAreaHeightLabel = new Label();
             label5 = new Label();
             MapAreaUnitCombo = new ComboBox();
             label4 = new Label();
             label7 = new Label();
-            numericUpDown1 = new NumericUpDown();
+            MapAreaWidthUpDown = new NumericUpDown();
             groupBox3 = new GroupBox();
             AspectRatioLabel = new Label();
             label3 = new Label();
@@ -79,7 +79,7 @@
             RealmConfigDialog.SuspendLayout();
             groupBox5.SuspendLayout();
             groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)MapAreaWidthUpDown).BeginInit();
             groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)WidthUpDown).BeginInit();
             ((System.ComponentModel.ISupportInitialize)HeightUpDown).BeginInit();
@@ -173,12 +173,12 @@
             // 
             // groupBox4
             // 
-            groupBox4.Controls.Add(label6);
+            groupBox4.Controls.Add(MapAreaHeightLabel);
             groupBox4.Controls.Add(label5);
             groupBox4.Controls.Add(MapAreaUnitCombo);
             groupBox4.Controls.Add(label4);
             groupBox4.Controls.Add(label7);
-            groupBox4.Controls.Add(numericUpDown1);
+            groupBox4.Controls.Add(MapAreaWidthUpDown);
             groupBox4.Location = new Point(371, 214);
             groupBox4.Name = "groupBox4";
             groupBox4.Size = new Size(205, 116);
@@ -186,15 +186,15 @@
             groupBox4.TabStop = false;
             groupBox4.Text = "Realm Map Area";
             // 
-            // label6
+            // MapAreaHeightLabel
             // 
-            label6.ForeColor = SystemColors.ControlDarkDark;
-            label6.Location = new Point(114, 81);
-            label6.Name = "label6";
-            label6.Size = new Size(85, 15);
-            label6.TabIndex = 6;
-            label6.Text = "75";
-            label6.TextAlign = ContentAlignment.MiddleCenter;
+            MapAreaHeightLabel.ForeColor = SystemColors.ControlDarkDark;
+            MapAreaHeightLabel.Location = new Point(114, 81);
+            MapAreaHeightLabel.Name = "MapAreaHeightLabel";
+            MapAreaHeightLabel.Size = new Size(85, 15);
+            MapAreaHeightLabel.TabIndex = 6;
+            MapAreaHeightLabel.Text = "75";
+            MapAreaHeightLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label5
             // 
@@ -236,16 +236,17 @@
             label7.TabIndex = 2;
             label7.Text = "Map Area Width";
             // 
-            // numericUpDown1
+            // MapAreaWidthUpDown
             // 
-            numericUpDown1.Location = new Point(114, 55);
-            numericUpDown1.Maximum = new decimal(new int[] { 1000000000, 0, 0, 0 });
-            numericUpDown1.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numericUpDown1.Name = "numericUpDown1";
-            numericUpDown1.Size = new Size(85, 23);
-            numericUpDown1.TabIndex = 1;
-            numericUpDown1.TextAlign = HorizontalAlignment.Center;
-            numericUpDown1.Value = new decimal(new int[] { 100, 0, 0, 0 });
+            MapAreaWidthUpDown.Location = new Point(114, 55);
+            MapAreaWidthUpDown.Maximum = new decimal(new int[] { 1000000000, 0, 0, 0 });
+            MapAreaWidthUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            MapAreaWidthUpDown.Name = "MapAreaWidthUpDown";
+            MapAreaWidthUpDown.Size = new Size(85, 23);
+            MapAreaWidthUpDown.TabIndex = 1;
+            MapAreaWidthUpDown.TextAlign = HorizontalAlignment.Center;
+            MapAreaWidthUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
+            MapAreaWidthUpDown.ValueChanged += MapAreaWidthUpDown_ValueChanged;
             // 
             // groupBox3
             // 
@@ -740,7 +741,7 @@
             groupBox5.ResumeLayout(false);
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)MapAreaWidthUpDown).EndInit();
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)WidthUpDown).EndInit();
@@ -791,11 +792,11 @@
         private FontAwesome.Sharp.IconButton LockAspectRatioButton;
         private GroupBox groupBox4;
         private Label label7;
-        private NumericUpDown numericUpDown1;
+        private NumericUpDown MapAreaWidthUpDown;
         private Label AspectRatioLabel;
         private Label label3;
         private Label label4;
-        private Label label6;
+        private Label MapAreaHeightLabel;
         private Label label5;
         private ComboBox MapAreaUnitCombo;
         private GroupBox groupBox5;

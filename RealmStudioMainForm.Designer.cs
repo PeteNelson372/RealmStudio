@@ -220,6 +220,29 @@
             cyberSwitch4 = new ReaLTaiizor.Controls.CyberSwitch();
             label8 = new Label();
             OverlayTab = new TabPage();
+            groupBox23 = new GroupBox();
+            ClearMeasureButton = new FontAwesome.Sharp.IconButton();
+            label71 = new Label();
+            MeasureAreaSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label70 = new Label();
+            UseScaleUnitsSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            SelectMeasureColorButton = new FontAwesome.Sharp.IconButton();
+            groupBox22 = new GroupBox();
+            label69 = new Label();
+            GridLayerUpDown = new DomainUpDown();
+            label68 = new Label();
+            PointedHexGridRadio = new RadioButton();
+            FlatHexGridRadio = new RadioButton();
+            SquareGridRadio = new RadioButton();
+            GridLineWidthTrack = new TrackBar();
+            label67 = new Label();
+            label66 = new Label();
+            ShowGridSizeSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            GridSizeTrack = new TrackBar();
+            label64 = new Label();
+            GridColorSelectButton = new FontAwesome.Sharp.IconButton();
+            label65 = new Label();
+            EnableGridSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             groupBox21 = new GroupBox();
             FrameScaleTrack = new TrackBar();
             label63 = new Label();
@@ -439,29 +462,6 @@
             label25 = new Label();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
-            groupBox22 = new GroupBox();
-            trackBar1 = new TrackBar();
-            label64 = new Label();
-            iconButton3 = new FontAwesome.Sharp.IconButton();
-            label65 = new Label();
-            cyberSwitch9 = new ReaLTaiizor.Controls.CyberSwitch();
-            label66 = new Label();
-            cyberSwitch10 = new ReaLTaiizor.Controls.CyberSwitch();
-            trackBar2 = new TrackBar();
-            label67 = new Label();
-            radioButton1 = new RadioButton();
-            radioButton2 = new RadioButton();
-            radioButton3 = new RadioButton();
-            label68 = new Label();
-            LayerUpDown = new DomainUpDown();
-            label69 = new Label();
-            groupBox23 = new GroupBox();
-            iconButton4 = new FontAwesome.Sharp.IconButton();
-            label70 = new Label();
-            cyberSwitch11 = new ReaLTaiizor.Controls.CyberSwitch();
-            label71 = new Label();
-            cyberSwitch12 = new ReaLTaiizor.Controls.CyberSwitch();
-            ClearMeasureButton = new FontAwesome.Sharp.IconButton();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -529,6 +529,10 @@
             groupBox15.SuspendLayout();
             LabelToolStrip.SuspendLayout();
             OverlayTab.SuspendLayout();
+            groupBox23.SuspendLayout();
+            groupBox22.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)GridLineWidthTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)GridSizeTrack).BeginInit();
             groupBox21.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)FrameScaleTrack).BeginInit();
             OverlayToolStrip.SuspendLayout();
@@ -576,10 +580,6 @@
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeScroll).BeginInit();
             DrawingToolPanel.SuspendLayout();
             RegionToolPanel.SuspendLayout();
-            groupBox22.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)trackBar2).BeginInit();
-            groupBox23.SuspendLayout();
             SuspendLayout();
             // 
             // OceanTab
@@ -3622,6 +3622,421 @@
             OverlayTab.TabIndex = 6;
             OverlayTab.Text = "Overlays";
             // 
+            // groupBox23
+            // 
+            groupBox23.Controls.Add(ClearMeasureButton);
+            groupBox23.Controls.Add(label71);
+            groupBox23.Controls.Add(MeasureAreaSwitch);
+            groupBox23.Controls.Add(label70);
+            groupBox23.Controls.Add(UseScaleUnitsSwitch);
+            groupBox23.Controls.Add(SelectMeasureColorButton);
+            groupBox23.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox23.Location = new Point(12, 664);
+            groupBox23.Name = "groupBox23";
+            groupBox23.Size = new Size(148, 202);
+            groupBox23.TabIndex = 24;
+            groupBox23.TabStop = false;
+            groupBox23.Text = "Measure";
+            // 
+            // ClearMeasureButton
+            // 
+            ClearMeasureButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ClearMeasureButton.ForeColor = SystemColors.ControlDarkDark;
+            ClearMeasureButton.IconChar = FontAwesome.Sharp.IconChar.Close;
+            ClearMeasureButton.IconColor = Color.Black;
+            ClearMeasureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ClearMeasureButton.IconSize = 18;
+            ClearMeasureButton.Location = new Point(33, 168);
+            ClearMeasureButton.Name = "ClearMeasureButton";
+            ClearMeasureButton.Size = new Size(75, 23);
+            ClearMeasureButton.TabIndex = 28;
+            ClearMeasureButton.Text = "Clear";
+            ClearMeasureButton.TextImageRelation = TextImageRelation.ImageBeforeText;
+            ClearMeasureButton.UseVisualStyleBackColor = true;
+            ClearMeasureButton.Click += ClearMeasureButton_Click;
+            // 
+            // label71
+            // 
+            label71.AutoSize = true;
+            label71.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label71.ForeColor = SystemColors.ControlDarkDark;
+            label71.Location = new Point(47, 126);
+            label71.Name = "label71";
+            label71.Size = new Size(79, 15);
+            label71.TabIndex = 27;
+            label71.Text = "Measure Area";
+            // 
+            // MeasureAreaSwitch
+            // 
+            MeasureAreaSwitch.Alpha = 50;
+            MeasureAreaSwitch.BackColor = Color.Transparent;
+            MeasureAreaSwitch.Background = true;
+            MeasureAreaSwitch.Background_WidthPen = 2F;
+            MeasureAreaSwitch.BackgroundPen = false;
+            MeasureAreaSwitch.Checked = false;
+            MeasureAreaSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            MeasureAreaSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            MeasureAreaSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            MeasureAreaSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            MeasureAreaSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            MeasureAreaSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            MeasureAreaSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            MeasureAreaSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            MeasureAreaSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            MeasureAreaSwitch.ColorValue = Color.ForestGreen;
+            MeasureAreaSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            MeasureAreaSwitch.Font = new Font("Arial", 11F);
+            MeasureAreaSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            MeasureAreaSwitch.Lighting = true;
+            MeasureAreaSwitch.LinearGradient_Background = false;
+            MeasureAreaSwitch.LinearGradient_Value = false;
+            MeasureAreaSwitch.LinearGradientPen = false;
+            MeasureAreaSwitch.Location = new Point(6, 121);
+            MeasureAreaSwitch.Name = "MeasureAreaSwitch";
+            MeasureAreaSwitch.PenWidth = 10;
+            MeasureAreaSwitch.RGB = false;
+            MeasureAreaSwitch.Rounding = true;
+            MeasureAreaSwitch.RoundingInt = 90;
+            MeasureAreaSwitch.Size = new Size(35, 20);
+            MeasureAreaSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            MeasureAreaSwitch.TabIndex = 26;
+            MeasureAreaSwitch.Tag = "Cyber";
+            MeasureAreaSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            MeasureAreaSwitch.Timer_RGB = 300;
+            MeasureAreaSwitch.CheckedChanged += MeasureAreaSwitch_CheckedChanged;
+            // 
+            // label70
+            // 
+            label70.AutoSize = true;
+            label70.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label70.ForeColor = SystemColors.ControlDarkDark;
+            label70.Location = new Point(47, 97);
+            label70.Name = "label70";
+            label70.Size = new Size(86, 15);
+            label70.TabIndex = 25;
+            label70.Text = "Use Scale Units";
+            // 
+            // UseScaleUnitsSwitch
+            // 
+            UseScaleUnitsSwitch.Alpha = 50;
+            UseScaleUnitsSwitch.BackColor = Color.Transparent;
+            UseScaleUnitsSwitch.Background = true;
+            UseScaleUnitsSwitch.Background_WidthPen = 2F;
+            UseScaleUnitsSwitch.BackgroundPen = false;
+            UseScaleUnitsSwitch.Checked = true;
+            UseScaleUnitsSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            UseScaleUnitsSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            UseScaleUnitsSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            UseScaleUnitsSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            UseScaleUnitsSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            UseScaleUnitsSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            UseScaleUnitsSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            UseScaleUnitsSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            UseScaleUnitsSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            UseScaleUnitsSwitch.ColorValue = Color.ForestGreen;
+            UseScaleUnitsSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            UseScaleUnitsSwitch.Font = new Font("Arial", 11F);
+            UseScaleUnitsSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            UseScaleUnitsSwitch.Lighting = true;
+            UseScaleUnitsSwitch.LinearGradient_Background = false;
+            UseScaleUnitsSwitch.LinearGradient_Value = false;
+            UseScaleUnitsSwitch.LinearGradientPen = false;
+            UseScaleUnitsSwitch.Location = new Point(6, 92);
+            UseScaleUnitsSwitch.Name = "UseScaleUnitsSwitch";
+            UseScaleUnitsSwitch.PenWidth = 10;
+            UseScaleUnitsSwitch.RGB = false;
+            UseScaleUnitsSwitch.Rounding = true;
+            UseScaleUnitsSwitch.RoundingInt = 90;
+            UseScaleUnitsSwitch.Size = new Size(35, 20);
+            UseScaleUnitsSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            UseScaleUnitsSwitch.TabIndex = 24;
+            UseScaleUnitsSwitch.Tag = "Cyber";
+            UseScaleUnitsSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            UseScaleUnitsSwitch.Timer_RGB = 300;
+            UseScaleUnitsSwitch.CheckedChanged += UseScaleUnitsSwitch_CheckedChanged;
+            // 
+            // SelectMeasureColorButton
+            // 
+            SelectMeasureColorButton.BackColor = Color.FromArgb(191, 138, 26, 0);
+            SelectMeasureColorButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SelectMeasureColorButton.ForeColor = SystemColors.ButtonShadow;
+            SelectMeasureColorButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SelectMeasureColorButton.IconColor = Color.Tan;
+            SelectMeasureColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectMeasureColorButton.Location = new Point(5, 26);
+            SelectMeasureColorButton.Name = "SelectMeasureColorButton";
+            SelectMeasureColorButton.Size = new Size(136, 60);
+            SelectMeasureColorButton.TabIndex = 23;
+            SelectMeasureColorButton.Text = "Select Measure Color";
+            SelectMeasureColorButton.UseVisualStyleBackColor = false;
+            SelectMeasureColorButton.Click += SelectMeasureColorButton_Click;
+            // 
+            // groupBox22
+            // 
+            groupBox22.Controls.Add(label69);
+            groupBox22.Controls.Add(GridLayerUpDown);
+            groupBox22.Controls.Add(label68);
+            groupBox22.Controls.Add(PointedHexGridRadio);
+            groupBox22.Controls.Add(FlatHexGridRadio);
+            groupBox22.Controls.Add(SquareGridRadio);
+            groupBox22.Controls.Add(GridLineWidthTrack);
+            groupBox22.Controls.Add(label67);
+            groupBox22.Controls.Add(label66);
+            groupBox22.Controls.Add(ShowGridSizeSwitch);
+            groupBox22.Controls.Add(GridSizeTrack);
+            groupBox22.Controls.Add(label64);
+            groupBox22.Controls.Add(GridColorSelectButton);
+            groupBox22.Controls.Add(label65);
+            groupBox22.Controls.Add(EnableGridSwitch);
+            groupBox22.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox22.Location = new Point(12, 219);
+            groupBox22.Name = "groupBox22";
+            groupBox22.Size = new Size(148, 422);
+            groupBox22.TabIndex = 23;
+            groupBox22.TabStop = false;
+            groupBox22.Text = "Grid";
+            // 
+            // label69
+            // 
+            label69.AutoSize = true;
+            label69.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label69.ForeColor = SystemColors.ControlDarkDark;
+            label69.Location = new Point(6, 158);
+            label69.Name = "label69";
+            label69.Size = new Size(40, 17);
+            label69.TabIndex = 100;
+            label69.Text = "Layer";
+            // 
+            // GridLayerUpDown
+            // 
+            GridLayerUpDown.Font = new Font("Tahoma", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            GridLayerUpDown.ForeColor = SystemColors.ControlDarkDark;
+            GridLayerUpDown.Items.Add("Default");
+            GridLayerUpDown.Items.Add("Above Ocean");
+            GridLayerUpDown.Items.Add("Below Symbols");
+            GridLayerUpDown.Location = new Point(6, 178);
+            GridLayerUpDown.Name = "GridLayerUpDown";
+            GridLayerUpDown.Size = new Size(136, 22);
+            GridLayerUpDown.TabIndex = 99;
+            GridLayerUpDown.Text = "Default";
+            GridLayerUpDown.TextAlign = HorizontalAlignment.Center;
+            GridLayerUpDown.SelectedItemChanged += GridLayerUpDown_SelectedItemChanged;
+            // 
+            // label68
+            // 
+            label68.AutoSize = true;
+            label68.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label68.ForeColor = SystemColors.ControlDarkDark;
+            label68.Location = new Point(6, 58);
+            label68.Name = "label68";
+            label68.Size = new Size(37, 17);
+            label68.TabIndex = 98;
+            label68.Text = "Style";
+            // 
+            // PointedHexGridRadio
+            // 
+            PointedHexGridRadio.AutoSize = true;
+            PointedHexGridRadio.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            PointedHexGridRadio.ForeColor = SystemColors.ControlDarkDark;
+            PointedHexGridRadio.Location = new Point(6, 131);
+            PointedHexGridRadio.Name = "PointedHexGridRadio";
+            PointedHexGridRadio.Size = new Size(90, 19);
+            PointedHexGridRadio.TabIndex = 97;
+            PointedHexGridRadio.Text = "Pointed Hex";
+            PointedHexGridRadio.UseVisualStyleBackColor = true;
+            PointedHexGridRadio.CheckedChanged += PointedHexGridRadio_CheckedChanged;
+            // 
+            // FlatHexGridRadio
+            // 
+            FlatHexGridRadio.AutoSize = true;
+            FlatHexGridRadio.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FlatHexGridRadio.ForeColor = SystemColors.ControlDarkDark;
+            FlatHexGridRadio.Location = new Point(5, 106);
+            FlatHexGridRadio.Name = "FlatHexGridRadio";
+            FlatHexGridRadio.Size = new Size(68, 19);
+            FlatHexGridRadio.TabIndex = 96;
+            FlatHexGridRadio.Text = "Flat Hex";
+            FlatHexGridRadio.UseVisualStyleBackColor = true;
+            FlatHexGridRadio.CheckedChanged += FlatHexGridRadio_CheckedChanged;
+            // 
+            // SquareGridRadio
+            // 
+            SquareGridRadio.AutoSize = true;
+            SquareGridRadio.Checked = true;
+            SquareGridRadio.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SquareGridRadio.ForeColor = SystemColors.ControlDarkDark;
+            SquareGridRadio.Location = new Point(5, 81);
+            SquareGridRadio.Name = "SquareGridRadio";
+            SquareGridRadio.Size = new Size(61, 19);
+            SquareGridRadio.TabIndex = 95;
+            SquareGridRadio.TabStop = true;
+            SquareGridRadio.Text = "Square";
+            SquareGridRadio.UseVisualStyleBackColor = true;
+            SquareGridRadio.CheckedChanged += SquareGridRadio_CheckedChanged;
+            // 
+            // GridLineWidthTrack
+            // 
+            GridLineWidthTrack.AutoSize = false;
+            GridLineWidthTrack.Location = new Point(6, 281);
+            GridLineWidthTrack.Minimum = 1;
+            GridLineWidthTrack.Name = "GridLineWidthTrack";
+            GridLineWidthTrack.Size = new Size(136, 20);
+            GridLineWidthTrack.TabIndex = 94;
+            GridLineWidthTrack.TickStyle = TickStyle.None;
+            GridLineWidthTrack.Value = 2;
+            GridLineWidthTrack.ValueChanged += GridLineWidthTrack_ValueChanged;
+            // 
+            // label67
+            // 
+            label67.AutoSize = true;
+            label67.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label67.ForeColor = SystemColors.ControlDarkDark;
+            label67.Location = new Point(11, 263);
+            label67.Name = "label67";
+            label67.Size = new Size(64, 15);
+            label67.TabIndex = 93;
+            label67.Text = "Line Width";
+            // 
+            // label66
+            // 
+            label66.AutoSize = true;
+            label66.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label66.ForeColor = SystemColors.ControlDarkDark;
+            label66.Location = new Point(46, 382);
+            label66.Name = "label66";
+            label66.Size = new Size(84, 15);
+            label66.TabIndex = 92;
+            label66.Text = "Show Grid Size";
+            // 
+            // ShowGridSizeSwitch
+            // 
+            ShowGridSizeSwitch.Alpha = 50;
+            ShowGridSizeSwitch.BackColor = Color.Transparent;
+            ShowGridSizeSwitch.Background = true;
+            ShowGridSizeSwitch.Background_WidthPen = 2F;
+            ShowGridSizeSwitch.BackgroundPen = false;
+            ShowGridSizeSwitch.Checked = true;
+            ShowGridSizeSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            ShowGridSizeSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            ShowGridSizeSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            ShowGridSizeSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            ShowGridSizeSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            ShowGridSizeSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            ShowGridSizeSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            ShowGridSizeSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            ShowGridSizeSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowGridSizeSwitch.ColorValue = Color.ForestGreen;
+            ShowGridSizeSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowGridSizeSwitch.Font = new Font("Arial", 11F);
+            ShowGridSizeSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowGridSizeSwitch.Lighting = true;
+            ShowGridSizeSwitch.LinearGradient_Background = false;
+            ShowGridSizeSwitch.LinearGradient_Value = false;
+            ShowGridSizeSwitch.LinearGradientPen = false;
+            ShowGridSizeSwitch.Location = new Point(5, 377);
+            ShowGridSizeSwitch.Name = "ShowGridSizeSwitch";
+            ShowGridSizeSwitch.PenWidth = 10;
+            ShowGridSizeSwitch.RGB = false;
+            ShowGridSizeSwitch.Rounding = true;
+            ShowGridSizeSwitch.RoundingInt = 90;
+            ShowGridSizeSwitch.Size = new Size(35, 20);
+            ShowGridSizeSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowGridSizeSwitch.TabIndex = 91;
+            ShowGridSizeSwitch.Tag = "Cyber";
+            ShowGridSizeSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowGridSizeSwitch.Timer_RGB = 300;
+            ShowGridSizeSwitch.CheckedChanged += ShowGridSizeSwitch_CheckedChanged;
+            // 
+            // GridSizeTrack
+            // 
+            GridSizeTrack.AutoSize = false;
+            GridSizeTrack.Location = new Point(6, 237);
+            GridSizeTrack.Maximum = 256;
+            GridSizeTrack.Minimum = 8;
+            GridSizeTrack.Name = "GridSizeTrack";
+            GridSizeTrack.Size = new Size(136, 20);
+            GridSizeTrack.TabIndex = 90;
+            GridSizeTrack.TickStyle = TickStyle.None;
+            GridSizeTrack.Value = 64;
+            GridSizeTrack.ValueChanged += GridSizeTrack_ValueChanged;
+            // 
+            // label64
+            // 
+            label64.AutoSize = true;
+            label64.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label64.ForeColor = SystemColors.ControlDarkDark;
+            label64.Location = new Point(13, 219);
+            label64.Name = "label64";
+            label64.Size = new Size(27, 15);
+            label64.TabIndex = 89;
+            label64.Text = "Size";
+            // 
+            // GridColorSelectButton
+            // 
+            GridColorSelectButton.BackColor = Color.FromArgb(126, 0, 0, 0);
+            GridColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            GridColorSelectButton.ForeColor = SystemColors.ButtonShadow;
+            GridColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            GridColorSelectButton.IconColor = Color.Tan;
+            GridColorSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            GridColorSelectButton.Location = new Point(6, 311);
+            GridColorSelectButton.Name = "GridColorSelectButton";
+            GridColorSelectButton.Size = new Size(136, 60);
+            GridColorSelectButton.TabIndex = 23;
+            GridColorSelectButton.Text = "Select Grid Color";
+            GridColorSelectButton.UseVisualStyleBackColor = false;
+            GridColorSelectButton.Click += GridColorSelectButton_Click;
+            // 
+            // label65
+            // 
+            label65.AutoSize = true;
+            label65.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label65.ForeColor = SystemColors.ControlDarkDark;
+            label65.Location = new Point(46, 31);
+            label65.Name = "label65";
+            label65.Size = new Size(42, 15);
+            label65.TabIndex = 22;
+            label65.Text = "Enable";
+            // 
+            // EnableGridSwitch
+            // 
+            EnableGridSwitch.Alpha = 50;
+            EnableGridSwitch.BackColor = Color.Transparent;
+            EnableGridSwitch.Background = true;
+            EnableGridSwitch.Background_WidthPen = 2F;
+            EnableGridSwitch.BackgroundPen = false;
+            EnableGridSwitch.Checked = true;
+            EnableGridSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            EnableGridSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            EnableGridSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            EnableGridSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            EnableGridSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            EnableGridSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            EnableGridSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            EnableGridSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            EnableGridSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            EnableGridSwitch.ColorValue = Color.ForestGreen;
+            EnableGridSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            EnableGridSwitch.Font = new Font("Arial", 11F);
+            EnableGridSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            EnableGridSwitch.Lighting = true;
+            EnableGridSwitch.LinearGradient_Background = false;
+            EnableGridSwitch.LinearGradient_Value = false;
+            EnableGridSwitch.LinearGradientPen = false;
+            EnableGridSwitch.Location = new Point(5, 26);
+            EnableGridSwitch.Name = "EnableGridSwitch";
+            EnableGridSwitch.PenWidth = 10;
+            EnableGridSwitch.RGB = false;
+            EnableGridSwitch.Rounding = true;
+            EnableGridSwitch.RoundingInt = 90;
+            EnableGridSwitch.Size = new Size(35, 20);
+            EnableGridSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            EnableGridSwitch.TabIndex = 21;
+            EnableGridSwitch.Tag = "Cyber";
+            EnableGridSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            EnableGridSwitch.Timer_RGB = 300;
+            EnableGridSwitch.CheckedChanged += EnableGridSwitch_CheckedChanged;
+            // 
             // groupBox21
             // 
             groupBox21.Controls.Add(FrameScaleTrack);
@@ -3760,6 +4175,7 @@
             ScaleButton.Size = new Size(60, 60);
             ScaleButton.Text = "Scale";
             ScaleButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            ScaleButton.Click += ScaleButton_Click;
             // 
             // GridButton
             // 
@@ -3776,6 +4192,7 @@
             GridButton.Size = new Size(60, 60);
             GridButton.Text = "Grid";
             GridButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            GridButton.Click += GridButton_Click;
             // 
             // MeasureButton
             // 
@@ -3792,6 +4209,7 @@
             MeasureButton.Size = new Size(60, 60);
             MeasureButton.Text = "Measure";
             MeasureButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            MeasureButton.Click += MeasureButton_Click;
             // 
             // cyberSwitch5
             // 
@@ -6515,410 +6933,6 @@
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
             // 
-            // groupBox22
-            // 
-            groupBox22.Controls.Add(label69);
-            groupBox22.Controls.Add(LayerUpDown);
-            groupBox22.Controls.Add(label68);
-            groupBox22.Controls.Add(radioButton3);
-            groupBox22.Controls.Add(radioButton2);
-            groupBox22.Controls.Add(radioButton1);
-            groupBox22.Controls.Add(trackBar2);
-            groupBox22.Controls.Add(label67);
-            groupBox22.Controls.Add(label66);
-            groupBox22.Controls.Add(cyberSwitch10);
-            groupBox22.Controls.Add(trackBar1);
-            groupBox22.Controls.Add(label64);
-            groupBox22.Controls.Add(iconButton3);
-            groupBox22.Controls.Add(label65);
-            groupBox22.Controls.Add(cyberSwitch9);
-            groupBox22.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox22.Location = new Point(12, 219);
-            groupBox22.Name = "groupBox22";
-            groupBox22.Size = new Size(148, 422);
-            groupBox22.TabIndex = 23;
-            groupBox22.TabStop = false;
-            groupBox22.Text = "Grid";
-            // 
-            // trackBar1
-            // 
-            trackBar1.AutoSize = false;
-            trackBar1.Location = new Point(6, 237);
-            trackBar1.Maximum = 200;
-            trackBar1.Minimum = 25;
-            trackBar1.Name = "trackBar1";
-            trackBar1.Size = new Size(136, 20);
-            trackBar1.TabIndex = 90;
-            trackBar1.TickStyle = TickStyle.None;
-            trackBar1.Value = 100;
-            // 
-            // label64
-            // 
-            label64.AutoSize = true;
-            label64.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label64.ForeColor = SystemColors.ControlDarkDark;
-            label64.Location = new Point(13, 219);
-            label64.Name = "label64";
-            label64.Size = new Size(27, 15);
-            label64.TabIndex = 89;
-            label64.Text = "Size";
-            // 
-            // iconButton3
-            // 
-            iconButton3.BackColor = Color.FromArgb(126, 0, 0, 0);
-            iconButton3.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconButton3.ForeColor = SystemColors.ButtonShadow;
-            iconButton3.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            iconButton3.IconColor = Color.Tan;
-            iconButton3.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton3.Location = new Point(6, 311);
-            iconButton3.Name = "iconButton3";
-            iconButton3.Size = new Size(136, 60);
-            iconButton3.TabIndex = 23;
-            iconButton3.Text = "Select Grid Color";
-            iconButton3.UseVisualStyleBackColor = false;
-            // 
-            // label65
-            // 
-            label65.AutoSize = true;
-            label65.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label65.ForeColor = SystemColors.ControlDarkDark;
-            label65.Location = new Point(46, 31);
-            label65.Name = "label65";
-            label65.Size = new Size(42, 15);
-            label65.TabIndex = 22;
-            label65.Text = "Enable";
-            // 
-            // cyberSwitch9
-            // 
-            cyberSwitch9.Alpha = 50;
-            cyberSwitch9.BackColor = Color.Transparent;
-            cyberSwitch9.Background = true;
-            cyberSwitch9.Background_WidthPen = 2F;
-            cyberSwitch9.BackgroundPen = false;
-            cyberSwitch9.Checked = true;
-            cyberSwitch9.ColorBackground = Color.FromArgb(223, 219, 210);
-            cyberSwitch9.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch9.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch9.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            cyberSwitch9.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            cyberSwitch9.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            cyberSwitch9.ColorLighting = Color.FromArgb(223, 219, 210);
-            cyberSwitch9.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch9.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch9.ColorValue = Color.ForestGreen;
-            cyberSwitch9.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            cyberSwitch9.Font = new Font("Arial", 11F);
-            cyberSwitch9.ForeColor = Color.FromArgb(245, 245, 245);
-            cyberSwitch9.Lighting = true;
-            cyberSwitch9.LinearGradient_Background = false;
-            cyberSwitch9.LinearGradient_Value = false;
-            cyberSwitch9.LinearGradientPen = false;
-            cyberSwitch9.Location = new Point(5, 26);
-            cyberSwitch9.Name = "cyberSwitch9";
-            cyberSwitch9.PenWidth = 10;
-            cyberSwitch9.RGB = false;
-            cyberSwitch9.Rounding = true;
-            cyberSwitch9.RoundingInt = 90;
-            cyberSwitch9.Size = new Size(35, 20);
-            cyberSwitch9.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            cyberSwitch9.TabIndex = 21;
-            cyberSwitch9.Tag = "Cyber";
-            cyberSwitch9.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            cyberSwitch9.Timer_RGB = 300;
-            // 
-            // label66
-            // 
-            label66.AutoSize = true;
-            label66.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label66.ForeColor = SystemColors.ControlDarkDark;
-            label66.Location = new Point(46, 382);
-            label66.Name = "label66";
-            label66.Size = new Size(84, 15);
-            label66.TabIndex = 92;
-            label66.Text = "Show Grid Size";
-            // 
-            // cyberSwitch10
-            // 
-            cyberSwitch10.Alpha = 50;
-            cyberSwitch10.BackColor = Color.Transparent;
-            cyberSwitch10.Background = true;
-            cyberSwitch10.Background_WidthPen = 2F;
-            cyberSwitch10.BackgroundPen = false;
-            cyberSwitch10.Checked = true;
-            cyberSwitch10.ColorBackground = Color.FromArgb(223, 219, 210);
-            cyberSwitch10.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch10.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch10.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            cyberSwitch10.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            cyberSwitch10.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            cyberSwitch10.ColorLighting = Color.FromArgb(223, 219, 210);
-            cyberSwitch10.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch10.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch10.ColorValue = Color.ForestGreen;
-            cyberSwitch10.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            cyberSwitch10.Font = new Font("Arial", 11F);
-            cyberSwitch10.ForeColor = Color.FromArgb(245, 245, 245);
-            cyberSwitch10.Lighting = true;
-            cyberSwitch10.LinearGradient_Background = false;
-            cyberSwitch10.LinearGradient_Value = false;
-            cyberSwitch10.LinearGradientPen = false;
-            cyberSwitch10.Location = new Point(5, 377);
-            cyberSwitch10.Name = "cyberSwitch10";
-            cyberSwitch10.PenWidth = 10;
-            cyberSwitch10.RGB = false;
-            cyberSwitch10.Rounding = true;
-            cyberSwitch10.RoundingInt = 90;
-            cyberSwitch10.Size = new Size(35, 20);
-            cyberSwitch10.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            cyberSwitch10.TabIndex = 91;
-            cyberSwitch10.Tag = "Cyber";
-            cyberSwitch10.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            cyberSwitch10.Timer_RGB = 300;
-            // 
-            // trackBar2
-            // 
-            trackBar2.AutoSize = false;
-            trackBar2.Location = new Point(6, 281);
-            trackBar2.Maximum = 200;
-            trackBar2.Minimum = 25;
-            trackBar2.Name = "trackBar2";
-            trackBar2.Size = new Size(136, 20);
-            trackBar2.TabIndex = 94;
-            trackBar2.TickStyle = TickStyle.None;
-            trackBar2.Value = 100;
-            // 
-            // label67
-            // 
-            label67.AutoSize = true;
-            label67.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label67.ForeColor = SystemColors.ControlDarkDark;
-            label67.Location = new Point(11, 263);
-            label67.Name = "label67";
-            label67.Size = new Size(64, 15);
-            label67.TabIndex = 93;
-            label67.Text = "Line Width";
-            // 
-            // radioButton1
-            // 
-            radioButton1.AutoSize = true;
-            radioButton1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            radioButton1.ForeColor = SystemColors.ControlDarkDark;
-            radioButton1.Location = new Point(5, 81);
-            radioButton1.Name = "radioButton1";
-            radioButton1.Size = new Size(61, 19);
-            radioButton1.TabIndex = 95;
-            radioButton1.TabStop = true;
-            radioButton1.Text = "Square";
-            radioButton1.UseVisualStyleBackColor = true;
-            // 
-            // radioButton2
-            // 
-            radioButton2.AutoSize = true;
-            radioButton2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            radioButton2.ForeColor = SystemColors.ControlDarkDark;
-            radioButton2.Location = new Point(5, 106);
-            radioButton2.Name = "radioButton2";
-            radioButton2.Size = new Size(68, 19);
-            radioButton2.TabIndex = 96;
-            radioButton2.TabStop = true;
-            radioButton2.Text = "Flat Hex";
-            radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // radioButton3
-            // 
-            radioButton3.AutoSize = true;
-            radioButton3.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            radioButton3.ForeColor = SystemColors.ControlDarkDark;
-            radioButton3.Location = new Point(6, 131);
-            radioButton3.Name = "radioButton3";
-            radioButton3.Size = new Size(90, 19);
-            radioButton3.TabIndex = 97;
-            radioButton3.TabStop = true;
-            radioButton3.Text = "Pointed Hex";
-            radioButton3.UseVisualStyleBackColor = true;
-            // 
-            // label68
-            // 
-            label68.AutoSize = true;
-            label68.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label68.ForeColor = SystemColors.ControlDarkDark;
-            label68.Location = new Point(6, 58);
-            label68.Name = "label68";
-            label68.Size = new Size(37, 17);
-            label68.TabIndex = 98;
-            label68.Text = "Style";
-            // 
-            // LayerUpDown
-            // 
-            LayerUpDown.Font = new Font("Tahoma", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LayerUpDown.ForeColor = SystemColors.ControlDarkDark;
-            LayerUpDown.Items.Add("Default");
-            LayerUpDown.Items.Add("Above Ocean");
-            LayerUpDown.Items.Add("Below Symbols");
-            LayerUpDown.Location = new Point(6, 178);
-            LayerUpDown.Name = "LayerUpDown";
-            LayerUpDown.Size = new Size(136, 22);
-            LayerUpDown.TabIndex = 99;
-            LayerUpDown.Text = "Default";
-            LayerUpDown.TextAlign = HorizontalAlignment.Center;
-            // 
-            // label69
-            // 
-            label69.AutoSize = true;
-            label69.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label69.ForeColor = SystemColors.ControlDarkDark;
-            label69.Location = new Point(6, 158);
-            label69.Name = "label69";
-            label69.Size = new Size(40, 17);
-            label69.TabIndex = 100;
-            label69.Text = "Layer";
-            // 
-            // groupBox23
-            // 
-            groupBox23.Controls.Add(ClearMeasureButton);
-            groupBox23.Controls.Add(label71);
-            groupBox23.Controls.Add(cyberSwitch12);
-            groupBox23.Controls.Add(label70);
-            groupBox23.Controls.Add(cyberSwitch11);
-            groupBox23.Controls.Add(iconButton4);
-            groupBox23.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox23.Location = new Point(12, 664);
-            groupBox23.Name = "groupBox23";
-            groupBox23.Size = new Size(148, 202);
-            groupBox23.TabIndex = 24;
-            groupBox23.TabStop = false;
-            groupBox23.Text = "Measure";
-            // 
-            // iconButton4
-            // 
-            iconButton4.BackColor = Color.FromArgb(191, 138, 26, 0);
-            iconButton4.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconButton4.ForeColor = SystemColors.ButtonShadow;
-            iconButton4.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            iconButton4.IconColor = Color.Tan;
-            iconButton4.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton4.Location = new Point(5, 26);
-            iconButton4.Name = "iconButton4";
-            iconButton4.Size = new Size(136, 60);
-            iconButton4.TabIndex = 23;
-            iconButton4.Text = "Select Measure Color";
-            iconButton4.UseVisualStyleBackColor = false;
-            // 
-            // label70
-            // 
-            label70.AutoSize = true;
-            label70.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label70.ForeColor = SystemColors.ControlDarkDark;
-            label70.Location = new Point(47, 97);
-            label70.Name = "label70";
-            label70.Size = new Size(86, 15);
-            label70.TabIndex = 25;
-            label70.Text = "Use Scale Units";
-            // 
-            // cyberSwitch11
-            // 
-            cyberSwitch11.Alpha = 50;
-            cyberSwitch11.BackColor = Color.Transparent;
-            cyberSwitch11.Background = true;
-            cyberSwitch11.Background_WidthPen = 2F;
-            cyberSwitch11.BackgroundPen = false;
-            cyberSwitch11.Checked = true;
-            cyberSwitch11.ColorBackground = Color.FromArgb(223, 219, 210);
-            cyberSwitch11.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch11.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch11.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            cyberSwitch11.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            cyberSwitch11.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            cyberSwitch11.ColorLighting = Color.FromArgb(223, 219, 210);
-            cyberSwitch11.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch11.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch11.ColorValue = Color.ForestGreen;
-            cyberSwitch11.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            cyberSwitch11.Font = new Font("Arial", 11F);
-            cyberSwitch11.ForeColor = Color.FromArgb(245, 245, 245);
-            cyberSwitch11.Lighting = true;
-            cyberSwitch11.LinearGradient_Background = false;
-            cyberSwitch11.LinearGradient_Value = false;
-            cyberSwitch11.LinearGradientPen = false;
-            cyberSwitch11.Location = new Point(6, 92);
-            cyberSwitch11.Name = "cyberSwitch11";
-            cyberSwitch11.PenWidth = 10;
-            cyberSwitch11.RGB = false;
-            cyberSwitch11.Rounding = true;
-            cyberSwitch11.RoundingInt = 90;
-            cyberSwitch11.Size = new Size(35, 20);
-            cyberSwitch11.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            cyberSwitch11.TabIndex = 24;
-            cyberSwitch11.Tag = "Cyber";
-            cyberSwitch11.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            cyberSwitch11.Timer_RGB = 300;
-            // 
-            // label71
-            // 
-            label71.AutoSize = true;
-            label71.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label71.ForeColor = SystemColors.ControlDarkDark;
-            label71.Location = new Point(47, 126);
-            label71.Name = "label71";
-            label71.Size = new Size(79, 15);
-            label71.TabIndex = 27;
-            label71.Text = "Measure Area";
-            // 
-            // cyberSwitch12
-            // 
-            cyberSwitch12.Alpha = 50;
-            cyberSwitch12.BackColor = Color.Transparent;
-            cyberSwitch12.Background = true;
-            cyberSwitch12.Background_WidthPen = 2F;
-            cyberSwitch12.BackgroundPen = false;
-            cyberSwitch12.Checked = false;
-            cyberSwitch12.ColorBackground = Color.FromArgb(223, 219, 210);
-            cyberSwitch12.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch12.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch12.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            cyberSwitch12.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            cyberSwitch12.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            cyberSwitch12.ColorLighting = Color.FromArgb(223, 219, 210);
-            cyberSwitch12.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch12.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch12.ColorValue = Color.ForestGreen;
-            cyberSwitch12.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            cyberSwitch12.Font = new Font("Arial", 11F);
-            cyberSwitch12.ForeColor = Color.FromArgb(245, 245, 245);
-            cyberSwitch12.Lighting = true;
-            cyberSwitch12.LinearGradient_Background = false;
-            cyberSwitch12.LinearGradient_Value = false;
-            cyberSwitch12.LinearGradientPen = false;
-            cyberSwitch12.Location = new Point(6, 121);
-            cyberSwitch12.Name = "cyberSwitch12";
-            cyberSwitch12.PenWidth = 10;
-            cyberSwitch12.RGB = false;
-            cyberSwitch12.Rounding = true;
-            cyberSwitch12.RoundingInt = 90;
-            cyberSwitch12.Size = new Size(35, 20);
-            cyberSwitch12.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            cyberSwitch12.TabIndex = 26;
-            cyberSwitch12.Tag = "Cyber";
-            cyberSwitch12.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            cyberSwitch12.Timer_RGB = 300;
-            // 
-            // ClearMeasureButton
-            // 
-            ClearMeasureButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            ClearMeasureButton.ForeColor = SystemColors.ControlDarkDark;
-            ClearMeasureButton.IconChar = FontAwesome.Sharp.IconChar.Close;
-            ClearMeasureButton.IconColor = Color.Black;
-            ClearMeasureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ClearMeasureButton.IconSize = 18;
-            ClearMeasureButton.Location = new Point(33, 168);
-            ClearMeasureButton.Name = "ClearMeasureButton";
-            ClearMeasureButton.Size = new Size(75, 23);
-            ClearMeasureButton.TabIndex = 28;
-            ClearMeasureButton.Text = "Clear";
-            ClearMeasureButton.TextImageRelation = TextImageRelation.ImageBeforeText;
-            ClearMeasureButton.UseVisualStyleBackColor = true;
-            // 
             // RealmStudioMainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -7034,6 +7048,12 @@
             LabelToolStrip.PerformLayout();
             OverlayTab.ResumeLayout(false);
             OverlayTab.PerformLayout();
+            groupBox23.ResumeLayout(false);
+            groupBox23.PerformLayout();
+            groupBox22.ResumeLayout(false);
+            groupBox22.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)GridLineWidthTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)GridSizeTrack).EndInit();
             groupBox21.ResumeLayout(false);
             groupBox21.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)FrameScaleTrack).EndInit();
@@ -7099,12 +7119,6 @@
             DrawingToolPanel.PerformLayout();
             RegionToolPanel.ResumeLayout(false);
             RegionToolPanel.PerformLayout();
-            groupBox22.ResumeLayout(false);
-            groupBox22.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)trackBar2).EndInit();
-            groupBox23.ResumeLayout(false);
-            groupBox23.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -7520,27 +7534,27 @@
         private Label label63;
         private FontAwesome.Sharp.IconButton FrameTintColorSelectButton;
         private GroupBox groupBox22;
-        private TrackBar trackBar1;
+        private TrackBar GridSizeTrack;
         private Label label64;
-        private FontAwesome.Sharp.IconButton iconButton3;
+        private FontAwesome.Sharp.IconButton GridColorSelectButton;
         private Label label65;
-        private ReaLTaiizor.Controls.CyberSwitch cyberSwitch9;
-        private TrackBar trackBar2;
+        private ReaLTaiizor.Controls.CyberSwitch EnableGridSwitch;
+        private TrackBar GridLineWidthTrack;
         private Label label67;
         private Label label66;
-        private ReaLTaiizor.Controls.CyberSwitch cyberSwitch10;
+        private ReaLTaiizor.Controls.CyberSwitch ShowGridSizeSwitch;
         private Label label68;
-        private RadioButton radioButton3;
-        private RadioButton radioButton2;
-        private RadioButton radioButton1;
+        private RadioButton PointedHexGridRadio;
+        private RadioButton FlatHexGridRadio;
+        private RadioButton SquareGridRadio;
         private Label label69;
-        private DomainUpDown LayerUpDown;
+        private DomainUpDown GridLayerUpDown;
         private GroupBox groupBox23;
         private FontAwesome.Sharp.IconButton ClearMeasureButton;
         private Label label71;
-        private ReaLTaiizor.Controls.CyberSwitch cyberSwitch12;
+        private ReaLTaiizor.Controls.CyberSwitch MeasureAreaSwitch;
         private Label label70;
-        private ReaLTaiizor.Controls.CyberSwitch cyberSwitch11;
-        private FontAwesome.Sharp.IconButton iconButton4;
+        private ReaLTaiizor.Controls.CyberSwitch UseScaleUnitsSwitch;
+        private FontAwesome.Sharp.IconButton SelectMeasureColorButton;
     }
 }

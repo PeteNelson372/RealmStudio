@@ -45,6 +45,8 @@ namespace RealmStudio
         private static River? CURRENT_RIVER = null;
         private static MapPath? CURRENT_PATH = null;
         private static MapFrame? CURRENT_FRAME = null;
+        private static MapGrid? CURRENT_MAP_GRID = null;
+        private static MapMeasure? CURRENT_MAP_MEASURE = null;
 
         // objects that are currently selected
         private static MapPath? SELECTED_PATH = null;
@@ -2033,6 +2035,32 @@ namespace RealmStudio
                         SELECTED_PLACED_MAP_BOX = new();
                     }
                     break;
+                case DrawingModeEnum.DrawMapMeasure:
+                    {
+                        if (CURRENT_MAP_MEASURE == null)
+                        {
+                            // make sure there is only one measure object
+                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.MEASURELAYER).MapLayerComponents.Clear();
+
+                            CURRENT_MAP_MEASURE = new(CURRENT_MAP)
+                            {
+                                UseMapUnits = UseScaleUnitsSwitch.Checked,
+                                MeasureArea = MeasureAreaSwitch.Checked,
+                                MeasureLineColor = SelectMeasureColorButton.BackColor
+                            };
+
+                            PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
+                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.MEASURELAYER).MapLayerComponents.Add(CURRENT_MAP_MEASURE);
+                        }
+                        else
+                        {
+                            if (!CURRENT_MAP_MEASURE.MeasurePoints.Contains(zoomedScrolledPoint))
+                            {
+                                CURRENT_MAP_MEASURE.MeasurePoints.Add(zoomedScrolledPoint);
+                            }
+                        }
+                    }
+                    break;
 
             }
         }
@@ -2100,6 +2128,24 @@ namespace RealmStudio
 
                         }
                     }
+                    break;
+                case DrawingModeEnum.DrawMapMeasure:
+                    if (CURRENT_MAP_MEASURE != null)
+                    {
+                        CURRENT_MAP_MEASURE.MeasurePoints.Add(zoomedScrolledPoint);
+
+                        float lineLength = SKPoint.Distance(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint);
+                        CURRENT_MAP_MEASURE.TotalMeasureLength += lineLength;
+                        CURRENT_MAP_MEASURE.RenderValue = true;
+
+                        // reset everything
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(); // not sure if this needs to be done
+                        PREVIOUS_CURSOR_POINT = SKPoint.Empty;
+
+                        CURRENT_MAP_MEASURE = null;
+                        CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+                    }
+
                     break;
             }
         }
@@ -2331,6 +2377,64 @@ namespace RealmStudio
 
                                 SKGLRenderControl.Invalidate();
                             }
+                        }
+                    }
+                    break;
+                case DrawingModeEnum.DrawMapMeasure:
+
+                    if (CURRENT_MAP_MEASURE != null)
+                    {
+                        SKCanvas? workCanvas = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+
+                        if (workCanvas == null) { return; }
+
+                        workCanvas.Clear();
+
+                        if (CURRENT_MAP_MEASURE.MeasureArea && CURRENT_MAP_MEASURE.MeasurePoints.Count > 1)
+                        {
+                            SKPath path = new();
+
+                            path.MoveTo(CURRENT_MAP_MEASURE.MeasurePoints.First());
+
+                            for (int i = 1; i < CURRENT_MAP_MEASURE.MeasurePoints.Count; i++)
+                            {
+                                path.LineTo(CURRENT_MAP_MEASURE.MeasurePoints[i]);
+                            }
+
+                            path.LineTo(zoomedScrolledPoint);
+
+                            path.Close();
+
+                            workCanvas.DrawPath(path, CURRENT_MAP_MEASURE.MeasureAreaPaint);
+                        }
+                        else
+                        {
+                            workCanvas.DrawLine(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint, CURRENT_MAP_MEASURE.MeasureLinePaint);
+                        }
+
+                        // render measure value and units
+                        SKPoint measureValuePoint = new(zoomedScrolledPoint.X + 30, zoomedScrolledPoint.Y + 20);
+
+                        float lineLength = SKPoint.Distance(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint);
+                        float totalLength = CURRENT_MAP_MEASURE.TotalMeasureLength + lineLength;
+
+                        CURRENT_MAP_MEASURE.RenderDistanceLabel(workCanvas, measureValuePoint, totalLength);
+
+                        if (CURRENT_MAP_MEASURE.MeasureArea && CURRENT_MAP_MEASURE.MeasurePoints.Count > 1)
+                        {
+                            // temporarity add the point at the mouse position
+                            CURRENT_MAP_MEASURE.MeasurePoints.Add(zoomedScrolledPoint);
+
+                            // calculate the polygon area
+                            float area = DrawingMethods.CalculatePolygonArea(CURRENT_MAP_MEASURE.MeasurePoints);
+
+                            // remove the temporarily added point
+                            CURRENT_MAP_MEASURE.MeasurePoints.RemoveAt(CURRENT_MAP_MEASURE.MeasurePoints.Count - 1);
+
+                            // display the area label
+                            SKPoint measureAreaPoint = new(zoomedScrolledPoint.X + 30, zoomedScrolledPoint.Y + 40);
+
+                            CURRENT_MAP_MEASURE.RenderAreaLabel(workCanvas, measureAreaPoint, area);
                         }
                     }
                     break;
@@ -2641,7 +2745,24 @@ namespace RealmStudio
 
                         SKGLRenderControl.Invalidate();
                     }
+                    break;
+                case DrawingModeEnum.DrawMapMeasure:
+                    {
+                        if (CURRENT_MAP_MEASURE != null)
+                        {
+                            if (!CURRENT_MAP_MEASURE.MeasurePoints.Contains(PREVIOUS_CURSOR_POINT))
+                            {
+                                CURRENT_MAP_MEASURE.MeasurePoints.Add(PREVIOUS_CURSOR_POINT);
+                            }
 
+                            CURRENT_MAP_MEASURE.MeasurePoints.Add(zoomedScrolledPoint);
+
+                            float lineLength = SKPoint.Distance(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint);
+                            CURRENT_MAP_MEASURE.TotalMeasureLength += lineLength;
+                        }
+
+                        PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
+                    }
                     break;
             }
 
@@ -5536,9 +5657,103 @@ namespace RealmStudio
             FrameStyleTable.Show();
         }
 
+        private void CreateGrid()
+        {
+            CURRENT_MAP_GRID = new MapGrid
+            {
+                ParentMap = CURRENT_MAP,
+                GridEnabled = true,
+                GridColor = GridColorSelectButton.BackColor,
+                GridLineWidth = GridLineWidthTrack.Value,
+                GridSize = GridSizeTrack.Value,
+                Width = CURRENT_MAP.MapWidth,
+                Height = CURRENT_MAP.MapHeight,
+            };
+
+            if (SquareGridRadio.Checked)
+            {
+                CURRENT_MAP_GRID.GridType = GridTypeEnum.Square;
+            }
+            else if (FlatHexGridRadio.Checked)
+            {
+                CURRENT_MAP_GRID.GridType = GridTypeEnum.FlatHex;
+                CURRENT_MAP_GRID.GridSize /= 2;
+            }
+            else if (PointedHexGridRadio.Checked)
+            {
+                CURRENT_MAP_GRID.GridType = GridTypeEnum.PointedHex;
+                CURRENT_MAP_GRID.GridSize /= 2;
+            }
+
+            string? selectedLayerItem = (string?)GridLayerUpDown.SelectedItem;
+
+            if (selectedLayerItem != null)
+            {
+                switch (selectedLayerItem)
+                {
+                    case "Default":
+                        CURRENT_MAP_GRID.GridLayerIndex = MapBuilder.DEFAULTGRIDLAYER;
+                        break;
+                    case "Above Ocean":
+                        CURRENT_MAP_GRID.GridLayerIndex = MapBuilder.ABOVEOCEANGRIDLAYER;
+                        break;
+                    case "Below Symbols":
+                        CURRENT_MAP_GRID.GridLayerIndex = MapBuilder.BELOWSYMBOLSGRIDLAYER;
+                        break;
+                    default:
+                        CURRENT_MAP_GRID.GridLayerIndex = MapBuilder.DEFAULTGRIDLAYER;
+                        break;
+                }
+            }
+            else
+            {
+                CURRENT_MAP_GRID.GridLayerIndex = MapBuilder.DEFAULTGRIDLAYER;
+            }
+
+            CURRENT_MAP_GRID.GridPaint = new()
+            {
+                Style = SKPaintStyle.Stroke,
+                Color = CURRENT_MAP_GRID.GridColor.ToSKColor(),
+                StrokeWidth = CURRENT_MAP_GRID.GridLineWidth,
+                StrokeJoin = SKStrokeJoin.Bevel
+            };
+        }
+
+        private static void RemoveGrid()
+        {
+            for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.Count - 1; i > 0; i--)
+            {
+                if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents[i] is MapGrid)
+                {
+                    MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.RemoveAt(i);
+                    break;
+                }
+            }
+
+            for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.Count - 1; i > 0; i--)
+            {
+                if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents[i] is MapGrid)
+                {
+                    MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.RemoveAt(i);
+                    break;
+                }
+            }
+
+            for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.Count - 1; i > 0; i--)
+            {
+                if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents[i] is MapGrid)
+                {
+                    MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
         #endregion
 
         #region Overlay Tab Event Handlers
+
+        #region Frame Event Handlers
 
         private void FramePictureBox_MouseClick(object sender, EventArgs e)
         {
@@ -5634,5 +5849,241 @@ namespace RealmStudio
 
         #endregion
 
+        #region Scale Event Handlers
+
+        private void ScaleButton_Click(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region Grid Event Handlers
+
+        private void GridButton_Click(object sender, EventArgs e)
+        {
+            if (EnableGridSwitch.Checked)
+            {
+                // make sure there is only one grid
+                RemoveGrid();
+
+                CreateGrid();
+
+                if (CURRENT_MAP_GRID != null)
+                {
+                    MapBuilder.GetMapLayerByIndex(CURRENT_MAP, CURRENT_MAP_GRID.GridLayerIndex).MapLayerComponents.Add(CURRENT_MAP_GRID);
+                }
+
+                SKGLRenderControl.Invalidate();
+            }
+            else
+            {
+                // make sure there is only one grid
+                RemoveGrid();
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void EnableGridSwitch_CheckedChanged()
+        {
+            if (CURRENT_MAP_GRID != null)
+            {
+                CURRENT_MAP_GRID.GridEnabled = EnableGridSwitch.Checked;
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void SquareGridRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CURRENT_MAP_GRID != null)
+            {
+                CURRENT_MAP_GRID.GridType = GridTypeEnum.Square;
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void FlatHexGridRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CURRENT_MAP_GRID != null)
+            {
+                CURRENT_MAP_GRID.GridType = GridTypeEnum.FlatHex;
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void PointedHexGridRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CURRENT_MAP_GRID != null)
+            {
+                CURRENT_MAP_GRID.GridType = GridTypeEnum.PointedHex;
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void GridLayerUpDown_SelectedItemChanged(object sender, EventArgs e)
+        {
+            if (EnableGridSwitch.Checked)
+            {
+                // make sure there is only one grid
+                RemoveGrid();
+
+                CreateGrid();
+
+                if (CURRENT_MAP_GRID != null)
+                {
+                    MapBuilder.GetMapLayerByIndex(CURRENT_MAP, CURRENT_MAP_GRID.GridLayerIndex).MapLayerComponents.Add(CURRENT_MAP_GRID);
+                }
+
+                SKGLRenderControl.Invalidate();
+            }
+            else
+            {
+                // make sure there is only one grid
+                RemoveGrid();
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void GridSizeTrack_ValueChanged(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(GridSizeTrack.Value.ToString(), GridSizeTrack, new Point(GridSizeTrack.Right - 38, GridSizeTrack.Top - 255), 2000);
+
+            if (CURRENT_MAP_GRID != null)
+            {
+                CURRENT_MAP_GRID.GridSize = GridSizeTrack.Value;
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void GridLineWidthTrack_ValueChanged(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(GridLineWidthTrack.Value.ToString(), GridLineWidthTrack, new Point(GridLineWidthTrack.Right - 38, GridLineWidthTrack.Top - 300), 2000);
+
+            if (CURRENT_MAP_GRID != null)
+            {
+                CURRENT_MAP_GRID.GridLineWidth = GridLineWidthTrack.Value;
+
+                CURRENT_MAP_GRID.GridPaint = new()
+                {
+                    Style = SKPaintStyle.Stroke,
+                    Color = CURRENT_MAP_GRID.GridColor.ToSKColor(),
+                    StrokeWidth = CURRENT_MAP_GRID.GridLineWidth,
+                    StrokeJoin = SKStrokeJoin.Bevel
+                };
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void GridColorSelectButton_Click(object sender, EventArgs e)
+        {
+            Color gridColor = UtilityMethods.SelectColorFromDialog(this, GridColorSelectButton.BackColor);
+
+            if (gridColor.ToArgb() != Color.Empty.ToArgb())
+            {
+                GridColorSelectButton.BackColor = gridColor;
+                GridColorSelectButton.Refresh();
+
+                if (CURRENT_MAP_GRID != null)
+                {
+                    CURRENT_MAP_GRID.GridColor = gridColor;
+
+                    CURRENT_MAP_GRID.GridPaint = new()
+                    {
+                        Style = SKPaintStyle.Stroke,
+                        Color = CURRENT_MAP_GRID.GridColor.ToSKColor(),
+                        StrokeWidth = CURRENT_MAP_GRID.GridLineWidth,
+                        StrokeJoin = SKStrokeJoin.Bevel
+                    };
+
+                    SKGLRenderControl.Invalidate();
+                }
+            }
+        }
+
+        private void ShowGridSizeSwitch_CheckedChanged()
+        {
+            if (CURRENT_MAP_GRID != null)
+            {
+                CURRENT_MAP_GRID.ShowGridSize = ShowGridSizeSwitch.Checked;
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        #endregion
+
+        #region Measure Event Handlers
+
+        private void MeasureButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.DrawMapMeasure;
+        }
+
+        private void SelectMeasureColorButton_Click(object sender, EventArgs e)
+        {
+            Color measureColor = UtilityMethods.SelectColorFromDialog(this, SelectMeasureColorButton.BackColor);
+
+            if (measureColor.ToArgb() != Color.Empty.ToArgb())
+            {
+                SelectMeasureColorButton.BackColor = measureColor;
+                SelectMeasureColorButton.Refresh();
+
+                if (CURRENT_MAP_MEASURE != null)
+                {
+                    CURRENT_MAP_MEASURE.MeasureLineColor = measureColor;
+
+                    CURRENT_MAP_MEASURE.MeasureLinePaint = new()
+                    {
+                        Style = SKPaintStyle.Stroke,
+                        StrokeWidth = 1,
+                        Color = CURRENT_MAP_MEASURE.MeasureLineColor.ToSKColor()
+                    };
+
+                    CURRENT_MAP_MEASURE.MeasureAreaPaint = new()
+                    {
+                        Style = SKPaintStyle.StrokeAndFill,
+                        StrokeWidth = 1,
+                        Color = CURRENT_MAP_MEASURE.MeasureLineColor.ToSKColor()
+                    };
+
+                    SKGLRenderControl.Invalidate();
+                }
+            }
+        }
+
+        private void UseScaleUnitsSwitch_CheckedChanged()
+        {
+            if (CURRENT_MAP_MEASURE != null)
+            {
+                CURRENT_MAP_MEASURE.UseMapUnits = UseScaleUnitsSwitch.Checked;
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void MeasureAreaSwitch_CheckedChanged()
+        {
+            if (CURRENT_MAP_MEASURE != null)
+            {
+                CURRENT_MAP_MEASURE.MeasureArea = MeasureAreaSwitch.Checked;
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void ClearMeasureButton_Click(object sender, EventArgs e)
+        {
+            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.MEASURELAYER).MapLayerComponents.Clear();
+            SKGLRenderControl.Invalidate();
+        }
+
+        #endregion
+
+        #endregion
     }
 }
