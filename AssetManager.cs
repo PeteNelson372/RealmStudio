@@ -36,7 +36,7 @@ namespace RealmStudio
         public static List<MapTexture> LAND_TEXTURE_LIST { get; set; } = [];
         public static List<MapTexture> HATCH_TEXTURE_LIST { get; set; } = [];
 
-        public static List<MapBox> MAP_BOX_TEXTURE_LIST = [];
+        public static List<MapBox> MAP_BOX_LIST = [];
 
         public static List<LabelPreset> LABEL_PRESETS = [];
 
@@ -216,16 +216,6 @@ namespace RealmStudio
                 else if (Path.GetDirectoryName(f.File).EndsWith("\\Stamps"))
                 {
                 }
-                else if (Path.GetDirectoryName(f.File).EndsWith("\\Boxes"))
-                {
-                    MapBox b = new()
-                    {
-                        BoxName = assetName,
-                        BoxBitmapPath = path
-                    };
-
-                    MAP_BOX_TEXTURE_LIST.Add(b);
-                }
                 else if (Path.GetDirectoryName(f.File).EndsWith("\\LabelPresets"))
                 {
                     LabelPreset? preset = MapFileMethods.ReadLabelPreset(path);
@@ -244,6 +234,9 @@ namespace RealmStudio
             int numSymbols = LoadSymbolCollections();
 
             numAssets += numSymbols;
+
+            int numBoxes = LoadBoxAssets();
+            numAssets += numBoxes;
 
             int numFrames = LoadFrameAssets();
             numAssets += numFrames;
@@ -353,6 +346,35 @@ namespace RealmStudio
             }
 
             return numFrames;
+        }
+
+        internal static int LoadBoxAssets()
+        {
+            MAP_BOX_LIST.Clear();
+
+            string boxAssetDirectory = Resources.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Boxes" + Path.DirectorySeparatorChar;
+
+            int numBoxes = 0;
+            var files = from file in Directory.EnumerateFiles(boxAssetDirectory, "*.*", SearchOption.AllDirectories).Order()
+                        where file.Contains(".xml")
+                        select new
+                        {
+                            File = file
+                        };
+
+            foreach (var f in files)
+            {
+                MapBox? mapBox = MapFileMethods.ReadBoxAssetFromXml(f.File);
+
+                if (mapBox != null)
+                {
+                    numBoxes++;
+                    MAP_BOX_LIST.Add(mapBox);
+                }
+
+            }
+
+            return numBoxes;
         }
 
         public static void LoadSymbolTags()

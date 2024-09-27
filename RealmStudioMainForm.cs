@@ -44,6 +44,7 @@ namespace RealmStudio
         private static WaterFeature? CURRENT_WATERFEATURE = null;
         private static River? CURRENT_RIVER = null;
         private static MapPath? CURRENT_PATH = null;
+        private static MapFrame? CURRENT_FRAME = null;
 
         // objects that are currently selected
         private static MapPath? SELECTED_PATH = null;
@@ -52,6 +53,7 @@ namespace RealmStudio
         private static MapBox? SELECTED_MAP_BOX = null;
         private static PlacedMapBox? SELECTED_PLACED_MAP_BOX = null;
         private static MapLabel? SELECTED_MAP_LABEL = null;
+        private static PlacedMapFrame? SELECTED_PLACED_MAP_FRAME = null;
 
         private static Font SELECTED_LABEL_FONT = new("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
 
@@ -675,9 +677,9 @@ namespace RealmStudio
 
             LabelPresetsListBox.Refresh();
 
-            AddMapBoxesToLabelBoxTable(AssetManager.MAP_BOX_TEXTURE_LIST);
+            AddMapBoxesToLabelBoxTable(AssetManager.MAP_BOX_LIST);
 
-            //AddMapFramesToFrameTable(OverlayMethods.MAP_FRAME_TEXTURES);
+            AddMapFramesToFrameTable(AssetManager.MAP_FRAME_TEXTURES);
 
             // TODO: apply default theme in main form
             if (AssetManager.CURRENT_THEME != null)
@@ -1605,8 +1607,8 @@ namespace RealmStudio
             // TODO: default grid layer
             MapRenderMethods.RenderDefaultGrid(CURRENT_MAP, e, ScrollPoint);
 
-            // TODO: overlay layer
-            MapRenderMethods.RenderOverlays(CURRENT_MAP, e, ScrollPoint);
+            // render frame
+            MapRenderMethods.RenderFrame(CURRENT_MAP, e, ScrollPoint);
 
             // TODO: measure layer
             MapRenderMethods.RenderMeasures(CURRENT_MAP, e, ScrollPoint);
@@ -2307,6 +2309,11 @@ namespace RealmStudio
                                 SELECTED_PLACED_MAP_BOX.Width = resizedBitmap.Width;
                                 SELECTED_PLACED_MAP_BOX.Height = resizedBitmap.Height;
 
+                                SELECTED_PLACED_MAP_BOX.BoxCenterLeft = SELECTED_MAP_BOX.BoxCenterLeft;
+                                SELECTED_PLACED_MAP_BOX.BoxCenterTop = SELECTED_MAP_BOX.BoxCenterTop;
+                                SELECTED_PLACED_MAP_BOX.BoxCenterRight = SELECTED_MAP_BOX.BoxCenterRight;
+                                SELECTED_PLACED_MAP_BOX.BoxCenterBottom = SELECTED_MAP_BOX.BoxCenterBottom;
+
                                 SELECTED_PLACED_MAP_BOX.BoxTint = SelectBoxTintButton.BackColor;
 
                                 using SKPaint boxPaint = new()
@@ -2588,7 +2595,42 @@ namespace RealmStudio
                     // finalize box drawing
                     if (SELECTED_PLACED_MAP_BOX != null)
                     {
-                        Cmd_AddLabelBox cmd = new Cmd_AddLabelBox(CURRENT_MAP, SELECTED_PLACED_MAP_BOX);
+                        SKRectI center = new((int)SELECTED_PLACED_MAP_BOX.BoxCenterLeft,
+                            (int)SELECTED_PLACED_MAP_BOX.BoxCenterTop,
+                            (int)(SELECTED_PLACED_MAP_BOX.Width - SELECTED_PLACED_MAP_BOX.BoxCenterRight),
+                            (int)(SELECTED_PLACED_MAP_BOX.Height - SELECTED_PLACED_MAP_BOX.BoxCenterBottom));
+
+                        if (center.IsEmpty || center.Left < 0 || center.Right <= 0 || center.Top < 0 || center.Bottom <= 0)
+                        {
+                            return;
+                        }
+                        else if (center.Width <= 0 || center.Height <= 0)
+                        {
+                            // swap 
+                            if (center.Right < center.Left)
+                            {
+                                (center.Left, center.Right) = (center.Right, center.Left);
+                            }
+
+                            if (center.Bottom < center.Top)
+                            {
+                                (center.Top, center.Bottom) = (center.Bottom, center.Top);
+                            }
+                        }
+
+                        SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(SELECTED_PLACED_MAP_BOX.BoxBitmap.ToSKBitmap(), center);
+
+                        SELECTED_PLACED_MAP_BOX.Patch_A = bitmapSlices[0].Copy();   // top-left corner
+                        SELECTED_PLACED_MAP_BOX.Patch_B = bitmapSlices[1].Copy();   // top
+                        SELECTED_PLACED_MAP_BOX.Patch_C = bitmapSlices[2].Copy();   // top-right corner
+                        SELECTED_PLACED_MAP_BOX.Patch_D = bitmapSlices[3].Copy();   // left size
+                        SELECTED_PLACED_MAP_BOX.Patch_E = bitmapSlices[4].Copy();   // middle
+                        SELECTED_PLACED_MAP_BOX.Patch_F = bitmapSlices[5].Copy();   // right side
+                        SELECTED_PLACED_MAP_BOX.Patch_G = bitmapSlices[6].Copy();   // bottom-left corner
+                        SELECTED_PLACED_MAP_BOX.Patch_H = bitmapSlices[7].Copy();   // bottom
+                        SELECTED_PLACED_MAP_BOX.Patch_I = bitmapSlices[8].Copy();   // bottom-right corner
+
+                        Cmd_AddLabelBox cmd = new(CURRENT_MAP, SELECTED_PLACED_MAP_BOX);
                         CommandManager.AddCommand(cmd);
                         cmd.DoOperation();
 
@@ -5461,6 +5503,136 @@ namespace RealmStudio
         }
         #endregion
 
+        #region Overlay Tab Methods
+
+        private void AddMapFramesToFrameTable(List<MapFrame> mapFrames)
+        {
+            FrameStyleTable.Hide();
+            FrameStyleTable.Controls.Clear();
+            foreach (MapFrame frame in mapFrames)
+            {
+                if (frame.FrameBitmapPath != null)
+                {
+                    if (frame.FrameBitmap == null)
+                    {
+                        SKImage image = SKImage.FromEncodedData(frame.FrameBitmapPath);
+                        frame.FrameBitmap ??= SKBitmap.FromImage(image);
+                    }
+
+                    PictureBox pb = new()
+                    {
+                        Tag = frame,
+                        SizeMode = PictureBoxSizeMode.Zoom,
+                        Image = frame.FrameBitmap.ToBitmap(),
+                    };
+
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+                    pb.MouseClick += FramePictureBox_MouseClick;
+#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+
+                    FrameStyleTable.Controls.Add(pb);
+                }
+            }
+            FrameStyleTable.Show();
+        }
+
+        #endregion
+
+        #region Overlay Tab Event Handlers
+
+        private void FramePictureBox_MouseClick(object sender, EventArgs e)
+        {
+            if (((MouseEventArgs)e).Button == MouseButtons.Left)
+            {
+                if (ModifierKeys == Keys.None)
+                {
+                    PictureBox pb = (PictureBox)sender;
+
+                    if (pb.Tag is MapFrame frame)
+                    {
+                        foreach (Control control in FrameStyleTable.Controls)
+                        {
+                            if (control != pb)
+                            {
+                                control.BackColor = SystemColors.Control;
+                            }
+                        }
+
+                        Color pbBackColor = pb.BackColor;
+
+                        if (pbBackColor.ToArgb() == SystemColors.Control.ToArgb())
+                        {
+                            // clicked symbol is not selected, so select it
+                            pb.BackColor = Color.LightSkyBlue;
+
+                            CURRENT_FRAME = frame;
+
+                            OverlayMethods.RemoveAllFrames(CURRENT_MAP);
+
+                            Cmd_CreateMapFrame cmd = new(CURRENT_MAP, frame, FrameTintColorSelectButton.BackColor, (float)(FrameScaleTrack.Value / 100F));
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            CURRENT_MAP.IsSaved = false;
+
+                            SKGLRenderControl.Invalidate();
+                        }
+                        else
+                        {
+                            // clicked symbol is already selected, so deselect it
+                            pb.BackColor = SystemColors.Control;
+                            CURRENT_FRAME = null;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void EnableFrameSwitch_CheckedChanged()
+        {
+            if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.FRAMELAYER).MapLayerComponents.Count > 0)
+            {
+                ((PlacedMapFrame)MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.FRAMELAYER).MapLayerComponents[0])
+                    .FrameEnabled = EnableFrameSwitch.Checked;
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void FrameScaleTrack_ValueChanged(object sender, EventArgs e)
+        {
+            TOOLTIP.Show((FrameScaleTrack.Value / 100F).ToString(), FrameScaleTrack, new Point(FrameScaleTrack.Right - 78, FrameScaleTrack.Top - 150), 2000);
+
+            if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.FRAMELAYER).MapLayerComponents.Count > 0)
+            {
+                // there can only be one frame on the map, so get it and update the frame scale
+                PlacedMapFrame placedFrame = (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.FRAMELAYER).MapLayerComponents[0];
+                placedFrame.FrameScale = FrameScaleTrack.Value / 100F;
+                OverlayMethods.CompletePlacedFrame(placedFrame);
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void FrameTintColorSelectButton_Click(object sender, EventArgs e)
+        {
+            Color frameColor = UtilityMethods.SelectColorFromDialog(this, FrameTintColorSelectButton.BackColor);
+
+            if (frameColor.ToArgb() != Color.Empty.ToArgb())
+            {
+                FrameTintColorSelectButton.BackColor = frameColor;
+                FrameTintColorSelectButton.Refresh();
+
+                PlacedMapFrame placedFrame = (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.FRAMELAYER).MapLayerComponents[0];
+
+                Cmd_ChangeFrameColor cmd = new(placedFrame, FrameTintColorSelectButton.BackColor);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        #endregion
 
     }
 }

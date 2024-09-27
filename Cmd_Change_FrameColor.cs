@@ -23,19 +23,27 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddLabelBox(RealmStudioMap map, PlacedMapBox mapBox) : IMapOperation
+    internal class Cmd_ChangeFrameColor : IMapOperation
     {
-        private readonly RealmStudioMap Map = map;
-        private readonly PlacedMapBox MapBox = mapBox;
+        private PlacedMapFrame SelectedFrame;
+        private Color FrameTint;
+        private Color PreviousFrameTint = Color.White;
+
+        public Cmd_ChangeFrameColor(PlacedMapFrame selectedFrame, Color frameTint)
+        {
+            SelectedFrame = selectedFrame;
+            PreviousFrameTint = SelectedFrame.FrameTint;
+            FrameTint = frameTint;
+        }
 
         public void DoOperation()
         {
-            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER).MapLayerComponents.Add(MapBox);
+            SelectedFrame.FrameTint = FrameTint;
         }
 
         public void UndoOperation()
         {
-            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER).MapLayerComponents.Remove(MapBox);
+            SelectedFrame.FrameTint = PreviousFrameTint;
         }
     }
 }

@@ -358,7 +358,7 @@ namespace RealmStudio
 
         internal static MapBox? ReadBoxAssetFromXml(string path)
         {
-            XmlSerializer? serializer = new(typeof(MapFrame));
+            XmlSerializer? serializer = new(typeof(MapBox));
 
             // If the XML document has been altered with unknown
             // nodes or attributes, handle them with the

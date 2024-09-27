@@ -324,6 +324,67 @@ namespace RealmStudio
             return null;
         }
 
+        internal static SKBitmap[] SliceNinePatchBitmap(SKBitmap resizedBitmap, SKRectI center)
+        {
+            SKBitmap[] slicedBitmaps = new SKBitmap[9];
+
+            slicedBitmaps[0] = new SKBitmap(center.Left, center.Top);
+            using SKCanvas canvas_A = new(slicedBitmaps[0]);
+            SKRect src_A = new(0, 0, center.Left, center.Top);
+            SKRect dst_A = new(0, 0, slicedBitmaps[0].Width, slicedBitmaps[0].Height);
+            canvas_A.DrawBitmap(resizedBitmap, src_A, dst_A);
+
+            slicedBitmaps[1] = new SKBitmap(center.Right - center.Left, center.Top);
+            using SKCanvas canvas_B = new(slicedBitmaps[1]);
+            SKRect src_B = new(center.Left, 0, center.Right, center.Top);
+            SKRect dst_B = new(0, 0, slicedBitmaps[1].Width, slicedBitmaps[1].Height);
+            canvas_B.DrawBitmap(resizedBitmap, src_B, dst_B);
+
+            slicedBitmaps[2] = new SKBitmap(resizedBitmap.Width - center.Right, center.Top);
+            using SKCanvas canvas_C = new(slicedBitmaps[2]);
+            SKRect src_C = new(center.Right, 0, resizedBitmap.Width, center.Top);
+            SKRect dst_C = new(0, 0, slicedBitmaps[2].Width, slicedBitmaps[2].Height);
+            canvas_C.DrawBitmap(resizedBitmap, src_C, dst_C);
+
+            slicedBitmaps[3] = new SKBitmap(center.Left, center.Height);
+            using SKCanvas canvas_D = new(slicedBitmaps[3]);
+            SKRect src_D = new(0, center.Top, center.Left, center.Bottom);
+            SKRect dst_D = new(0, 0, slicedBitmaps[3].Width, slicedBitmaps[3].Height);
+            canvas_D.DrawBitmap(resizedBitmap, src_D, dst_D);
+
+            slicedBitmaps[4] = new SKBitmap(center.Width, center.Height);
+            using SKCanvas canvas_E = new(slicedBitmaps[4]);
+            SKRect src_E = new(center.Left, center.Top, center.Right, center.Bottom);
+            SKRect dst_E = new(0, 0, slicedBitmaps[4].Width, slicedBitmaps[4].Height);
+            canvas_E.DrawBitmap(resizedBitmap, src_E, dst_E);
+
+            slicedBitmaps[5] = new SKBitmap(resizedBitmap.Width - center.Right, center.Height);
+            using SKCanvas canvas_F = new(slicedBitmaps[5]);
+            SKRect src_F = new(center.Right, center.Top, resizedBitmap.Width, center.Bottom);
+            SKRect dst_F = new(0, 0, slicedBitmaps[5].Width, slicedBitmaps[5].Height);
+            canvas_F.DrawBitmap(resizedBitmap, src_F, dst_F);
+
+            slicedBitmaps[6] = new SKBitmap(center.Left, resizedBitmap.Height - center.Bottom);
+            using SKCanvas canvas_G = new(slicedBitmaps[6]);
+            SKRect src_G = new(0, center.Bottom, center.Left, resizedBitmap.Height);
+            SKRect dst_G = new(0, 0, slicedBitmaps[6].Width, slicedBitmaps[6].Height);
+            canvas_G.DrawBitmap(resizedBitmap, src_G, dst_G);
+
+            slicedBitmaps[7] = new SKBitmap(center.Width, resizedBitmap.Height - center.Bottom);
+            using SKCanvas canvas_H = new(slicedBitmaps[7]);
+            SKRect src_H = new(center.Left, center.Bottom, center.Right, resizedBitmap.Height);
+            SKRect dst_H = new(0, 0, slicedBitmaps[7].Width, slicedBitmaps[7].Height);
+            canvas_H.DrawBitmap(resizedBitmap, src_H, dst_H);
+
+            slicedBitmaps[8] = new SKBitmap(resizedBitmap.Width - center.Right, resizedBitmap.Height - center.Bottom);
+            using SKCanvas canvas_I = new(slicedBitmaps[8]);
+            SKRect src_I = new(center.Right, center.Bottom, resizedBitmap.Width, resizedBitmap.Height);
+            SKRect dst_I = new(0, 0, slicedBitmaps[8].Width, slicedBitmaps[8].Height);
+            canvas_I.DrawBitmap(resizedBitmap, src_I, dst_I);
+
+            return slicedBitmaps;
+        }
+
         internal static SKPath GetInnerOrOuterPath(List<SKPoint> pathPoints, float distance, ParallelEnum location)
         {
             List<SKPoint> newPoints = GetParallelPoints(pathPoints, distance, location);

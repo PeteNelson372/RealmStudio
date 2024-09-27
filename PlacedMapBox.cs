@@ -34,7 +34,7 @@ namespace RealmStudio
     {
         public Guid BoxGuid = Guid.NewGuid();
 
-        private Bitmap? BoxBitmap { get; set; } = null;
+        public Bitmap? BoxBitmap { get; set; } = null;
 
         public Color BoxTint { get; set; } = Color.White;
 
@@ -47,6 +47,16 @@ namespace RealmStudio
         public float BoxCenterRight { get; set; } = 0;
         public float BoxCenterBottom { get; set; } = 0;
 
+        public SKBitmap Patch_A { get; set; } = new();  // top left corner
+        public SKBitmap Patch_B { get; set; } = new(); // top middle
+        public SKBitmap Patch_C { get; set; } = new(); // top right corner
+        public SKBitmap Patch_D { get; set; } = new(); // left side
+        public SKBitmap Patch_E { get; set; } = new(); // middle
+        public SKBitmap Patch_F { get; set; } = new(); // right side
+        public SKBitmap Patch_G { get; set; } = new(); // bottom left corner
+        public SKBitmap Patch_H { get; set; } = new(); // bottom middle
+        public SKBitmap Patch_I { get; set; } = new(); // bottom right corner
+
         public void SetBoxBitmap(Bitmap b)
         {
             BoxBitmap = b;
@@ -54,7 +64,16 @@ namespace RealmStudio
 
         public override void Render(SKCanvas canvas)
         {
-            if (BoxBitmap != null)
+            if (BoxBitmap != null
+                && Patch_A != null
+                && Patch_B != null
+                && Patch_C != null
+                && Patch_D != null
+                && Patch_E != null
+                && Patch_F != null
+                && Patch_G != null
+                && Patch_H != null
+                && Patch_I != null)
             {
                 using SKPaint boxPaint = new()
                 {
@@ -64,14 +83,125 @@ namespace RealmStudio
                         SKBlendMode.Modulate) // combine the tint with the bitmap color
                 };
 
-                canvas.DrawBitmap(Extensions.ToSKBitmap(BoxBitmap), X, Y, boxPaint);
+                BoxPaint = boxPaint.Clone();
 
-                if (IsSelected)
+                // frame top
+                canvas.DrawBitmap(Patch_A, X, Y, BoxPaint);
+
+                // tile Patch_B - has to be an integral number of tiles;
+                float patch_b_tile_length = Width - Patch_A.Width - Patch_C.Width;
+
+                int num_patch_b_tiles = Math.Max((int)Math.Floor(patch_b_tile_length / Patch_B.Width), 1);
+
+                int newWidth = (int)Math.Ceiling(patch_b_tile_length / num_patch_b_tiles);
+
+                num_patch_b_tiles = (int)Math.Round((float)patch_b_tile_length / newWidth);
+
+                while ((newWidth * num_patch_b_tiles) + Patch_A.Width + Patch_C.Width < Width)
                 {
-                    // draw box around label to show it is selected
-                    SKRect selectRect = new(X, Y, X + Width, Y + Height);
-                    canvas.DrawRect(selectRect, PaintObjects.LabelSelectPaint);
+                    newWidth++;
                 }
+
+                // scale Patch_B so that it tiles an integral number of times
+                using SKBitmap scaled_B = new(newWidth, Patch_B.Height);
+                Patch_B.ScalePixels(scaled_B, SKFilterQuality.High);
+
+                int left = X + Patch_A.Width;
+
+                for (int i = 0; i < num_patch_b_tiles; i++)
+                {
+                    canvas.DrawBitmap(scaled_B, left, Y, BoxPaint);
+                    left += scaled_B.Width;
+                }
+
+                canvas.DrawBitmap(Patch_C, X + Width - Patch_C.Width, Y, BoxPaint);
+
+                // tile Patch_D - has to be an integral number of tiles;
+                float patch_d_tile_height = Height - Patch_A.Height - Patch_G.Height;
+
+                int num_patch_d_tiles = Math.Max((int)(patch_d_tile_height / Patch_D.Height), 1);
+
+                int newHeight = (int)Math.Ceiling(patch_d_tile_height / num_patch_d_tiles);
+
+                num_patch_d_tiles = (int)Math.Round((float)patch_d_tile_height / newHeight);
+
+                while ((newHeight * num_patch_d_tiles) + Patch_A.Height + Patch_G.Height < Height)
+                {
+                    newHeight++;
+                }
+
+                // scale Patch_D so that it tiles an integral number of times
+                // scaled D patch has same width and new height
+                using SKBitmap scaled_D = new(Patch_D.Width, newHeight);
+                Patch_D.ScalePixels(scaled_D, SKFilterQuality.High);
+
+                int top = Y + Patch_A.Height;
+
+                for (int i = 0; i < num_patch_d_tiles; i++)
+                {
+                    canvas.DrawBitmap(scaled_D, X, top, BoxPaint);
+                    top += scaled_D.Height;
+                }
+
+                float patch_f_tile_height = Height - Patch_C.Height - Patch_I.Height;
+
+                int num_patch_f_tiles = Math.Max((int)(patch_f_tile_height / Patch_F.Height), 1);
+
+                int newFHeight = (int)Math.Ceiling(patch_f_tile_height / num_patch_f_tiles);
+
+                num_patch_f_tiles = (int)Math.Round((float)patch_f_tile_height / newHeight);
+
+                while ((newFHeight * num_patch_f_tiles) + Patch_C.Height + Patch_I.Height < Height)
+                {
+                    newFHeight++;
+                }
+
+                // scale Patch_F so that it tiles an integral number of times
+                using SKBitmap scaled_F = new(Patch_F.Width, newFHeight);
+                Patch_F.ScalePixels(scaled_F, SKFilterQuality.High);
+
+                top = Y + Patch_C.Height;
+
+                for (int i = 0; i < num_patch_f_tiles; i++)
+                {
+                    canvas.DrawBitmap(scaled_F, X + Width - scaled_F.Width, top, BoxPaint);
+                    top += scaled_F.Height;
+                }
+
+                // frame bottom
+                canvas.DrawBitmap(Patch_G, X, Y + Height - Patch_G.Height, BoxPaint);
+
+                // scale Patch_H so that it tiles an integral number of times
+                float patch_h_tile_length = Width - Patch_G.Width - Patch_I.Width;
+
+                int num_patch_h_tiles = Math.Max((int)Math.Floor(patch_h_tile_length / Patch_H.Width), 1);
+
+                int newHWidth = (int)Math.Ceiling(patch_h_tile_length / num_patch_h_tiles);
+
+                num_patch_h_tiles = (int)Math.Round((float)patch_h_tile_length / newWidth);
+
+                while ((newHWidth * num_patch_h_tiles) + Patch_G.Width + Patch_I.Width < Width)
+                {
+                    newHWidth++;
+                }
+
+                using SKBitmap scaled_H = new(newHWidth, Patch_H.Height);
+                Patch_H.ScalePixels(scaled_H, SKFilterQuality.High);
+
+                left = X + Patch_G.Width;
+
+                // patch H is tiled the same number of times as patch B
+                for (int i = 0; i < num_patch_h_tiles; i++)
+                {
+                    canvas.DrawBitmap(scaled_H, left, Y + Height - Patch_H.Height, BoxPaint);
+                    left += scaled_H.Width;
+                }
+
+                canvas.DrawBitmap(Patch_I, X + Width - Patch_I.Width, Y + Height - Patch_I.Height, BoxPaint);
+
+                // box center
+                canvas.DrawBitmap(Patch_E, X + Patch_D.Width, Y + Patch_B.Height, BoxPaint);
+
             }
         }
 

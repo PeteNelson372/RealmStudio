@@ -23,19 +23,32 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddLabelBox(RealmStudioMap map, PlacedMapBox mapBox) : IMapOperation
+    internal class Cmd_CreateMapFrame(RealmStudioMap map, MapFrame? frame, Color frameTint, float frameScale) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
-        private readonly PlacedMapBox MapBox = mapBox;
+        private MapFrame? Frame = frame;
+        private MapFrame? StoredFrame = null;
+        private readonly Color FrameTint = frameTint;
+        private readonly float FrameScale = frameScale;
 
         public void DoOperation()
         {
-            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER).MapLayerComponents.Add(MapBox);
+            StoredFrame = Frame;
+            OverlayMethods.CreateFrame(Map, Frame, FrameTint, FrameScale);
         }
 
         public void UndoOperation()
         {
-            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER).MapLayerComponents.Remove(MapBox);
+            if (StoredFrame != null)
+            {
+                Frame = StoredFrame;
+
+                OverlayMethods.CreateFrame(Map, Frame, FrameTint, FrameScale);
+            }
+            else
+            {
+                OverlayMethods.RemoveAllFrames(Map);
+            }
         }
     }
 }
