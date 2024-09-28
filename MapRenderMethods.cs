@@ -420,9 +420,28 @@ namespace RealmStudio
             }
         }
 
-        internal static void RenderRegions(RealmStudioMap cURRENT_MAP, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
+        internal static void RenderRegions(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
         {
-            // TODO
+            MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONLAYER);
+
+            // Create an SKPictureRecorder to record the Canvas Draw commands to an SKPicture
+            using var recorder = new SKPictureRecorder();
+            SKRect clippingBounds = new(0, 0, map.MapWidth, map.MapHeight);
+
+            // Start recording 
+            recorder.BeginRecording(clippingBounds);
+
+            regionLayer.Render(recorder.RecordingCanvas);
+
+            // Create a new SKPicture with recorded Draw commands 
+            regionLayer.RenderPicture = recorder.EndRecording();
+
+            e.Surface.Canvas.DrawPicture(regionLayer.RenderPicture, scrollPoint);
+
+            MapLayer regionOverlayLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONOVERLAYLAYER);
+            e.Surface.Canvas.DrawSurface(regionOverlayLayer.LayerSurface, scrollPoint);
+
+            regionOverlayLayer.LayerSurface?.Canvas.Clear();
         }
 
         internal static void RenderSelections(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)

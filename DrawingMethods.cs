@@ -33,8 +33,9 @@ namespace RealmStudio
 {
     internal class DrawingMethods
     {
-        const float PI_OVER_180 = (float)Math.PI / 180F;
-        const float D180_OVER_PI = (float)((float)180.0F / Math.PI);
+        private const float PI_OVER_180 = (float)Math.PI / 180F;
+        private const float D180_OVER_PI = (float)((float)180.0F / Math.PI);
+        private const double SELECTION_FUZZINESS = 3;
 
         public static SKPoint[] GetPoints(uint quantity, SKPoint p1, SKPoint p2)
         {
@@ -106,6 +107,53 @@ namespace RealmStudio
         {
             float square_dist = SKPoint.DistanceSquared(origin, pointToTest);
             return square_dist < (radius * radius);
+        }
+
+        internal static bool LineContainsPoint(SKPoint pointToCheck, SKPoint lineStartPoint, SKPoint lineEndPoint)
+        {
+            SKPoint leftPoint;
+            SKPoint rightPoint;
+
+            // Normalize start/end to left right to make the offset calc simpler.
+            if (lineStartPoint.X <= lineEndPoint.X)
+            {
+                leftPoint = lineStartPoint;
+                rightPoint = lineEndPoint;
+            }
+            else
+            {
+                leftPoint = lineEndPoint;
+                rightPoint = lineStartPoint;
+            }
+
+            // If point is out of bounds, no need to do further checks.                  
+            if (pointToCheck.X + SELECTION_FUZZINESS < leftPoint.X || rightPoint.X < pointToCheck.X - SELECTION_FUZZINESS)
+            {
+                return false;
+            }
+            else if (pointToCheck.Y + SELECTION_FUZZINESS < Math.Min(leftPoint.Y, rightPoint.Y) || Math.Max(leftPoint.Y, rightPoint.Y) < pointToCheck.Y - SELECTION_FUZZINESS)
+            {
+                return false;
+            }
+
+            double deltaX = rightPoint.X - leftPoint.X;
+            double deltaY = rightPoint.Y - leftPoint.Y;
+
+            // If the line is straight, the earlier boundary check is enough to determine that the point is on the line.
+            // Also prevents division by zero exceptions.
+            if (deltaX == 0 || deltaY == 0)
+            {
+                return true;
+            }
+
+            double slope = deltaY / deltaX;
+            double offset = leftPoint.Y - leftPoint.X * slope;
+            double calculatedY = pointToCheck.X * slope + offset;
+
+            // Check calculated Y matches the points Y coord with some easing.
+            bool lineContains = pointToCheck.Y - SELECTION_FUZZINESS <= calculatedY && calculatedY <= pointToCheck.Y + SELECTION_FUZZINESS;
+
+            return lineContains;
         }
 
         public static float CalculateLineAngle(SKPoint start, SKPoint end)
@@ -430,6 +478,24 @@ namespace RealmStudio
             return newPath;
         }
 
+        public static SKPath GetLinePathFromPoints(List<SKPoint> points)
+        {
+            SKPath path = new();
+
+            path.MoveTo(points.First());
+
+            for (int i = 1; i < points.Count; i++)
+            {
+                path.LineTo(points[i]);
+            }
+
+            path.LineTo(points.First());
+
+            path.Close();
+
+            return path;
+        }
+
         internal static List<SKPoint> GetParallelPoints(List<SKPoint> points, double distance, ParallelEnum location)
         {
             if (points.Count == 0) return points;
@@ -468,6 +534,44 @@ namespace RealmStudio
                 foreach (PointD p in inflatedPathD)
                 {
                     inflatedPath.Add(new SKPoint((float)p.x, (float)p.y));
+                }
+
+                return inflatedPath;
+            }
+            else
+            {
+                return points;
+            }
+        }
+
+        internal static List<MapRegionPoint> GetParallelRegionPoints(List<MapRegionPoint> points, float distance, ParallelEnum location)
+        {
+            PathD clipperPath = [];
+
+            foreach (MapRegionPoint point in points)
+            {
+                clipperPath.Add(new PointD(point.RegionPoint.X, point.RegionPoint.Y));
+            }
+
+            PathsD clipperPaths = [];
+            PathsD inflatedPaths = [];
+
+            clipperPaths.Add(clipperPath);
+
+            float d = (location == ParallelEnum.Below) ? -distance : distance;
+
+            // offset polyline
+            inflatedPaths = Clipper.InflatePaths(clipperPaths, d, JoinType.Square, EndType.Polygon);
+
+            if (inflatedPaths.Count > 0)
+            {
+                PathD inflatedPathD = inflatedPaths.First();
+
+                List<MapRegionPoint> inflatedPath = [];
+
+                foreach (PointD p in inflatedPathD)
+                {
+                    inflatedPath.Add(new MapRegionPoint(new SKPoint((float)p.x, (float)p.y)));
                 }
 
                 return inflatedPath;

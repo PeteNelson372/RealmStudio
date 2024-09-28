@@ -47,6 +47,7 @@ namespace RealmStudio
         private static MapFrame? CURRENT_FRAME = null;
         private static MapGrid? CURRENT_MAP_GRID = null;
         private static MapMeasure? CURRENT_MAP_MEASURE = null;
+        private static MapRegion? CURRENT_MAP_REGION = null;
 
         // objects that are currently selected
         private static MapPath? SELECTED_PATH = null;
@@ -55,7 +56,6 @@ namespace RealmStudio
         private static MapBox? SELECTED_MAP_BOX = null;
         private static PlacedMapBox? SELECTED_PLACED_MAP_BOX = null;
         private static MapLabel? SELECTED_MAP_LABEL = null;
-        private static PlacedMapFrame? SELECTED_PLACED_MAP_FRAME = null;
 
         private static Font SELECTED_LABEL_FONT = new("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
 
@@ -70,7 +70,7 @@ namespace RealmStudio
         private static float DrawingZoom = 1.0f;
 
         private static SKPath CURRENT_MAP_LABEL_PATH = new();
-        private static List<SKPoint> CURRENT_MAP_LABEL_PATH_POINTS = [];
+        private static readonly List<SKPoint> CURRENT_MAP_LABEL_PATH_POINTS = [];
 
         private static SKPoint ScrollPoint = new(0, 0);
         private static SKPoint DrawingPoint = new(0, 0);
@@ -930,13 +930,15 @@ namespace RealmStudio
                 label.IsSelected = false;
             }
 
-            /*
-            foreach (PlacedMapBox b in MapLabelMethods.MAP_BOXES)
+            MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BOXLAYER);
+
+            foreach (PlacedMapBox box in boxLayer.MapLayerComponents.Cast<PlacedMapBox>())
             {
-                if (selectedComponent != null && selectedComponent is PlacedMapBox mapBox && mapBox == b) continue;
-                b.IsSelected = false;
+                if (selectedComponent != null && selectedComponent is PlacedMapBox b && b == box) continue;
+                box.IsSelected = false;
             }
 
+            /*
             foreach (MapRegion r in MapRegionMethods.MAP_REGION_LIST)
             {
                 if (selectedComponent != null && selectedComponent is MapRegion region && region == r) continue;
@@ -1595,9 +1597,7 @@ namespace RealmStudio
 
             MapRenderMethods.RenderUpperMapPaths(CURRENT_MAP, CURRENT_PATH, e, ScrollPoint);
 
-            // TODO: region layer
-
-            // TODO: region overlay layer
+            // region and region overlay layers
             MapRenderMethods.RenderRegions(CURRENT_MAP, e, ScrollPoint);
 
             // box layer
@@ -2061,6 +2061,164 @@ namespace RealmStudio
                         }
                     }
                     break;
+                case DrawingModeEnum.RegionPaint:
+                    {
+                        // TODO: refactor to pull this code into a separate method
+                        Cursor = Cursors.Cross;
+
+                        // initialize region
+                        if (CURRENT_MAP_REGION == null)
+                        {
+                            CURRENT_MAP_REGION = new(CURRENT_MAP);
+                            SetRegionData(CURRENT_MAP_REGION);
+                        }
+
+                        if (ModifierKeys == Keys.Shift)
+                        {
+                            // find the closest point to the current point
+                            // on the contour path of a coastline;
+                            // if the nearest point on the coastline
+                            // is within 20 pixels of the current point,
+                            // then set the region point to be the point
+                            // on the coastline
+                            // then check the *previous* region point; if the previous
+                            // region point is on the coastline of the same landform
+                            // then add all of the points on the coastline contour
+                            // to the region points
+
+                            int coastlinePointIndex = -1;
+                            SKPoint coastlinePoint = SKPoint.Empty;
+                            Landform? landform1 = null;
+                            Landform? landform2 = null;
+
+                            float currentDistance = float.MaxValue;
+
+
+                            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+
+                            foreach (Landform lf in landformLayer.MapLayerComponents.Cast<Landform>())
+                            {
+                                for (int i = 0; i < lf.ContourPoints.Count; i++)
+                                {
+                                    SKPoint p = lf.ContourPoints[i];
+                                    float distance = SKPoint.Distance(zoomedScrolledPoint, p);
+
+                                    if (distance < currentDistance && distance < 5)
+                                    {
+                                        landform1 = lf;
+                                        coastlinePointIndex = i;
+                                        coastlinePoint = p;
+                                        currentDistance = distance;
+                                    }
+                                }
+
+                                if (coastlinePointIndex >= 0) break;
+                            }
+
+                            int previousCoastlinePointIndex = -1;
+                            currentDistance = float.MaxValue;
+
+                            if (landform1 != null && coastlinePointIndex >= 0)
+                            {
+                                MapRegionPoint mrp = new MapRegionPoint(landform1.ContourPoints[coastlinePointIndex]);
+                                CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
+
+                                if (CURRENT_MAP_REGION.MapRegionPoints.Count > 1 && coastlinePointIndex > 1)
+                                {
+                                    SKPoint previousPoint = CURRENT_MAP_REGION.MapRegionPoints[CURRENT_MAP_REGION.MapRegionPoints.Count - 2].RegionPoint;
+
+                                    foreach (Landform lf in landformLayer.MapLayerComponents.Cast<Landform>())
+                                    {
+                                        for (int i = 0; i < lf.ContourPoints.Count; i++)
+                                        {
+                                            SKPoint p = lf.ContourPoints[i];
+                                            float distance = SKPoint.Distance(previousPoint, p);
+
+                                            if (distance < currentDistance && !coastlinePoint.Equals(previousPoint))
+                                            {
+                                                landform2 = lf;
+                                                previousCoastlinePointIndex = i;
+                                                currentDistance = distance;
+                                            }
+                                        }
+
+                                        if (previousCoastlinePointIndex >= 0) break;
+                                    }
+                                }
+                            }
+
+                            if (landform1 != null && landform2 != null
+                                && landform1.LandformGuid.ToString() == landform2.LandformGuid.ToString()
+                                && coastlinePointIndex >= 0 && previousCoastlinePointIndex >= 0)
+                            {
+                                CURRENT_MAP_REGION.MapRegionPoints.Clear();
+
+                                landform1.ContourPath.GetTightBounds(out SKRect boundingRect);
+                                float xCenter = boundingRect.MidX;
+
+                                if (zoomedScrolledPoint.Y < PREVIOUS_CURSOR_POINT.Y)
+                                {
+                                    // drag mouse up to snap to west coast of landform
+                                    for (int i = previousCoastlinePointIndex; i < landform1.ContourPoints.Count - 1; i++)
+                                    {
+                                        MapRegionPoint mrp = new MapRegionPoint(landform1.ContourPoints[i]);
+                                        CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
+                                    }
+
+                                    for (int i = 0; i <= coastlinePointIndex; i++)
+                                    {
+                                        MapRegionPoint mrp = new(landform1.ContourPoints[i]);
+                                        CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
+                                    }
+                                }
+                                else
+                                {
+                                    // drag mouse down to snap region to east coast of landform
+                                    if (coastlinePointIndex > previousCoastlinePointIndex)
+                                    {
+                                        for (int i = previousCoastlinePointIndex; i <= coastlinePointIndex; i++)
+                                        {
+                                            MapRegionPoint mrp = new MapRegionPoint(landform1.ContourPoints[i]);
+                                            CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for (int i = coastlinePointIndex; i <= previousCoastlinePointIndex; i++)
+                                        {
+                                            MapRegionPoint mrp = new MapRegionPoint(landform1.ContourPoints[i]);
+                                            CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MapRegionPoint mrp = new MapRegionPoint(zoomedScrolledPoint);
+                            CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
+                        }
+
+                        PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
+                    }
+                    break;
+                case DrawingModeEnum.RegionSelect:
+                    {
+                        if (CURRENT_MAP_REGION != null && MapRegionMethods.NEW_REGION_POINT != null)
+                        {
+                            Cmd_AddMapRegionPoint cmd = new(CURRENT_MAP, CURRENT_MAP_REGION, MapRegionMethods.NEW_REGION_POINT, MapRegionMethods.NEXT_REGION_POINT_INDEX);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            // reset
+                            MapRegionMethods.NEW_REGION_POINT = null;
+                            MapRegionMethods.NEXT_REGION_POINT_INDEX = -1;
+                            MapRegionMethods.PREVIOUS_REGION_POINT_INDEX = -1;
+                        }
+
+                        PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
+                    }
+                    break;
 
             }
         }
@@ -2144,6 +2302,29 @@ namespace RealmStudio
 
                         CURRENT_MAP_MEASURE = null;
                         CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+                    }
+                    break;
+                case DrawingModeEnum.RegionPaint:
+                    if (CURRENT_MAP_REGION != null)
+                    {
+                        MapRegionPoint mrp = new(zoomedScrolledPoint);
+                        CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
+
+                        CURRENT_MAP.IsSaved = false;
+
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+
+                        Cmd_AddMapRegion cmd = new(CURRENT_MAP, CURRENT_MAP_REGION);
+                        CommandManager.AddCommand(cmd);
+                        cmd.DoOperation();
+
+                        CURRENT_MAP_REGION.IsSelected = false;
+
+                        // reset everything
+
+                        CURRENT_MAP_REGION = null;
+                        CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+                        SetDrawingModeLabel();
                     }
 
                     break;
@@ -2438,7 +2619,84 @@ namespace RealmStudio
                         }
                     }
                     break;
+                case DrawingModeEnum.RegionPaint:
+                    if (CURRENT_MAP_REGION != null)
+                    {
+                        SKCanvas? workCanvas = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+
+                        if (workCanvas != null)
+                        {
+                            workCanvas.Clear();
+
+                            if (CURRENT_MAP_REGION.MapRegionPoints.Count > 1)
+                            {
+                                // temporarily add the layer click point for rendering
+                                MapRegionPoint mrp = new MapRegionPoint(zoomedScrolledPoint);
+                                CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
+
+                                // render
+                                CURRENT_MAP_REGION.Render(workCanvas);
+
+                                // remove it
+                                CURRENT_MAP_REGION.MapRegionPoints.RemoveAt(CURRENT_MAP_REGION.MapRegionPoints.Count - 1);
+                            }
+                            else
+                            {
+                                workCanvas.DrawLine(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint, CURRENT_MAP_REGION.RegionBorderPaint);
+                            }
+                        }
+                    }
+                    break;
+                case DrawingModeEnum.RegionSelect:
+                    {
+                        if (CURRENT_MAP_REGION != null && CURRENT_MAP_REGION.IsSelected)
+                        {
+                            MapRegionPoint? selectedMapRegionPoint = null;
+                            foreach (MapRegionPoint p in CURRENT_MAP_REGION.MapRegionPoints)
+                            {
+                                using SKPath path = new();
+                                path.AddCircle(p.RegionPoint.X, p.RegionPoint.Y, 5);
+
+                                if (path.Contains(zoomedScrolledPoint.X, zoomedScrolledPoint.Y))
+                                {
+                                    // editing (moving) the selected point
+                                    p.IsSelected = true;
+                                    selectedMapRegionPoint = p;
+                                    MapRegionMethods.EDITING_REGION = true;
+                                }
+                                else
+                                {
+                                    p.IsSelected = false;
+                                }
+                            }
+
+                            if (selectedMapRegionPoint != null)
+                            {
+                                selectedMapRegionPoint.RegionPoint = zoomedScrolledPoint;
+                            }
+
+                            if (!MapRegionMethods.EDITING_REGION)
+                            {
+                                // not moving a point, so drag the region
+                                float xDelta = zoomedScrolledPoint.X - PREVIOUS_CURSOR_POINT.X;
+                                float yDelta = zoomedScrolledPoint.Y - PREVIOUS_CURSOR_POINT.Y;
+
+                                foreach (MapRegionPoint p in CURRENT_MAP_REGION.MapRegionPoints)
+                                {
+                                    SKPoint newPoint = p.RegionPoint;
+                                    newPoint.X += xDelta;
+                                    newPoint.Y += yDelta;
+                                    p.RegionPoint = newPoint;
+
+                                }
+
+                                PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
+                            }
+                        }
+                    }
+                    break;
             }
+
         }
 
         #endregion
@@ -2478,6 +2736,105 @@ namespace RealmStudio
                             }
 
                             SELECTED_PATHPOINT = MapPathMethods.SelectMapPathPointAtPoint(SELECTED_PATH, zoomedScrolledPoint);
+                        }
+                    }
+                    break;
+                case DrawingModeEnum.RegionPaint:
+                    {
+                        if (CURRENT_MAP_REGION != null)
+                        {
+                            SKCanvas? workCanvas = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+
+                            if (workCanvas != null)
+                            {
+
+                                if (CURRENT_MAP_REGION.MapRegionPoints.Count > 1)
+                                {
+                                    // temporarily add the layer click point for rendering
+                                    MapRegionPoint mrp = new MapRegionPoint(zoomedScrolledPoint);
+                                    CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
+
+                                    // render
+                                    CURRENT_MAP_REGION.Render(workCanvas);
+
+                                    // remove it
+                                    CURRENT_MAP_REGION.MapRegionPoints.RemoveAt(CURRENT_MAP_REGION.MapRegionPoints.Count - 1);
+                                }
+                                else
+                                {
+                                    workCanvas.DrawLine(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint, CURRENT_MAP_REGION.RegionBorderPaint);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case DrawingModeEnum.RegionSelect:
+                    {
+                        if (CURRENT_MAP_REGION != null && CURRENT_MAP_REGION.IsSelected)
+                        {
+                            bool pointSelected = false;
+                            foreach (MapRegionPoint p in CURRENT_MAP_REGION.MapRegionPoints)
+                            {
+                                using SKPath path = new();
+                                path.AddCircle(p.RegionPoint.X, p.RegionPoint.Y, 5);
+
+                                if (path.Contains(zoomedScrolledPoint.X, zoomedScrolledPoint.Y))
+                                {
+                                    pointSelected = true;
+                                    p.IsSelected = true;
+                                }
+                                else
+                                {
+                                    if (!MapRegionMethods.EDITING_REGION)
+                                    {
+                                        p.IsSelected = false;
+                                    }
+                                }
+                            }
+
+                            SKCanvas? regionOverlayCanvas = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.REGIONOVERLAYLAYER).LayerSurface?.Canvas;
+
+                            if (!pointSelected && regionOverlayCanvas != null)
+                            {
+                                regionOverlayCanvas.Clear();
+
+                                MapRegionMethods.PREVIOUS_REGION_POINT_INDEX = -1;
+                                MapRegionMethods.NEXT_REGION_POINT_INDEX = -1;
+                                MapRegionMethods.NEW_REGION_POINT = null;
+
+                                // is the cursor on a line segment between 2 region vertices? if so, draw a circle at the cursor location
+                                for (int i = 0; i < CURRENT_MAP_REGION.MapRegionPoints.Count - 1; i++)
+                                {
+                                    if (DrawingMethods.LineContainsPoint(zoomedScrolledPoint, CURRENT_MAP_REGION.MapRegionPoints[i].RegionPoint, CURRENT_MAP_REGION.MapRegionPoints[i + 1].RegionPoint))
+                                    {
+                                        MapRegionMethods.EDITING_REGION = true;
+
+                                        MapRegionMethods.PREVIOUS_REGION_POINT_INDEX = i;
+                                        MapRegionMethods.NEXT_REGION_POINT_INDEX = i + 1;
+
+                                        MapRegionMethods.NEW_REGION_POINT = new MapRegionPoint(zoomedScrolledPoint);
+
+                                        regionOverlayCanvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionNewPointFillPaint);
+                                        regionOverlayCanvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
+
+                                        break;
+                                    }
+                                }
+
+                                if (DrawingMethods.LineContainsPoint(zoomedScrolledPoint, CURRENT_MAP_REGION.MapRegionPoints[0].RegionPoint,
+                                    CURRENT_MAP_REGION.MapRegionPoints[^1].RegionPoint))
+                                {
+                                    MapRegionMethods.EDITING_REGION = true;
+
+                                    MapRegionMethods.PREVIOUS_REGION_POINT_INDEX = 0;
+                                    MapRegionMethods.NEXT_REGION_POINT_INDEX = CURRENT_MAP_REGION.MapRegionPoints.Count;
+
+                                    MapRegionMethods.NEW_REGION_POINT = new MapRegionPoint(zoomedScrolledPoint);
+
+                                    regionOverlayCanvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionNewPointFillPaint);
+                                    regionOverlayCanvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
+                                }
+                            }
                         }
                     }
                     break;
@@ -2764,6 +3121,32 @@ namespace RealmStudio
                         PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
                     }
                     break;
+                case DrawingModeEnum.RegionSelect:
+                    {
+                        if (MapRegionMethods.EDITING_REGION)
+                        {
+                            MapRegionMethods.EDITING_REGION = false;
+                        }
+                        else
+                        {
+                            MapRegion? selectedRegion = SelectRegionAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+
+                            if (selectedRegion != null)
+                            {
+                                if (selectedRegion.IsSelected)
+                                {
+                                    CURRENT_MAP_REGION = selectedRegion;
+                                }
+                                else
+                                {
+                                    CURRENT_MAP_REGION = null;
+                                }
+                            }
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
             }
 
         }
@@ -2911,6 +3294,42 @@ namespace RealmStudio
                             SKGLRenderControl.Invalidate();
                         }
                         break;
+                    case DrawingModeEnum.RegionSelect:
+                        {
+                            if (CURRENT_MAP_REGION != null)
+                            {
+                                bool pointSelected = false;
+
+                                foreach (MapRegionPoint mrp in CURRENT_MAP_REGION.MapRegionPoints)
+                                {
+                                    if (mrp.IsSelected)
+                                    {
+                                        pointSelected = true;
+                                        Cmd_DeleteMapRegionPoint cmd = new(CURRENT_MAP, CURRENT_MAP_REGION, mrp);
+                                        CommandManager.AddCommand(cmd);
+                                        cmd.DoOperation();
+
+                                        break;
+                                    }
+                                }
+
+                                if (!pointSelected)
+                                {
+                                    Cmd_DeleteMapRegion cmd = new(CURRENT_MAP, CURRENT_MAP_REGION);
+                                    CommandManager.AddCommand(cmd);
+                                    cmd.DoOperation();
+
+                                    CURRENT_MAP_REGION = null;
+                                }
+
+                                CURRENT_MAP.IsSaved = false;
+
+                                SKGLRenderControl.Invalidate();
+
+                                return;
+                            }
+                        }
+                        break;
                 }
             }
 
@@ -2934,11 +3353,12 @@ namespace RealmStudio
                         break;
                     case DrawingModeEnum.RegionSelect:
                         {
-                            //MoveSelectedRegionInRenderOrder(ComponentMoveDirectionEnum.Up);
+                            MapRegionMethods.MoveSelectedRegionInRenderOrder(CURRENT_MAP, CURRENT_MAP_REGION, ComponentMoveDirectionEnum.Up);
                         }
                         break;
-
                 }
+
+                SKGLRenderControl.Invalidate();
             }
 
             if (e.KeyCode == Keys.PageDown)
@@ -2961,11 +3381,12 @@ namespace RealmStudio
                         break;
                     case DrawingModeEnum.RegionSelect:
                         {
-                            //MoveSelectedRegionInRenderOrder(ComponentMoveDirectionEnum.Down);
+                            MapRegionMethods.MoveSelectedRegionInRenderOrder(CURRENT_MAP, CURRENT_MAP_REGION, ComponentMoveDirectionEnum.Down);
                         }
                         break;
-
                 }
+
+                SKGLRenderControl.Invalidate();
             }
 
             if (e.KeyCode == Keys.End)
@@ -6082,6 +6503,327 @@ namespace RealmStudio
             SKGLRenderControl.Invalidate();
         }
 
+        #endregion
+
+        #region Region Methods
+
+        internal void SetRegionData(MapRegion mapRegion)
+        {
+            if (mapRegion == null) { return; }
+
+            mapRegion.RegionBorderColor = RegionColorSelectButton.BackColor;
+            mapRegion.RegionBorderWidth = RegionBorderWidthTrack.Value;
+            mapRegion.RegionInnerOpacity = RegionOpacityTrack.Value;
+            mapRegion.RegionBorderSmoothing = RegionBorderSmoothingTrack.Value;
+
+            if (RegionSolidBorderRadio.Checked)
+            {
+                mapRegion.RegionBorderType = PathTypeEnum.SolidLinePath;
+            }
+
+            SKPathEffect? regionBorderEffect = null;
+            if (RegionDottedBorderRadio.Checked)
+            {
+                mapRegion.RegionBorderType = PathTypeEnum.DottedLinePath;
+            }
+
+            if (RegionDashBorderRadio.Checked)
+            {
+                mapRegion.RegionBorderType = PathTypeEnum.DashedLinePath;
+            }
+
+            if (RegionDashDotBorderRadio.Checked)
+            {
+                mapRegion.RegionBorderType = PathTypeEnum.DashDotLinePath;
+
+            }
+
+            if (RegionDashDotDotBorderRadio.Checked)
+            {
+                mapRegion.RegionBorderType = PathTypeEnum.DashDotDotLinePath;
+            }
+
+            if (RegionDoubleSolidBorderRadio.Checked)
+            {
+                mapRegion.RegionBorderType = PathTypeEnum.DoubleSolidBorderPath;
+            }
+
+            if (RegionSolidAndDashesBorderRadio.Checked)
+            {
+                mapRegion.RegionBorderType = PathTypeEnum.LineAndDashesPath;
+            }
+
+            if (RegionBorderedGradientRadio.Checked)
+            {
+                mapRegion.RegionBorderType = PathTypeEnum.BorderedGradientPath;
+            }
+
+            if (RegionBorderedLightSolidRadio.Checked)
+            {
+                mapRegion.RegionBorderType = PathTypeEnum.BorderedLightSolidPath;
+            }
+
+            regionBorderEffect = MapRegionMethods.ConstructRegionBorderEffect(mapRegion);
+            MapRegionMethods.ConstructRegionPaintObjects(mapRegion, regionBorderEffect);
+        }
+
+        internal static MapRegion? SelectRegionAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
+        {
+            MapRegion? selectedRegion = null;
+
+            List<MapComponent> mapRegionComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONLAYER).MapLayerComponents;
+
+            for (int i = 0; i < mapRegionComponents.Count; i++)
+            {
+                if (mapRegionComponents[i] is MapRegion mapRegion)
+                {
+                    SKPath? boundaryPath = mapRegion.BoundaryPath;
+
+                    if (boundaryPath != null && boundaryPath.PointCount > 0)
+                    {
+                        if (boundaryPath.Contains(zoomedScrolledPoint.X, zoomedScrolledPoint.Y))
+                        {
+                            mapRegion.IsSelected = !mapRegion.IsSelected;
+
+                            if (mapRegion.IsSelected)
+                            {
+                                selectedRegion = mapRegion;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            DeselectAllMapComponents(selectedRegion);
+
+            return selectedRegion;
+        }
+
+        #endregion
+
+        #region Region Tab Event Handlers
+
+        private void SelectRegionButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.RegionSelect;
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(0);
+
+            //DeselectAllMapComponents(null);
+
+            /*
+            if (CURRENT_DRAWING_MODE != DrawingModeEnum.RegionSelect)
+            {
+                // unselect all regions
+                if (CURRENT_MAP_REGION != null)
+                {
+                    for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.REGIONLAYER).MapLayerComponents.Count - 1; i > 0; i--)
+                    {
+                        if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.REGIONLAYER).MapLayerComponents[i] is MapRegion r)
+                        {
+                            if (r.RegionGuid.ToString() == CURRENT_MAP_REGION.RegionGuid.ToString())
+                            {
+                                r.IsSelected = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    CURRENT_MAP_REGION.IsSelected = false;
+                }
+
+                CURRENT_MAP_REGION = null;
+
+                SKGLRenderControl.Invalidate();
+            }
+            */
+        }
+
+        private void CreateRegionButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.RegionPaint;
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(0);
+
+            CURRENT_MAP_REGION = null;
+        }
+
+        private void RegionColorSelectButton_Click(object sender, EventArgs e)
+        {
+            Color regionColor = UtilityMethods.SelectColorFromDialog(this, RegionColorSelectButton.BackColor);
+
+            if (regionColor.ToArgb() != Color.Empty.ToArgb())
+            {
+                RegionColorSelectButton.BackColor = regionColor;
+                RegionColorSelectButton.Refresh();
+
+                if (CURRENT_MAP_REGION != null)
+                {
+                    SetRegionData(CURRENT_MAP_REGION);
+                    SKGLRenderControl.Invalidate();
+                }
+            }
+        }
+
+        private void RegionBorderWidthTrack_ValueChanged(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(RegionBorderWidthTrack.Value.ToString(), RegionBorderWidthTrack, new Point(RegionBorderWidthTrack.Right - 38, RegionBorderWidthTrack.Top - 135), 2000);
+
+            if (CURRENT_MAP_REGION != null)
+            {
+                SetRegionData(CURRENT_MAP_REGION);
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void RegionBorderSmoothingTrack_ValueChanged(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(RegionBorderSmoothingTrack.Value.ToString(), RegionBorderSmoothingTrack, new Point(RegionBorderSmoothingTrack.Right - 45, RegionBorderSmoothingTrack.Top - 176), 2000);
+
+            if (CURRENT_MAP_REGION != null)
+            {
+                SetRegionData(CURRENT_MAP_REGION);
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void RegionOpacityTrack_ValueChanged(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(RegionOpacityTrack.Value.ToString(), RegionOpacityTrack, new Point(RegionOpacityTrack.Right - 38, RegionOpacityTrack.Top - 222), 2000);
+
+            if (CURRENT_MAP_REGION != null)
+            {
+                SetRegionData(CURRENT_MAP_REGION);
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void RegionSolidBorderRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CURRENT_MAP_REGION != null)
+            {
+                SetRegionData(CURRENT_MAP_REGION);
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void SolidRegionBorderPicture_Click(object sender, EventArgs e)
+        {
+            RegionSolidBorderRadio.Checked = true;
+        }
+
+        private void RegionDottedBorderRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CURRENT_MAP_REGION != null)
+            {
+                SetRegionData(CURRENT_MAP_REGION);
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void DottedRegionBorderPicture_Click(object sender, EventArgs e)
+        {
+            RegionDottedBorderRadio.Checked = true;
+        }
+
+        private void RegionDashBorderRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CURRENT_MAP_REGION != null)
+            {
+                SetRegionData(CURRENT_MAP_REGION);
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void DashedRegionBorderPicture_Click(object sender, EventArgs e)
+        {
+            RegionDashBorderRadio.Checked = true;
+        }
+
+        private void RegionDashDotBorderRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CURRENT_MAP_REGION != null)
+            {
+                SetRegionData(CURRENT_MAP_REGION);
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void DashDotRegionBorderPicture_Click(object sender, EventArgs e)
+        {
+            RegionDashDotBorderRadio.Checked = true;
+        }
+
+        private void RegionDashDotDotBorderRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CURRENT_MAP_REGION != null)
+            {
+                SetRegionData(CURRENT_MAP_REGION);
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void DashDotDotRegionBorderPicture_Click(object sender, EventArgs e)
+        {
+            RegionDashDotDotBorderRadio.Checked = true;
+        }
+
+        private void RegionDoubleSolidBorderRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CURRENT_MAP_REGION != null)
+            {
+                SetRegionData(CURRENT_MAP_REGION);
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void DoubleSolidRegionBorderPicture_Click(object sender, EventArgs e)
+        {
+            RegionDoubleSolidBorderRadio.Checked = true;
+        }
+
+        private void RegionSolidAndDashesBorderRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CURRENT_MAP_REGION != null)
+            {
+                SetRegionData(CURRENT_MAP_REGION);
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void SolidAndDashRegionBorderPicture_Click(object sender, EventArgs e)
+        {
+            RegionSolidAndDashesBorderRadio.Checked = true;
+        }
+
+        private void RegionBorderedGradientRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CURRENT_MAP_REGION != null)
+            {
+                SetRegionData(CURRENT_MAP_REGION);
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void GradientRegionBorderPicture_Click(object sender, EventArgs e)
+        {
+            RegionBorderedGradientRadio.Checked = true;
+        }
+
+        private void RegionBorderedLightSolidRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CURRENT_MAP_REGION != null)
+            {
+                SetRegionData(CURRENT_MAP_REGION);
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void LightSolidRegionBorderPicture_Click(object sender, EventArgs e)
+        {
+            RegionBorderedLightSolidRadio.Checked = true;
+        }
         #endregion
 
         #endregion

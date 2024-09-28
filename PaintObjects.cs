@@ -172,5 +172,46 @@ namespace RealmStudio
             PathEffect = SKPathEffect.CreateDash([2F, 2F], 4F)
         };
 
+        public static readonly SKPaint RegionSelectPaint = new()
+        {
+            Style = SKPaintStyle.Stroke,
+            IsAntialias = true,
+            Color = SKColors.BlueViolet,
+            StrokeWidth = 2,
+            PathEffect = SKPathEffect.CreateDash([5F, 5F], 10F),
+        };
+
+        public static readonly SKPaint RegionPointFillPaint = new()
+        {
+            Style = SKPaintStyle.StrokeAndFill,
+            IsAntialias = true,
+            Color = SKColors.White,
+            StrokeWidth = 1,
+        };
+
+        public static readonly SKPaint RegionPointSelectedFillPaint = new()
+        {
+            Style = SKPaintStyle.StrokeAndFill,
+            IsAntialias = true,
+            Color = SKColors.Blue,
+            StrokeWidth = 1,
+        };
+
+        public static readonly SKPaint RegionNewPointFillPaint = new()
+        {
+            Style = SKPaintStyle.StrokeAndFill,
+            IsAntialias = true,
+            Color = SKColors.Yellow,
+            StrokeWidth = 1,
+        };
+
+        public static readonly SKPaint RegionPointOutlinePaint = new()
+        {
+            Style = SKPaintStyle.Stroke,
+            IsAntialias = true,
+            Color = SKColors.Black,
+            StrokeWidth = 1,
+        };
+
     }
 }
