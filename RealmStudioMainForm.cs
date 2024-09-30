@@ -26,6 +26,7 @@ using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
 using Control = System.Windows.Forms.Control;
+using Timer = System.Windows.Forms.Timer;
 
 namespace RealmStudio
 {
@@ -48,6 +49,7 @@ namespace RealmStudio
         private static MapGrid? CURRENT_MAP_GRID = null;
         private static MapMeasure? CURRENT_MAP_MEASURE = null;
         private static MapRegion? CURRENT_MAP_REGION = null;
+        private static LayerPaintStroke? CURRENT_LAYER_PAINT_STROKE = null;
 
         // objects that are currently selected
         private static MapPath? SELECTED_PATH = null;
@@ -56,6 +58,7 @@ namespace RealmStudio
         private static MapBox? SELECTED_MAP_BOX = null;
         private static PlacedMapBox? SELECTED_PLACED_MAP_BOX = null;
         private static MapLabel? SELECTED_MAP_LABEL = null;
+        private static ColorPaintBrush SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.SoftBrush;
 
         private static Font SELECTED_LABEL_FONT = new("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
 
@@ -68,6 +71,11 @@ namespace RealmStudio
         private static float PLACEMENT_RATE = 1.0F;
         private static float PLACEMENT_DENSITY = 1.0F;
         private static float DrawingZoom = 1.0f;
+
+        private static long BASE_MILIS_PER_PAINT_EVENT = 10L;
+        private static double BRUSH_VELOCITY = 10.0;
+
+        private static Timer? BRUSH_TIMER = null;
 
         private static SKPath CURRENT_MAP_LABEL_PATH = new();
         private static readonly List<SKPoint> CURRENT_MAP_LABEL_PATH_POINTS = [];
@@ -1744,21 +1752,23 @@ namespace RealmStudio
             else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.OceanErase)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
-                //int newValue = OceanBrushSizeTrack.Value + sizeDelta;
-                //newValue = Math.Max(OceanBrushSizeTrack.Minimum, Math.Min(newValue, OceanBrushSizeTrack.Maximum));
+                int newValue = OceanBrushSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(OceanBrushSizeTrack.Minimum, Math.Min(newValue, OceanBrushSizeTrack.Maximum));
 
-                //OceanEraserSizeTrack.Value = newValue;
-                //SELECTED_BRUSH_SIZE = newValue;
+                OceanEraserSizeTrack.Value = newValue;
+                OceanMethods.OceanPaintEraserSize = newValue;
+                SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
             else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.OceanPaint)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
-                //int newValue = OceanBrushSizeTrack.Value + sizeDelta;
-                //newValue = Math.Max(OceanBrushSizeTrack.Minimum, Math.Min(newValue, OceanBrushSizeTrack.Maximum));
+                int newValue = OceanBrushSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(OceanBrushSizeTrack.Minimum, Math.Min(newValue, OceanBrushSizeTrack.Maximum));
 
-                //OceanBrushSizeTrack.Value = newValue;
-                //SELECTED_BRUSH_SIZE = newValue;
+                OceanBrushSizeTrack.Value = newValue;
+                OceanMethods.OceanPaintBrushSize = newValue;
+                SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
             else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterPaint)
@@ -1865,6 +1875,39 @@ namespace RealmStudio
 
             switch (CURRENT_DRAWING_MODE)
             {
+                case DrawingModeEnum.OceanPaint:
+                    {
+                        CURRENT_MAP.IsSaved = false;
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_LAYER_PAINT_STROKE == null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(OceanPaintColorSelectButton.BackColor.ToSKColor(),
+                                SELECTED_COLOR_PAINT_BRUSH, SELECTED_BRUSH_SIZE / 2, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
+
+                            Cmd_AddOceanPaintStroke cmd = new(CURRENT_MAP, CURRENT_LAYER_PAINT_STROKE);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            if (BRUSH_TIMER != null)
+                            {
+                                BRUSH_TIMER.Stop();
+                                BRUSH_TIMER.Dispose();
+                            }
+
+                            // start the brush timer
+                            BRUSH_TIMER = new Timer
+                            {
+                                Interval = (int)BRUSH_VELOCITY
+                            };
+
+                            BRUSH_TIMER.Tick += new EventHandler(BrushTimerEventHandler);
+                            BRUSH_TIMER.Start();
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
                 case DrawingModeEnum.LandformSelect:
                     {
                         Cursor = Cursors.Default;
@@ -2854,6 +2897,20 @@ namespace RealmStudio
 
             switch (CURRENT_DRAWING_MODE)
             {
+                case DrawingModeEnum.OceanPaint:
+                    if (CURRENT_LAYER_PAINT_STROKE != null)
+                    {
+                        BRUSH_TIMER?.Stop();
+                        BRUSH_TIMER?.Dispose();
+                        BRUSH_TIMER = null;
+
+                        CURRENT_LAYER_PAINT_STROKE = null;
+
+                        CURRENT_MAP.IsSaved = false;
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
                 case DrawingModeEnum.LandPaint:
                     if (CURRENT_LANDFORM != null)
                     {
@@ -3757,6 +3814,67 @@ namespace RealmStudio
 
                 SKGLRenderControl.Invalidate();
             }
+        }
+
+        private void OceanPaintButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.OceanPaint;
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(OceanMethods.OceanPaintBrushSize);
+        }
+
+        private void OceanColorEraseButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.OceanErase;
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(OceanMethods.OceanPaintEraserSize);
+        }
+
+        private void OceanPaintColorSelectButton_Click(object sender, EventArgs e)
+        {
+            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, OceanPaintColorSelectButton.BackColor);
+
+            if (selectedColor != Color.Empty)
+            {
+                OceanPaintColorSelectButton.BackColor = selectedColor;
+                OceanPaintColorSelectButton.Refresh();
+            }
+        }
+
+        private void OceanSoftBrushButton_Click(object sender, EventArgs e)
+        {
+            SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.SoftBrush;
+        }
+
+        private void OceanHardBrushButton_Click(object sender, EventArgs e)
+        {
+            SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.HardBrush;
+        }
+
+        private void OceanBrushSizeTrack_ValueChanged(object sender, EventArgs e)
+        {
+            OceanMethods.OceanPaintBrushSize = OceanBrushSizeTrack.Value;
+            TOOLTIP.Show(OceanMethods.OceanPaintBrushSize.ToString(), OceanBrushSizeTrack, new Point(OceanBrushSizeTrack.Right - 42, OceanBrushSizeTrack.Top - 135), 2000);
+            SetSelectedBrushSize(OceanMethods.OceanPaintBrushSize);
+        }
+
+        private void OceanBrushVelocityTrack_ValueChanged(object sender, EventArgs e)
+        {
+            TOOLTIP.Show((OceanBrushVelocityTrack.Value / 100.0F).ToString(), OceanBrushVelocityTrack, new Point(OceanBrushVelocityTrack.Right - 42, OceanBrushVelocityTrack.Top - 135), 2000);
+            BRUSH_VELOCITY = BASE_MILIS_PER_PAINT_EVENT / (OceanBrushVelocityTrack.Value / 100.0);
+        }
+
+        private void BrushTimerEventHandler(Object? eventObject, EventArgs eventArgs)
+        {
+            Point cursorPoint = SKGLRenderControl.PointToClient(Cursor.Position);
+
+            BRUSH_TIMER?.Stop();
+
+            SKPoint zoomedScrolledPoint = new((cursorPoint.X / DrawingZoom) + DrawingPoint.X, (cursorPoint.Y / DrawingZoom) + DrawingPoint.Y);
+            CURRENT_LAYER_PAINT_STROKE?.AddLayerPaintStrokePoint(zoomedScrolledPoint);
+
+            SKGLRenderControl.Invalidate();
+            BRUSH_TIMER?.Start();
         }
         #endregion
 
@@ -6827,5 +6945,6 @@ namespace RealmStudio
         #endregion
 
         #endregion
+
     }
 }

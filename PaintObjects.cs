@@ -36,6 +36,12 @@ namespace RealmStudio
             PathEffect = SKPathEffect.CreateDash([5F, 5F], 10F),
         };
 
+        public static readonly SKPaint LandColorPaint = new()
+        {
+            Style = SKPaintStyle.Fill,
+            IsAntialias = true,
+        };
+
         public static SKPaint WaterFeatureSelectPaint { get; } = new()
         {
             Style = SKPaintStyle.Stroke,
@@ -43,6 +49,21 @@ namespace RealmStudio
             Color = SKColors.CadetBlue,
             StrokeWidth = 2,
             PathEffect = SKPathEffect.CreateDash([3F, 3F], 6F)
+        };
+
+        public static SKPaint WaterColorPaint { get; set; } = new()
+        {
+            Style = SKPaintStyle.Fill,
+            IsAntialias = true,
+            BlendMode = SKBlendMode.SrcOver
+        };
+
+        private static SKPaint WaterColorEraserPaint { get; } = new()
+        {
+            Color = SKColor.Empty,
+            Style = SKPaintStyle.Fill,
+            BlendMode = SKBlendMode.Src,
+            IsAntialias = true
         };
 
         public static readonly SKPaint CursorCirclePaint = new()
@@ -211,6 +232,20 @@ namespace RealmStudio
             IsAntialias = true,
             Color = SKColors.Black,
             StrokeWidth = 1,
+        };
+
+        public static SKPaint OceanPaint = new()
+        {
+            Style = SKPaintStyle.Fill,
+            IsAntialias = true,
+            BlendMode = SKBlendMode.SrcOver,
+        };
+
+        public static readonly SKPaint OceanEraserPaint = new()
+        {
+            Color = SKColor.Empty,
+            Style = SKPaintStyle.Fill,
+            BlendMode = SKBlendMode.Src,
         };
 
     }

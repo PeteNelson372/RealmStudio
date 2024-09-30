@@ -1,12 +1,11 @@
 ﻿using System.Data;
 using System.Drawing.Text;
-using WinFormAnimation;
 
 namespace RealmStudio
 {
     public partial class FontSelectionDialog : Form
     {
-        public event EventHandler FontSelected;
+        public event EventHandler? FontSelected;
 
         private bool isBold = false;
         private bool isItalic = false;
@@ -34,11 +33,7 @@ namespace RealmStudio
 
         protected virtual void OnFontSelected(EventArgs e)
         {
-            EventHandler eventHandler = FontSelected;
-            if (eventHandler != null)
-            {
-                eventHandler(this, e);
-            }
+            FontSelected?.Invoke(this, e);
         }
 
         private void PopulateUI()
