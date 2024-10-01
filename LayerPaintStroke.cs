@@ -38,19 +38,28 @@ namespace RealmStudio
 
         private SKShader StrokeShader = SKShader.CreateEmpty();
         private readonly int MapLayerIdentifer = 0;
+        private readonly bool Erase = false;
 
         private readonly SKPaint ShaderPaint;
 
-        public LayerPaintStroke(SKColor strokeColor, ColorPaintBrush colorPaintBrush, int brushRadius, int mapLayerIdentifier)
+        public LayerPaintStroke(SKColor strokeColor, ColorPaintBrush colorPaintBrush, int brushRadius, int mapLayerIdentifier, bool erase = false)
         {
             StrokeColor = strokeColor;
             PaintBrush = colorPaintBrush;
             BrushRadius = brushRadius;
             MapLayerIdentifer = mapLayerIdentifier;
+            Erase = erase;
 
             if (MapLayerIdentifer == MapBuilder.OCEANTEXTUREOVERLAYLAYER)
             {
-                ShaderPaint = PaintObjects.OceanPaint;
+                if (!Erase)
+                {
+                    ShaderPaint = PaintObjects.OceanPaint;
+                }
+                else
+                {
+                    ShaderPaint = PaintObjects.OceanEraserPaint;
+                }
             }
             else if (MapLayerIdentifer == MapBuilder.LANDDRAWINGLAYER)
             {
@@ -80,16 +89,19 @@ namespace RealmStudio
         {
             foreach (LayerPaintStrokePoint point in PaintStrokePoints)
             {
-                StrokeShader = SKShader.CreateColor(StrokeColor);
-
-                if (PaintBrush == ColorPaintBrush.SoftBrush)
+                if (!Erase)
                 {
-                    StrokeShader.Dispose();
-                    SKPoint gradientCenter = new(point.StrokeLocation.X, point.StrokeLocation.Y);
-                    StrokeShader = SKShader.CreateRadialGradient(gradientCenter, BrushRadius, [StrokeColor, StrokeColor.WithAlpha(0)], SKShaderTileMode.Clamp);
-                }
+                    StrokeShader = SKShader.CreateColor(StrokeColor);
 
-                ShaderPaint.Shader = StrokeShader;
+                    if (PaintBrush == ColorPaintBrush.SoftBrush)
+                    {
+                        StrokeShader.Dispose();
+                        SKPoint gradientCenter = new(point.StrokeLocation.X, point.StrokeLocation.Y);
+                        StrokeShader = SKShader.CreateRadialGradient(gradientCenter, BrushRadius, [StrokeColor, StrokeColor.WithAlpha(0)], SKShaderTileMode.Clamp);
+                    }
+
+                    ShaderPaint.Shader = StrokeShader;
+                }
 
                 // clip rendering to landforms or water features, depending on what map layer
                 // the brush stroke is on; painting on the ocean layer is not clipped

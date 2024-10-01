@@ -83,7 +83,7 @@ namespace RealmStudio
 
             SKFont sKFont = new(tf, font.SizeInPoints * 1.33F);
 
-            return sKFont;            
+            return sKFont;
         }
     }
 }

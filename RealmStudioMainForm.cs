@@ -44,7 +44,7 @@ namespace RealmStudio
         private static MapWindrose? CURRENT_WINDROSE = null;
         private static WaterFeature? CURRENT_WATERFEATURE = null;
         private static River? CURRENT_RIVER = null;
-        private static MapPath? CURRENT_PATH = null;
+        private static MapPath? CURRENT_MAP_PATH = null;
         private static MapFrame? CURRENT_FRAME = null;
         private static MapGrid? CURRENT_MAP_GRID = null;
         private static MapMeasure? CURRENT_MAP_MEASURE = null;
@@ -1008,6 +1008,47 @@ namespace RealmStudio
             }
 
         }
+
+        private void ColorPresetButtonMouseClickHandler(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (ModifierKeys == Keys.Control)
+                {
+                    ResetColorPresetButton((Button)sender);
+                }
+                else
+                {
+                    if (MainTab.SelectedTab != null)
+                    {
+                        if (MainTab.SelectedTab.Text == "Ocean")
+                        {
+                            SetOceanPaintColorFromCustomPresetButton((Button)sender);
+                        }
+                        else if (MainTab.SelectedTab.Text == "Land")
+                        {
+                            SetLandPaintColorFromCustomPresetButton((Button)sender);
+                        }
+                        else if (MainTab.SelectedTab.Text == "Water")
+                        {
+                            SetWaterPaintColorFromCustomPresetButton((Button)sender);
+                        }
+
+                        ((Button)sender).Refresh();
+                    }
+                }
+            }
+        }
+
+
+
+        private static void ResetColorPresetButton(Button b)
+        {
+            b.Text = string.Empty;
+            b.BackColor = Color.White;
+            b.Refresh();
+        }
+
         #endregion
 
         #region Map File Open and Save Methods
@@ -1219,6 +1260,25 @@ namespace RealmStudio
 
                     OceanCustomColorButton8.Refresh();
                 }
+
+                if (OceanCustomColorButton1.BackColor.ToArgb() == Color.White.ToArgb()
+                    && OceanCustomColorButton2.BackColor.ToArgb() == Color.White.ToArgb()
+                    && OceanCustomColorButton3.BackColor.ToArgb() == Color.White.ToArgb()
+                    && OceanCustomColorButton4.BackColor.ToArgb() == Color.White.ToArgb()
+                    && OceanCustomColorButton5.BackColor.ToArgb() == Color.White.ToArgb()
+                    && OceanCustomColorButton6.BackColor.ToArgb() == Color.White.ToArgb()
+                    && OceanCustomColorButton7.BackColor.ToArgb() == Color.White.ToArgb()
+                    && OceanCustomColorButton8.BackColor.ToArgb() == Color.White.ToArgb())
+                {
+                    OceanCustomColorButton1.Text = "";
+                    OceanCustomColorButton2.Text = "";
+                    OceanCustomColorButton3.Text = "";
+                    OceanCustomColorButton4.Text = "";
+                    OceanCustomColorButton5.Text = "";
+                    OceanCustomColorButton6.Text = "";
+                    OceanCustomColorButton7.Text = "";
+                    OceanCustomColorButton8.Text = "";
+                }
             }
 
             if (themeFilter.ApplyLandSettings)
@@ -1346,6 +1406,21 @@ namespace RealmStudio
 
                     LandCustomColorButton6.Refresh();
                 }
+
+                if (LandCustomColorButton1.BackColor.ToArgb() == Color.White.ToArgb()
+                    && LandCustomColorButton2.BackColor.ToArgb() == Color.White.ToArgb()
+                    && LandCustomColorButton3.BackColor.ToArgb() == Color.White.ToArgb()
+                    && LandCustomColorButton4.BackColor.ToArgb() == Color.White.ToArgb()
+                    && LandCustomColorButton5.BackColor.ToArgb() == Color.White.ToArgb()
+                    && LandCustomColorButton6.BackColor.ToArgb() == Color.White.ToArgb())
+                {
+                    LandCustomColorButton1.Text = "";
+                    LandCustomColorButton2.Text = "";
+                    LandCustomColorButton3.Text = "";
+                    LandCustomColorButton4.Text = "";
+                    LandCustomColorButton5.Text = "";
+                    LandCustomColorButton6.Text = "";
+                }
             }
 
             if (themeFilter.ApplyFreshwaterSettings)
@@ -1464,6 +1539,25 @@ namespace RealmStudio
                     WaterCustomColor8.Text = ColorTranslator.ToHtml(WaterCustomColor8.BackColor);
 
                     WaterCustomColor8.Refresh();
+                }
+
+                if (WaterCustomColor1.BackColor.ToArgb() == Color.White.ToArgb()
+                    && WaterCustomColor2.BackColor.ToArgb() == Color.White.ToArgb()
+                    && WaterCustomColor3.BackColor.ToArgb() == Color.White.ToArgb()
+                    && WaterCustomColor4.BackColor.ToArgb() == Color.White.ToArgb()
+                    && WaterCustomColor5.BackColor.ToArgb() == Color.White.ToArgb()
+                    && WaterCustomColor6.BackColor.ToArgb() == Color.White.ToArgb()
+                    && WaterCustomColor7.BackColor.ToArgb() == Color.White.ToArgb()
+                    && WaterCustomColor8.BackColor.ToArgb() == Color.White.ToArgb())
+                {
+                    WaterCustomColor1.Text = "";
+                    WaterCustomColor2.Text = "";
+                    WaterCustomColor3.Text = "";
+                    WaterCustomColor4.Text = "";
+                    WaterCustomColor5.Text = "";
+                    WaterCustomColor6.Text = "";
+                    WaterCustomColor7.Text = "";
+                    WaterCustomColor8.Text = "";
                 }
             }
 
@@ -1599,11 +1693,11 @@ namespace RealmStudio
             // TODO: upper grid layer (above water features)
             MapRenderMethods.RenderUpperGrid(CURRENT_MAP, e, ScrollPoint);
 
-            MapRenderMethods.RenderLowerMapPaths(CURRENT_MAP, CURRENT_PATH, e, ScrollPoint);
+            MapRenderMethods.RenderLowerMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, e, ScrollPoint);
 
             MapRenderMethods.RenderSymbols(CURRENT_MAP, e, ScrollPoint);
 
-            MapRenderMethods.RenderUpperMapPaths(CURRENT_MAP, CURRENT_PATH, e, ScrollPoint);
+            MapRenderMethods.RenderUpperMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, e, ScrollPoint);
 
             // region and region overlay layers
             MapRenderMethods.RenderRegions(CURRENT_MAP, e, ScrollPoint);
@@ -1653,6 +1747,11 @@ namespace RealmStudio
 
         private void SKGLRenderControl_MouseMove(object sender, MouseEventArgs e)
         {
+            if (CURRENT_DRAWING_MODE == DrawingModeEnum.ColorSelect)
+            {
+                Cursor = AssetManager.EYEDROPPER_CURSOR;
+            }
+
             SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
             Task.Run(() => UpdateDrawingPointLabel(e.Location.ToSKPoint(), zoomedScrolledPoint));
 
@@ -1695,7 +1794,14 @@ namespace RealmStudio
 
         private void SKGLRenderControl_MouseEnter(object sender, EventArgs e)
         {
-            Cursor = Cursors.Cross;
+            if (CURRENT_DRAWING_MODE == DrawingModeEnum.ColorSelect)
+            {
+                Cursor = AssetManager.EYEDROPPER_CURSOR;
+            }
+            else
+            {
+                Cursor = Cursors.Cross;
+            }
         }
 
         private void SKGLRenderControl_MouseLeave(object sender, EventArgs e)
@@ -1908,6 +2014,24 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case DrawingModeEnum.OceanErase:
+                    {
+                        CURRENT_MAP.IsSaved = false;
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_LAYER_PAINT_STROKE == null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(SKColors.Empty,
+                                ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.OCEANTEXTUREOVERLAYLAYER, true);
+
+                            Cmd_AddOceanPaintStroke cmd = new(CURRENT_MAP, CURRENT_LAYER_PAINT_STROKE);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
                 case DrawingModeEnum.LandformSelect:
                     {
                         Cursor = Cursors.Default;
@@ -2000,10 +2124,10 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
                         PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
 
-                        if (CURRENT_PATH == null)
+                        if (CURRENT_MAP_PATH == null)
                         {
                             // initialize map path
-                            CURRENT_PATH = new MapPath
+                            CURRENT_MAP_PATH = new MapPath
                             {
                                 ParentMap = CURRENT_MAP,
                                 PathType = GetSelectedPathType(),
@@ -2014,11 +2138,11 @@ namespace RealmStudio
 
                             if (PathTexturePreviewPicture.Image != null)
                             {
-                                CURRENT_PATH.PathTexture = new Bitmap(PathTexturePreviewPicture.Image, PathWidthTrack.Value, PathWidthTrack.Value).ToSKBitmap();
+                                CURRENT_MAP_PATH.PathTexture = new Bitmap(PathTexturePreviewPicture.Image, PathWidthTrack.Value, PathWidthTrack.Value).ToSKBitmap();
                             }
 
-                            MapPathMethods.ConstructPathPaint(CURRENT_PATH);
-                            CURRENT_PATH.PathPoints.Add(new MapPathPoint(zoomedScrolledPoint));
+                            MapPathMethods.ConstructPathPaint(CURRENT_MAP_PATH);
+                            CURRENT_MAP_PATH.PathPoints.Add(new MapPathPoint(zoomedScrolledPoint));
                         }
                     }
                     break;
@@ -2386,6 +2510,18 @@ namespace RealmStudio
 
             switch (CURRENT_DRAWING_MODE)
             {
+                case DrawingModeEnum.OceanErase:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_LAYER_PAINT_STROKE != null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE.AddLayerPaintStrokePoint(zoomedScrolledPoint);
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
                 case DrawingModeEnum.LandPaint:
                     {
                         Cursor = Cursors.Cross;
@@ -2444,7 +2580,7 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        CURRENT_PATH?.PathPoints.Add(new MapPathPoint(zoomedScrolledPoint));
+                        CURRENT_MAP_PATH?.PathPoints.Add(new MapPathPoint(zoomedScrolledPoint));
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -2911,6 +3047,19 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case DrawingModeEnum.OceanErase:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_LAYER_PAINT_STROKE != null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE = null;
+                            CURRENT_MAP.IsSaved = false;
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
                 case DrawingModeEnum.LandPaint:
                     if (CURRENT_LANDFORM != null)
                     {
@@ -2980,20 +3129,20 @@ namespace RealmStudio
                     }
                     break;
                 case DrawingModeEnum.PathPaint:
-                    if (CURRENT_PATH != null)
+                    if (CURRENT_MAP_PATH != null)
                     {
-                        CURRENT_PATH.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(CURRENT_PATH.PathPoints);
+                        CURRENT_MAP_PATH.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(CURRENT_MAP_PATH.PathPoints);
 
-                        if (CURRENT_PATH.DrawOverSymbols)
+                        if (CURRENT_MAP_PATH.DrawOverSymbols)
                         {
-                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER).MapLayerComponents.Add(CURRENT_PATH);
+                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER).MapLayerComponents.Add(CURRENT_MAP_PATH);
                         }
                         else
                         {
-                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER).MapLayerComponents.Add(CURRENT_PATH);
+                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER).MapLayerComponents.Add(CURRENT_MAP_PATH);
                         }
 
-                        CURRENT_PATH = null;
+                        CURRENT_MAP_PATH = null;
 
                         CURRENT_MAP.IsSaved = false;
 
@@ -3202,6 +3351,39 @@ namespace RealmStudio
                         }
 
                         SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.ColorSelect:
+                    {
+                        // eyedropper color select function
+                        Cursor = Cursors.Default;
+                        CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+
+                        SKGLRenderControl.Invalidate();
+
+                        using Bitmap b = new(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+                        SKGLRenderControl.DrawToBitmap(b, new Rectangle(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+
+                        Color pixelColor = b.GetPixel((int)zoomedScrolledPoint.X, (int)zoomedScrolledPoint.Y);
+
+                        switch (MainTab.SelectedIndex)
+                        {
+                            case 1:
+                                // ocean layer
+                                OceanPaintColorSelectButton.BackColor = pixelColor;
+                                OceanPaintColorSelectButton.Refresh();
+                                break;
+                            case 2:
+                                // land layer
+                                LandColorSelectionButton.BackColor = pixelColor;
+                                LandColorSelectionButton.Refresh();
+                                break;
+                            case 3:
+                                // water layer
+                                WaterPaintColorSelectButton.BackColor = pixelColor;
+                                WaterPaintColorSelectButton.Refresh();
+                                break;
+                        }
                     }
                     break;
             }
@@ -3660,6 +3842,29 @@ namespace RealmStudio
 
         #endregion
 
+        #region Ocean Tab Methods
+        private void SetOceanColorFromPreset(string htmlColor)
+        {
+            Color oceanColor = ColorTranslator.FromHtml(htmlColor);
+
+            OceanPaintColorSelectButton.BackColor = oceanColor;
+            OceanPaintColorSelectButton.Refresh();
+        }
+
+        private void SetOceanPaintColorFromCustomPresetButton(Button b)
+        {
+            if (b.Text != "")
+            {
+                Color oceanColor = b.BackColor;
+
+                OceanPaintColorSelectButton.BackColor = oceanColor;
+
+                OceanPaintColorSelectButton.Refresh();
+            }
+        }
+
+        #endregion
+
         #region Ocean Tab Event Handlers
         private void OceanTextureOpacityTrack_ValueChanged(object sender, EventArgs e)
         {
@@ -3858,9 +4063,16 @@ namespace RealmStudio
             SetSelectedBrushSize(OceanMethods.OceanPaintBrushSize);
         }
 
+        private void OceanEraserSizeTrack_ValueChanged(object sender, EventArgs e)
+        {
+            OceanMethods.OceanPaintEraserSize = OceanEraserSizeTrack.Value;
+            TOOLTIP.Show(OceanMethods.OceanPaintEraserSize.ToString(), OceanEraserSizeTrack, new Point(OceanEraserSizeTrack.Right - 42, OceanEraserSizeTrack.Top - 210), 2000);
+            SetSelectedBrushSize(OceanMethods.OceanPaintEraserSize);
+        }
+
         private void OceanBrushVelocityTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show((OceanBrushVelocityTrack.Value / 100.0F).ToString(), OceanBrushVelocityTrack, new Point(OceanBrushVelocityTrack.Right - 42, OceanBrushVelocityTrack.Top - 135), 2000);
+            TOOLTIP.Show((OceanBrushVelocityTrack.Value / 100.0F).ToString(), OceanBrushVelocityTrack, new Point(OceanBrushVelocityTrack.Right - 42, OceanBrushVelocityTrack.Top - 170), 2000);
             BRUSH_VELOCITY = BASE_MILIS_PER_PAINT_EVENT / (OceanBrushVelocityTrack.Value / 100.0);
         }
 
@@ -3875,6 +4087,130 @@ namespace RealmStudio
 
             SKGLRenderControl.Invalidate();
             BRUSH_TIMER?.Start();
+        }
+
+        private void OceanAddColorPresetButton_Click(object sender, EventArgs e)
+        {
+            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, OceanPaintColorSelectButton.BackColor);
+
+            if (selectedColor != Color.Empty)
+            {
+                Color oceanColor = selectedColor;
+
+                if (OceanCustomColorButton1.Text == "")
+                {
+                    OceanCustomColorButton1.BackColor = oceanColor;
+                    OceanCustomColorButton1.Text = ColorTranslator.ToHtml(oceanColor);
+                    OceanCustomColorButton1.Refresh();
+                }
+                else if (OceanCustomColorButton2.Text == "")
+                {
+                    OceanCustomColorButton2.BackColor = oceanColor;
+                    OceanCustomColorButton2.Text = ColorTranslator.ToHtml(oceanColor);
+                    OceanCustomColorButton2.Refresh();
+                }
+                else if (OceanCustomColorButton3.Text == "")
+                {
+                    OceanCustomColorButton3.BackColor = oceanColor;
+                    OceanCustomColorButton3.Text = ColorTranslator.ToHtml(oceanColor);
+                    OceanCustomColorButton3.Refresh();
+                }
+                else if (OceanCustomColorButton4.Text == "")
+                {
+                    OceanCustomColorButton4.BackColor = oceanColor;
+                    OceanCustomColorButton4.Text = ColorTranslator.ToHtml(oceanColor);
+                    OceanCustomColorButton4.Refresh();
+                }
+                else if (OceanCustomColorButton5.Text == "")
+                {
+                    OceanCustomColorButton5.BackColor = oceanColor;
+                    OceanCustomColorButton5.Text = ColorTranslator.ToHtml(oceanColor);
+                    OceanCustomColorButton5.Refresh();
+                }
+                else if (OceanCustomColorButton6.Text == "")
+                {
+                    OceanCustomColorButton6.BackColor = oceanColor;
+                    OceanCustomColorButton6.Text = ColorTranslator.ToHtml(oceanColor);
+                    OceanCustomColorButton6.Refresh();
+                }
+                else if (OceanCustomColorButton7.Text == "")
+                {
+                    OceanCustomColorButton7.BackColor = oceanColor;
+                    OceanCustomColorButton7.Text = ColorTranslator.ToHtml(oceanColor);
+                    OceanCustomColorButton7.Refresh();
+                }
+                else if (OceanCustomColorButton8.Text == "")
+                {
+                    OceanCustomColorButton8.BackColor = oceanColor;
+                    OceanCustomColorButton8.Text = ColorTranslator.ToHtml(oceanColor);
+                    OceanCustomColorButton8.Refresh();
+                }
+            }
+        }
+        private void OceanColorPickerButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.ColorSelect;
+            SetDrawingModeLabel();
+        }
+
+        private void OceanButton91CBB8_Click(object sender, EventArgs e)
+        {
+            SetOceanColorFromPreset("#91CBB8");
+        }
+
+        private void OceanButton88B5BB_Click(object sender, EventArgs e)
+        {
+            SetOceanColorFromPreset("#88B5BB");
+        }
+
+        private void OceanButton6BA5B9_Click(object sender, EventArgs e)
+        {
+            SetOceanColorFromPreset("#6BA5B9");
+        }
+
+        private void OceanButton42718D_Click(object sender, EventArgs e)
+        {
+            SetOceanColorFromPreset("#42718D");
+        }
+
+        private void OceanCustomColorButton1_Click(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void OceanCustomColorButton2_Click(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void OceanCustomColorButton3_Click(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void OceanCustomColorButton4_Click(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void OceanCustomColorButton5_Click(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void OceanCustomColorButton6_Click(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void OceanCustomColorButton7_Click(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void OceanCustomColorButton8_Click(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
         }
         #endregion
 
@@ -4081,6 +4417,18 @@ namespace RealmStudio
 #pragma warning restore CS8604 // Possible null reference argument.
 
             return selectedLandform;
+        }
+
+        private void SetLandPaintColorFromCustomPresetButton(Button b)
+        {
+            if (b.Text != "")
+            {
+                Color landColor = b.BackColor;
+
+                LandColorSelectionButton.BackColor = landColor;
+
+                LandColorSelectionButton.Refresh();
+            }
         }
 
         #endregion
@@ -4294,7 +4642,7 @@ namespace RealmStudio
 
         #endregion
 
-        #region Water Feature Methods
+        #region Water Tab Methods
 
         internal static MapComponent? SelectWaterFeatureAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
         {
@@ -4349,6 +4697,25 @@ namespace RealmStudio
             return selectedWaterFeature;
         }
 
+        private void SetWaterColorFromPreset(string htmlColor)
+        {
+            Color waterColor = ColorTranslator.FromHtml(htmlColor);
+
+            WaterSelectedPaintColorLabel.BackColor = waterColor;
+            WaterSelectedPaintColorLabel.Refresh();
+        }
+
+        private void SetWaterPaintColorFromCustomPresetButton(Button b)
+        {
+            if (b.Text != "")
+            {
+                Color waterColor = b.BackColor;
+
+                WaterSelectedPaintColorLabel.BackColor = waterColor;
+
+                WaterSelectedPaintColorLabel.Refresh();
+            }
+        }
 
         #endregion
 
