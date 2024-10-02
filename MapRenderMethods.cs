@@ -215,6 +215,8 @@ namespace RealmStudio
                     }
                 }
 
+                landDrawingLayer.Render(landDrawingLayer.LayerSurface.Canvas);
+
                 // paint landform coastline layer
                 e.Surface.Canvas.DrawSurface(landCoastlineLayer.LayerSurface, scrollPoint);
 

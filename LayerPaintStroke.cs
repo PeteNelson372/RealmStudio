@@ -30,6 +30,8 @@ namespace RealmStudio
 {
     internal class LayerPaintStroke : MapComponent, IXmlSerializable
     {
+        private readonly RealmStudioMap ParentMap;
+
         public Guid StrokeId { get; set; } = Guid.NewGuid();
         public List<LayerPaintStrokePoint> PaintStrokePoints { get; set; } = [];
         public SKColor StrokeColor { get; set; } = SKColor.Empty;
@@ -42,8 +44,9 @@ namespace RealmStudio
 
         private readonly SKPaint ShaderPaint;
 
-        public LayerPaintStroke(SKColor strokeColor, ColorPaintBrush colorPaintBrush, int brushRadius, int mapLayerIdentifier, bool erase = false)
+        public LayerPaintStroke(RealmStudioMap parentMap, SKColor strokeColor, ColorPaintBrush colorPaintBrush, int brushRadius, int mapLayerIdentifier, bool erase = false)
         {
+            ParentMap = parentMap;
             StrokeColor = strokeColor;
             PaintBrush = colorPaintBrush;
             BrushRadius = brushRadius;
@@ -63,7 +66,14 @@ namespace RealmStudio
             }
             else if (MapLayerIdentifer == MapBuilder.LANDDRAWINGLAYER)
             {
-                ShaderPaint = PaintObjects.LandColorPaint;
+                if (!Erase)
+                {
+                    ShaderPaint = PaintObjects.LandColorPaint;
+                }
+                else
+                {
+                    ShaderPaint = PaintObjects.LandColorEraserPaint;
+                }
             }
             else if (MapLayerIdentifer == MapBuilder.WATERDRAWINGLAYER)
             {
@@ -87,6 +97,38 @@ namespace RealmStudio
 
         public override void Render(SKCanvas canvas)
         {
+            // clip rendering to landforms or water features, depending on what map layer
+            // the brush stroke is on; painting on the ocean layer is not clipped
+
+            if (MapLayerIdentifer == MapBuilder.LANDDRAWINGLAYER)
+            {
+                // clip drawing to the outer path of landforms
+
+                using SKRegion drawingPathRegion = new();
+
+                List<MapComponent> landformList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
+                SKPath clipPath = new SKPath();
+                for (int i = 0; i < landformList.Count; i++)
+                {
+                    SKPath landformOutlinePath = ((Landform)landformList[i]).ContourPath;
+
+                    if (landformOutlinePath != null && landformOutlinePath.PointCount > 0)
+                    {
+                        clipPath.AddPath(landformOutlinePath);
+                    }
+                }
+
+                drawingPathRegion.SetPath(clipPath);
+
+                canvas.Save();
+                canvas.ClipRegion(drawingPathRegion);
+
+            }
+            else if (MapLayerIdentifer == MapBuilder.WATERDRAWINGLAYER)
+            {
+
+            }
+
             foreach (LayerPaintStrokePoint point in PaintStrokePoints)
             {
                 if (!Erase)
@@ -103,21 +145,12 @@ namespace RealmStudio
                     ShaderPaint.Shader = StrokeShader;
                 }
 
-                // clip rendering to landforms or water features, depending on what map layer
-                // the brush stroke is on; painting on the ocean layer is not clipped
-                if (MapLayerIdentifer == MapBuilder.OCEANTEXTUREOVERLAYLAYER)
-                {
-                    // no clipping on ocean painting
-                    canvas.DrawCircle(point.StrokeLocation.X, point.StrokeLocation.Y, point.StrokeRadius, ShaderPaint);
-                }
-                else if (MapLayerIdentifer == MapBuilder.LANDDRAWINGLAYER)
-                {
-                    // TODO - clip to landform contour
-                }
-                else if (MapLayerIdentifer == MapBuilder.WATERDRAWINGLAYER)
-                {
-                    // TODO - clip to water feature (painted water feature or river) boundary
-                }
+                canvas.DrawCircle(point.StrokeLocation.X, point.StrokeLocation.Y, point.StrokeRadius, ShaderPaint);
+            }
+
+            if (MapLayerIdentifer == MapBuilder.LANDDRAWINGLAYER || MapLayerIdentifer == MapBuilder.WATERDRAWINGLAYER)
+            {
+                canvas.Restore();
             }
         }
 

@@ -31,6 +31,8 @@ namespace RealmStudio
 
         public static int LandformBrushSize { get; set; } = 64;
         public static int LandformEraserSize { get; set; } = 64;
+        public static int LandformColorBrushSize { get; set; } = 20;
+        public static int LandformColorEraserBrushSize { get; set; } = 20;
 
         internal static void CreateInnerAndOuterPaths(RealmStudioMap map, Landform landform)
         {

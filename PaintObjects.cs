@@ -42,6 +42,14 @@ namespace RealmStudio
             IsAntialias = true,
         };
 
+        public static readonly SKPaint LandColorEraserPaint = new()
+        {
+            Color = SKColor.Empty,
+            Style = SKPaintStyle.Fill,
+            BlendMode = SKBlendMode.Src,
+            IsAntialias = true,
+        };
+
         public static SKPaint WaterFeatureSelectPaint { get; } = new()
         {
             Style = SKPaintStyle.Stroke,

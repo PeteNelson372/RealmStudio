@@ -72,7 +72,7 @@ namespace RealmStudio
         private static float PLACEMENT_DENSITY = 1.0F;
         private static float DrawingZoom = 1.0f;
 
-        private static long BASE_MILIS_PER_PAINT_EVENT = 10L;
+        private static readonly double BASE_MILIS_PER_PAINT_EVENT = 5.0;
         private static double BRUSH_VELOCITY = 10.0;
 
         private static Timer? BRUSH_TIMER = null;
@@ -92,6 +92,9 @@ namespace RealmStudio
         private static bool AUTOSAVE = true;
         private static bool SYMBOL_SCALE_LOCKED = false;
         private static bool CREATING_LABEL = false;
+        private static bool CREATE_MAP_IMAGE = false;
+
+        private static SKImage? MAP_IMAGE = null;
         // 
 
         #region Constructor
@@ -1728,6 +1731,12 @@ namespace RealmStudio
 
             // work layer
             MapRenderMethods.RenderWorkLayer(CURRENT_MAP, e, ScrollPoint);
+
+            if (CREATE_MAP_IMAGE)
+            {
+                MAP_IMAGE?.Dispose();
+                MAP_IMAGE = e.Surface.Snapshot();
+            }
         }
 
         private void SKGLRenderControl_MouseDown(object sender, MouseEventArgs e)
@@ -1837,22 +1846,24 @@ namespace RealmStudio
             else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.LandColor)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
-                //int newValue = LandColorBrushSizeTrack.Value + sizeDelta;
-                //newValue = Math.Max(LandColorBrushSizeTrack.Minimum, Math.Min(newValue, LandColorBrushSizeTrack.Maximum));
+                int newValue = LandColorBrushSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(LandColorBrushSizeTrack.Minimum, Math.Min(newValue, LandColorBrushSizeTrack.Maximum));
 
-                //LandColorBrushSizeTrack.Value = newValue;
-                //SELECTED_BRUSH_SIZE = newValue;
+                LandColorBrushSizeTrack.Value = newValue;
+                LandformMethods.LandformColorBrushSize = newValue;
+                SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
             else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.LandColorErase)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
-                //int newValue = LandColorEraserSizeTrack.Value + sizeDelta;
-                //newValue = Math.Max(LandColorEraserSizeTrack.Minimum, Math.Min(newValue, LandColorEraserSizeTrack.Maximum));
+                int newValue = LandColorEraserSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(LandColorEraserSizeTrack.Minimum, Math.Min(newValue, LandColorEraserSizeTrack.Maximum));
 
                 // land color eraser
-                //LandColorEraserSizeTrack.Value = newValue;
-                //SELECTED_BRUSH_SIZE = newValue;
+                LandColorEraserSizeTrack.Value = newValue;
+                LandformMethods.LandformColorEraserBrushSize = newValue;
+                SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
             else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.OceanErase)
@@ -1955,7 +1966,14 @@ namespace RealmStudio
 
         private void SKGLRenderControl_Enter(object sender, EventArgs e)
         {
-            Cursor = Cursors.Cross;
+            if (CURRENT_DRAWING_MODE == DrawingModeEnum.ColorSelect)
+            {
+                Cursor = AssetManager.EYEDROPPER_CURSOR;
+            }
+            else
+            {
+                Cursor = Cursors.Cross;
+            }
         }
 
         private void SKGLRenderControl_Leave(object sender, EventArgs e)
@@ -1988,7 +2006,7 @@ namespace RealmStudio
 
                         if (CURRENT_LAYER_PAINT_STROKE == null)
                         {
-                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(OceanPaintColorSelectButton.BackColor.ToSKColor(),
+                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, OceanPaintColorSelectButton.BackColor.ToSKColor(),
                                 SELECTED_COLOR_PAINT_BRUSH, SELECTED_BRUSH_SIZE / 2, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
 
                             Cmd_AddOceanPaintStroke cmd = new(CURRENT_MAP, CURRENT_LAYER_PAINT_STROKE);
@@ -2021,7 +2039,7 @@ namespace RealmStudio
 
                         if (CURRENT_LAYER_PAINT_STROKE == null)
                         {
-                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(SKColors.Empty,
+                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.Empty,
                                 ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.OCEANTEXTUREOVERLAYLAYER, true);
 
                             Cmd_AddOceanPaintStroke cmd = new(CURRENT_MAP, CURRENT_LAYER_PAINT_STROKE);
@@ -2046,6 +2064,39 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
                         CURRENT_LANDFORM = new();
                         SetLandformData(CURRENT_LANDFORM);
+                    }
+                    break;
+                case DrawingModeEnum.LandColor:
+                    {
+                        CURRENT_MAP.IsSaved = false;
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_LAYER_PAINT_STROKE == null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, LandColorSelectionButton.BackColor.ToSKColor(),
+                                SELECTED_COLOR_PAINT_BRUSH, SELECTED_BRUSH_SIZE / 2, MapBuilder.LANDDRAWINGLAYER);
+
+                            Cmd_AddLandPaintStroke cmd = new(CURRENT_MAP, CURRENT_LAYER_PAINT_STROKE);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            if (BRUSH_TIMER != null)
+                            {
+                                BRUSH_TIMER.Stop();
+                                BRUSH_TIMER.Dispose();
+                            }
+
+                            // start the brush timer
+                            BRUSH_TIMER = new Timer
+                            {
+                                Interval = (int)BRUSH_VELOCITY
+                            };
+
+                            BRUSH_TIMER.Tick += new EventHandler(BrushTimerEventHandler);
+                            BRUSH_TIMER.Start();
+                        }
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.WaterFeatureSelect:
@@ -3074,6 +3125,20 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case DrawingModeEnum.LandColor:
+                    if (CURRENT_LAYER_PAINT_STROKE != null)
+                    {
+                        BRUSH_TIMER?.Stop();
+                        BRUSH_TIMER?.Dispose();
+                        BRUSH_TIMER = null;
+
+                        CURRENT_LAYER_PAINT_STROKE = null;
+
+                        CURRENT_MAP.IsSaved = false;
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
                 case DrawingModeEnum.PlaceWindrose:
                     if (CURRENT_WINDROSE != null)
                     {
@@ -3358,11 +3423,13 @@ namespace RealmStudio
                         // eyedropper color select function
                         Cursor = Cursors.Default;
                         CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+                        CREATE_MAP_IMAGE = true;
 
-                        SKGLRenderControl.Invalidate();
+                        SKGLRenderControl.Refresh();
 
-                        using Bitmap b = new(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
-                        SKGLRenderControl.DrawToBitmap(b, new Rectangle(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+                        Bitmap b = MAP_IMAGE.ToBitmap();
+
+                        CREATE_MAP_IMAGE = false;
 
                         Color pixelColor = b.GetPixel((int)zoomedScrolledPoint.X, (int)zoomedScrolledPoint.Y);
 
@@ -4083,7 +4150,7 @@ namespace RealmStudio
             BRUSH_TIMER?.Stop();
 
             SKPoint zoomedScrolledPoint = new((cursorPoint.X / DrawingZoom) + DrawingPoint.X, (cursorPoint.Y / DrawingZoom) + DrawingPoint.Y);
-            CURRENT_LAYER_PAINT_STROKE?.AddLayerPaintStrokePoint(zoomedScrolledPoint);
+            Task.Run(() => CURRENT_LAYER_PAINT_STROKE?.AddLayerPaintStrokePoint(zoomedScrolledPoint));
 
             SKGLRenderControl.Invalidate();
             BRUSH_TIMER?.Start();
@@ -4151,6 +4218,7 @@ namespace RealmStudio
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.ColorSelect;
             SetDrawingModeLabel();
+            SetSelectedBrushSize(0);
         }
 
         private void OceanButton91CBB8_Click(object sender, EventArgs e)
@@ -4310,6 +4378,128 @@ namespace RealmStudio
             LandformMethods.LandformEraserSize = LandEraserSizeTrack.Value;
             TOOLTIP.Show(LandEraserSizeTrack.Value.ToString(), LandEraserSizeTrack, new Point(LandEraserSizeTrack.Right - 42, LandEraserSizeTrack.Top - 58), 2000);
             SetSelectedBrushSize(LandformMethods.LandformEraserSize);
+
+        }
+
+        private void LandColorButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.LandColor;
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(LandformMethods.LandformColorBrushSize);
+        }
+
+        private void LandColorEraseButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.LandColor;
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(LandformMethods.LandformColorEraserBrushSize);
+        }
+
+        private void LandColorSelectionButton_Click(object sender, EventArgs e)
+        {
+            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, LandColorSelectionButton.BackColor);
+
+            if (selectedColor != Color.Empty)
+            {
+                LandColorSelectionButton.BackColor = selectedColor;
+                LandColorSelectionButton.Refresh();
+            }
+        }
+
+        private void LandAddColorPresetButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LandColorSelectButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.ColorSelect;
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(0);
+        }
+
+        private void LandButtonE6D0AB_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LandButtonD8B48F_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LandButtonBEBB8E_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LandButtonD7C293_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LandButtonAD9C7E_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LandButton3D3728_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LandCustomColorButton1_MouseClick(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void LandCustomColorButton2_MouseClick(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void LandCustomColorButton3_MouseClick(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void LandCustomColorButton4_MouseClick(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void LandCustomColorButton5_MouseClick(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void LandCustomColorButton6_MouseClick(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void LandSoftBrushButton_Click(object sender, EventArgs e)
+        {
+            SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.SoftBrush;
+        }
+
+        private void LandHardBrushButton_Click(object sender, EventArgs e)
+        {
+            SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.HardBrush;
+        }
+
+        private void LandColorBrushSizeTrack_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LandBrushVelocityTrack_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LandColorEraserSizeTrack_ValueChanged(object sender, EventArgs e)
+        {
 
         }
         #endregion
