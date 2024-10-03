@@ -104,10 +104,8 @@ namespace RealmStudio
             {
                 // clip drawing to the outer path of landforms
 
-                using SKRegion drawingPathRegion = new();
-
                 List<MapComponent> landformList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
-                SKPath clipPath = new SKPath();
+                SKPath clipPath = new();
                 for (int i = 0; i < landformList.Count; i++)
                 {
                     SKPath landformOutlinePath = ((Landform)landformList[i]).ContourPath;
@@ -118,11 +116,8 @@ namespace RealmStudio
                     }
                 }
 
-                drawingPathRegion.SetPath(clipPath);
-
                 canvas.Save();
-                canvas.ClipRegion(drawingPathRegion);
-
+                canvas.ClipPath(clipPath);
             }
             else if (MapLayerIdentifer == MapBuilder.WATERDRAWINGLAYER)
             {

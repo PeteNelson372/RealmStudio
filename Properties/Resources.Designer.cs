@@ -78,5 +78,15 @@ namespace RealmStudio.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] ZeroSum_white___no_background {
+            get {
+                object obj = ResourceManager.GetObject("ZeroSum white - no background", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

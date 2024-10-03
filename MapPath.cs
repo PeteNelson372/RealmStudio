@@ -51,7 +51,6 @@ namespace RealmStudio
         public override void Render(SKCanvas canvas)
         {
             if (ParentMap == null) return;
-            using SKRegion pathDrawingRegion = new();
 
             // clip the path drawing to the outer path of landforms
             List<MapComponent> landformList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
@@ -64,10 +63,8 @@ namespace RealmStudio
 
                 if (landformOutlinePath != null && landformOutlinePath.PointCount > 0 && distinctPathPoints.Count > 0 && PathPaint != null)
                 {
-                    pathDrawingRegion.SetPath(landformOutlinePath);
-
                     canvas.Save();
-                    canvas.ClipRegion(pathDrawingRegion);
+                    canvas.ClipPath(landformOutlinePath);
 
                     switch (PathType)
                     {

@@ -29,7 +29,7 @@ namespace RealmStudio
 {
     internal class AssetManager
     {
-        public static Cursor? EYEDROPPER_CURSOR;
+        public static Cursor? EYEDROPPER_CURSOR { get; set; }
 
         public static readonly List<MapTexture> BACKGROUND_TEXTURE_LIST = [];
         public static List<MapTexture> WATER_TEXTURE_LIST { get; set; } = [];
@@ -80,7 +80,19 @@ namespace RealmStudio
 
             ResetAssets();
 
-            EYEDROPPER_CURSOR = new Cursor(Resources.Eye_Dropper.Handle);
+            // loading the eyedropper cursor icon from the resource handle doesn't seem to work consistently;
+            // if a breakpoint is set, and the code is stepped through, the icon is loaded and the cursor created correctly,
+            // but without the breakpoint, the cursor does not load
+
+            // the workaround is to load the icon from a file, as below
+
+            //Icon eyeDropper = Resources.Eye_Dropper;
+            //nint eyeDropperHandle = eyeDropper.Handle;
+            //Debug.WriteLine(eyeDropperHandle.ToString());
+
+            //EYEDROPPER_CURSOR = new System.Windows.Forms.Cursor(eyeDropperHandle);
+
+            //EYEDROPPER_CURSOR = new System.Windows.Forms.Cursor("eye dropper.ico");
 
             // load symbol tags
             LoadSymbolTags();
@@ -198,6 +210,12 @@ namespace RealmStudio
                     };
 
                     APPLICATION_ICON_LIST.Add(icon);
+
+                    if (icon.IconName == "Eye Dropper")
+                    {
+                        EYEDROPPER_CURSOR = new System.Windows.Forms.Cursor(icon.IconPath);
+                    }
+
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("\\Themes"))
                 {

@@ -90,11 +90,11 @@ namespace RealmStudio
 
         internal static bool MergeWaterFeaturePaths(SKPath waterFeaturePath2, ref SKPath waterFeaturePath1)
         {
-             // merge paths from two water features; if the paths overlap, then waterFeaturePath1
+            // merge paths from two water features; if the paths overlap, then waterFeaturePath1
             // is modified to include waterFeaturePath2 (the first path becomes the union
             // of the two original paths)
             bool pathsMerged = false;
-            
+
             if (waterFeaturePath2.PointCount > 0 && waterFeaturePath1.PointCount > 0)
             {
                 // get the intersection between the paths
@@ -277,10 +277,10 @@ namespace RealmStudio
             int numOctaves = 2;
 
             using SKPaint paint = new();
-            
+
             paint.Style = SKPaintStyle.Fill;
             paint.Shader = SKShader.CreatePerlinNoiseTurbulence(fx, fy, numOctaves, seed, new SKSizeI((int)tileRect.Width, (int)tileRect.Height));
-            
+
             skc.DrawRect(tileRect, paint);
             Bitmap gsb = DrawingMethods.MakeGrayscale(Extensions.ToBitmap(b), 0.19F, false);
 
@@ -383,12 +383,12 @@ namespace RealmStudio
             mapRiver.RiverPaint = new()
             {
                 Color = riverColor,
-                StrokeWidth = strokeWidth,
+                StrokeWidth = 4,
                 Style = SKPaintStyle.Stroke,
                 StrokeCap = SKStrokeCap.Butt,
                 StrokeJoin = SKStrokeJoin.Round,
                 IsAntialias = true,
-                BlendMode = SKBlendMode.SrcATop,
+                BlendMode = SKBlendMode.Src,
                 Shader = combinedShader
             };
 

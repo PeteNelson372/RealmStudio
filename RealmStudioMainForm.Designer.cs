@@ -1496,7 +1496,7 @@
             groupBox3.Controls.Add(label19);
             groupBox3.Controls.Add(LandEraserSizeTrack);
             groupBox3.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox3.Location = new Point(6, 729);
+            groupBox3.Location = new Point(6, 707);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new Size(148, 82);
             groupBox3.TabIndex = 19;
@@ -1549,7 +1549,7 @@
             groupBox2.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             groupBox2.Location = new Point(6, 391);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(148, 320);
+            groupBox2.Size = new Size(148, 302);
             groupBox2.TabIndex = 18;
             groupBox2.TabStop = false;
             groupBox2.Text = "Coastline";
@@ -1580,10 +1580,10 @@
             CoastlineStyleList.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             CoastlineStyleList.FormattingEnabled = true;
             CoastlineStyleList.ItemHeight = 15;
-            CoastlineStyleList.Items.AddRange(new object[] { "None", "Uniform Band", "Uniform Blend", "Uniform Outline", "Three-Tiered", "Circular Pattern", "Dash Pattern", "Hatch Pattern", "User Defined" });
+            CoastlineStyleList.Items.AddRange(new object[] { "None", "Uniform Band", "Uniform Blend", "Uniform Outline", "Three-Tiered", "Circular Pattern", "Dash Pattern", "Hatch Pattern" });
             CoastlineStyleList.Location = new Point(6, 163);
             CoastlineStyleList.Name = "CoastlineStyleList";
-            CoastlineStyleList.Size = new Size(136, 139);
+            CoastlineStyleList.Size = new Size(136, 124);
             CoastlineStyleList.TabIndex = 23;
             // 
             // CoastlineColorSelectionButton
@@ -5387,7 +5387,6 @@
             LandBrushVelocityTrack.Name = "LandBrushVelocityTrack";
             LandBrushVelocityTrack.Size = new Size(126, 20);
             LandBrushVelocityTrack.TabIndex = 86;
-            LandBrushVelocityTrack.TickFrequency = 2;
             LandBrushVelocityTrack.TickStyle = TickStyle.None;
             LandBrushVelocityTrack.Value = 100;
             LandBrushVelocityTrack.ValueChanged += LandBrushVelocityTrack_ValueChanged;
@@ -5395,6 +5394,7 @@
             // LandColorSelectButton
             // 
             LandColorSelectButton.BackColor = SystemColors.ControlLightLight;
+            LandColorSelectButton.CausesValidation = false;
             LandColorSelectButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandColorSelectButton.FlatStyle = FlatStyle.Flat;
             LandColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.EyeDropperEmpty;
@@ -5405,7 +5405,7 @@
             LandColorSelectButton.Name = "LandColorSelectButton";
             LandColorSelectButton.Size = new Size(60, 60);
             LandColorSelectButton.TabIndex = 85;
-            LandColorSelectButton.UseVisualStyleBackColor = false;
+            LandColorSelectButton.UseVisualStyleBackColor = true;
             LandColorSelectButton.Click += LandColorSelectButton_Click;
             // 
             // LandColorButton

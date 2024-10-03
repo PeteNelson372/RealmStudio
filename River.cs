@@ -66,8 +66,6 @@ namespace RealmStudio
         {
             if (ParentMap == null) return;
 
-            using SKRegion waterPathRegion = new();
-
             List<MapRiverPoint> distinctRiverPoints = RiverPoints.Distinct(new RiverPointComparer()).ToList();
 
             // clip the river drawing to the outer path of landforms
@@ -79,10 +77,8 @@ namespace RealmStudio
 
                 if (landformOutlinePath != null && landformOutlinePath.PointCount > 0 && distinctRiverPoints.Count > 0 && RiverPaint != null)
                 {
-                    waterPathRegion.SetPath(landformOutlinePath);
-
                     canvas.Save();
-                    canvas.ClipRegion(waterPathRegion);
+                    canvas.ClipPath(landformOutlinePath);
 
                     // use multiple paths and multiple sets of parallel points and paint objects
                     // to draw lines as gradients to shade rivers
@@ -121,7 +117,9 @@ namespace RealmStudio
                         }
                     }
 
+
                     canvas.DrawPath(riverPath, RiverPaint);
+
 
                     // fill path
                     using SKPath riverFillPath = new();
@@ -141,7 +139,6 @@ namespace RealmStudio
 
                     if (parallelPoints2.Count > 2)
                     {
-                        riverFillPath.MoveTo(parallelPoints.Last().RiverPoint);
                         riverFillPath.LineTo(parallelPoints2.Last().RiverPoint);
 
                         for (int j = parallelPoints2.Count - 1; j >= 2; j -= 3)
@@ -153,13 +150,14 @@ namespace RealmStudio
                         }
                     }
 
+
                     if (parallelPoints.Count > 2 && parallelPoints2.Count > 2)
                     {
-                        riverFillPath.MoveTo(parallelPoints2[0].RiverPoint);
                         riverFillPath.LineTo(parallelPoints[0].RiverPoint);
 
                         canvas.DrawPath(riverFillPath, RiverFillPaint);
                     }
+
 
                     // shoreline
                     using SKPath shorelinePath = new();
@@ -197,6 +195,8 @@ namespace RealmStudio
                     }
 
                     canvas.DrawPath(shorelinePath, RiverShorelinePaint);
+
+
                     RiverBoundaryPath?.Dispose();
                     RiverBoundaryPath = new(shorelinePath)
                     {

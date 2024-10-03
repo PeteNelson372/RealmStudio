@@ -185,47 +185,64 @@ namespace RealmStudio
             MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDDRAWINGLAYER);
             MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
 
-            // TODO: change to use picture recorder for rendering
-            if (landformLayer.LayerSurface != null && landCoastlineLayer.LayerSurface != null && landDrawingLayer.LayerSurface != null)
+            selectionLayer.RenderPicture?.Dispose();
+            selectionLayer.RenderPicture = null;
+
+            SKRect clippingBounds = new(0, 0, map.MapWidth, map.MapHeight);
+
+            using var coastlineRecorder = new SKPictureRecorder();
+            using var landFormRecorder = new SKPictureRecorder();
+            using var drawingRecorder = new SKPictureRecorder();
+            using var selectionRecorder = new SKPictureRecorder();
+
+            // Start recording 
+            coastlineRecorder.BeginRecording(clippingBounds);
+            currentLandform?.RenderCoastline(coastlineRecorder.RecordingCanvas);
+
+            landFormRecorder.BeginRecording(clippingBounds);
+            currentLandform?.RenderLandform(landFormRecorder.RecordingCanvas);
+
+            foreach (Landform l in landformLayer.MapLayerComponents.Cast<Landform>())
             {
-                landCoastlineLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                landformLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                landDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+                l.RenderCoastline(coastlineRecorder.RecordingCanvas);
+                l.RenderLandform(landFormRecorder.RecordingCanvas);
 
-                currentLandform?.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
-                currentLandform?.RenderLandform(landformLayer.LayerSurface.Canvas);
-
-                // TODO: render CURRENT_LANDFORM landform drawing
-
-                foreach (Landform l in landformLayer.MapLayerComponents.Cast<Landform>())
+                if (l.IsSelected)
                 {
-                    l.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
-                    l.RenderLandform(landformLayer.LayerSurface.Canvas);
+                    // draw an outline around the landform to show that it is selected
+                    l.ContourPath.GetBounds(out SKRect boundRect);
+                    using SKPath boundsPath = new();
+                    boundsPath.AddRect(boundRect);
 
-                    // TODO: render landform drawing
-
-                    if (l.IsSelected)
-                    {
-                        // draw an outline around the landform to show that it is selected
-                        l.ContourPath.GetBounds(out SKRect boundRect);
-                        using SKPath boundsPath = new();
-                        boundsPath.AddRect(boundRect);
-
-                        selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
-                    }
+                    // only one landform can be selected
+                    selectionRecorder.BeginRecording(clippingBounds);
+                    selectionRecorder.RecordingCanvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
+                    selectionLayer.RenderPicture = selectionRecorder.EndRecording();
                 }
-
-                landDrawingLayer.Render(landDrawingLayer.LayerSurface.Canvas);
-
-                // paint landform coastline layer
-                e.Surface.Canvas.DrawSurface(landCoastlineLayer.LayerSurface, scrollPoint);
-
-                // paint landform layer
-                e.Surface.Canvas.DrawSurface(landformLayer.LayerSurface, scrollPoint);
-
-                // paint land drawing layer
-                e.Surface.Canvas.DrawSurface(landDrawingLayer.LayerSurface, scrollPoint);
             }
+
+            landCoastlineLayer.RenderPicture = coastlineRecorder?.EndRecording();
+            landformLayer.RenderPicture = landFormRecorder?.EndRecording();
+
+            drawingRecorder.BeginRecording(clippingBounds);
+            landDrawingLayer.Render(drawingRecorder.RecordingCanvas);
+            landDrawingLayer.RenderPicture = drawingRecorder.EndRecording();
+
+            // paint landform coastline layer
+            e.Surface.Canvas.DrawPicture(landCoastlineLayer.RenderPicture, scrollPoint);
+
+            // paint landform layer
+            e.Surface.Canvas.DrawPicture(landformLayer.RenderPicture, scrollPoint);
+
+            // paint land drawing layer
+            e.Surface.Canvas.DrawPicture(landDrawingLayer.RenderPicture, scrollPoint);
+
+            if (selectionLayer.RenderPicture != null)
+            {
+                // paint selection layer
+                e.Surface.Canvas.DrawPicture(selectionLayer.RenderPicture, scrollPoint);
+            }
+
         }
 
         internal static void RenderLowerMapPaths(RealmStudioMap map, MapPath? currentPath, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
@@ -449,8 +466,8 @@ namespace RealmStudio
         internal static void RenderSelections(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
         {
             // paint selection layer
-            MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
-            e.Surface.Canvas.DrawSurface(selectionLayer.LayerSurface, scrollPoint);
+            //MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
+            //e.Surface.Canvas.DrawSurface(selectionLayer.LayerSurface, scrollPoint);
         }
 
         internal static void RenderSymbols(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)

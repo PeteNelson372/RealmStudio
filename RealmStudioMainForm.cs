@@ -25,8 +25,8 @@ using RealmStudio.Properties;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
+using System.Timers;
 using Control = System.Windows.Forms.Control;
-using Timer = System.Windows.Forms.Timer;
 
 namespace RealmStudio
 {
@@ -72,10 +72,10 @@ namespace RealmStudio
         private static float PLACEMENT_DENSITY = 1.0F;
         private static float DrawingZoom = 1.0f;
 
-        private static readonly double BASE_MILIS_PER_PAINT_EVENT = 5.0;
-        private static double BRUSH_VELOCITY = 10.0;
+        private static readonly double BASE_MILLIS_PER_PAINT_EVENT = 10.0;
+        private static double BRUSH_VELOCITY = 2.0;
 
-        private static Timer? BRUSH_TIMER = null;
+        private static System.Timers.Timer? BRUSH_TIMER = null;
 
         private static SKPath CURRENT_MAP_LABEL_PATH = new();
         private static readonly List<SKPoint> CURRENT_MAP_LABEL_PATH_POINTS = [];
@@ -1727,7 +1727,10 @@ namespace RealmStudio
 
             MapRenderMethods.RenderSelections(CURRENT_MAP, e, ScrollPoint);
 
-            MapRenderMethods.RenderCursor(CURRENT_MAP, e, ScrollPoint);
+            if (CURRENT_DRAWING_MODE != DrawingModeEnum.ColorSelect)
+            {
+                MapRenderMethods.RenderCursor(CURRENT_MAP, e, ScrollPoint);
+            }
 
             // work layer
             MapRenderMethods.RenderWorkLayer(CURRENT_MAP, e, ScrollPoint);
@@ -1778,7 +1781,10 @@ namespace RealmStudio
                 NoButtonMouseMoveHandler(sender, e, SELECTED_BRUSH_SIZE / 2);
             }
 
-            DrawCursor(zoomedScrolledPoint, SELECTED_BRUSH_SIZE);
+            if (CURRENT_DRAWING_MODE != DrawingModeEnum.ColorSelect)
+            {
+                DrawCursor(zoomedScrolledPoint, SELECTED_BRUSH_SIZE);
+            }
 
             SKGLRenderControl.Invalidate();
         }
@@ -2019,17 +2025,19 @@ namespace RealmStudio
                                 BRUSH_TIMER.Dispose();
                             }
 
+                            BRUSH_VELOCITY = Math.Max(1, BASE_MILLIS_PER_PAINT_EVENT / (OceanBrushVelocityTrack.Value / 100.0));
+
                             // start the brush timer
-                            BRUSH_TIMER = new Timer
+                            BRUSH_TIMER = new System.Timers.Timer
                             {
-                                Interval = (int)BRUSH_VELOCITY
+                                Interval = (int)BRUSH_VELOCITY,
+                                AutoReset = true,
+                                SynchronizingObject = SKGLRenderControl,
                             };
 
-                            BRUSH_TIMER.Tick += new EventHandler(BrushTimerEventHandler);
+                            BRUSH_TIMER.Elapsed += new ElapsedEventHandler(BrushTimerEventHandler);
                             BRUSH_TIMER.Start();
                         }
-
-                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.OceanErase:
@@ -2086,14 +2094,34 @@ namespace RealmStudio
                                 BRUSH_TIMER.Dispose();
                             }
 
+                            BRUSH_VELOCITY = Math.Max(1, BASE_MILLIS_PER_PAINT_EVENT / (LandBrushVelocityTrack.Value / 100.0));
+
                             // start the brush timer
-                            BRUSH_TIMER = new Timer
+                            BRUSH_TIMER = new System.Timers.Timer
                             {
-                                Interval = (int)BRUSH_VELOCITY
+                                Interval = (int)BRUSH_VELOCITY,
+                                AutoReset = true,
+                                SynchronizingObject = SKGLRenderControl,
                             };
 
-                            BRUSH_TIMER.Tick += new EventHandler(BrushTimerEventHandler);
+                            BRUSH_TIMER.Elapsed += new ElapsedEventHandler(BrushTimerEventHandler);
                             BRUSH_TIMER.Start();
+                        }
+                    }
+                    break;
+                case DrawingModeEnum.LandColorErase:
+                    {
+                        CURRENT_MAP.IsSaved = false;
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_LAYER_PAINT_STROKE == null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.Empty,
+                                ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.LANDDRAWINGLAYER, true);
+
+                            Cmd_AddLandPaintStroke cmd = new(CURRENT_MAP, CURRENT_LAYER_PAINT_STROKE);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
                         }
 
                         SKGLRenderControl.Invalidate();
@@ -2603,6 +2631,18 @@ namespace RealmStudio
 
                     }
                     break;
+                case DrawingModeEnum.LandColorErase:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_LAYER_PAINT_STROKE != null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE.AddLayerPaintStrokePoint(zoomedScrolledPoint);
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
                 case DrawingModeEnum.WaterPaint:
                     {
                         Cursor = Cursors.Cross;
@@ -3080,22 +3120,22 @@ namespace RealmStudio
         private void LeftButtonMouseUpHandler(object sender, MouseEventArgs e)
         {
             SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
-            Cursor = Cursors.Default;
+            //Cursor = Cursors.Default;
 
             switch (CURRENT_DRAWING_MODE)
             {
                 case DrawingModeEnum.OceanPaint:
-                    if (CURRENT_LAYER_PAINT_STROKE != null)
                     {
                         BRUSH_TIMER?.Stop();
                         BRUSH_TIMER?.Dispose();
                         BRUSH_TIMER = null;
 
-                        CURRENT_LAYER_PAINT_STROKE = null;
-
-                        CURRENT_MAP.IsSaved = false;
-
-                        SKGLRenderControl.Invalidate();
+                        if (CURRENT_LAYER_PAINT_STROKE != null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE = null;
+                            CURRENT_MAP.IsSaved = false;
+                            SKGLRenderControl.Invalidate();
+                        }
                     }
                     break;
                 case DrawingModeEnum.OceanErase:
@@ -3126,15 +3166,28 @@ namespace RealmStudio
                     }
                     break;
                 case DrawingModeEnum.LandColor:
-                    if (CURRENT_LAYER_PAINT_STROKE != null)
                     {
                         BRUSH_TIMER?.Stop();
                         BRUSH_TIMER?.Dispose();
                         BRUSH_TIMER = null;
 
-                        CURRENT_LAYER_PAINT_STROKE = null;
+                        if (CURRENT_LAYER_PAINT_STROKE != null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE = null;
+                            CURRENT_MAP.IsSaved = false;
+                            SKGLRenderControl.Invalidate();
+                        }
+                    }
+                    break;
+                case DrawingModeEnum.LandColorErase:
+                    {
+                        Cursor = Cursors.Cross;
 
-                        CURRENT_MAP.IsSaved = false;
+                        if (CURRENT_LAYER_PAINT_STROKE != null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE = null;
+                            CURRENT_MAP.IsSaved = false;
+                        }
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3421,8 +3474,8 @@ namespace RealmStudio
                 case DrawingModeEnum.ColorSelect:
                     {
                         // eyedropper color select function
-                        Cursor = Cursors.Default;
-                        CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+                        //Cursor = Cursors.Default;
+                        //CURRENT_DRAWING_MODE = DrawingModeEnum.None;
                         CREATE_MAP_IMAGE = true;
 
                         SKGLRenderControl.Refresh();
@@ -3523,6 +3576,44 @@ namespace RealmStudio
         #region SKGLRenderControl KeyDown Handler
         private void SKGLRenderControl_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.KeyCode == Keys.Escape)
+            {
+                // deselect selected symbols, map frames, boxes,
+                // clear any label paths that have been drawn
+                // deselect all selected objects
+                // what else?
+
+                // stop and dispose of the brush timer
+                BRUSH_TIMER?.Stop();
+                BRUSH_TIMER?.Dispose();
+                BRUSH_TIMER = null;
+
+                // clear drawing mode and set brush size to 0
+                CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+                SetDrawingModeLabel();
+                SetSelectedBrushSize(0);
+
+                // dispose of any map label path
+                CURRENT_MAP_LABEL_PATH.Dispose();
+                CURRENT_MAP_LABEL_PATH = new();
+
+                // clear the work layer
+                MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+
+                // unselect anything selected
+                DeselectAllMapComponents(null);
+
+                // dispose of any label text box that is drawn
+                if (LABEL_TEXT_BOX != null)
+                {
+                    SKGLRenderControl.Controls.Remove(LABEL_TEXT_BOX);
+                    LABEL_TEXT_BOX.Dispose();
+                }
+
+                SKGLRenderControl.Invalidate();
+                Refresh();
+            }
+
             if (e.KeyCode == Keys.Delete)
             {
                 switch (CURRENT_DRAWING_MODE)
@@ -4140,20 +4231,17 @@ namespace RealmStudio
         private void OceanBrushVelocityTrack_ValueChanged(object sender, EventArgs e)
         {
             TOOLTIP.Show((OceanBrushVelocityTrack.Value / 100.0F).ToString(), OceanBrushVelocityTrack, new Point(OceanBrushVelocityTrack.Right - 42, OceanBrushVelocityTrack.Top - 170), 2000);
-            BRUSH_VELOCITY = BASE_MILIS_PER_PAINT_EVENT / (OceanBrushVelocityTrack.Value / 100.0);
+            BRUSH_VELOCITY = Math.Max(1, BASE_MILLIS_PER_PAINT_EVENT / (OceanBrushVelocityTrack.Value / 100.0));
         }
 
         private void BrushTimerEventHandler(Object? eventObject, EventArgs eventArgs)
         {
             Point cursorPoint = SKGLRenderControl.PointToClient(Cursor.Position);
 
-            BRUSH_TIMER?.Stop();
-
             SKPoint zoomedScrolledPoint = new((cursorPoint.X / DrawingZoom) + DrawingPoint.X, (cursorPoint.Y / DrawingZoom) + DrawingPoint.Y);
-            Task.Run(() => CURRENT_LAYER_PAINT_STROKE?.AddLayerPaintStrokePoint(zoomedScrolledPoint));
+            CURRENT_LAYER_PAINT_STROKE?.AddLayerPaintStrokePoint(zoomedScrolledPoint);
 
             SKGLRenderControl.Invalidate();
-            BRUSH_TIMER?.Start();
         }
 
         private void OceanAddColorPresetButton_Click(object sender, EventArgs e)
@@ -4219,6 +4307,8 @@ namespace RealmStudio
             CURRENT_DRAWING_MODE = DrawingModeEnum.ColorSelect;
             SetDrawingModeLabel();
             SetSelectedBrushSize(0);
+
+            Cursor = AssetManager.EYEDROPPER_CURSOR;
         }
 
         private void OceanButton91CBB8_Click(object sender, EventArgs e)
@@ -4390,7 +4480,7 @@ namespace RealmStudio
 
         private void LandColorEraseButton_Click(object sender, EventArgs e)
         {
-            CURRENT_DRAWING_MODE = DrawingModeEnum.LandColor;
+            CURRENT_DRAWING_MODE = DrawingModeEnum.LandColorErase;
             SetDrawingModeLabel();
             SetSelectedBrushSize(LandformMethods.LandformColorEraserBrushSize);
         }
@@ -4408,7 +4498,49 @@ namespace RealmStudio
 
         private void LandAddColorPresetButton_Click(object sender, EventArgs e)
         {
+            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, Color.Empty);
 
+            if (selectedColor != Color.Empty)
+            {
+                Color landColor = selectedColor;
+
+                if (LandCustomColorButton1.Text == "")
+                {
+                    LandCustomColorButton1.BackColor = landColor;
+                    LandCustomColorButton1.Text = ColorTranslator.ToHtml(landColor);
+                    LandCustomColorButton1.Refresh();
+                }
+                else if (LandCustomColorButton2.Text == "")
+                {
+                    LandCustomColorButton2.BackColor = landColor;
+                    LandCustomColorButton2.Text = ColorTranslator.ToHtml(landColor);
+                    LandCustomColorButton2.Refresh();
+                }
+                else if (LandCustomColorButton3.Text == "")
+                {
+                    LandCustomColorButton3.BackColor = landColor;
+                    LandCustomColorButton3.Text = ColorTranslator.ToHtml(landColor);
+                    LandCustomColorButton3.Refresh();
+                }
+                else if (LandCustomColorButton4.Text == "")
+                {
+                    LandCustomColorButton4.BackColor = landColor;
+                    LandCustomColorButton4.Text = ColorTranslator.ToHtml(landColor);
+                    LandCustomColorButton4.Refresh();
+                }
+                else if (LandCustomColorButton5.Text == "")
+                {
+                    LandCustomColorButton5.BackColor = landColor;
+                    LandCustomColorButton5.Text = ColorTranslator.ToHtml(landColor);
+                    LandCustomColorButton5.Refresh();
+                }
+                else if (LandCustomColorButton6.Text == "")
+                {
+                    LandCustomColorButton6.BackColor = landColor;
+                    LandCustomColorButton6.Text = ColorTranslator.ToHtml(landColor);
+                    LandCustomColorButton6.Refresh();
+                }
+            }
         }
 
         private void LandColorSelectButton_Click(object sender, EventArgs e)
@@ -4416,36 +4548,38 @@ namespace RealmStudio
             CURRENT_DRAWING_MODE = DrawingModeEnum.ColorSelect;
             SetDrawingModeLabel();
             SetSelectedBrushSize(0);
+
+            Cursor = AssetManager.EYEDROPPER_CURSOR;
         }
 
         private void LandButtonE6D0AB_Click(object sender, EventArgs e)
         {
-
+            SetLandColorFromPreset("#E6D0AB");
         }
 
         private void LandButtonD8B48F_Click(object sender, EventArgs e)
         {
-
+            SetLandColorFromPreset("#D8B48F");
         }
 
         private void LandButtonBEBB8E_Click(object sender, EventArgs e)
         {
-
+            SetLandColorFromPreset("#BEBB8E");
         }
 
         private void LandButtonD7C293_Click(object sender, EventArgs e)
         {
-
+            SetLandColorFromPreset("#D7C293");
         }
 
         private void LandButtonAD9C7E_Click(object sender, EventArgs e)
         {
-
+            SetLandColorFromPreset("#AD9C7E");
         }
 
         private void LandButton3D3728_Click(object sender, EventArgs e)
         {
-
+            SetLandColorFromPreset("#3D3728");
         }
 
         private void LandCustomColorButton1_MouseClick(object sender, MouseEventArgs e)
@@ -4490,18 +4624,24 @@ namespace RealmStudio
 
         private void LandColorBrushSizeTrack_ValueChanged(object sender, EventArgs e)
         {
-
+            LandformMethods.LandformColorBrushSize = LandColorBrushSizeTrack.Value;
+            TOOLTIP.Show(LandformMethods.LandformColorBrushSize.ToString(), LandColorBrushSizeTrack, new Point(LandColorBrushSizeTrack.Right - 42, LandColorBrushSizeTrack.Top - 135), 2000);
+            SetSelectedBrushSize(LandformMethods.LandformColorBrushSize);
         }
 
         private void LandBrushVelocityTrack_ValueChanged(object sender, EventArgs e)
         {
-
+            TOOLTIP.Show((LandBrushVelocityTrack.Value / 100.0F).ToString(), LandBrushVelocityTrack, new Point(LandBrushVelocityTrack.Right - 42, LandBrushVelocityTrack.Top - 175), 2000);
+            BRUSH_VELOCITY = Math.Max(1, BASE_MILLIS_PER_PAINT_EVENT / (LandBrushVelocityTrack.Value / 100.0));
         }
 
         private void LandColorEraserSizeTrack_ValueChanged(object sender, EventArgs e)
         {
-
+            LandformMethods.LandformColorEraserBrushSize = LandColorEraserSizeTrack.Value;
+            TOOLTIP.Show(LandformMethods.LandformColorEraserBrushSize.ToString(), LandColorEraserSizeTrack, new Point(LandColorEraserSizeTrack.Right - 42, LandColorEraserSizeTrack.Top - 210), 2000);
+            SetSelectedBrushSize(LandformMethods.LandformColorEraserBrushSize);
         }
+
         #endregion
 
         #region Landform Methods
@@ -4619,6 +4759,15 @@ namespace RealmStudio
 
                 LandColorSelectionButton.Refresh();
             }
+        }
+
+        private void SetLandColorFromPreset(string htmlColor)
+        {
+            Color landColor = ColorTranslator.FromHtml(htmlColor);
+
+            LandColorSelectionButton.BackColor = landColor;
+
+            LandColorSelectionButton.Refresh();
         }
 
         #endregion
@@ -6095,7 +6244,17 @@ namespace RealmStudio
                 Font labelFont = SELECTED_LABEL_FONT;
                 Color labelColor = FontColorSelectButton.BackColor;
 
-                if (((KeyPressEventArgs)e).KeyChar == (char)Keys.Return)
+                if (((KeyPressEventArgs)e).KeyChar == (char)Keys.Escape)
+                {
+                    ((KeyPressEventArgs)e).Handled = false; // pass the event up
+
+                    CREATING_LABEL = false;
+
+                    // dispose of the text box, as it isn't needed once the label text has been entered
+                    SKGLRenderControl.Controls.Remove(tb);
+                    tb.Dispose();
+                }
+                else if (((KeyPressEventArgs)e).KeyChar == (char)Keys.Return)
                 {
                     ((KeyPressEventArgs)e).Handled = true;
                     CREATING_LABEL = false;
@@ -6475,7 +6634,7 @@ namespace RealmStudio
 
             if (LabelPresetsListBox.SelectedIndex >= 0)
             {
-                string? presetName = (string?)LabelPresetsListBox.SelectedItem;
+                string? presetName = ((LabelPreset?)LabelPresetsListBox.SelectedItem)?.LabelPresetName;
 
                 if (!string.IsNullOrEmpty(presetName))
                 {

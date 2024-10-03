@@ -105,8 +105,6 @@ namespace RealmStudio
         {
             if (ParentMap == null) return;
 
-            using SKRegion waterPathRegion = new();
-
             // clip the water feature drawing to the outer path of landforms
             List<MapComponent> landformList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
 
@@ -116,10 +114,8 @@ namespace RealmStudio
 
                 if (landformOutlinePath != null && landformOutlinePath.PointCount > 0 && WaterFeaturePath.PointCount > 0)
                 {
-                    waterPathRegion.SetPath(landformOutlinePath);
-
                     canvas.Save();
-                    canvas.ClipRegion(waterPathRegion);
+                    canvas.ClipPath(landformOutlinePath);
 
                     DrawWaterFeatureWithGradient(canvas);
 
