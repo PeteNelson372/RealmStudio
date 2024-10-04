@@ -21,10 +21,10 @@
 * contact@brookmonte.com
 *
 ***************************************************************************************************************************/
-using AForge.Imaging.Filters;
+using DelaunatorSharp;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
-using System.Drawing.Imaging;
+using Point = DelaunatorSharp.Point;
 
 namespace RealmStudio
 {
@@ -32,6 +32,9 @@ namespace RealmStudio
     {
         public static int WaterFeatureBrushSize { get; set; } = 20;
         public static int WaterFeatureEraserSize { get; set; } = 20;
+
+        public static int WaterColorBrushSize { get; set; } = 20;
+        public static int WaterColorEraserSize { get; set; } = 20;
 
         public static Color DEFAULT_WATER_OUTLINE_COLOR { get; } = ColorTranslator.FromHtml("#A19076");
         public static Color DEFAULT_WATER_COLOR { get; } = ColorTranslator.FromHtml("#658CBFC5");
@@ -166,8 +169,8 @@ namespace RealmStudio
             {
                 Style = SKPaintStyle.Stroke,
                 BlendMode = SKBlendMode.Src,
-                Color = Extensions.ToSKColor((Color)waterFeature.WaterFeatureShorelineColor),
-                StrokeWidth = 3,
+                Color = Extensions.ToSKColor(waterFeature.WaterFeatureShorelineColor),
+                StrokeWidth = 2,
                 IsAntialias = true,
             };
 
@@ -182,78 +185,54 @@ namespace RealmStudio
 
         public static SKPath? GenerateRandomLakePath(SKPoint location, float lakeSize)
         {
-            Bitmap b = GetLakeBitmap((int)lakeSize, (int)lakeSize);
+            SKPoint centerLocation = new SKPoint(location.X - (lakeSize / 4), location.Y - (lakeSize / 4));
 
-            b.Save("C:\\Users\\Pete Nelson\\OneDrive\\Desktop\\lake1.bmp");
+            List<SKPoint> lakePoints = ShapeGenerator.GenerateRandomPointSet((int)centerLocation.X, (int)centerLocation.Y, (int)lakeSize - 2, (int)lakeSize - 2, (int)(lakeSize / 2.0));
 
-            Bitmap? blobBitmap = DrawingMethods.ExtractLargestBlob(b);
-
-            if (blobBitmap != null)
+            while (lakePoints.Count < lakeSize * 2)
             {
-                blobBitmap.Save("C:\\Users\\Pete Nelson\\OneDrive\\Desktop\\lake2.bmp");
-
-                if (blobBitmap.PixelFormat != PixelFormat.Format8bppIndexed)
-                {
-                    // convert the bitmap to an 8bpp grayscale image for processing
-                    blobBitmap = Grayscale.CommonAlgorithms.BT709.Apply(b);
-                }
-
-                // invert the bitmap colors white -> black; black -> white
-                Invert invert = new();
-                using Bitmap invertedBitmap = invert.Apply(blobBitmap);
-
-                using SKCanvas canvas = new(invertedBitmap.ToSKBitmap());
-
-                canvas.Clear();
-
-                canvas.DrawBitmap(invertedBitmap.ToSKBitmap(), 0, 0);
-
-                // make sure the bitmap has a 2-pixel wide margin of empty pixels
-                // so that the contour points can be found
-                using SKPath marginPath = new SKPath();
-                marginPath.MoveTo(1, 1);
-                marginPath.LineTo(invertedBitmap.Width - 1, 1);
-                marginPath.LineTo(invertedBitmap.Width - 1, invertedBitmap.Height - 1);
-                marginPath.LineTo(1, invertedBitmap.Height - 1);
-                marginPath.Close();
-
-                using SKPaint marginpaint = new();
-                marginpaint.Style = SKPaintStyle.Stroke;
-                marginpaint.IsAntialias = false;
-                marginpaint.Color = SKColors.White;
-                marginpaint.StrokeWidth = 2;
-
-                canvas.DrawPath(marginPath, marginpaint);
-
-                invertedBitmap.Save("C:\\Users\\Pete Nelson\\OneDrive\\Desktop\\lake3.bmp");
-
-                List<SKPoint> lakePoints = DrawingMethods.GetBitmapContourPoints(invertedBitmap);
-
-                SKPath contourPath = new();
-
-                if (lakePoints.Count > 1)
-                {
-                    // the Moore-Neighbor algorithm sets the first (0th) pixel in the list of contour points to
-                    // an empty pixel, so remove it before constructing the path from the contour points
-                    lakePoints.RemoveAt(0);
-
-                    if (lakePoints.Count > 0)
-                    {
-                        contourPath.MoveTo(lakePoints[0]);
-
-                        for (int i = 1; i < lakePoints.Count; i++)
-                        {
-                            contourPath.LineTo(lakePoints[i]);
-                        }
-
-                        contourPath.Close();
-                    }
-                }
-
-                return contourPath;
+                lakePoints.AddRange(ShapeGenerator.GenerateRandomPointSet((int)centerLocation.X + Random.Shared.Next(-3, 3), (int)centerLocation.Y + Random.Shared.Next(-3, 3), (int)lakeSize - 2, (int)lakeSize - 2, (int)(lakeSize / 2.0)));
             }
 
-            return null;
+            List<IPoint> iPoints = [];
+
+            foreach (SKPoint point in lakePoints)
+            {
+                iPoints.Add(new Point(point.X, point.Y));
+            }
+
+            List<SKPoint> voronoiCellPoints = [];
+
+            Delaunator delaunator = new([.. iPoints]);
+
+            IEnumerable<IVoronoiCell> cells = delaunator.GetVoronoiCellsBasedOnCentroids();
+
+            foreach (IVoronoiCell cell in cells)
+            {
+                IPoint[] points = cell.Points;
+
+                foreach (IPoint point in points)
+                {
+                    voronoiCellPoints.Add(new SKPoint((float)point.X, (float)point.Y));
+                }
+            }
+
+            // Compute the concave hull.
+            List<SKPoint> hullPoints = ConcaveHull.ComputeConcaveHull(voronoiCellPoints, 3);
+
+            SKPath concaveHullPath = new();
+            concaveHullPath.MoveTo(new SKPoint(hullPoints[0].X, hullPoints[0].Y));
+
+            for (int i = 1; i < hullPoints.Count; i++)
+            {
+                concaveHullPath.LineTo(new SKPoint(hullPoints[i].X, hullPoints[i].Y));
+            }
+
+            //concaveHullPath.Close();
+
+            //SKPath lakePath = ShapeGenerator.GetConvexHullPath(lakePoints);
+
+            return concaveHullPath;
         }
 
         public static Bitmap GetLakeBitmap(int width, int height)

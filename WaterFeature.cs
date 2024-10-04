@@ -108,21 +108,23 @@ namespace RealmStudio
             // clip the water feature drawing to the outer path of landforms
             List<MapComponent> landformList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
 
+            using SKPath clipPath = new();
+
             for (int i = 0; i < landformList.Count; i++)
             {
                 SKPath landformOutlinePath = ((Landform)landformList[i]).ContourPath;
 
                 if (landformOutlinePath != null && landformOutlinePath.PointCount > 0 && WaterFeaturePath.PointCount > 0)
                 {
-                    canvas.Save();
-                    canvas.ClipPath(landformOutlinePath);
-
-                    DrawWaterFeatureWithGradient(canvas);
-
-                    canvas.Restore();
+                    clipPath.AddPath(landformOutlinePath);
                 }
             }
 
+            using (new SKAutoCanvasRestore(canvas))
+            {
+                canvas.ClipPath(clipPath);
+                DrawWaterFeatureWithGradient(canvas);
+            }
         }
 
         private void DrawWaterFeatureWithGradient(SKCanvas canvas)

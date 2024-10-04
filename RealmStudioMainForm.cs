@@ -158,6 +158,10 @@ namespace RealmStudio
 
         private void RealmStudioMainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            BRUSH_TIMER?.Stop();
+            BRUSH_TIMER?.Dispose();
+            BRUSH_TIMER = null;
+
             //SymbolMethods.SaveSymbolTags();
             //SymbolMethods.SaveCollections();
 
@@ -239,6 +243,188 @@ namespace RealmStudio
         private void MainTab_KeyDown(object sender, KeyEventArgs e)
         {
             e.SuppressKeyPress = true;
+        }
+
+        private void AddPresetColorButton_Click(object sender, EventArgs e)
+        {
+            switch (MainTab.SelectedIndex)
+            {
+                case 1:
+                    {
+                        // ocean layer
+                        Color selectedColor = UtilityMethods.SelectColorFromDialog(this, OceanPaintColorSelectButton.BackColor);
+
+                        if (selectedColor != Color.Empty)
+                        {
+                            Color oceanColor = selectedColor;
+
+                            if (OceanCustomColorButton1.Text == "")
+                            {
+                                OceanCustomColorButton1.BackColor = oceanColor;
+                                OceanCustomColorButton1.Text = ColorTranslator.ToHtml(oceanColor);
+                                OceanCustomColorButton1.Refresh();
+                            }
+                            else if (OceanCustomColorButton2.Text == "")
+                            {
+                                OceanCustomColorButton2.BackColor = oceanColor;
+                                OceanCustomColorButton2.Text = ColorTranslator.ToHtml(oceanColor);
+                                OceanCustomColorButton2.Refresh();
+                            }
+                            else if (OceanCustomColorButton3.Text == "")
+                            {
+                                OceanCustomColorButton3.BackColor = oceanColor;
+                                OceanCustomColorButton3.Text = ColorTranslator.ToHtml(oceanColor);
+                                OceanCustomColorButton3.Refresh();
+                            }
+                            else if (OceanCustomColorButton4.Text == "")
+                            {
+                                OceanCustomColorButton4.BackColor = oceanColor;
+                                OceanCustomColorButton4.Text = ColorTranslator.ToHtml(oceanColor);
+                                OceanCustomColorButton4.Refresh();
+                            }
+                            else if (OceanCustomColorButton5.Text == "")
+                            {
+                                OceanCustomColorButton5.BackColor = oceanColor;
+                                OceanCustomColorButton5.Text = ColorTranslator.ToHtml(oceanColor);
+                                OceanCustomColorButton5.Refresh();
+                            }
+                            else if (OceanCustomColorButton6.Text == "")
+                            {
+                                OceanCustomColorButton6.BackColor = oceanColor;
+                                OceanCustomColorButton6.Text = ColorTranslator.ToHtml(oceanColor);
+                                OceanCustomColorButton6.Refresh();
+                            }
+                            else if (OceanCustomColorButton7.Text == "")
+                            {
+                                OceanCustomColorButton7.BackColor = oceanColor;
+                                OceanCustomColorButton7.Text = ColorTranslator.ToHtml(oceanColor);
+                                OceanCustomColorButton7.Refresh();
+                            }
+                            else if (OceanCustomColorButton8.Text == "")
+                            {
+                                OceanCustomColorButton8.BackColor = oceanColor;
+                                OceanCustomColorButton8.Text = ColorTranslator.ToHtml(oceanColor);
+                                OceanCustomColorButton8.Refresh();
+                            }
+                        }
+                    }
+                    break;
+                case 2:
+                    {
+                        // land layer
+                        Color selectedColor = UtilityMethods.SelectColorFromDialog(this, Color.Empty);
+
+                        if (selectedColor != Color.Empty)
+                        {
+                            Color landColor = selectedColor;
+
+                            if (LandCustomColorButton1.Text == "")
+                            {
+                                LandCustomColorButton1.BackColor = landColor;
+                                LandCustomColorButton1.Text = ColorTranslator.ToHtml(landColor);
+                                LandCustomColorButton1.Refresh();
+                            }
+                            else if (LandCustomColorButton2.Text == "")
+                            {
+                                LandCustomColorButton2.BackColor = landColor;
+                                LandCustomColorButton2.Text = ColorTranslator.ToHtml(landColor);
+                                LandCustomColorButton2.Refresh();
+                            }
+                            else if (LandCustomColorButton3.Text == "")
+                            {
+                                LandCustomColorButton3.BackColor = landColor;
+                                LandCustomColorButton3.Text = ColorTranslator.ToHtml(landColor);
+                                LandCustomColorButton3.Refresh();
+                            }
+                            else if (LandCustomColorButton4.Text == "")
+                            {
+                                LandCustomColorButton4.BackColor = landColor;
+                                LandCustomColorButton4.Text = ColorTranslator.ToHtml(landColor);
+                                LandCustomColorButton4.Refresh();
+                            }
+                            else if (LandCustomColorButton5.Text == "")
+                            {
+                                LandCustomColorButton5.BackColor = landColor;
+                                LandCustomColorButton5.Text = ColorTranslator.ToHtml(landColor);
+                                LandCustomColorButton5.Refresh();
+                            }
+                            else if (LandCustomColorButton6.Text == "")
+                            {
+                                LandCustomColorButton6.BackColor = landColor;
+                                LandCustomColorButton6.Text = ColorTranslator.ToHtml(landColor);
+                                LandCustomColorButton6.Refresh();
+                            }
+                        }
+                    }
+                    break;
+                case 3:
+                    {
+                        // water layer
+                        Color selectedColor = UtilityMethods.SelectColorFromDialog(this, WaterPaintColorSelectButton.BackColor);
+
+                        if (selectedColor != Color.Empty)
+                        {
+                            Color waterColor = selectedColor;
+
+                            if (WaterCustomColor1.Text == "")
+                            {
+                                WaterCustomColor1.BackColor = waterColor;
+                                WaterCustomColor1.Text = ColorTranslator.ToHtml(waterColor);
+                                WaterCustomColor1.Refresh();
+                            }
+                            else if (WaterCustomColor2.Text == "")
+                            {
+                                WaterCustomColor2.BackColor = waterColor;
+                                WaterCustomColor2.Text = ColorTranslator.ToHtml(waterColor);
+                                WaterCustomColor2.Refresh();
+                            }
+                            else if (WaterCustomColor3.Text == "")
+                            {
+                                WaterCustomColor3.BackColor = waterColor;
+                                WaterCustomColor3.Text = ColorTranslator.ToHtml(waterColor);
+                                WaterCustomColor3.Refresh();
+                            }
+                            else if (WaterCustomColor4.Text == "")
+                            {
+                                WaterCustomColor4.BackColor = waterColor;
+                                WaterCustomColor4.Text = ColorTranslator.ToHtml(waterColor);
+                                WaterCustomColor4.Refresh();
+                            }
+                            else if (WaterCustomColor5.Text == "")
+                            {
+                                WaterCustomColor5.BackColor = waterColor;
+                                WaterCustomColor5.Text = ColorTranslator.ToHtml(waterColor);
+                                WaterCustomColor5.Refresh();
+                            }
+                            else if (WaterCustomColor6.Text == "")
+                            {
+                                WaterCustomColor6.BackColor = waterColor;
+                                WaterCustomColor6.Text = ColorTranslator.ToHtml(waterColor);
+                                WaterCustomColor6.Refresh();
+                            }
+                            else if (WaterCustomColor7.Text == "")
+                            {
+                                WaterCustomColor7.BackColor = waterColor;
+                                WaterCustomColor7.Text = ColorTranslator.ToHtml(waterColor);
+                                WaterCustomColor7.Refresh();
+                            }
+                            else if (WaterCustomColor8.Text == "")
+                            {
+                                WaterCustomColor8.BackColor = waterColor;
+                                WaterCustomColor8.Text = ColorTranslator.ToHtml(waterColor);
+                                WaterCustomColor8.Refresh();
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private void SelectColorButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.ColorSelect;
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(0);
         }
 
         #endregion
@@ -2161,18 +2347,23 @@ namespace RealmStudio
                             WaterFeatureShorelineColor = ShorelineColorSelectionButton.BackColor,
                         };
 
-                        WaterFeatureMethods.ConstructWaterFeaturePaintObjects(CURRENT_WATERFEATURE);
-
                         SKPath? lakePath = WaterFeatureMethods.GenerateRandomLakePath(zoomedScrolledPoint, brushSize);
 
                         if (lakePath != null)
                         {
                             CURRENT_WATERFEATURE.WaterFeaturePath = lakePath;
+                            WaterFeatureMethods.CreateInnerAndOuterPaths(CURRENT_MAP, CURRENT_WATERFEATURE);
+
+                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER).MapLayerComponents.Add(CURRENT_WATERFEATURE);
+                            WaterFeatureMethods.MergeWaterFeatures(CURRENT_MAP);
+
+                            WaterFeatureMethods.ConstructWaterFeaturePaintObjects(CURRENT_WATERFEATURE);
                         }
                         else
                         {
                             CURRENT_WATERFEATURE = null;
                         }
+
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -2196,6 +2387,59 @@ namespace RealmStudio
                             WaterFeatureMethods.ConstructRiverPaintObjects(CURRENT_RIVER);
                             CURRENT_RIVER.RiverPoints.Add(new MapRiverPoint(zoomedScrolledPoint));
                         }
+                    }
+                    break;
+                case DrawingModeEnum.WaterColor:
+                    {
+                        CURRENT_MAP.IsSaved = false;
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_LAYER_PAINT_STROKE == null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, WaterPaintColorSelectButton.BackColor.ToSKColor(),
+                                SELECTED_COLOR_PAINT_BRUSH, SELECTED_BRUSH_SIZE / 2, MapBuilder.WATERDRAWINGLAYER);
+
+                            Cmd_AddWaterPaintStroke cmd = new(CURRENT_MAP, CURRENT_LAYER_PAINT_STROKE);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            if (BRUSH_TIMER != null)
+                            {
+                                BRUSH_TIMER.Stop();
+                                BRUSH_TIMER.Dispose();
+                            }
+
+                            BRUSH_VELOCITY = Math.Max(1, BASE_MILLIS_PER_PAINT_EVENT / (LandBrushVelocityTrack.Value / 100.0));
+
+                            // start the brush timer
+                            BRUSH_TIMER = new System.Timers.Timer
+                            {
+                                Interval = (int)BRUSH_VELOCITY,
+                                AutoReset = true,
+                                SynchronizingObject = SKGLRenderControl,
+                            };
+
+                            BRUSH_TIMER.Elapsed += new ElapsedEventHandler(BrushTimerEventHandler);
+                            BRUSH_TIMER.Start();
+                        }
+                    }
+                    break;
+                case DrawingModeEnum.WaterColorErase:
+                    {
+                        CURRENT_MAP.IsSaved = false;
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_LAYER_PAINT_STROKE == null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.Empty,
+                                ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.WATERDRAWINGLAYER, true);
+
+                            Cmd_AddWaterPaintStroke cmd = new(CURRENT_MAP, CURRENT_LAYER_PAINT_STROKE);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+                        }
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.PathPaint:
@@ -2653,6 +2897,18 @@ namespace RealmStudio
 
                             // compute contour path and inner and outer paths in a separate thread
                             Task.Run(() => WaterFeatureMethods.CreateInnerAndOuterPaths(CURRENT_MAP, CURRENT_WATERFEATURE));
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.WaterColorErase:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_LAYER_PAINT_STROKE != null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE.AddLayerPaintStrokePoint(zoomedScrolledPoint);
                         }
 
                         SKGLRenderControl.Invalidate();
@@ -3120,7 +3376,6 @@ namespace RealmStudio
         private void LeftButtonMouseUpHandler(object sender, MouseEventArgs e)
         {
             SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
-            //Cursor = Cursors.Default;
 
             switch (CURRENT_DRAWING_MODE)
             {
@@ -3223,10 +3478,6 @@ namespace RealmStudio
                 case DrawingModeEnum.LakePaint:
                     if (CURRENT_WATERFEATURE != null)
                     {
-                        // TODO: undo/redo
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER).MapLayerComponents.Add(CURRENT_WATERFEATURE);
-                        WaterFeatureMethods.MergeWaterFeatures(CURRENT_MAP);
-
                         CURRENT_WATERFEATURE = null;
 
                         CURRENT_MAP.IsSaved = false;
@@ -3242,6 +3493,33 @@ namespace RealmStudio
                         CURRENT_RIVER = null;
 
                         CURRENT_MAP.IsSaved = false;
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.WaterColor:
+                    {
+                        BRUSH_TIMER?.Stop();
+                        BRUSH_TIMER?.Dispose();
+                        BRUSH_TIMER = null;
+
+                        if (CURRENT_LAYER_PAINT_STROKE != null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE = null;
+                            CURRENT_MAP.IsSaved = false;
+                            SKGLRenderControl.Invalidate();
+                        }
+                    }
+                    break;
+                case DrawingModeEnum.WaterColorErase:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_LAYER_PAINT_STROKE != null)
+                        {
+                            CURRENT_LAYER_PAINT_STROKE = null;
+                            CURRENT_MAP.IsSaved = false;
+                        }
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3484,7 +3762,7 @@ namespace RealmStudio
 
                         CREATE_MAP_IMAGE = false;
 
-                        Color pixelColor = b.GetPixel((int)zoomedScrolledPoint.X, (int)zoomedScrolledPoint.Y);
+                        Color pixelColor = b.GetPixel(e.X, e.Y);
 
                         switch (MainTab.SelectedIndex)
                         {
@@ -4979,6 +5257,124 @@ namespace RealmStudio
             SetSelectedBrushSize(WaterFeatureMethods.WaterFeatureEraserSize);
         }
 
+        private void WaterSoftBrushButton_Click(object sender, EventArgs e)
+        {
+            SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.SoftBrush;
+        }
+
+        private void WaterHardBrushButton_Click(object sender, EventArgs e)
+        {
+            SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.HardBrush;
+        }
+
+        private void WaterColorBrushSizeTrack_ValueChanged(object sender, EventArgs e)
+        {
+            WaterFeatureMethods.WaterColorBrushSize = WaterColorBrushSizeTrack.Value;
+            TOOLTIP.Show(WaterFeatureMethods.WaterColorBrushSize.ToString(), WaterColorBrushSizeTrack, new Point(WaterColorBrushSizeTrack.Right - 42, WaterColorBrushSizeTrack.Top - 58), 2000);
+            SetSelectedBrushSize(WaterFeatureMethods.WaterColorBrushSize);
+        }
+
+        private void WaterBrushVelocityTrack_ValueChanged(object sender, EventArgs e)
+        {
+            TOOLTIP.Show((WaterBrushVelocityTrack.Value / 100.0F).ToString(), WaterBrushVelocityTrack, new Point(WaterBrushVelocityTrack.Right - 42, WaterBrushVelocityTrack.Top - 175), 2000);
+            BRUSH_VELOCITY = Math.Max(1, BASE_MILLIS_PER_PAINT_EVENT / (WaterBrushVelocityTrack.Value / 100.0));
+        }
+
+        private void WaterColorEraserSizeTrack_ValueChanged(object sender, EventArgs e)
+        {
+            WaterFeatureMethods.WaterColorEraserSize = WaterColorEraserSizeTrack.Value;
+            TOOLTIP.Show(WaterFeatureMethods.WaterColorEraserSize.ToString(), WaterColorEraserSizeTrack, new Point(WaterColorEraserSizeTrack.Right - 42, WaterColorEraserSizeTrack.Top - 58), 2000);
+            SetSelectedBrushSize(WaterFeatureMethods.WaterColorEraserSize);
+        }
+
+        private void WaterColorButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.WaterColor;
+
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(WaterFeatureMethods.WaterColorBrushSize);
+        }
+
+        private void WaterColorEraseButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.WaterColorErase;
+
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(WaterFeatureMethods.WaterColorEraserSize);
+        }
+
+        private void WaterPaintColorSelectButton_Click(object sender, EventArgs e)
+        {
+            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, WaterPaintColorSelectButton.BackColor);
+
+            if (selectedColor != Color.Empty)
+            {
+                WaterPaintColorSelectButton.BackColor = selectedColor;
+
+                WaterPaintColorSelectButton.Refresh();
+            }
+        }
+
+        private void WaterButton91CBB8_Click(object sender, EventArgs e)
+        {
+            SetWaterColorFromPreset("#91CBB8");
+        }
+
+        private void WaterButton88B5BB_Click(object sender, EventArgs e)
+        {
+            SetWaterColorFromPreset("#88B5BB");
+        }
+
+        private void WaterButton6BA5B9_Click(object sender, EventArgs e)
+        {
+            SetWaterColorFromPreset("#6BA5B9");
+        }
+
+        private void WaterButton42718D_Click(object sender, EventArgs e)
+        {
+            SetWaterColorFromPreset("#42718D");
+        }
+
+        private void WaterCustomColor1_MouseClick(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void WaterCustomColor2_MouseClick(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void WaterCustomColor3_MouseClick(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void WaterCustomColor4_MouseClick(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void WaterCustomColor5_MouseClick(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void WaterCustomColor6_MouseClick(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void WaterCustomColor7_MouseClick(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
+        private void WaterCustomColor8_MouseClick(object sender, MouseEventArgs e)
+        {
+            ColorPresetButtonMouseClickHandler(sender, e);
+        }
+
         #endregion
 
         #region Water Tab Methods
@@ -5040,8 +5436,8 @@ namespace RealmStudio
         {
             Color waterColor = ColorTranslator.FromHtml(htmlColor);
 
-            WaterSelectedPaintColorLabel.BackColor = waterColor;
-            WaterSelectedPaintColorLabel.Refresh();
+            WaterPaintColorSelectButton.BackColor = waterColor;
+            WaterPaintColorSelectButton.Refresh();
         }
 
         private void SetWaterPaintColorFromCustomPresetButton(Button b)
@@ -5050,12 +5446,11 @@ namespace RealmStudio
             {
                 Color waterColor = b.BackColor;
 
-                WaterSelectedPaintColorLabel.BackColor = waterColor;
+                WaterPaintColorSelectButton.BackColor = waterColor;
 
-                WaterSelectedPaintColorLabel.Refresh();
+                WaterPaintColorSelectButton.Refresh();
             }
         }
-
         #endregion
 
         #region Path Tab Event Handlers

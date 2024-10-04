@@ -121,7 +121,35 @@ namespace RealmStudio
             }
             else if (MapLayerIdentifer == MapBuilder.WATERDRAWINGLAYER)
             {
+                // clip drawing to the outer path of water features and rivers
 
+                List<MapComponent> waterFeatureList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.WATERLAYER).MapLayerComponents;
+                SKPath clipPath = new();
+                for (int i = 0; i < waterFeatureList.Count; i++)
+                {
+                    if (waterFeatureList[i] is WaterFeature feature)
+                    {
+                        SKPath waterFeatureOutlinePath = feature.ContourPath;
+
+                        if (waterFeatureOutlinePath != null && waterFeatureOutlinePath.PointCount > 0)
+                        {
+                            clipPath.AddPath(waterFeatureOutlinePath);
+                        }
+                    }
+                    else if (waterFeatureList[i] is River river)
+                    {
+                        SKPath? riverBoundaryPath = river.RiverBoundaryPath;
+
+                        if (riverBoundaryPath != null && riverBoundaryPath.PointCount > 0)
+                        {
+                            clipPath.AddPath(riverBoundaryPath);
+                        }
+                    }
+                }
+
+
+                canvas.Save();
+                canvas.ClipPath(clipPath);
             }
 
             foreach (LayerPaintStrokePoint point in PaintStrokePoints)

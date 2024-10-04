@@ -84,15 +84,9 @@ namespace RealmStudio
             // if a breakpoint is set, and the code is stepped through, the icon is loaded and the cursor created correctly,
             // but without the breakpoint, the cursor does not load
 
-            // the workaround is to load the icon from a file, as below
-
-            //Icon eyeDropper = Resources.Eye_Dropper;
-            //nint eyeDropperHandle = eyeDropper.Handle;
-            //Debug.WriteLine(eyeDropperHandle.ToString());
+            // the workaround is to load the icon from a file, as below where icon assets are loaded
 
             //EYEDROPPER_CURSOR = new System.Windows.Forms.Cursor(eyeDropperHandle);
-
-            //EYEDROPPER_CURSOR = new System.Windows.Forms.Cursor("eye dropper.ico");
 
             // load symbol tags
             LoadSymbolTags();
@@ -213,7 +207,7 @@ namespace RealmStudio
 
                     if (icon.IconName == "Eye Dropper")
                     {
-                        EYEDROPPER_CURSOR = new System.Windows.Forms.Cursor(icon.IconPath);
+                        EYEDROPPER_CURSOR = new Cursor(icon.IconPath);
                     }
 
                 }

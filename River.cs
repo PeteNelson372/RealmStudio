@@ -64,186 +64,214 @@ namespace RealmStudio
 
         public override void Render(SKCanvas canvas)
         {
-            if (ParentMap == null) return;
+            if (ParentMap == null || RiverPaint == null) return;
 
             List<MapRiverPoint> distinctRiverPoints = RiverPoints.Distinct(new RiverPointComparer()).ToList();
 
             // clip the river drawing to the outer path of landforms
             List<MapComponent> landformList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
 
+            using SKPath clipPath = new();
+
             for (int i = 0; i < landformList.Count; i++)
             {
                 SKPath landformOutlinePath = ((Landform)landformList[i]).ContourPath;
 
-                if (landformOutlinePath != null && landformOutlinePath.PointCount > 0 && distinctRiverPoints.Count > 0 && RiverPaint != null)
+                if (landformOutlinePath != null && landformOutlinePath.PointCount > 0)
                 {
-                    canvas.Save();
-                    canvas.ClipPath(landformOutlinePath);
-
-                    // use multiple paths and multiple sets of parallel points and paint objects
-                    // to draw lines as gradients to shade rivers
-
-                    // river
-                    using SKPath riverPath = new();
-
-                    List<MapRiverPoint> parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth / 2.0F, ParallelEnum.Above, RiverSourceFadeIn);
-
-                    if (parallelPoints.Count > 2)
-                    {
-                        riverPath.MoveTo(parallelPoints[0].RiverPoint);
-
-                        for (int j = 0; j < parallelPoints.Count; j += 3)
-                        {
-                            if (j < parallelPoints.Count - 2)
-                            {
-                                riverPath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
-                            }
-                        }
-                    }
-
-
-                    List<MapRiverPoint> parallelPoints2 = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth / 2.0F, ParallelEnum.Below, RiverSourceFadeIn);
-
-                    if (parallelPoints2.Count > 2)
-                    {
-                        riverPath.MoveTo(parallelPoints2[0].RiverPoint);
-
-                        for (int j = 0; j < parallelPoints2.Count; j += 3)
-                        {
-                            if (j < parallelPoints2.Count - 2)
-                            {
-                                riverPath.CubicTo(parallelPoints2[j].RiverPoint, parallelPoints2[j + 1].RiverPoint, parallelPoints2[j + 2].RiverPoint);
-                            }
-                        }
-                    }
-
-
-                    canvas.DrawPath(riverPath, RiverPaint);
-
-
-                    // fill path
-                    using SKPath riverFillPath = new();
-
-                    if (parallelPoints.Count > 2)
-                    {
-                        riverFillPath.MoveTo(parallelPoints[0].RiverPoint);
-
-                        for (int j = 0; j < parallelPoints.Count; j += 3)
-                        {
-                            if (j < parallelPoints.Count - 2)
-                            {
-                                riverFillPath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
-                            }
-                        }
-                    }
-
-                    if (parallelPoints2.Count > 2)
-                    {
-                        riverFillPath.LineTo(parallelPoints2.Last().RiverPoint);
-
-                        for (int j = parallelPoints2.Count - 1; j >= 2; j -= 3)
-                        {
-                            if (j < parallelPoints2.Count - 2)
-                            {
-                                riverFillPath.CubicTo(parallelPoints2[j].RiverPoint, parallelPoints2[j - 1].RiverPoint, parallelPoints2[j - 2].RiverPoint);
-                            }
-                        }
-                    }
-
-
-                    if (parallelPoints.Count > 2 && parallelPoints2.Count > 2)
-                    {
-                        riverFillPath.LineTo(parallelPoints[0].RiverPoint);
-
-                        canvas.DrawPath(riverFillPath, RiverFillPaint);
-                    }
-
-
-                    // shoreline
-                    using SKPath shorelinePath = new();
-
-                    parallelPoints.Clear();
-                    parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth * 1.1F, ParallelEnum.Below, RiverSourceFadeIn);
-
-                    if (parallelPoints.Count > 2)
-                    {
-                        shorelinePath.MoveTo(parallelPoints[0].RiverPoint);
-
-                        for (int j = 0; j < parallelPoints.Count; j += 3)
-                        {
-                            if (j < parallelPoints.Count - 2)
-                            {
-                                shorelinePath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
-                            }
-                        }
-                    }
-
-                    parallelPoints.Clear();
-                    parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth * 1.1F, ParallelEnum.Above, RiverSourceFadeIn);
-
-                    if (parallelPoints.Count > 2)
-                    {
-                        shorelinePath.MoveTo(parallelPoints[0].RiverPoint);
-
-                        for (int j = 0; j < parallelPoints.Count; j += 3)
-                        {
-                            if (j < parallelPoints.Count - 2)
-                            {
-                                shorelinePath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
-                            }
-                        }
-                    }
-
-                    canvas.DrawPath(shorelinePath, RiverShorelinePaint);
-
-
-                    RiverBoundaryPath?.Dispose();
-                    RiverBoundaryPath = new(shorelinePath)
-                    {
-                        FillType = SKPathFillType.Winding,
-                    };
-
-                    parallelPoints.Clear();
-                    parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth * 0.9F, ParallelEnum.Above, RiverSourceFadeIn);
-
-                    // shallow water
-                    using SKPath shallowWaterPath = new();
-
-                    if (parallelPoints.Count > 2)
-                    {
-                        shallowWaterPath.MoveTo(parallelPoints[0].RiverPoint);
-
-                        for (int j = 0; j < parallelPoints.Count; j += 3)
-                        {
-                            if (j < parallelPoints.Count - 2)
-                            {
-                                shallowWaterPath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
-                            }
-                        }
-                    }
-
-                    parallelPoints.Clear();
-                    parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth * 0.9F, ParallelEnum.Below, RiverSourceFadeIn);
-
-                    if (parallelPoints.Count > 2)
-                    {
-                        shallowWaterPath.MoveTo(parallelPoints[0].RiverPoint);
-
-                        for (int j = 0; j < parallelPoints.Count; j += 3)
-                        {
-                            if (j < parallelPoints.Count - 2)
-                            {
-                                shallowWaterPath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
-                            }
-                        }
-                    }
-
-                    canvas.DrawPath(shallowWaterPath, RiverShallowWaterPaint);
-
-                    canvas.Restore();
+                    clipPath.AddPath(landformOutlinePath);
                 }
             }
 
+            using (new SKAutoCanvasRestore(canvas))
+            {
+                canvas.ClipPath(clipPath);
+
+                // use multiple paths and multiple sets of parallel points and paint objects
+                // to draw lines as gradients to shade rivers
+
+                using SKPath riverPath = new();
+
+                List<MapRiverPoint> parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth / 2.0F, ParallelEnum.Above, RiverSourceFadeIn);
+
+                if (parallelPoints.Count > 2)
+                {
+                    riverPath.MoveTo(parallelPoints[0].RiverPoint);
+
+                    for (int j = 0; j < parallelPoints.Count; j += 3)
+                    {
+                        if (j < parallelPoints.Count - 2)
+                        {
+                            riverPath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
+                        }
+                    }
+                }
+
+                List<MapRiverPoint> parallelPoints2 = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth / 2.0F, ParallelEnum.Below, RiverSourceFadeIn);
+
+                if (parallelPoints2.Count > 2)
+                {
+                    riverPath.MoveTo(parallelPoints2[0].RiverPoint);
+
+                    for (int j = 0; j < parallelPoints2.Count; j += 3)
+                    {
+                        if (j < parallelPoints2.Count - 2)
+                        {
+                            riverPath.CubicTo(parallelPoints2[j].RiverPoint, parallelPoints2[j + 1].RiverPoint, parallelPoints2[j + 2].RiverPoint);
+                        }
+                    }
+                }
+
+                canvas.DrawPath(riverPath, RiverPaint);
+
+                // fill path
+                using SKPath riverFillPath = new();
+
+                if (parallelPoints.Count > 2)
+                {
+                    riverFillPath.MoveTo(parallelPoints[0].RiverPoint);
+
+                    for (int j = 0; j < parallelPoints.Count; j += 3)
+                    {
+                        if (j < parallelPoints.Count - 2)
+                        {
+                            riverFillPath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
+                        }
+                    }
+                }
+
+                if (parallelPoints2.Count > 2)
+                {
+                    riverFillPath.LineTo(parallelPoints2.Last().RiverPoint);
+
+                    for (int j = parallelPoints2.Count - 1; j >= 2; j -= 3)
+                    {
+                        if (j < parallelPoints2.Count - 2)
+                        {
+                            riverFillPath.CubicTo(parallelPoints2[j].RiverPoint, parallelPoints2[j - 1].RiverPoint, parallelPoints2[j - 2].RiverPoint);
+                        }
+                    }
+                }
+
+                if (parallelPoints.Count > 2 && parallelPoints2.Count > 2)
+                {
+                    riverFillPath.LineTo(parallelPoints[0].RiverPoint);
+
+                    canvas.DrawPath(riverFillPath, RiverFillPaint);
+                }
+
+                // shoreline
+                using SKPath shorelinePath = new();
+
+                parallelPoints.Clear();
+                parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth * 1.1F, ParallelEnum.Below, RiverSourceFadeIn);
+
+                if (parallelPoints.Count > 2)
+                {
+                    shorelinePath.MoveTo(parallelPoints[0].RiverPoint);
+
+                    for (int j = 0; j < parallelPoints.Count; j += 3)
+                    {
+                        if (j < parallelPoints.Count - 2)
+                        {
+                            shorelinePath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
+                        }
+                    }
+                }
+
+                parallelPoints2.Clear();
+                parallelPoints2 = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth * 1.1F, ParallelEnum.Above, RiverSourceFadeIn);
+
+                if (parallelPoints2.Count > 2)
+                {
+                    shorelinePath.MoveTo(parallelPoints2[0].RiverPoint);
+
+                    for (int j = 0; j < parallelPoints2.Count; j += 3)
+                    {
+                        if (j < parallelPoints2.Count - 2)
+                        {
+                            shorelinePath.CubicTo(parallelPoints2[j].RiverPoint, parallelPoints2[j + 1].RiverPoint, parallelPoints2[j + 2].RiverPoint);
+                        }
+                    }
+                }
+
+                canvas.DrawPath(shorelinePath, RiverShorelinePaint);
+
+
+                RiverBoundaryPath?.Dispose();
+
+                using SKPath riverBoundaryPath = new();
+
+                if (parallelPoints.Count > 2)
+                {
+                    riverBoundaryPath.MoveTo(parallelPoints[0].RiverPoint);
+
+                    for (int j = 0; j < parallelPoints.Count; j += 3)
+                    {
+                        if (j < parallelPoints.Count - 2)
+                        {
+                            riverBoundaryPath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
+                        }
+                    }
+                }
+
+                if (parallelPoints2.Count > 2)
+                {
+                    riverBoundaryPath.LineTo(parallelPoints2.Last().RiverPoint);
+
+                    for (int j = parallelPoints2.Count - 1; j >= 2; j -= 3)
+                    {
+                        if (j < parallelPoints2.Count - 2)
+                        {
+                            riverBoundaryPath.CubicTo(parallelPoints2[j].RiverPoint, parallelPoints2[j - 1].RiverPoint, parallelPoints2[j - 2].RiverPoint);
+                        }
+                    }
+                }
+
+                if (parallelPoints.Count > 2 && parallelPoints2.Count > 2)
+                {
+                    riverBoundaryPath.LineTo(parallelPoints[0].RiverPoint);
+
+                    RiverBoundaryPath = new(riverBoundaryPath);
+                }
+
+                parallelPoints.Clear();
+                parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth * 0.9F, ParallelEnum.Above, RiverSourceFadeIn);
+
+                // shallow water
+                using SKPath shallowWaterPath = new();
+
+                if (parallelPoints.Count > 2)
+                {
+                    shallowWaterPath.MoveTo(parallelPoints[0].RiverPoint);
+
+                    for (int j = 0; j < parallelPoints.Count; j += 3)
+                    {
+                        if (j < parallelPoints.Count - 2)
+                        {
+                            shallowWaterPath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
+                        }
+                    }
+                }
+
+                parallelPoints.Clear();
+                parallelPoints = WaterFeatureMethods.GetParallelRiverPoints(distinctRiverPoints, RiverPaint.StrokeWidth * 0.9F, ParallelEnum.Below, RiverSourceFadeIn);
+
+                if (parallelPoints.Count > 2)
+                {
+                    shallowWaterPath.MoveTo(parallelPoints[0].RiverPoint);
+
+                    for (int j = 0; j < parallelPoints.Count; j += 3)
+                    {
+                        if (j < parallelPoints.Count - 2)
+                        {
+                            shallowWaterPath.CubicTo(parallelPoints[j].RiverPoint, parallelPoints[j + 1].RiverPoint, parallelPoints[j + 2].RiverPoint);
+                        }
+                    }
+                }
+
+                canvas.DrawPath(shallowWaterPath, RiverShallowWaterPaint);
+            }
         }
 
         public List<MapRiverPoint> GetRiverControlPoints()

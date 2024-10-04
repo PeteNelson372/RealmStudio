@@ -242,7 +242,6 @@ namespace RealmStudio
                 // paint selection layer
                 e.Surface.Canvas.DrawPicture(selectionLayer.RenderPicture, scrollPoint);
             }
-
         }
 
         internal static void RenderLowerMapPaths(RealmStudioMap map, MapPath? currentPath, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
@@ -531,76 +530,95 @@ namespace RealmStudio
 
         internal static void RenderWaterFeatures(RealmStudioMap map, WaterFeature? currentWaterFeature, River? currentRiver, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
         {
-            // TODO: change to user picture recorder for rendering
+            // use picture recorder for rendering
             // render water features and rivers
             MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER);
             MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERDRAWINGLAYER);
             MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
 
-            if (waterLayer.LayerSurface != null && waterDrawingLayer.LayerSurface != null)
+
+            selectionLayer.RenderPicture?.Dispose();
+            selectionLayer.RenderPicture = null;
+
+            SKRect clippingBounds = new(0, 0, map.MapWidth, map.MapHeight);
+
+            using var waterFeatureRecorder = new SKPictureRecorder();
+            using var drawingRecorder = new SKPictureRecorder();
+            using var selectionRecorder = new SKPictureRecorder();
+
+            waterFeatureRecorder.BeginRecording(clippingBounds);
+            drawingRecorder.BeginRecording(clippingBounds);
+
+            // water features
+            currentWaterFeature?.Render(waterFeatureRecorder.RecordingCanvas);
+            currentRiver?.Render(waterFeatureRecorder.RecordingCanvas);
+
+            // render layer paint strokes
+            waterDrawingLayer.Render(drawingRecorder.RecordingCanvas);
+
+            foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
             {
-                waterLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                waterDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-
-                // water features
-                currentWaterFeature?.Render(waterLayer.LayerSurface.Canvas);
-                currentRiver?.Render(waterLayer.LayerSurface.Canvas);
-
-                foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
+                if (w is WaterFeature wf)
                 {
-                    if (w is WaterFeature wf)
-                    {
-                        wf.Render(waterLayer.LayerSurface.Canvas);
+                    wf.Render(waterFeatureRecorder.RecordingCanvas);
 
-                        if (wf.IsSelected)
+                    if (wf.IsSelected)
+                    {
+                        // draw an outline around the water feature to show that it is selected
+                        wf.WaterFeaturePath.GetBounds(out SKRect boundRect);
+                        using SKPath boundsPath = new();
+                        boundsPath.AddRect(boundRect);
+
+                        selectionRecorder.BeginRecording(clippingBounds);
+                        selectionRecorder.RecordingCanvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
+                        selectionLayer.RenderPicture = selectionRecorder.EndRecording();
+                    }
+                }
+                else if (w is River r)
+                {
+                    r.Render(waterFeatureRecorder.RecordingCanvas);
+
+                    if (r.IsSelected)
+                    {
+                        if (r.RiverBoundaryPath != null)
                         {
-                            // draw an outline around the landform to show that it is selected
-                            wf.WaterFeaturePath.GetBounds(out SKRect boundRect);
+                            // draw an outline around the path to show that it is selected
+                            r.RiverBoundaryPath.GetTightBounds(out SKRect boundRect);
                             using SKPath boundsPath = new();
                             boundsPath.AddRect(boundRect);
 
-                            selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.WaterFeatureSelectPaint);
+                            selectionRecorder.BeginRecording(clippingBounds);
+                            selectionRecorder.RecordingCanvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
+                            selectionLayer.RenderPicture = selectionRecorder.EndRecording();
                         }
                     }
-                    else if (w is River r)
+
+                    if (r.ShowRiverPoints)
                     {
-                        r.Render(waterLayer.LayerSurface.Canvas);
+                        List<MapRiverPoint> controlPoints = r.GetRiverControlPoints();
 
-                        // TODO: render river drawing
-
-                        if (r.IsSelected)
+                        foreach (MapRiverPoint p in controlPoints)
                         {
-                            if (r.RiverBoundaryPath != null)
-                            {
-                                // draw an outline around the path to show that it is selected
-                                r.RiverBoundaryPath.GetTightBounds(out SKRect boundRect);
-                                using SKPath boundsPath = new();
-                                boundsPath.AddRect(boundRect);
-
-                                selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.RiverSelectPaint);
-                            }
-                        }
-
-                        if (r.ShowRiverPoints)
-                        {
-                            List<MapRiverPoint> controlPoints = r.GetRiverControlPoints();
-
-                            foreach (MapRiverPoint p in controlPoints)
-                            {
-                                waterDrawingLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, 2.0F, PaintObjects.RiverControlPointPaint);
-                                waterDrawingLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, 2.0F, PaintObjects.RiverControlPointOutlinePaint);
-                            }
+                            waterFeatureRecorder.RecordingCanvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, 2.0F, PaintObjects.RiverControlPointPaint);
+                            waterFeatureRecorder.RecordingCanvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, 2.0F, PaintObjects.RiverControlPointOutlinePaint);
                         }
                     }
                 }
+            }
 
-                // TODO: render water feature drawing on water drawing layer
+            waterLayer.RenderPicture = waterFeatureRecorder.EndRecording();
+            waterDrawingLayer.RenderPicture = drawingRecorder.EndRecording();
 
-                // paint water layer
-                e.Surface.Canvas.DrawSurface(waterLayer.LayerSurface, scrollPoint);
+            // paint water layer
+            e.Surface.Canvas.DrawPicture(waterLayer.RenderPicture, scrollPoint);
 
-                // paint water drawing layer
-                e.Surface.Canvas.DrawSurface(waterDrawingLayer.LayerSurface, scrollPoint);
+            // paint water drawing layer
+            e.Surface.Canvas.DrawPicture(waterDrawingLayer.RenderPicture, scrollPoint);
+
+            if (selectionLayer.RenderPicture != null)
+            {
+                // paint selection layer
+                e.Surface.Canvas.DrawPicture(selectionLayer.RenderPicture, scrollPoint);
             }
         }
 
