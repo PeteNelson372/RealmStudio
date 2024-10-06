@@ -4671,6 +4671,7 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(RealmStudioMainMenuStrip);
+            RealmStudioForm.Controls.Add(WaterToolPanel);
             RealmStudioForm.Controls.Add(LandToolPanel);
             RealmStudioForm.Controls.Add(OceanToolPanel);
             RealmStudioForm.Controls.Add(BackgroundToolPanel);
@@ -4680,7 +4681,6 @@
             RealmStudioForm.Controls.Add(LabelToolPanel);
             RealmStudioForm.Controls.Add(SymbolToolPanel);
             RealmStudioForm.Controls.Add(PathToolPanel);
-            RealmStudioForm.Controls.Add(WaterToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
             RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
             RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
@@ -4704,12 +4704,13 @@
             // 
             // ZoomLevelTrack
             // 
+            ZoomLevelTrack.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             ZoomLevelTrack.AutoSize = false;
-            ZoomLevelTrack.Location = new Point(1294, 60);
+            ZoomLevelTrack.Location = new Point(1422, 901);
             ZoomLevelTrack.Maximum = 80;
             ZoomLevelTrack.Minimum = 1;
             ZoomLevelTrack.Name = "ZoomLevelTrack";
-            ZoomLevelTrack.Size = new Size(126, 20);
+            ZoomLevelTrack.Size = new Size(151, 20);
             ZoomLevelTrack.TabIndex = 37;
             ZoomLevelTrack.TickStyle = TickStyle.None;
             ZoomLevelTrack.Value = 10;
@@ -4843,7 +4844,7 @@
             // 
             ZoomToFitButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             ZoomToFitButton.BackColor = SystemColors.InactiveCaption;
-            ZoomToFitButton.FlatAppearance.BorderColor = SystemColors.ControlLight;
+            ZoomToFitButton.FlatAppearance.BorderColor = Color.FromArgb(69, 68, 63);
             ZoomToFitButton.FlatStyle = FlatStyle.Popup;
             ZoomToFitButton.IconChar = FontAwesome.Sharp.IconChar.Arrows;
             ZoomToFitButton.IconColor = Color.Black;
@@ -4861,7 +4862,7 @@
             // 
             ResetButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             ResetButton.BackColor = SystemColors.Info;
-            ResetButton.FlatAppearance.BorderColor = SystemColors.ControlLight;
+            ResetButton.FlatAppearance.BorderColor = Color.FromArgb(69, 68, 63);
             ResetButton.FlatStyle = FlatStyle.Popup;
             ResetButton.IconChar = FontAwesome.Sharp.IconChar.Refresh;
             ResetButton.IconColor = Color.Black;
@@ -4870,7 +4871,7 @@
             ResetButton.Location = new Point(1497, 926);
             ResetButton.Margin = new Padding(0);
             ResetButton.Name = "ResetButton";
-            ResetButton.Size = new Size(76, 51);
+            ResetButton.Size = new Size(77, 51);
             ResetButton.TabIndex = 15;
             ResetButton.UseVisualStyleBackColor = false;
             ResetButton.Click += ResetButton_Click;
@@ -5401,10 +5402,10 @@
             WaterToolPanel.Controls.Add(WaterColorBrushSizeTrack);
             WaterToolPanel.Controls.Add(label62);
             WaterToolPanel.Controls.Add(WaterPaintColorSelectButton);
-            WaterToolPanel.Location = new Point(1422, 90);
+            WaterToolPanel.Location = new Point(1421, 90);
             WaterToolPanel.Margin = new Padding(0);
             WaterToolPanel.Name = "WaterToolPanel";
-            WaterToolPanel.Size = new Size(152, 836);
+            WaterToolPanel.Size = new Size(152, 806);
             WaterToolPanel.TabIndex = 28;
             // 
             // label76
@@ -5778,10 +5779,10 @@
             LandToolPanel.Controls.Add(LandColorBrushSizeTrack);
             LandToolPanel.Controls.Add(label60);
             LandToolPanel.Controls.Add(LandColorSelectionButton);
-            LandToolPanel.Location = new Point(1422, 90);
+            LandToolPanel.Location = new Point(1421, 90);
             LandToolPanel.Margin = new Padding(0);
             LandToolPanel.Name = "LandToolPanel";
-            LandToolPanel.Size = new Size(152, 836);
+            LandToolPanel.Size = new Size(152, 806);
             LandToolPanel.TabIndex = 19;
             // 
             // label75
@@ -6157,10 +6158,10 @@
             OceanToolPanel.Controls.Add(OceanBrushSizeTrack);
             OceanToolPanel.Controls.Add(label57);
             OceanToolPanel.Controls.Add(OceanPaintColorSelectButton);
-            OceanToolPanel.Location = new Point(1422, 90);
+            OceanToolPanel.Location = new Point(1421, 90);
             OceanToolPanel.Margin = new Padding(0);
             OceanToolPanel.Name = "OceanToolPanel";
-            OceanToolPanel.Size = new Size(152, 836);
+            OceanToolPanel.Size = new Size(152, 806);
             OceanToolPanel.TabIndex = 29;
             // 
             // label72
@@ -6511,10 +6512,10 @@
             // 
             BackgroundToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             BackgroundToolPanel.BackColor = SystemColors.Control;
-            BackgroundToolPanel.Location = new Point(1422, 90);
+            BackgroundToolPanel.Location = new Point(1421, 90);
             BackgroundToolPanel.Margin = new Padding(0);
             BackgroundToolPanel.Name = "BackgroundToolPanel";
-            BackgroundToolPanel.Size = new Size(152, 836);
+            BackgroundToolPanel.Size = new Size(152, 806);
             BackgroundToolPanel.TabIndex = 15;
             // 
             // DrawingToolPanel
@@ -6522,10 +6523,10 @@
             DrawingToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             DrawingToolPanel.BackColor = SystemColors.Control;
             DrawingToolPanel.Controls.Add(label26);
-            DrawingToolPanel.Location = new Point(1422, 90);
+            DrawingToolPanel.Location = new Point(1421, 90);
             DrawingToolPanel.Margin = new Padding(0);
             DrawingToolPanel.Name = "DrawingToolPanel";
-            DrawingToolPanel.Size = new Size(152, 836);
+            DrawingToolPanel.Size = new Size(152, 806);
             DrawingToolPanel.TabIndex = 26;
             // 
             // label26
@@ -6560,10 +6561,10 @@
             RegionToolPanel.Controls.Add(RegionDashBorderRadio);
             RegionToolPanel.Controls.Add(RegionDottedBorderRadio);
             RegionToolPanel.Controls.Add(RegionSolidBorderRadio);
-            RegionToolPanel.Location = new Point(1422, 90);
+            RegionToolPanel.Location = new Point(1421, 90);
             RegionToolPanel.Margin = new Padding(0);
             RegionToolPanel.Name = "RegionToolPanel";
-            RegionToolPanel.Size = new Size(152, 836);
+            RegionToolPanel.Size = new Size(152, 806);
             RegionToolPanel.TabIndex = 25;
             // 
             // label90
@@ -6794,10 +6795,10 @@
             OverlayToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             OverlayToolPanel.BackColor = SystemColors.Control;
             OverlayToolPanel.Controls.Add(FrameStyleTable);
-            OverlayToolPanel.Location = new Point(1422, 90);
+            OverlayToolPanel.Location = new Point(1421, 90);
             OverlayToolPanel.Margin = new Padding(0);
             OverlayToolPanel.Name = "OverlayToolPanel";
-            OverlayToolPanel.Size = new Size(152, 836);
+            OverlayToolPanel.Size = new Size(152, 806);
             OverlayToolPanel.TabIndex = 24;
             // 
             // FrameStyleTable
@@ -6820,10 +6821,10 @@
             LabelToolPanel.BackColor = SystemColors.Control;
             LabelToolPanel.Controls.Add(SelectBoxTintButton);
             LabelToolPanel.Controls.Add(LabelBoxStyleTable);
-            LabelToolPanel.Location = new Point(1422, 90);
+            LabelToolPanel.Location = new Point(1421, 90);
             LabelToolPanel.Margin = new Padding(0);
             LabelToolPanel.Name = "LabelToolPanel";
-            LabelToolPanel.Size = new Size(152, 836);
+            LabelToolPanel.Size = new Size(152, 806);
             LabelToolPanel.TabIndex = 27;
             // 
             // SelectBoxTintButton
@@ -6853,7 +6854,7 @@
             LabelBoxStyleTable.Name = "LabelBoxStyleTable";
             LabelBoxStyleTable.RowCount = 1;
             LabelBoxStyleTable.RowStyles.Add(new RowStyle());
-            LabelBoxStyleTable.Size = new Size(122, 723);
+            LabelBoxStyleTable.Size = new Size(122, 708);
             LabelBoxStyleTable.TabIndex = 112;
             // 
             // SymbolToolPanel
@@ -6863,10 +6864,10 @@
             SymbolToolPanel.Controls.Add(label22);
             SymbolToolPanel.Controls.Add(SymbolSearchTextBox);
             SymbolToolPanel.Controls.Add(SymbolTable);
-            SymbolToolPanel.Location = new Point(1422, 90);
+            SymbolToolPanel.Location = new Point(1421, 90);
             SymbolToolPanel.Margin = new Padding(0);
             SymbolToolPanel.Name = "SymbolToolPanel";
-            SymbolToolPanel.Size = new Size(152, 836);
+            SymbolToolPanel.Size = new Size(152, 806);
             SymbolToolPanel.TabIndex = 22;
             // 
             // label22
@@ -6901,7 +6902,7 @@
             SymbolTable.Name = "SymbolTable";
             SymbolTable.RowCount = 1;
             SymbolTable.RowStyles.Add(new RowStyle());
-            SymbolTable.Size = new Size(132, 747);
+            SymbolTable.Size = new Size(132, 722);
             SymbolTable.TabIndex = 77;
             // 
             // PathToolPanel
@@ -6945,10 +6946,10 @@
             PathToolPanel.Controls.Add(DottedLineRadio);
             PathToolPanel.Controls.Add(SolidLineRadio);
             PathToolPanel.Controls.Add(label51);
-            PathToolPanel.Location = new Point(1422, 90);
+            PathToolPanel.Location = new Point(1421, 90);
             PathToolPanel.Margin = new Padding(0);
             PathToolPanel.Name = "PathToolPanel";
-            PathToolPanel.Size = new Size(152, 836);
+            PathToolPanel.Size = new Size(152, 806);
             PathToolPanel.TabIndex = 21;
             // 
             // RailroadTracksPictureBox
