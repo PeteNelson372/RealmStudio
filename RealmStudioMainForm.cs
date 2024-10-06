@@ -58,6 +58,7 @@ namespace RealmStudio
         private static MapBox? SELECTED_MAP_BOX = null;
         private static PlacedMapBox? SELECTED_PLACED_MAP_BOX = null;
         private static MapLabel? SELECTED_MAP_LABEL = null;
+        private static IWaterFeature? SELECTED_WATERFEATURE = null;
         private static ColorPaintBrush SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.SoftBrush;
 
         private static Font SELECTED_LABEL_FONT = new("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -82,6 +83,8 @@ namespace RealmStudio
 
         private static SKPoint ScrollPoint = new(0, 0);
         private static SKPoint DrawingPoint = new(0, 0);
+
+        private static Point PREVIOUS_MOUSE_LOCATION = new(0, 0);
 
         private static SKPoint PREVIOUS_CURSOR_POINT = new(0, 0);
 
@@ -210,6 +213,7 @@ namespace RealmStudio
         private void ResetButton_Click(object sender, EventArgs e)
         {
             DrawingZoom = 1.0F;
+            ZoomLevelTrack.Value = 10;
 
             ScrollPoint.X = 0;
             ScrollPoint.Y = 0;
@@ -228,6 +232,7 @@ namespace RealmStudio
             float verticalAspect = (float)SKGLRenderControl.Height / CURRENT_MAP.MapHeight;
 
             DrawingZoom = Math.Min(horizontalAspect, verticalAspect);
+            ZoomLevelTrack.Value = Math.Max(1, (int)DrawingZoom);
 
             ScrollPoint.X = 0;
             ScrollPoint.Y = 0;
@@ -312,7 +317,7 @@ namespace RealmStudio
                 case 2:
                     {
                         // land layer
-                        Color selectedColor = UtilityMethods.SelectColorFromDialog(this, Color.Empty);
+                        Color selectedColor = UtilityMethods.SelectColorFromDialog(this, LandColorSelectionButton.BackColor);
 
                         if (selectedColor != Color.Empty)
                         {
@@ -425,6 +430,12 @@ namespace RealmStudio
             CURRENT_DRAWING_MODE = DrawingModeEnum.ColorSelect;
             SetDrawingModeLabel();
             SetSelectedBrushSize(0);
+        }
+
+        private void ZoomLevelTrack_Scroll(object sender, EventArgs e)
+        {
+            DrawingZoom = ZoomLevelTrack.Value / 10.0F;
+            SKGLRenderControl.Invalidate();
         }
 
         #endregion
@@ -784,6 +795,7 @@ namespace RealmStudio
 
             Refresh();
         }
+
         private static void SetZoomLevel(int upDown)
         {
             // TODO: scrollbars need to be updated
@@ -1029,10 +1041,9 @@ namespace RealmStudio
                     break;
             }
 
-            /*
             modeText += ". Selected Brush: ";
 
-            switch (MapPaintMethods.GetSelectedColorBrushType())
+            switch (SELECTED_COLOR_PAINT_BRUSH)
             {
                 case ColorPaintBrush.SoftBrush:
                     modeText += "Soft Brush";
@@ -1046,7 +1057,6 @@ namespace RealmStudio
                     modeText += "None";
                     break;
             }
-            */
 
             DrawingModeLabel.Text = modeText;
             ApplicationStatusStrip.Refresh();
@@ -1066,7 +1076,18 @@ namespace RealmStudio
             MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER);
             foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
             {
-                if (selectedComponent != null)
+                if (selectedComponent == null)
+                {
+                    if (w is WaterFeature wf)
+                    {
+                        wf.IsSelected = false;
+                    }
+                    else if (w is River r)
+                    {
+                        r.IsSelected = false;
+                    }
+                }
+                else if (selectedComponent != null)
                 {
                     if (w is WaterFeature wf)
                     {
@@ -1135,13 +1156,12 @@ namespace RealmStudio
                 box.IsSelected = false;
             }
 
-            /*
-            foreach (MapRegion r in MapRegionMethods.MAP_REGION_LIST)
+            MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.REGIONLAYER);
+            foreach (MapRegion r in regionLayer.MapLayerComponents.Cast<MapRegion>())
             {
                 if (selectedComponent != null && selectedComponent is MapRegion region && region == r) continue;
                 r.IsSelected = false;
             }
-            */
         }
 
         private static void SetSelectedBrushSize(int brushSize)
@@ -1826,16 +1846,16 @@ namespace RealmStudio
 
         private void MapRenderVScroll_Scroll(object sender, ScrollEventArgs e)
         {
-            ScrollPoint.Y = (float)-e.NewValue;
-            DrawingPoint.Y = (float)e.NewValue;
+            ScrollPoint.Y = -e.NewValue;
+            DrawingPoint.Y = e.NewValue;
 
             SKGLRenderControl.Invalidate();
         }
 
         private void MapRenderHScroll_Scroll(object sender, ScrollEventArgs e)
         {
-            ScrollPoint.X = (float)-e.NewValue;
-            DrawingPoint.X = (float)e.NewValue;
+            ScrollPoint.X = -e.NewValue;
+            DrawingPoint.X = e.NewValue;
 
             SKGLRenderControl.Invalidate();
         }
@@ -1936,6 +1956,11 @@ namespace RealmStudio
                 LeftButtonMouseDownHandler(sender, e, SELECTED_BRUSH_SIZE);
             }
 
+            if (e.Button == MouseButtons.Middle)
+            {
+                MiddleButtonMouseDownHandler(sender, e, SELECTED_BRUSH_SIZE);
+            }
+
             if (e.Button == MouseButtons.Right)
             {
                 RightButtonMouseDownHandler(sender, e, SELECTED_BRUSH_SIZE);
@@ -1961,6 +1986,10 @@ namespace RealmStudio
             else if (e.Button == MouseButtons.Right)
             {
                 RightButtonMouseMoveHandler(sender, e);
+            }
+            else if (e.Button == MouseButtons.Middle)
+            {
+                MiddleButtonMouseMoveHandler(sender, e);
             }
             else if (e.Button == MouseButtons.None)
             {
@@ -2113,21 +2142,21 @@ namespace RealmStudio
             else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterColor)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
-                //int newValue = WaterColorBrushSizeTrack.Value + sizeDelta;
-                //newValue = Math.Max(WaterColorBrushSizeTrack.Minimum, Math.Min(newValue, WaterColorBrushSizeTrack.Maximum));
+                int newValue = WaterColorBrushSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(WaterColorBrushSizeTrack.Minimum, Math.Min(newValue, WaterColorBrushSizeTrack.Maximum));
 
-                //WaterColorBrushSizeTrack.Value = newValue;
-                //SELECTED_BRUSH_SIZE = newValue;
+                WaterColorBrushSizeTrack.Value = newValue;
+                SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
             else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterColorErase)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
-                //int newValue = WaterColorBrushSizeTrack.Value + sizeDelta;
-                //newValue = Math.Max(WaterColorBrushSizeTrack.Minimum, Math.Min(newValue, WaterColorBrushSizeTrack.Maximum));
+                int newValue = WaterColorBrushSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(WaterColorBrushSizeTrack.Minimum, Math.Min(newValue, WaterColorBrushSizeTrack.Maximum));
 
-                //WaterColorBrushSizeTrack.Value = newValue;
-                //SELECTED_BRUSH_SIZE = newValue;
+                WaterColorBrushSizeTrack.Value = newValue;
+                SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
             else if (CURRENT_DRAWING_MODE == DrawingModeEnum.SymbolPlace)
@@ -2151,6 +2180,8 @@ namespace RealmStudio
             else if (ModifierKeys == Keys.Shift)
             {
                 SetZoomLevel(e.Delta);
+
+                ZoomLevelTrack.Value = (int)(DrawingZoom * 10.0F);
 
                 SKGLRenderControl.Invalidate();
             }
@@ -2315,7 +2346,7 @@ namespace RealmStudio
                     break;
                 case DrawingModeEnum.WaterFeatureSelect:
                     {
-                        SelectWaterFeatureAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+                        SELECTED_WATERFEATURE = (IWaterFeature?)SelectWaterFeatureAtPoint(CURRENT_MAP, zoomedScrolledPoint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -2342,6 +2373,10 @@ namespace RealmStudio
                         CURRENT_WATERFEATURE = new()
                         {
                             ParentMap = CURRENT_MAP,
+                            X = (int)zoomedScrolledPoint.X,
+                            Y = (int)zoomedScrolledPoint.Y,
+                            Width = brushSize,
+                            Height = brushSize,
                             WaterFeatureType = WaterFeatureTypeEnum.Lake,
                             WaterFeatureColor = WaterColorSelectionButton.BackColor,
                             WaterFeatureShorelineColor = ShorelineColorSelectionButton.BackColor,
@@ -2713,6 +2748,11 @@ namespace RealmStudio
             }
         }
 
+        private static void MiddleButtonMouseDownHandler(object sender, MouseEventArgs e, int sELECTED_BRUSH_SIZE)
+        {
+            PREVIOUS_MOUSE_LOCATION = e.Location;
+        }
+
         private void RightButtonMouseDownHandler(object sender, MouseEventArgs e, int brushSize)
         {
             SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
@@ -2900,6 +2940,17 @@ namespace RealmStudio
                         }
 
                         SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.WaterErase:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        WaterFeatureMethods.WaterFeaturErasePath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
+
+                        WaterFeatureMethods.EraseWaterFeature(CURRENT_MAP);
+                        SKGLRenderControl.Invalidate();
+
                     }
                     break;
                 case DrawingModeEnum.WaterColorErase:
@@ -3233,6 +3284,33 @@ namespace RealmStudio
         {
 
         }
+        #endregion
+
+        #region Middle Button Move Handler Method
+        private void MiddleButtonMouseMoveHandler(object sender, MouseEventArgs e)
+        {
+            Cursor = Cursors.Hand;
+
+            // pan the map when middle button (mouse wheel) is held down and dragged
+
+            int xDelta = e.Location.X - PREVIOUS_MOUSE_LOCATION.X;
+            int yDelta = e.Location.Y - PREVIOUS_MOUSE_LOCATION.Y;
+
+            ScrollPoint.X += xDelta;
+            DrawingPoint.X += -xDelta;
+
+            MapRenderHScroll.Value = Math.Max(0, (int)DrawingPoint.X);
+
+            ScrollPoint.Y += yDelta;
+            DrawingPoint.Y += -yDelta;
+
+            MapRenderVScroll.Value = Math.Max(0, (int)DrawingPoint.Y);
+
+            PREVIOUS_MOUSE_LOCATION = e.Location;
+
+            SKGLRenderControl.Invalidate();
+        }
+
         #endregion
 
         #region No Button Move Handler Method
@@ -3846,7 +3924,7 @@ namespace RealmStudio
 
         private void MiddleButtonMouseUpHandler(object sender, MouseEventArgs e)
         {
-            // no middle button mouse up events yet
+            Cursor = Cursors.Default;
         }
 
         #endregion
@@ -3896,7 +3974,21 @@ namespace RealmStudio
             {
                 switch (CURRENT_DRAWING_MODE)
                 {
-                    // TODO: delete water features, rivers
+                    case DrawingModeEnum.WaterFeatureSelect:
+                        // delete water features, rivers
+                        if (SELECTED_WATERFEATURE != null)
+                        {
+                            Cmd_RemoveWaterFeature cmd = new(CURRENT_MAP, SELECTED_WATERFEATURE);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            SELECTED_WATERFEATURE = null;
+
+                            CURRENT_MAP.IsSaved = false;
+                            SKGLRenderControl.Invalidate();
+                        }
+
+                        break;
                     case DrawingModeEnum.PathSelect:
                         if (SELECTED_PATH != null)
                         {
@@ -8056,6 +8148,5 @@ namespace RealmStudio
         #endregion
 
         #endregion
-
     }
 }

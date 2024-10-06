@@ -166,18 +166,28 @@ namespace RealmStudio
             ShallowWaterPaint.Color = SKColor.FromHsl(WaterFeatureColor.GetHue(), WaterFeatureColor.GetSaturation() * 100F, luminance * 100F, alpha);
             canvas.DrawPath(InnerPath3, ShallowWaterPaint);
 
-            // draw the shoreline outer gradients
-            alpha = 75;
-            luminance = WaterFeatureColor.GetBrightness();
-            luminance = Math.Min(0.9F * luminance, 1.0F);
-
-            WaterFeatureShorelinePaint.Color = SKColor.FromHsl(WaterFeatureShorelineColor.GetHue(), WaterFeatureShorelineColor.GetSaturation() * 100F, luminance * 100F, alpha);
-            canvas.DrawPath(OuterPath1, WaterFeatureShorelinePaint);
-
-            WaterFeatureShorelinePaint.Color = WaterFeatureShorelineColor.ToSKColor();
+            alpha = 192;
+            Color shorelineColor = Color.FromArgb(alpha, WaterFeatureShorelinePaint.Color.ToDrawingColor());
+            WaterFeatureShorelinePaint.Color = shorelineColor.ToSKColor();
 
             // draw the water feature border
             canvas.DrawPath(ContourPath, WaterFeatureShorelinePaint);
+
+            // draw the shoreline outer gradients
+            alpha = 128;
+            shorelineColor = Color.FromArgb(alpha, WaterFeatureShorelinePaint.Color.ToDrawingColor());
+            WaterFeatureShorelinePaint.Color = shorelineColor.ToSKColor();
+            canvas.DrawPath(OuterPath1, WaterFeatureShorelinePaint);
+
+            alpha = 64;
+            shorelineColor = Color.FromArgb(alpha, WaterFeatureShorelinePaint.Color.ToDrawingColor());
+            WaterFeatureShorelinePaint.Color = shorelineColor.ToSKColor();
+            canvas.DrawPath(OuterPath2, WaterFeatureShorelinePaint);
+
+            alpha = 32;
+            shorelineColor = Color.FromArgb(alpha, WaterFeatureShorelinePaint.Color.ToDrawingColor());
+            WaterFeatureShorelinePaint.Color = shorelineColor.ToSKColor();
+            canvas.DrawPath(OuterPath3, WaterFeatureShorelinePaint);
         }
 
         public XmlSchema? GetSchema()

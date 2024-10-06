@@ -21,15 +21,15 @@
 * contact@brookmonte.com
 *
 ***************************************************************************************************************************/
-using DelaunatorSharp;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
-using Point = DelaunatorSharp.Point;
 
 namespace RealmStudio
 {
     internal class WaterFeatureMethods
     {
+        public static SKPath WaterFeaturErasePath { get; set; } = new();
+
         public static int WaterFeatureBrushSize { get; set; } = 20;
         public static int WaterFeatureEraserSize { get; set; } = 20;
 
@@ -71,6 +71,12 @@ namespace RealmStudio
 
                             waterFeature_i.WaterFeatureColor = waterFeature_j.WaterFeatureColor;
                             waterFeature_i.WaterFeatureShorelineColor = waterFeature_j.WaterFeatureShorelineColor;
+
+                            if (waterFeature_i.WaterFeatureType == WaterFeatureTypeEnum.Lake || waterFeature_j.WaterFeatureType == WaterFeatureTypeEnum.Lake)
+                            {
+                                waterFeature_i.WaterFeatureType = WaterFeatureTypeEnum.Lake;
+                            }
+
                             ConstructWaterFeaturePaintObjects(waterFeature_i);
 
                             waterLayer.MapLayerComponents[i] = waterFeature_i;
@@ -138,166 +144,125 @@ namespace RealmStudio
             int pathDistance = waterFeature.ShorelineEffectDistance / 3;
 
             waterFeature.InnerPath1 = DrawingMethods.GetInnerOrOuterPath(contourPoints, pathDistance, ParallelEnum.Below);
+            waterFeature.InnerPath1.Close();
+
             waterFeature.InnerPath2 = DrawingMethods.GetInnerOrOuterPath(contourPoints, 2 * pathDistance, ParallelEnum.Below);
+            waterFeature.InnerPath2.Close();
+
             waterFeature.InnerPath3 = DrawingMethods.GetInnerOrOuterPath(contourPoints, 3 * pathDistance, ParallelEnum.Below);
+            waterFeature.InnerPath3.Close();
 
             waterFeature.OuterPath1 = DrawingMethods.GetInnerOrOuterPath(contourPoints, pathDistance, ParallelEnum.Above);
+            waterFeature.OuterPath1.Close();
+
             waterFeature.OuterPath2 = DrawingMethods.GetInnerOrOuterPath(contourPoints, 2 * pathDistance, ParallelEnum.Above);
+            waterFeature.OuterPath2.Close();
+
             waterFeature.OuterPath3 = DrawingMethods.GetInnerOrOuterPath(contourPoints, 3 * pathDistance, ParallelEnum.Above);
+            waterFeature.OuterPath3.Close();
 
         }
 
         internal static void ConstructWaterFeaturePaintObjects(WaterFeature waterFeature)
         {
-            SKShader colorShader = SKShader.CreateColor(Extensions.ToSKColor((Color)waterFeature.WaterFeatureColor));
+            SKShader colorShader = SKShader.CreateColor(Extensions.ToSKColor(waterFeature.WaterFeatureColor));
 
             // TODO: should water have a texture applied?
             //SKBitmap shaderBitmap = Extensions.ToSKBitmap(MapDrawingMethods.GetNoisyBitmap(MapPaintMethods.WATER_BRUSH_SIZE, MapPaintMethods.WATER_BRUSH_SIZE));
             //SKShader bitmapShader = SKShader.CreateBitmap(shaderBitmap);
             //SKShader combinedShader = SKShader.CreateCompose(colorShader, bitmapShader, SKBlendMode.SrcOver);
 
+            int pathDistance = waterFeature.ShorelineEffectDistance / 3;
+
+            waterFeature.WaterFeatureBackgroundPaint?.Dispose();
             waterFeature.WaterFeatureBackgroundPaint = new()
             {
                 Style = SKPaintStyle.Fill,
                 Shader = colorShader,
                 BlendMode = SKBlendMode.Src,
-                Color = Extensions.ToSKColor((Color)waterFeature.WaterFeatureColor),
+                Color = Extensions.ToSKColor(waterFeature.WaterFeatureColor),
                 IsAntialias = true,
             };
 
+            waterFeature.WaterFeatureShorelinePaint?.Dispose();
             waterFeature.WaterFeatureShorelinePaint = new()
             {
                 Style = SKPaintStyle.Stroke,
-                BlendMode = SKBlendMode.Src,
+                BlendMode = SKBlendMode.SrcATop,
                 Color = Extensions.ToSKColor(waterFeature.WaterFeatureShorelineColor),
-                StrokeWidth = 2,
+                StrokeWidth = pathDistance,
                 IsAntialias = true,
             };
 
+            waterFeature.ShallowWaterPaint?.Dispose();
             waterFeature.ShallowWaterPaint = new()
             {
                 Style = SKPaintStyle.Stroke,
                 BlendMode = SKBlendMode.SrcATop,
-                StrokeWidth = 2,
+                StrokeWidth = pathDistance,
                 IsAntialias = true
             };
+
+            if (waterFeature.WaterFeatureType == WaterFeatureTypeEnum.Lake)
+            {
+                waterFeature.WaterFeatureShorelinePaint.PathEffect = SKPathEffect.CreateCorner(100);
+                waterFeature.ShallowWaterPaint.PathEffect = SKPathEffect.CreateCorner(100);
+                waterFeature.WaterFeatureBackgroundPaint.PathEffect = SKPathEffect.CreateCorner(100);
+            }
         }
 
         public static SKPath? GenerateRandomLakePath(SKPoint location, float lakeSize)
         {
-            SKPoint centerLocation = new SKPoint(location.X - (lakeSize / 4), location.Y - (lakeSize / 4));
+            SKPath lakePath = new();
 
-            List<SKPoint> lakePoints = ShapeGenerator.GenerateRandomPointSet((int)centerLocation.X, (int)centerLocation.Y, (int)lakeSize - 2, (int)lakeSize - 2, (int)(lakeSize / 2.0));
+            // generate a bitmap using Simplex noise; the bitmap returned is 500x500 pixels
+            // so it will need to be scaled to lakeSize before generating the path
+            Bitmap noiseGeneratedlakeBitmap = ShapeGenerator.GetNoiseGeneratedLakeShape();
 
-            while (lakePoints.Count < lakeSize * 2)
+            // fill any holes in the bitmap
+            Bitmap filledBitmap = DrawingMethods.FillHoles(noiseGeneratedlakeBitmap);
+
+            // extract the largest blob from the bitmap; this will be the lake shape
+            Bitmap? unscaledLakeBitmap = DrawingMethods.ExtractLargestBlob(filledBitmap);
+
+            if (unscaledLakeBitmap != null)
             {
-                lakePoints.AddRange(ShapeGenerator.GenerateRandomPointSet((int)centerLocation.X + Random.Shared.Next(-3, 3), (int)centerLocation.Y + Random.Shared.Next(-3, 3), (int)lakeSize - 2, (int)lakeSize - 2, (int)(lakeSize / 2.0)));
-            }
+                // scale the bitmap
+                Bitmap scaledLakeBitmap = new(unscaledLakeBitmap, new Size((int)lakeSize, (int)lakeSize));
 
-            List<IPoint> iPoints = [];
+                DrawingMethods.FlattenBitmapColors(ref scaledLakeBitmap);
 
-            foreach (SKPoint point in lakePoints)
-            {
-                iPoints.Add(new Point(point.X, point.Y));
-            }
+                using Graphics g = Graphics.FromImage(scaledLakeBitmap);
+                using Pen p = new(Color.White, 3);
 
-            List<SKPoint> voronoiCellPoints = [];
+                g.DrawLine(p, new Point(2, 2), new Point(scaledLakeBitmap.Width - 2, 2));
+                g.DrawLine(p, new Point(2, scaledLakeBitmap.Height - 2), new Point(scaledLakeBitmap.Width - 2, scaledLakeBitmap.Height - 2));
+                g.DrawLine(p, new Point(2, 2), new Point(2, scaledLakeBitmap.Height - 2));
+                g.DrawLine(p, new Point(scaledLakeBitmap.Width - 2, 2), new Point(scaledLakeBitmap.Width - 2, scaledLakeBitmap.Height - 2));
 
-            Delaunator delaunator = new([.. iPoints]);
+                // run Moore meighborhood algorithm to get the perimeter path
+                List<SKPoint> contourPoints = DrawingMethods.GetBitmapContourPoints(scaledLakeBitmap);
 
-            IEnumerable<IVoronoiCell> cells = delaunator.GetVoronoiCellsBasedOnCentroids();
-
-            foreach (IVoronoiCell cell in cells)
-            {
-                IPoint[] points = cell.Points;
-
-                foreach (IPoint point in points)
+                if (contourPoints.Count > 2)
                 {
-                    voronoiCellPoints.Add(new SKPoint((float)point.X, (float)point.Y));
-                }
-            }
+                    // the Moore-Neighbor algorithm sets the first (0th) pixel in the list of contour points to
+                    // an empty pixel, so remove it before constructing the path from the contour points
+                    contourPoints.RemoveAt(0);
 
-            // Compute the concave hull.
-            List<SKPoint> hullPoints = ConcaveHull.ComputeConcaveHull(voronoiCellPoints, 3);
+                    lakePath.MoveTo(contourPoints[0]);
 
-            SKPath concaveHullPath = new();
-            concaveHullPath.MoveTo(new SKPoint(hullPoints[0].X, hullPoints[0].Y));
-
-            for (int i = 1; i < hullPoints.Count; i++)
-            {
-                concaveHullPath.LineTo(new SKPoint(hullPoints[i].X, hullPoints[i].Y));
-            }
-
-            //concaveHullPath.Close();
-
-            //SKPath lakePath = ShapeGenerator.GetConvexHullPath(lakePoints);
-
-            return concaveHullPath;
-        }
-
-        public static Bitmap GetLakeBitmap(int width, int height)
-        {
-            //float fx = (float)Random.Shared.NextDouble();
-            //float fy = (float)Random.Shared.NextDouble();
-
-            float fx = 0.02F;
-            float fy = 0.02F;
-
-            float seed = (float)Random.Shared.NextDouble();
-
-            SKBitmap b = new(width, height);
-            SKCanvas skc = new(b);
-            skc.Clear(SKColors.White);
-
-            SKRect tileRect = new(0, 0, width, height);
-
-            //int numOctaves = (int)Math.Round(Math.Log2(width));
-
-            int numOctaves = 2;
-
-            using SKPaint paint = new();
-
-            paint.Style = SKPaintStyle.Fill;
-            paint.Shader = SKShader.CreatePerlinNoiseTurbulence(fx, fy, numOctaves, seed, new SKSizeI((int)tileRect.Width, (int)tileRect.Height));
-
-            skc.DrawRect(tileRect, paint);
-            Bitmap gsb = DrawingMethods.MakeGrayscale(Extensions.ToBitmap(b), 0.19F, false);
-
-            MakeLakeBitmap(ref gsb);
-
-            return gsb;
-        }
-
-        private static void MakeLakeBitmap(ref Bitmap bitmap)
-        {
-            byte colorValue = 128;
-
-            if (bitmap == null)
-            {
-                return;
-            }
-
-            var lockedBitmap = new LockBitmap(bitmap);
-            lockedBitmap.LockBits();
-
-            for (int y = 0; y < lockedBitmap.Height; y++)
-            {
-                for (int x = 0; x < lockedBitmap.Width; x++)
-                {
-                    Color c = lockedBitmap.GetPixel(x, y);
-
-                    if (c.R < colorValue && c.G < colorValue && c.B < colorValue)
+                    for (int i = 1; i < contourPoints.Count; i++)
                     {
-                        lockedBitmap.SetPixel(x, y, Color.White);
+                        lakePath.LineTo(contourPoints[i]);
                     }
-                    else
-                    {
-                        lockedBitmap.SetPixel(x, y, Color.Black);
-                    }
+
+                    lakePath.Close();
                 }
+
+                lakePath.Transform(SKMatrix.CreateTranslation(location.X - (lakeSize / 2.0F), location.Y - (lakeSize / 2.0F)));
             }
 
-            lockedBitmap.UnlockBits();
+            return lakePath;
         }
 
         internal static List<MapRiverPoint> GetParallelRiverPoints(List<MapRiverPoint> points, float distance, ParallelEnum location, bool fromStartingPoint)
@@ -329,8 +294,6 @@ namespace RealmStudio
 
         internal static void ConstructRiverPaintObjects(River mapRiver)
         {
-            if (mapRiver.RiverPaint != null) return;
-
             float strokeWidth = mapRiver.RiverWidth / 2;
 
             SKShader colorShader = SKShader.CreateColor(Extensions.ToSKColor(mapRiver.RiverColor));
@@ -341,7 +304,7 @@ namespace RealmStudio
 
             if (riverTexture != null)
             {
-                riverTexture.TextureBitmap ??= Image.FromFile(riverTexture.TexturePath) as Bitmap;
+                riverTexture.TextureBitmap ??= System.Drawing.Image.FromFile(riverTexture.TexturePath) as Bitmap;
 
                 SKBitmap bitmap = Extensions.ToSKBitmap(riverTexture.TextureBitmap);
                 SKBitmap resizedSKBitmap = new((int)mapRiver.RiverWidth, (int)mapRiver.RiverWidth);
@@ -357,12 +320,14 @@ namespace RealmStudio
                 combinedShader = colorShader;
             }
 
+            int pathDistance = (int)(mapRiver.RiverWidth / 3);
+
             SKColor riverColor = Extensions.ToSKColor(Color.FromArgb(mapRiver.RiverColor.A, mapRiver.RiverColor));
 
             mapRiver.RiverPaint = new()
             {
                 Color = riverColor,
-                StrokeWidth = 4,
+                StrokeWidth = pathDistance,
                 Style = SKPaintStyle.Stroke,
                 StrokeCap = SKStrokeCap.Butt,
                 StrokeJoin = SKStrokeJoin.Round,
@@ -382,9 +347,9 @@ namespace RealmStudio
 
             mapRiver.RiverShorelinePaint = new()
             {
-                StrokeWidth = strokeWidth - 2,
+                StrokeWidth = pathDistance,
                 Style = SKPaintStyle.Stroke,
-                BlendMode = SKBlendMode.Src,
+                BlendMode = SKBlendMode.SrcATop,
                 Color = Extensions.ToSKColor(mapRiver.RiverShorelineColor),
                 IsAntialias = true,
             };
@@ -392,19 +357,41 @@ namespace RealmStudio
             // shallow water is a lighter shade of river color
             SKColor shallowWaterColor = Extensions.ToSKColor(Color.FromArgb(mapRiver.RiverShorelineColor.A / 4, mapRiver.RiverColor));
 
-            shallowWaterColor.ToHsl(out float hue, out float saturation, out float luminance);
-            luminance *= 1.1F;
-
-            shallowWaterColor = SKColor.FromHsl(hue, saturation, luminance);
-
             mapRiver.RiverShallowWaterPaint = new()
             {
                 Color = shallowWaterColor,
-                StrokeWidth = strokeWidth / 2F,
+                StrokeWidth = pathDistance,
                 Style = SKPaintStyle.Stroke,
                 BlendMode = SKBlendMode.SrcATop,
                 IsAntialias = true
             };
+
+        }
+
+        internal static void EraseWaterFeature(RealmStudioMap map)
+        {
+            if (WaterFeaturErasePath.PointCount > 0)
+            {
+                MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER);
+
+                foreach (IWaterFeature iwf in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
+                {
+                    if (iwf is WaterFeature wf)
+                    {
+                        using SKPath diffPath = wf.WaterFeaturePath.Op(WaterFeaturErasePath, SKPathOp.Difference);
+
+                        if (diffPath != null)
+                        {
+                            wf.WaterFeaturePath = new(diffPath);
+
+                            Task.Run(() => CreateInnerAndOuterPaths(map, wf));
+                        }
+                    }
+
+                }
+
+                WaterFeaturErasePath.Reset();
+            }
         }
     }
 }

@@ -53,5 +53,118 @@ namespace RealmStudio
 
             return mapPoints;
         }
+
+
+        public static List<SKPoint> GetRadialShape(float x, float y, float radius, float roughness)
+        {
+            List<SKPoint> shapePoints = [];
+
+            float previousRadialDistance = 0.0F;
+
+            double revolutions = 2.0;
+
+            for (int i = 0; i < 360 * revolutions; i++)
+            {
+                float randomRadialDistance = Random.Shared.NextSingle();
+                float scaledRadialDistance = (0.5F * radius) * randomRadialDistance;
+                float variedScaleRadialDistance = scaledRadialDistance + Random.Shared.Next((int)(-roughness * scaledRadialDistance), (int)(roughness * scaledRadialDistance));
+
+                float finalRadialDistance = variedScaleRadialDistance + previousRadialDistance;
+
+                previousRadialDistance = variedScaleRadialDistance;
+
+                // convert to cartesian coordinates
+                float cx = (float)(finalRadialDistance * Math.Cos(i / revolutions));
+                float cy = (float)(finalRadialDistance * Math.Sin(i / revolutions));
+
+                shapePoints.Add(new SKPoint(x + cx, y + cy));
+            }
+
+            return shapePoints;
+        }
+
+        public static Bitmap GetNoiseGeneratedLakeShape()
+        {
+            // see: https://www.redblobgames.com/maps/terrain-from-noise/#demo
+            // and https://github.com/WardBenjamin/SimplexNoise
+
+            float width = 500;
+            float height = 500;
+
+            SimplexNoise.Noise.Seed = Random.Shared.Next(int.MaxValue - 1);
+
+            // scale parameter: larger scale value = denser noise, so scale = wavelength (higher wavelength = denser noise)
+            // or scale is inverse of frequency
+
+            float[,] noiseArray1 = SimplexNoise.Noise.Calc2D((int)width, (int)height, 0.008F);
+            float[,] noiseArray2 = SimplexNoise.Noise.Calc2D((int)width, (int)height, 0.015F);
+
+            float[,] elevation = new float[(int)width, (int)height];
+
+            float waterLevel = 0.5F;
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    float e = (noiseArray1[x, y] / 255.0F);
+                    //float e = ((noiseArray1[x, y] / 255.0F) + (noiseArray2[x, y] / 255.0F)) / 2.0F;
+                    elevation[x, y] = e;
+                }
+            }
+
+
+            float[,] distance = new float[(int)width, (int)height];
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    float nx = 2 * x / width - 1;
+                    float ny = 2 * y / height - 1;
+
+                    distance[x, y] = 1 - (float)Math.Min(1, (nx * nx + ny * ny) / Math.Sqrt(2));
+                }
+            }
+
+            float interpolationWeight = 0.6F;
+
+            float[,] interolatedElevationAndDistance = new float[(int)width, (int)height];
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    interolatedElevationAndDistance[x, y] = float.Lerp(elevation[x, y], 1 - distance[x, y], interpolationWeight);
+                }
+            }
+
+            // make sure the bitmap has a white border surrounding it so the lake image can be extracted
+            Bitmap lakeBitmap = new((int)width, (int)height);
+            using Graphics g = Graphics.FromImage(lakeBitmap);
+            g.Clear(Color.White);
+
+            var lockedBitmap = new LockBitmap(lakeBitmap);
+            lockedBitmap.LockBits();
+
+            for (int x = 2; x < width - 2; x++)
+            {
+                for (int y = 2; y < height - 2; y++)
+                {
+                    if (interolatedElevationAndDistance[x, y] > waterLevel)
+                    {
+                        lockedBitmap.SetPixel(x, y, Color.White);
+                    }
+                    else
+                    {
+                        lockedBitmap.SetPixel(x, y, Color.Black);
+                    }
+                }
+            }
+
+            lockedBitmap.UnlockBits();
+
+            return lakeBitmap;
+        }
     }
 }

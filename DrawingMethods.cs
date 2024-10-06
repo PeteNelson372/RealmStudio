@@ -305,6 +305,70 @@ namespace RealmStudio
             return IsGrayScaleImage;
         }
 
+        public static void FlattenBitmapColors(ref Bitmap bitmap)
+        {
+            if (bitmap == null)
+            {
+                return;
+            }
+
+            var lockedBitmap = new LockBitmap(bitmap);
+            lockedBitmap.LockBits();
+
+            for (int y = 0; y < lockedBitmap.Height; y++)
+            {
+                for (int x = 0; x < lockedBitmap.Width; x++)
+                {
+                    if (lockedBitmap.GetPixel(x, y) == Color.Transparent
+                        || ColorIsNear(lockedBitmap.GetPixel(x, y), Color.White, 64)
+                        || lockedBitmap.GetPixel(x, y) == Color.White)
+                    {
+                        lockedBitmap.SetPixel(x, y, Color.White);
+                    }
+                    else
+                    {
+                        lockedBitmap.SetPixel(x, y, Color.Black);
+                    }
+                }
+            }
+
+            lockedBitmap.UnlockBits();
+        }
+
+        public static bool ColorIsNear(Color color, Color checkColor, int tolerance)
+        {
+            int rValue = color.R;
+            int gValue = color.G;
+            int bValue = color.B;
+
+            int minR = checkColor.R - tolerance;
+            int maxR = checkColor.R + tolerance;
+
+            int minG = checkColor.G - tolerance;
+            int maxG = checkColor.G + tolerance;
+
+            int minB = checkColor.B - tolerance;
+            int maxB = checkColor.B + tolerance;
+
+            if (rValue < minR || rValue > maxR)
+            {
+                return false;
+            }
+
+            if (gValue < minG || gValue > maxG)
+            {
+                return false;
+            }
+
+            if (bValue < minB || bValue > maxB)
+            {
+                return false;
+            }
+
+            return true;
+
+        }
+
         internal static SKBitmap ScaleBitmap(SKBitmap bitmap, float scale)
         {
             int bitmapWidth = (int)Math.Round(bitmap.Width * scale);
@@ -344,6 +408,39 @@ namespace RealmStudio
             return Extensions.ToSKBitmap(rotatedBitmap);
         }
 
+        internal static Bitmap FillHoles(Bitmap inputBitmap)
+        {
+            // convert the bitmap to an 8bpp grayscale image for processing
+            if (inputBitmap.PixelFormat != PixelFormat.Format8bppIndexed)
+            {
+                // convert the bitmap to an 8bpp grayscale image for processing
+                Bitmap newB = Grayscale.CommonAlgorithms.BT709.Apply(inputBitmap);
+                inputBitmap = newB;
+            }
+
+            // invert the bitmap colors white -> black; black -> white
+            // FillHoles filter looks for black holes in white background
+            // landformBitmap has white holes in black background, so
+            // invert is required
+            Invert invert = new();
+            using Bitmap invertedBitmap = invert.Apply(inputBitmap);
+
+            // fill holes in the input bitmap (black areas surrounded by white)
+            FillHoles fillHolesFilter = new()
+            {
+                MaxHoleWidth = 200,     // 200 pixels is maximum size of hole filled
+                MaxHoleHeight = 200,
+                CoupledSizeFiltering = false
+            };
+
+            Bitmap filledBitmap = fillHolesFilter.Apply(invertedBitmap);
+
+            // re-invert the colors to restore to original
+            Bitmap filledInvertedBitmap = invert.Apply(filledBitmap);
+
+            return filledInvertedBitmap;
+        }
+
         internal static Bitmap? ExtractLargestBlob(Bitmap b)
         {
             if (b.PixelFormat != PixelFormat.Format8bppIndexed)
@@ -362,8 +459,8 @@ namespace RealmStudio
             {
                 // set filtering options
                 FilterBlobs = true,
-                MinWidth = 5,
-                MinHeight = 5,
+                MinWidth = 100,
+                MinHeight = 100,
 
                 // set ordering options
                 ObjectsOrder = ObjectsOrder.Size
@@ -379,13 +476,15 @@ namespace RealmStudio
             // extract the biggest blob
             if (blobs.Length > 0)
             {
-                bc.ExtractBlobsImage(b, blobs[0], true);
+                bc.ExtractBlobsImage(invertedBitmap, blobs[0], true);
 
                 Blob biggestBlob = blobs[0];
                 Bitmap managedImage = biggestBlob.Image.ToManagedImage();
 
                 // re-invert the colors
                 Bitmap invertedBlobBitmap = invert.Apply(managedImage);
+
+                invertedBlobBitmap.Save("C:\\Users\\Pete Nelson\\OneDrive\\Desktop\\invertedBlobBitmap.bmp");
 
                 //return managedImage;
                 return invertedBlobBitmap;

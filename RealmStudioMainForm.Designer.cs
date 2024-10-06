@@ -278,6 +278,7 @@
             labelPresetBindingSource = new BindingSource(components);
             crownContextMenuStrip1 = new ReaLTaiizor.Controls.CrownContextMenuStrip();
             RealmStudioForm = new ReaLTaiizor.Forms.DungeonForm();
+            ZoomLevelTrack = new TrackBar();
             AddPresetColorButton = new FontAwesome.Sharp.IconButton();
             SelectColorButton = new FontAwesome.Sharp.IconButton();
             OpenButton = new FontAwesome.Sharp.IconButton();
@@ -573,6 +574,7 @@
             DrawingToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)labelPresetBindingSource).BeginInit();
             RealmStudioForm.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)ZoomLevelTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LogoPictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)TopLogoPictureBox).BeginInit();
             RealmDataStatusStrip.SuspendLayout();
@@ -4646,6 +4648,7 @@
             RealmStudioForm.BackColor = Color.FromArgb(223, 219, 210);
             RealmStudioForm.BorderColor = Color.FromArgb(38, 38, 38);
             RealmStudioForm.CausesValidation = false;
+            RealmStudioForm.Controls.Add(ZoomLevelTrack);
             RealmStudioForm.Controls.Add(AddPresetColorButton);
             RealmStudioForm.Controls.Add(SelectColorButton);
             RealmStudioForm.Controls.Add(OpenButton);
@@ -4668,7 +4671,6 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(RealmStudioMainMenuStrip);
-            RealmStudioForm.Controls.Add(WaterToolPanel);
             RealmStudioForm.Controls.Add(LandToolPanel);
             RealmStudioForm.Controls.Add(OceanToolPanel);
             RealmStudioForm.Controls.Add(BackgroundToolPanel);
@@ -4678,6 +4680,7 @@
             RealmStudioForm.Controls.Add(LabelToolPanel);
             RealmStudioForm.Controls.Add(SymbolToolPanel);
             RealmStudioForm.Controls.Add(PathToolPanel);
+            RealmStudioForm.Controls.Add(WaterToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
             RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
             RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
@@ -4698,6 +4701,19 @@
             RealmStudioForm.TabStop = false;
             RealmStudioForm.Text = "Realm Studio";
             RealmStudioForm.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // ZoomLevelTrack
+            // 
+            ZoomLevelTrack.AutoSize = false;
+            ZoomLevelTrack.Location = new Point(1294, 60);
+            ZoomLevelTrack.Maximum = 80;
+            ZoomLevelTrack.Minimum = 1;
+            ZoomLevelTrack.Name = "ZoomLevelTrack";
+            ZoomLevelTrack.Size = new Size(126, 20);
+            ZoomLevelTrack.TabIndex = 37;
+            ZoomLevelTrack.TickStyle = TickStyle.None;
+            ZoomLevelTrack.Value = 10;
+            ZoomLevelTrack.Scroll += ZoomLevelTrack_Scroll;
             // 
             // AddPresetColorButton
             // 
@@ -7390,6 +7406,7 @@
             DoubleBuffered = true;
             ForeColor = SystemColors.Control;
             FormBorderStyle = FormBorderStyle.None;
+            KeyPreview = true;
             MaximumSize = new Size(1920, 1200);
             MinimumSize = new Size(261, 65);
             Name = "RealmStudioMainForm";
@@ -7521,6 +7538,7 @@
             ((System.ComponentModel.ISupportInitialize)labelPresetBindingSource).EndInit();
             RealmStudioForm.ResumeLayout(false);
             RealmStudioForm.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)ZoomLevelTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LogoPictureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)TopLogoPictureBox).EndInit();
             RealmDataStatusStrip.ResumeLayout(false);
@@ -8046,5 +8064,6 @@
         private TrackBar WaterBrushVelocityTrack;
         private FontAwesome.Sharp.IconButton SelectColorButton;
         private FontAwesome.Sharp.IconButton AddPresetColorButton;
+        private TrackBar ZoomLevelTrack;
     }
 }
