@@ -490,6 +490,7 @@
             label51 = new Label();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
+            MapScaleCreatorPanel = new Panel();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -4648,6 +4649,7 @@
             RealmStudioForm.BackColor = Color.FromArgb(223, 219, 210);
             RealmStudioForm.BorderColor = Color.FromArgb(38, 38, 38);
             RealmStudioForm.CausesValidation = false;
+            RealmStudioForm.Controls.Add(MapScaleCreatorPanel);
             RealmStudioForm.Controls.Add(ZoomLevelTrack);
             RealmStudioForm.Controls.Add(AddPresetColorButton);
             RealmStudioForm.Controls.Add(SelectColorButton);
@@ -7396,6 +7398,15 @@
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
             // 
+            // MapScaleCreatorPanel
+            // 
+            MapScaleCreatorPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            MapScaleCreatorPanel.Location = new Point(1198, 114);
+            MapScaleCreatorPanel.Name = "MapScaleCreatorPanel";
+            MapScaleCreatorPanel.Size = new Size(200, 843);
+            MapScaleCreatorPanel.TabIndex = 38;
+            MapScaleCreatorPanel.Visible = false;
+            // 
             // RealmStudioMainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -8066,5 +8077,6 @@
         private FontAwesome.Sharp.IconButton SelectColorButton;
         private FontAwesome.Sharp.IconButton AddPresetColorButton;
         private TrackBar ZoomLevelTrack;
+        private Panel MapScaleCreatorPanel;
     }
 }

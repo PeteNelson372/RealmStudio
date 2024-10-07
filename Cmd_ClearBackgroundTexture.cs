@@ -21,8 +21,6 @@
 * contact@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
-
 namespace RealmStudio
 {
     internal class Cmd_ClearBackgroundTexture(RealmStudioMap map, MapImage textureBitmap) : IMapOperation
@@ -38,9 +36,6 @@ namespace RealmStudio
             {
                 baseLayer.MapLayerComponents.Remove(LayerTexture);
             }
-
-            // base layer is cleared to WHITE, not transparent or empty;
-            baseLayer.LayerSurface?.Canvas.Clear(SKColors.White);
         }
 
         public void UndoOperation()

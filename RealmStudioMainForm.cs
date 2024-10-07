@@ -1172,7 +1172,14 @@ namespace RealmStudio
         private void DrawCursor(SKPoint point, int brushSize)
         {
             MapLayer cursorLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.CURSORLAYER);
-            cursorLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            cursorLayer.RenderPicture?.Dispose();
+            cursorLayer.RenderPicture = null;
+
+            using var recorder = new SKPictureRecorder();
+            SKRect clippingBounds = new(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+
+            // Start recording 
+            recorder.BeginRecording(clippingBounds);
 
             switch (CURRENT_DRAWING_MODE)
             {
@@ -1191,18 +1198,18 @@ namespace RealmStudio
 
                                 if (rotatedAndScaledBitmap != null)
                                 {
-                                    cursorLayer.LayerSurface?.Canvas.DrawBitmap(rotatedAndScaledBitmap,
+                                    recorder.RecordingCanvas.DrawBitmap(rotatedAndScaledBitmap,
                                         new SKPoint(point.X - (rotatedAndScaledBitmap.Width / 2), point.Y - (rotatedAndScaledBitmap.Height / 2)), null);
                                 }
                             }
                         }
                         else if (AreaBrushSwitch.Checked)
                         {
-                            cursorLayer.LayerSurface?.Canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                            recorder.RecordingCanvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
                         }
                         else
                         {
-                            cursorLayer.LayerSurface?.Canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                            recorder.RecordingCanvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
                         }
                     }
                     break;
@@ -1210,11 +1217,13 @@ namespace RealmStudio
                     {
                         if (brushSize > 0)
                         {
-                            cursorLayer.LayerSurface?.Canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                            recorder.RecordingCanvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
                         }
                     }
                     break;
             }
+
+            cursorLayer.RenderPicture = recorder.EndRecording();
 
         }
 
@@ -1873,9 +1882,6 @@ namespace RealmStudio
             // have been added is slow)
 
 
-            // create the map layers, if needed
-            MapRenderMethods.CreateMapLayers(CURRENT_MAP, SKGLRenderControl.GRContext);
-
             // handle zoom-in and zoom-out (TODO: zoom in and out from center of map - how?)
             e.Surface.Canvas.Scale(DrawingZoom);
 
@@ -1892,14 +1898,14 @@ namespace RealmStudio
 
             MapRenderMethods.RenderWindroses(CURRENT_MAP, CURRENT_WINDROSE, e, ScrollPoint);
 
-            // TODO: lower grid layer (above ocean)
+            // lower grid layer (above ocean)
             MapRenderMethods.RenderLowerGrid(CURRENT_MAP, e, ScrollPoint);
 
             MapRenderMethods.RenderLandforms(CURRENT_MAP, CURRENT_LANDFORM, e, ScrollPoint);
 
             MapRenderMethods.RenderWaterFeatures(CURRENT_MAP, CURRENT_WATERFEATURE, CURRENT_RIVER, e, ScrollPoint);
 
-            // TODO: upper grid layer (above water features)
+            // upper grid layer (above water features)
             MapRenderMethods.RenderUpperGrid(CURRENT_MAP, e, ScrollPoint);
 
             MapRenderMethods.RenderLowerMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, e, ScrollPoint);
@@ -1911,14 +1917,14 @@ namespace RealmStudio
             // region and region overlay layers
             MapRenderMethods.RenderRegions(CURRENT_MAP, e, ScrollPoint);
 
+            // default grid layer
+            MapRenderMethods.RenderDefaultGrid(CURRENT_MAP, e, ScrollPoint);
+
             // box layer
             MapRenderMethods.RenderBoxes(CURRENT_MAP, e, ScrollPoint);
 
             // label layer
             MapRenderMethods.RenderLabels(CURRENT_MAP, e, ScrollPoint);
-
-            // TODO: default grid layer
-            MapRenderMethods.RenderDefaultGrid(CURRENT_MAP, e, ScrollPoint);
 
             // render frame
             MapRenderMethods.RenderFrame(CURRENT_MAP, e, ScrollPoint);
@@ -2533,7 +2539,9 @@ namespace RealmStudio
                         CURRENT_MAP_LABEL_PATH = new();
 
                         PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).RenderPicture?.Dispose();
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).RenderPicture = null;
                     }
                     break;
                 case DrawingModeEnum.DrawBezierLabelPath:
@@ -2547,7 +2555,8 @@ namespace RealmStudio
 
                         PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
 
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).RenderPicture?.Dispose();
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).RenderPicture = null;
                     }
                     break;
                 case DrawingModeEnum.DrawBox:
@@ -2827,7 +2836,8 @@ namespace RealmStudio
                         CURRENT_MAP_MEASURE.RenderValue = true;
 
                         // reset everything
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(); // not sure if this needs to be done
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).RenderPicture?.Dispose();
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).RenderPicture = null;
                         PREVIOUS_CURSOR_POINT = SKPoint.Empty;
 
                         CURRENT_MAP_MEASURE = null;
@@ -2842,7 +2852,8 @@ namespace RealmStudio
 
                         CURRENT_MAP.IsSaved = false;
 
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).RenderPicture?.Dispose();
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).RenderPicture = null;
 
                         Cmd_AddMapRegion cmd = new(CURRENT_MAP, CURRENT_MAP_REGION);
                         CommandManager.AddCommand(cmd);
@@ -3078,9 +3089,20 @@ namespace RealmStudio
 
                         CURRENT_MAP_LABEL_PATH.AddArc(r, 180, 180);
 
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+                        MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
+                        workLayer.RenderPicture?.Dispose();
+                        workLayer.RenderPicture = null;
 
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawPath(CURRENT_MAP_LABEL_PATH, PaintObjects.LabelPathPaint);
+                        using var recorder = new SKPictureRecorder();
+                        SKRect clippingBounds = new(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+
+                        // Start recording 
+                        recorder.BeginRecording(clippingBounds);
+
+                        recorder.RecordingCanvas.DrawPath(CURRENT_MAP_LABEL_PATH, PaintObjects.LabelPathPaint);
+                        workLayer.RenderPicture = recorder.EndRecording();
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.DrawBezierLabelPath:
@@ -3088,9 +3110,20 @@ namespace RealmStudio
                         CURRENT_MAP_LABEL_PATH_POINTS.Add(zoomedScrolledPoint);
                         ConstructBezierPathFromPoints();
 
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+                        MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
+                        workLayer.RenderPicture?.Dispose();
+                        workLayer.RenderPicture = null;
 
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawPath(CURRENT_MAP_LABEL_PATH, PaintObjects.LabelPathPaint);
+                        using var recorder = new SKPictureRecorder();
+                        SKRect clippingBounds = new(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+
+                        // Start recording 
+                        recorder.BeginRecording(clippingBounds);
+
+                        recorder.RecordingCanvas.DrawPath(CURRENT_MAP_LABEL_PATH, PaintObjects.LabelPathPaint);
+                        workLayer.RenderPicture = recorder.EndRecording();
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.DrawBox:
@@ -3130,100 +3163,120 @@ namespace RealmStudio
                                         SKBlendMode.Modulate) // combine the tint with the bitmap color
                                 };
 
-                                MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+                                MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
+                                workLayer.RenderPicture?.Dispose();
+                                workLayer.RenderPicture = null;
 
-                                MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas
-                                    .DrawBitmap(Extensions.ToSKBitmap(resizedBitmap), PREVIOUS_CURSOR_POINT, boxPaint);
+                                using var recorder = new SKPictureRecorder();
+                                SKRect clippingBounds = new(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
 
+                                // Start recording 
+                                recorder.BeginRecording(clippingBounds);
+
+                                recorder.RecordingCanvas.DrawBitmap(Extensions.ToSKBitmap(resizedBitmap), PREVIOUS_CURSOR_POINT, boxPaint);
+
+                                workLayer.RenderPicture = recorder.EndRecording();
                                 SKGLRenderControl.Invalidate();
                             }
                         }
                     }
                     break;
                 case DrawingModeEnum.DrawMapMeasure:
-
-                    if (CURRENT_MAP_MEASURE != null)
                     {
-                        SKCanvas? workCanvas = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-
-                        if (workCanvas == null) { return; }
-
-                        workCanvas.Clear();
-
-                        if (CURRENT_MAP_MEASURE.MeasureArea && CURRENT_MAP_MEASURE.MeasurePoints.Count > 1)
+                        if (CURRENT_MAP_MEASURE != null)
                         {
-                            SKPath path = new();
+                            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
+                            workLayer.RenderPicture?.Dispose();
+                            workLayer.RenderPicture = null;
 
-                            path.MoveTo(CURRENT_MAP_MEASURE.MeasurePoints.First());
+                            using var recorder = new SKPictureRecorder();
+                            SKRect clippingBounds = new(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
 
-                            for (int i = 1; i < CURRENT_MAP_MEASURE.MeasurePoints.Count; i++)
+                            // Start recording 
+                            recorder.BeginRecording(clippingBounds);
+
+                            if (CURRENT_MAP_MEASURE.MeasureArea && CURRENT_MAP_MEASURE.MeasurePoints.Count > 1)
                             {
-                                path.LineTo(CURRENT_MAP_MEASURE.MeasurePoints[i]);
+                                SKPath path = new();
+
+                                path.MoveTo(CURRENT_MAP_MEASURE.MeasurePoints.First());
+
+                                for (int i = 1; i < CURRENT_MAP_MEASURE.MeasurePoints.Count; i++)
+                                {
+                                    path.LineTo(CURRENT_MAP_MEASURE.MeasurePoints[i]);
+                                }
+
+                                path.LineTo(zoomedScrolledPoint);
+
+                                path.Close();
+
+                                recorder.RecordingCanvas.DrawPath(path, CURRENT_MAP_MEASURE.MeasureAreaPaint);
+                            }
+                            else
+                            {
+                                recorder.RecordingCanvas.DrawLine(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint, CURRENT_MAP_MEASURE.MeasureLinePaint);
                             }
 
-                            path.LineTo(zoomedScrolledPoint);
+                            // render measure value and units
+                            SKPoint measureValuePoint = new(zoomedScrolledPoint.X + 30, zoomedScrolledPoint.Y + 20);
 
-                            path.Close();
+                            float lineLength = SKPoint.Distance(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint);
+                            float totalLength = CURRENT_MAP_MEASURE.TotalMeasureLength + lineLength;
 
-                            workCanvas.DrawPath(path, CURRENT_MAP_MEASURE.MeasureAreaPaint);
-                        }
-                        else
-                        {
-                            workCanvas.DrawLine(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint, CURRENT_MAP_MEASURE.MeasureLinePaint);
-                        }
+                            CURRENT_MAP_MEASURE.RenderDistanceLabel(recorder.RecordingCanvas, measureValuePoint, totalLength);
 
-                        // render measure value and units
-                        SKPoint measureValuePoint = new(zoomedScrolledPoint.X + 30, zoomedScrolledPoint.Y + 20);
+                            if (CURRENT_MAP_MEASURE.MeasureArea && CURRENT_MAP_MEASURE.MeasurePoints.Count > 1)
+                            {
+                                // temporarity add the point at the mouse position
+                                CURRENT_MAP_MEASURE.MeasurePoints.Add(zoomedScrolledPoint);
 
-                        float lineLength = SKPoint.Distance(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint);
-                        float totalLength = CURRENT_MAP_MEASURE.TotalMeasureLength + lineLength;
+                                // calculate the polygon area
+                                float area = DrawingMethods.CalculatePolygonArea(CURRENT_MAP_MEASURE.MeasurePoints);
 
-                        CURRENT_MAP_MEASURE.RenderDistanceLabel(workCanvas, measureValuePoint, totalLength);
+                                // remove the temporarily added point
+                                CURRENT_MAP_MEASURE.MeasurePoints.RemoveAt(CURRENT_MAP_MEASURE.MeasurePoints.Count - 1);
 
-                        if (CURRENT_MAP_MEASURE.MeasureArea && CURRENT_MAP_MEASURE.MeasurePoints.Count > 1)
-                        {
-                            // temporarity add the point at the mouse position
-                            CURRENT_MAP_MEASURE.MeasurePoints.Add(zoomedScrolledPoint);
+                                // display the area label
+                                SKPoint measureAreaPoint = new(zoomedScrolledPoint.X + 30, zoomedScrolledPoint.Y + 40);
 
-                            // calculate the polygon area
-                            float area = DrawingMethods.CalculatePolygonArea(CURRENT_MAP_MEASURE.MeasurePoints);
+                                CURRENT_MAP_MEASURE.RenderAreaLabel(recorder.RecordingCanvas, measureAreaPoint, area);
+                            }
 
-                            // remove the temporarily added point
-                            CURRENT_MAP_MEASURE.MeasurePoints.RemoveAt(CURRENT_MAP_MEASURE.MeasurePoints.Count - 1);
-
-                            // display the area label
-                            SKPoint measureAreaPoint = new(zoomedScrolledPoint.X + 30, zoomedScrolledPoint.Y + 40);
-
-                            CURRENT_MAP_MEASURE.RenderAreaLabel(workCanvas, measureAreaPoint, area);
+                            workLayer.RenderPicture = recorder.EndRecording();
                         }
                     }
                     break;
                 case DrawingModeEnum.RegionPaint:
                     if (CURRENT_MAP_REGION != null)
                     {
-                        SKCanvas? workCanvas = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
+                        workLayer.RenderPicture?.Dispose();
+                        workLayer.RenderPicture = null;
 
-                        if (workCanvas != null)
+                        using var recorder = new SKPictureRecorder();
+                        SKRect clippingBounds = new(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+
+                        // Start recording 
+                        recorder.BeginRecording(clippingBounds);
+
+                        if (CURRENT_MAP_REGION.MapRegionPoints.Count > 1)
                         {
-                            workCanvas.Clear();
+                            // temporarily add the layer click point for rendering
+                            MapRegionPoint mrp = new MapRegionPoint(zoomedScrolledPoint);
+                            CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
 
-                            if (CURRENT_MAP_REGION.MapRegionPoints.Count > 1)
-                            {
-                                // temporarily add the layer click point for rendering
-                                MapRegionPoint mrp = new MapRegionPoint(zoomedScrolledPoint);
-                                CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
+                            // render
+                            CURRENT_MAP_REGION.Render(recorder.RecordingCanvas);
 
-                                // render
-                                CURRENT_MAP_REGION.Render(workCanvas);
-
-                                // remove it
-                                CURRENT_MAP_REGION.MapRegionPoints.RemoveAt(CURRENT_MAP_REGION.MapRegionPoints.Count - 1);
-                            }
-                            else
-                            {
-                                workCanvas.DrawLine(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint, CURRENT_MAP_REGION.RegionBorderPaint);
-                            }
+                            // remove it
+                            CURRENT_MAP_REGION.MapRegionPoints.RemoveAt(CURRENT_MAP_REGION.MapRegionPoints.Count - 1);
                         }
+                        else
+                        {
+                            recorder.RecordingCanvas.DrawLine(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint, CURRENT_MAP_REGION.RegionBorderPaint);
+                        }
+
+                        workLayer.RenderPicture = recorder.EndRecording();
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3351,29 +3404,34 @@ namespace RealmStudio
                     {
                         if (CURRENT_MAP_REGION != null)
                         {
-                            SKCanvas? workCanvas = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
+                            workLayer.RenderPicture?.Dispose();
+                            workLayer.RenderPicture = null;
 
-                            if (workCanvas != null)
+                            using var recorder = new SKPictureRecorder();
+                            SKRect clippingBounds = new(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+
+                            // Start recording 
+                            recorder.BeginRecording(clippingBounds);
+
+                            if (CURRENT_MAP_REGION.MapRegionPoints.Count > 1)
                             {
-                                workCanvas.Clear();
+                                // temporarily add the layer click point for rendering
+                                MapRegionPoint mrp = new MapRegionPoint(zoomedScrolledPoint);
+                                CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
 
-                                if (CURRENT_MAP_REGION.MapRegionPoints.Count > 1)
-                                {
-                                    // temporarily add the layer click point for rendering
-                                    MapRegionPoint mrp = new MapRegionPoint(zoomedScrolledPoint);
-                                    CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
+                                // render
+                                CURRENT_MAP_REGION.Render(recorder.RecordingCanvas);
 
-                                    // render
-                                    CURRENT_MAP_REGION.Render(workCanvas);
-
-                                    // remove it
-                                    CURRENT_MAP_REGION.MapRegionPoints.RemoveAt(CURRENT_MAP_REGION.MapRegionPoints.Count - 1);
-                                }
-                                else
-                                {
-                                    workCanvas.DrawLine(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint, CURRENT_MAP_REGION.RegionBorderPaint);
-                                }
+                                // remove it
+                                CURRENT_MAP_REGION.MapRegionPoints.RemoveAt(CURRENT_MAP_REGION.MapRegionPoints.Count - 1);
                             }
+                            else
+                            {
+                                recorder.RecordingCanvas.DrawLine(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint, CURRENT_MAP_REGION.RegionBorderPaint);
+                            }
+
+                            workLayer.RenderPicture = recorder.EndRecording();
                         }
                     }
                     break;
@@ -3401,11 +3459,17 @@ namespace RealmStudio
                                 }
                             }
 
-                            SKCanvas? regionOverlayCanvas = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.REGIONOVERLAYLAYER).LayerSurface?.Canvas;
-
-                            if (!pointSelected && regionOverlayCanvas != null)
+                            if (!pointSelected)
                             {
-                                regionOverlayCanvas.Clear();
+                                MapLayer regionOverlayLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.REGIONOVERLAYLAYER);
+                                regionOverlayLayer.RenderPicture?.Dispose();
+                                regionOverlayLayer.RenderPicture = null;
+
+                                using var regionOverlayRecorder = new SKPictureRecorder();
+                                SKRect clippingBounds = new(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+
+                                // Start recording 
+                                regionOverlayRecorder.BeginRecording(clippingBounds);
 
                                 MapRegionMethods.PREVIOUS_REGION_POINT_INDEX = -1;
                                 MapRegionMethods.NEXT_REGION_POINT_INDEX = -1;
@@ -3423,8 +3487,8 @@ namespace RealmStudio
 
                                         MapRegionMethods.NEW_REGION_POINT = new MapRegionPoint(zoomedScrolledPoint);
 
-                                        regionOverlayCanvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionNewPointFillPaint);
-                                        regionOverlayCanvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
+                                        regionOverlayRecorder.RecordingCanvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionNewPointFillPaint);
+                                        regionOverlayRecorder.RecordingCanvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
 
                                         break;
                                     }
@@ -3440,9 +3504,11 @@ namespace RealmStudio
 
                                     MapRegionMethods.NEW_REGION_POINT = new MapRegionPoint(zoomedScrolledPoint);
 
-                                    regionOverlayCanvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionNewPointFillPaint);
-                                    regionOverlayCanvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
+                                    regionOverlayRecorder.RecordingCanvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionNewPointFillPaint);
+                                    regionOverlayRecorder.RecordingCanvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
                                 }
+
+                                regionOverlayLayer.RenderPicture = regionOverlayRecorder.EndRecording();
                             }
                         }
                     }
@@ -3783,8 +3849,6 @@ namespace RealmStudio
                         CURRENT_MAP.IsSaved = false;
                         SELECTED_PLACED_MAP_BOX = null;
 
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
-
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -3835,8 +3899,6 @@ namespace RealmStudio
                 case DrawingModeEnum.ColorSelect:
                     {
                         // eyedropper color select function
-                        //Cursor = Cursors.Default;
-                        //CURRENT_DRAWING_MODE = DrawingModeEnum.None;
                         CREATE_MAP_IMAGE = true;
 
                         SKGLRenderControl.Refresh();
@@ -3958,7 +4020,8 @@ namespace RealmStudio
                 CURRENT_MAP_LABEL_PATH = new();
 
                 // clear the work layer
-                MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+                MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).RenderPicture?.Dispose();
+                MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).RenderPicture = null;
 
                 // unselect anything selected
                 DeselectAllMapComponents(null);
@@ -6804,7 +6867,9 @@ namespace RealmStudio
                             CURRENT_MAP_LABEL_PATH.Dispose();
                             CURRENT_MAP_LABEL_PATH = new();
 
-                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear();
+                            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
+                            workLayer.RenderPicture?.Dispose();
+                            workLayer.RenderPicture = null;
                         }
 
                         Cmd_AddLabel cmd = new(CURRENT_MAP, label);
@@ -7469,7 +7534,7 @@ namespace RealmStudio
 
         private static void RemoveGrid()
         {
-            for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.Count - 1; i > 0; i--)
+            for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
                 if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents[i] is MapGrid)
                 {
@@ -7478,7 +7543,7 @@ namespace RealmStudio
                 }
             }
 
-            for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.Count - 1; i > 0; i--)
+            for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
                 if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents[i] is MapGrid)
                 {
@@ -7487,7 +7552,7 @@ namespace RealmStudio
                 }
             }
 
-            for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.Count - 1; i > 0; i--)
+            for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
                 if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents[i] is MapGrid)
                 {
@@ -7601,7 +7666,7 @@ namespace RealmStudio
 
         private void ScaleButton_Click(object sender, EventArgs e)
         {
-
+            MapScaleCreatorPanel.Visible = !MapScaleCreatorPanel.Visible;
         }
         #endregion
 

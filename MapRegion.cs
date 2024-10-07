@@ -106,16 +106,25 @@ namespace RealmStudio
 
             if (IsSelected)
             {
-                SKCanvas? overlayCanvas = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.REGIONOVERLAYLAYER).LayerSurface?.Canvas;
+                MapLayer overlayLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.REGIONOVERLAYLAYER);
 
-                if (overlayCanvas != null && BoundaryPath != null)
+                if (BoundaryPath != null)
                 {
+                    overlayLayer.RenderPicture?.Dispose();
+                    overlayLayer.RenderPicture = null;
+
+                    using var regionOverlayRecorder = new SKPictureRecorder();
+                    SKRect clippingBounds = new(0, 0, Map.MapWidth, Map.MapHeight);
+
+                    // Start recording 
+                    regionOverlayRecorder.BeginRecording(clippingBounds);
+
                     // draw an outline around the region to show that it is selected
                     BoundaryPath.GetTightBounds(out SKRect boundRect);
                     using SKPath boundsPath = new();
                     boundsPath.AddRect(boundRect);
 
-                    overlayCanvas.DrawPath(boundsPath, PaintObjects.RegionSelectPaint);
+                    regionOverlayRecorder.RecordingCanvas.DrawPath(boundsPath, PaintObjects.RegionSelectPaint);
 
                     // draw dots on region vertices
 
@@ -146,9 +155,11 @@ namespace RealmStudio
 
                         if (renderPoint)
                         {
-                            p.Render(overlayCanvas);
+                            p.Render(regionOverlayRecorder.RecordingCanvas);
                         }
                     }
+
+                    overlayLayer.RenderPicture = regionOverlayRecorder.EndRecording();
                 }
             }
         }

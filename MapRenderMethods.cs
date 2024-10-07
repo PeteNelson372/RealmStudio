@@ -31,16 +31,8 @@ namespace RealmStudio
         internal static void ClearSelectionLayer(RealmStudioMap map)
         {
             MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
-            selectionLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
-        }
-
-        internal static void CreateMapLayers(RealmStudioMap map, GRContext grContext)
-        {
-            foreach (MapLayer layer in map.MapLayers)
-            {
-                // if the surfaces haven't been created, create them
-                layer.LayerSurface ??= SKSurface.Create(grContext, false, new SKImageInfo(map.MapWidth, map.MapHeight));
-            }
+            selectionLayer.RenderPicture?.Dispose();
+            selectionLayer.RenderPicture = null;
         }
 
         internal static void RenderBackground(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
@@ -90,7 +82,11 @@ namespace RealmStudio
         {
             // paint cursor layer
             MapLayer cursorLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.CURSORLAYER);
-            e.Surface.Canvas.DrawSurface(cursorLayer.LayerSurface, scrollPoint);
+
+            if (cursorLayer.RenderPicture != null)
+            {
+                e.Surface.Canvas.DrawPicture(cursorLayer.RenderPicture, scrollPoint);
+            }
         }
 
         internal static void RenderDrawing(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
@@ -248,116 +244,148 @@ namespace RealmStudio
         {
             MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
 
-            // TODO: change to use picture recorder for rendering
-            // path lower layer
             MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
 
-            if (pathLowerLayer.LayerSurface != null)
+            selectionLayer.RenderPicture?.Dispose();
+            selectionLayer.RenderPicture = null;
+
+            // Create an SKPictureRecorder to record the Canvas Draw commands to an SKPicture
+            using var recorder = new SKPictureRecorder();
+            SKRect clippingBounds = new(0, 0, map.MapWidth, map.MapHeight);
+
+            using var selectionRecorder = new SKPictureRecorder();
+
+            // Start recording 
+            recorder.BeginRecording(clippingBounds);
+
+            if (currentPath != null && !currentPath.DrawOverSymbols)
             {
-                pathLowerLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+                currentPath.Render(recorder.RecordingCanvas);
+            }
 
-                if (currentPath != null && !currentPath.DrawOverSymbols)
+            foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+            {
+                mp.Render(recorder.RecordingCanvas);
+
+                if (mp.IsSelected)
                 {
-                    currentPath.Render(pathLowerLayer.LayerSurface.Canvas);
-                }
-
-                foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-                {
-                    mp.Render(pathLowerLayer.LayerSurface.Canvas);
-
-                    if (mp.IsSelected)
+                    if (mp.BoundaryPath != null)
                     {
-                        if (mp.BoundaryPath != null)
-                        {
-                            // draw an outline around the path to show that it is selected
-                            mp.BoundaryPath.GetTightBounds(out SKRect boundRect);
-                            using SKPath boundsPath = new();
-                            boundsPath.AddRect(boundRect);
+                        // draw an outline around the path to show that it is selected
+                        mp.BoundaryPath.GetTightBounds(out SKRect boundRect);
+                        using SKPath boundsPath = new();
+                        boundsPath.AddRect(boundRect);
 
-                            selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.MapPathSelectPaint);
-                        }
-                    }
-
-                    if (mp.ShowPathPoints)
-                    {
-                        List<MapPathPoint> controlPoints = mp.GetMapPathControlPoints();
-
-                        foreach (MapPathPoint p in controlPoints)
-                        {
-                            if (p.IsSelected)
-                            {
-                                pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathSelectedControlPointPaint);
-                            }
-                            else
-                            {
-                                pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointPaint);
-                            }
-
-                            pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointOutlinePaint);
-                        }
+                        selectionRecorder.BeginRecording(clippingBounds);
+                        selectionRecorder.RecordingCanvas.DrawPath(boundsPath, PaintObjects.MapPathSelectPaint);
+                        selectionLayer.RenderPicture = selectionRecorder.EndRecording();
                     }
                 }
 
-                e.Surface.Canvas.DrawSurface(pathLowerLayer.LayerSurface, scrollPoint);
+                if (mp.ShowPathPoints)
+                {
+                    List<MapPathPoint> controlPoints = mp.GetMapPathControlPoints();
+
+                    foreach (MapPathPoint p in controlPoints)
+                    {
+                        if (p.IsSelected)
+                        {
+                            recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathSelectedControlPointPaint);
+                        }
+                        else
+                        {
+                            recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointPaint);
+                        }
+
+                        recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointOutlinePaint);
+                    }
+                }
+            }
+
+            pathLowerLayer.RenderPicture = recorder.EndRecording();
+
+            // paint the path lower layer
+            e.Surface.Canvas.DrawPicture(pathLowerLayer.RenderPicture, scrollPoint);
+
+            if (selectionLayer.RenderPicture != null)
+            {
+                // paint selection layer
+                e.Surface.Canvas.DrawPicture(selectionLayer.RenderPicture, scrollPoint);
             }
         }
 
         internal static void RenderUpperMapPaths(RealmStudioMap map, MapPath? currentPath, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
         {
+            // path upper layer
             MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
 
-            // TODO: change to use picture recorder for rendering
             MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER);
 
-            // path upper layer
+            selectionLayer.RenderPicture?.Dispose();
+            selectionLayer.RenderPicture = null;
 
-            if (pathUpperLayer.LayerSurface != null)
+            // Create an SKPictureRecorder to record the Canvas Draw commands to an SKPicture
+            using var recorder = new SKPictureRecorder();
+            SKRect clippingBounds = new(0, 0, map.MapWidth, map.MapHeight);
+
+            using var selectionRecorder = new SKPictureRecorder();
+
+            // Start recording 
+            recorder.BeginRecording(clippingBounds);
+
+            if (currentPath != null && currentPath.DrawOverSymbols)
             {
-                pathUpperLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+                currentPath.Render(recorder.RecordingCanvas);
+            }
 
-                if (currentPath != null && currentPath.DrawOverSymbols)
+            foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+            {
+                mp.Render(recorder.RecordingCanvas);
+
+                if (mp.IsSelected)
                 {
-                    currentPath.Render(pathUpperLayer.LayerSurface.Canvas);
-                }
-
-                foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-                {
-                    mp.Render(pathUpperLayer.LayerSurface.Canvas);
-
-                    if (mp.IsSelected)
+                    if (mp.BoundaryPath != null)
                     {
-                        if (mp.BoundaryPath != null)
-                        {
-                            // draw an outline around the path to show that it is selected
-                            mp.BoundaryPath.GetTightBounds(out SKRect boundRect);
-                            using SKPath boundsPath = new();
-                            boundsPath.AddRect(boundRect);
+                        // draw an outline around the path to show that it is selected
+                        mp.BoundaryPath.GetTightBounds(out SKRect boundRect);
+                        using SKPath boundsPath = new();
+                        boundsPath.AddRect(boundRect);
 
-                            selectionLayer.LayerSurface?.Canvas.DrawPath(boundsPath, PaintObjects.MapPathSelectPaint);
-                        }
-                    }
-
-                    if (mp.ShowPathPoints)
-                    {
-                        List<MapPathPoint> controlPoints = mp.GetMapPathControlPoints();
-
-                        foreach (MapPathPoint p in controlPoints)
-                        {
-                            if (p.IsSelected)
-                            {
-                                pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathSelectedControlPointPaint);
-                            }
-                            else
-                            {
-                                pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointPaint);
-                            }
-
-                            pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointOutlinePaint);
-                        }
+                        selectionRecorder.BeginRecording(clippingBounds);
+                        selectionRecorder.RecordingCanvas.DrawPath(boundsPath, PaintObjects.MapPathSelectPaint);
+                        selectionLayer.RenderPicture = selectionRecorder.EndRecording();
                     }
                 }
 
-                e.Surface.Canvas.DrawSurface(pathUpperLayer.LayerSurface, scrollPoint);
+                if (mp.ShowPathPoints)
+                {
+                    List<MapPathPoint> controlPoints = mp.GetMapPathControlPoints();
+
+                    foreach (MapPathPoint p in controlPoints)
+                    {
+                        if (p.IsSelected)
+                        {
+                            recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathSelectedControlPointPaint);
+                        }
+                        else
+                        {
+                            recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointPaint);
+                        }
+
+                        recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointOutlinePaint);
+                    }
+                }
+            }
+
+            pathUpperLayer.RenderPicture = recorder.EndRecording();
+
+            // paint the path upper layer
+            e.Surface.Canvas.DrawPicture(pathUpperLayer.RenderPicture, scrollPoint);
+
+            if (selectionLayer.RenderPicture != null)
+            {
+                // paint selection layer
+                e.Surface.Canvas.DrawPicture(selectionLayer.RenderPicture, scrollPoint);
             }
         }
 
@@ -382,32 +410,37 @@ namespace RealmStudio
 
         internal static void RenderOcean(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
         {
-            // render ocean texture layer
+            // render ocean layer2
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OCEANTEXTURELAYER);
-            if (oceanTextureLayer.LayerSurface != null)
-            {
-                oceanTextureLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                oceanTextureLayer.Render(oceanTextureLayer.LayerSurface.Canvas);
-                e.Surface.Canvas.DrawSurface(oceanTextureLayer.LayerSurface, scrollPoint);
-            }
+            MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
+            MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OCEANDRAWINGLAYER);
+
+            SKRect clippingBounds = new(0, 0, map.MapWidth, map.MapHeight);
+
+            using var oceanTextureRecorder = new SKPictureRecorder();
+            using var oceanTextureOverlayRecorder = new SKPictureRecorder();
+            using var oceanDrawingRecorder = new SKPictureRecorder();
+
+            oceanTextureRecorder.BeginRecording(clippingBounds);
+            oceanTextureOverlayRecorder.BeginRecording(clippingBounds);
+            oceanDrawingRecorder.BeginRecording(clippingBounds);
+
+            // ocean texture layer
+            oceanTextureLayer.Render(oceanTextureRecorder.RecordingCanvas);
+            oceanTextureLayer.RenderPicture = oceanTextureRecorder.EndRecording();
 
             // render ocean texture overlay layer (ocean color fill)
-            MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
-            if (oceanTextureOverlayLayer.LayerSurface != null)
-            {
-                oceanTextureOverlayLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                oceanTextureOverlayLayer.Render(oceanTextureOverlayLayer.LayerSurface.Canvas);
-                e.Surface.Canvas.DrawSurface(oceanTextureOverlayLayer.LayerSurface, scrollPoint);
-            }
+            oceanTextureOverlayLayer.Render(oceanTextureOverlayRecorder.RecordingCanvas);
+            oceanTextureOverlayLayer.RenderPicture = oceanTextureOverlayRecorder.EndRecording();
 
             // render ocean drawing layer (user-painted color)
-            MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OCEANDRAWINGLAYER);
-            if (oceanDrawingLayer.LayerSurface != null)
-            {
-                oceanDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                oceanDrawingLayer.Render(oceanDrawingLayer.LayerSurface.Canvas);
-                e.Surface.Canvas.DrawSurface(oceanDrawingLayer.LayerSurface, scrollPoint);
-            }
+            oceanDrawingLayer.Render(oceanDrawingRecorder.RecordingCanvas);
+            oceanDrawingLayer.RenderPicture = oceanDrawingRecorder.EndRecording();
+
+            e.Surface.Canvas.DrawPicture(oceanTextureLayer.RenderPicture, scrollPoint);
+            e.Surface.Canvas.DrawPicture(oceanTextureOverlayLayer.RenderPicture, scrollPoint);
+            e.Surface.Canvas.DrawPicture(oceanDrawingLayer.RenderPicture, scrollPoint);
+
         }
 
         internal static void RenderFrame(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
@@ -457,9 +490,14 @@ namespace RealmStudio
             e.Surface.Canvas.DrawPicture(regionLayer.RenderPicture, scrollPoint);
 
             MapLayer regionOverlayLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONOVERLAYLAYER);
-            e.Surface.Canvas.DrawSurface(regionOverlayLayer.LayerSurface, scrollPoint);
 
-            regionOverlayLayer.LayerSurface?.Canvas.Clear();
+            if (regionOverlayLayer.RenderPicture != null)
+            {
+                e.Surface.Canvas.DrawPicture(regionOverlayLayer.RenderPicture, scrollPoint);
+                regionOverlayLayer.RenderPicture.Dispose();
+                regionOverlayLayer.RenderPicture = null;
+            }
+
         }
 
         internal static void RenderSelections(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
@@ -649,7 +687,11 @@ namespace RealmStudio
         internal static void RenderWorkLayer(RealmStudioMap map, SKPaintGLSurfaceEventArgs e, SKPoint scrollPoint)
         {
             MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
-            e.Surface.Canvas.DrawSurface(workLayer.LayerSurface, scrollPoint);
+
+            if (workLayer.RenderPicture != null)
+            {
+                e.Surface.Canvas.DrawPicture(workLayer.RenderPicture, scrollPoint);
+            }
         }
     }
 }

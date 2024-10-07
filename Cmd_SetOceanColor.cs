@@ -55,8 +55,6 @@ namespace RealmStudio
             {
                 oceanTextureOverlayLayer.MapLayerComponents.Remove(OceanColor);
             }
-
-            oceanTextureOverlayLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
         }
     }
 }

@@ -21,8 +21,6 @@
 * contact@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
-
 namespace RealmStudio
 {
     internal class Cmd_ClearOceanTexture(RealmStudioMap map, MapImage textureBitmap) : IMapOperation
@@ -38,8 +36,6 @@ namespace RealmStudio
             {
                 oceanTextureLayer.MapLayerComponents.Remove(LayerTexture);
             }
-
-            oceanTextureLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
         }
 
         public void UndoOperation()

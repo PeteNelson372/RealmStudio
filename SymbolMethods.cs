@@ -244,19 +244,17 @@ namespace RealmStudio
             float exclusionRadius = ((rotatedAndScaledBitmap.Width + rotatedAndScaledBitmap.Height) / 2.0F) / placementDensity;
 
             MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER);
-            if (symbolLayer.LayerSurface != null)
-            {
-                for (int i = 0; i < symbolLayer.MapLayerComponents.Count; i++)
-                {
-                    MapSymbol symbol = (MapSymbol)symbolLayer.MapLayerComponents[i];
-                    SKPoint symbolPoint = new(symbol.X, symbol.Y);
-                    bool placeAllowed = !DrawingMethods.PointInCircle(exclusionRadius, symbolPoint, cursorPoint);
 
-                    if (!placeAllowed)
-                    {
-                        canPlace = false;
-                        break;
-                    }
+            for (int i = 0; i < symbolLayer.MapLayerComponents.Count; i++)
+            {
+                MapSymbol symbol = (MapSymbol)symbolLayer.MapLayerComponents[i];
+                SKPoint symbolPoint = new(symbol.X, symbol.Y);
+                bool placeAllowed = !DrawingMethods.PointInCircle(exclusionRadius, symbolPoint, cursorPoint);
+
+                if (!placeAllowed)
+                {
+                    canPlace = false;
+                    break;
                 }
             }
 

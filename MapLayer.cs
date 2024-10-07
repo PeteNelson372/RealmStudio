@@ -41,9 +41,6 @@ namespace RealmStudio
         public ushort MapLayerOrder { get => mapLayerOrder; set => mapLayerOrder = value; }
 
         [XmlIgnore]
-        public SKSurface? LayerSurface { get; set; } = null;
-
-        [XmlIgnore]
         public SKPicture? RenderPicture { get; set; } = null;
 
         [XmlIgnore]

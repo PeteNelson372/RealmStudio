@@ -238,13 +238,7 @@ namespace RealmStudio
 
         public static void DisposeMap(RealmStudioMap map)
         {
-            if (map != null)
-            {
-                foreach (MapLayer ml in map.MapLayers)
-                {
-                    ml.LayerSurface?.Dispose();
-                }
-            }
+
         }
 
     }
