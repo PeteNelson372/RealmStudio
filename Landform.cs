@@ -30,7 +30,7 @@ using Extensions = SkiaSharp.Views.Desktop.Extensions;
 
 namespace RealmStudio
 {
-    class Landform : MapComponent, IXmlSerializable
+    public class Landform : MapComponent, IXmlSerializable
     {
         public string LandformName { get; set; } = string.Empty;
 
@@ -166,7 +166,7 @@ namespace RealmStudio
         public SKShader? LineHatchBitmapShader { get; set; } = null;
 
         public MapTexture? LandformTexture { get; set; } = null;
-        public Color LandformOutlineColor { get; set; } = ColorTranslator.FromHtml("#3D3728");
+        public Color LandformOutlineColor { get; set; } = Color.FromArgb(255, 62, 55, 40);
         public Color LandformFillColor { get; set; } = ColorTranslator.FromHtml("#AC964F");
         public int LandformOutlineWidth { get; set; } = 2;
         public GradientDirectionEnum ShorelineStyle { get; set; } = GradientDirectionEnum.None;
@@ -321,7 +321,7 @@ namespace RealmStudio
         {
             double colorAlphaStep = 1.0 / (256.0 / 8.0);
             CoastlineFillPaint.StrokeWidth = CoastlineEffectDistance / 8.0F;
-         
+
             // outer path 1
             CoastlineFillPaint.Shader = SKShader.CreateCompose(
                 SKShader.CreateColor(Extensions.ToSKColor(CoastlineColor)),
@@ -707,7 +707,7 @@ namespace RealmStudio
             double colorAlphaStep = 1.0 / (256.0 / 8.0);
 
             Color landformColor = Color.FromArgb((int)(LandformFillColor.A * (4 * colorAlphaStep)), LandformFillColor);
-            
+
             LandformGradientPaint.BlendMode = SKBlendMode.SrcATop;
             LandformGradientPaint.Color = landformColor.ToSKColor();
             LandformGradientPaint.StrokeWidth = CoastlineEffectDistance / 8;

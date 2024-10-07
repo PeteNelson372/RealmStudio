@@ -3881,9 +3881,8 @@ namespace RealmStudio
 
                     if (selectedLandform != null)
                     {
-                        //LandformData landformData = new();
-                        //landformData.SetMapLandform(selectedLandform);
-                        //landformData.ShowDialog(this);
+                        LandformInfo landformInfo = new(CURRENT_MAP, selectedLandform, SKGLRenderControl);
+                        landformInfo.ShowDialog(this);
                     }
                     break;
                 case DrawingModeEnum.WaterFeatureSelect:
@@ -4355,7 +4354,7 @@ namespace RealmStudio
 
         private void VignetteStrengthTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(VignetteStrengthTrack.Value.ToString(), VignetteStrengthTrack, new Point(VignetteStrengthTrack.Right - 42, VignetteStrengthTrack.Top - 58), 2000);
+            TOOLTIP.Show(VignetteStrengthTrack.Value.ToString(), VignetteGroupBox, new Point(VignetteStrengthTrack.Right - 30, VignetteStrengthTrack.Top - 20), 2000);
 
             for (int i = 0; i < MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.VIGNETTELAYER).MapLayerComponents.Count; i++)
             {
@@ -4396,7 +4395,7 @@ namespace RealmStudio
         #region Ocean Tab Event Handlers
         private void OceanTextureOpacityTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(OceanTextureOpacityTrack.Value.ToString(), OceanTextureGroup, new Point(OceanTextureGroup.Left + 120, OceanTextureGroup.Bottom - 90), 2000);
+            TOOLTIP.Show(OceanTextureOpacityTrack.Value.ToString(), OceanTextureGroup, new Point(OceanTextureOpacityTrack.Right - 30, OceanTextureOpacityTrack.Top - 20), 2000);
 
             Bitmap b = new(AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX].TexturePath);
 
@@ -5067,6 +5066,8 @@ namespace RealmStudio
             }
 
             landform.LandformOutlineColor = LandformOutlineColorSelectButton.BackColor;
+
+            landform.LandformFillColor = Color.FromArgb(landform.LandformOutlineColor.A / 4, landform.LandformOutlineColor);
 
             landform.CoastlineColor = CoastlineColorSelectionButton.BackColor;
 

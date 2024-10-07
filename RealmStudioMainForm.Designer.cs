@@ -65,7 +65,7 @@
             label3 = new Label();
             MainTab = new TabControl();
             BackgroundTab = new TabPage();
-            groupBox5 = new GroupBox();
+            VignetteGroupBox = new GroupBox();
             VignetteColorSelectionButton = new FontAwesome.Sharp.IconButton();
             label27 = new Label();
             VignetteStrengthTrack = new TrackBar();
@@ -505,7 +505,7 @@
             OceanToolStrip.SuspendLayout();
             MainTab.SuspendLayout();
             BackgroundTab.SuspendLayout();
-            groupBox5.SuspendLayout();
+            VignetteGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)VignetteStrengthTrack).BeginInit();
             groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)BackgroundTextureBox).BeginInit();
@@ -1167,7 +1167,7 @@
             // BackgroundTab
             // 
             BackgroundTab.BackColor = SystemColors.Control;
-            BackgroundTab.Controls.Add(groupBox5);
+            BackgroundTab.Controls.Add(VignetteGroupBox);
             BackgroundTab.Controls.Add(groupBox4);
             BackgroundTab.Controls.Add(BackgroundToolStrip);
             BackgroundTab.Controls.Add(ShowBaseLayerSwitch);
@@ -1180,20 +1180,20 @@
             BackgroundTab.TabIndex = 0;
             BackgroundTab.Text = "Background";
             // 
-            // groupBox5
+            // VignetteGroupBox
             // 
-            groupBox5.BackColor = Color.Transparent;
-            groupBox5.Controls.Add(VignetteColorSelectionButton);
-            groupBox5.Controls.Add(label27);
-            groupBox5.Controls.Add(VignetteStrengthTrack);
-            groupBox5.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox5.ForeColor = SystemColors.ControlText;
-            groupBox5.Location = new Point(6, 253);
-            groupBox5.Name = "groupBox5";
-            groupBox5.Size = new Size(148, 169);
-            groupBox5.TabIndex = 19;
-            groupBox5.TabStop = false;
-            groupBox5.Text = "Vignette";
+            VignetteGroupBox.BackColor = Color.Transparent;
+            VignetteGroupBox.Controls.Add(VignetteColorSelectionButton);
+            VignetteGroupBox.Controls.Add(label27);
+            VignetteGroupBox.Controls.Add(VignetteStrengthTrack);
+            VignetteGroupBox.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            VignetteGroupBox.ForeColor = SystemColors.ControlText;
+            VignetteGroupBox.Location = new Point(6, 253);
+            VignetteGroupBox.Name = "VignetteGroupBox";
+            VignetteGroupBox.Size = new Size(148, 169);
+            VignetteGroupBox.TabIndex = 19;
+            VignetteGroupBox.TabStop = false;
+            VignetteGroupBox.Text = "Vignette";
             // 
             // VignetteColorSelectionButton
             // 
@@ -1710,7 +1710,7 @@
             // 
             // LandformOutlineColorSelectButton
             // 
-            LandformOutlineColorSelectButton.BackColor = Color.FromArgb(61, 55, 40);
+            LandformOutlineColorSelectButton.BackColor = Color.FromArgb(62, 55, 40);
             LandformOutlineColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             LandformOutlineColorSelectButton.ForeColor = SystemColors.HighlightText;
             LandformOutlineColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
@@ -7437,8 +7437,8 @@
             MainTab.ResumeLayout(false);
             BackgroundTab.ResumeLayout(false);
             BackgroundTab.PerformLayout();
-            groupBox5.ResumeLayout(false);
-            groupBox5.PerformLayout();
+            VignetteGroupBox.ResumeLayout(false);
+            VignetteGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)VignetteStrengthTrack).EndInit();
             groupBox4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)BackgroundTextureBox).EndInit();
@@ -7754,7 +7754,7 @@
         private ToolStripMenuItem ChangeMapSizeMenuItem;
         private ToolStripMenuItem CreateDetailMapMenuItem;
         private ToolStripMenuItem PreferencesMenuItem;
-        private GroupBox groupBox5;
+        private GroupBox VignetteGroupBox;
         private Label label27;
         private TrackBar VignetteStrengthTrack;
         private FontAwesome.Sharp.IconButton VignetteColorSelectionButton;
