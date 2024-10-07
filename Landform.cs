@@ -30,7 +30,7 @@ using Extensions = SkiaSharp.Views.Desktop.Extensions;
 
 namespace RealmStudio
 {
-    public class Landform : MapComponent, IXmlSerializable
+    public class Landform(RealmStudioMap map) : MapComponent, IXmlSerializable
     {
         public string LandformName { get; set; } = string.Empty;
 
@@ -187,36 +187,42 @@ namespace RealmStudio
         *******************************************************************************************************/
         public void RenderCoastline(SKCanvas canvas)
         {
-            if (!string.IsNullOrEmpty(CoastlineStyleName))
+            using SKRegion clipRegion = new SKRegion(new SKRectI(0, 0, map.MapWidth, map.MapHeight));
+            using (new SKAutoCanvasRestore(canvas))
             {
-                switch (CoastlineStyleName)
+                canvas.ClipRegion(clipRegion);
+
+                if (!string.IsNullOrEmpty(CoastlineStyleName))
                 {
-                    case "None":
-                        break;
-                    case "Uniform Band":
-                        DrawUniformBandCoastlineEffect(canvas);
-                        break;
-                    case "Uniform Blend":
-                        DrawUniformBlendCoastlineEffect(canvas);
-                        break;
-                    case "Uniform Outline":
-                        DrawUniformOutlineCoastlineEffect(canvas);
-                        break;
-                    case "Three-Tiered":
-                        DrawThreeTieredCoastlineEffect(canvas);
-                        break;
-                    case "Circular Pattern":
-                        DrawRadialPatternCoastlineEffect(canvas);
-                        break;
-                    case "Dash Pattern":
-                        DrawDashPatternCoastlineEffect(canvas);
-                        break;
-                    case "Hatch Pattern":
-                        DrawHatchPatternCoastlineEffect(canvas);
-                        break;
-                    case "User Defined":
-                        DrawUserDefinedHatchEffect(canvas);
-                        break;
+                    switch (CoastlineStyleName)
+                    {
+                        case "None":
+                            break;
+                        case "Uniform Band":
+                            DrawUniformBandCoastlineEffect(canvas);
+                            break;
+                        case "Uniform Blend":
+                            DrawUniformBlendCoastlineEffect(canvas);
+                            break;
+                        case "Uniform Outline":
+                            DrawUniformOutlineCoastlineEffect(canvas);
+                            break;
+                        case "Three-Tiered":
+                            DrawThreeTieredCoastlineEffect(canvas);
+                            break;
+                        case "Circular Pattern":
+                            DrawRadialPatternCoastlineEffect(canvas);
+                            break;
+                        case "Dash Pattern":
+                            DrawDashPatternCoastlineEffect(canvas);
+                            break;
+                        case "Hatch Pattern":
+                            DrawHatchPatternCoastlineEffect(canvas);
+                            break;
+                        case "User Defined":
+                            DrawUserDefinedHatchEffect(canvas);
+                            break;
+                    }
                 }
             }
         }
@@ -702,48 +708,55 @@ namespace RealmStudio
 
         public void RenderLandform(SKCanvas canvas)
         {
-            canvas.DrawPath(DrawPath, LandformFillPaint);
+            using SKRegion clipRegion = new SKRegion(new SKRectI(0, 0, map.MapWidth, map.MapHeight));
 
-            double colorAlphaStep = 1.0 / (256.0 / 8.0);
+            using (new SKAutoCanvasRestore(canvas))
+            {
+                canvas.ClipRegion(clipRegion);
 
-            Color landformColor = Color.FromArgb((int)(LandformFillColor.A * (4 * colorAlphaStep)), LandformFillColor);
+                canvas.DrawPath(DrawPath, LandformFillPaint);
 
-            LandformGradientPaint.BlendMode = SKBlendMode.SrcATop;
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            LandformGradientPaint.StrokeWidth = CoastlineEffectDistance / 8;
+                double colorAlphaStep = 1.0 / (256.0 / 8.0);
 
-            canvas.DrawPath(InnerPath8, LandformGradientPaint);
+                Color landformColor = Color.FromArgb((int)(LandformFillColor.A * (4 * colorAlphaStep)), LandformFillColor);
 
-            landformColor = Color.FromArgb((int)(LandformFillColor.A * (8 * colorAlphaStep)), LandformFillColor);
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            canvas.DrawPath(InnerPath7, LandformGradientPaint);
+                LandformGradientPaint.BlendMode = SKBlendMode.SrcATop;
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                LandformGradientPaint.StrokeWidth = CoastlineEffectDistance / 8;
 
-            landformColor = Color.FromArgb((int)(LandformFillColor.A * (12 * colorAlphaStep)), LandformFillColor);
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            canvas.DrawPath(InnerPath6, LandformGradientPaint);
+                canvas.DrawPath(InnerPath8, LandformGradientPaint);
 
-            landformColor = Color.FromArgb((int)(LandformFillColor.A * (16 * colorAlphaStep)), LandformFillColor);
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            canvas.DrawPath(InnerPath5, LandformGradientPaint);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (8 * colorAlphaStep)), LandformFillColor);
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                canvas.DrawPath(InnerPath7, LandformGradientPaint);
 
-            landformColor = Color.FromArgb((int)(LandformFillColor.A * (20 * colorAlphaStep)), LandformFillColor);
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            canvas.DrawPath(InnerPath4, LandformGradientPaint);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (12 * colorAlphaStep)), LandformFillColor);
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                canvas.DrawPath(InnerPath6, LandformGradientPaint);
 
-            landformColor = Color.FromArgb((int)(LandformFillColor.A * (24 * colorAlphaStep)), LandformFillColor);
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            canvas.DrawPath(InnerPath3, LandformGradientPaint);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (16 * colorAlphaStep)), LandformFillColor);
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                canvas.DrawPath(InnerPath5, LandformGradientPaint);
 
-            landformColor = Color.FromArgb((int)(LandformFillColor.A * (28 * colorAlphaStep)), LandformFillColor);
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            canvas.DrawPath(InnerPath2, LandformGradientPaint);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (20 * colorAlphaStep)), LandformFillColor);
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                canvas.DrawPath(InnerPath4, LandformGradientPaint);
 
-            landformColor = Color.FromArgb((int)(LandformFillColor.A * (32 * colorAlphaStep)), LandformFillColor);
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            canvas.DrawPath(InnerPath1, LandformGradientPaint);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (24 * colorAlphaStep)), LandformFillColor);
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                canvas.DrawPath(InnerPath3, LandformGradientPaint);
 
-            LandformOutlinePaint.Color = LandformOutlineColor.ToSKColor();
-            canvas.DrawPath(ContourPath, LandformOutlinePaint);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (28 * colorAlphaStep)), LandformFillColor);
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                canvas.DrawPath(InnerPath2, LandformGradientPaint);
+
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (32 * colorAlphaStep)), LandformFillColor);
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                canvas.DrawPath(InnerPath1, LandformGradientPaint);
+
+                LandformOutlinePaint.Color = LandformOutlineColor.ToSKColor();
+                canvas.DrawPath(ContourPath, LandformOutlinePaint);
+            }
         }
 
         #endregion

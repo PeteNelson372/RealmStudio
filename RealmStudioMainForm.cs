@@ -2287,7 +2287,7 @@ namespace RealmStudio
                     {
                         CURRENT_MAP.IsSaved = false;
                         Cursor = Cursors.Cross;
-                        CURRENT_LANDFORM = new();
+                        CURRENT_LANDFORM = new(CURRENT_MAP);
                         SetLandformData(CURRENT_LANDFORM);
                     }
                     break;
@@ -2603,7 +2603,7 @@ namespace RealmStudio
                             // find the closest point to the current point
                             // on the contour path of a coastline;
                             // if the nearest point on the coastline
-                            // is within 20 pixels of the current point,
+                            // is within 5 pixels of the current point,
                             // then set the region point to be the point
                             // on the coastline
                             // then check the *previous* region point; if the previous
@@ -2618,9 +2618,9 @@ namespace RealmStudio
 
                             float currentDistance = float.MaxValue;
 
-
                             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
 
+                            // get the distance from the point the cursor was clicked to the contour points of all landforms
                             foreach (Landform lf in landformLayer.MapLayerComponents.Cast<Landform>())
                             {
                                 for (int i = 0; i < lf.ContourPoints.Count; i++)
@@ -2889,7 +2889,9 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        if (CURRENT_LANDFORM != null)
+                        if (CURRENT_LANDFORM != null
+                            && zoomedScrolledPoint.X > 0 && zoomedScrolledPoint.X < CURRENT_MAP.MapWidth
+                            && zoomedScrolledPoint.Y > 0 && zoomedScrolledPoint.Y < CURRENT_MAP.MapHeight)
                         {
                             CURRENT_LANDFORM.DrawPath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
 
@@ -3222,6 +3224,8 @@ namespace RealmStudio
                                 workCanvas.DrawLine(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint, CURRENT_MAP_REGION.RegionBorderPaint);
                             }
                         }
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.RegionSelect:
@@ -3351,6 +3355,7 @@ namespace RealmStudio
 
                             if (workCanvas != null)
                             {
+                                workCanvas.Clear();
 
                                 if (CURRENT_MAP_REGION.MapRegionPoints.Count > 1)
                                 {

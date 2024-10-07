@@ -4328,7 +4328,7 @@
             RegionHelpRichText.Name = "RegionHelpRichText";
             RegionHelpRichText.ReadOnly = true;
             RegionHelpRichText.ScrollBars = RichTextBoxScrollBars.None;
-            RegionHelpRichText.Size = new Size(189, 410);
+            RegionHelpRichText.Size = new Size(189, 537);
             RegionHelpRichText.TabIndex = 108;
             RegionHelpRichText.Text = resources.GetString("RegionHelpRichText.Text");
             // 
