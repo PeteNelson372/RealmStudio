@@ -25,6 +25,7 @@ using RealmStudio.Properties;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
+using System.Drawing.Text;
 using System.Timers;
 using Control = System.Windows.Forms.Control;
 
@@ -58,12 +59,15 @@ namespace RealmStudio
         private static MapBox? SELECTED_MAP_BOX = null;
         private static PlacedMapBox? SELECTED_PLACED_MAP_BOX = null;
         private static MapLabel? SELECTED_MAP_LABEL = null;
+        private static MapScale? SELECTED_MAP_SCALE = null;
         private static IWaterFeature? SELECTED_WATERFEATURE = null;
         private static ColorPaintBrush SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.SoftBrush;
 
         private static Font SELECTED_LABEL_FONT = new("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
+        private static Font SELECTED_MAP_SCALE_FONT = new("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
 
-        private FontSelectionDialog? FONT_SELECTION_DIALOG = null;
+        private static readonly FontSelection FONT_PANEL_SELECTED_FONT = new();
+        private static FontPanelOpenerEnum FONT_PANEL_OPENER = FontPanelOpenerEnum.NotSet;
 
         private static SymbolTypeEnum SELECTED_SYMBOL_TYPE = SymbolTypeEnum.NotSet;
 
@@ -91,6 +95,8 @@ namespace RealmStudio
         private static readonly ToolTip TOOLTIP = new();
 
         private TextBox? LABEL_TEXT_BOX;
+
+        NameGeneratorConfiguration NAME_GENERATOR_CONFIG = new NameGeneratorConfiguration();
 
         private static bool AUTOSAVE = true;
         private static bool SYMBOL_SCALE_LOCKED = false;
@@ -146,6 +152,8 @@ namespace RealmStudio
                 int assetCount = AssetManager.LoadAllAssets();
 
                 PopulateControlsWithAssets(assetCount);
+                PopulateFontPanelUI();
+                LoadNameGeneratorConfigurationDialog();
 
                 LogoPictureBox.Hide();
                 SKGLRenderControl.Show();
@@ -438,6 +446,23 @@ namespace RealmStudio
             SKGLRenderControl.Invalidate();
         }
 
+        void NameGenerator_NameGenerated(object? sender, EventArgs e)
+        {
+            if (sender is NameGeneratorConfiguration ngc)
+            {
+                string selectedName = ngc.SelectedName;
+
+                if (CREATING_LABEL && !string.IsNullOrEmpty(selectedName))
+                {
+                    if (LABEL_TEXT_BOX != null && !LABEL_TEXT_BOX.IsDisposed)
+                    {
+                        LABEL_TEXT_BOX.Text = selectedName;
+                        LABEL_TEXT_BOX.Refresh();
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region Main Menu Event Handlers
@@ -559,6 +584,109 @@ namespace RealmStudio
 
         }
 
+        private void ExportMapMenuItem_Click(object sender, EventArgs e)
+        {
+            // render the map for export
+            using SKBitmap exportBitmap = new(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+            using SKCanvas renderCanvas = new(exportBitmap);
+
+            SKPoint zeroPoint = new(0, 0);
+
+            MapRenderMethods.RenderBackground(CURRENT_MAP, renderCanvas, zeroPoint);
+
+            MapRenderMethods.RenderOcean(CURRENT_MAP, renderCanvas, zeroPoint);
+
+            MapRenderMethods.RenderWindroses(CURRENT_MAP, CURRENT_WINDROSE, renderCanvas, zeroPoint);
+
+            // lower grid layer (above ocean)
+            MapRenderMethods.RenderLowerGrid(CURRENT_MAP, renderCanvas, zeroPoint);
+
+            MapRenderMethods.RenderLandforms(CURRENT_MAP, CURRENT_LANDFORM, renderCanvas, zeroPoint);
+
+            MapRenderMethods.RenderWaterFeatures(CURRENT_MAP, CURRENT_WATERFEATURE, CURRENT_RIVER, renderCanvas, zeroPoint);
+
+            // upper grid layer (above water features)
+            MapRenderMethods.RenderUpperGrid(CURRENT_MAP, renderCanvas, zeroPoint);
+
+            MapRenderMethods.RenderLowerMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, renderCanvas, zeroPoint);
+
+            MapRenderMethods.RenderSymbols(CURRENT_MAP, renderCanvas, zeroPoint);
+
+            MapRenderMethods.RenderUpperMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, renderCanvas, zeroPoint);
+
+            // region and region overlay layers
+            MapRenderMethods.RenderRegions(CURRENT_MAP, renderCanvas, zeroPoint);
+
+            // default grid layer
+            MapRenderMethods.RenderDefaultGrid(CURRENT_MAP, renderCanvas, zeroPoint);
+
+            // box layer
+            MapRenderMethods.RenderBoxes(CURRENT_MAP, renderCanvas, zeroPoint);
+
+            // label layer
+            MapRenderMethods.RenderLabels(CURRENT_MAP, renderCanvas, zeroPoint);
+
+            // overlay layer (map scale)
+            MapRenderMethods.RenderOverlays(CURRENT_MAP, renderCanvas, zeroPoint);
+
+            // render frame
+            MapRenderMethods.RenderFrame(CURRENT_MAP, renderCanvas, zeroPoint);
+
+            // measure layer
+            MapRenderMethods.RenderMeasures(CURRENT_MAP, renderCanvas, zeroPoint);
+
+            // TODO: drawing layer
+            MapRenderMethods.RenderDrawing(CURRENT_MAP, renderCanvas, zeroPoint);
+
+            MapRenderMethods.RenderVignette(CURRENT_MAP, renderCanvas, zeroPoint);
+
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            // export the map as a PNG, JPG, or other graphics format
+            SaveFileDialog ofd = new()
+            {
+                Title = "Export Map",
+                DefaultExt = "png",
+                RestoreDirectory = true,
+                ShowHelp = true,
+                Filter = "",
+                AddExtension = true,
+                CheckPathExists = true,
+                ShowHiddenFiles = false,
+                ValidateNames = true,
+            };
+
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+            string sep = string.Empty;
+
+            foreach (var c in codecs)
+            {
+                string codecName = c.CodecName.Substring(8).Replace("Codec", "Files").Trim();
+
+                ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLower());
+                sep = "|";
+            }
+
+            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
+
+            DialogResult result = ofd.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                string filename = ofd.FileName;
+
+                try
+                {
+                    exportBitmap.ToBitmap().Save(filename);
+                    MessageBox.Show("Map exported to " + ofd.FileName, "Map Exported", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+                catch
+                {
+                    MessageBox.Show("Failed to export map to " + ofd.FileName, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+            }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
         private void PrintToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -670,6 +798,11 @@ namespace RealmStudio
         private void PreferencesMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void NameGeneratorConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NAME_GENERATOR_CONFIG.Show();
         }
 
         private void HelpContentsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -897,6 +1030,37 @@ namespace RealmStudio
             {
                 ThemeFilter tf = new();
                 ApplyTheme(AssetManager.CURRENT_THEME, tf);
+            }
+        }
+
+        public void LoadNameGeneratorConfigurationDialog()
+        {
+            NAME_GENERATOR_CONFIG.NameGenerated += new EventHandler(NameGenerator_NameGenerated);
+
+            NAME_GENERATOR_CONFIG.NameGeneratorsListBox.Items.Clear();
+
+            foreach (string nameGeneratorName in MapToolMethods.NameGeneratorNames)
+            {
+                NAME_GENERATOR_CONFIG.NameGeneratorsListBox.Items.Add(nameGeneratorName);
+                NAME_GENERATOR_CONFIG.NameGeneratorsListBox.SetItemChecked(
+                    NAME_GENERATOR_CONFIG.NameGeneratorsListBox.Items.Count - 1, true);
+            }
+
+            foreach (string nameBaseName in MapToolMethods.NameBaseNames)
+            {
+                NAME_GENERATOR_CONFIG.NamebasesListBox.Items.Add(nameBaseName);
+                NAME_GENERATOR_CONFIG.NamebasesListBox.SetItemChecked(
+                    NAME_GENERATOR_CONFIG.NamebasesListBox.Items.Count - 1, true);
+            }
+
+            foreach (string languageName in MapToolMethods.NameLanguages)
+            {
+                NAME_GENERATOR_CONFIG.LanguagesListBox.Items.Add(languageName);
+            }
+
+            for (int i = 0; i < NAME_GENERATOR_CONFIG.LanguagesListBox.Items.Count; i++)
+            {
+                NAME_GENERATOR_CONFIG.LanguagesListBox.SetItemChecked(i, true);
             }
         }
 
@@ -1318,6 +1482,236 @@ namespace RealmStudio
             }
 
             return result;
+        }
+
+        #endregion
+
+        #region Font Panel Methods
+
+        private void PopulateFontPanelUI()
+        {
+            InstalledFontCollection installedFontCollection = new();
+
+            FontFamilyCombo.DrawItem += FontFamilyCombo_DrawItem;
+            FontFamilyCombo.DisplayMember = "Name";
+
+            // Get the array of FontFamily objects.
+            foreach (var t in installedFontCollection.Families.Where(t => t.IsStyleAvailable(FontStyle.Regular)))
+            {
+                FontFamilyCombo.Items.Add(new Font(t, 12));
+            }
+
+            int fontIndex = 0;
+
+            fontIndex = FontFamilyCombo.Items.IndexOf(FONT_PANEL_SELECTED_FONT.SelectedFont);
+
+            if (FontFamilyCombo.Items != null && fontIndex < 0)
+            {
+                // find by name
+                for (int i = 0; i < FontFamilyCombo.Items?.Count; i++)
+                {
+                    Font? f = FontFamilyCombo.Items[i] as Font;
+
+                    string? fontName = f?.Name;
+
+                    if (!string.IsNullOrEmpty(fontName) && fontName == FONT_PANEL_SELECTED_FONT.SelectedFont.Name)
+                    {
+                        fontIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            FontFamilyCombo.SelectedIndex = (fontIndex >= 0) ? fontIndex : 0;
+
+            FontSizeCombo.SelectedIndex = 7; // 12 points
+
+            SetFont();
+            SetExampleText();
+        }
+
+        private void SetFont()
+        {
+            Font? selectedFont = (Font?)FontFamilyCombo.Items[FontFamilyCombo.SelectedIndex];
+
+            if (selectedFont != null)
+            {
+                FontFamily ff = selectedFont.FontFamily;
+
+                if (FontSizeCombo.SelectedIndex >= 0)
+                {
+                    string? selectedFontSize = (string?)FontSizeCombo.Items[FontSizeCombo.SelectedIndex];
+
+                    if (float.TryParse(selectedFontSize, out float fontSize))
+                    {
+                        fontSize *= 1.33F;
+
+                        FontStyle fs = FontStyle.Regular;
+
+                        if (FONT_PANEL_SELECTED_FONT.IsBold)
+                        {
+                            fs = fs | FontStyle.Bold;
+                        }
+
+                        if (FONT_PANEL_SELECTED_FONT.IsItalic)
+                        {
+                            fs = fs | FontStyle.Italic;
+                        }
+
+                        try
+                        {
+                            FONT_PANEL_SELECTED_FONT.SelectedFont = new Font(ff, fontSize, fs, GraphicsUnit.Point);
+                        }
+                        catch { }
+                    }
+                }
+            }
+        }
+
+        private void SetExampleText()
+        {
+            ExampleTextLabel.Font = FONT_PANEL_SELECTED_FONT.SelectedFont;
+            ExampleTextLabel.Text = "The quick brown fox";
+        }
+
+        #endregion
+
+        #region Font Panel Event Handlers
+
+        private void FontFamilyCombo_DrawItem(object? sender, DrawItemEventArgs e)
+        {
+            ComboBox? comboBox = (ComboBox?)sender;
+
+            if (comboBox != null)
+            {
+                Font? font = (Font?)comboBox.Items[e.Index];
+
+                if (font != null)
+                {
+                    e.DrawBackground();
+                    e.Graphics.DrawString(font.Name, font, Brushes.Black, e.Bounds.X, e.Bounds.Y);
+                }
+            }
+        }
+
+        private void FontFamilyCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (FontFamilyCombo.SelectedIndex >= 0)
+            {
+                Font? selectedFont = (Font?)FontFamilyCombo.Items[FontFamilyCombo.SelectedIndex];
+
+                if (selectedFont != null)
+                {
+                    FontFamilyCombo.Text = selectedFont.Name;
+
+                    SetFont();
+                    SetExampleText();
+                }
+            }
+        }
+
+        private void FontSizeCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetFont();
+            SetExampleText();
+        }
+
+        private void IncreaseFontSizeButton_Click(object sender, EventArgs e)
+        {
+            int sizeIndex = FontSizeCombo.SelectedIndex;
+
+            if (sizeIndex < FontSizeCombo.Items.Count - 1)
+            {
+                sizeIndex++;
+                FontSizeCombo.SelectedIndex = sizeIndex;
+            }
+        }
+
+        private void DecreaseFontSizeButton_Click(object sender, EventArgs e)
+        {
+            int sizeIndex = FontSizeCombo.SelectedIndex;
+
+            if (sizeIndex > 0)
+            {
+                sizeIndex--;
+                FontSizeCombo.SelectedIndex = sizeIndex;
+            }
+        }
+
+        private void SetBoldFontButton_Click(object sender, EventArgs e)
+        {
+            FONT_PANEL_SELECTED_FONT.IsBold = !FONT_PANEL_SELECTED_FONT.IsBold;
+
+            if (FONT_PANEL_SELECTED_FONT.IsBold)
+            {
+                SetBoldFontButton.BackColor = ColorTranslator.FromHtml("#D2F1C1");
+            }
+            else
+            {
+                SetBoldFontButton.BackColor = Color.FromArgb(223, 219, 210);
+            }
+
+            SetFont();
+            SetExampleText();
+        }
+
+        private void SetItalicFontButton_Click(object sender, EventArgs e)
+        {
+            FONT_PANEL_SELECTED_FONT.IsItalic = !FONT_PANEL_SELECTED_FONT.IsItalic;
+
+            if (FONT_PANEL_SELECTED_FONT.IsItalic)
+            {
+                SetItalicFontButton.BackColor = ColorTranslator.FromHtml("#D2F1C1");
+            }
+            else
+            {
+                SetItalicFontButton.BackColor = Color.FromArgb(223, 219, 210);
+            }
+
+            SetFont();
+            SetExampleText();
+        }
+
+        private void FontPanelOKButton_Click(object sender, EventArgs e)
+        {
+            switch (FONT_PANEL_OPENER)
+            {
+                case FontPanelOpenerEnum.ScaleFontButton:
+                    {
+                        SELECTED_MAP_SCALE_FONT = FONT_PANEL_SELECTED_FONT.SelectedFont;
+                    }
+                    break;
+                case FontPanelOpenerEnum.LabelFontButton:
+                    {
+                        SelectLabelFontButton.Font = new Font(FONT_PANEL_SELECTED_FONT.SelectedFont.FontFamily, 12);
+                        SelectLabelFontButton.Refresh();
+
+                        SELECTED_LABEL_FONT = FONT_PANEL_SELECTED_FONT.SelectedFont;
+
+                        if (SELECTED_MAP_LABEL != null)
+                        {
+                            Color labelColor = FontColorSelectButton.BackColor;
+                            Color outlineColor = OutlineColorSelectButton.BackColor;
+                            float outlineWidth = OutlineWidthTrack.Value / 100F;
+                            Color glowColor = GlowColorSelectButton.BackColor;
+                            int glowStrength = GlowStrengthTrack.Value;
+
+                            Cmd_ChangeLabelAttributes cmd = new(SELECTED_MAP_LABEL, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, SELECTED_LABEL_FONT);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            SKGLRenderControl.Invalidate();
+                        }
+                    }
+                    break;
+                default:
+                    {
+
+                    }
+                    break;
+            }
+
+            FontSelectionPanel.Visible = false;
         }
 
         #endregion
@@ -1881,71 +2275,75 @@ namespace RealmStudio
             // to improve performance of rendering? (rendering when many (1000's) of symbols
             // have been added is slow)
 
+            SKCanvas renderCanvas = e.Surface.Canvas;
 
             // handle zoom-in and zoom-out (TODO: zoom in and out from center of map - how?)
-            e.Surface.Canvas.Scale(DrawingZoom);
+            renderCanvas.Scale(DrawingZoom);
 
             // paint the SKGLRenderControl surface, compositing the surfaces from all of the layers
-            e.Surface.Canvas.Clear(SKColors.Black);
+            renderCanvas.Clear(SKColors.Black);
 
             // The order that the layers are rendered here matters;
             // each layer has to be rendered separately in the correct order
             MapRenderMethods.ClearSelectionLayer(CURRENT_MAP);
 
-            MapRenderMethods.RenderBackground(CURRENT_MAP, e, ScrollPoint);
+            MapRenderMethods.RenderBackground(CURRENT_MAP, renderCanvas, ScrollPoint);
 
-            MapRenderMethods.RenderOcean(CURRENT_MAP, e, ScrollPoint);
+            MapRenderMethods.RenderOcean(CURRENT_MAP, renderCanvas, ScrollPoint);
 
-            MapRenderMethods.RenderWindroses(CURRENT_MAP, CURRENT_WINDROSE, e, ScrollPoint);
+            MapRenderMethods.RenderWindroses(CURRENT_MAP, CURRENT_WINDROSE, renderCanvas, ScrollPoint);
 
             // lower grid layer (above ocean)
-            MapRenderMethods.RenderLowerGrid(CURRENT_MAP, e, ScrollPoint);
+            MapRenderMethods.RenderLowerGrid(CURRENT_MAP, renderCanvas, ScrollPoint);
 
-            MapRenderMethods.RenderLandforms(CURRENT_MAP, CURRENT_LANDFORM, e, ScrollPoint);
+            MapRenderMethods.RenderLandforms(CURRENT_MAP, CURRENT_LANDFORM, renderCanvas, ScrollPoint);
 
-            MapRenderMethods.RenderWaterFeatures(CURRENT_MAP, CURRENT_WATERFEATURE, CURRENT_RIVER, e, ScrollPoint);
+            MapRenderMethods.RenderWaterFeatures(CURRENT_MAP, CURRENT_WATERFEATURE, CURRENT_RIVER, renderCanvas, ScrollPoint);
 
             // upper grid layer (above water features)
-            MapRenderMethods.RenderUpperGrid(CURRENT_MAP, e, ScrollPoint);
+            MapRenderMethods.RenderUpperGrid(CURRENT_MAP, renderCanvas, ScrollPoint);
 
-            MapRenderMethods.RenderLowerMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, e, ScrollPoint);
+            MapRenderMethods.RenderLowerMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, renderCanvas, ScrollPoint);
 
-            MapRenderMethods.RenderSymbols(CURRENT_MAP, e, ScrollPoint);
+            MapRenderMethods.RenderSymbols(CURRENT_MAP, renderCanvas, ScrollPoint);
 
-            MapRenderMethods.RenderUpperMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, e, ScrollPoint);
+            MapRenderMethods.RenderUpperMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, renderCanvas, ScrollPoint);
 
             // region and region overlay layers
-            MapRenderMethods.RenderRegions(CURRENT_MAP, e, ScrollPoint);
+            MapRenderMethods.RenderRegions(CURRENT_MAP, renderCanvas, ScrollPoint);
 
             // default grid layer
-            MapRenderMethods.RenderDefaultGrid(CURRENT_MAP, e, ScrollPoint);
+            MapRenderMethods.RenderDefaultGrid(CURRENT_MAP, renderCanvas, ScrollPoint);
 
             // box layer
-            MapRenderMethods.RenderBoxes(CURRENT_MAP, e, ScrollPoint);
+            MapRenderMethods.RenderBoxes(CURRENT_MAP, renderCanvas, ScrollPoint);
 
             // label layer
-            MapRenderMethods.RenderLabels(CURRENT_MAP, e, ScrollPoint);
+            MapRenderMethods.RenderLabels(CURRENT_MAP, renderCanvas, ScrollPoint);
+
+            // overlay layer (map scale)
+            MapRenderMethods.RenderOverlays(CURRENT_MAP, renderCanvas, ScrollPoint);
 
             // render frame
-            MapRenderMethods.RenderFrame(CURRENT_MAP, e, ScrollPoint);
+            MapRenderMethods.RenderFrame(CURRENT_MAP, renderCanvas, ScrollPoint);
 
-            // TODO: measure layer
-            MapRenderMethods.RenderMeasures(CURRENT_MAP, e, ScrollPoint);
+            // measure layer
+            MapRenderMethods.RenderMeasures(CURRENT_MAP, renderCanvas, ScrollPoint);
 
             // TODO: drawing layer
-            MapRenderMethods.RenderDrawing(CURRENT_MAP, e, ScrollPoint);
+            MapRenderMethods.RenderDrawing(CURRENT_MAP, renderCanvas, ScrollPoint);
 
-            MapRenderMethods.RenderVignette(CURRENT_MAP, e, ScrollPoint);
+            MapRenderMethods.RenderVignette(CURRENT_MAP, renderCanvas, ScrollPoint);
 
-            MapRenderMethods.RenderSelections(CURRENT_MAP, e, ScrollPoint);
+            MapRenderMethods.RenderSelections(CURRENT_MAP, renderCanvas, ScrollPoint);
 
             if (CURRENT_DRAWING_MODE != DrawingModeEnum.ColorSelect)
             {
-                MapRenderMethods.RenderCursor(CURRENT_MAP, e, ScrollPoint);
+                MapRenderMethods.RenderCursor(CURRENT_MAP, renderCanvas, ScrollPoint);
             }
 
             // work layer
-            MapRenderMethods.RenderWorkLayer(CURRENT_MAP, e, ScrollPoint);
+            MapRenderMethods.RenderWorkLayer(CURRENT_MAP, renderCanvas, ScrollPoint);
 
             if (CREATE_MAP_IMAGE)
             {
@@ -2225,6 +2623,28 @@ namespace RealmStudio
         private void LeftButtonMouseDownHandler(object sender, MouseEventArgs e, int brushSize)
         {
             SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
+
+            // has the map scale been clicked?
+            for (int i = 0; i < MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents.Count; i++)
+            {
+                if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents[i] is MapScale)
+                {
+                    SELECTED_MAP_SCALE = (MapScale?)MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents[i];
+                }
+            }
+
+            if (SELECTED_MAP_SCALE != null)
+            {
+                SKRect scaleRect = new(SELECTED_MAP_SCALE.X, SELECTED_MAP_SCALE.Y,
+                    SELECTED_MAP_SCALE.X + SELECTED_MAP_SCALE.Width, SELECTED_MAP_SCALE.Y + SELECTED_MAP_SCALE.Height);
+
+                if (scaleRect.Contains(zoomedScrolledPoint))
+                {
+                    Cursor = Cursors.SizeAll;
+                    SELECTED_MAP_SCALE.IsSelected = true;
+                    CURRENT_DRAWING_MODE = DrawingModeEnum.SelectMapScale;
+                }
+            }
 
             switch (CURRENT_DRAWING_MODE)
             {
@@ -3329,6 +3749,17 @@ namespace RealmStudio
                         }
                     }
                     break;
+                case DrawingModeEnum.SelectMapScale:
+                    if (SELECTED_MAP_SCALE != null)
+                    {
+                        SELECTED_MAP_SCALE.X = (int)zoomedScrolledPoint.X - SELECTED_MAP_SCALE.Width / 2;
+                        SELECTED_MAP_SCALE.Y = (int)zoomedScrolledPoint.Y - SELECTED_MAP_SCALE.Height / 2;
+
+                        CURRENT_MAP.IsSaved = false;
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
             }
 
         }
@@ -3927,6 +4358,18 @@ namespace RealmStudio
                                 WaterPaintColorSelectButton.Refresh();
                                 break;
                         }
+                    }
+                    break;
+                case DrawingModeEnum.SelectMapScale:
+                    if (SELECTED_MAP_SCALE != null)
+                    {
+                        Cursor = Cursors.Cross;
+                        SELECTED_MAP_SCALE.IsSelected = false;
+                        SELECTED_MAP_SCALE = null;
+                        CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+                        SetDrawingModeLabel();
+
+                        CURRENT_MAP.IsSaved = false;
                     }
                     break;
             }
@@ -7249,53 +7692,8 @@ namespace RealmStudio
 
         private void SelectLabelFontButton_Click(object sender, EventArgs e)
         {
-            if (FONT_SELECTION_DIALOG == null)
-            {
-                FONT_SELECTION_DIALOG = new FontSelectionDialog(this, SELECTED_LABEL_FONT);
-                FONT_SELECTION_DIALOG.FontSelected += new EventHandler(FontSelector_FontSelected);
-            }
-
-            if (FONT_SELECTION_DIALOG != null)
-            {
-                if (!FONT_SELECTION_DIALOG.Visible)
-                {
-                    FONT_SELECTION_DIALOG.Show(this);
-                }
-                else
-                {
-                    FONT_SELECTION_DIALOG.Hide();
-                }
-            }
-
-        }
-
-        private void FontSelector_FontSelected(object? sender, EventArgs e)
-        {
-            if (FONT_SELECTION_DIALOG != null)
-            {
-                if (FONT_SELECTION_DIALOG.SelectedFont != null)
-                {
-                    SelectLabelFontButton.Font = new Font(FONT_SELECTION_DIALOG.SelectedFont.FontFamily, 12);
-                    SelectLabelFontButton.Refresh();
-
-                    SELECTED_LABEL_FONT = FONT_SELECTION_DIALOG.SelectedFont;
-
-                    if (SELECTED_MAP_LABEL != null)
-                    {
-                        Color labelColor = FontColorSelectButton.BackColor;
-                        Color outlineColor = OutlineColorSelectButton.BackColor;
-                        float outlineWidth = OutlineWidthTrack.Value / 100F;
-                        Color glowColor = GlowColorSelectButton.BackColor;
-                        int glowStrength = GlowStrengthTrack.Value;
-
-                        Cmd_ChangeLabelAttributes cmd = new(SELECTED_MAP_LABEL, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, SELECTED_LABEL_FONT);
-                        CommandManager.AddCommand(cmd);
-                        cmd.DoOperation();
-
-                        SKGLRenderControl.Invalidate();
-                    }
-                }
-            }
+            FONT_PANEL_OPENER = FontPanelOpenerEnum.LabelFontButton;
+            FontSelectionPanel.Visible = true;
         }
 
         private void FontColorSelectButton_Click(object sender, EventArgs e)
@@ -7668,6 +8066,173 @@ namespace RealmStudio
         {
             MapScaleCreatorPanel.Visible = !MapScaleCreatorPanel.Visible;
         }
+
+        private void CreateScaleButton_Click(object sender, EventArgs e)
+        {
+            MapScale mapScale = new()
+            {
+                Width = ScaleWidthTrack.Value,
+                Height = ScaleHeightTrack.Value,
+                ScaleSegmentCount = ScaleSegmentCountTrack.Value,
+                ScaleLineWidth = ScaleLineWidthTrack.Value,
+                ScaleColor1 = ScaleColor1Button.BackColor,
+                ScaleColor2 = ScaleColor2Button.BackColor,
+                ScaleColor3 = ScaleColor3Button.BackColor,
+                ScaleDistance = (float)ScaleSegmentDistanceUpDown.Value,
+                ScaleDistanceUnit = ScaleUnitsTextBox.Text,
+                ScaleFontColor = SelectScaleFontColorButton.BackColor,
+                ScaleOutlineWidth = ScaleOutlineWidthTrack.Value,
+                ScaleOutlineColor = SelectScaleOutlineColorButton.BackColor,
+                ScaleFont = SELECTED_MAP_SCALE_FONT,
+            };
+
+            mapScale.ScaleNumbersDisplayType = ScaleNumbersDisplayEnum.None;
+
+            if (ScaleNumbersNoneRadio.Checked)
+            {
+                mapScale.ScaleNumbersDisplayType = ScaleNumbersDisplayEnum.None;
+            }
+
+            if (ScaleNumbersEndsRadio.Checked)
+            {
+                mapScale.ScaleNumbersDisplayType = ScaleNumbersDisplayEnum.Ends;
+            }
+
+            if (ScaleNumbersEveryOtherRadio.Checked)
+            {
+                mapScale.ScaleNumbersDisplayType = ScaleNumbersDisplayEnum.EveryOther;
+            }
+
+            if (ScaleNumbersAllRadio.Checked)
+            {
+                mapScale.ScaleNumbersDisplayType = ScaleNumbersDisplayEnum.All;
+            }
+
+            // initial position of the scale is near the bottom-left corner of the map
+            mapScale.X = 100;
+            mapScale.Y = CURRENT_MAP.MapHeight - 100;
+
+            // make sure there is only one scale - remove any existing scale
+            for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents[i] is MapScale)
+                {
+                    MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents.RemoveAt(i);
+                }
+            }
+
+            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents.Add(mapScale);
+
+            SKGLRenderControl.Invalidate();
+        }
+
+        private void DeleteScaleButton_Click(object sender, EventArgs e)
+        {
+            // remove any existing scale
+            for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents[i] is MapScale)
+                {
+                    MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents.RemoveAt(i);
+                }
+            }
+
+            SKGLRenderControl.Invalidate();
+        }
+
+        private void ScaleWidthTrack_Scroll(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(ScaleWidthTrack.Value.ToString(), MapScaleGroupBox, new Point(ScaleWidthTrack.Right - 30, ScaleWidthTrack.Top - 20), 2000);
+        }
+
+        private void ScaleHeightTrack_Scroll(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(ScaleHeightTrack.Value.ToString(), MapScaleGroupBox, new Point(ScaleHeightTrack.Right - 30, ScaleHeightTrack.Top - 20), 2000);
+        }
+
+        private void ScaleSegmentCountTrack_Scroll(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(ScaleSegmentCountTrack.Value.ToString(), MapScaleGroupBox, new Point(ScaleSegmentCountTrack.Right - 30, ScaleSegmentCountTrack.Top - 20), 2000);
+        }
+
+        private void ScaleLineWidthTrack_Scroll(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(ScaleLineWidthTrack.Value.ToString(), MapScaleGroupBox, new Point(ScaleLineWidthTrack.Right - 30, ScaleLineWidthTrack.Top - 20), 2000);
+        }
+
+        private void ScaleColorsResetButton_Click(object sender, EventArgs e)
+        {
+            ScaleColor1Button.BackColor = Color.Black;
+            ScaleColor2Button.BackColor = Color.White;
+            ScaleColor3Button.BackColor = Color.Black;
+        }
+
+        private void ScaleColor1Button_Click(object sender, EventArgs e)
+        {
+            Color scaleColor = UtilityMethods.SelectColorFromDialog(this, ScaleColor1Button.BackColor);
+
+            if (scaleColor.ToArgb() != Color.Empty.ToArgb())
+            {
+                ScaleColor1Button.BackColor = scaleColor;
+                ScaleColor1Button.Refresh();
+            }
+        }
+
+        private void ScaleColor2Button_Click(object sender, EventArgs e)
+        {
+            Color scaleColor = UtilityMethods.SelectColorFromDialog(this, ScaleColor2Button.BackColor);
+
+            if (scaleColor.ToArgb() != Color.Empty.ToArgb())
+            {
+                ScaleColor2Button.BackColor = scaleColor;
+                ScaleColor2Button.Refresh();
+            }
+        }
+
+        private void ScaleColor3Button_Click(object sender, EventArgs e)
+        {
+            Color scaleColor = UtilityMethods.SelectColorFromDialog(this, ScaleColor3Button.BackColor);
+
+            if (scaleColor.ToArgb() != Color.Empty.ToArgb())
+            {
+                ScaleColor3Button.BackColor = scaleColor;
+                ScaleColor3Button.Refresh();
+            }
+        }
+
+        private void SelectScaleFontButton_Click(object sender, EventArgs e)
+        {
+            FONT_PANEL_OPENER = FontPanelOpenerEnum.ScaleFontButton;
+            FontSelectionPanel.Visible = !FontSelectionPanel.Visible;
+        }
+
+        private void SelectScaleFontColorButton_Click(object sender, EventArgs e)
+        {
+            Color scaleColor = UtilityMethods.SelectColorFromDialog(this, SelectScaleFontColorButton.BackColor);
+
+            if (scaleColor.ToArgb() != Color.Empty.ToArgb())
+            {
+                SelectScaleFontColorButton.BackColor = scaleColor;
+                SelectScaleFontColorButton.Refresh();
+            }
+        }
+
+        private void SelectScaleOutlineColorButton_Click(object sender, EventArgs e)
+        {
+            Color scaleColor = UtilityMethods.SelectColorFromDialog(this, SelectScaleOutlineColorButton.BackColor);
+
+            if (scaleColor.ToArgb() != Color.Empty.ToArgb())
+            {
+                SelectScaleOutlineColorButton.BackColor = scaleColor;
+                SelectScaleOutlineColorButton.Refresh();
+            }
+        }
+
+        private void ScaleOutlineWidthTrack_Scroll(object sender, EventArgs e)
+        {
+            TOOLTIP.Show(ScaleOutlineWidthTrack.Value.ToString(), ScaleOutlineGroupBox, new Point(ScaleOutlineWidthTrack.Right - 30, ScaleOutlineWidthTrack.Top - 20), 2000);
+        }
+
         #endregion
 
         #region Grid Event Handlers
@@ -8219,5 +8784,6 @@ namespace RealmStudio
         #endregion
 
         #endregion
+
     }
 }

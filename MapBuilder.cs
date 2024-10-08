@@ -51,13 +51,14 @@ namespace RealmStudio
         public static readonly int DEFAULTGRIDLAYER = 17;
         public static readonly int BOXLAYER = 18;
         public static readonly int LABELLAYER = 19;
-        public static readonly int FRAMELAYER = 20;
-        public static readonly int MEASURELAYER = 21;
-        public static readonly int DRAWINGLAYER = 22;
-        public static readonly int VIGNETTELAYER = 23;
-        public static readonly int SELECTIONLAYER = 24;
-        public static readonly int CURSORLAYER = 25;
-        public static readonly int WORKLAYER = 26;
+        public static readonly int OVERLAYLAYER = 20;
+        public static readonly int FRAMELAYER = 21;
+        public static readonly int MEASURELAYER = 22;
+        public static readonly int DRAWINGLAYER = 23;
+        public static readonly int VIGNETTELAYER = 24;
+        public static readonly int SELECTIONLAYER = 25;
+        public static readonly int CURSORLAYER = 26;
+        public static readonly int WORKLAYER = 27;
 
         public static readonly int MAP_LAYER_COUNT = WORKLAYER + 1;
 
@@ -212,6 +213,9 @@ namespace RealmStudio
             map.MapLayers.Add(layer);
 
             layer = ConstructMapLayer("labels", (ushort)LABELLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            map.MapLayers.Add(layer);
+
+            layer = ConstructMapLayer("overlay", (ushort)OVERLAYLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
             map.MapLayers.Add(layer);
 
             layer = ConstructMapLayer("frame", (ushort)FRAMELAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);

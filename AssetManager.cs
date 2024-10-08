@@ -80,14 +80,6 @@ namespace RealmStudio
 
             ResetAssets();
 
-            // loading the eyedropper cursor icon from the resource handle doesn't seem to work consistently;
-            // if a breakpoint is set, and the code is stepped through, the icon is loaded and the cursor created correctly,
-            // but without the breakpoint, the cursor does not load
-
-            // the workaround is to load the icon from a file, as below where icon assets are loaded
-
-            //EYEDROPPER_CURSOR = new System.Windows.Forms.Cursor(eyeDropperHandle);
-
             // load symbol tags
             LoadSymbolTags();
 

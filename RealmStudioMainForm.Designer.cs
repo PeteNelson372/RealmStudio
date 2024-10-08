@@ -278,6 +278,49 @@
             labelPresetBindingSource = new BindingSource(components);
             crownContextMenuStrip1 = new ReaLTaiizor.Controls.CrownContextMenuStrip();
             RealmStudioForm = new ReaLTaiizor.Forms.DungeonForm();
+            FontSelectionPanel = new Panel();
+            groupBox5 = new GroupBox();
+            FontPanelOKButton = new Button();
+            ExampleTextLabel = new Label();
+            SetItalicFontButton = new FontAwesome.Sharp.IconButton();
+            SetBoldFontButton = new FontAwesome.Sharp.IconButton();
+            DecreaseFontSizeButton = new FontAwesome.Sharp.IconButton();
+            IncreaseFontSizeButton = new FontAwesome.Sharp.IconButton();
+            FontFamilyCombo = new ComboBox();
+            FontSizeCombo = new ComboBox();
+            MapScaleCreatorPanel = new Panel();
+            MapScaleGroupBox = new GroupBox();
+            DeleteScaleButton = new FontAwesome.Sharp.IconButton();
+            CreateScaleButton = new FontAwesome.Sharp.IconButton();
+            ScaleOutlineGroupBox = new GroupBox();
+            label83 = new Label();
+            ScaleOutlineWidthTrack = new TrackBar();
+            SelectScaleOutlineColorButton = new FontAwesome.Sharp.IconButton();
+            ScaleSegmentColorsGroupBox = new GroupBox();
+            ScaleColorsResetButton = new FontAwesome.Sharp.IconButton();
+            ScaleColor3Button = new FontAwesome.Sharp.IconButton();
+            ScaleColor2Button = new FontAwesome.Sharp.IconButton();
+            ScaleColor1Button = new FontAwesome.Sharp.IconButton();
+            ScaleFontGroupBox = new GroupBox();
+            SelectScaleFontButton = new FontAwesome.Sharp.IconButton();
+            SelectScaleFontColorButton = new FontAwesome.Sharp.IconButton();
+            ScaleNumbersDisplayGroupBox = new GroupBox();
+            ScaleNumbersAllRadio = new RadioButton();
+            ScaleNumbersEveryOtherRadio = new RadioButton();
+            ScaleNumbersEndsRadio = new RadioButton();
+            ScaleNumbersNoneRadio = new RadioButton();
+            label82 = new Label();
+            ScaleUnitsTextBox = new TextBox();
+            label81 = new Label();
+            ScaleSegmentDistanceUpDown = new NumericUpDown();
+            label80 = new Label();
+            ScaleLineWidthTrack = new TrackBar();
+            label79 = new Label();
+            ScaleSegmentCountTrack = new TrackBar();
+            label78 = new Label();
+            ScaleHeightTrack = new TrackBar();
+            label77 = new Label();
+            ScaleWidthTrack = new TrackBar();
             ZoomLevelTrack = new TrackBar();
             AddPresetColorButton = new FontAwesome.Sharp.IconButton();
             SelectColorButton = new FontAwesome.Sharp.IconButton();
@@ -315,6 +358,8 @@
             SaveToolStripMenuItem = new ToolStripMenuItem();
             SaveAsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
+            ExportMapMenuItem = new FontAwesome.Sharp.IconMenuItem();
+            toolStripSeparator6 = new ToolStripSeparator();
             PrintToolStripMenuItem = new ToolStripMenuItem();
             PrintPreviewToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
@@ -490,7 +535,7 @@
             label51 = new Label();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
-            MapScaleCreatorPanel = new Panel();
+            NameGeneratorConfigurationToolStripMenuItem = new ToolStripMenuItem();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -575,6 +620,20 @@
             DrawingToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)labelPresetBindingSource).BeginInit();
             RealmStudioForm.SuspendLayout();
+            FontSelectionPanel.SuspendLayout();
+            groupBox5.SuspendLayout();
+            MapScaleCreatorPanel.SuspendLayout();
+            MapScaleGroupBox.SuspendLayout();
+            ScaleOutlineGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)ScaleOutlineWidthTrack).BeginInit();
+            ScaleSegmentColorsGroupBox.SuspendLayout();
+            ScaleFontGroupBox.SuspendLayout();
+            ScaleNumbersDisplayGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)ScaleSegmentDistanceUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)ScaleLineWidthTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)ScaleSegmentCountTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)ScaleHeightTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)ScaleWidthTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ZoomLevelTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LogoPictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)TopLogoPictureBox).BeginInit();
@@ -4649,6 +4708,7 @@
             RealmStudioForm.BackColor = Color.FromArgb(223, 219, 210);
             RealmStudioForm.BorderColor = Color.FromArgb(38, 38, 38);
             RealmStudioForm.CausesValidation = false;
+            RealmStudioForm.Controls.Add(FontSelectionPanel);
             RealmStudioForm.Controls.Add(MapScaleCreatorPanel);
             RealmStudioForm.Controls.Add(ZoomLevelTrack);
             RealmStudioForm.Controls.Add(AddPresetColorButton);
@@ -4703,6 +4763,599 @@
             RealmStudioForm.TabStop = false;
             RealmStudioForm.Text = "Realm Studio";
             RealmStudioForm.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // FontSelectionPanel
+            // 
+            FontSelectionPanel.Controls.Add(groupBox5);
+            FontSelectionPanel.Location = new Point(272, 112);
+            FontSelectionPanel.Margin = new Padding(0);
+            FontSelectionPanel.Name = "FontSelectionPanel";
+            FontSelectionPanel.Size = new Size(459, 144);
+            FontSelectionPanel.TabIndex = 39;
+            FontSelectionPanel.Visible = false;
+            // 
+            // groupBox5
+            // 
+            groupBox5.Controls.Add(FontPanelOKButton);
+            groupBox5.Controls.Add(ExampleTextLabel);
+            groupBox5.Controls.Add(SetItalicFontButton);
+            groupBox5.Controls.Add(SetBoldFontButton);
+            groupBox5.Controls.Add(DecreaseFontSizeButton);
+            groupBox5.Controls.Add(IncreaseFontSizeButton);
+            groupBox5.Controls.Add(FontFamilyCombo);
+            groupBox5.Controls.Add(FontSizeCombo);
+            groupBox5.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox5.Location = new Point(3, 3);
+            groupBox5.Name = "groupBox5";
+            groupBox5.Size = new Size(453, 138);
+            groupBox5.TabIndex = 0;
+            groupBox5.TabStop = false;
+            groupBox5.Text = "Select Font";
+            // 
+            // FontPanelOKButton
+            // 
+            FontPanelOKButton.DialogResult = DialogResult.OK;
+            FontPanelOKButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FontPanelOKButton.ForeColor = SystemColors.ControlDarkDark;
+            FontPanelOKButton.Location = new Point(393, 82);
+            FontPanelOKButton.Name = "FontPanelOKButton";
+            FontPanelOKButton.Size = new Size(54, 50);
+            FontPanelOKButton.TabIndex = 47;
+            FontPanelOKButton.Text = "O&K";
+            FontPanelOKButton.UseVisualStyleBackColor = true;
+            FontPanelOKButton.Click += FontPanelOKButton_Click;
+            // 
+            // ExampleTextLabel
+            // 
+            ExampleTextLabel.BackColor = SystemColors.ControlLightLight;
+            ExampleTextLabel.BorderStyle = BorderStyle.FixedSingle;
+            ExampleTextLabel.Location = new Point(6, 62);
+            ExampleTextLabel.Name = "ExampleTextLabel";
+            ExampleTextLabel.Size = new Size(314, 70);
+            ExampleTextLabel.TabIndex = 46;
+            // 
+            // SetItalicFontButton
+            // 
+            SetItalicFontButton.FlatAppearance.BorderColor = SystemColors.Control;
+            SetItalicFontButton.FlatStyle = FlatStyle.Flat;
+            SetItalicFontButton.IconChar = FontAwesome.Sharp.IconChar.Italic;
+            SetItalicFontButton.IconColor = SystemColors.ControlDark;
+            SetItalicFontButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SetItalicFontButton.IconSize = 18;
+            SetItalicFontButton.Location = new Point(416, 28);
+            SetItalicFontButton.Name = "SetItalicFontButton";
+            SetItalicFontButton.Size = new Size(24, 24);
+            SetItalicFontButton.TabIndex = 45;
+            SetItalicFontButton.UseVisualStyleBackColor = true;
+            SetItalicFontButton.Click += SetItalicFontButton_Click;
+            // 
+            // SetBoldFontButton
+            // 
+            SetBoldFontButton.FlatAppearance.BorderColor = SystemColors.Control;
+            SetBoldFontButton.FlatStyle = FlatStyle.Flat;
+            SetBoldFontButton.IconChar = FontAwesome.Sharp.IconChar.Bold;
+            SetBoldFontButton.IconColor = SystemColors.ButtonShadow;
+            SetBoldFontButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SetBoldFontButton.IconSize = 18;
+            SetBoldFontButton.Location = new Point(386, 28);
+            SetBoldFontButton.Name = "SetBoldFontButton";
+            SetBoldFontButton.Size = new Size(24, 24);
+            SetBoldFontButton.TabIndex = 44;
+            SetBoldFontButton.UseVisualStyleBackColor = true;
+            SetBoldFontButton.Click += SetBoldFontButton_Click;
+            // 
+            // DecreaseFontSizeButton
+            // 
+            DecreaseFontSizeButton.FlatAppearance.BorderColor = SystemColors.Control;
+            DecreaseFontSizeButton.FlatStyle = FlatStyle.Flat;
+            DecreaseFontSizeButton.IconChar = FontAwesome.Sharp.IconChar.Font;
+            DecreaseFontSizeButton.IconColor = Color.Black;
+            DecreaseFontSizeButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            DecreaseFontSizeButton.IconSize = 14;
+            DecreaseFontSizeButton.Location = new Point(356, 28);
+            DecreaseFontSizeButton.Name = "DecreaseFontSizeButton";
+            DecreaseFontSizeButton.Size = new Size(24, 24);
+            DecreaseFontSizeButton.TabIndex = 43;
+            DecreaseFontSizeButton.UseVisualStyleBackColor = true;
+            DecreaseFontSizeButton.Click += DecreaseFontSizeButton_Click;
+            // 
+            // IncreaseFontSizeButton
+            // 
+            IncreaseFontSizeButton.FlatAppearance.BorderColor = SystemColors.Control;
+            IncreaseFontSizeButton.FlatStyle = FlatStyle.Flat;
+            IncreaseFontSizeButton.IconChar = FontAwesome.Sharp.IconChar.Font;
+            IncreaseFontSizeButton.IconColor = Color.Black;
+            IncreaseFontSizeButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            IncreaseFontSizeButton.IconSize = 24;
+            IncreaseFontSizeButton.Location = new Point(326, 28);
+            IncreaseFontSizeButton.Name = "IncreaseFontSizeButton";
+            IncreaseFontSizeButton.Size = new Size(24, 24);
+            IncreaseFontSizeButton.TabIndex = 42;
+            IncreaseFontSizeButton.UseVisualStyleBackColor = true;
+            IncreaseFontSizeButton.Click += IncreaseFontSizeButton_Click;
+            // 
+            // FontFamilyCombo
+            // 
+            FontFamilyCombo.DrawMode = DrawMode.OwnerDrawFixed;
+            FontFamilyCombo.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FontFamilyCombo.Location = new Point(6, 25);
+            FontFamilyCombo.Name = "FontFamilyCombo";
+            FontFamilyCombo.Size = new Size(231, 30);
+            FontFamilyCombo.TabIndex = 41;
+            FontFamilyCombo.SelectedIndexChanged += FontFamilyCombo_SelectedIndexChanged;
+            // 
+            // FontSizeCombo
+            // 
+            FontSizeCombo.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FontSizeCombo.ForeColor = SystemColors.ControlDarkDark;
+            FontSizeCombo.Items.AddRange(new object[] { "5", "6", "7", "8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30", "32", "34", "36", "42", "48", "56", "64", "72", "80", "96", "120", "144" });
+            FontSizeCombo.Location = new Point(243, 26);
+            FontSizeCombo.Name = "FontSizeCombo";
+            FontSizeCombo.Size = new Size(77, 29);
+            FontSizeCombo.TabIndex = 40;
+            FontSizeCombo.SelectedIndexChanged += FontSizeCombo_SelectedIndexChanged;
+            // 
+            // MapScaleCreatorPanel
+            // 
+            MapScaleCreatorPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            MapScaleCreatorPanel.Controls.Add(MapScaleGroupBox);
+            MapScaleCreatorPanel.Location = new Point(1199, 112);
+            MapScaleCreatorPanel.Name = "MapScaleCreatorPanel";
+            MapScaleCreatorPanel.Size = new Size(200, 847);
+            MapScaleCreatorPanel.TabIndex = 38;
+            MapScaleCreatorPanel.Visible = false;
+            // 
+            // MapScaleGroupBox
+            // 
+            MapScaleGroupBox.Controls.Add(DeleteScaleButton);
+            MapScaleGroupBox.Controls.Add(CreateScaleButton);
+            MapScaleGroupBox.Controls.Add(ScaleOutlineGroupBox);
+            MapScaleGroupBox.Controls.Add(ScaleSegmentColorsGroupBox);
+            MapScaleGroupBox.Controls.Add(ScaleFontGroupBox);
+            MapScaleGroupBox.Controls.Add(ScaleNumbersDisplayGroupBox);
+            MapScaleGroupBox.Controls.Add(label82);
+            MapScaleGroupBox.Controls.Add(ScaleUnitsTextBox);
+            MapScaleGroupBox.Controls.Add(label81);
+            MapScaleGroupBox.Controls.Add(ScaleSegmentDistanceUpDown);
+            MapScaleGroupBox.Controls.Add(label80);
+            MapScaleGroupBox.Controls.Add(ScaleLineWidthTrack);
+            MapScaleGroupBox.Controls.Add(label79);
+            MapScaleGroupBox.Controls.Add(ScaleSegmentCountTrack);
+            MapScaleGroupBox.Controls.Add(label78);
+            MapScaleGroupBox.Controls.Add(ScaleHeightTrack);
+            MapScaleGroupBox.Controls.Add(label77);
+            MapScaleGroupBox.Controls.Add(ScaleWidthTrack);
+            MapScaleGroupBox.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            MapScaleGroupBox.Location = new Point(10, 14);
+            MapScaleGroupBox.Margin = new Padding(10, 3, 10, 3);
+            MapScaleGroupBox.Name = "MapScaleGroupBox";
+            MapScaleGroupBox.Size = new Size(180, 807);
+            MapScaleGroupBox.TabIndex = 0;
+            MapScaleGroupBox.TabStop = false;
+            MapScaleGroupBox.Text = "Map Scale";
+            // 
+            // DeleteScaleButton
+            // 
+            DeleteScaleButton.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            DeleteScaleButton.ForeColor = SystemColors.ControlDarkDark;
+            DeleteScaleButton.IconChar = FontAwesome.Sharp.IconChar.Cancel;
+            DeleteScaleButton.IconColor = Color.Black;
+            DeleteScaleButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            DeleteScaleButton.IconSize = 24;
+            DeleteScaleButton.Location = new Point(114, 741);
+            DeleteScaleButton.Name = "DeleteScaleButton";
+            DeleteScaleButton.Size = new Size(60, 60);
+            DeleteScaleButton.TabIndex = 83;
+            DeleteScaleButton.Text = "Delete";
+            DeleteScaleButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            DeleteScaleButton.UseVisualStyleBackColor = true;
+            DeleteScaleButton.Click += DeleteScaleButton_Click;
+            // 
+            // CreateScaleButton
+            // 
+            CreateScaleButton.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            CreateScaleButton.ForeColor = SystemColors.ControlDarkDark;
+            CreateScaleButton.IconChar = FontAwesome.Sharp.IconChar.RulerHorizontal;
+            CreateScaleButton.IconColor = Color.Black;
+            CreateScaleButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            CreateScaleButton.IconSize = 32;
+            CreateScaleButton.Location = new Point(12, 741);
+            CreateScaleButton.Name = "CreateScaleButton";
+            CreateScaleButton.Size = new Size(60, 60);
+            CreateScaleButton.TabIndex = 82;
+            CreateScaleButton.Text = "Create";
+            CreateScaleButton.TextAlign = ContentAlignment.BottomCenter;
+            CreateScaleButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            CreateScaleButton.UseVisualStyleBackColor = true;
+            CreateScaleButton.Click += CreateScaleButton_Click;
+            // 
+            // ScaleOutlineGroupBox
+            // 
+            ScaleOutlineGroupBox.Controls.Add(label83);
+            ScaleOutlineGroupBox.Controls.Add(ScaleOutlineWidthTrack);
+            ScaleOutlineGroupBox.Controls.Add(SelectScaleOutlineColorButton);
+            ScaleOutlineGroupBox.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ScaleOutlineGroupBox.Location = new Point(3, 635);
+            ScaleOutlineGroupBox.Name = "ScaleOutlineGroupBox";
+            ScaleOutlineGroupBox.Size = new Size(177, 93);
+            ScaleOutlineGroupBox.TabIndex = 81;
+            ScaleOutlineGroupBox.TabStop = false;
+            ScaleOutlineGroupBox.Text = "Numbers Outline";
+            // 
+            // label83
+            // 
+            label83.AutoSize = true;
+            label83.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label83.ForeColor = SystemColors.ControlDarkDark;
+            label83.Location = new Point(69, 39);
+            label83.Name = "label83";
+            label83.Size = new Size(72, 13);
+            label83.TabIndex = 76;
+            label83.Text = "Outline Width";
+            // 
+            // ScaleOutlineWidthTrack
+            // 
+            ScaleOutlineWidthTrack.AutoSize = false;
+            ScaleOutlineWidthTrack.Location = new Point(69, 55);
+            ScaleOutlineWidthTrack.Maximum = 32;
+            ScaleOutlineWidthTrack.Name = "ScaleOutlineWidthTrack";
+            ScaleOutlineWidthTrack.Size = new Size(98, 20);
+            ScaleOutlineWidthTrack.TabIndex = 75;
+            ScaleOutlineWidthTrack.TickStyle = TickStyle.None;
+            ScaleOutlineWidthTrack.Value = 2;
+            ScaleOutlineWidthTrack.Scroll += ScaleOutlineWidthTrack_Scroll;
+            // 
+            // SelectScaleOutlineColorButton
+            // 
+            SelectScaleOutlineColorButton.BackColor = Color.WhiteSmoke;
+            SelectScaleOutlineColorButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SelectScaleOutlineColorButton.ForeColor = SystemColors.ControlDarkDark;
+            SelectScaleOutlineColorButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SelectScaleOutlineColorButton.IconColor = Color.Tan;
+            SelectScaleOutlineColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectScaleOutlineColorButton.IconSize = 32;
+            SelectScaleOutlineColorButton.Location = new Point(6, 24);
+            SelectScaleOutlineColorButton.Name = "SelectScaleOutlineColorButton";
+            SelectScaleOutlineColorButton.Size = new Size(60, 60);
+            SelectScaleOutlineColorButton.TabIndex = 22;
+            SelectScaleOutlineColorButton.Text = "Select Color";
+            SelectScaleOutlineColorButton.UseVisualStyleBackColor = false;
+            SelectScaleOutlineColorButton.Click += SelectScaleOutlineColorButton_Click;
+            // 
+            // ScaleSegmentColorsGroupBox
+            // 
+            ScaleSegmentColorsGroupBox.Controls.Add(ScaleColorsResetButton);
+            ScaleSegmentColorsGroupBox.Controls.Add(ScaleColor3Button);
+            ScaleSegmentColorsGroupBox.Controls.Add(ScaleColor2Button);
+            ScaleSegmentColorsGroupBox.Controls.Add(ScaleColor1Button);
+            ScaleSegmentColorsGroupBox.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ScaleSegmentColorsGroupBox.Location = new Point(0, 206);
+            ScaleSegmentColorsGroupBox.Name = "ScaleSegmentColorsGroupBox";
+            ScaleSegmentColorsGroupBox.Size = new Size(180, 99);
+            ScaleSegmentColorsGroupBox.TabIndex = 81;
+            ScaleSegmentColorsGroupBox.TabStop = false;
+            ScaleSegmentColorsGroupBox.Text = "Segment Colors";
+            // 
+            // ScaleColorsResetButton
+            // 
+            ScaleColorsResetButton.BackColor = SystemColors.Control;
+            ScaleColorsResetButton.IconChar = FontAwesome.Sharp.IconChar.RotateBack;
+            ScaleColorsResetButton.IconColor = Color.Black;
+            ScaleColorsResetButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ScaleColorsResetButton.IconSize = 14;
+            ScaleColorsResetButton.Location = new Point(149, 0);
+            ScaleColorsResetButton.Margin = new Padding(0);
+            ScaleColorsResetButton.Name = "ScaleColorsResetButton";
+            ScaleColorsResetButton.Size = new Size(24, 24);
+            ScaleColorsResetButton.TabIndex = 29;
+            ScaleColorsResetButton.UseVisualStyleBackColor = false;
+            ScaleColorsResetButton.Click += ScaleColorsResetButton_Click;
+            // 
+            // ScaleColor3Button
+            // 
+            ScaleColor3Button.BackColor = Color.Black;
+            ScaleColor3Button.FlatAppearance.BorderColor = Color.Black;
+            ScaleColor3Button.FlatStyle = FlatStyle.Flat;
+            ScaleColor3Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ScaleColor3Button.ForeColor = SystemColors.HighlightText;
+            ScaleColor3Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            ScaleColor3Button.IconColor = Color.Tan;
+            ScaleColor3Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ScaleColor3Button.IconSize = 24;
+            ScaleColor3Button.Location = new Point(118, 28);
+            ScaleColor3Button.Margin = new Padding(1, 3, 0, 3);
+            ScaleColor3Button.Name = "ScaleColor3Button";
+            ScaleColor3Button.Size = new Size(54, 54);
+            ScaleColor3Button.TabIndex = 27;
+            ScaleColor3Button.Text = "Select Color";
+            ScaleColor3Button.UseVisualStyleBackColor = false;
+            ScaleColor3Button.Click += ScaleColor3Button_Click;
+            // 
+            // ScaleColor2Button
+            // 
+            ScaleColor2Button.BackColor = Color.White;
+            ScaleColor2Button.FlatAppearance.BorderColor = Color.Black;
+            ScaleColor2Button.FlatStyle = FlatStyle.Flat;
+            ScaleColor2Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ScaleColor2Button.ForeColor = SystemColors.ControlDarkDark;
+            ScaleColor2Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            ScaleColor2Button.IconColor = Color.Tan;
+            ScaleColor2Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ScaleColor2Button.IconSize = 24;
+            ScaleColor2Button.Location = new Point(62, 28);
+            ScaleColor2Button.Margin = new Padding(1, 3, 1, 3);
+            ScaleColor2Button.Name = "ScaleColor2Button";
+            ScaleColor2Button.Size = new Size(54, 54);
+            ScaleColor2Button.TabIndex = 26;
+            ScaleColor2Button.Text = "Select Color";
+            ScaleColor2Button.UseVisualStyleBackColor = false;
+            ScaleColor2Button.Click += ScaleColor2Button_Click;
+            // 
+            // ScaleColor1Button
+            // 
+            ScaleColor1Button.BackColor = Color.Black;
+            ScaleColor1Button.FlatAppearance.BorderColor = Color.Black;
+            ScaleColor1Button.FlatStyle = FlatStyle.Flat;
+            ScaleColor1Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ScaleColor1Button.ForeColor = SystemColors.HighlightText;
+            ScaleColor1Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            ScaleColor1Button.IconColor = Color.Tan;
+            ScaleColor1Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ScaleColor1Button.IconSize = 24;
+            ScaleColor1Button.Location = new Point(6, 28);
+            ScaleColor1Button.Margin = new Padding(1, 3, 1, 3);
+            ScaleColor1Button.Name = "ScaleColor1Button";
+            ScaleColor1Button.Size = new Size(54, 54);
+            ScaleColor1Button.TabIndex = 25;
+            ScaleColor1Button.Text = "Select Color";
+            ScaleColor1Button.UseVisualStyleBackColor = false;
+            ScaleColor1Button.Click += ScaleColor1Button_Click;
+            // 
+            // ScaleFontGroupBox
+            // 
+            ScaleFontGroupBox.Controls.Add(SelectScaleFontButton);
+            ScaleFontGroupBox.Controls.Add(SelectScaleFontColorButton);
+            ScaleFontGroupBox.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ScaleFontGroupBox.Location = new Point(3, 536);
+            ScaleFontGroupBox.Name = "ScaleFontGroupBox";
+            ScaleFontGroupBox.Size = new Size(177, 93);
+            ScaleFontGroupBox.TabIndex = 80;
+            ScaleFontGroupBox.TabStop = false;
+            ScaleFontGroupBox.Text = "Font";
+            // 
+            // SelectScaleFontButton
+            // 
+            SelectScaleFontButton.BackColor = SystemColors.ControlLightLight;
+            SelectScaleFontButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SelectScaleFontButton.ForeColor = SystemColors.ControlDarkDark;
+            SelectScaleFontButton.IconChar = FontAwesome.Sharp.IconChar.Font;
+            SelectScaleFontButton.IconColor = Color.Tan;
+            SelectScaleFontButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectScaleFontButton.IconSize = 32;
+            SelectScaleFontButton.Location = new Point(26, 22);
+            SelectScaleFontButton.Name = "SelectScaleFontButton";
+            SelectScaleFontButton.Size = new Size(60, 60);
+            SelectScaleFontButton.TabIndex = 23;
+            SelectScaleFontButton.Text = "Select Font";
+            SelectScaleFontButton.UseVisualStyleBackColor = false;
+            SelectScaleFontButton.Click += SelectScaleFontButton_Click;
+            // 
+            // SelectScaleFontColorButton
+            // 
+            SelectScaleFontColorButton.BackColor = Color.Black;
+            SelectScaleFontColorButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SelectScaleFontColorButton.ForeColor = SystemColors.ButtonFace;
+            SelectScaleFontColorButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SelectScaleFontColorButton.IconColor = Color.Tan;
+            SelectScaleFontColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectScaleFontColorButton.IconSize = 32;
+            SelectScaleFontColorButton.Location = new Point(92, 22);
+            SelectScaleFontColorButton.Name = "SelectScaleFontColorButton";
+            SelectScaleFontColorButton.Size = new Size(60, 60);
+            SelectScaleFontColorButton.TabIndex = 22;
+            SelectScaleFontColorButton.Text = "Select Color";
+            SelectScaleFontColorButton.UseVisualStyleBackColor = false;
+            SelectScaleFontColorButton.Click += SelectScaleFontColorButton_Click;
+            // 
+            // ScaleNumbersDisplayGroupBox
+            // 
+            ScaleNumbersDisplayGroupBox.Controls.Add(ScaleNumbersAllRadio);
+            ScaleNumbersDisplayGroupBox.Controls.Add(ScaleNumbersEveryOtherRadio);
+            ScaleNumbersDisplayGroupBox.Controls.Add(ScaleNumbersEndsRadio);
+            ScaleNumbersDisplayGroupBox.Controls.Add(ScaleNumbersNoneRadio);
+            ScaleNumbersDisplayGroupBox.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ScaleNumbersDisplayGroupBox.Location = new Point(3, 405);
+            ScaleNumbersDisplayGroupBox.Name = "ScaleNumbersDisplayGroupBox";
+            ScaleNumbersDisplayGroupBox.Size = new Size(177, 125);
+            ScaleNumbersDisplayGroupBox.TabIndex = 79;
+            ScaleNumbersDisplayGroupBox.TabStop = false;
+            ScaleNumbersDisplayGroupBox.Text = "Numbers Display";
+            // 
+            // ScaleNumbersAllRadio
+            // 
+            ScaleNumbersAllRadio.AutoSize = true;
+            ScaleNumbersAllRadio.Checked = true;
+            ScaleNumbersAllRadio.ForeColor = SystemColors.ControlDarkDark;
+            ScaleNumbersAllRadio.Location = new Point(17, 100);
+            ScaleNumbersAllRadio.Name = "ScaleNumbersAllRadio";
+            ScaleNumbersAllRadio.Size = new Size(39, 19);
+            ScaleNumbersAllRadio.TabIndex = 3;
+            ScaleNumbersAllRadio.TabStop = true;
+            ScaleNumbersAllRadio.Text = "All";
+            ScaleNumbersAllRadio.UseVisualStyleBackColor = true;
+            // 
+            // ScaleNumbersEveryOtherRadio
+            // 
+            ScaleNumbersEveryOtherRadio.AutoSize = true;
+            ScaleNumbersEveryOtherRadio.ForeColor = SystemColors.ControlDarkDark;
+            ScaleNumbersEveryOtherRadio.Location = new Point(17, 75);
+            ScaleNumbersEveryOtherRadio.Name = "ScaleNumbersEveryOtherRadio";
+            ScaleNumbersEveryOtherRadio.Size = new Size(86, 19);
+            ScaleNumbersEveryOtherRadio.TabIndex = 2;
+            ScaleNumbersEveryOtherRadio.Text = "Every Other";
+            ScaleNumbersEveryOtherRadio.UseVisualStyleBackColor = true;
+            // 
+            // ScaleNumbersEndsRadio
+            // 
+            ScaleNumbersEndsRadio.AutoSize = true;
+            ScaleNumbersEndsRadio.ForeColor = SystemColors.ControlDarkDark;
+            ScaleNumbersEndsRadio.Location = new Point(17, 50);
+            ScaleNumbersEndsRadio.Name = "ScaleNumbersEndsRadio";
+            ScaleNumbersEndsRadio.Size = new Size(50, 19);
+            ScaleNumbersEndsRadio.TabIndex = 1;
+            ScaleNumbersEndsRadio.Text = "Ends";
+            ScaleNumbersEndsRadio.UseVisualStyleBackColor = true;
+            // 
+            // ScaleNumbersNoneRadio
+            // 
+            ScaleNumbersNoneRadio.AutoSize = true;
+            ScaleNumbersNoneRadio.ForeColor = SystemColors.ControlDarkDark;
+            ScaleNumbersNoneRadio.Location = new Point(17, 25);
+            ScaleNumbersNoneRadio.Name = "ScaleNumbersNoneRadio";
+            ScaleNumbersNoneRadio.Size = new Size(54, 19);
+            ScaleNumbersNoneRadio.TabIndex = 0;
+            ScaleNumbersNoneRadio.Text = "None";
+            ScaleNumbersNoneRadio.UseVisualStyleBackColor = true;
+            // 
+            // label82
+            // 
+            label82.AutoSize = true;
+            label82.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label82.ForeColor = SystemColors.ControlDarkDark;
+            label82.Location = new Point(6, 343);
+            label82.Name = "label82";
+            label82.Size = new Size(54, 13);
+            label82.TabIndex = 78;
+            label82.Text = "Unit Label";
+            // 
+            // ScaleUnitsTextBox
+            // 
+            ScaleUnitsTextBox.BorderStyle = BorderStyle.FixedSingle;
+            ScaleUnitsTextBox.Location = new Point(6, 359);
+            ScaleUnitsTextBox.Name = "ScaleUnitsTextBox";
+            ScaleUnitsTextBox.Size = new Size(169, 27);
+            ScaleUnitsTextBox.TabIndex = 77;
+            // 
+            // label81
+            // 
+            label81.AutoSize = true;
+            label81.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label81.ForeColor = SystemColors.ControlDarkDark;
+            label81.Location = new Point(91, 318);
+            label81.Name = "label81";
+            label81.Size = new Size(93, 13);
+            label81.TabIndex = 76;
+            label81.Text = "Segment Distance";
+            // 
+            // ScaleSegmentDistanceUpDown
+            // 
+            ScaleSegmentDistanceUpDown.BorderStyle = BorderStyle.FixedSingle;
+            ScaleSegmentDistanceUpDown.DecimalPlaces = 1;
+            ScaleSegmentDistanceUpDown.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
+            ScaleSegmentDistanceUpDown.Location = new Point(6, 311);
+            ScaleSegmentDistanceUpDown.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            ScaleSegmentDistanceUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
+            ScaleSegmentDistanceUpDown.Name = "ScaleSegmentDistanceUpDown";
+            ScaleSegmentDistanceUpDown.Size = new Size(79, 27);
+            ScaleSegmentDistanceUpDown.TabIndex = 75;
+            ScaleSegmentDistanceUpDown.TextAlign = HorizontalAlignment.Center;
+            ScaleSegmentDistanceUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
+            // 
+            // label80
+            // 
+            label80.AutoSize = true;
+            label80.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label80.ForeColor = SystemColors.ControlDarkDark;
+            label80.Location = new Point(6, 164);
+            label80.Name = "label80";
+            label80.Size = new Size(57, 13);
+            label80.TabIndex = 74;
+            label80.Text = "Line Width";
+            // 
+            // ScaleLineWidthTrack
+            // 
+            ScaleLineWidthTrack.AutoSize = false;
+            ScaleLineWidthTrack.Location = new Point(3, 180);
+            ScaleLineWidthTrack.Maximum = 8;
+            ScaleLineWidthTrack.Minimum = 2;
+            ScaleLineWidthTrack.Name = "ScaleLineWidthTrack";
+            ScaleLineWidthTrack.Size = new Size(177, 20);
+            ScaleLineWidthTrack.TabIndex = 73;
+            ScaleLineWidthTrack.TickStyle = TickStyle.None;
+            ScaleLineWidthTrack.Value = 3;
+            ScaleLineWidthTrack.Scroll += ScaleLineWidthTrack_Scroll;
+            // 
+            // label79
+            // 
+            label79.AutoSize = true;
+            label79.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label79.ForeColor = SystemColors.ControlDarkDark;
+            label79.Location = new Point(0, 120);
+            label79.Name = "label79";
+            label79.Size = new Size(54, 13);
+            label79.TabIndex = 72;
+            label79.Text = "Segments";
+            // 
+            // ScaleSegmentCountTrack
+            // 
+            ScaleSegmentCountTrack.AutoSize = false;
+            ScaleSegmentCountTrack.Location = new Point(3, 136);
+            ScaleSegmentCountTrack.Maximum = 32;
+            ScaleSegmentCountTrack.Minimum = 1;
+            ScaleSegmentCountTrack.Name = "ScaleSegmentCountTrack";
+            ScaleSegmentCountTrack.Size = new Size(177, 20);
+            ScaleSegmentCountTrack.TabIndex = 71;
+            ScaleSegmentCountTrack.TickStyle = TickStyle.None;
+            ScaleSegmentCountTrack.Value = 5;
+            ScaleSegmentCountTrack.Scroll += ScaleSegmentCountTrack_Scroll;
+            // 
+            // label78
+            // 
+            label78.AutoSize = true;
+            label78.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label78.ForeColor = SystemColors.ControlDarkDark;
+            label78.Location = new Point(6, 76);
+            label78.Name = "label78";
+            label78.Size = new Size(38, 13);
+            label78.TabIndex = 70;
+            label78.Text = "Height";
+            // 
+            // ScaleHeightTrack
+            // 
+            ScaleHeightTrack.AutoSize = false;
+            ScaleHeightTrack.Location = new Point(3, 92);
+            ScaleHeightTrack.Maximum = 256;
+            ScaleHeightTrack.Minimum = 4;
+            ScaleHeightTrack.Name = "ScaleHeightTrack";
+            ScaleHeightTrack.Size = new Size(177, 20);
+            ScaleHeightTrack.TabIndex = 69;
+            ScaleHeightTrack.TickStyle = TickStyle.None;
+            ScaleHeightTrack.Value = 16;
+            ScaleHeightTrack.Scroll += ScaleHeightTrack_Scroll;
+            // 
+            // label77
+            // 
+            label77.AutoSize = true;
+            label77.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label77.ForeColor = SystemColors.ControlDarkDark;
+            label77.Location = new Point(3, 32);
+            label77.Name = "label77";
+            label77.Size = new Size(35, 13);
+            label77.TabIndex = 68;
+            label77.Text = "Width";
+            // 
+            // ScaleWidthTrack
+            // 
+            ScaleWidthTrack.AutoSize = false;
+            ScaleWidthTrack.Location = new Point(3, 48);
+            ScaleWidthTrack.Maximum = 2048;
+            ScaleWidthTrack.Minimum = 64;
+            ScaleWidthTrack.Name = "ScaleWidthTrack";
+            ScaleWidthTrack.Size = new Size(177, 20);
+            ScaleWidthTrack.TabIndex = 67;
+            ScaleWidthTrack.TickStyle = TickStyle.None;
+            ScaleWidthTrack.Value = 256;
+            ScaleWidthTrack.Scroll += ScaleWidthTrack_Scroll;
             // 
             // ZoomLevelTrack
             // 
@@ -4829,7 +5482,7 @@
             cyberSwitch8.LinearGradient_Background = false;
             cyberSwitch8.LinearGradient_Value = false;
             cyberSwitch8.LinearGradientPen = false;
-            cyberSwitch8.Location = new Point(1386, 15);
+            cyberSwitch8.Location = new Point(1387, 14);
             cyberSwitch8.Name = "cyberSwitch8";
             cyberSwitch8.PenWidth = 10;
             cyberSwitch8.RGB = false;
@@ -5112,13 +5765,13 @@
             RealmStudioMainMenuStrip.Items.AddRange(new ToolStripItem[] { FileToolStripMenuItem, EditToolStripMenuItem, RealmToolStripMenuItem, AssetsToolStripMenuItem, ThemeToolStripMenuItem, OptionsToolStripMenuItem, HelpToolStripMenuItem });
             RealmStudioMainMenuStrip.Location = new Point(20, 56);
             RealmStudioMainMenuStrip.Name = "RealmStudioMainMenuStrip";
-            RealmStudioMainMenuStrip.Size = new Size(348, 24);
+            RealmStudioMainMenuStrip.Size = new Size(468, 24);
             RealmStudioMainMenuStrip.TabIndex = 1;
             RealmStudioMainMenuStrip.Text = "menuStrip1";
             // 
             // FileToolStripMenuItem
             // 
-            FileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { NewToolStripMenuItem, OpenToolStripMenuItem, toolStripSeparator, SaveToolStripMenuItem, SaveAsToolStripMenuItem, toolStripSeparator1, PrintToolStripMenuItem, PrintPreviewToolStripMenuItem, toolStripSeparator2, ExitToolStripMenuItem });
+            FileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { NewToolStripMenuItem, OpenToolStripMenuItem, toolStripSeparator, SaveToolStripMenuItem, SaveAsToolStripMenuItem, toolStripSeparator1, ExportMapMenuItem, toolStripSeparator6, PrintToolStripMenuItem, PrintPreviewToolStripMenuItem, toolStripSeparator2, ExitToolStripMenuItem });
             FileToolStripMenuItem.Name = "FileToolStripMenuItem";
             FileToolStripMenuItem.Size = new Size(37, 20);
             FileToolStripMenuItem.Text = "&File";
@@ -5169,6 +5822,21 @@
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
             toolStripSeparator1.Size = new Size(143, 6);
+            // 
+            // ExportMapMenuItem
+            // 
+            ExportMapMenuItem.IconChar = FontAwesome.Sharp.IconChar.FileImage;
+            ExportMapMenuItem.IconColor = Color.Black;
+            ExportMapMenuItem.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ExportMapMenuItem.Name = "ExportMapMenuItem";
+            ExportMapMenuItem.Size = new Size(146, 22);
+            ExportMapMenuItem.Text = "&Export";
+            ExportMapMenuItem.Click += ExportMapMenuItem_Click;
+            // 
+            // toolStripSeparator6
+            // 
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new Size(143, 6);
             // 
             // PrintToolStripMenuItem
             // 
@@ -5338,7 +6006,7 @@
             // 
             // OptionsToolStripMenuItem
             // 
-            OptionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { PreferencesMenuItem });
+            OptionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { PreferencesMenuItem, NameGeneratorConfigurationToolStripMenuItem });
             OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem";
             OptionsToolStripMenuItem.Size = new Size(61, 20);
             OptionsToolStripMenuItem.Text = "&Options";
@@ -5346,7 +6014,7 @@
             // PreferencesMenuItem
             // 
             PreferencesMenuItem.Name = "PreferencesMenuItem";
-            PreferencesMenuItem.Size = new Size(144, 22);
+            PreferencesMenuItem.Size = new Size(247, 22);
             PreferencesMenuItem.Text = "&Preferences...";
             PreferencesMenuItem.Click += PreferencesMenuItem_Click;
             // 
@@ -7398,14 +8066,12 @@
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
             // 
-            // MapScaleCreatorPanel
+            // NameGeneratorConfigurationToolStripMenuItem
             // 
-            MapScaleCreatorPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            MapScaleCreatorPanel.Location = new Point(1198, 114);
-            MapScaleCreatorPanel.Name = "MapScaleCreatorPanel";
-            MapScaleCreatorPanel.Size = new Size(200, 843);
-            MapScaleCreatorPanel.TabIndex = 38;
-            MapScaleCreatorPanel.Visible = false;
+            NameGeneratorConfigurationToolStripMenuItem.Name = "NameGeneratorConfigurationToolStripMenuItem";
+            NameGeneratorConfigurationToolStripMenuItem.Size = new Size(247, 22);
+            NameGeneratorConfigurationToolStripMenuItem.Text = "&Name Generator Configuration...";
+            NameGeneratorConfigurationToolStripMenuItem.Click += NameGeneratorConfigurationToolStripMenuItem_Click;
             // 
             // RealmStudioMainForm
             // 
@@ -7550,6 +8216,23 @@
             ((System.ComponentModel.ISupportInitialize)labelPresetBindingSource).EndInit();
             RealmStudioForm.ResumeLayout(false);
             RealmStudioForm.PerformLayout();
+            FontSelectionPanel.ResumeLayout(false);
+            groupBox5.ResumeLayout(false);
+            MapScaleCreatorPanel.ResumeLayout(false);
+            MapScaleGroupBox.ResumeLayout(false);
+            MapScaleGroupBox.PerformLayout();
+            ScaleOutlineGroupBox.ResumeLayout(false);
+            ScaleOutlineGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)ScaleOutlineWidthTrack).EndInit();
+            ScaleSegmentColorsGroupBox.ResumeLayout(false);
+            ScaleFontGroupBox.ResumeLayout(false);
+            ScaleNumbersDisplayGroupBox.ResumeLayout(false);
+            ScaleNumbersDisplayGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)ScaleSegmentDistanceUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ScaleLineWidthTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ScaleSegmentCountTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ScaleHeightTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ScaleWidthTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)ZoomLevelTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LogoPictureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)TopLogoPictureBox).EndInit();
@@ -8078,5 +8761,50 @@
         private FontAwesome.Sharp.IconButton AddPresetColorButton;
         private TrackBar ZoomLevelTrack;
         private Panel MapScaleCreatorPanel;
+        private GroupBox MapScaleGroupBox;
+        private Label label79;
+        private TrackBar ScaleSegmentCountTrack;
+        private Label label78;
+        private TrackBar ScaleHeightTrack;
+        private Label label77;
+        private TrackBar ScaleWidthTrack;
+        private NumericUpDown ScaleSegmentDistanceUpDown;
+        private Label label80;
+        private TrackBar ScaleLineWidthTrack;
+        private Label label82;
+        private TextBox ScaleUnitsTextBox;
+        private Label label81;
+        private GroupBox ScaleNumbersDisplayGroupBox;
+        private RadioButton ScaleNumbersNoneRadio;
+        private GroupBox ScaleFontGroupBox;
+        private RadioButton ScaleNumbersAllRadio;
+        private RadioButton ScaleNumbersEveryOtherRadio;
+        private RadioButton ScaleNumbersEndsRadio;
+        private GroupBox ScaleSegmentColorsGroupBox;
+        private FontAwesome.Sharp.IconButton ScaleColorsResetButton;
+        private FontAwesome.Sharp.IconButton ScaleColor3Button;
+        private FontAwesome.Sharp.IconButton ScaleColor2Button;
+        private FontAwesome.Sharp.IconButton ScaleColor1Button;
+        private FontAwesome.Sharp.IconButton SelectScaleFontButton;
+        private FontAwesome.Sharp.IconButton SelectScaleFontColorButton;
+        private GroupBox ScaleOutlineGroupBox;
+        private Label label83;
+        private TrackBar ScaleOutlineWidthTrack;
+        private FontAwesome.Sharp.IconButton SelectScaleOutlineColorButton;
+        private FontAwesome.Sharp.IconButton CreateScaleButton;
+        private FontAwesome.Sharp.IconButton DeleteScaleButton;
+        private Panel FontSelectionPanel;
+        private GroupBox groupBox5;
+        private ComboBox FontFamilyCombo;
+        private ComboBox FontSizeCombo;
+        private FontAwesome.Sharp.IconButton IncreaseFontSizeButton;
+        private FontAwesome.Sharp.IconButton SetItalicFontButton;
+        private FontAwesome.Sharp.IconButton SetBoldFontButton;
+        private FontAwesome.Sharp.IconButton DecreaseFontSizeButton;
+        private Button FontPanelOKButton;
+        private Label ExampleTextLabel;
+        private FontAwesome.Sharp.IconMenuItem ExportMapMenuItem;
+        private ToolStripSeparator toolStripSeparator6;
+        private ToolStripMenuItem NameGeneratorConfigurationToolStripMenuItem;
     }
 }

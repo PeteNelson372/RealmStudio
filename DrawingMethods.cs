@@ -484,8 +484,6 @@ namespace RealmStudio
                 // re-invert the colors
                 Bitmap invertedBlobBitmap = invert.Apply(managedImage);
 
-                invertedBlobBitmap.Save("C:\\Users\\Pete Nelson\\OneDrive\\Desktop\\invertedBlobBitmap.bmp");
-
                 //return managedImage;
                 return invertedBlobBitmap;
             }

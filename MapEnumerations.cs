@@ -76,7 +76,7 @@ namespace RealmStudio
         HardBrush
     }
 
-    public enum  WaterFeatureTypeEnum
+    public enum WaterFeatureTypeEnum
     {
         NotSet,
         Lake,
@@ -180,5 +180,12 @@ namespace RealmStudio
         SolarSystem,
         Ship,
         Other
+    }
+
+    public enum FontPanelOpenerEnum
+    {
+        NotSet,
+        LabelFontButton,
+        ScaleFontButton
     }
 }
