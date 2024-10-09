@@ -81,5 +81,42 @@ namespace RealmStudio
             }
             catch { }
         }
+
+        private void RealmStudioSupportLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "mailto://support@brookmonte.com",
+                UseShellExecute = true
+            };
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch { }
+        }
+
+        private void ReleaseNotesLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string startupPath = Application.StartupPath;
+            string releaseNotesPath = Path.GetFullPath(Path.Combine(startupPath, @"..\..\..\", "Resources", "ReleaseNotes.txt"));
+
+            var attributes = File.GetAttributes(releaseNotesPath);
+
+            File.SetAttributes(releaseNotesPath, attributes | FileAttributes.ReadOnly);
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = releaseNotesPath,
+                UseShellExecute = true,
+            };
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch { }
+        }
     }
 }

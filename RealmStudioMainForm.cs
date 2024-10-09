@@ -26,7 +26,6 @@ using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
-using System.Reflection;
 using System.Timers;
 using Control = System.Windows.Forms.Control;
 
@@ -34,6 +33,8 @@ namespace RealmStudio
 {
     public partial class RealmStudioMainForm : Form
     {
+        private string RELEASE_STATE = "Pre-Release";
+
         private int MAP_WIDTH = MapBuilder.MAP_DEFAULT_WIDTH;
         private int MAP_HEIGHT = MapBuilder.MAP_DEFAULT_HEIGHT;
 
@@ -813,21 +814,20 @@ namespace RealmStudio
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string? version = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            string? version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 
-            AboutRealmStudio aboutRealmStudio = new AboutRealmStudio();
+            AboutRealmStudio aboutRealmStudio = new();
 
             if (!string.IsNullOrEmpty(version))
             {
-                aboutRealmStudio.RealmStudioVersionLabel.Text = string.Concat("Version ", version.AsSpan(0, version.IndexOf('+')));
+                aboutRealmStudio.RealmStudioVersionLabel.Text = string.Concat(RELEASE_STATE + " Version ", version);
             }
             else
             {
-                aboutRealmStudio.RealmStudioVersionLabel.Text = "Version Unknown";
+                aboutRealmStudio.RealmStudioVersionLabel.Text = RELEASE_STATE + " Version Unknown";
             }
 
             aboutRealmStudio.ShowDialog();
-
         }
         #endregion
 

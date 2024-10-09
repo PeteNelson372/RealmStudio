@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutRealmStudio));
             AboutRealmStudioOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            RealmStudioSupportLink = new LinkLabel();
+            ReleaseNotesLink = new LinkLabel();
+            GPL3LicensePictureBox = new PictureBox();
             RealmStudioSourceLink = new LinkLabel();
             GithubPictureBox = new PictureBox();
             CreditsTextBox = new TextBox();
@@ -43,18 +46,19 @@
             AboutOkButton = new Button();
             pictureBox2 = new PictureBox();
             pictureBox1 = new PictureBox();
-            GPL3LicensePictureBox = new PictureBox();
             AboutRealmStudioOverlay.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)GPL3LicensePictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)GithubPictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)GPL3LicensePictureBox).BeginInit();
             SuspendLayout();
             // 
             // AboutRealmStudioOverlay
             // 
             AboutRealmStudioOverlay.BackColor = Color.FromArgb(244, 241, 243);
             AboutRealmStudioOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            AboutRealmStudioOverlay.Controls.Add(RealmStudioSupportLink);
+            AboutRealmStudioOverlay.Controls.Add(ReleaseNotesLink);
             AboutRealmStudioOverlay.Controls.Add(GPL3LicensePictureBox);
             AboutRealmStudioOverlay.Controls.Add(RealmStudioSourceLink);
             AboutRealmStudioOverlay.Controls.Add(GithubPictureBox);
@@ -88,6 +92,39 @@
             AboutRealmStudioOverlay.TabIndex = 0;
             AboutRealmStudioOverlay.Text = "About Realm Studio";
             AboutRealmStudioOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // RealmStudioSupportLink
+            // 
+            RealmStudioSupportLink.AutoSize = true;
+            RealmStudioSupportLink.Location = new Point(23, 499);
+            RealmStudioSupportLink.Name = "RealmStudioSupportLink";
+            RealmStudioSupportLink.Size = new Size(167, 15);
+            RealmStudioSupportLink.TabIndex = 16;
+            RealmStudioSupportLink.TabStop = true;
+            RealmStudioSupportLink.Text = "Contact Realm Studio Support";
+            RealmStudioSupportLink.LinkClicked += RealmStudioSupportLink_LinkClicked;
+            // 
+            // ReleaseNotesLink
+            // 
+            ReleaseNotesLink.AutoSize = true;
+            ReleaseNotesLink.Location = new Point(23, 521);
+            ReleaseNotesLink.Name = "ReleaseNotesLink";
+            ReleaseNotesLink.Size = new Size(108, 15);
+            ReleaseNotesLink.TabIndex = 15;
+            ReleaseNotesLink.TabStop = true;
+            ReleaseNotesLink.Text = "View Release Notes";
+            ReleaseNotesLink.LinkClicked += ReleaseNotesLink_LinkClicked;
+            // 
+            // GPL3LicensePictureBox
+            // 
+            GPL3LicensePictureBox.Cursor = Cursors.Hand;
+            GPL3LicensePictureBox.Image = Properties.Resources.gplv3_127x51;
+            GPL3LicensePictureBox.Location = new Point(23, 266);
+            GPL3LicensePictureBox.Name = "GPL3LicensePictureBox";
+            GPL3LicensePictureBox.Size = new Size(127, 51);
+            GPL3LicensePictureBox.TabIndex = 14;
+            GPL3LicensePictureBox.TabStop = false;
+            GPL3LicensePictureBox.Click += GPL3LicensePictureBox_Click;
             // 
             // RealmStudioSourceLink
             // 
@@ -234,17 +271,6 @@
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
-            // GPL3LicensePictureBox
-            // 
-            GPL3LicensePictureBox.Cursor = Cursors.Hand;
-            GPL3LicensePictureBox.Image = Properties.Resources.gplv3_127x51;
-            GPL3LicensePictureBox.Location = new Point(23, 266);
-            GPL3LicensePictureBox.Name = "GPL3LicensePictureBox";
-            GPL3LicensePictureBox.Size = new Size(127, 51);
-            GPL3LicensePictureBox.TabIndex = 14;
-            GPL3LicensePictureBox.TabStop = false;
-            GPL3LicensePictureBox.Click += GPL3LicensePictureBox_Click;
-            // 
             // AboutRealmStudio
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -259,10 +285,10 @@
             TransparencyKey = Color.Fuchsia;
             AboutRealmStudioOverlay.ResumeLayout(false);
             AboutRealmStudioOverlay.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)GPL3LicensePictureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)GithubPictureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)GPL3LicensePictureBox).EndInit();
             ResumeLayout(false);
         }
 
@@ -283,5 +309,7 @@
         private PictureBox GithubPictureBox;
         private LinkLabel RealmStudioSourceLink;
         private PictureBox GPL3LicensePictureBox;
+        private LinkLabel ReleaseNotesLink;
+        private LinkLabel RealmStudioSupportLink;
     }
 }

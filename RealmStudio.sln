@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealmStudio", "RealmStudio.csproj", "{85B6671E-D32A-43B5-AA02-CF522FD748E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealmStudio", "RealmStudio.csproj", "{85B6671E-D32A-43B5-AA02-CF522FD748E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,5 +21,29 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {58356546-686C-4CF1-AE67-972CB6C0D369}
+	EndGlobalSection
+	GlobalSection(AutomaticVersions) = postSolution
+		PrimaryVersionType.Debug|Any CPU = AssemblyVersionAttribute
+		UpdateAssemblyVersion.Debug|Any CPU = True
+		UpdateAssemblyFileVersion.Debug|Any CPU = True
+		UpdateAssemblyInfoVersion.Debug|Any CPU = True
+		AdvancedSettingsExpanded.Debug|Any CPU = True
+		AssemblyVersionSettings.Debug|Any CPU = None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight
+		AssemblyFileVersionSettings.Debug|Any CPU = None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight
+		AssemblyInfoVersionSettings.Debug|Any CPU = None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight
+		UpdatePackageVersion.Debug|Any CPU = False
+		AssemblyInfoVersionType.Debug|Any CPU = SettingsVersion
+		InheritWinAppVersionFrom.Debug|Any CPU = None
+		PrimaryVersionType = AssemblyFileVersionAttribute
+		UpdateAssemblyVersion = True
+		UpdateAssemblyFileVersion = True
+		UpdateAssemblyInfoVersion = True
+		AdvancedSettingsExpanded = True
+		AssemblyVersionSettings = None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight
+		AssemblyFileVersionSettings = None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight
+		UpdatePackageVersion = False
+		AssemblyInfoVersionSemVerSettings = AssemblyFileVersion.IncrementOnce.Alpha
+		AssemblyInfoVersionType = SemVer1
+		InheritWinAppVersionFrom = None
 	EndGlobalSection
 EndGlobal

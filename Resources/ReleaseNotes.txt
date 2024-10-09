@@ -1,0 +1,4 @@
+﻿Release Notes for Realm Studio.
+
+Prerelease Versions
+The Realm Studio application is still under development.
