@@ -70,6 +70,16 @@ namespace RealmStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap brookmonte_group_logo {
+            get {
+                object obj = ResourceManager.GetObject("brookmonte-group-logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon Eye_Dropper {
@@ -80,12 +90,32 @@ namespace RealmStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static byte[] ZeroSum_white___no_background {
+        internal static System.Drawing.Bitmap GitHub_Logo {
+            get {
+                object obj = ResourceManager.GetObject("GitHub_Logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap gplv3_127x51 {
+            get {
+                object obj = ResourceManager.GetObject("gplv3-127x51", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ZeroSum_white___no_background {
             get {
                 object obj = ResourceManager.GetObject("ZeroSum white - no background", resourceCulture);
-                return ((byte[])(obj));
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

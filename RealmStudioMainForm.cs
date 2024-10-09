@@ -26,6 +26,7 @@ using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using System.Reflection;
 using System.Timers;
 using Control = System.Windows.Forms.Control;
 
@@ -176,7 +177,7 @@ namespace RealmStudio
             //SymbolMethods.SaveSymbolTags();
             //SymbolMethods.SaveCollections();
 
-            //NAME_GENERATOR_SETTINGS_DIALOG.Close();
+            NAME_GENERATOR_CONFIG.Close();
 
             if (!CURRENT_MAP.IsSaved)
             {
@@ -812,6 +813,20 @@ namespace RealmStudio
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            string? version = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+
+            AboutRealmStudio aboutRealmStudio = new AboutRealmStudio();
+
+            if (!string.IsNullOrEmpty(version))
+            {
+                aboutRealmStudio.RealmStudioVersionLabel.Text = string.Concat("Version ", version.AsSpan(0, version.IndexOf('+')));
+            }
+            else
+            {
+                aboutRealmStudio.RealmStudioVersionLabel.Text = "Version Unknown";
+            }
+
+            aboutRealmStudio.ShowDialog();
 
         }
         #endregion
@@ -1053,6 +1068,8 @@ namespace RealmStudio
                     NAME_GENERATOR_CONFIG.NamebasesListBox.Items.Count - 1, true);
             }
 
+
+            MapToolMethods.NameLanguages.Sort();
             foreach (string languageName in MapToolMethods.NameLanguages)
             {
                 NAME_GENERATOR_CONFIG.LanguagesListBox.Items.Add(languageName);
@@ -7813,12 +7830,11 @@ namespace RealmStudio
 
         private void GenerateNameButton_Click(object sender, EventArgs e)
         {
-            /*
             if (ModifierKeys == Keys.None)
             {
                 string generatedName = MapToolMethods.GenerateRandomPlaceName();
 
-                if (MapLabelMethods.CreatingLabel)
+                if (CREATING_LABEL)
                 {
                     if (LABEL_TEXT_BOX != null && !LABEL_TEXT_BOX.IsDisposed)
                     {
@@ -7829,9 +7845,8 @@ namespace RealmStudio
             }
             else if (ModifierKeys == Keys.Shift)
             {
-                NAME_GENERATOR_SETTINGS_DIALOG.Show();
+                NAME_GENERATOR_CONFIG.Show();
             }
-            */
         }
         #endregion
 

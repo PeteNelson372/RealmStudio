@@ -46,6 +46,8 @@
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox3 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox4 = new ReaLTaiizor.Controls.MaterialCheckBox();
+            ClipboardButton = new FontAwesome.Sharp.IconButton();
+            ClearNameListButton = new FontAwesome.Sharp.IconButton();
             NameConfigOverlayForm.SuspendLayout();
             SuspendLayout();
             // 
@@ -53,6 +55,8 @@
             // 
             NameConfigOverlayForm.BackColor = Color.FromArgb(244, 241, 243);
             NameConfigOverlayForm.BorderColor = Color.FromArgb(38, 38, 38);
+            NameConfigOverlayForm.Controls.Add(ClearNameListButton);
+            NameConfigOverlayForm.Controls.Add(ClipboardButton);
             NameConfigOverlayForm.Controls.Add(GenerateNamesButton);
             NameConfigOverlayForm.Controls.Add(GeneratedNamesList);
             NameConfigOverlayForm.Controls.Add(SelectAllLanguagesCheck);
@@ -79,7 +83,7 @@
             NameConfigOverlayForm.Padding = new Padding(20, 56, 20, 16);
             NameConfigOverlayForm.RoundCorners = true;
             NameConfigOverlayForm.Sizable = true;
-            NameConfigOverlayForm.Size = new Size(557, 431);
+            NameConfigOverlayForm.Size = new Size(563, 431);
             NameConfigOverlayForm.SmartBounds = true;
             NameConfigOverlayForm.StartPosition = FormStartPosition.WindowsDefaultLocation;
             NameConfigOverlayForm.TabIndex = 0;
@@ -93,10 +97,11 @@
             GenerateNamesButton.ForeColor = SystemColors.ControlDarkDark;
             GenerateNamesButton.Location = new Point(370, 104);
             GenerateNamesButton.Name = "GenerateNamesButton";
-            GenerateNamesButton.Size = new Size(160, 50);
+            GenerateNamesButton.Size = new Size(170, 50);
             GenerateNamesButton.TabIndex = 60;
             GenerateNamesButton.Text = "&Generate Names";
             GenerateNamesButton.UseVisualStyleBackColor = true;
+            GenerateNamesButton.Click += GenerateNamesButton_Click;
             // 
             // GeneratedNamesList
             // 
@@ -104,8 +109,9 @@
             GeneratedNamesList.ItemHeight = 15;
             GeneratedNamesList.Location = new Point(370, 160);
             GeneratedNamesList.Name = "GeneratedNamesList";
-            GeneratedNamesList.Size = new Size(160, 199);
+            GeneratedNamesList.Size = new Size(170, 199);
             GeneratedNamesList.TabIndex = 59;
+            GeneratedNamesList.SelectedIndexChanged += GeneratedNamesList_SelectedIndexChanged;
             // 
             // SelectAllLanguagesCheck
             // 
@@ -119,6 +125,7 @@
             SelectAllLanguagesCheck.TabIndex = 58;
             SelectAllLanguagesCheck.Text = "Select All";
             SelectAllLanguagesCheck.UseVisualStyleBackColor = true;
+            SelectAllLanguagesCheck.CheckedChanged += SelectAllLanguagesCheck_CheckedChanged;
             // 
             // label3
             // 
@@ -151,6 +158,7 @@
             SelectAllNamebasesCheck.TabIndex = 55;
             SelectAllNamebasesCheck.Text = "Select All";
             SelectAllNamebasesCheck.UseVisualStyleBackColor = true;
+            SelectAllNamebasesCheck.CheckedChanged += SelectAllNamebasesCheck_CheckedChanged;
             // 
             // label2
             // 
@@ -183,6 +191,7 @@
             SelectAllNameGeneratorsCheck.TabIndex = 52;
             SelectAllNameGeneratorsCheck.Text = "Select All";
             SelectAllNameGeneratorsCheck.UseVisualStyleBackColor = true;
+            SelectAllNameGeneratorsCheck.CheckedChanged += SelectAllNameGeneratorsCheck_CheckedChanged;
             // 
             // label1
             // 
@@ -208,7 +217,7 @@
             CloseNameConfigurationButton.DialogResult = DialogResult.OK;
             CloseNameConfigurationButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             CloseNameConfigurationButton.ForeColor = SystemColors.ControlDarkDark;
-            CloseNameConfigurationButton.Location = new Point(476, 365);
+            CloseNameConfigurationButton.Location = new Point(490, 365);
             CloseNameConfigurationButton.Name = "CloseNameConfigurationButton";
             CloseNameConfigurationButton.Size = new Size(54, 50);
             CloseNameConfigurationButton.TabIndex = 49;
@@ -221,12 +230,13 @@
             ApplySelectedNameButton.DialogResult = DialogResult.OK;
             ApplySelectedNameButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             ApplySelectedNameButton.ForeColor = SystemColors.ControlDarkDark;
-            ApplySelectedNameButton.Location = new Point(416, 364);
+            ApplySelectedNameButton.Location = new Point(430, 364);
             ApplySelectedNameButton.Name = "ApplySelectedNameButton";
             ApplySelectedNameButton.Size = new Size(54, 50);
             ApplySelectedNameButton.TabIndex = 48;
             ApplySelectedNameButton.Text = "&Apply";
             ApplySelectedNameButton.UseVisualStyleBackColor = true;
+            ApplySelectedNameButton.Click += ApplySelectedNameButton_Click;
             // 
             // materialCheckBox1
             // 
@@ -296,11 +306,37 @@
             materialCheckBox4.UseAccentColor = false;
             materialCheckBox4.UseVisualStyleBackColor = true;
             // 
+            // ClipboardButton
+            // 
+            ClipboardButton.IconChar = FontAwesome.Sharp.IconChar.ClipboardList;
+            ClipboardButton.IconColor = Color.Black;
+            ClipboardButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ClipboardButton.IconSize = 24;
+            ClipboardButton.Location = new Point(370, 362);
+            ClipboardButton.Name = "ClipboardButton";
+            ClipboardButton.Size = new Size(54, 50);
+            ClipboardButton.TabIndex = 62;
+            ClipboardButton.UseVisualStyleBackColor = true;
+            ClipboardButton.Click += CopyToClipboardButton_Click;
+            // 
+            // ClearNameListButton
+            // 
+            ClearNameListButton.IconChar = FontAwesome.Sharp.IconChar.TrashAlt;
+            ClearNameListButton.IconColor = Color.Black;
+            ClearNameListButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ClearNameListButton.IconSize = 14;
+            ClearNameListButton.Location = new Point(516, 75);
+            ClearNameListButton.Name = "ClearNameListButton";
+            ClearNameListButton.Size = new Size(24, 24);
+            ClearNameListButton.TabIndex = 63;
+            ClearNameListButton.UseVisualStyleBackColor = true;
+            ClearNameListButton.Click += ClearNameListButton_Click;
+            // 
             // NameGeneratorConfiguration
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(557, 431);
+            ClientSize = new Size(563, 431);
             Controls.Add(NameConfigOverlayForm);
             FormBorderStyle = FormBorderStyle.None;
             MinimumSize = new Size(261, 65);
@@ -333,5 +369,7 @@
         public CheckedListBox NameGeneratorsListBox;
         public CheckedListBox LanguagesListBox;
         public CheckedListBox NamebasesListBox;
+        private FontAwesome.Sharp.IconButton ClipboardButton;
+        private FontAwesome.Sharp.IconButton ClearNameListButton;
     }
 }

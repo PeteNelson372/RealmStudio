@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+  <!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -117,23 +117,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Eye Dropper" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Eye Dropper.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="CreditsTextBox.Text" xml:space="preserve">
+    <value>The source code for Realm Studio is found on Github at https://github.com/PeteNelson372/RealmStudio.
+
+Realm Studio uses the SkiaSharp (https://github.com/mono/SkiaSharp) implementation of the Google Skia (https://skia.org/) graphics library for rendering graphics.
+
+Realm Studio also uses libraries from:
+AForge (https://www.aforgenet.com/framework/)
+Clipper2 (https://www.angusj.com/clipper2/Docs/Overview.htm)
+Cyotek (https://www.cyotek.com/)
+Delaunator (https://github.com/nol1fe/delaunator-sharp)
+FontAwesome.Sharp (https://awesome-inc.github.io/FontAwesome.Sharp/)
+FontAwesome (https://fontawesome.com/)
+log4net by the Apache Software Foundation (https://logging.apache.org/log4net/)
+
+Realm Studio uses image assets from Freepik (freepik.com) and FreeImages (freeimages.com) credited to artists:
+efe_madrid, kjpargeter, Layerace, rawpixel (rawpixel.com), and jvror.
+
+Realm Studio also uses Wonderdraft assets imported from CartographyAssets (cartographyassets.com). See the Help file for information on importing assets into Realm Studio.</value>
   </data>
-  <data name="ASSET_DIRECTORY" xml:space="preserve">
-    <value>D:\The Brookmonte Group\Brookmonte Software\Map Creator\Assets</value>
-  </data>
-  <data name="GitHub_Logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GitHub_Logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="brookmonte-group-logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\brookmonte-group-logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ZeroSum white - no background" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ZeroSum white - no background1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="gplv3-127x51" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\gplv3-127x51.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="LicenseTextBox.Text" xml:space="preserve">
+    <value>Realm Studio is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+Realm Studio is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. The text of the GNU General Public License (GPL) is found in the LICENSE.txt file. If the LICENSE.txt file is not present or the text of the GNU GPL is not present in the LICENSE.txt file, see https://www.gnu.org/licenses/.
+
+For questions about the Realm Studio application or about licensing, please email support@brookmonte.com.</value>
   </data>
 </root>
