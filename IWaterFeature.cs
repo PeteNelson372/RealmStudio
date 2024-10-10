@@ -18,10 +18,10 @@
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
-* contact@brookmonte.com
+* support@brookmonte.com
 *
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal interface IWaterFeature {}
+    internal interface IWaterFeature { }
 }

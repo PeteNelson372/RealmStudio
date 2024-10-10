@@ -18,7 +18,7 @@
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
-* contact@brookmonte.com
+* support@brookmonte.com
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
@@ -30,7 +30,7 @@ using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    internal class MapLabel : MapComponent, IXmlSerializable
+    public class MapLabel : MapComponent, IXmlSerializable
     {
         public bool IsSelected { get; set; } = false;
 
@@ -159,7 +159,7 @@ namespace RealmStudio
 #pragma warning disable CS8604 // Possible null reference argument.
 #pragma warning disable CS8601 // Possible null reference assignment.
 
-            XNamespace ns = "MapCreator";
+            XNamespace ns = "RealmStudio";
             string content = reader.ReadOuterXml();
             XDocument mapLabelDoc = XDocument.Parse(content);
 

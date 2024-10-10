@@ -18,18 +18,18 @@
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
-* contact@brookmonte.com
+* support@brookmonte.com
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    internal class MapRiverPoint : IXmlSerializable
+    public class MapRiverPoint : IXmlSerializable
     {
         public Guid PointGuid { get; set; } = Guid.NewGuid();
         public SKPoint RiverPoint { get; set; }
@@ -102,12 +102,15 @@ namespace RealmStudio
             writer.WriteEndElement();
 
             writer.WriteStartElement("RiverPoint");
+
             writer.WriteStartElement("X");
             writer.WriteValue(RiverPoint.X.ToString());
             writer.WriteEndElement();
+
             writer.WriteStartElement("Y");
             writer.WriteValue(RiverPoint.Y.ToString());
             writer.WriteEndElement();
+
             writer.WriteEndElement();
         }
     }

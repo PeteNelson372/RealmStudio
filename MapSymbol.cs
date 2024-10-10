@@ -18,10 +18,11 @@
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
-* contact@brookmonte.com
+* support@brookmonte.com
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
+using SkiaSharp.Views.Desktop;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -257,11 +258,11 @@ namespace RealmStudio
             UseCustomColors = bool.Parse(useCustomColors);
 
             IEnumerable<XElement> customColorElem = mapSymbolDoc.Descendants(ns + "CustomColors");
-            if (customColorElem.First() != null)
+            if (customColorElem != null && customColorElem.Count() > 0 && customColorElem.First() != null)
             {
                 List<XElement> elemList = customColorElem.Descendants().ToList();
 
-                if (elemList != null && elemList.Count == 4)
+                if (elemList != null && elemList.Count == 3)
                 {
                     XElement colorELem = elemList[0];
                     string colorString = colorELem.Value;
@@ -275,6 +276,18 @@ namespace RealmStudio
                     colorString = colorELem.Value;
                     CustomSymbolColors[2] = Extensions.ToSKColor(ColorTranslator.FromHtml(colorString));
                 }
+                else
+                {
+                    CustomSymbolColors[0] = Color.FromArgb(255, 85, 44, 36).ToSKColor();
+                    CustomSymbolColors[1] = Color.FromArgb(255, 53, 45, 32).ToSKColor();
+                    CustomSymbolColors[2] = Color.FromArgb(161, 214, 202, 171).ToSKColor();
+                }
+            }
+            else
+            {
+                CustomSymbolColors[0] = Color.FromArgb(255, 85, 44, 36).ToSKColor();
+                CustomSymbolColors[1] = Color.FromArgb(255, 53, 45, 32).ToSKColor();
+                CustomSymbolColors[2] = Color.FromArgb(161, 214, 202, 171).ToSKColor();
             }
 
             IEnumerable<XElement?> sbmElemEnum = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "SymbolBitmap"));
@@ -395,7 +408,7 @@ namespace RealmStudio
             writer.WriteStartElement("CustomColors");
             for (int i = 0; i < CustomSymbolColors.Length; i++)
             {
-                XmlColor color = new XmlColor(Extensions.ToDrawingColor(CustomSymbolColors[i]));
+                XmlColor color = new(Extensions.ToDrawingColor(CustomSymbolColors[i]));
                 writer.WriteStartElement("CustomColor" + i.ToString());
                 color.WriteXml(writer);
                 writer.WriteEndElement();

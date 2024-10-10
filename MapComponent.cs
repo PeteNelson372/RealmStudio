@@ -18,7 +18,7 @@
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
-* contact@brookmonte.com
+* support@brookmonte.com
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
@@ -26,7 +26,6 @@ using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    //[XmlInclude(typeof(MapBitmap))]
     [XmlInclude(typeof(MapLayer))]
     public abstract class MapComponent : IMapComponent
     {
@@ -34,20 +33,19 @@ namespace RealmStudio
         public bool RenderComponent { get; set; } = true;
 
         [XmlArray("MapLayerComponents")]
-        //[XmlArrayItem("MapBitmap", Type = typeof(MapBitmap))]
         [XmlArrayItem("Landform", Type = typeof(Landform))]
-        //[XmlArrayItem("MapPaintedWaterFeature", Type = typeof(MapPaintedWaterFeature))]
-        //[XmlArrayItem("MapPath", Type = typeof(MapPath))]
-        //[XmlArrayItem("MapSymbol", Type = typeof(MapSymbol))]
-        //[XmlArrayItem("MapRiver", Type = typeof(MapRiver))]
-        //[XmlArrayItem("MapLabel", Type = typeof(MapLabel))]
-        //[XmlArrayItem("PlacedMapBox", Type = typeof(PlacedMapBox))]
-        //[XmlArrayItem("PlacedMapFrame", Type = typeof(PlacedMapFrame))]
-        //[XmlArrayItem("MapGrid", Type = typeof(MapGrid))]
-        //[XmlArrayItem("MapWindrose", Type = typeof(MapWindrose))]
-        //[XmlArrayItem("MapScale", Type = typeof(MapScale))]
-        //[XmlArrayItem("MapRegion", Type = typeof(MapRegion))]
-        //[XmlArrayItem("MapVignette", Type = typeof(MapVignette))]
+        [XmlArrayItem("WaterFeature", Type = typeof(WaterFeature))]
+        [XmlArrayItem("MapPath", Type = typeof(MapPath))]
+        [XmlArrayItem("MapSymbol", Type = typeof(MapSymbol))]
+        [XmlArrayItem("River", Type = typeof(River))]
+        [XmlArrayItem("MapLabel", Type = typeof(MapLabel))]
+        [XmlArrayItem("PlacedMapBox", Type = typeof(PlacedMapBox))]
+        [XmlArrayItem("PlacedMapFrame", Type = typeof(PlacedMapFrame))]
+        [XmlArrayItem("MapGrid", Type = typeof(MapGrid))]
+        [XmlArrayItem("Windrose", Type = typeof(MapWindrose))]
+        [XmlArrayItem("MapScale", Type = typeof(MapScale))]
+        [XmlArrayItem("MapRegion", Type = typeof(MapRegion))]
+        [XmlArrayItem("MapVignette", Type = typeof(MapVignette))]
         public List<MapComponent> MapLayerComponents { get; } = new List<MapComponent>(500);
 
         [XmlAttribute]

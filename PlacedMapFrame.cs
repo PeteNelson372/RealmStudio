@@ -18,7 +18,7 @@
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
-* contact@brookmonte.com
+* support@brookmonte.com
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
@@ -214,7 +214,7 @@ namespace RealmStudio
 #pragma warning disable CS8604 // Possible null reference argument.
 #pragma warning disable CS8601 // Possible null reference assignment.
 
-            XNamespace ns = "MapCreator";
+            XNamespace ns = "RealmStudio";
             string content = reader.ReadOuterXml();
             XDocument mapFrameDoc = XDocument.Parse(content);
 

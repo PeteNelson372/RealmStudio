@@ -18,18 +18,19 @@
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
-* contact@brookmonte.com
+* support@brookmonte.com
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    internal class WaterFeature : MapComponent, IWaterFeature, IXmlSerializable
+    public class WaterFeature : MapComponent, IWaterFeature, IXmlSerializable
     {
         public RealmStudioMap? ParentMap { get; set; } = null;
         public string WaterFeatureName { get; set; } = String.Empty;
@@ -192,17 +193,117 @@ namespace RealmStudio
 
         public XmlSchema? GetSchema()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public void ReadXml(XmlReader reader)
         {
-            throw new NotImplementedException();
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8601 // Possible null reference assignment.
+
+            XNamespace ns = "RealmStudio";
+            string content = reader.ReadOuterXml();
+            XDocument mapWaterFeatureDoc = XDocument.Parse(content);
+
+            IEnumerable<XNode> nodes = mapWaterFeatureDoc.Descendants();
+
+            IEnumerable<XElement?> nameElemEnum = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureName"));
+            if (nameElemEnum.First() != null)
+            {
+                string? mapWaterFeatureName = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureName").Value).FirstOrDefault();
+                WaterFeatureName = mapWaterFeatureName;
+            }
+
+            IEnumerable<XElement?> guidElemEnum = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureGuid"));
+            if (guidElemEnum.First() != null)
+            {
+                string? mapGuid = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureGuid").Value).FirstOrDefault();
+                WaterFeatureGuid = Guid.Parse(mapGuid);
+            }
+
+            IEnumerable<XElement?> typeElemEnum = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureType"));
+            if (typeElemEnum.First() != null)
+            {
+                string? waterFeatureType = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureType").Value).FirstOrDefault();
+                WaterFeatureType = Enum.Parse<WaterFeatureTypeEnum>(waterFeatureType);
+            }
+
+            IEnumerable<XElement?> shorelineEffectDistanceEnum = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "ShorelineEffectDistance"));
+            if (shorelineEffectDistanceEnum.First() != null)
+            {
+                string? shorelineEffectDistance = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "ShorelineEffectDistance").Value).FirstOrDefault();
+                ShorelineEffectDistance = int.Parse(shorelineEffectDistance);
+            }
+
+            IEnumerable<XElement?> colorElemEnum = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureColor"));
+            if (colorElemEnum.First() != null)
+            {
+                string? waterFeatureColor = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureColor").Value).FirstOrDefault();
+                WaterFeatureColor = ColorTranslator.FromHtml(waterFeatureColor);
+            }
+
+            IEnumerable<XElement?> shoreColorElemEnum = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureShorelineColor"));
+            if (shoreColorElemEnum.First() != null)
+            {
+                string? waterFeatureShorelineColor = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureShorelineColor").Value).FirstOrDefault();
+                WaterFeatureShorelineColor = ColorTranslator.FromHtml(waterFeatureShorelineColor);
+            }
+
+            IEnumerable<XElement?> pathElemEnum = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeaturePath"));
+            if (pathElemEnum.First() != null)
+            {
+                string? waterFeaturePath = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeaturePath").Value).FirstOrDefault();
+                WaterFeaturePath = SKPath.ParseSvgPathData(waterFeaturePath);
+            }
+
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         public void WriteXml(XmlWriter writer)
         {
-            throw new NotImplementedException();
+            using MemoryStream ms = new();
+            using SKManagedWStream wstream = new(ms);
+
+            // water feature name
+            writer.WriteStartElement("WaterFeatureName");
+            writer.WriteString(WaterFeatureName);
+            writer.WriteEndElement();
+
+            // water feature GUID
+            writer.WriteStartElement("WaterFeatureGuid");
+            writer.WriteString(WaterFeatureGuid.ToString());
+            writer.WriteEndElement();
+
+            // water feature type
+            writer.WriteStartElement("WaterFeatureType");
+            writer.WriteString(WaterFeatureType.ToString());
+            writer.WriteEndElement();
+
+            // shoreline effect distance
+            writer.WriteStartElement("ShorelineEffectDistance");
+            writer.WriteString(ShorelineEffectDistance.ToString());
+            writer.WriteEndElement();
+
+            // water feature color
+            XmlColor waterfeaturecolor = new(WaterFeatureColor);
+            writer.WriteStartElement("WaterFeatureColor");
+            waterfeaturecolor.WriteXml(writer);
+            writer.WriteEndElement();
+
+            // water feature shoreline color
+            XmlColor waterFeatureShorelineColor = new(WaterFeatureShorelineColor);
+            writer.WriteStartElement("WaterFeatureShorelineColor");
+            waterfeaturecolor.WriteXml(writer);
+            writer.WriteEndElement();
+
+            // water feature path
+            writer.WriteStartElement("WaterFeaturePath");
+            string pathSvg = WaterFeaturePath.ToSvgPathData();
+            writer.WriteValue(pathSvg);
+            writer.WriteEndElement();
         }
 
 

@@ -18,7 +18,7 @@
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
-* contact@brookmonte.com
+* support@brookmonte.com
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
@@ -41,7 +41,6 @@ namespace RealmStudio
         public float PathWidth { get; set; } = 4;
         public SKBitmap? PathTexture { get; set; } = null;
         public bool DrawOverSymbols { get; set; } = false;
-
 
         public bool ShowPathPoints { get; set; } = false;
         public bool IsSelected { get; set; } = false;

@@ -18,7 +18,7 @@
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
-* contact@brookmonte.com
+* support@brookmonte.com
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
@@ -34,7 +34,7 @@ namespace RealmStudio
         public static int LandformColorBrushSize { get; set; } = 20;
         public static int LandformColorEraserBrushSize { get; set; } = 20;
 
-        internal static void CreateInnerAndOuterPaths(RealmStudioMap map, Landform landform)
+        internal static void CreateAllPathsFromDrawnPath(RealmStudioMap map, Landform landform)
         {
             if (map == null || landform == null) return;
 
@@ -66,6 +66,38 @@ namespace RealmStudio
             Task.WaitAll(cpt1, cpt2, cpt3, cpt4, cpt4, cpt6, cpt7, cpt8, cpt9, cpt10, cpt11, cpt12, cpt13, cpt14, cpt15, cpt16);
         }
 
+        internal static void CreateInnerAndOuterPathsFromContourPoints(RealmStudioMap map, Landform landform)
+        {
+            if (map == null || landform == null) return;
+
+            if (landform.ContourPoints.Count == 0)
+            {
+                landform.ContourPoints = [.. landform.ContourPath.Points];
+            }
+
+            int pathDistance = landform.CoastlineEffectDistance / 8;
+
+            Task cpt1 = Task.Run(() => landform.InnerPath1 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, pathDistance, ParallelEnum.Below));
+            Task cpt2 = Task.Run(() => landform.InnerPath2 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 2 * pathDistance, ParallelEnum.Below));
+            Task cpt3 = Task.Run(() => landform.InnerPath3 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 3 * pathDistance, ParallelEnum.Below));
+            Task cpt4 = Task.Run(() => landform.InnerPath4 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 4 * pathDistance, ParallelEnum.Below));
+            Task cpt5 = Task.Run(() => landform.InnerPath5 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 5 * pathDistance, ParallelEnum.Below));
+            Task cpt6 = Task.Run(() => landform.InnerPath6 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 6 * pathDistance, ParallelEnum.Below));
+            Task cpt7 = Task.Run(() => landform.InnerPath7 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 7 * pathDistance, ParallelEnum.Below));
+            Task cpt8 = Task.Run(() => landform.InnerPath8 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 8 * pathDistance, ParallelEnum.Below));
+
+            Task cpt9 = Task.Run(() => landform.OuterPath1 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, pathDistance, ParallelEnum.Above));
+            Task cpt10 = Task.Run(() => landform.OuterPath2 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 2 * pathDistance, ParallelEnum.Above));
+            Task cpt11 = Task.Run(() => landform.OuterPath3 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 3 * pathDistance, ParallelEnum.Above));
+            Task cpt12 = Task.Run(() => landform.OuterPath4 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 4 * pathDistance, ParallelEnum.Above));
+            Task cpt13 = Task.Run(() => landform.OuterPath5 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 5 * pathDistance, ParallelEnum.Above));
+            Task cpt14 = Task.Run(() => landform.OuterPath6 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 6 * pathDistance, ParallelEnum.Above));
+            Task cpt15 = Task.Run(() => landform.OuterPath7 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 7 * pathDistance, ParallelEnum.Above));
+            Task cpt16 = Task.Run(() => landform.OuterPath8 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 8 * pathDistance, ParallelEnum.Above));
+
+            Task.WaitAll(cpt1, cpt2, cpt3, cpt4, cpt4, cpt6, cpt7, cpt8, cpt9, cpt10, cpt11, cpt12, cpt13, cpt14, cpt15, cpt16);
+        }
+
         internal static void EraseLandForm(RealmStudioMap map)
         {
             if (LandformErasePath.PointCount > 0)
@@ -80,7 +112,7 @@ namespace RealmStudio
                     {
                         l.DrawPath = new(diffPath);
 
-                        Task.Run(() => CreateInnerAndOuterPaths(map, l));
+                        Task.Run(() => CreateAllPathsFromDrawnPath(map, l));
                     }
                 }
 
@@ -114,7 +146,7 @@ namespace RealmStudio
                         if (pathsMerged)
                         {
                             landform_i.DrawPath = new(landformPath1);
-                            CreateInnerAndOuterPaths(map, landform_i);
+                            CreateAllPathsFromDrawnPath(map, landform_i);
 
                             landformLayer.MapLayerComponents[i] = landform_i;
 

@@ -18,18 +18,19 @@
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
-* contact@brookmonte.com
+* support@brookmonte.com
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    internal class River : MapComponent, IWaterFeature, IXmlSerializable
+    public class River : MapComponent, IWaterFeature, IXmlSerializable
     {
         public RealmStudioMap? ParentMap { get; set; } = null;
 
@@ -72,8 +73,6 @@ namespace RealmStudio
         };
 
         public SKPath? RiverBoundaryPath { get; set; } = null;
-
-        public List<SKPath> RiverColorPaths = [];
 
         public override void Render(SKCanvas canvas)
         {
@@ -433,17 +432,132 @@ namespace RealmStudio
 
         public XmlSchema? GetSchema()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public void ReadXml(XmlReader reader)
         {
-            throw new NotImplementedException();
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8601 // Possible null reference assignment.
+
+            XNamespace ns = "RealmStudio";
+            string content = reader.ReadOuterXml();
+            XDocument mapRiverDoc = XDocument.Parse(content);
+
+            IEnumerable<XElement?> nameElemEnum = mapRiverDoc.Descendants().Select(x => x.Element(ns + "MapRiverName"));
+            if (nameElemEnum.First() != null)
+            {
+                string? mapRiverName = mapRiverDoc.Descendants().Select(x => x.Element(ns + "MapRiverName").Value).FirstOrDefault();
+                MapRiverName = mapRiverName;
+            }
+
+            IEnumerable<XElement?> guidElemEnum = mapRiverDoc.Descendants().Select(x => x.Element(ns + "MapRiverGuid"));
+            if (guidElemEnum.First() != null)
+            {
+                string? mapGuid = mapRiverDoc.Descendants().Select(x => x.Element(ns + "MapRiverGuid").Value).FirstOrDefault();
+                MapRiverGuid = Guid.Parse(mapGuid);
+            }
+
+            IEnumerable<XElement?> riverColorElem = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverColor"));
+            if (riverColorElem.First() != null)
+            {
+                string? riverColor = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverColor").Value).FirstOrDefault();
+                RiverColor = ColorTranslator.FromHtml(riverColor);
+            }
+
+            IEnumerable<XElement?> riverWidthElem = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverWidth"));
+            if (riverWidthElem.First() != null)
+            {
+                string? riverWidth = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverWidth").Value).FirstOrDefault();
+                RiverWidth = int.Parse(riverWidth);
+            }
+
+            IEnumerable<XElement?> riverSourceFadeInElem = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverSourceFadeIn"));
+            if (riverSourceFadeInElem.First() != null)
+            {
+                string? riverSourceFadeIn = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverSourceFadeIn").Value).FirstOrDefault();
+                RiverSourceFadeIn = bool.Parse(riverSourceFadeIn);
+            }
+
+            IEnumerable<XElement?> riverShorelineColorElem = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverShorelineColor"));
+            if (riverShorelineColorElem.First() != null)
+            {
+                string? riverShorelineColor = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverShorelineColor").Value).FirstOrDefault();
+                RiverShorelineColor = ColorTranslator.FromHtml(riverShorelineColor);
+            }
+
+            IEnumerable<XElement?> mapPointsElem = mapRiverDoc.Descendants().Select(x => x.Element(ns + "MapRiverPoints"));
+            if (mapPointsElem.Count() > 0 && mapPointsElem.First() != null)
+            {
+                var settings = new XmlReaderSettings
+                {
+                    IgnoreWhitespace = true
+                };
+
+                foreach (XElement? elem in mapPointsElem.Descendants())
+                {
+                    if (elem != null && elem.Name.LocalName == "MapRiverPoint")
+                    {
+                        string mapPointString = elem.ToString();
+
+                        using XmlReader pointReader = XmlReader.Create(new StringReader(mapPointString), settings);
+                        pointReader.Read();
+                        MapRiverPoint mpp = new();
+                        mpp.ReadXml(pointReader);
+
+                        RiverPoints.Add(mpp);
+                    }
+                }
+            }
+
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         public void WriteXml(XmlWriter writer)
         {
-            throw new NotImplementedException();
+            using MemoryStream ms = new();
+            using SKManagedWStream wstream = new(ms);
+
+            // water feature name
+            writer.WriteStartElement("MapRiverName");
+            writer.WriteString(MapRiverName);
+            writer.WriteEndElement();
+
+            // water feature GUID
+            writer.WriteStartElement("MapRiverGuid");
+            writer.WriteString(MapRiverGuid.ToString());
+            writer.WriteEndElement();
+
+            // water feature color
+            XmlColor riverColor = new(RiverColor);
+            writer.WriteStartElement("RiverColor");
+            riverColor.WriteXml(writer);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("RiverWidth");
+            writer.WriteValue(RiverWidth.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("RiverSourceFadeIn");
+            writer.WriteValue(RiverSourceFadeIn.ToString());
+            writer.WriteEndElement();
+
+            XmlColor riverShorelineColor = new(RiverShorelineColor);
+            writer.WriteStartElement("RiverShorelineColor");
+            riverShorelineColor.WriteXml(writer);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("MapRiverPoints");
+            foreach (MapRiverPoint point in RiverPoints)
+            {
+                writer.WriteStartElement("MapRiverPoint");
+                point.WriteXml(writer);
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
         }
     }
 }

@@ -18,7 +18,7 @@
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
-* contact@brookmonte.com
+* support@brookmonte.com
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
@@ -363,7 +363,7 @@ namespace RealmStudio
 #pragma warning disable CS8604 // Possible null reference argument.
 #pragma warning disable CS8601 // Possible null reference assignment.
 
-            XNamespace ns = "MapCreator";
+            XNamespace ns = "RealmStudio";
             string content = reader.ReadOuterXml();
             XDocument mapGridDoc = XDocument.Parse(content);
 
@@ -406,10 +406,28 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement> gridColorElem = mapGridDoc.Descendants(ns + "GridColor");
-            if (gridColorElem.First() != null)
+            if (gridColorElem != null && gridColorElem.Count() > 0 && gridColorElem.First() != null)
             {
                 string? gridColor = mapGridDoc.Descendants().Select(x => x.Element(ns + "GridColor").Value).FirstOrDefault();
-                GridColor = ColorTranslator.FromHtml(gridColor);
+
+                int argbValue = 0;
+                if (int.TryParse(gridColor, out int n))
+                {
+                    if (n > 0)
+                    {
+                        argbValue = n;
+                    }
+                    else
+                    {
+                        argbValue = Color.FromArgb(126, 0, 0, 0).ToArgb();
+                    }
+                }
+
+                GridColor = Color.FromArgb(argbValue);
+            }
+            else
+            {
+                GridColor = Color.FromArgb(126, 0, 0, 0);
             }
 
             IEnumerable<XElement?> layerIndexElem = mapGridDoc.Descendants().Select(x => x.Element(ns + "GridLayerIndex"));
@@ -455,9 +473,9 @@ namespace RealmStudio
             writer.WriteString(GridType.ToString());
             writer.WriteEndElement();
 
-            XmlColor gridColor = new(GridColor);
+            int gridColor = GridColor.ToArgb();
             writer.WriteStartElement("GridColor");
-            gridColor.WriteXml(writer);
+            writer.WriteValue(gridColor);
             writer.WriteEndElement();
 
             writer.WriteStartElement("GridLayerIndex");

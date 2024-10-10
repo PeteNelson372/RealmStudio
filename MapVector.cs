@@ -18,7 +18,7 @@
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
-* contact@brookmonte.com
+* support@brookmonte.com
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
@@ -26,7 +26,7 @@ using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    internal class MapVector
+    public class MapVector
     {
         public MapVector()
         {

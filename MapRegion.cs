@@ -18,7 +18,7 @@
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
-* contact@brookmonte.com
+* support@brookmonte.com
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
@@ -33,7 +33,7 @@ namespace RealmStudio
 {
     public class MapRegion : MapComponent, IXmlSerializable
     {
-        public RealmStudioMap? Map { get; set; }
+        public RealmStudioMap? ParentMap { get; set; }
 
         public string RegionName { get; set; } = string.Empty;
         public Guid RegionGuid { get; set; } = Guid.NewGuid();
@@ -52,16 +52,11 @@ namespace RealmStudio
 
         public SKPath? BoundaryPath { get; set; } = null;
 
-        public MapRegion(RealmStudioMap parentMap)
-        {
-            Map = parentMap;
-        }
-
         public MapRegion() { }
 
         public override void Render(SKCanvas canvas)
         {
-            if (Map == null) return;
+            if (ParentMap == null) return;
 
             SKPath path = new();
 
@@ -106,7 +101,7 @@ namespace RealmStudio
 
             if (IsSelected)
             {
-                MapLayer overlayLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.REGIONOVERLAYLAYER);
+                MapLayer overlayLayer = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.REGIONOVERLAYLAYER);
 
                 if (BoundaryPath != null)
                 {
@@ -114,7 +109,7 @@ namespace RealmStudio
                     overlayLayer.RenderPicture = null;
 
                     using var regionOverlayRecorder = new SKPictureRecorder();
-                    SKRect clippingBounds = new(0, 0, Map.MapWidth, Map.MapHeight);
+                    SKRect clippingBounds = new(0, 0, ParentMap.MapWidth, ParentMap.MapHeight);
 
                     // Start recording 
                     regionOverlayRecorder.BeginRecording(clippingBounds);

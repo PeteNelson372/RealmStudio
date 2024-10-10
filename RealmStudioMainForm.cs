@@ -18,7 +18,7 @@
 * see https://www.gnu.org/licenses/.
 *
 * For questions about the RealmStudio application or about licensing, please email
-* contact@brookmonte.com
+* support@brookmonte.com
 *
 ***************************************************************************************************************************/
 using RealmStudio.Properties;
@@ -33,7 +33,7 @@ namespace RealmStudio
 {
     public partial class RealmStudioMainForm : Form
     {
-        private string RELEASE_STATE = "Pre-Release";
+        private readonly string RELEASE_STATE = "Pre-Release";
 
         private int MAP_WIDTH = MapBuilder.MAP_DEFAULT_WIDTH;
         private int MAP_HEIGHT = MapBuilder.MAP_DEFAULT_HEIGHT;
@@ -573,17 +573,17 @@ namespace RealmStudio
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            OpenExistingMap();
         }
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            SaveMap();
         }
 
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            SaveMap();
         }
 
         private void ExportMapMenuItem_Click(object sender, EventArgs e)
@@ -869,8 +869,9 @@ namespace RealmStudio
                 }
 
                 // create the map vignette and add it to the vignette layer
-                MapVignette vignette = new(CURRENT_MAP)
+                MapVignette vignette = new()
                 {
+                    ParentMap = CURRENT_MAP,
                     VignetteColor = VignetteColorSelectionButton.BackColor,
                     VignetteStrength = VignetteStrengthTrack.Value
                 };
@@ -1499,6 +1500,380 @@ namespace RealmStudio
             }
 
             return result;
+        }
+
+        private void OpenExistingMap()
+        {
+            try
+            {
+                OpenFileDialog ofd = new()
+                {
+                    Title = "Open or Create Map",
+                    DefaultExt = "rsmapx",
+                    Filter = "Realm Studio map files (*.rsmapx)|*.rsmapx|All files (*.*)|*.*",
+                    CheckFileExists = true,
+                    RestoreDirectory = true,
+                    ShowHelp = false,           // enabling the help button causes the dialog not to display files
+                    Multiselect = false
+                };
+
+                if (ofd.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (ofd.FileName != "")
+                    {
+                        try
+                        {
+                            OpenMap(ofd.FileName);
+                        }
+                        catch
+                        {
+                            throw;
+                        }
+
+
+                        UpdateMapNameAndSize();
+                        SKGLRenderControl.Invalidate();
+                        Refresh();
+                    }
+                }
+            }
+            catch { }
+        }
+
+
+        private void OpenMap(string mapFilePath)
+        {
+            // open an existing map
+            try
+            {
+                SetStatusText("Loading: " + Path.GetFileName(mapFilePath));
+
+                try
+                {
+                    CURRENT_MAP = MapFileMethods.OpenMap(mapFilePath);
+                }
+                catch
+                {
+                    throw;
+                }
+
+                CURRENT_MAP.IsSaved = true;
+
+                MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+
+                for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
+                {
+                    if (landformLayer.MapLayerComponents[i] is Landform landform)
+                    {
+                        landform.ParentMap = CURRENT_MAP;
+                        LandformMethods.CreateInnerAndOuterPathsFromContourPoints(CURRENT_MAP, landform);
+
+                        if (landform.LandformTexture != null)
+                        {
+                            if (landform.LandformTexture.TextureBitmap != null)
+                            {
+                                Bitmap resizedBitmap = new(landform.LandformTexture.TextureBitmap, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+
+                                // create and set a shader from the texture
+                                SKShader flpShader = SKShader.CreateBitmap(Extensions.ToSKBitmap(resizedBitmap),
+                                    SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+
+                                landform.LandformFillPaint.Shader = flpShader;
+                            }
+                        }
+                        else
+                        {
+                            // texture is not set in the landform object, so use default
+                            if (AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TextureBitmap == null)
+                            {
+                                AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TexturePath);
+                            }
+
+                            landform.LandformTexture = AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX];
+
+                            if (landform.LandformTexture.TextureBitmap != null)
+                            {
+                                Bitmap resizedBitmap = new(landform.LandformTexture.TextureBitmap, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+
+                                // create and set a shader from the texture
+                                SKShader flpShader = SKShader.CreateBitmap(Extensions.ToSKBitmap(resizedBitmap),
+                                    SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+
+                                landform.LandformFillPaint.Shader = flpShader;
+                            }
+                        }
+
+                        MapTexture? dashTexture = AssetManager.HATCH_TEXTURE_LIST.Find(x => x.TextureName == "Watercolor Dashes");
+
+                        if (dashTexture != null)
+                        {
+                            dashTexture.TextureBitmap ??= new Bitmap(dashTexture.TexturePath);
+
+                            SKBitmap resizedSKBitmap = new(100, 100);
+
+                            Extensions.ToSKBitmap(dashTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKFilterQuality.High);
+
+                            landform.DashShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                        }
+
+                        MapTexture? lineHatchTexture = AssetManager.HATCH_TEXTURE_LIST.Find(x => x.TextureName == "Line Hatch");
+
+                        if (lineHatchTexture != null)
+                        {
+                            lineHatchTexture.TextureBitmap ??= new Bitmap(lineHatchTexture.TexturePath);
+
+                            SKBitmap resizedSKBitmap = new(100, 100);
+
+                            Extensions.ToSKBitmap(lineHatchTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKFilterQuality.High);
+
+                            landform.LineHatchBitmapShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                        }
+                    }
+                }
+
+                MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER);
+
+                for (int i = 0; i < waterLayer.MapLayerComponents.Count; i++)
+                {
+                    if (waterLayer.MapLayerComponents[i] is WaterFeature waterFeature)
+                    {
+                        waterFeature.ParentMap = CURRENT_MAP;
+                        WaterFeatureMethods.CreateInnerAndOuterPaths(CURRENT_MAP, waterFeature);
+                        WaterFeatureMethods.ConstructWaterFeaturePaintObjects(waterFeature);
+                    }
+                    else if (waterLayer.MapLayerComponents[i] is River river)
+                    {
+                        river.ParentMap = CURRENT_MAP;
+                        WaterFeatureMethods.ConstructRiverPaintObjects(river);
+                    }
+                }
+
+                MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+                MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+
+                for (int i = 0; i < pathLowerLayer.MapLayerComponents.Count; i++)
+                {
+                    if (pathLowerLayer.MapLayerComponents[i] is MapPath mapPath)
+                    {
+                        mapPath.ParentMap = CURRENT_MAP;
+                        MapPathMethods.ConstructPathPaint(mapPath);
+
+                        SKPath path = MapPathMethods.GenerateMapPathBoundaryPath(mapPath.PathPoints);
+                        mapPath.BoundaryPath?.Dispose();
+                        mapPath.BoundaryPath = new(path);
+                        path.Dispose();
+                    }
+                }
+
+                for (int i = 0; i < pathUpperLayer.MapLayerComponents.Count; i++)
+                {
+                    if (pathUpperLayer.MapLayerComponents[i] is MapPath mapPath)
+                    {
+                        mapPath.ParentMap = CURRENT_MAP;
+                        MapPathMethods.ConstructPathPaint(mapPath);
+
+                        SKPath path = MapPathMethods.GenerateMapPathBoundaryPath(mapPath.PathPoints);
+                        mapPath.BoundaryPath?.Dispose();
+                        mapPath.BoundaryPath = new(path);
+                        path.Dispose();
+                    }
+                }
+
+                MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.SYMBOLLAYER);
+
+                for (int i = 0; i < symbolLayer.MapLayerComponents.Count; i++)
+                {
+                    if (symbolLayer.MapLayerComponents[i] is MapSymbol symbol)
+                    {
+                        SKColor? paintColor = symbol.CustomSymbolColors[0];
+
+                        // reconstruct paint object for grayscale symbols
+                        if (symbol.IsGrayscale && paintColor != null)
+                        {
+                            SKPaint paint = new()
+                            {
+                                ColorFilter = SKColorFilter.CreateBlendMode((SKColor)paintColor,
+                                    SKBlendMode.Modulate) // combine the selected color with the bitmap colors
+                            };
+
+                            symbol.SymbolPaint = paint;
+
+                            if (symbol.PlacedBitmap != null)
+                            {
+                                if (symbol.Width != symbol.PlacedBitmap.Width || symbol.Height != symbol.PlacedBitmap.Height)
+                                {
+                                    // resize the placed bitmap to match the size set in the symbol - this shouldn't be necessary
+                                    SKBitmap resizedPlacedBitmap = new SKBitmap(symbol.Width, symbol.Height);
+
+                                    symbol.PlacedBitmap.ScalePixels(resizedPlacedBitmap, SKFilterQuality.High);
+                                    symbol.SetPlacedBitmap(resizedPlacedBitmap);
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.DEFAULTGRIDLAYER);
+                for (int i = 0; i < defaultGridLayer.MapLayerComponents.Count; i++)
+                {
+                    if (defaultGridLayer.MapLayerComponents[i] is MapGrid grid)
+                    {
+                        CURRENT_MAP_GRID = grid;
+                        CURRENT_MAP_GRID.GridLayerIndex = MapBuilder.DEFAULTGRIDLAYER;
+                        CURRENT_MAP_GRID.GridEnabled = true;
+                        break;
+                    }
+                }
+
+                if (CURRENT_MAP_GRID == null)
+                {
+                    MapLayer oceanGridLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.ABOVEOCEANGRIDLAYER);
+                    for (int i = 0; i < oceanGridLayer.MapLayerComponents.Count; i++)
+                    {
+                        if (oceanGridLayer.MapLayerComponents[i] is MapGrid grid)
+                        {
+                            CURRENT_MAP_GRID = grid;
+                            CURRENT_MAP_GRID.GridLayerIndex = MapBuilder.ABOVEOCEANGRIDLAYER;
+                            CURRENT_MAP_GRID.GridEnabled = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (CURRENT_MAP_GRID == null)
+                {
+                    MapLayer symbolGridLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BELOWSYMBOLSGRIDLAYER);
+                    for (int i = 0; i < symbolGridLayer.MapLayerComponents.Count; i++)
+                    {
+                        if (symbolGridLayer.MapLayerComponents[i] is MapGrid grid)
+                        {
+                            CURRENT_MAP_GRID = grid;
+                            CURRENT_MAP_GRID.GridLayerIndex = MapBuilder.BELOWSYMBOLSGRIDLAYER;
+                            CURRENT_MAP_GRID.GridEnabled = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (CURRENT_MAP_GRID != null)
+                {
+                    CURRENT_MAP_GRID.ParentMap = CURRENT_MAP;
+                    CURRENT_MAP_GRID.GridEnabled = true;
+
+                    switch (CURRENT_MAP_GRID.GridType)
+                    {
+                        case GridTypeEnum.Square:
+                            SquareGridRadio.Checked = true;
+                            break;
+                        case GridTypeEnum.PointedHex:
+                            PointedHexGridRadio.Checked = true;
+                            break;
+                        case GridTypeEnum.FlatHex:
+                            FlatHexGridRadio.Checked = true;
+                            break;
+                    }
+
+                    GridSizeTrack.Value = CURRENT_MAP_GRID.GridSize;
+                    GridLineWidthTrack.Value = CURRENT_MAP_GRID.GridLineWidth;
+                    GridColorSelectButton.BackColor = CURRENT_MAP_GRID.GridColor;
+
+                    if (CURRENT_MAP_GRID.GridLayerIndex == MapBuilder.ABOVEOCEANGRIDLAYER)
+                    {
+                        GridLayerUpDown.SelectedItem = "Above Ocean";
+                    }
+                    else if (CURRENT_MAP_GRID.GridLayerIndex == MapBuilder.BELOWSYMBOLSGRIDLAYER)
+                    {
+                        GridLayerUpDown.SelectedItem = "Below Symbols";
+                    }
+                    else
+                    {
+                        GridLayerUpDown.SelectedItem = "Default";
+                    }
+                }
+
+                MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WINDROSELAYER);
+                for (int i = 0; i < windroseLayer.MapLayerComponents.Count; i++)
+                {
+                    if (windroseLayer.MapLayerComponents[i] is MapWindrose windrose)
+                    {
+                        windrose.WindrosePaint = new()
+                        {
+                            Style = SKPaintStyle.Stroke,
+                            StrokeWidth = windrose.LineWidth,
+                            Color = windrose.WindroseColor.ToSKColor(),
+                            IsAntialias = true,
+                        };
+                    }
+                }
+
+
+                MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.REGIONLAYER);
+                for (int i = 0; i < regionLayer.MapLayerComponents.Count; i++)
+                {
+                    if (regionLayer.MapLayerComponents[i] is MapRegion region)
+                    {
+                        region.ParentMap = CURRENT_MAP;
+                        SKPathEffect? regionBorderEffect = MapRegionMethods.ConstructRegionBorderEffect(region);
+                        MapRegionMethods.ConstructRegionPaintObjects(region, regionBorderEffect);
+                    }
+                }
+
+                MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.VIGNETTELAYER);
+                for (int i = 0; i < vignetteLayer.MapLayerComponents.Count; i++)
+                {
+                    if (vignetteLayer.MapLayerComponents[i] is MapVignette vignette)
+                    {
+                        vignette.ParentMap = CURRENT_MAP;
+
+                    }
+                }
+
+                Text = "Map Creator - " + CURRENT_MAP.MapName;
+                SetStatusText("Loaded: " + CURRENT_MAP.MapName);
+
+                UpdateMapNameAndSize();
+                //UpdateViewportStatus();
+
+                SKGLRenderControl.Invalidate();
+            }
+            catch
+            {
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8604 // Possible null reference argument.
+
+                MessageBox.Show("An error has occurred while opening the map. The map file may be corrupt.", "Error Loading Map", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+                CURRENT_MAP = MapBuilder.CreateMap("", "DEFAULT", MapBuilder.MAP_DEFAULT_WIDTH, MapBuilder.MAP_DEFAULT_HEIGHT);
+
+                //InitializeMap(CURRENT_MAP);
+
+                for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.VIGNETTELAYER).MapLayerComponents.Count - 1; i > 0; i--)
+                {
+                    if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.VIGNETTELAYER).MapLayerComponents[i] is MapVignette)
+                    {
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.VIGNETTELAYER).MapLayerComponents.RemoveAt(i);
+                        break;
+                    }
+                }
+
+                MapVignette vignette = new()
+                {
+                    ParentMap = CURRENT_MAP,
+                    VignetteColor = VignetteColorSelectionButton.BackColor,
+                    VignetteStrength = VignetteStrengthTrack.Value
+                };
+
+                MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.VIGNETTELAYER).MapLayerComponents.Add(vignette);
+
+                CURRENT_MAP.IsSaved = false;
+
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8601 // Possible null reference assignment.
+
+                throw;
+            }
         }
 
         #endregion
@@ -2730,7 +3105,11 @@ namespace RealmStudio
                     {
                         CURRENT_MAP.IsSaved = false;
                         Cursor = Cursors.Cross;
-                        CURRENT_LANDFORM = new(CURRENT_MAP);
+                        CURRENT_LANDFORM = new()
+                        {
+                            ParentMap = CURRENT_MAP,
+                        };
+
                         SetLandformData(CURRENT_LANDFORM);
                     }
                     break;
@@ -3040,7 +3419,11 @@ namespace RealmStudio
                         // initialize region
                         if (CURRENT_MAP_REGION == null)
                         {
-                            CURRENT_MAP_REGION = new(CURRENT_MAP);
+                            CURRENT_MAP_REGION = new()
+                            {
+                                ParentMap = CURRENT_MAP
+                            };
+
                             SetRegionData(CURRENT_MAP_REGION);
                         }
 
@@ -3344,11 +3727,7 @@ namespace RealmStudio
                             CURRENT_LANDFORM.DrawPath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
 
                             // compute contour path and inner and outer paths in a separate thread
-
-                            // TODO: can the creation of paths be divided up to more tasks?
-                            // perhaps await a task to create the contour path, then when it is complete,
-                            // create separate tasks to compute each inner and outer path
-                            Task.Run(() => LandformMethods.CreateInnerAndOuterPaths(CURRENT_MAP, CURRENT_LANDFORM));
+                            Task.Run(() => LandformMethods.CreateAllPathsFromDrawnPath(CURRENT_MAP, CURRENT_LANDFORM));
                         }
 
                         SKGLRenderControl.Invalidate();
