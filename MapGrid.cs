@@ -411,6 +411,12 @@ namespace RealmStudio
                 string? gridColor = mapGridDoc.Descendants().Select(x => x.Element(ns + "GridColor").Value).FirstOrDefault();
 
                 int argbValue = 0;
+
+                if (gridColor.StartsWith("#"))
+                {
+                    argbValue = ColorTranslator.FromHtml(gridColor).ToArgb();
+                }
+
                 if (int.TryParse(gridColor, out int n))
                 {
                     if (n > 0)

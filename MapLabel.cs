@@ -66,6 +66,7 @@ namespace RealmStudio
 
                 if (LabelPath == null || LabelPath.PointCount < 3)
                 {
+                    // auto restore, even on exceptions or errors
                     using (new SKAutoCanvasRestore(canvas))
                     {
                         // do any transformations
@@ -89,7 +90,6 @@ namespace RealmStudio
 
                         // draw the text
                         canvas.DrawText(LabelText, point, LabelPaint);
-                        // auto restore, even on exceptions or errors
 
                         if (IsSelected)
                         {
@@ -101,6 +101,7 @@ namespace RealmStudio
                 }
                 else
                 {
+                    // auto restore, even on exceptions or errors
                     using (new SKAutoCanvasRestore(canvas))
                     {
                         using SKTextBlob sKTextBlob = SKTextBlob.CreatePathPositioned(LabelText, LabelSKFont, LabelPath, LabelPaint.TextAlign, new SKPoint(0, 0));
@@ -202,17 +203,65 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement> labelColorElem = mapLabelDoc.Descendants(ns + "LabelColor");
-            if (labelColorElem.First() != null)
+            if (labelColorElem != null && labelColorElem.Count() > 0 && labelColorElem.First() != null)
             {
                 string? labelColor = mapLabelDoc.Descendants().Select(x => x.Element(ns + "LabelColor").Value).FirstOrDefault();
-                LabelColor = ColorTranslator.FromHtml(labelColor);
+
+                int argbValue = 0;
+
+                if (labelColor.StartsWith("#"))
+                {
+                    argbValue = ColorTranslator.FromHtml(labelColor).ToArgb();
+                }
+
+                if (int.TryParse(labelColor, out int n))
+                {
+                    if (n > 0)
+                    {
+                        argbValue = n;
+                    }
+                    else
+                    {
+                        argbValue = ColorTranslator.FromHtml("#3D351E").ToArgb();
+                    }
+                }
+
+                LabelColor = Color.FromArgb(argbValue);
+            }
+            else
+            {
+                LabelColor = ColorTranslator.FromHtml("#3D351E");
             }
 
             IEnumerable<XElement> labelOutlineColorElem = mapLabelDoc.Descendants(ns + "LabelOutlineColor");
-            if (labelOutlineColorElem.First() != null)
+            if (labelOutlineColorElem != null && labelOutlineColorElem.Count() > 0 && labelOutlineColorElem.First() != null)
             {
                 string? labelOutlineColor = mapLabelDoc.Descendants().Select(x => x.Element(ns + "LabelOutlineColor").Value).FirstOrDefault();
-                LabelOutlineColor = ColorTranslator.FromHtml(labelOutlineColor);
+
+                int argbValue = 0;
+
+                if (labelOutlineColor.StartsWith("#"))
+                {
+                    argbValue = ColorTranslator.FromHtml(labelOutlineColor).ToArgb();
+                }
+
+                if (int.TryParse(labelOutlineColor, out int n))
+                {
+                    if (n > 0)
+                    {
+                        argbValue = n;
+                    }
+                    else
+                    {
+                        argbValue = ColorTranslator.FromHtml("#A1D6CAAB").ToArgb();
+                    }
+                }
+
+                LabelOutlineColor = Color.FromArgb(argbValue);
+            }
+            else
+            {
+                LabelOutlineColor = ColorTranslator.FromHtml("#A1D6CAAB");
             }
 
             IEnumerable<XElement?> labelOutlineWidthElem = mapLabelDoc.Descendants().Select(x => x.Element(ns + "LabelOutlineWidth"));
@@ -223,10 +272,34 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement> labelGlowColorElem = mapLabelDoc.Descendants(ns + "LabelGlowColor");
-            if (labelGlowColorElem.First() != null)
+            if (labelGlowColorElem != null && labelGlowColorElem.Count() > 0 && labelGlowColorElem.First() != null)
             {
                 string? labelGlowColor = mapLabelDoc.Descendants().Select(x => x.Element(ns + "LabelGlowColor").Value).FirstOrDefault();
-                LabelGlowColor = ColorTranslator.FromHtml(labelGlowColor);
+
+                int argbValue = 0;
+
+                if (labelGlowColor.StartsWith("#"))
+                {
+                    argbValue = ColorTranslator.FromHtml(labelGlowColor).ToArgb();
+                }
+
+                if (int.TryParse(labelGlowColor, out int n))
+                {
+                    if (n > 0)
+                    {
+                        argbValue = n;
+                    }
+                    else
+                    {
+                        argbValue = Color.White.ToArgb();
+                    }
+                }
+
+                LabelGlowColor = Color.FromArgb(argbValue);
+            }
+            else
+            {
+                LabelGlowColor = Color.White;
             }
 
             IEnumerable<XElement?> labelGlowStrengthElem = mapLabelDoc.Descendants().Select(x => x.Element(ns + "LabelGlowStrength"));
@@ -263,7 +336,7 @@ namespace RealmStudio
                 LabelPath = SKPath.ParseSvgPathData(labelPath);
             }
 
-            SKPaint paint = MapLabelMethods.CreateLabelPaint(LabelFont, LabelColor, LabelTextAlignEnum.AlignCenter);
+            SKPaint paint = MapLabelMethods.CreateLabelPaint(LabelFont, LabelColor, LabelTextAlignEnum.AlignLeft);
             SKFont paintFont = paint.ToFont();
 
             LabelPaint = paint;
@@ -290,23 +363,23 @@ namespace RealmStudio
             writer.WriteString(LabelText);
             writer.WriteEndElement();
 
-            XmlColor labelColor = new(LabelColor);
+            int labelColor = LabelColor.ToArgb();
             writer.WriteStartElement("LabelColor");
-            labelColor.WriteXml(writer);
+            writer.WriteValue(labelColor);
             writer.WriteEndElement();
 
-            XmlColor labelOutlineColor = new(LabelOutlineColor);
+            int labelOutlineColor = LabelOutlineColor.ToArgb();
             writer.WriteStartElement("LabelOutlineColor");
-            labelOutlineColor.WriteXml(writer);
+            writer.WriteValue(labelOutlineColor);
             writer.WriteEndElement();
 
             writer.WriteStartElement("LabelOutlineWidth");
             writer.WriteValue(LabelOutlineWidth);
             writer.WriteEndElement();
 
-            XmlColor labelGlowColor = new(LabelGlowColor);
+            int labelGlowColor = LabelGlowColor.ToArgb();
             writer.WriteStartElement("LabelGlowColor");
-            labelGlowColor.WriteXml(writer);
+            writer.WriteValue(labelGlowColor);
             writer.WriteEndElement();
 
             writer.WriteStartElement("LabelGlowStrength");

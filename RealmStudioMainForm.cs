@@ -1559,6 +1559,8 @@ namespace RealmStudio
 
                 CURRENT_MAP.IsSaved = true;
 
+
+                // finalize loading of landforms
                 MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
 
                 for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
@@ -1631,6 +1633,7 @@ namespace RealmStudio
                     }
                 }
 
+                // finalize loading of water features and rivers
                 MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER);
 
                 for (int i = 0; i < waterLayer.MapLayerComponents.Count; i++)
@@ -1679,6 +1682,8 @@ namespace RealmStudio
                     }
                 }
 
+
+                // finalize loading of symbols
                 MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.SYMBOLLAYER);
 
                 for (int i = 0; i < symbolLayer.MapLayerComponents.Count; i++)
@@ -1714,7 +1719,7 @@ namespace RealmStudio
                     }
                 }
 
-
+                // finalize loading of grid
                 MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.DEFAULTGRIDLAYER);
                 for (int i = 0; i < defaultGridLayer.MapLayerComponents.Count; i++)
                 {
@@ -1793,6 +1798,7 @@ namespace RealmStudio
                     }
                 }
 
+                // finalize loading of wind roses
                 MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WINDROSELAYER);
                 for (int i = 0; i < windroseLayer.MapLayerComponents.Count; i++)
                 {
@@ -1808,7 +1814,47 @@ namespace RealmStudio
                     }
                 }
 
+                // finalize loading of placed map boxes
+                MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BOXLAYER);
+                for (int i = 0; i < boxLayer.MapLayerComponents.Count; i++)
+                {
+                    if (boxLayer.MapLayerComponents[i] is PlacedMapBox box)
+                    {
+                        SKRectI center = new((int)box.BoxCenterLeft, (int)box.BoxCenterTop,
+                            (int)(box.Width - box.BoxCenterRight), (int)(box.Height - box.BoxCenterBottom));
 
+                        if (center.IsEmpty || center.Left < 0 || center.Right <= 0 || center.Top < 0 || center.Bottom <= 0)
+                        {
+                        }
+                        else if (center.Width <= 0 || center.Height <= 0)
+                        {
+                            // swap 
+                            if (center.Right < center.Left)
+                            {
+                                (center.Left, center.Right) = (center.Right, center.Left);
+                            }
+
+                            if (center.Bottom < center.Top)
+                            {
+                                (center.Top, center.Bottom) = (center.Bottom, center.Top);
+                            }
+                        }
+
+                        SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(box.BoxBitmap.ToSKBitmap(), center);
+
+                        box.Patch_A = bitmapSlices[0].Copy();   // top-left corner
+                        box.Patch_B = bitmapSlices[1].Copy();   // top
+                        box.Patch_C = bitmapSlices[2].Copy();   // top-right corner
+                        box.Patch_D = bitmapSlices[3].Copy();   // left size
+                        box.Patch_E = bitmapSlices[4].Copy();   // middle
+                        box.Patch_F = bitmapSlices[5].Copy();   // right side
+                        box.Patch_G = bitmapSlices[6].Copy();   // bottom-left corner
+                        box.Patch_H = bitmapSlices[7].Copy();   // bottom
+                        box.Patch_I = bitmapSlices[8].Copy();   // bottom-right corner
+                    }
+                }
+
+                // finalize loading of regions
                 MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.REGIONLAYER);
                 for (int i = 0; i < regionLayer.MapLayerComponents.Count; i++)
                 {
@@ -1820,6 +1866,7 @@ namespace RealmStudio
                     }
                 }
 
+                // finalize loading of vignette
                 MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.VIGNETTELAYER);
                 for (int i = 0; i < vignetteLayer.MapLayerComponents.Count; i++)
                 {
@@ -1830,7 +1877,6 @@ namespace RealmStudio
                     }
                 }
 
-                Text = "Map Creator - " + CURRENT_MAP.MapName;
                 SetStatusText("Loaded: " + CURRENT_MAP.MapName);
 
                 UpdateMapNameAndSize();
@@ -1840,14 +1886,9 @@ namespace RealmStudio
             }
             catch
             {
-#pragma warning disable CS8601 // Possible null reference assignment.
-#pragma warning disable CS8604 // Possible null reference argument.
-
                 MessageBox.Show("An error has occurred while opening the map. The map file may be corrupt.", "Error Loading Map", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
                 CURRENT_MAP = MapBuilder.CreateMap("", "DEFAULT", MapBuilder.MAP_DEFAULT_WIDTH, MapBuilder.MAP_DEFAULT_HEIGHT);
-
-                //InitializeMap(CURRENT_MAP);
 
                 for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.VIGNETTELAYER).MapLayerComponents.Count - 1; i > 0; i--)
                 {
@@ -1868,10 +1909,6 @@ namespace RealmStudio
                 MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.VIGNETTELAYER).MapLayerComponents.Add(vignette);
 
                 CURRENT_MAP.IsSaved = false;
-
-#pragma warning restore CS8604 // Possible null reference argument.
-#pragma warning restore CS8601 // Possible null reference assignment.
-
                 throw;
             }
         }
@@ -3598,25 +3635,30 @@ namespace RealmStudio
                                 new Size(int.MaxValue, int.MaxValue),
                                 TextFormatFlags.Default | TextFormatFlags.LeftAndRightPadding | TextFormatFlags.ExternalLeading | TextFormatFlags.SingleLine);
 
+                            float boxX = (e.X - DrawingPoint.X) * DrawingZoom;
+                            float boxY = (e.Y - DrawingPoint.Y) * DrawingZoom;
+
                             LABEL_TEXT_BOX = new()
                             {
                                 Parent = SKGLRenderControl,
                                 Name = Guid.NewGuid().ToString(),
-                                Left = Math.Max(0, (int)zoomedScrolledPoint.X - (labelSize.Width / 2)),
-                                Top = Math.Max(0, (int)zoomedScrolledPoint.Y - (labelSize.Height / 2)),
+                                Left = e.X - (labelSize.Width / 2),
+                                Top = e.Y - (labelSize.Height / 2),
                                 Width = labelSize.Width,
                                 Height = labelSize.Height,
                                 Margin = System.Windows.Forms.Padding.Empty,
                                 AutoSize = false,
-                                Font = SELECTED_LABEL_FONT,
+                                Font = SELECTED_MAP_LABEL.LabelFont,
                                 Visible = true,
-                                BackColor = Color.AliceBlue,
+                                BackColor = Color.Peru,
                                 ForeColor = FontColorSelectButton.BackColor,
-                                BorderStyle = BorderStyle.None,
+                                BorderStyle = BorderStyle.FixedSingle,
                                 Multiline = false,
                                 TextAlign = HorizontalAlignment.Left,
                                 Text = SELECTED_MAP_LABEL.LabelText,
+
                             };
+
 
                             LABEL_TEXT_BOX.KeyPress += LabelTextBox_KeyPress;
 
@@ -4426,7 +4468,8 @@ namespace RealmStudio
                 case DrawingModeEnum.PlaceWindrose:
                     if (CURRENT_WINDROSE != null)
                     {
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WINDROSELAYER).MapLayerComponents.Add(CURRENT_WINDROSE);
+                        CURRENT_WINDROSE.X = (int)zoomedScrolledPoint.X;
+                        CURRENT_WINDROSE.Y = (int)zoomedScrolledPoint.Y;
 
                         Cmd_AddWindrose cmd = new(CURRENT_MAP, CURRENT_WINDROSE);
                         CommandManager.AddCommand(cmd);
@@ -4558,8 +4601,8 @@ namespace RealmStudio
                         {
                             Parent = SKGLRenderControl,
                             Name = Guid.NewGuid().ToString(),
-                            Left = (int)zoomedScrolledPoint.X,
-                            Top = (int)zoomedScrolledPoint.Y,
+                            Left = e.X - (labelSize.Width / 2),
+                            Top = e.Y - (labelSize.Height / 2),
                             Width = labelSize.Width,
                             Height = labelSize.Height,
                             Margin = System.Windows.Forms.Padding.Empty,
@@ -4567,9 +4610,9 @@ namespace RealmStudio
                             Font = tbFont,
                             Visible = true,
                             PlaceholderText = "...Label...",
-                            BackColor = Color.AliceBlue,
+                            BackColor = Color.Peru,
                             ForeColor = FontColorSelectButton.BackColor,
-                            BorderStyle = BorderStyle.None,
+                            BorderStyle = BorderStyle.FixedSingle,
                             Multiline = false,
                             TextAlign = HorizontalAlignment.Center,
                             Text = "...Label...",
@@ -4580,6 +4623,7 @@ namespace RealmStudio
                         SKGLRenderControl.Controls.Add(LABEL_TEXT_BOX);
 
                         SKGLRenderControl.Refresh();
+                        Refresh();
 
                         LABEL_TEXT_BOX.BringToFront();
                         LABEL_TEXT_BOX.Select(LABEL_TEXT_BOX.Text.Length, 0);
@@ -4632,6 +4676,11 @@ namespace RealmStudio
                     break;
                 case DrawingModeEnum.DrawBox:
                     // finalize box drawing
+
+                    // clear the work layer
+                    MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).RenderPicture?.Dispose();
+                    MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).RenderPicture = null;
+
                     if (SELECTED_PLACED_MAP_BOX != null)
                     {
                         SKRectI center = new((int)SELECTED_PLACED_MAP_BOX.BoxCenterLeft,
@@ -7636,7 +7685,7 @@ namespace RealmStudio
             {
                 TextBox tb = (TextBox)sender;
 
-                Font labelFont = SELECTED_LABEL_FONT;
+                Font labelFont = tb.Font;
                 Color labelColor = FontColorSelectButton.BackColor;
 
                 if (((KeyPressEventArgs)e).KeyChar == (char)Keys.Escape)
@@ -7688,10 +7737,12 @@ namespace RealmStudio
                         SKRect bounds = new();
                         paint.MeasureText(label.LabelText, ref bounds);
 
-                        Point labelPoint = new(tb.Left, tb.Top);
+                        SKPoint zoomedScrolledPoint = new((tb.Left / DrawingZoom) + DrawingPoint.X, (tb.Top / DrawingZoom) + DrawingPoint.Y);
 
-                        label.X = labelPoint.X;
-                        label.Y = labelPoint.Y + (int)bounds.Height / 2;
+                        //Point labelPoint = new(tb.Left, tb.Top);
+
+                        label.X = (int)zoomedScrolledPoint.X;
+                        label.Y = (int)zoomedScrolledPoint.Y;
                         label.Width = (int)bounds.Width;
                         label.Height = (int)bounds.Height;
 

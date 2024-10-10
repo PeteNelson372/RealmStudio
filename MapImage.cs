@@ -29,7 +29,7 @@ using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    internal class MapImage : MapComponent, IXmlSerializable
+    public class MapImage : MapComponent, IXmlSerializable
     {
         public SKBitmap? MapImageBitmap { get; set; }
 
@@ -39,7 +39,7 @@ namespace RealmStudio
         {
             if (MapImageBitmap != null)
             {
-                canvas.DrawBitmap(MapImageBitmap, 0, 0);
+                canvas.DrawBitmap(MapImageBitmap, X, Y);
             }
         }
 

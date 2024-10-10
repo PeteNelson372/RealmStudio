@@ -34,7 +34,6 @@ namespace RealmStudio
     {
         public Guid WindroseGuid { get; set; } = Guid.NewGuid();
         public Color WindroseColor { get; set; } = ColorTranslator.FromHtml("#7F3D3728");
-        public int WindroseColorOpacity { get; set; } = 127;
         public int DirectionCount { get; set; } = 16;
         public int LineWidth { get; set; } = 2;
         public int InnerRadius { get; set; } = 0;
@@ -110,8 +109,8 @@ namespace RealmStudio
             if (WindrosePaint != null)
             {
                 SKPoint[] linePoints = DrawingMethods.GetPoints(254, sp, ep);
-                int segmentOpacity = WindroseColorOpacity;
-                Color argbColor = Color.FromArgb(segmentOpacity, WindroseColor);
+                int segmentOpacity = WindroseColor.A;
+                Color argbColor = WindroseColor;
 
                 for (int j = 0; j < linePoints.Length - 1; j++)
                 {
@@ -175,17 +174,28 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement> windroseColorElem = mapRoseDoc.Descendants(ns + "WindroseColor");
-            if (windroseColorElem.First() != null)
+            if (windroseColorElem != null && windroseColorElem.Count() > 0 && windroseColorElem.First() != null)
             {
-                string? windroseColor = mapRoseDoc.Descendants().Select(x => x.Element(ns + "WindroseColor").Value).FirstOrDefault();
-                WindroseColor = ColorTranslator.FromHtml(windroseColor);
-            }
+                string? gridColor = mapRoseDoc.Descendants().Select(x => x.Element(ns + "WindroseColor").Value).FirstOrDefault();
 
-            IEnumerable<XElement?> WindroseColorOpacityElem = mapRoseDoc.Descendants().Select(x => x.Element(ns + "WindroseColorOpacity"));
-            if (WindroseColorOpacityElem.First() != null)
+                int argbValue = 0;
+                if (int.TryParse(gridColor, out int n))
+                {
+                    if (n > 0)
+                    {
+                        argbValue = n;
+                    }
+                    else
+                    {
+                        argbValue = ColorTranslator.FromHtml("#7F3D3728").ToArgb();
+                    }
+                }
+
+                WindroseColor = Color.FromArgb(argbValue);
+            }
+            else
             {
-                string? windroseColorOpacity = mapRoseDoc.Descendants().Select(x => x.Element(ns + "WindroseColorOpacity").Value).FirstOrDefault();
-                WindroseColorOpacity = int.Parse(windroseColorOpacity);
+                WindroseColor = ColorTranslator.FromHtml("#7F3D3728");
             }
 
             IEnumerable<XElement?> directionCountElem = mapRoseDoc.Descendants().Select(x => x.Element(ns + "DirectionCount"));
@@ -246,13 +256,9 @@ namespace RealmStudio
             writer.WriteString(WindroseGuid.ToString());
             writer.WriteEndElement();
 
-            XmlColor windroseColor = new(WindroseColor);
+            int windroseColor = WindroseColor.ToArgb();
             writer.WriteStartElement("WindroseColor");
-            windroseColor.WriteXml(writer);
-            writer.WriteEndElement();
-
-            writer.WriteStartElement("WindroseColorOpacity");
-            writer.WriteValue(WindroseColorOpacity);
+            writer.WriteValue(windroseColor);
             writer.WriteEndElement();
 
             writer.WriteStartElement("DirectionCount");

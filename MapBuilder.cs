@@ -126,7 +126,7 @@ namespace RealmStudio
             return map;
         }
 
-        internal static RealmStudioMap? CreateMap(string mapPath, string mapName, int width, int height)
+        internal static RealmStudioMap CreateMap(string mapPath, string mapName, int width, int height)
         {
             RealmStudioMap map = new()
             {

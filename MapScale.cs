@@ -56,7 +56,7 @@ namespace RealmStudio
         private SKPaint SegmentOutlinePaint = new();
         private SKPaint EvenSegmentPaint = new();
         private SKPaint OddSegmentPaint = new();
-        private SKPaint LabelPaint = new();
+        private SKPaint ScaleLabelPaint = new();
         private SKPaint OutlinePaint = new();
 
         public MapScale()
@@ -87,7 +87,7 @@ namespace RealmStudio
                 Color = ScaleColor2.ToSKColor()
             };
 
-            LabelPaint = new()
+            ScaleLabelPaint = new()
             {
                 Color = Extensions.ToSKColor(ScaleFontColor),
                 TextSize = (ScaleFont.Size * 4.0F) / 3.0F,
@@ -110,7 +110,7 @@ namespace RealmStudio
                 fs = SKFontStyle.Italic;
             }
 
-            LabelPaint.Typeface = SKFontManager.Default.MatchFamily(ScaleFont.Name, fs);
+            ScaleLabelPaint.Typeface = SKFontManager.Default.MatchFamily(ScaleFont.Name, fs);
 
             OutlinePaint = new()
             {
@@ -165,7 +165,7 @@ namespace RealmStudio
                 string distanceText = string.Format("{0}", (int)distance);
                 SKRect bounds = new();
 
-                LabelPaint.MeasureText(distanceText, ref bounds);
+                ScaleLabelPaint.MeasureText(distanceText, ref bounds);
 
 
                 SKPoint labelPoint = new(labelX, labelY - bounds.Height);
@@ -177,7 +177,7 @@ namespace RealmStudio
                             if (i == 0 || i == ScaleSegmentCount)
                             {
                                 canvas.DrawText(distanceText, labelPoint, OutlinePaint);
-                                canvas.DrawText(distanceText, labelPoint, LabelPaint);
+                                canvas.DrawText(distanceText, labelPoint, ScaleLabelPaint);
                             }
                         }
                         break;
@@ -186,14 +186,14 @@ namespace RealmStudio
                             if (int.IsEvenInteger(i))
                             {
                                 canvas.DrawText(distanceText, labelPoint, OutlinePaint);
-                                canvas.DrawText(distanceText, labelPoint, LabelPaint);
+                                canvas.DrawText(distanceText, labelPoint, ScaleLabelPaint);
                             }
                         }
                         break;
                     case ScaleNumbersDisplayEnum.All:
                         {
                             canvas.DrawText(distanceText, labelPoint, OutlinePaint);
-                            canvas.DrawText(distanceText, labelPoint, LabelPaint);
+                            canvas.DrawText(distanceText, labelPoint, ScaleLabelPaint);
                         }
                         break;
                 }
@@ -210,14 +210,14 @@ namespace RealmStudio
 
                 SKRect bounds = new();
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-                LabelPaint.MeasureText(ScaleDistanceUnit, ref bounds);
+                ScaleLabelPaint.MeasureText(ScaleDistanceUnit, ref bounds);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 
                 unitLabelY = (int)(unitLabelY + bounds.Height * 2);
 
                 SKPoint unitLabelPoint = new SKPoint(unitLabelX, unitLabelY);
                 canvas.DrawText(ScaleDistanceUnit, unitLabelPoint, OutlinePaint);
-                canvas.DrawText(ScaleDistanceUnit, unitLabelPoint, LabelPaint);
+                canvas.DrawText(ScaleDistanceUnit, unitLabelPoint, ScaleLabelPaint);
             }
         }
 
