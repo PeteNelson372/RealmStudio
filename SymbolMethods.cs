@@ -28,6 +28,8 @@ namespace RealmStudio
 {
     internal class SymbolMethods
     {
+        public static SymbolTypeEnum SELECTED_SYMBOL_TYPE { get; set; } = SymbolTypeEnum.NotSet;
+
         private static readonly string SymbolTagsFilePath = AssetManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
 
         private static readonly List<Tuple<string, List<MapSymbol>>> TagSymbolAssociationList = [];
@@ -273,7 +275,7 @@ namespace RealmStudio
 
                 if (DrawingMethods.PointInCircle(colorBrushRadius, colorCursorPoint, symbolPoint))
                 {
-                    if (symbol.IsGrayscale)
+                    if (symbol.IsGrayscale && symbol.SymbolType == SELECTED_SYMBOL_TYPE)
                     {
                         SKPaint paint = new()
                         {

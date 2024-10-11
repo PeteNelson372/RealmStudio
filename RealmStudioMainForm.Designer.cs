@@ -155,7 +155,8 @@
             SymbolTagsListBox = new CheckedListBox();
             groupBox13 = new GroupBox();
             SymbolCollectionsListBox = new CheckedListBox();
-            groupBox12 = new GroupBox();
+            SymbolPlacementGroup = new GroupBox();
+            SymbolRotationUpDown = new NumericUpDown();
             label53 = new Label();
             AreaBrushSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label52 = new Label();
@@ -170,12 +171,12 @@
             SymbolRotationTrack = new TrackBar();
             label44 = new Label();
             MirrorSymbolSwitch = new ReaLTaiizor.Controls.CyberSwitch();
-            groupBox11 = new GroupBox();
+            SymbolColorGroup = new GroupBox();
             ResetSymbolColorsButton = new FontAwesome.Sharp.IconButton();
             SymbolColor3Button = new FontAwesome.Sharp.IconButton();
             SymbolColor2Button = new FontAwesome.Sharp.IconButton();
             SymbolColor1Button = new FontAwesome.Sharp.IconButton();
-            groupBox10 = new GroupBox();
+            SymbolScaleGroup = new GroupBox();
             SymbolScaleUpDown = new NumericUpDown();
             LockSymbolScaleButton = new FontAwesome.Sharp.IconButton();
             SymbolScaleTrack = new TrackBar();
@@ -195,6 +196,7 @@
             BezierTextPathButton = new FontAwesome.Sharp.IconButton();
             CircleTextPathButton = new FontAwesome.Sharp.IconButton();
             groupBox19 = new GroupBox();
+            LabelRotationUpDown = new NumericUpDown();
             LabelRotationTrack = new TrackBar();
             groupBox18 = new GroupBox();
             label56 = new Label();
@@ -384,6 +386,7 @@
             ThemeToolStripMenuItem = new ToolStripMenuItem();
             OptionsToolStripMenuItem = new ToolStripMenuItem();
             PreferencesMenuItem = new ToolStripMenuItem();
+            NameGeneratorConfigurationToolStripMenuItem = new ToolStripMenuItem();
             HelpToolStripMenuItem = new ToolStripMenuItem();
             HelpContentsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
@@ -535,7 +538,6 @@
             label51 = new Label();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
-            NameGeneratorConfigurationToolStripMenuItem = new ToolStripMenuItem();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -581,19 +583,21 @@
             SymbolTab.SuspendLayout();
             groupBox14.SuspendLayout();
             groupBox13.SuspendLayout();
-            groupBox12.SuspendLayout();
+            SymbolPlacementGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)SymbolRotationUpDown).BeginInit();
             ((System.ComponentModel.ISupportInitialize)AreaBrushSizeTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SymbolPlacementDensityUpDown).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SymbolPlacementRateUpDown).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SymbolRotationTrack).BeginInit();
-            groupBox11.SuspendLayout();
-            groupBox10.SuspendLayout();
+            SymbolColorGroup.SuspendLayout();
+            SymbolScaleGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SymbolScaleUpDown).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SymbolScaleTrack).BeginInit();
             SymbolToolStrip.SuspendLayout();
             LabelTab.SuspendLayout();
             groupBox20.SuspendLayout();
             groupBox19.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)LabelRotationUpDown).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LabelRotationTrack).BeginInit();
             groupBox18.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)GlowStrengthTrack).BeginInit();
@@ -2611,9 +2615,9 @@
             SymbolTab.BackColor = SystemColors.Control;
             SymbolTab.Controls.Add(groupBox14);
             SymbolTab.Controls.Add(groupBox13);
-            SymbolTab.Controls.Add(groupBox12);
-            SymbolTab.Controls.Add(groupBox11);
-            SymbolTab.Controls.Add(groupBox10);
+            SymbolTab.Controls.Add(SymbolPlacementGroup);
+            SymbolTab.Controls.Add(SymbolColorGroup);
+            SymbolTab.Controls.Add(SymbolScaleGroup);
             SymbolTab.Controls.Add(SymbolToolStrip);
             SymbolTab.Controls.Add(cyberSwitch3);
             SymbolTab.Controls.Add(label7);
@@ -2669,29 +2673,41 @@
             SymbolCollectionsListBox.TabIndex = 0;
             SymbolCollectionsListBox.ItemCheck += SymbolCollectionsListBox_ItemCheck;
             // 
-            // groupBox12
+            // SymbolPlacementGroup
             // 
-            groupBox12.Controls.Add(label53);
-            groupBox12.Controls.Add(AreaBrushSwitch);
-            groupBox12.Controls.Add(label52);
-            groupBox12.Controls.Add(AreaBrushSizeTrack);
-            groupBox12.Controls.Add(label50);
-            groupBox12.Controls.Add(ResetSymbolPlacementDensityButton);
-            groupBox12.Controls.Add(SymbolPlacementDensityUpDown);
-            groupBox12.Controls.Add(label49);
-            groupBox12.Controls.Add(ResetSymbolPlacementRateButton);
-            groupBox12.Controls.Add(SymbolPlacementRateUpDown);
-            groupBox12.Controls.Add(label21);
-            groupBox12.Controls.Add(SymbolRotationTrack);
-            groupBox12.Controls.Add(label44);
-            groupBox12.Controls.Add(MirrorSymbolSwitch);
-            groupBox12.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox12.Location = new Point(9, 234);
-            groupBox12.Name = "groupBox12";
-            groupBox12.Size = new Size(148, 246);
-            groupBox12.TabIndex = 30;
-            groupBox12.TabStop = false;
-            groupBox12.Text = "Placement";
+            SymbolPlacementGroup.Controls.Add(SymbolRotationUpDown);
+            SymbolPlacementGroup.Controls.Add(label53);
+            SymbolPlacementGroup.Controls.Add(AreaBrushSwitch);
+            SymbolPlacementGroup.Controls.Add(label52);
+            SymbolPlacementGroup.Controls.Add(AreaBrushSizeTrack);
+            SymbolPlacementGroup.Controls.Add(label50);
+            SymbolPlacementGroup.Controls.Add(ResetSymbolPlacementDensityButton);
+            SymbolPlacementGroup.Controls.Add(SymbolPlacementDensityUpDown);
+            SymbolPlacementGroup.Controls.Add(label49);
+            SymbolPlacementGroup.Controls.Add(ResetSymbolPlacementRateButton);
+            SymbolPlacementGroup.Controls.Add(SymbolPlacementRateUpDown);
+            SymbolPlacementGroup.Controls.Add(label21);
+            SymbolPlacementGroup.Controls.Add(SymbolRotationTrack);
+            SymbolPlacementGroup.Controls.Add(label44);
+            SymbolPlacementGroup.Controls.Add(MirrorSymbolSwitch);
+            SymbolPlacementGroup.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SymbolPlacementGroup.Location = new Point(9, 234);
+            SymbolPlacementGroup.Name = "SymbolPlacementGroup";
+            SymbolPlacementGroup.Size = new Size(148, 246);
+            SymbolPlacementGroup.TabIndex = 30;
+            SymbolPlacementGroup.TabStop = false;
+            SymbolPlacementGroup.Text = "Placement";
+            // 
+            // SymbolRotationUpDown
+            // 
+            SymbolRotationUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolRotationUpDown.Location = new Point(100, 148);
+            SymbolRotationUpDown.Maximum = new decimal(new int[] { 359, 0, 0, 0 });
+            SymbolRotationUpDown.Name = "SymbolRotationUpDown";
+            SymbolRotationUpDown.Size = new Size(43, 23);
+            SymbolRotationUpDown.TabIndex = 41;
+            SymbolRotationUpDown.TextAlign = HorizontalAlignment.Center;
+            SymbolRotationUpDown.ValueChanged += SymbolRotationUpDown_ValueChanged;
             // 
             // label53
             // 
@@ -2874,7 +2890,7 @@
             SymbolRotationTrack.Location = new Point(0, 151);
             SymbolRotationTrack.Maximum = 359;
             SymbolRotationTrack.Name = "SymbolRotationTrack";
-            SymbolRotationTrack.Size = new Size(141, 20);
+            SymbolRotationTrack.Size = new Size(95, 20);
             SymbolRotationTrack.TabIndex = 29;
             SymbolRotationTrack.TickStyle = TickStyle.None;
             SymbolRotationTrack.Scroll += SymbolRotationTrack_Scroll;
@@ -2885,7 +2901,7 @@
             label44.BackColor = Color.Transparent;
             label44.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label44.ForeColor = SystemColors.ControlDarkDark;
-            label44.Location = new Point(58, 103);
+            label44.Location = new Point(51, 103);
             label44.Name = "label44";
             label44.Size = new Size(83, 15);
             label44.TabIndex = 28;
@@ -2916,7 +2932,7 @@
             MirrorSymbolSwitch.LinearGradient_Background = false;
             MirrorSymbolSwitch.LinearGradient_Value = false;
             MirrorSymbolSwitch.LinearGradientPen = false;
-            MirrorSymbolSwitch.Location = new Point(11, 98);
+            MirrorSymbolSwitch.Location = new Point(4, 98);
             MirrorSymbolSwitch.Name = "MirrorSymbolSwitch";
             MirrorSymbolSwitch.PenWidth = 10;
             MirrorSymbolSwitch.RGB = false;
@@ -2929,19 +2945,19 @@
             MirrorSymbolSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             MirrorSymbolSwitch.Timer_RGB = 300;
             // 
-            // groupBox11
+            // SymbolColorGroup
             // 
-            groupBox11.Controls.Add(ResetSymbolColorsButton);
-            groupBox11.Controls.Add(SymbolColor3Button);
-            groupBox11.Controls.Add(SymbolColor2Button);
-            groupBox11.Controls.Add(SymbolColor1Button);
-            groupBox11.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox11.Location = new Point(7, 116);
-            groupBox11.Name = "groupBox11";
-            groupBox11.Size = new Size(148, 106);
-            groupBox11.TabIndex = 29;
-            groupBox11.TabStop = false;
-            groupBox11.Text = "Color";
+            SymbolColorGroup.Controls.Add(ResetSymbolColorsButton);
+            SymbolColorGroup.Controls.Add(SymbolColor3Button);
+            SymbolColorGroup.Controls.Add(SymbolColor2Button);
+            SymbolColorGroup.Controls.Add(SymbolColor1Button);
+            SymbolColorGroup.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SymbolColorGroup.Location = new Point(7, 116);
+            SymbolColorGroup.Name = "SymbolColorGroup";
+            SymbolColorGroup.Size = new Size(148, 106);
+            SymbolColorGroup.TabIndex = 29;
+            SymbolColorGroup.TabStop = false;
+            SymbolColorGroup.Text = "Color";
             // 
             // ResetSymbolColorsButton
             // 
@@ -3012,18 +3028,18 @@
             SymbolColor1Button.UseVisualStyleBackColor = false;
             SymbolColor1Button.Click += SymbolColor1Button_Click;
             // 
-            // groupBox10
+            // SymbolScaleGroup
             // 
-            groupBox10.Controls.Add(SymbolScaleUpDown);
-            groupBox10.Controls.Add(LockSymbolScaleButton);
-            groupBox10.Controls.Add(SymbolScaleTrack);
-            groupBox10.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox10.Location = new Point(6, 32);
-            groupBox10.Name = "groupBox10";
-            groupBox10.Size = new Size(148, 75);
-            groupBox10.TabIndex = 28;
-            groupBox10.TabStop = false;
-            groupBox10.Text = "Scale";
+            SymbolScaleGroup.Controls.Add(SymbolScaleUpDown);
+            SymbolScaleGroup.Controls.Add(LockSymbolScaleButton);
+            SymbolScaleGroup.Controls.Add(SymbolScaleTrack);
+            SymbolScaleGroup.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SymbolScaleGroup.Location = new Point(6, 32);
+            SymbolScaleGroup.Name = "SymbolScaleGroup";
+            SymbolScaleGroup.Size = new Size(148, 75);
+            SymbolScaleGroup.TabIndex = 28;
+            SymbolScaleGroup.TabStop = false;
+            SymbolScaleGroup.Text = "Scale";
             // 
             // SymbolScaleUpDown
             // 
@@ -3032,7 +3048,7 @@
             SymbolScaleUpDown.Maximum = new decimal(new int[] { 200, 0, 0, 0 });
             SymbolScaleUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             SymbolScaleUpDown.Name = "SymbolScaleUpDown";
-            SymbolScaleUpDown.Size = new Size(44, 23);
+            SymbolScaleUpDown.Size = new Size(43, 23);
             SymbolScaleUpDown.TabIndex = 6;
             SymbolScaleUpDown.TextAlign = HorizontalAlignment.Center;
             SymbolScaleUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
@@ -3057,11 +3073,11 @@
             // 
             SymbolScaleTrack.AutoSize = false;
             SymbolScaleTrack.BackColor = SystemColors.Control;
-            SymbolScaleTrack.Location = new Point(-3, 46);
+            SymbolScaleTrack.Location = new Point(0, 46);
             SymbolScaleTrack.Maximum = 200;
             SymbolScaleTrack.Minimum = 1;
             SymbolScaleTrack.Name = "SymbolScaleTrack";
-            SymbolScaleTrack.Size = new Size(101, 20);
+            SymbolScaleTrack.Size = new Size(95, 20);
             SymbolScaleTrack.TabIndex = 1;
             SymbolScaleTrack.TickStyle = TickStyle.None;
             SymbolScaleTrack.Value = 100;
@@ -3332,6 +3348,7 @@
             // 
             // groupBox19
             // 
+            groupBox19.Controls.Add(LabelRotationUpDown);
             groupBox19.Controls.Add(LabelRotationTrack);
             groupBox19.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             groupBox19.Location = new Point(6, 663);
@@ -3341,6 +3358,17 @@
             groupBox19.TabStop = false;
             groupBox19.Text = "Rotation";
             // 
+            // LabelRotationUpDown
+            // 
+            LabelRotationUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LabelRotationUpDown.Location = new Point(96, 23);
+            LabelRotationUpDown.Maximum = new decimal(new int[] { 359, 0, 0, 0 });
+            LabelRotationUpDown.Name = "LabelRotationUpDown";
+            LabelRotationUpDown.Size = new Size(43, 23);
+            LabelRotationUpDown.TabIndex = 31;
+            LabelRotationUpDown.TextAlign = HorizontalAlignment.Center;
+            LabelRotationUpDown.ValueChanged += LabelRotationUpDown_ValueChanged;
+            // 
             // LabelRotationTrack
             // 
             LabelRotationTrack.AutoSize = false;
@@ -3348,10 +3376,11 @@
             LabelRotationTrack.Location = new Point(6, 26);
             LabelRotationTrack.Maximum = 359;
             LabelRotationTrack.Name = "LabelRotationTrack";
-            LabelRotationTrack.Size = new Size(136, 20);
+            LabelRotationTrack.Size = new Size(84, 20);
             LabelRotationTrack.TabIndex = 30;
+            LabelRotationTrack.TickFrequency = 0;
             LabelRotationTrack.TickStyle = TickStyle.None;
-            LabelRotationTrack.ValueChanged += LabelRotationTrack_ValueChanged;
+            LabelRotationTrack.Scroll += LabelRotationTrack_Scroll;
             // 
             // groupBox18
             // 
@@ -5765,7 +5794,7 @@
             RealmStudioMainMenuStrip.Items.AddRange(new ToolStripItem[] { FileToolStripMenuItem, EditToolStripMenuItem, RealmToolStripMenuItem, AssetsToolStripMenuItem, ThemeToolStripMenuItem, OptionsToolStripMenuItem, HelpToolStripMenuItem });
             RealmStudioMainMenuStrip.Location = new Point(20, 56);
             RealmStudioMainMenuStrip.Name = "RealmStudioMainMenuStrip";
-            RealmStudioMainMenuStrip.Size = new Size(468, 24);
+            RealmStudioMainMenuStrip.Size = new Size(348, 24);
             RealmStudioMainMenuStrip.TabIndex = 1;
             RealmStudioMainMenuStrip.Text = "menuStrip1";
             // 
@@ -6017,6 +6046,13 @@
             PreferencesMenuItem.Size = new Size(247, 22);
             PreferencesMenuItem.Text = "&Preferences...";
             PreferencesMenuItem.Click += PreferencesMenuItem_Click;
+            // 
+            // NameGeneratorConfigurationToolStripMenuItem
+            // 
+            NameGeneratorConfigurationToolStripMenuItem.Name = "NameGeneratorConfigurationToolStripMenuItem";
+            NameGeneratorConfigurationToolStripMenuItem.Size = new Size(247, 22);
+            NameGeneratorConfigurationToolStripMenuItem.Text = "&Name Generator Configuration...";
+            NameGeneratorConfigurationToolStripMenuItem.Click += NameGeneratorConfigurationToolStripMenuItem_Click;
             // 
             // HelpToolStripMenuItem
             // 
@@ -8066,13 +8102,6 @@
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
             // 
-            // NameGeneratorConfigurationToolStripMenuItem
-            // 
-            NameGeneratorConfigurationToolStripMenuItem.Name = "NameGeneratorConfigurationToolStripMenuItem";
-            NameGeneratorConfigurationToolStripMenuItem.Size = new Size(247, 22);
-            NameGeneratorConfigurationToolStripMenuItem.Text = "&Name Generator Configuration...";
-            NameGeneratorConfigurationToolStripMenuItem.Click += NameGeneratorConfigurationToolStripMenuItem_Click;
-            // 
             // RealmStudioMainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -8160,14 +8189,15 @@
             SymbolTab.PerformLayout();
             groupBox14.ResumeLayout(false);
             groupBox13.ResumeLayout(false);
-            groupBox12.ResumeLayout(false);
-            groupBox12.PerformLayout();
+            SymbolPlacementGroup.ResumeLayout(false);
+            SymbolPlacementGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)SymbolRotationUpDown).EndInit();
             ((System.ComponentModel.ISupportInitialize)AreaBrushSizeTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)SymbolPlacementDensityUpDown).EndInit();
             ((System.ComponentModel.ISupportInitialize)SymbolPlacementRateUpDown).EndInit();
             ((System.ComponentModel.ISupportInitialize)SymbolRotationTrack).EndInit();
-            groupBox11.ResumeLayout(false);
-            groupBox10.ResumeLayout(false);
+            SymbolColorGroup.ResumeLayout(false);
+            SymbolScaleGroup.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)SymbolScaleUpDown).EndInit();
             ((System.ComponentModel.ISupportInitialize)SymbolScaleTrack).EndInit();
             SymbolToolStrip.ResumeLayout(false);
@@ -8176,6 +8206,7 @@
             LabelTab.PerformLayout();
             groupBox20.ResumeLayout(false);
             groupBox19.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)LabelRotationUpDown).EndInit();
             ((System.ComponentModel.ISupportInitialize)LabelRotationTrack).EndInit();
             groupBox18.ResumeLayout(false);
             groupBox18.PerformLayout();
@@ -8559,16 +8590,16 @@
         private FontAwesome.Sharp.IconToolStripButton EraseSymbolsButton;
         private ToolStripSeparator toolStripSeparator4;
         private FontAwesome.Sharp.IconToolStripButton ColorSymbolsButton;
-        private GroupBox groupBox10;
+        private GroupBox SymbolScaleGroup;
         private TrackBar SymbolScaleTrack;
         private FontAwesome.Sharp.IconButton LockSymbolScaleButton;
         private NumericUpDown SymbolScaleUpDown;
-        private GroupBox groupBox11;
+        private GroupBox SymbolColorGroup;
         private FontAwesome.Sharp.IconButton ResetSymbolColorsButton;
         private FontAwesome.Sharp.IconButton SymbolColor3Button;
         private FontAwesome.Sharp.IconButton SymbolColor2Button;
         private FontAwesome.Sharp.IconButton SymbolColor1Button;
-        private GroupBox groupBox12;
+        private GroupBox SymbolPlacementGroup;
         private Label label21;
         private TrackBar SymbolRotationTrack;
         private Label label44;
@@ -8806,5 +8837,7 @@
         private FontAwesome.Sharp.IconMenuItem ExportMapMenuItem;
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripMenuItem NameGeneratorConfigurationToolStripMenuItem;
+        private NumericUpDown LabelRotationUpDown;
+        private NumericUpDown SymbolRotationUpDown;
     }
 }

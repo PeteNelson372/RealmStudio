@@ -9,7 +9,7 @@
     <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2024.284.15278</AssemblyVersion>
+    <AssemblyVersion>1.2024.285.1657</AssemblyVersion>
     <FileVersion>1.2024.283.15336</FileVersion>  
   </PropertyGroup>
 

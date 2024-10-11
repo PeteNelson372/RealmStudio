@@ -71,8 +71,6 @@ namespace RealmStudio
         private static readonly FontSelection FONT_PANEL_SELECTED_FONT = new();
         private static FontPanelOpenerEnum FONT_PANEL_OPENER = FontPanelOpenerEnum.NotSet;
 
-        private static SymbolTypeEnum SELECTED_SYMBOL_TYPE = SymbolTypeEnum.NotSet;
-
         private static int SELECTED_BRUSH_SIZE = 0;
 
         private static float PLACEMENT_RATE = 1.0F;
@@ -2992,7 +2990,7 @@ namespace RealmStudio
                 SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
-            else if (CURRENT_DRAWING_MODE == DrawingModeEnum.SymbolPlace)
+            else if (ModifierKeys != Keys.Shift && CURRENT_DRAWING_MODE == DrawingModeEnum.SymbolPlace)
             {
                 // TODO: should area brush size be changed when AreaBrushSwitch is checked?
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
@@ -3002,13 +3000,18 @@ namespace RealmStudio
                 SymbolScaleUpDown.Value = newValue;
                 SKGLRenderControl.Invalidate();
             }
-            else if (CURRENT_DRAWING_MODE == DrawingModeEnum.LabelSelect)
+            else if (ModifierKeys != Keys.Shift && CURRENT_DRAWING_MODE == DrawingModeEnum.LabelSelect)
             {
-                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
-                int newValue = Math.Max(LabelRotationTrack.Minimum, LabelRotationTrack.Value + sizeDelta);
-                LabelRotationTrack.Value = Math.Min(LabelRotationTrack.Maximum, newValue);
+                if (SELECTED_MAP_LABEL != null)
+                {
+                    int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                    int newValue = Math.Max(LabelRotationTrack.Minimum, LabelRotationTrack.Value + sizeDelta);
 
-                SKGLRenderControl.Invalidate();
+                    LabelRotationTrack.Value = Math.Min(LabelRotationTrack.Maximum, newValue);
+                    LabelRotationUpDown.Value = Math.Min(LabelRotationUpDown.Maximum, newValue);
+
+                    SKGLRenderControl.Invalidate();
+                }
             }
             else if (ModifierKeys == Keys.Shift)
             {
@@ -3631,34 +3634,38 @@ namespace RealmStudio
                         {
                             CREATING_LABEL = true;
 
-                            Size labelSize = TextRenderer.MeasureText(SELECTED_MAP_LABEL.LabelText, SELECTED_LABEL_FONT,
-                                new Size(int.MaxValue, int.MaxValue),
-                                TextFormatFlags.Default | TextFormatFlags.LeftAndRightPadding | TextFormatFlags.ExternalLeading | TextFormatFlags.SingleLine);
+                            Font labelFont = new Font(SELECTED_MAP_LABEL.LabelFont.FontFamily, SELECTED_MAP_LABEL.LabelFont.Size * 1.33F * DrawingZoom,
+                                SELECTED_MAP_LABEL.LabelFont.Style, GraphicsUnit.Pixel);
 
-                            float boxX = (e.X - DrawingPoint.X) * DrawingZoom;
-                            float boxY = (e.Y - DrawingPoint.Y) * DrawingZoom;
+                            Size labelSize = TextRenderer.MeasureText(SELECTED_MAP_LABEL.LabelText, labelFont,
+                                new Size(int.MaxValue, int.MaxValue),
+                                TextFormatFlags.Default | TextFormatFlags.SingleLine | TextFormatFlags.TextBoxControl);
+
+                            int tbX = (int)((SELECTED_MAP_LABEL.X - DrawingPoint.X) * DrawingZoom);
+                            int tbY = (int)((SELECTED_MAP_LABEL.Y - DrawingPoint.Y) * DrawingZoom) - (labelSize.Height / 2);
+                            int tbW = (int)(SELECTED_MAP_LABEL.Width * DrawingZoom);
+                            int tbH = (int)(SELECTED_MAP_LABEL.Height * 1.5F * DrawingZoom);
 
                             LABEL_TEXT_BOX = new()
                             {
                                 Parent = SKGLRenderControl,
                                 Name = Guid.NewGuid().ToString(),
-                                Left = e.X - (labelSize.Width / 2),
-                                Top = e.Y - (labelSize.Height / 2),
-                                Width = labelSize.Width,
-                                Height = labelSize.Height,
-                                Margin = System.Windows.Forms.Padding.Empty,
-                                AutoSize = false,
-                                Font = SELECTED_MAP_LABEL.LabelFont,
+                                Left = tbX,
+                                Top = tbY,
+                                Width = tbW,
+                                Height = tbH,
+                                Margin = Padding.Empty,
+                                Padding = Padding.Empty,
+                                AutoSize = true,
+                                Font = labelFont,
                                 Visible = true,
-                                BackColor = Color.Peru,
-                                ForeColor = FontColorSelectButton.BackColor,
-                                BorderStyle = BorderStyle.FixedSingle,
+                                BackColor = Color.AliceBlue,
+                                ForeColor = SELECTED_MAP_LABEL.LabelColor,
+                                BorderStyle = BorderStyle.None,
                                 Multiline = false,
                                 TextAlign = HorizontalAlignment.Left,
                                 Text = SELECTED_MAP_LABEL.LabelText,
-
                             };
-
 
                             LABEL_TEXT_BOX.KeyPress += LabelTextBox_KeyPress;
 
@@ -3672,7 +3679,6 @@ namespace RealmStudio
                             LABEL_TEXT_BOX.Tag = SELECTED_MAP_LABEL.LabelPath;
 
                             // delete the currently selected label
-
                             MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LABELLAYER);
 
                             for (int i = labelLayer.MapLayerComponents.Count - 1; i >= 0; i--)
@@ -4645,6 +4651,8 @@ namespace RealmStudio
                             if (selectedLabel.IsSelected)
                             {
                                 SELECTED_MAP_LABEL = selectedLabel;
+                                LabelRotationTrack.Value = (int)SELECTED_MAP_LABEL.LabelRotationDegrees;
+                                LabelRotationUpDown.Value = (int)SELECTED_MAP_LABEL.LabelRotationDegrees;
                             }
                             else
                             {
@@ -4655,11 +4663,13 @@ namespace RealmStudio
                         }
                         else
                         {
+                            SELECTED_MAP_LABEL = null;
+
                             PlacedMapBox? selectedMapBox = SelectMapBoxAtPoint(CURRENT_MAP, zoomedScrolledPoint);
 
                             if (selectedMapBox != null)
                             {
-                                bool isSelected = selectedMapBox.IsSelected;
+                                bool isSelected = !selectedMapBox.IsSelected;
                                 selectedMapBox.IsSelected = !isSelected;
 
                                 if (selectedMapBox.IsSelected)
@@ -4670,6 +4680,10 @@ namespace RealmStudio
                                 {
                                     SELECTED_PLACED_MAP_BOX = null;
                                 }
+                            }
+                            else
+                            {
+                                SELECTED_PLACED_MAP_BOX = null;
                             }
                         }
                     }
@@ -7053,7 +7067,7 @@ namespace RealmStudio
 
         private void StructuresSymbolButton_Click(object sender, EventArgs e)
         {
-            SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Structure;
+            SymbolMethods.SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Structure;
             List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
 
             AddSymbolsToSymbolTable(selectedSymbols);
@@ -7063,7 +7077,7 @@ namespace RealmStudio
 
         private void VegetationSymbolsButton_Click(object sender, EventArgs e)
         {
-            SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Vegetation;
+            SymbolMethods.SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Vegetation;
             List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
 
             AddSymbolsToSymbolTable(selectedSymbols);
@@ -7072,7 +7086,7 @@ namespace RealmStudio
 
         private void TerrainSymbolsButton_Click(object sender, EventArgs e)
         {
-            SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Terrain;
+            SymbolMethods.SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Terrain;
             List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
 
             AddSymbolsToSymbolTable(selectedSymbols);
@@ -7081,7 +7095,7 @@ namespace RealmStudio
 
         private void OtherSymbolsButton_Click(object sender, EventArgs e)
         {
-            SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Other;
+            SymbolMethods.SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Other;
             List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
 
             AddSymbolsToSymbolTable(selectedSymbols);
@@ -7093,6 +7107,8 @@ namespace RealmStudio
         {
             if (!SYMBOL_SCALE_LOCKED)
             {
+                TOOLTIP.Show(SymbolScaleTrack.Value.ToString(), SymbolScaleGroup, new Point(SymbolScaleTrack.Right - 30, SymbolScaleTrack.Top - 20), 2000);
+
                 SymbolScaleUpDown.Value = SymbolScaleTrack.Value;
                 SymbolScaleUpDown.Refresh();
             }
@@ -7190,7 +7206,7 @@ namespace RealmStudio
 
         private void AreaBrushSizeTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(AreaBrushSizeTrack.Value.ToString(), AreaBrushSizeTrack, new Point(AreaBrushSizeTrack.Right - 42, AreaBrushSizeTrack.Top - 94), 2000);
+            TOOLTIP.Show(AreaBrushSizeTrack.Value.ToString(), SymbolPlacementGroup, new Point(AreaBrushSizeTrack.Right - 30, AreaBrushSizeTrack.Top - 20), 2000);
 
             SELECTED_BRUSH_SIZE = AreaBrushSizeTrack.Value;
             SKGLRenderControl.Invalidate();
@@ -7198,7 +7214,13 @@ namespace RealmStudio
 
         private void SymbolRotationTrack_Scroll(object sender, EventArgs e)
         {
-            TOOLTIP.Show(SymbolRotationTrack.Value.ToString(), SymbolRotationTrack, new Point(SymbolRotationTrack.Right - 38, SymbolRotationTrack.Top - 170), 2000);
+            TOOLTIP.Show(SymbolRotationTrack.Value.ToString(), SymbolPlacementGroup, new Point(SymbolRotationTrack.Right - 30, SymbolRotationTrack.Top - 20), 2000);
+            SymbolRotationUpDown.Value = SymbolRotationTrack.Value;
+        }
+
+        private void SymbolRotationUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            SymbolRotationTrack.Value = (int)SymbolRotationUpDown.Value;
         }
 
         private void SymbolPlacementRateUpDown_ValueChanged(object sender, EventArgs e)
@@ -7248,7 +7270,7 @@ namespace RealmStudio
 
 #pragma warning restore CS8604 // Possible null reference argument.
             List<string> selectedTags = SymbolTagsListBox.CheckedItems.Cast<string>().ToList();
-            List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SELECTED_SYMBOL_TYPE, checkedCollections, selectedTags);
+            List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SymbolMethods.SELECTED_SYMBOL_TYPE, checkedCollections, selectedTags);
             AddSymbolsToSymbolTable(filteredSymbols);
         }
 
@@ -7272,7 +7294,7 @@ namespace RealmStudio
 
 #pragma warning restore CS8604 // Possible null reference argument.
             List<string> selectedCollections = SymbolCollectionsListBox.CheckedItems.Cast<string>().ToList();
-            List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SELECTED_SYMBOL_TYPE, selectedCollections, checkedTags);
+            List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SymbolMethods.SELECTED_SYMBOL_TYPE, selectedCollections, checkedTags);
             AddSymbolsToSymbolTable(filteredSymbols);
         }
 
@@ -7284,7 +7306,7 @@ namespace RealmStudio
             {
                 List<string> selectedCollections = SymbolCollectionsListBox.CheckedItems.Cast<string>().ToList();
                 List<string> selectedTags = SymbolTagsListBox.CheckedItems.Cast<string>().ToList();
-                List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SELECTED_SYMBOL_TYPE, selectedCollections, selectedTags, SymbolSearchTextBox.Text);
+                List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SymbolMethods.SELECTED_SYMBOL_TYPE, selectedCollections, selectedTags, SymbolSearchTextBox.Text);
 
                 AddSymbolsToSymbolTable(filteredSymbols);
             }
@@ -7292,7 +7314,7 @@ namespace RealmStudio
             {
                 List<string> selectedCollections = SymbolCollectionsListBox.CheckedItems.Cast<string>().ToList();
                 List<string> selectedTags = SymbolTagsListBox.CheckedItems.Cast<string>().ToList();
-                List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SELECTED_SYMBOL_TYPE, selectedCollections, selectedTags);
+                List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SymbolMethods.SELECTED_SYMBOL_TYPE, selectedCollections, selectedTags);
 
                 AddSymbolsToSymbolTable(filteredSymbols);
             }
@@ -7306,7 +7328,7 @@ namespace RealmStudio
         {
             List<string> selectedCollections = SymbolCollectionsListBox.CheckedItems.Cast<string>().ToList();
             List<string> selectedTags = SymbolTagsListBox.CheckedItems.Cast<string>().ToList();
-            List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SELECTED_SYMBOL_TYPE, selectedCollections, selectedTags);
+            List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SymbolMethods.SELECTED_SYMBOL_TYPE, selectedCollections, selectedTags);
 
             return filteredSymbols;
         }
@@ -7687,6 +7709,13 @@ namespace RealmStudio
 
                 Font labelFont = tb.Font;
                 Color labelColor = FontColorSelectButton.BackColor;
+                Color outlineColor = OutlineColorSelectButton.BackColor;
+                float outlineWidth = OutlineWidthTrack.Value / 100F;
+
+                Color glowColor = GlowColorSelectButton.BackColor;
+                int glowStrength = GlowStrengthTrack.Value;
+
+                int labelRotationDegrees = LabelRotationTrack.Value;
 
                 if (((KeyPressEventArgs)e).KeyChar == (char)Keys.Escape)
                 {
@@ -7703,13 +7732,16 @@ namespace RealmStudio
                     ((KeyPressEventArgs)e).Handled = true;
                     CREATING_LABEL = false;
 
-                    Color outlineColor = OutlineColorSelectButton.BackColor;
-                    float outlineWidth = OutlineWidthTrack.Value / 100F;
-
-                    Color glowColor = GlowColorSelectButton.BackColor;
-                    int glowStrength = GlowStrengthTrack.Value;
-
-                    int labelRotationDegrees = LabelRotationTrack.Value;
+                    if (SELECTED_MAP_LABEL != null)
+                    {
+                        labelFont = SELECTED_MAP_LABEL.LabelFont;
+                        labelColor = SELECTED_MAP_LABEL.LabelColor;
+                        outlineColor = SELECTED_MAP_LABEL.LabelOutlineColor;
+                        outlineWidth = SELECTED_MAP_LABEL.LabelOutlineWidth;
+                        glowColor = SELECTED_MAP_LABEL.LabelGlowColor;
+                        glowStrength = SELECTED_MAP_LABEL.LabelGlowStrength;
+                        labelRotationDegrees = (int)SELECTED_MAP_LABEL.LabelRotationDegrees;
+                    }
 
                     if (!string.IsNullOrEmpty(tb.Text))
                     {
@@ -7739,10 +7771,15 @@ namespace RealmStudio
 
                         SKPoint zoomedScrolledPoint = new((tb.Left / DrawingZoom) + DrawingPoint.X, (tb.Top / DrawingZoom) + DrawingPoint.Y);
 
-                        //Point labelPoint = new(tb.Left, tb.Top);
-
                         label.X = (int)zoomedScrolledPoint.X;
                         label.Y = (int)zoomedScrolledPoint.Y;
+
+                        if (SELECTED_MAP_LABEL != null)
+                        {
+                            label.X = SELECTED_MAP_LABEL.X;
+                            label.Y = SELECTED_MAP_LABEL.Y;
+                        }
+
                         label.Width = (int)bounds.Width;
                         label.Height = (int)bounds.Height;
 
@@ -7951,6 +7988,7 @@ namespace RealmStudio
         #endregion
 
         #region Label Tab Event Handlers
+
         private void MapBoxPictureBox_MouseClick(object sender, EventArgs e)
         {
             if (((MouseEventArgs)e).Button == MouseButtons.Left)
@@ -8193,9 +8231,25 @@ namespace RealmStudio
             UpdateSelectedLabelOnUIChange();
         }
 
-        private void LabelRotationTrack_ValueChanged(object sender, EventArgs e)
+        private void LabelRotationUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            LabelRotationTrack.Value = (int)LabelRotationUpDown.Value;
+
+            if (SELECTED_MAP_LABEL != null)
+            {
+                Cmd_ChangeLabelRotation cmd = new(SELECTED_MAP_LABEL, (float)LabelRotationTrack.Value);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void LabelRotationTrack_Scroll(object sender, EventArgs e)
         {
             TOOLTIP.Show(LabelRotationTrack.Value.ToString(), LabelRotationTrack, new Point(LabelRotationTrack.Right - 38, LabelRotationTrack.Top - 40), 2000);
+
+            LabelRotationUpDown.Value = LabelRotationTrack.Value;
 
             if (SELECTED_MAP_LABEL != null)
             {
@@ -9226,9 +9280,11 @@ namespace RealmStudio
         {
             RegionBorderedLightSolidRadio.Checked = true;
         }
+
         #endregion
 
         #endregion
+
 
     }
 }
