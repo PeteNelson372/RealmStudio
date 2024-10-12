@@ -841,7 +841,8 @@ namespace RealmStudio
 
         private void WDUserFolderMenuItem_Click(object sender, EventArgs e)
         {
-
+            WonderdraftUserFolderImportDialog dlg = new WonderdraftUserFolderImportDialog();
+            dlg.ShowDialog(this);
         }
 
         private void ReloadAllAssetsMenuItem_Click(object sender, EventArgs e)
