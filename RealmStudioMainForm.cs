@@ -763,7 +763,30 @@ namespace RealmStudio
 
         private void ThemeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // show the theme dialog
+            ThemeList themeList = new();
 
+            // get the current state of the UI as a theme
+            // and send it to the ThemeList dialog
+            MapTheme settingsTheme = SaveCurentSettingsToTheme();
+
+            themeList.SetThemes([.. AssetManager.THEME_LIST]);
+            themeList.SettingsTheme = settingsTheme;
+
+            DialogResult result = themeList.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                // on OK result, apply the selected theme
+                MapTheme selectedTheme = themeList.GetSelectedTheme();
+                ThemeFilter themeFilter = themeList.GetThemeFilter();
+
+                if (!string.IsNullOrEmpty(selectedTheme.ThemeName))
+                {
+                    AssetManager.CURRENT_THEME = selectedTheme;
+                    ApplyTheme(selectedTheme, themeFilter);
+                }
+            }
         }
 
         private void MapPropertiesMenuItem_Click(object sender, EventArgs e)
@@ -2157,6 +2180,92 @@ namespace RealmStudio
         #endregion
 
         #region Theme Methods
+
+        private MapTheme SaveCurentSettingsToTheme()
+        {
+            MapTheme theme = new();
+
+            // label presets for the theme are serialized to a file at the time they are created
+            // and loaded when the theme is loaded/selected; they are not stored with the theme
+
+            // background
+
+            theme.BackgroundTexture = AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX];
+
+            // vignette color and strength
+            theme.VignetteColor = (XmlColor)VignetteColorSelectionButton.BackColor;
+            theme.VignetteStrength = VignetteStrengthTrack.Value;
+
+            // ocean
+            theme.OceanTexture = AssetManager.WATER_TEXTURE_LIST[AssetManager.SELECTED_OCEAN_TEXTURE_INDEX];
+
+
+            theme.OceanTextureOpacity = OceanTextureOpacityTrack.Value;
+            theme.OceanColor = OceanColorSelectButton.BackColor;
+
+            // save ocean custom colors
+            theme.OceanColorPalette.Add(OceanCustomColorButton1.BackColor);
+            theme.OceanColorPalette.Add(OceanCustomColorButton2.BackColor);
+            theme.OceanColorPalette.Add(OceanCustomColorButton3.BackColor);
+            theme.OceanColorPalette.Add(OceanCustomColorButton4.BackColor);
+            theme.OceanColorPalette.Add(OceanCustomColorButton5.BackColor);
+            theme.OceanColorPalette.Add(OceanCustomColorButton6.BackColor);
+            theme.OceanColorPalette.Add(OceanCustomColorButton7.BackColor);
+            theme.OceanColorPalette.Add(OceanCustomColorButton8.BackColor);
+
+            // landform
+            theme.LandformOutlineColor = LandformOutlineColorSelectButton.BackColor;
+            theme.LandformOutlineWidth = 2;
+
+            theme.LandformTexture = AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX];
+
+            theme.LandShorelineStyle = GradientDirectionEnum.None.ToString();
+
+            theme.LandformCoastlineColor = CoastlineColorSelectionButton.BackColor;
+            theme.LandformCoastlineEffectDistance = CoastlineEffectDistanceTrack.Value;
+
+            if (CoastlineStyleList.SelectedIndex > -1)
+            {
+                theme.LandformCoastlineStyle = (string?)CoastlineStyleList.Items[CoastlineStyleList.SelectedIndex];
+            }
+
+            // save land custom colors
+            theme.LandformColorPalette.Add(LandCustomColorButton1.BackColor);
+            theme.LandformColorPalette.Add(LandCustomColorButton2.BackColor);
+            theme.LandformColorPalette.Add(LandCustomColorButton3.BackColor);
+            theme.LandformColorPalette.Add(LandCustomColorButton4.BackColor);
+            theme.LandformColorPalette.Add(LandCustomColorButton5.BackColor);
+            theme.LandformColorPalette.Add(LandCustomColorButton6.BackColor);
+
+            // freshwater
+            theme.FreshwaterColor = WaterColorSelectionButton.BackColor;
+            theme.FreshwaterShorelineColor = ShorelineColorSelectionButton.BackColor;
+
+            theme.RiverWidth = RiverWidthTrack.Value;
+            theme.RiverSourceFadeIn = RiverSourceFadeInSwitch.Checked;
+
+            // save freshwater custom colors
+            theme.FreshwaterColorPalette.Add(WaterCustomColor1.BackColor);
+            theme.FreshwaterColorPalette.Add(WaterCustomColor2.BackColor);
+            theme.FreshwaterColorPalette.Add(WaterCustomColor3.BackColor);
+            theme.FreshwaterColorPalette.Add(WaterCustomColor4.BackColor);
+            theme.FreshwaterColorPalette.Add(WaterCustomColor5.BackColor);
+            theme.FreshwaterColorPalette.Add(WaterCustomColor6.BackColor);
+            theme.FreshwaterColorPalette.Add(WaterCustomColor7.BackColor);
+            theme.FreshwaterColorPalette.Add(WaterCustomColor8.BackColor);
+
+            // path
+            theme.PathColor = PathColorSelectButton.BackColor;
+            theme.PathWidth = PathWidthTrack.Value;
+
+            // symbols
+            theme.SymbolCustomColors[0] = (XmlColor)SymbolColor1Button.BackColor;
+            theme.SymbolCustomColors[1] = (XmlColor)SymbolColor2Button.BackColor;
+            theme.SymbolCustomColors[2] = (XmlColor)SymbolColor3Button.BackColor;
+
+            return theme;
+        }
+
 
         private void ApplyTheme(MapTheme theme, ThemeFilter themeFilter)
         {

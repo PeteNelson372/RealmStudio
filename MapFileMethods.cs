@@ -155,6 +155,8 @@ namespace RealmStudio
                     Program.LOGGER.Error("Error saving theme: " + ex.Message);
 
                     MessageBox.Show("Error saving theme: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+                    throw;
                 }
                 finally
                 {

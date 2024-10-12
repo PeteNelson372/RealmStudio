@@ -103,7 +103,7 @@ namespace RealmStudio
                         where file.Contains(".png")
                             || file.Contains(".jpg")
                             || file.Contains(".ico")
-                            || file.Contains(".mctheme")
+                            || file.Contains(".rstheme")
                             || file.Contains(".svg")
                             || file.Contains(".mclblprst")
                         select new

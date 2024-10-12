@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class ThemeFilter
+    public class ThemeFilter
     {
         public bool ApplyBackgroundSettings { get; set; } = true;
         public bool ApplyOceanSettings { get; set; } = true;

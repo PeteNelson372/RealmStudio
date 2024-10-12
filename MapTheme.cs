@@ -28,7 +28,7 @@ namespace RealmStudio
     [XmlRoot("maptheme", Namespace = "RealmStudio", IsNullable = false)]
     public class MapTheme
     {
-        public string? ThemeName { get; set; }
+        public string ThemeName { get; set; } = string.Empty;
         public string? ThemePath { get; set; }
         public bool IsDefaultTheme { get; set; } = false;
         public bool IsSystemTheme { get; set; } = false;
