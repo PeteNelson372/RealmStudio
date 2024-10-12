@@ -81,20 +81,41 @@ namespace RealmStudio
 
         public static readonly string WonderdraftSymbolsFileName = ".wonderdraft_symbols";
 
+        public static LoadingStatusForm LOADING_STATUS_FORM = new();
+
         internal static int LoadAllAssets()
         {
+            int LoadPercentage = 0;
+
             string assetDirectory = Resources.ASSET_DIRECTORY;
 
             ResetAssets();
 
+            LOADING_STATUS_FORM.SetStatusText("Loading Symbol Tags");
+
             // load symbol tags
             LoadSymbolTags();
+
+            LoadPercentage += 2;
+            LOADING_STATUS_FORM.SetStatusPercentage(LoadPercentage);
+
+            LOADING_STATUS_FORM.SetStatusText("Loading Symbol Type Synonyms");
 
             // load symbol type synonyms
             LoadSymbolTypeSynonyms();
 
+            LoadPercentage += 2;
+            LOADING_STATUS_FORM.SetStatusPercentage(LoadPercentage);
+
+            LOADING_STATUS_FORM.SetStatusText("Loading Name Generators");
+
             // load name generator files
             MapToolMethods.LoadNameGeneratorFiles();
+
+            LoadPercentage += 6;
+            LOADING_STATUS_FORM.SetStatusPercentage(LoadPercentage);
+
+            LOADING_STATUS_FORM.SetStatusText("Loading Assets");
 
             // load assets
             int numAssets = 0;
@@ -245,15 +266,23 @@ namespace RealmStudio
 
             numAssets += files.Count();
 
-            int numSymbols = LoadSymbolCollections();
-
-            numAssets += numSymbols;
-
             int numBoxes = LoadBoxAssets();
             numAssets += numBoxes;
 
             int numFrames = LoadFrameAssets();
             numAssets += numFrames;
+
+            LoadPercentage += 10;
+            LOADING_STATUS_FORM.SetStatusPercentage(LoadPercentage);
+
+            int numSymbols = LoadSymbolCollections();
+
+            LoadPercentage = 100;
+            LOADING_STATUS_FORM.SetStatusPercentage(LoadPercentage);
+
+            numAssets += numSymbols;
+
+            Thread.Sleep(1000);
 
             return numAssets;
         }
@@ -276,6 +305,9 @@ namespace RealmStudio
 
         internal static int LoadSymbolCollections()
         {
+            int StartingLoadPercentage = LOADING_STATUS_FORM.GetStatusPercentage();
+            int LoadPercentage = LOADING_STATUS_FORM.GetStatusPercentage();
+
             int numSymbols = 0;
             try
             {
@@ -286,12 +318,17 @@ namespace RealmStudio
                                 File = file
                             };
 
+                int collectionCount = files.Count();
+                int statusIncrement = (int)Math.Round((100.0 - StartingLoadPercentage) / collectionCount);
+
                 foreach (var f in files)
                 {
                     MapSymbolCollection? collection = MapFileMethods.ReadCollectionFromXml(f.File);
 
                     if (collection != null)
                     {
+                        LOADING_STATUS_FORM.SetStatusText("Loading Collection " + collection.CollectionName);
+
                         MAP_SYMBOL_COLLECTIONS.Add(collection);
 
                         // load symbol file into object
@@ -321,6 +358,9 @@ namespace RealmStudio
                                 symbol.CollectionPath = collection.GetCollectionPath();
                             }
                         }
+
+                        LoadPercentage += statusIncrement;
+                        LOADING_STATUS_FORM.SetStatusPercentage(LoadPercentage);
                     }
                 }
 

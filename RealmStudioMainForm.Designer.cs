@@ -4786,7 +4786,7 @@
             RealmStudioForm.RoundCorners = true;
             RealmStudioForm.Sizable = true;
             RealmStudioForm.Size = new Size(1583, 1024);
-            RealmStudioForm.SmartBounds = true;
+            RealmStudioForm.SmartBounds = false;
             RealmStudioForm.StartPosition = FormStartPosition.CenterScreen;
             RealmStudioForm.TabIndex = 3;
             RealmStudioForm.TabStop = false;

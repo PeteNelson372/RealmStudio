@@ -115,6 +115,8 @@ namespace RealmStudio
             InitializeComponent();
             SKGLRenderControl.Hide();
             SKGLRenderControl.MouseWheel += SKGLRenderControl_MouseWheel;
+
+            AssetManager.LOADING_STATUS_FORM.Show(this);
         }
         #endregion
 
@@ -147,6 +149,8 @@ namespace RealmStudio
             {
                 Cursor = Cursors.WaitCursor;
 
+                Refresh();
+
                 SetDrawingModeLabel();
 
                 int assetCount = AssetManager.LoadAllAssets();
@@ -155,7 +159,10 @@ namespace RealmStudio
                 PopulateFontPanelUI();
                 LoadNameGeneratorConfigurationDialog();
 
+                AssetManager.LOADING_STATUS_FORM.Hide();
+
                 LogoPictureBox.Hide();
+
                 SKGLRenderControl.Show();
                 SKGLRenderControl.Select();
                 SKGLRenderControl.Refresh();
@@ -486,6 +493,7 @@ namespace RealmStudio
 
                     if (saveResult == DialogResult.OK)
                     {
+
                         // this creates the CURRENT_MAP
                         MapBuilder.DisposeMap(CURRENT_MAP);
 
@@ -496,11 +504,16 @@ namespace RealmStudio
                         {
                             Cursor = Cursors.WaitCursor;
 
+                            AssetManager.LOADING_STATUS_FORM.ResetLoadingProgress();
+                            AssetManager.LOADING_STATUS_FORM.Show(this);
+
                             SetDrawingModeLabel();
 
                             int assetCount = AssetManager.LoadAllAssets();
 
                             PopulateControlsWithAssets(assetCount);
+
+                            AssetManager.LOADING_STATUS_FORM.Hide();
 
                             LogoPictureBox.Hide();
                             SKGLRenderControl.Show();
@@ -526,11 +539,16 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.WaitCursor;
 
+                        AssetManager.LOADING_STATUS_FORM.ResetLoadingProgress();
+                        AssetManager.LOADING_STATUS_FORM.Show(this);
+
                         SetDrawingModeLabel();
 
                         int assetCount = AssetManager.LoadAllAssets();
 
                         PopulateControlsWithAssets(assetCount);
+
+                        AssetManager.LOADING_STATUS_FORM.Hide();
 
                         LogoPictureBox.Hide();
                         SKGLRenderControl.Show();
@@ -556,11 +574,16 @@ namespace RealmStudio
                 {
                     Cursor = Cursors.WaitCursor;
 
+                    AssetManager.LOADING_STATUS_FORM.ResetLoadingProgress();
+                    AssetManager.LOADING_STATUS_FORM.Show(this);
+
                     SetDrawingModeLabel();
 
                     int assetCount = AssetManager.LoadAllAssets();
 
                     PopulateControlsWithAssets(assetCount);
+
+                    AssetManager.LOADING_STATUS_FORM.Hide();
 
                     LogoPictureBox.Hide();
                     SKGLRenderControl.Show();
@@ -823,10 +846,17 @@ namespace RealmStudio
         private void ReloadAllAssetsMenuItem_Click(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
+
+            AssetManager.LOADING_STATUS_FORM.ResetLoadingProgress();
+            AssetManager.LOADING_STATUS_FORM.Show(this);
+
             int assetCount = AssetManager.LoadAllAssets();
             PopulateControlsWithAssets(assetCount);
             PopulateFontPanelUI();
             LoadNameGeneratorConfigurationDialog();
+
+            AssetManager.LOADING_STATUS_FORM.Hide();
+
             Cursor = Cursors.Default;
         }
 
