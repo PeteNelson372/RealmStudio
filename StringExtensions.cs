@@ -21,52 +21,30 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
-using System.Xml.Serialization;
-
 namespace RealmStudio
 {
-    [XmlType("MapLayer")]
-    public class MapLayer : MapComponent
+    public static class StringExtensions
     {
-        private ushort mapLayerOrder = 0;
+        // from: https://stackoverflow.com/questions/6724840/how-can-i-truncate-my-strings-with-a-if-they-are-too-long
 
-        [XmlAttribute]
-        public Guid MapLayerGuid { get; set; } = Guid.NewGuid();
-
-        [XmlAttribute]
-        public string MapLayerName { get; set; } = "";
-
-        [XmlAttribute]
-        public ushort MapLayerOrder { get => mapLayerOrder; set => mapLayerOrder = value; }
-
-        [XmlIgnore]
-        public SKPicture? RenderPicture { get; set; } = null;
-
-        [XmlIgnore]
-        public bool ShowLayer { get; set; } = true;
-
-        public override void Render(SKCanvas canvas)
+        public static string Truncate(this string value, int maxLength, bool addEllipsis = false)
         {
-            if (ShowLayer)
+            // Check for valid string before attempting to truncate
+            if (string.IsNullOrEmpty(value)) return value;
+
+            // Proceed with truncating
+            string? result;
+            if (value.Length > maxLength)
             {
-                if (MapLayerComponents != null)
-                {
-                    foreach (var component in MapLayerComponents)
-                    {
-                        if (component.RenderComponent)
-                        {
-                            // clip drawing to the boundaries of the layer
-                            canvas.Save();
-                            using (new SKAutoCanvasRestore(canvas))
-                            {
-                                canvas.ClipRect(new SKRectI(0, 0, Width, Height));
-                                component.Render(canvas);
-                            }
-                        }
-                    }
-                }
+                result = value.Substring(0, maxLength);
+                if (addEllipsis) result += "...";
             }
+            else
+            {
+                result = value;
+            }
+
+            return result;
         }
     }
 }

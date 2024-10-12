@@ -173,8 +173,8 @@ namespace RealmStudio
             BRUSH_TIMER?.Dispose();
             BRUSH_TIMER = null;
 
-            //SymbolMethods.SaveSymbolTags();
-            //SymbolMethods.SaveCollections();
+            SymbolMethods.SaveSymbolTags();
+            SymbolMethods.SaveCollections();
 
             NAME_GENERATOR_CONFIG.Close();
 
@@ -216,6 +216,12 @@ namespace RealmStudio
         {
             // save the map
             SaveMap();
+        }
+
+        private void OpenButton_Click(object sender, EventArgs e)
+        {
+            // open a map
+            OpenExistingMap();
         }
 
         private void ResetButton_Click(object sender, EventArgs e)
@@ -777,7 +783,8 @@ namespace RealmStudio
 
         private void CreateSymbolCollectionMenuItem_Click(object sender, EventArgs e)
         {
-
+            SymbolCollectionForm symbolCollectionForm = new();
+            symbolCollectionForm.ShowDialog(this);
         }
 
         private void WDAssetZipFileMenuItem_Click(object sender, EventArgs e)
@@ -792,7 +799,12 @@ namespace RealmStudio
 
         private void ReloadAllAssetsMenuItem_Click(object sender, EventArgs e)
         {
-
+            Cursor = Cursors.WaitCursor;
+            int assetCount = AssetManager.LoadAllAssets();
+            PopulateControlsWithAssets(assetCount);
+            PopulateFontPanelUI();
+            LoadNameGeneratorConfigurationDialog();
+            Cursor = Cursors.Default;
         }
 
         private void PreferencesMenuItem_Click(object sender, EventArgs e)
@@ -1538,7 +1550,6 @@ namespace RealmStudio
             catch { }
         }
 
-
         private void OpenMap(string mapFilePath)
         {
             // open an existing map
@@ -1802,6 +1813,8 @@ namespace RealmStudio
                 {
                     if (windroseLayer.MapLayerComponents[i] is MapWindrose windrose)
                     {
+                        windrose.ParentMap = CURRENT_MAP;
+
                         windrose.WindrosePaint = new()
                         {
                             Style = SKPaintStyle.Stroke,
@@ -6198,6 +6211,7 @@ namespace RealmStudio
         {
             MapWindrose windrose = new()
             {
+                ParentMap = CURRENT_MAP,
                 InnerCircles = WindroseInnerCircleTrack.Value,
                 InnerRadius = (int)WindroseInnerRadiusUpDown.Value,
                 FadeOut = WindroseFadeOutSwitch.Checked,
@@ -9284,7 +9298,6 @@ namespace RealmStudio
         #endregion
 
         #endregion
-
 
     }
 }

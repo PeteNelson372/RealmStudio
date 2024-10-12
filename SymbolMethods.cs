@@ -293,5 +293,114 @@ namespace RealmStudio
                 }
             }
         }
+
+        public static void SaveSymbolTags()
+        {
+            if (AssetManager.SYMBOL_TAGS.Count >= AssetManager.ORIGINAL_SYMBOL_TAGS.Count)
+            {
+                File.WriteAllLines(SymbolTagsFilePath, AssetManager.SYMBOL_TAGS);
+            }
+        }
+
+        internal static void SaveCollections()
+        {
+            foreach (MapSymbolCollection collection in AssetManager.MAP_SYMBOL_COLLECTIONS)
+            {
+                if (collection != null && collection.IsModified)
+                {
+                    // make a backup of the current collection.xml file
+                    File.Copy(collection.GetCollectionPath(), collection.GetCollectionPath() + ".backup", true);
+
+                    MapFileMethods.SerializeSymbolCollection(collection);
+                }
+            }
+        }
+
+        internal static List<string> AutoTagSymbol(MapSymbol symbol)
+        {
+            const int minTagLength = 2;
+
+            List<string> potentialTags = [];
+
+            string symbolFileName = Path.GetFileNameWithoutExtension(symbol.SymbolFilePath);
+
+            if (string.IsNullOrEmpty(symbol.SymbolName))
+            {
+                symbol.SymbolName = symbolFileName;
+            }
+
+            string[] symbolNameParts = symbol.SymbolName.Split([' ', '_']);
+            string[] collectionNameParts = symbol.CollectionName.Split([' ', '_']);
+
+            foreach (string symbolNamePart in symbolNameParts)
+            {
+                string potentialTag = new string(symbolNamePart.Where(char.IsLetter).ToArray()).ToLower();
+
+                if (!string.IsNullOrEmpty(potentialTag) && potentialTag.Length > minTagLength && !potentialTags.Contains(potentialTag))
+                {
+                    potentialTags.Add(potentialTag);
+                }
+            }
+
+            foreach (string collectionNamePart in collectionNameParts)
+            {
+                string potentialTag = new string(collectionNamePart.Where(char.IsLetter).ToArray()).ToLower();
+
+                if (!string.IsNullOrEmpty(potentialTag) && potentialTag.Length > minTagLength && !potentialTags.Contains(potentialTag))
+                {
+                    potentialTags.Add(potentialTag);
+                }
+            }
+
+
+            for (int i = potentialTags.Count - 1; i >= 0; i--)
+            {
+                string potentialTag = potentialTags[i];
+                bool tagMatched = false;
+
+                foreach (string tag in AssetManager.SYMBOL_TAGS)
+                {
+                    if (tag.Contains(potentialTag) || potentialTag.Contains(tag))
+                    {
+                        tagMatched = true;
+                    }
+                }
+
+                if (!tagMatched)
+                {
+                    potentialTags.RemoveAt(i);
+                }
+            }
+
+            return potentialTags;
+
+        }
+
+        internal static void GuessSymbolTypeFromTags(MapSymbol mapSymbol)
+        {
+            foreach (string tag in mapSymbol.SymbolTags)
+            {
+                if (!string.IsNullOrEmpty(tag))
+                {
+                    if (AssetManager.STRUCTURE_SYNONYMS.Contains(tag))
+                    {
+                        mapSymbol.SymbolType = SymbolTypeEnum.Structure;
+                        return;
+                    }
+
+                    if (AssetManager.TERRAIN_SYNONYMS.Contains(tag))
+                    {
+                        mapSymbol.SymbolType = SymbolTypeEnum.Terrain;
+                        return;
+                    }
+
+                    if (AssetManager.VEGETATION_SYNONYMS.Contains(tag))
+                    {
+                        mapSymbol.SymbolType = SymbolTypeEnum.Vegetation;
+                        return;
+                    }
+                }
+            }
+        }
     }
 }

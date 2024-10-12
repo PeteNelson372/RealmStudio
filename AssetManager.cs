@@ -58,6 +58,9 @@ namespace RealmStudio
         // the tags that can be selected in the UI to filter the tags in the tag list box on the UI
         public static readonly List<string> ORIGINAL_SYMBOL_TAGS = [];
         public static readonly List<string> SYMBOL_TAGS = [];
+        public static readonly List<string> STRUCTURE_SYNONYMS = [];
+        public static readonly List<string> TERRAIN_SYNONYMS = [];
+        public static readonly List<string> VEGETATION_SYNONYMS = [];
 
         public static MapTheme? CURRENT_THEME { get; set; } = null;
 
@@ -70,9 +73,13 @@ namespace RealmStudio
 
         private static readonly string SymbolTagsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
 
-        private static readonly string CollectionFileName = "collection.xml";
+        private static readonly string StructureSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "StructureSynonyms.txt";
+        private static readonly string TerrainSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
+        private static readonly string VegetationSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
 
-        private static readonly string WonderdraftSymbolsFileName = ".wonderdraft_symbols";
+        public static readonly string CollectionFileName = "collection.xml";
+
+        public static readonly string WonderdraftSymbolsFileName = ".wonderdraft_symbols";
 
         internal static int LoadAllAssets()
         {
@@ -82,6 +89,9 @@ namespace RealmStudio
 
             // load symbol tags
             LoadSymbolTags();
+
+            // load symbol type synonyms
+            LoadSymbolTypeSynonyms();
 
             // load name generator files
             MapToolMethods.LoadNameGeneratorFiles();
@@ -400,6 +410,55 @@ namespace RealmStudio
             foreach (string tag in SYMBOL_TAGS)
             {
                 ORIGINAL_SYMBOL_TAGS.Add(tag);
+            }
+        }
+
+        private static void LoadSymbolTypeSynonyms()
+        {
+            STRUCTURE_SYNONYMS.Clear();
+            TERRAIN_SYNONYMS.Clear();
+            VEGETATION_SYNONYMS.Clear();
+
+            IEnumerable<string> structureSynonyms = File.ReadLines(StructureSynonymsFilePath);
+            foreach (string synonym in structureSynonyms)
+            {
+                if (!string.IsNullOrEmpty(synonym))
+                {
+                    string trimmedSynonym = synonym.Trim([' ', ',']).ToLower();
+
+                    if (!STRUCTURE_SYNONYMS.Contains(trimmedSynonym))
+                    {
+                        STRUCTURE_SYNONYMS.Add(trimmedSynonym);
+                    }
+                }
+            }
+
+            IEnumerable<string> terrainSynonyms = File.ReadLines(TerrainSynonymsFilePath);
+            foreach (string synonym in terrainSynonyms)
+            {
+                if (!string.IsNullOrEmpty(synonym))
+                {
+                    string trimmedSynonym = synonym.Trim([' ', ',']).ToLower();
+
+                    if (!TERRAIN_SYNONYMS.Contains(trimmedSynonym))
+                    {
+                        TERRAIN_SYNONYMS.Add(trimmedSynonym);
+                    }
+                }
+            }
+
+            IEnumerable<string> vegetationSynonyms = File.ReadLines(VegetationSynonymsFilePath);
+            foreach (string synonym in vegetationSynonyms)
+            {
+                if (!string.IsNullOrEmpty(synonym))
+                {
+                    string trimmedSynonym = synonym.Trim([' ', ',']).ToLower();
+
+                    if (!VEGETATION_SYNONYMS.Contains(trimmedSynonym))
+                    {
+                        VEGETATION_SYNONYMS.Add(trimmedSynonym);
+                    }
+                }
             }
         }
 

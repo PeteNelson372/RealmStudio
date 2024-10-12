@@ -32,6 +32,8 @@ namespace RealmStudio
 {
     public class MapWindrose : MapComponent, IXmlSerializable
     {
+        public RealmStudioMap ParentMap { get; set; } = new();
+
         public Guid WindroseGuid { get; set; } = Guid.NewGuid();
         public Color WindroseColor { get; set; } = ColorTranslator.FromHtml("#7F3D3728");
         public int DirectionCount { get; set; } = 16;
@@ -68,7 +70,6 @@ namespace RealmStudio
                     DrawWindroseLines(canvas, false);
                 }
             }
-
         }
 
         private void DrawWindroseLines(SKCanvas canvas, bool fromCircle)

@@ -5445,6 +5445,7 @@
             OpenButton.Size = new Size(30, 30);
             OpenButton.TabIndex = 35;
             OpenButton.UseVisualStyleBackColor = false;
+            OpenButton.Click += OpenButton_Click;
             // 
             // MapRenderHScroll
             // 

@@ -191,42 +191,36 @@ namespace RealmStudio
         *******************************************************************************************************/
         public void RenderCoastline(SKCanvas canvas)
         {
-            using SKRegion clipRegion = new SKRegion(new SKRectI(0, 0, ParentMap.MapWidth, ParentMap.MapHeight));
-            using (new SKAutoCanvasRestore(canvas))
+            if (!string.IsNullOrEmpty(CoastlineStyleName))
             {
-                canvas.ClipRegion(clipRegion);
-
-                if (!string.IsNullOrEmpty(CoastlineStyleName))
+                switch (CoastlineStyleName)
                 {
-                    switch (CoastlineStyleName)
-                    {
-                        case "None":
-                            break;
-                        case "Uniform Band":
-                            DrawUniformBandCoastlineEffect(canvas);
-                            break;
-                        case "Uniform Blend":
-                            DrawUniformBlendCoastlineEffect(canvas);
-                            break;
-                        case "Uniform Outline":
-                            DrawUniformOutlineCoastlineEffect(canvas);
-                            break;
-                        case "Three-Tiered":
-                            DrawThreeTieredCoastlineEffect(canvas);
-                            break;
-                        case "Circular Pattern":
-                            DrawRadialPatternCoastlineEffect(canvas);
-                            break;
-                        case "Dash Pattern":
-                            DrawDashPatternCoastlineEffect(canvas);
-                            break;
-                        case "Hatch Pattern":
-                            DrawHatchPatternCoastlineEffect(canvas);
-                            break;
-                        case "User Defined":
-                            DrawUserDefinedHatchEffect(canvas);
-                            break;
-                    }
+                    case "None":
+                        break;
+                    case "Uniform Band":
+                        DrawUniformBandCoastlineEffect(canvas);
+                        break;
+                    case "Uniform Blend":
+                        DrawUniformBlendCoastlineEffect(canvas);
+                        break;
+                    case "Uniform Outline":
+                        DrawUniformOutlineCoastlineEffect(canvas);
+                        break;
+                    case "Three-Tiered":
+                        DrawThreeTieredCoastlineEffect(canvas);
+                        break;
+                    case "Circular Pattern":
+                        DrawRadialPatternCoastlineEffect(canvas);
+                        break;
+                    case "Dash Pattern":
+                        DrawDashPatternCoastlineEffect(canvas);
+                        break;
+                    case "Hatch Pattern":
+                        DrawHatchPatternCoastlineEffect(canvas);
+                        break;
+                    case "User Defined":
+                        DrawUserDefinedHatchEffect(canvas);
+                        break;
                 }
             }
         }
@@ -712,55 +706,48 @@ namespace RealmStudio
 
         public void RenderLandform(SKCanvas canvas)
         {
-            using SKRegion clipRegion = new(new SKRectI(0, 0, ParentMap.MapWidth, ParentMap.MapHeight));
+            canvas.DrawPath(DrawPath, LandformFillPaint);
 
-            using (new SKAutoCanvasRestore(canvas))
-            {
-                canvas.ClipRegion(clipRegion);
+            double colorAlphaStep = 1.0 / (256.0 / 8.0);
 
-                canvas.DrawPath(DrawPath, LandformFillPaint);
+            Color landformColor = Color.FromArgb((int)(LandformFillColor.A * (4 * colorAlphaStep)), LandformFillColor);
 
-                double colorAlphaStep = 1.0 / (256.0 / 8.0);
+            LandformGradientPaint.BlendMode = SKBlendMode.SrcATop;
+            LandformGradientPaint.Color = landformColor.ToSKColor();
+            LandformGradientPaint.StrokeWidth = CoastlineEffectDistance / 8;
 
-                Color landformColor = Color.FromArgb((int)(LandformFillColor.A * (4 * colorAlphaStep)), LandformFillColor);
+            canvas.DrawPath(InnerPath8, LandformGradientPaint);
 
-                LandformGradientPaint.BlendMode = SKBlendMode.SrcATop;
-                LandformGradientPaint.Color = landformColor.ToSKColor();
-                LandformGradientPaint.StrokeWidth = CoastlineEffectDistance / 8;
+            landformColor = Color.FromArgb((int)(LandformFillColor.A * (8 * colorAlphaStep)), LandformFillColor);
+            LandformGradientPaint.Color = landformColor.ToSKColor();
+            canvas.DrawPath(InnerPath7, LandformGradientPaint);
 
-                canvas.DrawPath(InnerPath8, LandformGradientPaint);
+            landformColor = Color.FromArgb((int)(LandformFillColor.A * (12 * colorAlphaStep)), LandformFillColor);
+            LandformGradientPaint.Color = landformColor.ToSKColor();
+            canvas.DrawPath(InnerPath6, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (8 * colorAlphaStep)), LandformFillColor);
-                LandformGradientPaint.Color = landformColor.ToSKColor();
-                canvas.DrawPath(InnerPath7, LandformGradientPaint);
+            landformColor = Color.FromArgb((int)(LandformFillColor.A * (16 * colorAlphaStep)), LandformFillColor);
+            LandformGradientPaint.Color = landformColor.ToSKColor();
+            canvas.DrawPath(InnerPath5, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (12 * colorAlphaStep)), LandformFillColor);
-                LandformGradientPaint.Color = landformColor.ToSKColor();
-                canvas.DrawPath(InnerPath6, LandformGradientPaint);
+            landformColor = Color.FromArgb((int)(LandformFillColor.A * (20 * colorAlphaStep)), LandformFillColor);
+            LandformGradientPaint.Color = landformColor.ToSKColor();
+            canvas.DrawPath(InnerPath4, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (16 * colorAlphaStep)), LandformFillColor);
-                LandformGradientPaint.Color = landformColor.ToSKColor();
-                canvas.DrawPath(InnerPath5, LandformGradientPaint);
+            landformColor = Color.FromArgb((int)(LandformFillColor.A * (24 * colorAlphaStep)), LandformFillColor);
+            LandformGradientPaint.Color = landformColor.ToSKColor();
+            canvas.DrawPath(InnerPath3, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (20 * colorAlphaStep)), LandformFillColor);
-                LandformGradientPaint.Color = landformColor.ToSKColor();
-                canvas.DrawPath(InnerPath4, LandformGradientPaint);
+            landformColor = Color.FromArgb((int)(LandformFillColor.A * (28 * colorAlphaStep)), LandformFillColor);
+            LandformGradientPaint.Color = landformColor.ToSKColor();
+            canvas.DrawPath(InnerPath2, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (24 * colorAlphaStep)), LandformFillColor);
-                LandformGradientPaint.Color = landformColor.ToSKColor();
-                canvas.DrawPath(InnerPath3, LandformGradientPaint);
+            landformColor = Color.FromArgb((int)(LandformFillColor.A * (32 * colorAlphaStep)), LandformFillColor);
+            LandformGradientPaint.Color = landformColor.ToSKColor();
+            canvas.DrawPath(InnerPath1, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (28 * colorAlphaStep)), LandformFillColor);
-                LandformGradientPaint.Color = landformColor.ToSKColor();
-                canvas.DrawPath(InnerPath2, LandformGradientPaint);
-
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (32 * colorAlphaStep)), LandformFillColor);
-                LandformGradientPaint.Color = landformColor.ToSKColor();
-                canvas.DrawPath(InnerPath1, LandformGradientPaint);
-
-                LandformOutlinePaint.Color = LandformOutlineColor.ToSKColor();
-                canvas.DrawPath(ContourPath, LandformOutlinePaint);
-            }
+            LandformOutlinePaint.Color = LandformOutlineColor.ToSKColor();
+            canvas.DrawPath(ContourPath, LandformOutlinePaint);
         }
 
         #endregion
@@ -785,14 +772,18 @@ namespace RealmStudio
             XDocument mapLandformDoc = XDocument.Parse(content);
 
             IEnumerable<XElement?> nameElemEnum = mapLandformDoc.Descendants().Select(x => x.Element(ns + "LandformName"));
-            if (nameElemEnum.Count() > 0 && nameElemEnum.First() != null)
+            if (nameElemEnum != null && nameElemEnum.Any() && nameElemEnum.First() != null)
             {
                 string? name = mapLandformDoc.Descendants().Select(x => x.Element(ns + "LandformName").Value).FirstOrDefault();
                 LandformName = name;
             }
+            else
+            {
+                LandformName = string.Empty;
+            }
 
             IEnumerable<XElement?> guidElemEnum = mapLandformDoc.Descendants().Select(x => x.Element(ns + "LandformGuid"));
-            if (guidElemEnum.Count() > 0 && guidElemEnum.First() != null)
+            if (guidElemEnum != null && guidElemEnum.Any() && guidElemEnum.First() != null)
             {
                 string? mapGuid = mapLandformDoc.Descendants().Select(x => x.Element(ns + "LandformGuid").Value).FirstOrDefault();
                 LandformGuid = Guid.Parse(mapGuid);
@@ -806,7 +797,7 @@ namespace RealmStudio
             string txPath = string.Empty;
 
             IEnumerable<XElement?> landformTextureElem = mapLandformDoc.Descendants().Select(x => x.Element(ns + "LandformTexture"));
-            if (landformTextureElem.Count() > 0 && landformTextureElem.First() != null)
+            if (landformTextureElem != null && landformTextureElem.Any() && landformTextureElem.First() != null)
             {
                 foreach (var item in landformTextureElem.Descendants())
                 {
@@ -857,7 +848,7 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement> colorElem = mapLandformDoc.Descendants(ns + "LandformOutlineColor");
-            if (colorElem.Count() > 0 && colorElem.First() != null)
+            if (colorElem != null && colorElem.Any() && colorElem.First() != null)
             {
                 string? color = mapLandformDoc.Descendants().Select(x => x.Element(ns + "LandformOutlineColor").Value).FirstOrDefault();
 
@@ -878,7 +869,7 @@ namespace RealmStudio
             LandformFillColor = Color.FromArgb(LandformOutlineColor.A / 4, LandformOutlineColor);
 
             IEnumerable<XElement?> widthElem = mapLandformDoc.Descendants().Select(x => x.Element(ns + "LandformOutlineWidth"));
-            if (widthElem.Count() > 0 && widthElem.First() != null)
+            if (widthElem != null && widthElem.Any() && widthElem.First() != null)
             {
                 string? width = mapLandformDoc.Descendants().Select(x => x.Element(ns + "LandformOutlineWidth").Value).FirstOrDefault();
 
@@ -898,7 +889,7 @@ namespace RealmStudio
 
             // shoreline style is not used now
             IEnumerable<XElement?> styleEnum = mapLandformDoc.Descendants().Select(x => x.Element(ns + "ShorelineStyle"));
-            if (styleEnum.Count() > 0 && styleEnum.First() != null)
+            if (styleEnum != null && styleEnum.Any() && styleEnum.First() != null)
             {
                 string? styleName = mapLandformDoc.Descendants().Select(x => x.Element(ns + "ShorelineStyle").Value).FirstOrDefault();
 
@@ -918,7 +909,7 @@ namespace RealmStudio
             }
 
             colorElem = mapLandformDoc.Descendants(ns + "CoastlineColor");
-            if (colorElem.Count() > 0 && colorElem.First() != null)
+            if (colorElem != null && colorElem.Any() && colorElem.First() != null)
             {
                 string? color = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineColor").Value).FirstOrDefault();
 
@@ -937,7 +928,7 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> distanceElem = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineEffectDistance"));
-            if (distanceElem.Count() > 0 && distanceElem.First() != null)
+            if (distanceElem != null && distanceElem.Any() && distanceElem.First() != null)
             {
                 string? distance = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineEffectDistance").Value).FirstOrDefault();
 
@@ -963,7 +954,7 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> styleNameEnum = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineStyleName"));
-            if (styleNameEnum.Count() > 0 && styleNameEnum.First() != null)
+            if (styleNameEnum != null && styleNameEnum.Any() && styleNameEnum.First() != null)
             {
                 string? styleName = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineStyleName").Value).FirstOrDefault();
 
@@ -982,14 +973,14 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> patternNameEnum = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineHatchPattern"));
-            if (patternNameEnum.First() != null)
+            if (patternNameEnum != null && patternNameEnum.First() != null)
             {
                 string? patternName = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineHatchPattern").Value).FirstOrDefault();
                 CoastlineHatchPattern = patternName;
             }
 
             IEnumerable<XElement?> opacityEnum = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineHatchOpacity"));
-            if (opacityEnum.First() != null)
+            if (opacityEnum != null && opacityEnum.First() != null)
             {
                 string? opacity = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineHatchOpacity").Value).FirstOrDefault();
                 CoastlineHatchOpacity = int.Parse(opacity);
@@ -1000,21 +991,21 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> hatchScaleEnum = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineHatchScale"));
-            if (hatchScaleEnum.First() != null)
+            if (hatchScaleEnum != null && hatchScaleEnum.First() != null)
             {
                 string? hatchScale = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineHatchScale").Value).FirstOrDefault();
                 CoastlineHatchScale = int.Parse(hatchScale);
             }
 
             IEnumerable<XElement?> blendModeEnum = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineHatchBlendMode"));
-            if (blendModeEnum.First() != null)
+            if (blendModeEnum != null && blendModeEnum.First() != null)
             {
                 string? blendMode = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineHatchBlendMode").Value).FirstOrDefault();
                 CoastlineHatchBlendMode = blendMode;
             }
 
             IEnumerable<XElement?> boolElem = mapLandformDoc.Descendants().Select(x => x.Element(ns + "PaintCoastlineGradient"));
-            if (boolElem.First() != null)
+            if (boolElem != null && boolElem.First() != null)
             {
                 string? paintCoastlineGradient = mapLandformDoc.Descendants().Select(x => x.Element(ns + "PaintCoastlineGradient").Value).FirstOrDefault();
                 PaintCoastlineGradient = bool.Parse(paintCoastlineGradient);
@@ -1025,7 +1016,7 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> pathElemEnum = mapLandformDoc.Descendants().Select(x => x.Element(ns + "ContourPath"));
-            if (pathElemEnum.Count() > 0 && pathElemEnum.First() != null)
+            if (pathElemEnum != null && pathElemEnum.Any() && pathElemEnum.First() != null)
             {
                 string? contourPath = mapLandformDoc.Descendants().Select(x => x.Element(ns + "ContourPath").Value).FirstOrDefault();
                 ContourPath = SKPath.ParseSvgPathData(contourPath);
@@ -1137,8 +1128,6 @@ namespace RealmStudio
             string pathSvg = ContourPath.ToSvgPathData();
             writer.WriteValue(pathSvg);
             writer.WriteEndElement();
-
-
         }
         #endregion
 
