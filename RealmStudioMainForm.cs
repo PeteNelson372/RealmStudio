@@ -835,7 +835,8 @@ namespace RealmStudio
 
         private void WDAssetZipFileMenuItem_Click(object sender, EventArgs e)
         {
-
+            WonderdraftAssetImportDialog dlg = new WonderdraftAssetImportDialog();
+            dlg.ShowDialog(this);
         }
 
         private void WDUserFolderMenuItem_Click(object sender, EventArgs e)
