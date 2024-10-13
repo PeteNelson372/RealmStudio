@@ -296,7 +296,7 @@ namespace RealmStudio
 
         public static void SaveSymbolTags()
         {
-            if (AssetManager.SYMBOL_TAGS.Count >= AssetManager.ORIGINAL_SYMBOL_TAGS.Count)
+            if (AssetManager.SYMBOL_TAGS.Count > 0 && AssetManager.SYMBOL_TAGS.Count >= AssetManager.ORIGINAL_SYMBOL_TAGS.Count)
             {
                 File.WriteAllLines(SymbolTagsFilePath, AssetManager.SYMBOL_TAGS);
             }

@@ -188,4 +188,19 @@ namespace RealmStudio
         LabelFontButton,
         ScaleFontButton
     }
+
+    public enum MeasurementUnitsEnum
+    {
+        NotSet,
+        Metric,
+        USCustomary
+    }
+
+    public enum MapExportFormatEnum
+    {
+        NotSet,
+        PNG,
+        JPG,
+        BMP
+    }
 }

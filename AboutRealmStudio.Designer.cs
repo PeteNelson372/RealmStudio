@@ -216,9 +216,9 @@
             label3.ForeColor = SystemColors.ControlDarkDark;
             label3.Location = new Point(187, 101);
             label3.Name = "label3";
-            label3.Size = new Size(406, 21);
+            label3.Size = new Size(402, 21);
             label3.TabIndex = 6;
-            label3.Text = "Copyright © 2024 Peter R. Nelson. All rights Reserved.";
+            label3.Text = "Copyright © 2024 Peter R. Nelson. All rights reserved.";
             // 
             // RealmStudioVersionLabel
             // 

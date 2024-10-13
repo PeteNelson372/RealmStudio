@@ -49,9 +49,10 @@
             // 
             VersionLabel.BackColor = Color.Transparent;
             VersionLabel.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            VersionLabel.Location = new Point(348, 405);
+            VersionLabel.ForeColor = SystemColors.ControlDarkDark;
+            VersionLabel.Location = new Point(302, 405);
             VersionLabel.Name = "VersionLabel";
-            VersionLabel.Size = new Size(223, 23);
+            VersionLabel.Size = new Size(306, 23);
             VersionLabel.TabIndex = 1;
             VersionLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 

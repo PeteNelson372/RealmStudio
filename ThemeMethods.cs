@@ -38,7 +38,7 @@ namespace RealmStudio
                 //  - what other data is required?
                 // select a path
 
-                string assetDirectory = Resources.ASSET_DIRECTORY;
+                string assetDirectory = Settings.Default.MapAssetDirectory;
                 string themeDirectory = assetDirectory + Path.DirectorySeparatorChar + "Themes";
 
                 SaveFileDialog sfd = new()

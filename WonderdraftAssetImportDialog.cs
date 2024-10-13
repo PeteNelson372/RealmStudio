@@ -29,7 +29,7 @@ namespace RealmStudio
 {
     public partial class WonderdraftAssetImportDialog : Form
     {
-        private readonly string AssetDirectory = Resources.ASSET_DIRECTORY;
+        private readonly string AssetDirectory = Settings.Default.MapAssetDirectory;
 
         private string ZipFilePath = string.Empty;
 

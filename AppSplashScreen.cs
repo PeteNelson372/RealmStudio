@@ -21,8 +21,6 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using System.Reflection;
-
 namespace RealmStudio
 {
     public partial class AppSplashScreen : Form
@@ -30,20 +28,7 @@ namespace RealmStudio
         public AppSplashScreen()
         {
             InitializeComponent();
-
-            string? version = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-
             VersionLabel.BringToFront();
-            VersionLabel.ForeColor = Color.Black;
-
-            if (!string.IsNullOrEmpty(version))
-            {
-                VersionLabel.Text = string.Concat("Version ", version.AsSpan(0, version.IndexOf('+')));
-            }
-            else
-            {
-                VersionLabel.Text = "";
-            }
         }
     }
 }

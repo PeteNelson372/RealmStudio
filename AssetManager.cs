@@ -69,13 +69,13 @@ namespace RealmStudio
         public static int SELECTED_OCEAN_TEXTURE_INDEX { get; set; } = 0;
         public static int SELECTED_PATH_TEXTURE_INDEX { get; set; } = 0;
 
-        public static readonly string DefaultSymbolDirectory = Resources.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols";
+        public static string DefaultSymbolDirectory = Settings.Default.MapAssetDirectory + Path.DirectorySeparatorChar + "Symbols";
 
-        private static readonly string SymbolTagsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
+        private static string SymbolTagsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
 
-        private static readonly string StructureSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "StructureSynonyms.txt";
-        private static readonly string TerrainSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
-        private static readonly string VegetationSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
+        private static string StructureSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "StructureSynonyms.txt";
+        private static string TerrainSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
+        private static string VegetationSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
 
         public static readonly string CollectionFileName = "collection.xml";
 
@@ -87,7 +87,38 @@ namespace RealmStudio
         {
             int LoadPercentage = 0;
 
-            string assetDirectory = Resources.ASSET_DIRECTORY;
+            string assetDirectory = Settings.Default.MapAssetDirectory;
+
+            string defaultAssetFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                + Path.DirectorySeparatorChar
+                + "RealmStudio"
+                + Path.DirectorySeparatorChar
+                + "Assets";
+
+            if (string.IsNullOrEmpty(assetDirectory))
+            {
+                Settings.Default.MapAssetDirectory = defaultAssetFolder;
+
+                DefaultSymbolDirectory = defaultAssetFolder + Path.DirectorySeparatorChar + "Symbols";
+
+                SymbolTagsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
+
+                StructureSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "StructureSynonyms.txt";
+                TerrainSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
+                VegetationSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
+            }
+            else
+            {
+                DefaultSymbolDirectory = assetDirectory + Path.DirectorySeparatorChar + "Symbols";
+
+                SymbolTagsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
+
+                StructureSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "StructureSynonyms.txt";
+                TerrainSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
+                VegetationSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
+            }
+
+            //Settings.Default.Save();
 
             ResetAssets();
 
@@ -377,7 +408,7 @@ namespace RealmStudio
         {
             MAP_FRAME_TEXTURES.Clear();
 
-            string frameAssetDirectory = Resources.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Frames" + Path.DirectorySeparatorChar;
+            string frameAssetDirectory = Settings.Default.MapAssetDirectory + Path.DirectorySeparatorChar + "Frames" + Path.DirectorySeparatorChar;
 
             int numFrames = 0;
             var files = from file in Directory.EnumerateFiles(frameAssetDirectory, "*.*", SearchOption.AllDirectories).Order()
@@ -406,7 +437,7 @@ namespace RealmStudio
         {
             MAP_BOX_LIST.Clear();
 
-            string boxAssetDirectory = Resources.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Boxes" + Path.DirectorySeparatorChar;
+            string boxAssetDirectory = Settings.Default.MapAssetDirectory + Path.DirectorySeparatorChar + "Boxes" + Path.DirectorySeparatorChar;
 
             int numBoxes = 0;
             var files = from file in Directory.EnumerateFiles(boxAssetDirectory, "*.*", SearchOption.AllDirectories).Order()

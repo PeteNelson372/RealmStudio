@@ -114,17 +114,39 @@ namespace RealmStudio
         public RealmStudioMainForm()
         {
             InitializeComponent();
+
             SKGLRenderControl.Hide();
             SKGLRenderControl.MouseWheel += SKGLRenderControl_MouseWheel;
 
+            // show and hide the loading status form;
+            // without this the loading status form is not displayed
+            // in the center of the application form
             AssetManager.LOADING_STATUS_FORM.Show(this);
             AssetManager.LOADING_STATUS_FORM.Hide();
 
+
+            string defaultAssetFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                + Path.DirectorySeparatorChar
+                + "RealmStudio"
+                + Path.DirectorySeparatorChar
+                + "Assets";
+
+            string assetDirectory = Settings.Default.MapAssetDirectory;
+
+            if (string.IsNullOrEmpty(assetDirectory))
+            {
+                Settings.Default.MapAssetDirectory = defaultAssetFolder;
+            }
+
+            Settings.Default.Save();
+
             SPLASH_SCREEN = new AppSplashScreen();
 
-            string? version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+            //string? version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 
-            if (!string.IsNullOrEmpty(version))
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+
+            if (version != null)
             {
                 SPLASH_SCREEN.VersionLabel.Text = string.Concat(RELEASE_STATE + " Version ", version);
             }
@@ -136,6 +158,7 @@ namespace RealmStudio
             SPLASH_SCREEN.Show(this);
             SPLASH_SCREEN.Refresh();
 
+            // display the splash screen for 6 seconds
             Thread.Sleep(6000);
         }
 
@@ -161,6 +184,7 @@ namespace RealmStudio
 
         private void RealmStudioMainForm_Shown(object sender, EventArgs e)
         {
+            // hide and dispose the splash screen
             SPLASH_SCREEN.Hide();
             SPLASH_SCREEN.Dispose();
 
@@ -209,6 +233,8 @@ namespace RealmStudio
             BRUSH_TIMER?.Stop();
             BRUSH_TIMER?.Dispose();
             BRUSH_TIMER = null;
+
+            Settings.Default.Save();
 
             SymbolMethods.SaveSymbolTags();
             SymbolMethods.SaveCollections();
@@ -894,7 +920,8 @@ namespace RealmStudio
 
         private void PreferencesMenuItem_Click(object sender, EventArgs e)
         {
-
+            UserPreferences preferencesDlg = new();
+            preferencesDlg.ShowDialog(this);
         }
 
         private void NameGeneratorConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -8240,7 +8267,7 @@ namespace RealmStudio
                     currentThemeName = "DEFAULT";
                 }
 
-                string presetFileName = Resources.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "LabelPresets" + Path.DirectorySeparatorChar + Guid.NewGuid().ToString() + ".mclblprst";
+                string presetFileName = Settings.Default.MapAssetDirectory + Path.DirectorySeparatorChar + "LabelPresets" + Path.DirectorySeparatorChar + Guid.NewGuid().ToString() + ".mclblprst";
 
                 bool makeNewPreset = true;
 

@@ -61,15 +61,6 @@ namespace RealmStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to D:\The Brookmonte Group\Brookmonte Software\Map Creator\Assets.
-        /// </summary>
-        internal static string ASSET_DIRECTORY {
-            get {
-                return ResourceManager.GetString("ASSET_DIRECTORY", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap brookmonte_group_logo {

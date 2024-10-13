@@ -28,7 +28,7 @@ namespace RealmStudio
 {
     public partial class WonderdraftUserFolderImportDialog : Form
     {
-        private readonly string AssetDirectory = Resources.ASSET_DIRECTORY;
+        private readonly string AssetDirectory = Settings.Default.MapAssetDirectory;
 
         private readonly ToolTip TOOLTIP = new();
         private string WonderdraftAssetFolder = string.Empty;

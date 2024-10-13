@@ -105,7 +105,7 @@ namespace RealmStudio
                     string themeName = nameEntryDlg.ThemeNameTextBox.Text;
                     SettingsTheme.ThemeName = themeName;
 
-                    string assetDirectory = Resources.ASSET_DIRECTORY;
+                    string assetDirectory = Settings.Default.MapAssetDirectory;
                     string themePath = assetDirectory + Path.DirectorySeparatorChar + "Themes" + Path.DirectorySeparatorChar + themeName + ".rstheme";
                     SettingsTheme.ThemePath = themePath;
 

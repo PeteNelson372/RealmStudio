@@ -152,7 +152,7 @@ namespace RealmStudio
 
         public static void LoadNameGeneratorFiles()
         {
-            string assetDirectory = Resources.ASSET_DIRECTORY;
+            string assetDirectory = Settings.Default.MapAssetDirectory;
             string nameGeneratorsDirectory = assetDirectory + Path.DirectorySeparatorChar + "NameGenerators";
 
             var files = from file in Directory.EnumerateFiles(assetDirectory, "*.*", SearchOption.AllDirectories).Order()

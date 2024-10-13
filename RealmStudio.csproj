@@ -9,8 +9,9 @@
     <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2024.287.2286</AssemblyVersion>
-    <FileVersion>1.2024.283.15336</FileVersion>  
+    <AssemblyVersion>1.2024.287.14905</AssemblyVersion>
+    <FileVersion>1.2024.287.14905</FileVersion>
+    <Version>1.2024.1-alpha-07</Version>  
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -20,9 +21,26 @@
     <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
     <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
     <AssemblyVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyVersionSettings>
-    <UpdatePackageVersion>False</UpdatePackageVersion>
+    <UpdatePackageVersion>True</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>AssemblyVersion</InheritWinAppVersionFrom>
+    <AssemblyFileVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyFileVersionSettings>
+    <AssemblyInfoVersionSettings>None.None.None.None</AssemblyInfoVersionSettings>
+    <PackageVersionSettings>AssemblyVersion.NoneWithAutoReset.Alpha</PackageVersionSettings>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyVersionSettings>
+    <UpdatePackageVersion>True</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>AssemblyFileVersion</InheritWinAppVersionFrom>
+    <AssemblyFileVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyFileVersionSettings>
+    <PackageVersionSettings>AssemblyVersion.IncrementOnce.Alpha</PackageVersionSettings>
   </PropertyGroup>
 
   <ItemGroup>
@@ -69,7 +87,7 @@
 
   <ItemGroup>
     <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Update="README.md">
