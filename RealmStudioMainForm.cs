@@ -104,7 +104,8 @@ namespace RealmStudio
         private static bool CREATE_MAP_IMAGE = false;
 
         private static SKImage? MAP_IMAGE = null;
-        // 
+
+        private readonly AppSplashScreen SPLASH_SCREEN;
 
         #region Constructor
         /******************************************************************************************************* 
@@ -117,7 +118,27 @@ namespace RealmStudio
             SKGLRenderControl.MouseWheel += SKGLRenderControl_MouseWheel;
 
             AssetManager.LOADING_STATUS_FORM.Show(this);
+            AssetManager.LOADING_STATUS_FORM.Hide();
+
+            SPLASH_SCREEN = new AppSplashScreen();
+
+            string? version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+
+            if (!string.IsNullOrEmpty(version))
+            {
+                SPLASH_SCREEN.VersionLabel.Text = string.Concat(RELEASE_STATE + " Version ", version);
+            }
+            else
+            {
+                SPLASH_SCREEN.VersionLabel.Text = RELEASE_STATE + " Version Unknown";
+            }
+
+            SPLASH_SCREEN.Show(this);
+            SPLASH_SCREEN.Refresh();
+
+            Thread.Sleep(6000);
         }
+
         #endregion
 
         #region Main Form Event Handlers
@@ -140,6 +161,9 @@ namespace RealmStudio
 
         private void RealmStudioMainForm_Shown(object sender, EventArgs e)
         {
+            SPLASH_SCREEN.Hide();
+            SPLASH_SCREEN.Dispose();
+
             MapBuilder.DisposeMap(CURRENT_MAP);
 
             // this creates the CURRENT_MAP
@@ -150,6 +174,8 @@ namespace RealmStudio
                 Cursor = Cursors.WaitCursor;
 
                 Refresh();
+
+                AssetManager.LOADING_STATUS_FORM.Show(this);
 
                 SetDrawingModeLabel();
 
@@ -169,6 +195,10 @@ namespace RealmStudio
                 SKGLRenderControl.Invalidate();
 
                 Activate();
+            }
+            else
+            {
+                Application.Exit();
             }
 
             Cursor = Cursors.Default;
