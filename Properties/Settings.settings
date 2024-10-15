@@ -11,7 +11,7 @@
     <Setting Name="MapAssetDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Autosave" Type="System.Boolean" Scope="User">
+    <Setting Name="RealmAutosave" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="AutosaveDirectory" Type="System.String" Scope="User">
@@ -28,6 +28,9 @@
     </Setting>
     <Setting Name="CalculateContoursWhilePainting" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DefaultRealmDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

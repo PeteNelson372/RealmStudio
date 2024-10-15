@@ -62,12 +62,12 @@ namespace RealmStudio.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Autosave {
+        public bool RealmAutosave {
             get {
-                return ((bool)(this["Autosave"]));
+                return ((bool)(this["RealmAutosave"]));
             }
             set {
-                this["Autosave"] = value;
+                this["RealmAutosave"] = value;
             }
         }
         
@@ -128,6 +128,18 @@ namespace RealmStudio.Properties {
             }
             set {
                 this["CalculateContoursWhilePainting"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultRealmDirectory {
+            get {
+                return ((string)(this["DefaultRealmDirectory"]));
+            }
+            set {
+                this["DefaultRealmDirectory"] = value;
             }
         }
     }

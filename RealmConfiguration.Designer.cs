@@ -32,7 +32,6 @@
             CancelConfigButton = new FontAwesome.Sharp.IconButton();
             OkayButton = new FontAwesome.Sharp.IconButton();
             groupBox5 = new GroupBox();
-            dungeonListBox1 = new ReaLTaiizor.Controls.DungeonListBox();
             groupBox4 = new GroupBox();
             MapAreaHeightLabel = new Label();
             label5 = new Label();
@@ -54,7 +53,7 @@
             WH7016x4960Radio = new RadioButton();
             WH4960x3508Radio = new RadioButton();
             WH3508x2480Radio = new RadioButton();
-            WH2840x1754Radio = new RadioButton();
+            WH2480x1754Radio = new RadioButton();
             WH1754x1240Radio = new RadioButton();
             WH3300x2250Radio = new RadioButton();
             WH1280x720Radio = new RadioButton();
@@ -76,6 +75,7 @@
             RegionRadioButton = new RadioButton();
             WorldRadioButton = new RadioButton();
             RealmNameTextBox = new ReaLTaiizor.Controls.PoisonTextBox();
+            MapThemeList = new ListBox();
             RealmConfigDialog.SuspendLayout();
             groupBox5.SuspendLayout();
             groupBox4.SuspendLayout();
@@ -150,26 +150,13 @@
             // 
             // groupBox5
             // 
-            groupBox5.Controls.Add(dungeonListBox1);
+            groupBox5.Controls.Add(MapThemeList);
             groupBox5.Location = new Point(371, 339);
             groupBox5.Name = "groupBox5";
-            groupBox5.Size = new Size(205, 103);
+            groupBox5.Size = new Size(205, 116);
             groupBox5.TabIndex = 20;
             groupBox5.TabStop = false;
             groupBox5.Text = "Realm Map Theme";
-            // 
-            // dungeonListBox1
-            // 
-            dungeonListBox1.DrawMode = DrawMode.OwnerDrawFixed;
-            dungeonListBox1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dungeonListBox1.FormattingEnabled = true;
-            dungeonListBox1.IntegralHeight = false;
-            dungeonListBox1.ItemHeight = 18;
-            dungeonListBox1.Items.AddRange(new object[] { "Default Theme", "Theme 1", "Theme 2", "Theme 3", "Theme 4", "Theme 5", "Theme 6" });
-            dungeonListBox1.Location = new Point(6, 22);
-            dungeonListBox1.Name = "dungeonListBox1";
-            dungeonListBox1.Size = new Size(193, 76);
-            dungeonListBox1.TabIndex = 0;
             // 
             // groupBox4
             // 
@@ -349,6 +336,7 @@
             // 
             HeightUpDown.Location = new Point(55, 51);
             HeightUpDown.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            HeightUpDown.Minimum = new decimal(new int[] { 500, 0, 0, 0 });
             HeightUpDown.Name = "HeightUpDown";
             HeightUpDown.Size = new Size(87, 23);
             HeightUpDown.TabIndex = 0;
@@ -362,7 +350,7 @@
             groupBox2.Controls.Add(WH7016x4960Radio);
             groupBox2.Controls.Add(WH4960x3508Radio);
             groupBox2.Controls.Add(WH3508x2480Radio);
-            groupBox2.Controls.Add(WH2840x1754Radio);
+            groupBox2.Controls.Add(WH2480x1754Radio);
             groupBox2.Controls.Add(WH1754x1240Radio);
             groupBox2.Controls.Add(WH3300x2250Radio);
             groupBox2.Controls.Add(WH1280x720Radio);
@@ -429,17 +417,17 @@
             WH3508x2480Radio.UseVisualStyleBackColor = true;
             WH3508x2480Radio.Click += WH3508x2480Radio_Click;
             // 
-            // WH2840x1754Radio
+            // WH2480x1754Radio
             // 
-            WH2840x1754Radio.AutoSize = true;
-            WH2840x1754Radio.ForeColor = SystemColors.ControlDarkDark;
-            WH2840x1754Radio.Location = new Point(6, 297);
-            WH2840x1754Radio.Name = "WH2840x1754Radio";
-            WH2840x1754Radio.Size = new Size(152, 19);
-            WH2840x1754Radio.TabIndex = 13;
-            WH2840x1754Radio.Text = "2480 x 1754 (A5 300 DPI)";
-            WH2840x1754Radio.UseVisualStyleBackColor = true;
-            WH2840x1754Radio.Click += WH2840x1754Radio_Click;
+            WH2480x1754Radio.AutoSize = true;
+            WH2480x1754Radio.ForeColor = SystemColors.ControlDarkDark;
+            WH2480x1754Radio.Location = new Point(6, 297);
+            WH2480x1754Radio.Name = "WH2480x1754Radio";
+            WH2480x1754Radio.Size = new Size(152, 19);
+            WH2480x1754Radio.TabIndex = 13;
+            WH2480x1754Radio.Text = "2480 x 1754 (A5 300 DPI)";
+            WH2480x1754Radio.UseVisualStyleBackColor = true;
+            WH2480x1754Radio.Click += WH2480x1754Radio_Click;
             // 
             // WH1754x1240Radio
             // 
@@ -721,6 +709,16 @@
             RealmNameTextBox.WaterMarkColor = Color.FromArgb(109, 109, 109);
             RealmNameTextBox.WaterMarkFont = new Font("Segoe UI", 12F, FontStyle.Italic, GraphicsUnit.Pixel);
             // 
+            // MapThemeList
+            // 
+            MapThemeList.FormattingEnabled = true;
+            MapThemeList.ItemHeight = 15;
+            MapThemeList.Location = new Point(6, 22);
+            MapThemeList.Name = "MapThemeList";
+            MapThemeList.Size = new Size(193, 79);
+            MapThemeList.TabIndex = 0;
+            MapThemeList.SelectedIndexChanged += MapThemes_SelectedIndexChanged;
+            // 
             // RealmConfiguration
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -776,7 +774,7 @@
         private RadioButton WH1024x768Radio;
         private RadioButton OtherRadioButton;
         private RadioButton WH1280x720Radio;
-        private RadioButton WH2840x1754Radio;
+        private RadioButton WH2480x1754Radio;
         private RadioButton WH1754x1240Radio;
         private RadioButton WH3300x2250Radio;
         private RadioButton WH7680x4320Radio;
@@ -800,8 +798,8 @@
         private Label label5;
         private ComboBox MapAreaUnitCombo;
         private GroupBox groupBox5;
-        private ReaLTaiizor.Controls.DungeonListBox dungeonListBox1;
         private FontAwesome.Sharp.IconButton CancelConfigButton;
         private FontAwesome.Sharp.IconButton OkayButton;
+        private ListBox MapThemeList;
     }
 }

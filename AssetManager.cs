@@ -97,6 +97,7 @@ namespace RealmStudio
 
             if (string.IsNullOrEmpty(assetDirectory))
             {
+                assetDirectory = defaultAssetFolder;
                 Settings.Default.MapAssetDirectory = defaultAssetFolder;
 
                 DefaultSymbolDirectory = defaultAssetFolder + Path.DirectorySeparatorChar + "Symbols";
@@ -117,8 +118,6 @@ namespace RealmStudio
                 TerrainSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
                 VegetationSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
             }
-
-            //Settings.Default.Save();
 
             ResetAssets();
 
@@ -273,7 +272,8 @@ namespace RealmStudio
                     {
                         THEME_LIST.Add(t);
 
-                        if (t.IsDefaultTheme)
+                        // current theme may have already been set in configuration dialog
+                        if (t.IsDefaultTheme && CURRENT_THEME == null)
                         {
                             CURRENT_THEME = t;
                         }
@@ -332,6 +332,53 @@ namespace RealmStudio
             LABEL_PRESETS.Clear();
 
             MAP_SYMBOL_COLLECTIONS.Clear();
+        }
+
+        internal static void LoadThemes()
+        {
+            THEME_LIST.Clear();
+
+            string assetDirectory = Settings.Default.MapAssetDirectory;
+
+
+
+            string defaultAssetFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                + Path.DirectorySeparatorChar
+                + "RealmStudio"
+                + Path.DirectorySeparatorChar
+                + "Assets";
+
+            if (string.IsNullOrEmpty(assetDirectory))
+            {
+                assetDirectory = defaultAssetFolder;
+            }
+
+            string themeDirectory = assetDirectory + Path.DirectorySeparatorChar + "Themes";
+
+
+            var files = from file in Directory.EnumerateFiles(assetDirectory, "*.*", SearchOption.AllDirectories).Order()
+                        where file.Contains(".rstheme")
+                        select new
+                        {
+                            File = file
+                        };
+
+            foreach (var f in files)
+            {
+                string path = Path.GetFullPath(f.File);
+
+                MapTheme? t = MapFileMethods.ReadThemeFromXml(path);
+
+                if (t != null)
+                {
+                    THEME_LIST.Add(t);
+
+                    if (t.IsDefaultTheme)
+                    {
+                        CURRENT_THEME = t;
+                    }
+                }
+            }
         }
 
         internal static int LoadSymbolCollections()

@@ -21,6 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using RealmStudio.Properties;
+
 namespace RealmStudio
 {
     public partial class RealmConfiguration : Form
@@ -35,8 +37,17 @@ namespace RealmStudio
         {
             InitializeComponent();
 
-            WidthUpDown.Value = 1920;
-            HeightUpDown.Value = 1080;
+            Size defaultMapSize = Settings.Default.DefaultMapSize;
+
+            SelectDefaultMapSizeRadioFromSize(defaultMapSize);
+
+            HeightChanging = false;
+            WidthUpDown.Value = defaultMapSize.Width;
+            WidthUpDown.Refresh();
+
+            WidthChanging = true;
+            HeightUpDown.Value = defaultMapSize.Height;
+            HeightUpDown.Refresh();
 
             map.MapWidth = (int)WidthUpDown.Value;
             map.MapHeight = (int)HeightUpDown.Value;
@@ -46,9 +57,124 @@ namespace RealmStudio
             map.RealmType = RealmTypeEnum.World;
 
 
-            MapAreaUnitCombo.SelectedIndex = 6;  // miles
+            string measurementUnits = Settings.Default.MeasurementUnits.Trim();
 
-            map.MapAreaUnits = "Miles";
+            if (!string.IsNullOrEmpty(measurementUnits))
+            {
+                if (measurementUnits == "US Customary")
+                {
+                    MapAreaUnitCombo.SelectedIndex = 6;  // miles
+                    map.MapAreaUnits = "Miles";
+                }
+                else if (measurementUnits == "Metric")
+                {
+                    MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
+                    map.MapAreaUnits = "Kilometers";
+                }
+            }
+            AssetManager.LoadThemes();
+
+            MapThemeList.Items.Clear();
+
+            List<MapTheme> themes = AssetManager.THEME_LIST;
+
+            for (int i = 0; i < themes.Count; i++)
+            {
+                if (themes[i] != null && !string.IsNullOrEmpty(themes[i].ThemeName))
+                {
+                    MapThemeList.Items.Add(themes[i].ThemeName);
+
+                    if (themes[i].IsDefaultTheme)
+                    {
+                        MapThemeList.SelectedIndex = i;
+                        AssetManager.CURRENT_THEME = AssetManager.THEME_LIST[i];
+                    }
+                }
+            }
+
+        }
+
+        private void SelectDefaultMapSizeRadioFromSize(Size defaultMapSize)
+        {
+            if (defaultMapSize.Width == 1024 && defaultMapSize.Height == 768)
+            {
+                WH1024x768Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 1280 && defaultMapSize.Height == 720)
+            {
+                WH1280x720Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 1280 && defaultMapSize.Height == 1024)
+            {
+                WH1280x1024Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 1600 && defaultMapSize.Height == 1200)
+            {
+                WH1600x1200Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 1920 && defaultMapSize.Height == 1080)
+            {
+                WH1920x1080Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 2560 && defaultMapSize.Height == 1080)
+            {
+                WH2560x1080Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 2048 && defaultMapSize.Height == 1024)
+            {
+                WH2048x1024Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 3840 && defaultMapSize.Height == 2160)
+            {
+                WH3840x2160Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 4096 && defaultMapSize.Height == 2048)
+            {
+                WH4096x2048Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 3300 && defaultMapSize.Height == 2250)
+            {
+                WH3300x2250Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 1754 && defaultMapSize.Height == 1240)
+            {
+                WH1754x1240Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 2480 && defaultMapSize.Height == 1754)
+            {
+                WH2480x1754Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 3508 && defaultMapSize.Height == 2480)
+            {
+                WH3508x2480Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 4960 && defaultMapSize.Height == 3508)
+            {
+                WH4960x3508Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 7016 && defaultMapSize.Height == 4960)
+            {
+                WH7016x4960Radio.Checked = true;
+            }
+
+            if (defaultMapSize.Width == 7680 && defaultMapSize.Height == 4320)
+            {
+                WH7680x4320Radio.Checked = true;
+            }
         }
 
         private void WH1024x768Radio_Click(object sender, EventArgs e)
@@ -260,9 +386,9 @@ namespace RealmStudio
             }
         }
 
-        private void WH2840x1754Radio_Click(object sender, EventArgs e)
+        private void WH2480x1754Radio_Click(object sender, EventArgs e)
         {
-            if (WH2840x1754Radio.Checked)
+            if (WH2480x1754Radio.Checked)
             {
                 bool aspectLocked = AspectRatioLocked;
                 AspectRatioLocked = false;
@@ -503,6 +629,14 @@ namespace RealmStudio
         {
             map.MapName = RealmNameTextBox.Text;
             Close();
+        }
+
+        private void MapThemes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (MapThemeList.SelectedIndex >= 0)
+            {
+                AssetManager.CURRENT_THEME = AssetManager.THEME_LIST[MapThemeList.SelectedIndex];
+            }
         }
     }
 }

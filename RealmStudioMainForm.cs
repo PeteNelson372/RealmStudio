@@ -26,6 +26,7 @@ using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using System.Media;
 using System.Timers;
 using Control = System.Windows.Forms.Control;
 
@@ -209,7 +210,11 @@ namespace RealmStudio
                 PopulateFontPanelUI();
                 LoadNameGeneratorConfigurationDialog();
 
-                AssetManager.LOADING_STATUS_FORM.Hide();
+                if (AssetManager.CURRENT_THEME != null)
+                {
+                    ThemeFilter themeFilter = new();
+                    ApplyTheme(AssetManager.CURRENT_THEME, themeFilter);
+                }
 
                 LogoPictureBox.Hide();
 
@@ -217,6 +222,8 @@ namespace RealmStudio
                 SKGLRenderControl.Select();
                 SKGLRenderControl.Refresh();
                 SKGLRenderControl.Invalidate();
+
+                AssetManager.LOADING_STATUS_FORM.Hide();
 
                 Activate();
             }
@@ -723,14 +730,23 @@ namespace RealmStudio
             // TODO: drawing layer
             MapRenderMethods.RenderDrawing(CURRENT_MAP, renderCanvas, zeroPoint);
 
+            // vignette layer
             MapRenderMethods.RenderVignette(CURRENT_MAP, renderCanvas, zeroPoint);
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             // export the map as a PNG, JPG, or other graphics format
+
+            string defaultExtension = Settings.Default.DefaultExportFormat;
+            if (!string.IsNullOrEmpty(defaultExtension))
+            {
+                defaultExtension = defaultExtension.ToLower();
+            }
+
             SaveFileDialog ofd = new()
             {
                 Title = "Export Map",
-                DefaultExt = "png",
+                DefaultExt = defaultExtension,
                 RestoreDirectory = true,
                 ShowHelp = true,
                 Filter = "",
@@ -858,7 +874,7 @@ namespace RealmStudio
             {
                 // on OK result, apply the selected theme
                 MapTheme selectedTheme = themeList.GetSelectedTheme();
-                ThemeFilter themeFilter = themeList.GetThemeFilter();
+                ThemeFilter themeFilter = new ThemeFilter();
 
                 if (!string.IsNullOrEmpty(selectedTheme.ThemeName))
                 {
@@ -1612,6 +1628,11 @@ namespace RealmStudio
                     {
                         MapFileMethods.SaveMap(CURRENT_MAP);
                         CURRENT_MAP.IsSaved = true;
+
+                        if (Settings.Default.PlaySoundOnSave)
+                        {
+                            SystemSounds.Exclamation.Play();
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -3985,8 +4006,13 @@ namespace RealmStudio
                         {
                             CURRENT_LANDFORM.DrawPath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
 
-                            // compute contour path and inner and outer paths in a separate thread
-                            Task.Run(() => LandformMethods.CreateAllPathsFromDrawnPath(CURRENT_MAP, CURRENT_LANDFORM));
+                            bool createPathsWhilePainting = Settings.Default.CalculateContoursWhilePainting;
+
+                            if (createPathsWhilePainting)
+                            {
+                                // compute contour path and inner and outer paths in a separate thread
+                                Task.Run(() => LandformMethods.CreateAllPathsFromDrawnPath(CURRENT_MAP, CURRENT_LANDFORM));
+                            }
                         }
 
                         SKGLRenderControl.Invalidate();
@@ -4645,6 +4671,15 @@ namespace RealmStudio
                     if (CURRENT_LANDFORM != null)
                     {
                         // TODO: undo/redo
+
+                        bool createPathsWhilePainting = Settings.Default.CalculateContoursWhilePainting;
+
+                        if (!createPathsWhilePainting)
+                        {
+                            // compute contour path and inner and outer paths in a separate thread
+                            LandformMethods.CreateAllPathsFromDrawnPath(CURRENT_MAP, CURRENT_LANDFORM);
+                        }
+
                         MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(CURRENT_LANDFORM);
                         LandformMethods.MergeLandforms(CURRENT_MAP);
 
@@ -4999,6 +5034,11 @@ namespace RealmStudio
                     break;
                 case DrawingModeEnum.ColorSelect:
                     {
+                        // TODO: refactor this to render the map to a bitmap
+                        // using the  code that is now in the main menu Export
+                        // handler (move that code out to a separate methods
+                        // so it is reusable)
+
                         // eyedropper color select function
                         CREATE_MAP_IMAGE = true;
 
