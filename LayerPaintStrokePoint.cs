@@ -23,11 +23,13 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    internal class LayerPaintStrokePoint : MapComponent
+    public class LayerPaintStrokePoint : MapComponent, IXmlSerializable
     {
         [XmlElement]
         public Guid Id { get; set; } = Guid.NewGuid();
@@ -35,6 +37,8 @@ namespace RealmStudio
         public SKPoint StrokeLocation { get; set; } = SKPoint.Empty;
         [XmlElement]
         public int StrokeRadius { get; set; } = 0;
+
+        public LayerPaintStrokePoint() { }
 
         public LayerPaintStrokePoint(SKPoint strokeLocation, int strokeRadius)
         {
@@ -50,6 +54,55 @@ namespace RealmStudio
         public override void Render(SKCanvas canvas)
         {
             // layer paint strokes are rendered as a part of a path when the layer is rendered
+        }
+
+        public XmlSchema? GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            string content = reader.ReadOuterXml();
+            XDocument strokePointDoc = XDocument.Parse(content);
+
+            XAttribute? idAttr = strokePointDoc.Root?.Attribute("Id");
+            if (idAttr != null)
+            {
+                Id = Guid.Parse(idAttr.Value);
+            }
+
+            XAttribute? xAttr = strokePointDoc.Root?.Attribute("X");
+            if (xAttr != null)
+            {
+                X = (int)float.Parse(xAttr.Value);
+            }
+
+            XAttribute? yAttr = strokePointDoc.Root?.Attribute("Y");
+            if (yAttr != null)
+            {
+                Y = (int)float.Parse(yAttr.Value);
+            }
+
+            XAttribute? radiusAttr = strokePointDoc.Root?.Attribute("Radius");
+            if (radiusAttr != null)
+            {
+                StrokeRadius = int.Parse(radiusAttr.Value);
+            }
+
+            StrokeLocation = new SKPoint(X, Y);
+            Width = StrokeRadius * 2;
+            Height = StrokeRadius * 2;
+
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttributeString("Id", Id.ToString());
+            writer.WriteAttributeString("X", StrokeLocation.X.ToString());
+            writer.WriteAttributeString("Y", StrokeLocation.Y.ToString());
+            writer.WriteAttributeString("Radius", StrokeRadius.ToString());
+            writer.WriteAttributeString("Height", Height.ToString());
         }
     }
 }

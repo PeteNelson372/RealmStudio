@@ -27,6 +27,26 @@ namespace RealmStudio
 {
     internal class UtilityMethods
     {
+        public static readonly string DEFAULT_REALM_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            + Path.DirectorySeparatorChar
+            + "RealmStudio"
+            + Path.DirectorySeparatorChar
+            + "Realms";
+
+        public static readonly string DEFAULT_AUTOSAVE_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            + Path.DirectorySeparatorChar
+            + "RealmStudio"
+            + Path.DirectorySeparatorChar
+            + "Realms"
+            + Path.DirectorySeparatorChar
+            + "autosave";
+
+        public static readonly string DEFAULT_ASSETS_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            + Path.DirectorySeparatorChar
+            + "RealmStudio"
+            + Path.DirectorySeparatorChar
+            + "Assets";
+
         public static Color SelectColorFromDialog(Form owner, Color initialColor)
         {
             // color selector

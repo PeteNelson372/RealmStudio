@@ -48,6 +48,9 @@ namespace RealmStudio
         private bool isSaved = true;
 
         [XmlAttribute]
+        public Guid MapGuid { get; set; } = Guid.NewGuid();
+
+        [XmlAttribute]
         public string MapName { get; set; } = "";
 
         [XmlAttribute]

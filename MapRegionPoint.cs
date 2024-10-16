@@ -64,66 +64,42 @@ namespace RealmStudio
 
         public void ReadXml(XmlReader reader)
         {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8601 // Possible null reference assignment.
-
-            XNamespace ns = "RealmStudio";
             string content = reader.ReadOuterXml();
             XDocument mapRegionPointDoc = XDocument.Parse(content);
 
-
-            IEnumerable<XElement?> guidElemEnum = mapRegionPointDoc.Descendants().Select(x => x.Element(ns + "PointGuid"));
-            if (guidElemEnum.First() != null)
+            XAttribute? idAttr = mapRegionPointDoc.Root?.Attribute("PointGuid");
+            if (idAttr != null)
             {
-                string? mapGuid = mapRegionPointDoc.Descendants().Select(x => x.Element(ns + "PointGuid").Value).FirstOrDefault();
-                PointGuid = Guid.Parse(mapGuid);
+                PointGuid = Guid.Parse(idAttr.Value);
+            }
+            else
+            {
+                PointGuid = Guid.NewGuid();
             }
 
-            IEnumerable<XElement?> xyElemEnum = mapRegionPointDoc.Descendants().Select(x => x.Element(ns + "RegionPoint"));
-            if (xyElemEnum.First() != null)
+            // TODO: use tryparse for reliability
+            float x = 0;
+            XAttribute? xAttr = mapRegionPointDoc.Root?.Attribute("X");
+            if (xAttr != null)
             {
-                List<XElement> elemList = xyElemEnum.Descendants().ToList();
-
-                if (elemList != null)
-                {
-                    float x = 0;
-                    float y = 0;
-
-                    foreach (XElement elem in elemList)
-                    {
-                        if (elem.Name.LocalName.ToString() == "X")
-                        {
-                            x = float.Parse(elem.Value);
-                        }
-
-                        if (elem.Name.LocalName.ToString() == "Y")
-                        {
-                            y = float.Parse(elem.Value);
-                            RegionPoint = new SKPoint(x, y);
-                        }
-                    }
-                }
+                x = float.Parse(xAttr.Value);
             }
-#pragma warning restore CS8601 // Possible null reference assignment.
-#pragma warning restore CS8604 // Possible null reference argument.
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+            float y = 0;
+            XAttribute? yAttr = mapRegionPointDoc.Root?.Attribute("Y");
+            if (yAttr != null)
+            {
+                y = float.Parse(yAttr.Value);
+            }
+
+            RegionPoint = new SKPoint(x, y);
         }
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteStartElement("PointGuid");
-            writer.WriteString(PointGuid.ToString());
-            writer.WriteEndElement();
-
-            writer.WriteStartElement("RegionPoint");
-            writer.WriteStartElement("X");
-            writer.WriteValue(RegionPoint.X);
-            writer.WriteEndElement();
-            writer.WriteStartElement("Y");
-            writer.WriteValue(RegionPoint.Y);
-            writer.WriteEndElement();
-            writer.WriteEndElement();
+            writer.WriteAttributeString("PointGuid", PointGuid.ToString());
+            writer.WriteAttributeString("X", RegionPoint.X.ToString());
+            writer.WriteAttributeString("Y", RegionPoint.Y.ToString());
         }
     }
 }

@@ -47,6 +47,7 @@ namespace RealmStudio
         [XmlArrayItem("MapRegion", Type = typeof(MapRegion))]
         [XmlArrayItem("MapVignette", Type = typeof(MapVignette))]
         [XmlArrayItem("MapImage", Type = typeof(MapImage))]
+        [XmlArrayItem("LayerPaintStroke", Type = typeof(LayerPaintStroke))]
         public List<MapComponent> MapLayerComponents { get; } = new List<MapComponent>(500);
 
         [XmlAttribute]

@@ -82,6 +82,9 @@ namespace RealmStudio
         private static double BRUSH_VELOCITY = 2.0;
 
         private static System.Timers.Timer? BRUSH_TIMER = null;
+        private static System.Timers.Timer? AUTOSAVE_TIMER = null;
+
+        private static int BACKUP_COUNT = 5;
 
         private static SKPath CURRENT_MAP_LABEL_PATH = new();
         private static readonly List<SKPoint> CURRENT_MAP_LABEL_PATH_POINTS = [];
@@ -97,9 +100,8 @@ namespace RealmStudio
 
         private TextBox? LABEL_TEXT_BOX;
 
-        NameGeneratorConfiguration NAME_GENERATOR_CONFIG = new NameGeneratorConfiguration();
+        private readonly NameGeneratorConfiguration NAME_GENERATOR_CONFIG = new();
 
-        private static bool AUTOSAVE = true;
         private static bool SYMBOL_SCALE_LOCKED = false;
         private static bool CREATING_LABEL = false;
         private static bool CREATE_MAP_IMAGE = false;
@@ -125,18 +127,11 @@ namespace RealmStudio
             AssetManager.LOADING_STATUS_FORM.Show(this);
             AssetManager.LOADING_STATUS_FORM.Hide();
 
-
-            string defaultAssetFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                + Path.DirectorySeparatorChar
-                + "RealmStudio"
-                + Path.DirectorySeparatorChar
-                + "Assets";
-
             string assetDirectory = Settings.Default.MapAssetDirectory;
 
             if (string.IsNullOrEmpty(assetDirectory))
             {
-                Settings.Default.MapAssetDirectory = defaultAssetFolder;
+                Settings.Default.MapAssetDirectory = UtilityMethods.DEFAULT_ASSETS_FOLDER;
             }
 
             Settings.Default.Save();
@@ -226,6 +221,9 @@ namespace RealmStudio
                 AssetManager.LOADING_STATUS_FORM.Hide();
 
                 Activate();
+
+                StartAutosaveTimer();
+
             }
             else
             {
@@ -235,11 +233,71 @@ namespace RealmStudio
             Cursor = Cursors.Default;
         }
 
+        private void AutosaveTimerEventHandler(object? sender, ElapsedEventArgs e)
+        {
+            string currentmapFileName = CURRENT_MAP.MapPath;
+
+            try
+            {
+                PruneOldBackupsOfMap(CURRENT_MAP);
+
+                // realm autosave folder (location where map backups are saved during autosave)
+                string defaultAutosaveFolder = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
+
+                string autosaveDirectory = Settings.Default.AutosaveDirectory;
+
+                if (string.IsNullOrEmpty(autosaveDirectory))
+                {
+                    autosaveDirectory = defaultAutosaveFolder;
+                }
+
+                string autosaveFilename = CURRENT_MAP.MapGuid.ToString();
+
+                string saveTime = DateTime.Now.ToFileTimeUtc().ToString();
+
+                autosaveFilename += "_" + saveTime + ".rsmapx";
+
+                string autosaveFullPath = autosaveDirectory + Path.DirectorySeparatorChar + autosaveFilename;
+
+                CURRENT_MAP.MapPath = autosaveFullPath;
+
+                MapFileMethods.SaveMap(CURRENT_MAP);
+
+                if (Settings.Default.PlaySoundOnSave)
+                {
+                    Stream s = new MemoryStream(Resources.savesound2);
+
+                    if (s != null)
+                    {
+                        SoundPlayer player = new SoundPlayer(s);
+                        player.Play();
+                    }
+
+                    SetStatusText("A backup of the realm has been saved.");
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message != "Prune backup failed")
+                {
+                    Program.LOGGER.Error(ex);
+                    MessageBox.Show("An error has occurred while saving a backup copy of the map.", "Map Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+            }
+            finally
+            {
+                CURRENT_MAP.MapPath = currentmapFileName;
+            }
+
+        }
+
         private void RealmStudioMainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             BRUSH_TIMER?.Stop();
             BRUSH_TIMER?.Dispose();
             BRUSH_TIMER = null;
+
+            StopAutosaveTimer();
 
             Settings.Default.Save();
 
@@ -279,7 +337,17 @@ namespace RealmStudio
 
         private void AutosaveSwitch_Click(object sender, EventArgs e)
         {
-            AUTOSAVE = AutosaveSwitch.Checked;
+            Settings.Default.RealmAutosave = AutosaveSwitch.Checked;
+            Settings.Default.Save();
+
+            if (Settings.Default.RealmAutosave)
+            {
+                StartAutosaveTimer();
+            }
+            else
+            {
+                StopAutosaveTimer();
+            }
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -938,6 +1006,15 @@ namespace RealmStudio
         {
             UserPreferences preferencesDlg = new();
             preferencesDlg.ShowDialog(this);
+
+            if (!Settings.Default.RealmAutosave)
+            {
+                StopAutosaveTimer();
+            }
+            else
+            {
+                StartAutosaveTimer();
+            }
         }
 
         private void NameGeneratorConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -973,6 +1050,100 @@ namespace RealmStudio
         /******************************************************************************************************* 
          * MAIN FORM METHODS
          *******************************************************************************************************/
+
+        private void StartAutosaveTimer()
+        {
+            bool autosave = Settings.Default.RealmAutosave;
+
+            if (autosave)
+            {
+                StopAutosaveTimer();
+
+                int saveIntervalMinutes = Settings.Default.AutosaveInterval;
+
+                // save interval cannot be less than 5 minutes (300000 milliseconds)
+                int saveIntervalMillis = Math.Max(5 * 60 * 1000, saveIntervalMinutes * 60 * 1000);
+
+                // start the autosave timer
+                AUTOSAVE_TIMER = new System.Timers.Timer
+                {
+                    Interval = saveIntervalMillis,
+                    AutoReset = true,
+                    SynchronizingObject = this,
+                };
+
+                AUTOSAVE_TIMER.Elapsed += new ElapsedEventHandler(AutosaveTimerEventHandler);
+                AUTOSAVE_TIMER.Start();
+            }
+        }
+
+        private static void StopAutosaveTimer()
+        {
+            if (AUTOSAVE_TIMER != null)
+            {
+                AUTOSAVE_TIMER.Stop();
+                AUTOSAVE_TIMER.Dispose();
+                AUTOSAVE_TIMER = null;
+            }
+        }
+
+        private static void PruneOldBackupsOfMap(RealmStudioMap cURRENT_MAP)
+        {
+            // realm autosave folder (location where map backups are saved during autosave)
+            string defaultAutosaveFolder = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
+
+            string autosaveDirectory = Settings.Default.AutosaveDirectory;
+
+            if (string.IsNullOrEmpty(autosaveDirectory))
+            {
+                autosaveDirectory = defaultAutosaveFolder;
+            }
+
+            string autosaveFilename = CURRENT_MAP.MapGuid.ToString();
+
+            string oldestFilePath = string.Empty;
+            DateTime? oldestCreationDateTime = null;
+
+            var files = from file in Directory.EnumerateFiles(autosaveDirectory, "*.*", SearchOption.AllDirectories).Order()
+                        where file.Contains(autosaveFilename)
+                        select new
+                        {
+                            File = file
+                        };
+
+            // keep 5 backups of the map
+            if (files.Count() >= BACKUP_COUNT)
+            {
+                foreach (var f in files)
+                {
+                    DateTime creationDateTime = File.GetCreationTimeUtc(f.File);
+                    string path = Path.GetFullPath(f.File);
+
+                    if (string.IsNullOrEmpty(oldestFilePath) || creationDateTime < oldestCreationDateTime)
+                    {
+                        oldestFilePath = path;
+                        oldestCreationDateTime = creationDateTime;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(oldestFilePath)
+                    && File.Exists(oldestFilePath)
+                    && oldestFilePath.Contains("autosave")
+                    && oldestFilePath.StartsWith(autosaveDirectory)
+                    && oldestFilePath.EndsWith(".rsmapx"))
+                {
+                    try
+                    {
+                        File.Delete(oldestFilePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Program.LOGGER.Error(ex);
+                        throw new Exception("Prune backup failed");
+                    }
+                }
+            }
+        }
 
         private DialogResult OpenRealmConfigurationDialog()
         {
@@ -1594,7 +1765,7 @@ namespace RealmStudio
          * MAP FILE OPEN AND SAVE METHODS
          *******************************************************************************************************/
 
-        private static DialogResult SaveMap()
+        private DialogResult SaveMap()
         {
             SaveFileDialog sfd = new()
             {
@@ -1631,7 +1802,15 @@ namespace RealmStudio
 
                         if (Settings.Default.PlaySoundOnSave)
                         {
-                            SystemSounds.Exclamation.Play();
+                            Stream s = new MemoryStream(Resources.savesound2);
+
+                            if (s != null)
+                            {
+                                SoundPlayer player = new SoundPlayer(s);
+                                player.Play();
+                            }
+
+                            SetStatusText("Realm " + Path.GetFileNameWithoutExtension(sfd.FileName) + " has been saved.");
                         }
                     }
                     catch (Exception ex)
@@ -1668,8 +1847,9 @@ namespace RealmStudio
                         {
                             OpenMap(ofd.FileName);
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                            Program.LOGGER.Error(ex);
                             throw;
                         }
 
@@ -1701,6 +1881,26 @@ namespace RealmStudio
 
                 CURRENT_MAP.IsSaved = true;
 
+
+                // finalize loading of ocean drawing layer
+                MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANDRAWINGLAYER);
+
+                for (int i = 0; i < oceanDrawingLayer.MapLayerComponents.Count; i++)
+                {
+                    if (oceanDrawingLayer.MapLayerComponents[i] is LayerPaintStroke paintStroke)
+                    {
+                        paintStroke.ParentMap = CURRENT_MAP;
+
+                        if (!paintStroke.Erase)
+                        {
+                            paintStroke.ShaderPaint = PaintObjects.OceanPaint;
+                        }
+                        else
+                        {
+                            paintStroke.ShaderPaint = PaintObjects.OceanEraserPaint;
+                        }
+                    }
+                }
 
                 // finalize loading of landforms
                 MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
@@ -1775,6 +1975,27 @@ namespace RealmStudio
                     }
                 }
 
+                // finalize loading of land drawing layer
+                MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDDRAWINGLAYER);
+
+                for (int i = 0; i < landDrawingLayer.MapLayerComponents.Count; i++)
+                {
+                    if (landDrawingLayer.MapLayerComponents[i] is LayerPaintStroke paintStroke)
+                    {
+                        paintStroke.ParentMap = CURRENT_MAP;
+
+                        if (!paintStroke.Erase)
+                        {
+                            paintStroke.ShaderPaint = PaintObjects.LandColorPaint;
+                        }
+                        else
+                        {
+                            paintStroke.ShaderPaint = PaintObjects.LandColorEraserPaint;
+                        }
+                    }
+                }
+
+
                 // finalize loading of water features and rivers
                 MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER);
 
@@ -1790,6 +2011,26 @@ namespace RealmStudio
                     {
                         river.ParentMap = CURRENT_MAP;
                         WaterFeatureMethods.ConstructRiverPaintObjects(river);
+                    }
+                }
+
+                // finalize loading of water drawing layer
+                MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERDRAWINGLAYER);
+
+                for (int i = 0; i < waterDrawingLayer.MapLayerComponents.Count; i++)
+                {
+                    if (waterDrawingLayer.MapLayerComponents[i] is LayerPaintStroke paintStroke)
+                    {
+                        paintStroke.ParentMap = CURRENT_MAP;
+
+                        if (!paintStroke.Erase)
+                        {
+                            paintStroke.ShaderPaint = PaintObjects.WaterColorPaint;
+                        }
+                        else
+                        {
+                            paintStroke.ShaderPaint = PaintObjects.WaterColorEraserPaint;
+                        }
                     }
                 }
 
@@ -3320,7 +3561,7 @@ namespace RealmStudio
                         if (CURRENT_LAYER_PAINT_STROKE == null)
                         {
                             CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, OceanPaintColorSelectButton.BackColor.ToSKColor(),
-                                SELECTED_COLOR_PAINT_BRUSH, SELECTED_BRUSH_SIZE / 2, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
+                                SELECTED_COLOR_PAINT_BRUSH, SELECTED_BRUSH_SIZE / 2, MapBuilder.OCEANDRAWINGLAYER);
 
                             Cmd_AddOceanPaintStroke cmd = new(CURRENT_MAP, CURRENT_LAYER_PAINT_STROKE);
                             CommandManager.AddCommand(cmd);
@@ -3355,7 +3596,7 @@ namespace RealmStudio
                         if (CURRENT_LAYER_PAINT_STROKE == null)
                         {
                             CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.Empty,
-                                ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.OCEANTEXTUREOVERLAYLAYER, true);
+                                ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.OCEANDRAWINGLAYER, true);
 
                             Cmd_AddOceanPaintStroke cmd = new(CURRENT_MAP, CURRENT_LAYER_PAINT_STROKE);
                             CommandManager.AddCommand(cmd);
@@ -8816,6 +9057,11 @@ namespace RealmStudio
         private void ScaleButton_Click(object sender, EventArgs e)
         {
             MapScaleCreatorPanel.Visible = !MapScaleCreatorPanel.Visible;
+
+            if (MapScaleCreatorPanel.Visible)
+            {
+                ScaleUnitsTextBox.Text = CURRENT_MAP.MapAreaUnits;
+            }
         }
 
         private void CreateScaleButton_Click(object sender, EventArgs e)
@@ -8835,9 +9081,8 @@ namespace RealmStudio
                 ScaleOutlineWidth = ScaleOutlineWidthTrack.Value,
                 ScaleOutlineColor = SelectScaleOutlineColorButton.BackColor,
                 ScaleFont = SELECTED_MAP_SCALE_FONT,
+                ScaleNumbersDisplayType = ScaleNumbersDisplayEnum.None
             };
-
-            mapScale.ScaleNumbersDisplayType = ScaleNumbersDisplayEnum.None;
 
             if (ScaleNumbersNoneRadio.Checked)
             {

@@ -66,7 +66,7 @@ namespace RealmStudio
             BlendMode = SKBlendMode.SrcOver
         };
 
-        private static SKPaint WaterColorEraserPaint { get; } = new()
+        public static SKPaint WaterColorEraserPaint { get; } = new()
         {
             Color = SKColor.Empty,
             Style = SKPaintStyle.Fill,

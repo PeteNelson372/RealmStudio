@@ -22,15 +22,18 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
+using SkiaSharp.Views.Desktop;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Extensions = SkiaSharp.Views.Desktop.Extensions;
 
 namespace RealmStudio
 {
-    internal class LayerPaintStroke : MapComponent, IXmlSerializable
+    public class LayerPaintStroke : MapComponent, IXmlSerializable
     {
-        private readonly RealmStudioMap ParentMap;
+        public RealmStudioMap? ParentMap { get; set; } = null;
 
         public Guid StrokeId { get; set; } = Guid.NewGuid();
         public List<LayerPaintStrokePoint> PaintStrokePoints { get; set; } = [];
@@ -38,11 +41,20 @@ namespace RealmStudio
         public ColorPaintBrush PaintBrush { get; set; } = new ColorPaintBrush();
         public int BrushRadius { get; set; } = 0;
 
-        private SKShader StrokeShader = SKShader.CreateEmpty();
-        private readonly int MapLayerIdentifer = 0;
-        private readonly bool Erase = false;
+        public SKShader StrokeShader = SKShader.CreateEmpty();
+        public int MapLayerIdentifier { get; set; } = 0;
+        public bool Erase { get; set; } = false;
 
-        private readonly SKPaint ShaderPaint;
+        public SKPaint ShaderPaint;
+
+        public LayerPaintStroke()
+        {
+            ShaderPaint = new()
+            {
+                Style = SKPaintStyle.Fill,
+                Color = SKColor.Empty,
+            };
+        }
 
         public LayerPaintStroke(RealmStudioMap parentMap, SKColor strokeColor, ColorPaintBrush colorPaintBrush, int brushRadius, int mapLayerIdentifier, bool erase = false)
         {
@@ -50,10 +62,10 @@ namespace RealmStudio
             StrokeColor = strokeColor;
             PaintBrush = colorPaintBrush;
             BrushRadius = brushRadius;
-            MapLayerIdentifer = mapLayerIdentifier;
+            MapLayerIdentifier = mapLayerIdentifier;
             Erase = erase;
 
-            if (MapLayerIdentifer == MapBuilder.OCEANTEXTUREOVERLAYLAYER)
+            if (MapLayerIdentifier == MapBuilder.OCEANDRAWINGLAYER)
             {
                 if (!Erase)
                 {
@@ -64,7 +76,7 @@ namespace RealmStudio
                     ShaderPaint = PaintObjects.OceanEraserPaint;
                 }
             }
-            else if (MapLayerIdentifer == MapBuilder.LANDDRAWINGLAYER)
+            else if (MapLayerIdentifier == MapBuilder.LANDDRAWINGLAYER)
             {
                 if (!Erase)
                 {
@@ -75,7 +87,7 @@ namespace RealmStudio
                     ShaderPaint = PaintObjects.LandColorEraserPaint;
                 }
             }
-            else if (MapLayerIdentifer == MapBuilder.WATERDRAWINGLAYER)
+            else if (MapLayerIdentifier == MapBuilder.WATERDRAWINGLAYER)
             {
                 ShaderPaint = PaintObjects.WaterColorPaint;
             }
@@ -100,7 +112,7 @@ namespace RealmStudio
             // clip rendering to landforms or water features, depending on what map layer
             // the brush stroke is on; painting on the ocean layer is not clipped
 
-            if (MapLayerIdentifer == MapBuilder.LANDDRAWINGLAYER)
+            if (MapLayerIdentifier == MapBuilder.LANDDRAWINGLAYER)
             {
                 // clip drawing to the outer path of landforms
 
@@ -119,7 +131,7 @@ namespace RealmStudio
                 canvas.Save();
                 canvas.ClipPath(clipPath);
             }
-            else if (MapLayerIdentifer == MapBuilder.WATERDRAWINGLAYER)
+            else if (MapLayerIdentifier == MapBuilder.WATERDRAWINGLAYER)
             {
                 // clip drawing to the outer path of water features and rivers
 
@@ -171,7 +183,7 @@ namespace RealmStudio
                 canvas.DrawCircle(point.StrokeLocation.X, point.StrokeLocation.Y, point.StrokeRadius, ShaderPaint);
             }
 
-            if (MapLayerIdentifer == MapBuilder.LANDDRAWINGLAYER || MapLayerIdentifer == MapBuilder.WATERDRAWINGLAYER)
+            if (MapLayerIdentifier == MapBuilder.LANDDRAWINGLAYER || MapLayerIdentifier == MapBuilder.WATERDRAWINGLAYER)
             {
                 canvas.Restore();
             }
@@ -184,12 +196,101 @@ namespace RealmStudio
 
         public void ReadXml(XmlReader reader)
         {
-            throw new NotImplementedException();
+            XNamespace ns = "RealmStudio";
+            string content = reader.ReadOuterXml();
+            XDocument paintStrokeDoc = XDocument.Parse(content);
+
+            XAttribute? idAttr = paintStrokeDoc.Root?.Attribute("StrokeId");
+            if (idAttr != null)
+            {
+                StrokeId = Guid.Parse(idAttr.Value);
+            }
+
+            XAttribute? colorAttr = paintStrokeDoc.Root?.Attribute("StrokeColor");
+            if (colorAttr != null)
+            {
+                int argbColor = int.Parse(colorAttr.Value);
+                Color strokeColor = Color.FromArgb(argbColor);
+                StrokeColor = strokeColor.ToSKColor();
+            }
+
+            XAttribute? radiusAttr = paintStrokeDoc.Root?.Attribute("BrushRadius");
+            if (radiusAttr != null)
+            {
+                BrushRadius = int.Parse(radiusAttr.Value);
+            }
+
+            XAttribute? layerAttr = paintStrokeDoc.Root?.Attribute("MapLayerIdentifier");
+            if (layerAttr != null)
+            {
+                MapLayerIdentifier = int.Parse(layerAttr.Value);
+            }
+
+            XAttribute? brushAttr = paintStrokeDoc.Root?.Attribute("PaintBrush");
+            if (brushAttr != null)
+            {
+                PaintBrush = Enum.Parse<ColorPaintBrush>(brushAttr.Value);
+            }
+
+            XAttribute? eraseAttr = paintStrokeDoc.Root?.Attribute("Erase");
+            if (eraseAttr != null)
+            {
+                Erase = bool.Parse(eraseAttr.Value);
+            }
+
+            IEnumerable<XElement?> strokePointsElem = paintStrokeDoc.Descendants().Select(x => x.Element(ns + "PaintStrokePoints"));
+            if (strokePointsElem.Any() && strokePointsElem.First() != null)
+            {
+                var settings = new XmlReaderSettings
+                {
+                    IgnoreWhitespace = true
+                };
+
+                foreach (XElement? elem in strokePointsElem.Descendants())
+                {
+                    if (elem != null && elem.Name.LocalName == "LayerPaintStrokePoint")
+                    {
+                        string layerStrokePointPointString = elem.ToString();
+
+                        using XmlReader pointReader = XmlReader.Create(new StringReader(layerStrokePointPointString), settings);
+                        pointReader.Read();
+                        LayerPaintStrokePoint lpsp = new();
+                        lpsp.ReadXml(pointReader);
+
+                        PaintStrokePoints.Add(lpsp);
+                    }
+                }
+            }
+
         }
 
         public void WriteXml(XmlWriter writer)
         {
-            throw new NotImplementedException();
+            using MemoryStream ms = new();
+            using SKManagedWStream wstream = new(ms);
+
+            // paint stroke GUID
+            writer.WriteAttributeString("StrokeId", StrokeId.ToString());
+
+            Color strokeColor = Extensions.ToDrawingColor(StrokeColor);
+            writer.WriteAttributeString("StrokeColor", strokeColor.ToArgb().ToString());
+
+            writer.WriteAttributeString("BrushRadius", BrushRadius.ToString());
+
+            writer.WriteAttributeString("MapLayerIdentifier", MapLayerIdentifier.ToString());
+
+            writer.WriteAttributeString("PaintBrush", PaintBrush.ToString());
+
+            writer.WriteAttributeString("Erase", Erase.ToString());
+
+            writer.WriteStartElement("PaintStrokePoints");
+            foreach (LayerPaintStrokePoint point in PaintStrokePoints)
+            {
+                writer.WriteStartElement("LayerPaintStrokePoint");
+                point.WriteXml(writer);
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
         }
     }
 }

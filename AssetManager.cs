@@ -89,35 +89,19 @@ namespace RealmStudio
 
             string assetDirectory = Settings.Default.MapAssetDirectory;
 
-            string defaultAssetFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                + Path.DirectorySeparatorChar
-                + "RealmStudio"
-                + Path.DirectorySeparatorChar
-                + "Assets";
-
             if (string.IsNullOrEmpty(assetDirectory))
             {
-                assetDirectory = defaultAssetFolder;
-                Settings.Default.MapAssetDirectory = defaultAssetFolder;
-
-                DefaultSymbolDirectory = defaultAssetFolder + Path.DirectorySeparatorChar + "Symbols";
-
-                SymbolTagsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
-
-                StructureSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "StructureSynonyms.txt";
-                TerrainSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
-                VegetationSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
+                assetDirectory = UtilityMethods.DEFAULT_ASSETS_FOLDER;
             }
-            else
-            {
-                DefaultSymbolDirectory = assetDirectory + Path.DirectorySeparatorChar + "Symbols";
 
-                SymbolTagsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
 
-                StructureSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "StructureSynonyms.txt";
-                TerrainSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
-                VegetationSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
-            }
+            DefaultSymbolDirectory = assetDirectory + Path.DirectorySeparatorChar + "Symbols";
+
+            SymbolTagsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
+
+            StructureSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "StructureSynonyms.txt";
+            TerrainSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
+            VegetationSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
 
             ResetAssets();
 
@@ -340,17 +324,9 @@ namespace RealmStudio
 
             string assetDirectory = Settings.Default.MapAssetDirectory;
 
-
-
-            string defaultAssetFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                + Path.DirectorySeparatorChar
-                + "RealmStudio"
-                + Path.DirectorySeparatorChar
-                + "Assets";
-
             if (string.IsNullOrEmpty(assetDirectory))
             {
-                assetDirectory = defaultAssetFolder;
+                assetDirectory = UtilityMethods.DEFAULT_ASSETS_FOLDER;
             }
 
             string themeDirectory = assetDirectory + Path.DirectorySeparatorChar + "Themes";

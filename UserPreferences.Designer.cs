@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             PreferencesFormOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            DrawContourTooltipButton = new FontAwesome.Sharp.IconButton();
             AutosaveRealmSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             RealmDirectoryButton = new FontAwesome.Sharp.IconButton();
             DefaultRealmDirectoryTextbox = new TextBox();
@@ -69,6 +70,7 @@
             WH1024x768Radio = new RadioButton();
             label1 = new Label();
             MeasurementUnitsCombo = new ComboBox();
+            AutosaveIntervalTooltipButton = new FontAwesome.Sharp.IconButton();
             PreferencesFormOverlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)AutosaveIntervalTrack).BeginInit();
             groupBox2.SuspendLayout();
@@ -78,6 +80,8 @@
             // 
             PreferencesFormOverlay.BackColor = Color.FromArgb(244, 241, 243);
             PreferencesFormOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            PreferencesFormOverlay.Controls.Add(AutosaveIntervalTooltipButton);
+            PreferencesFormOverlay.Controls.Add(DrawContourTooltipButton);
             PreferencesFormOverlay.Controls.Add(AutosaveRealmSwitch);
             PreferencesFormOverlay.Controls.Add(RealmDirectoryButton);
             PreferencesFormOverlay.Controls.Add(DefaultRealmDirectoryTextbox);
@@ -121,6 +125,21 @@
             PreferencesFormOverlay.TabIndex = 0;
             PreferencesFormOverlay.Text = "Preferences";
             PreferencesFormOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // DrawContourTooltipButton
+            // 
+            DrawContourTooltipButton.FlatAppearance.BorderSize = 0;
+            DrawContourTooltipButton.FlatStyle = FlatStyle.Flat;
+            DrawContourTooltipButton.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
+            DrawContourTooltipButton.IconColor = Color.DeepSkyBlue;
+            DrawContourTooltipButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            DrawContourTooltipButton.IconSize = 20;
+            DrawContourTooltipButton.Location = new Point(250, 286);
+            DrawContourTooltipButton.Name = "DrawContourTooltipButton";
+            DrawContourTooltipButton.Size = new Size(24, 24);
+            DrawContourTooltipButton.TabIndex = 59;
+            DrawContourTooltipButton.UseVisualStyleBackColor = true;
+            DrawContourTooltipButton.MouseHover += DrawContourTooltipButton_MouseHover;
             // 
             // AutosaveRealmSwitch
             // 
@@ -667,6 +686,21 @@
             MeasurementUnitsCombo.TabIndex = 0;
             MeasurementUnitsCombo.SelectionChangeCommitted += MeasurementUnitsCombo_SelectionChangeCommitted;
             // 
+            // AutosaveIntervalTooltipButton
+            // 
+            AutosaveIntervalTooltipButton.FlatAppearance.BorderSize = 0;
+            AutosaveIntervalTooltipButton.FlatStyle = FlatStyle.Flat;
+            AutosaveIntervalTooltipButton.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
+            AutosaveIntervalTooltipButton.IconColor = Color.DeepSkyBlue;
+            AutosaveIntervalTooltipButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            AutosaveIntervalTooltipButton.IconSize = 20;
+            AutosaveIntervalTooltipButton.Location = new Point(490, 205);
+            AutosaveIntervalTooltipButton.Name = "AutosaveIntervalTooltipButton";
+            AutosaveIntervalTooltipButton.Size = new Size(24, 24);
+            AutosaveIntervalTooltipButton.TabIndex = 60;
+            AutosaveIntervalTooltipButton.UseVisualStyleBackColor = true;
+            AutosaveIntervalTooltipButton.MouseHover += AutosaveIntervalTooltipButton_MouseHover;
+            // 
             // UserPreferences
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -730,5 +764,7 @@
         private TextBox DefaultRealmDirectoryTextbox;
         private Label label10;
         private ReaLTaiizor.Controls.CyberSwitch AutosaveRealmSwitch;
+        private FontAwesome.Sharp.IconButton DrawContourTooltipButton;
+        private FontAwesome.Sharp.IconButton AutosaveIntervalTooltipButton;
     }
 }

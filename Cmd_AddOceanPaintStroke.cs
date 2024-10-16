@@ -30,19 +30,19 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapLayer oceanTextureOverlay = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
-            oceanTextureOverlay.MapLayerComponents.Add(PaintStroke);
+            MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.OCEANDRAWINGLAYER);
+            oceanDrawingLayer.MapLayerComponents.Add(PaintStroke);
         }
 
         public void UndoOperation()
         {
-            MapLayer oceanTextureOverlay = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
+            MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.OCEANDRAWINGLAYER);
 
-            for (int i = oceanTextureOverlay.MapLayerComponents.Count - 1; i >= 0; i--)
+            for (int i = oceanDrawingLayer.MapLayerComponents.Count - 1; i >= 0; i--)
             {
-                if (oceanTextureOverlay.MapLayerComponents[i] is LayerPaintStroke l && l.StrokeId.ToString() == PaintStroke.StrokeId.ToString())
+                if (oceanDrawingLayer.MapLayerComponents[i] is LayerPaintStroke l && l.StrokeId.ToString() == PaintStroke.StrokeId.ToString())
                 {
-                    oceanTextureOverlay.MapLayerComponents.RemoveAt(i);
+                    oceanDrawingLayer.MapLayerComponents.RemoveAt(i);
                 }
             }
         }

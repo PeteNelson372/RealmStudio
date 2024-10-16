@@ -61,18 +61,20 @@ namespace RealmStudio
 
         public MapScale()
         {
-            ConstructPaintObjects();
+            //ConstructPaintObjects();
         }
 
         private void ConstructPaintObjects()
         {
+            SegmentOutlinePaint.Dispose();
             SegmentOutlinePaint = new()
             {
-                Style = SKPaintStyle.Stroke,
+                Style = SKPaintStyle.StrokeAndFill,
                 StrokeWidth = ScaleLineWidth,
                 Color = ScaleColor3.ToSKColor()
             };
 
+            EvenSegmentPaint.Dispose();
             EvenSegmentPaint = new()
             {
                 Style = SKPaintStyle.StrokeAndFill,
@@ -80,13 +82,15 @@ namespace RealmStudio
                 Color = ScaleColor1.ToSKColor()
             };
 
+            OddSegmentPaint.Dispose();
             OddSegmentPaint = new()
             {
                 Style = SKPaintStyle.StrokeAndFill,
                 StrokeWidth = Height - ScaleLineWidth,
-                Color = ScaleColor2.ToSKColor()
+                Color = ScaleColor2.ToSKColor(),
             };
 
+            ScaleLabelPaint.Dispose();
             ScaleLabelPaint = new()
             {
                 Color = Extensions.ToSKColor(ScaleFontColor),
@@ -112,6 +116,7 @@ namespace RealmStudio
 
             ScaleLabelPaint.Typeface = SKFontManager.Default.MatchFamily(ScaleFont.Name, fs);
 
+            OutlinePaint.Dispose();
             OutlinePaint = new()
             {
                 Color = ScaleOutlineColor.ToSKColor(),
@@ -134,8 +139,8 @@ namespace RealmStudio
             canvas.DrawRect(outlineRect, SegmentOutlinePaint);
 
             // draw the segments and labels
-            int segmentX = (int)X + (ScaleLineWidth / 2);
-            int segmentY = (int)((int)Y + (Height / 2));
+            int segmentX = X + (ScaleLineWidth / 2);
+            int segmentY = Y + (Height / 2);
 
             for (int i = 0; i < ScaleSegmentCount; i++)
             {
@@ -205,8 +210,8 @@ namespace RealmStudio
             if (!string.IsNullOrEmpty(ScaleDistanceUnit))
             {
                 // draw the scale unit label
-                int unitLabelX = (int)((int)X + (Width / 2));
-                int unitLabelY = (int)((int)Y + Height);
+                int unitLabelX = X + (Width / 2);
+                int unitLabelY = Y + Height;
 
                 SKRect bounds = new();
 #pragma warning disable CS8602 // Dereference of a possibly null reference.

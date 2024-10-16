@@ -15,7 +15,6 @@ namespace RealmStudio
 
         private void InitializeSettings()
         {
-
             string measurementUnitsSetting = Settings.Default.MeasurementUnits;
 
             if (!string.IsNullOrEmpty(measurementUnitsSetting))
@@ -25,51 +24,31 @@ namespace RealmStudio
             }
 
             // realm assets
-            string defaultAssetFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                + Path.DirectorySeparatorChar
-                + "RealmStudio"
-                + Path.DirectorySeparatorChar
-                + "Assets";
-
             string assetDirectory = Settings.Default.MapAssetDirectory;
 
             if (string.IsNullOrEmpty(assetDirectory))
             {
-                Settings.Default.MapAssetDirectory = defaultAssetFolder;
+                Settings.Default.MapAssetDirectory = UtilityMethods.DEFAULT_ASSETS_FOLDER;
             }
 
             RealmAssetDirectoryTextBox.Text = Settings.Default.MapAssetDirectory;
 
             // realm folder (default location where maps are saved)
-            string defaultRealmFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                + Path.DirectorySeparatorChar
-                + "RealmStudio"
-                + Path.DirectorySeparatorChar
-                + "Realms";
-
             string realmDirectory = Settings.Default.DefaultRealmDirectory;
 
             if (string.IsNullOrEmpty(realmDirectory))
             {
-                Settings.Default.DefaultRealmDirectory = defaultRealmFolder;
+                Settings.Default.DefaultRealmDirectory = UtilityMethods.DEFAULT_REALM_FOLDER;
             }
 
             DefaultRealmDirectoryTextbox.Text = Settings.Default.DefaultRealmDirectory;
 
             // realm autosave folder (location where map backups are saved during autosave)
-            string defaultAutosaveFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                + Path.DirectorySeparatorChar
-                + "RealmStudio"
-                + Path.DirectorySeparatorChar
-                + "Realms"
-                + Path.DirectorySeparatorChar
-                + "autosave";
-
             string autosaveDirectory = Settings.Default.AutosaveDirectory;
 
             if (string.IsNullOrEmpty(autosaveDirectory))
             {
-                Settings.Default.AutosaveDirectory = defaultAutosaveFolder;
+                Settings.Default.AutosaveDirectory = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
             }
 
             AutosaveDirectoryTextBox.Text = Settings.Default.AutosaveDirectory;
@@ -201,11 +180,7 @@ namespace RealmStudio
 
             if (string.IsNullOrEmpty(realmDirectory))
             {
-                realmDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                    + Path.DirectorySeparatorChar
-                    + "RealmStudio"
-                    + Path.DirectorySeparatorChar
-                    + "Realms";
+                realmDirectory = UtilityMethods.DEFAULT_REALM_FOLDER;
             }
 
             FolderBrowserDialog fbd = new()
@@ -251,11 +226,7 @@ namespace RealmStudio
 
             if (string.IsNullOrEmpty(assetDirectory))
             {
-                assetDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                    + Path.DirectorySeparatorChar
-                    + "RealmStudio"
-                    + Path.DirectorySeparatorChar
-                    + "Assets";
+                assetDirectory = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
             }
 
             FolderBrowserDialog fbd = new()
@@ -286,13 +257,7 @@ namespace RealmStudio
             if (string.IsNullOrEmpty(autosaveDirectory))
             {
                 // realm autosave folder (location where map backups are saved during autosave)
-                autosaveDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                    + Path.DirectorySeparatorChar
-                    + "RealmStudio"
-                    + Path.DirectorySeparatorChar
-                    + "Realms"
-                    + Path.DirectorySeparatorChar
-                    + "autosave";
+                autosaveDirectory = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
             }
 
             FolderBrowserDialog fbd = new()
@@ -427,6 +392,16 @@ namespace RealmStudio
             Settings.Default.Save();
         }
 
+        private void DrawContourTooltipButton_MouseHover(object sender, EventArgs e)
+        {
+            string tt = "Turning this preference off will improve performance while painting landforms, especially on large maps or for computers with less memory or slower CPUs.";
+            TOOLTIP.Show(tt, this, new Point(DrawContourTooltipButton.Right - 30, DrawContourTooltipButton.Top - 20), 4000);
+        }
 
+        private void AutosaveIntervalTooltipButton_MouseHover(object sender, EventArgs e)
+        {
+            string tt = "The time in minutes between automatic backups of the current realm.";
+            TOOLTIP.Show(tt, this, new Point(AutosaveIntervalTooltipButton.Right - 30, AutosaveIntervalTooltipButton.Top - 20), 4000);
+        }
     }
 }

@@ -25,7 +25,6 @@ using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    // are these two includes needed? If so, does MapSymbol need to be included to get IXmlSerializable implementation to work for it?
     [XmlInclude(typeof(MapLayer))]
     internal class MapFileMethods
     {
