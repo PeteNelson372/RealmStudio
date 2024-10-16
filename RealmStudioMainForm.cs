@@ -954,7 +954,13 @@ namespace RealmStudio
 
         private void MapPropertiesMenuItem_Click(object sender, EventArgs e)
         {
+            RealmProperties propertiesDialog = new(CURRENT_MAP);
+            DialogResult result = propertiesDialog.ShowDialog();
 
+            if (result == DialogResult.OK)
+            {
+                CURRENT_MAP.MapName = propertiesDialog.NameTextbox.Text;
+            }
         }
 
         private void ChangeMapSizeMenuItem_Click(object sender, EventArgs e)

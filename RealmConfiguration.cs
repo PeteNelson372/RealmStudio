@@ -72,6 +72,7 @@ namespace RealmStudio
                     map.MapAreaUnits = "Kilometers";
                 }
             }
+
             AssetManager.LoadThemes();
 
             MapThemeList.Items.Clear();
@@ -507,6 +508,21 @@ namespace RealmStudio
             if (WorldRadioButton.Checked)
             {
                 map.RealmType = RealmTypeEnum.World;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
+                        map.MapAreaUnits = "Miles";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
+                        map.MapAreaUnits = "Kilometers";
+                    }
+                }
             }
         }
 
@@ -515,6 +531,21 @@ namespace RealmStudio
             if (RegionRadioButton.Checked)
             {
                 map.RealmType = RealmTypeEnum.Region;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
+                        map.MapAreaUnits = "Miles";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
+                        map.MapAreaUnits = "Kilometers";
+                    }
+                }
             }
         }
 
@@ -523,6 +554,21 @@ namespace RealmStudio
             if (CityRadioButton.Checked)
             {
                 map.RealmType = RealmTypeEnum.City;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
+                        map.MapAreaUnits = "Miles";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
+                        map.MapAreaUnits = "Kilometers";
+                    }
+                }
             }
         }
 
@@ -531,6 +577,21 @@ namespace RealmStudio
             if (InteriorRadioButton.Checked)
             {
                 map.RealmType = RealmTypeEnum.Interior;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 2;  // feet
+                        map.MapAreaUnits = "Feet";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 4;  // Meters
+                        map.MapAreaUnits = "Meters";
+                    }
+                }
             }
         }
 
@@ -539,6 +600,21 @@ namespace RealmStudio
             if (DungeonRadioButton.Checked)
             {
                 map.RealmType = RealmTypeEnum.Dungeon;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 2;  // feet
+                        map.MapAreaUnits = "Feet";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 4;  // Meters
+                        map.MapAreaUnits = "Meters";
+                    }
+                }
             }
         }
 
@@ -547,6 +623,21 @@ namespace RealmStudio
             if (SolarSystemRadioButton.Checked)
             {
                 map.RealmType = RealmTypeEnum.SolarSystem;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
+                        map.MapAreaUnits = "Miles";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
+                        map.MapAreaUnits = "Kilometers";
+                    }
+                }
             }
         }
 
@@ -555,6 +646,21 @@ namespace RealmStudio
             if (ShipRadioButton.Checked)
             {
                 map.RealmType = RealmTypeEnum.Ship;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 2;  // feet
+                        map.MapAreaUnits = "Feet";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 4;  // Meters
+                        map.MapAreaUnits = "Meters";
+                    }
+                }
             }
         }
 
@@ -563,6 +669,21 @@ namespace RealmStudio
             if (OtherRadioButton.Checked)
             {
                 map.RealmType = RealmTypeEnum.Other;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
+                        map.MapAreaUnits = "Miles";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
+                        map.MapAreaUnits = "Kilometers";
+                    }
+                }
             }
         }
 
