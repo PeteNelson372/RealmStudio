@@ -43,6 +43,7 @@ namespace RealmStudio
                     Height = LayerTexture.Height,
                     MapImageBitmap = LayerTexture.Copy()
                 };
+
                 oceanTextureLayer.MapLayerComponents.Add(OceanTexture);
             }
         }

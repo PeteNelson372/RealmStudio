@@ -184,6 +184,17 @@ namespace RealmStudio
         public bool PaintCoastlineGradient { get; set; } = true;
 
         public bool IsSelected { get; set; } = false;
+        public bool IsModified { get; set; } = false;
+
+        public SKPicture? LandformRenderPicture { get; set; } = null;
+        public SKPicture? CoastlineRenderPicture { get; set; } = null;
+
+        #region NO-OP RENDER METHOD
+        public override void Render(SKCanvas canvas)
+        {
+            // no-op for landforms, because coastline and landform are rendered on different canvases
+        }
+        #endregion
 
         #region COASTLINE RENDERING METHODS
         /******************************************************************************************************* 
@@ -191,37 +202,57 @@ namespace RealmStudio
         *******************************************************************************************************/
         public void RenderCoastline(SKCanvas canvas)
         {
-            if (!string.IsNullOrEmpty(CoastlineStyleName))
+            if (!IsModified && CoastlineRenderPicture != null)
             {
-                switch (CoastlineStyleName)
+                canvas.DrawPicture(CoastlineRenderPicture);
+            }
+            else
+            {
+                CoastlineRenderPicture?.Dispose();
+
+                using var recorder = new SKPictureRecorder();
+                SKRect clippingBounds = new(0, 0, Width, Height);
+
+                // Start recording 
+                recorder.BeginRecording(clippingBounds);
+
+                if (!string.IsNullOrEmpty(CoastlineStyleName))
                 {
-                    case "None":
-                        break;
-                    case "Uniform Band":
-                        DrawUniformBandCoastlineEffect(canvas);
-                        break;
-                    case "Uniform Blend":
-                        DrawUniformBlendCoastlineEffect(canvas);
-                        break;
-                    case "Uniform Outline":
-                        DrawUniformOutlineCoastlineEffect(canvas);
-                        break;
-                    case "Three-Tiered":
-                        DrawThreeTieredCoastlineEffect(canvas);
-                        break;
-                    case "Circular Pattern":
-                        DrawRadialPatternCoastlineEffect(canvas);
-                        break;
-                    case "Dash Pattern":
-                        DrawDashPatternCoastlineEffect(canvas);
-                        break;
-                    case "Hatch Pattern":
-                        DrawHatchPatternCoastlineEffect(canvas);
-                        break;
-                    case "User Defined":
-                        DrawUserDefinedHatchEffect(canvas);
-                        break;
+                    switch (CoastlineStyleName)
+                    {
+                        case "None":
+                            break;
+                        case "Uniform Band":
+                            DrawUniformBandCoastlineEffect(recorder.RecordingCanvas);
+                            break;
+                        case "Uniform Blend":
+                            DrawUniformBlendCoastlineEffect(recorder.RecordingCanvas);
+                            break;
+                        case "Uniform Outline":
+                            DrawUniformOutlineCoastlineEffect(recorder.RecordingCanvas);
+                            break;
+                        case "Three-Tiered":
+                            DrawThreeTieredCoastlineEffect(recorder.RecordingCanvas);
+                            break;
+                        case "Circular Pattern":
+                            DrawRadialPatternCoastlineEffect(recorder.RecordingCanvas);
+                            break;
+                        case "Dash Pattern":
+                            DrawDashPatternCoastlineEffect(recorder.RecordingCanvas);
+                            break;
+                        case "Hatch Pattern":
+                            DrawHatchPatternCoastlineEffect(recorder.RecordingCanvas);
+                            break;
+                        case "User Defined":
+                            DrawUserDefinedHatchEffect(recorder.RecordingCanvas);
+                            break;
+                    }
                 }
+
+                // Create a new SKPicture with recorded Draw commands 
+                CoastlineRenderPicture = recorder.EndRecording();
+
+                canvas.DrawPicture(CoastlineRenderPicture);
             }
         }
 
@@ -706,48 +737,70 @@ namespace RealmStudio
 
         public void RenderLandform(SKCanvas canvas)
         {
-            canvas.DrawPath(DrawPath, LandformFillPaint);
+            if (!IsModified && LandformRenderPicture != null)
+            {
+                canvas.DrawPicture(LandformRenderPicture);
+            }
+            else
+            {
+                LandformRenderPicture?.Dispose();
 
-            double colorAlphaStep = 1.0 / (256.0 / 8.0);
+                using var recorder = new SKPictureRecorder();
+                SKRect clippingBounds = new(0, 0, Width, Height);
 
-            Color landformColor = Color.FromArgb((int)(LandformFillColor.A * (4 * colorAlphaStep)), LandformFillColor);
+                // Start recording 
+                recorder.BeginRecording(clippingBounds);
 
-            LandformGradientPaint.BlendMode = SKBlendMode.SrcATop;
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            LandformGradientPaint.StrokeWidth = CoastlineEffectDistance / 8;
+                recorder.RecordingCanvas.DrawPath(DrawPath, LandformFillPaint);
 
-            canvas.DrawPath(InnerPath8, LandformGradientPaint);
+                double colorAlphaStep = 1.0 / (256.0 / 8.0);
 
-            landformColor = Color.FromArgb((int)(LandformFillColor.A * (8 * colorAlphaStep)), LandformFillColor);
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            canvas.DrawPath(InnerPath7, LandformGradientPaint);
+                Color landformColor = Color.FromArgb((int)(LandformFillColor.A * (4 * colorAlphaStep)), LandformFillColor);
 
-            landformColor = Color.FromArgb((int)(LandformFillColor.A * (12 * colorAlphaStep)), LandformFillColor);
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            canvas.DrawPath(InnerPath6, LandformGradientPaint);
+                LandformGradientPaint.BlendMode = SKBlendMode.SrcATop;
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                LandformGradientPaint.StrokeWidth = CoastlineEffectDistance / 8;
 
-            landformColor = Color.FromArgb((int)(LandformFillColor.A * (16 * colorAlphaStep)), LandformFillColor);
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            canvas.DrawPath(InnerPath5, LandformGradientPaint);
+                recorder.RecordingCanvas.DrawPath(InnerPath8, LandformGradientPaint);
 
-            landformColor = Color.FromArgb((int)(LandformFillColor.A * (20 * colorAlphaStep)), LandformFillColor);
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            canvas.DrawPath(InnerPath4, LandformGradientPaint);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (8 * colorAlphaStep)), LandformFillColor);
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                recorder.RecordingCanvas.DrawPath(InnerPath7, LandformGradientPaint);
 
-            landformColor = Color.FromArgb((int)(LandformFillColor.A * (24 * colorAlphaStep)), LandformFillColor);
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            canvas.DrawPath(InnerPath3, LandformGradientPaint);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (12 * colorAlphaStep)), LandformFillColor);
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                recorder.RecordingCanvas.DrawPath(InnerPath6, LandformGradientPaint);
 
-            landformColor = Color.FromArgb((int)(LandformFillColor.A * (28 * colorAlphaStep)), LandformFillColor);
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            canvas.DrawPath(InnerPath2, LandformGradientPaint);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (16 * colorAlphaStep)), LandformFillColor);
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                recorder.RecordingCanvas.DrawPath(InnerPath5, LandformGradientPaint);
 
-            landformColor = Color.FromArgb((int)(LandformFillColor.A * (32 * colorAlphaStep)), LandformFillColor);
-            LandformGradientPaint.Color = landformColor.ToSKColor();
-            canvas.DrawPath(InnerPath1, LandformGradientPaint);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (20 * colorAlphaStep)), LandformFillColor);
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                recorder.RecordingCanvas.DrawPath(InnerPath4, LandformGradientPaint);
 
-            LandformOutlinePaint.Color = LandformOutlineColor.ToSKColor();
-            canvas.DrawPath(ContourPath, LandformOutlinePaint);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (24 * colorAlphaStep)), LandformFillColor);
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                recorder.RecordingCanvas.DrawPath(InnerPath3, LandformGradientPaint);
+
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (28 * colorAlphaStep)), LandformFillColor);
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                recorder.RecordingCanvas.DrawPath(InnerPath2, LandformGradientPaint);
+
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (32 * colorAlphaStep)), LandformFillColor);
+                LandformGradientPaint.Color = landformColor.ToSKColor();
+                recorder.RecordingCanvas.DrawPath(InnerPath1, LandformGradientPaint);
+
+                LandformOutlinePaint.Color = LandformOutlineColor.ToSKColor();
+                recorder.RecordingCanvas.DrawPath(ContourPath, LandformOutlinePaint);
+
+                // Create a new SKPicture with recorded Draw commands 
+                LandformRenderPicture = recorder.EndRecording();
+
+                canvas.DrawPicture(LandformRenderPicture);
+
+                IsModified = false;
+            }
         }
 
         #endregion
@@ -1128,13 +1181,6 @@ namespace RealmStudio
             string pathSvg = ContourPath.ToSvgPathData();
             writer.WriteValue(pathSvg);
             writer.WriteEndElement();
-        }
-        #endregion
-
-        #region NO-OP RENDER METHOD
-        public override void Render(SKCanvas canvas)
-        {
-            // no-op for landforms, because coastline and landform are rendered on different canvases
         }
         #endregion
     }

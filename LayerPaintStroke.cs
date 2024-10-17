@@ -109,6 +109,8 @@ namespace RealmStudio
 
         public override void Render(SKCanvas canvas)
         {
+            if (ParentMap == null) return;
+
             // clip rendering to landforms or water features, depending on what map layer
             // the brush stroke is on; painting on the ocean layer is not clipped
 

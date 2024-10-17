@@ -33,6 +33,8 @@ namespace RealmStudio
 {
     public class MapSymbol : MapComponent, IXmlSerializable
     {
+        public string Name { get; set; } = string.Empty;
+
         public Guid SymbolGuid { get; set; } = Guid.NewGuid();
 
         public int SymbolWidth { get; set; } = 0;
@@ -75,6 +77,7 @@ namespace RealmStudio
 
         public MapSymbol(MapSymbol original)
         {
+            Name = original.Name;
             IsGrayscale = original.IsGrayscale;
             UseCustomColors = original.UseCustomColors;
 

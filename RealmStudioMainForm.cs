@@ -1916,6 +1916,8 @@ namespace RealmStudio
                     if (landformLayer.MapLayerComponents[i] is Landform landform)
                     {
                         landform.ParentMap = CURRENT_MAP;
+                        landform.IsModified = true;
+
                         LandformMethods.CreateInnerAndOuterPathsFromContourPoints(CURRENT_MAP, landform);
 
                         if (landform.LandformTexture != null)
@@ -3157,7 +3159,6 @@ namespace RealmStudio
         {
             ScrollPoint.Y = -e.NewValue;
             DrawingPoint.Y = e.NewValue;
-
             SKGLRenderControl.Invalidate();
         }
 
@@ -3165,7 +3166,6 @@ namespace RealmStudio
         {
             ScrollPoint.X = -e.NewValue;
             DrawingPoint.X = e.NewValue;
-
             SKGLRenderControl.Invalidate();
         }
         #endregion
@@ -3627,6 +3627,9 @@ namespace RealmStudio
                         CURRENT_LANDFORM = new()
                         {
                             ParentMap = CURRENT_MAP,
+                            Width = CURRENT_MAP.MapWidth,
+                            Height = CURRENT_MAP.MapHeight,
+                            IsModified = true,
                         };
 
                         SetLandformData(CURRENT_LANDFORM);
@@ -3739,7 +3742,6 @@ namespace RealmStudio
                         {
                             CURRENT_WATERFEATURE = null;
                         }
-
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4251,6 +4253,8 @@ namespace RealmStudio
                             && zoomedScrolledPoint.X > 0 && zoomedScrolledPoint.X < CURRENT_MAP.MapWidth
                             && zoomedScrolledPoint.Y > 0 && zoomedScrolledPoint.Y < CURRENT_MAP.MapHeight)
                         {
+                            CURRENT_LANDFORM.IsModified = true;
+
                             CURRENT_LANDFORM.DrawPath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
 
                             bool createPathsWhilePainting = Settings.Default.CalculateContoursWhilePainting;
@@ -4715,12 +4719,12 @@ namespace RealmStudio
             ScrollPoint.X += xDelta;
             DrawingPoint.X += -xDelta;
 
-            MapRenderHScroll.Value = Math.Max(0, (int)DrawingPoint.X);
+            MapRenderHScroll.Value = Math.Max(0, Math.Min((int)DrawingPoint.X, CURRENT_MAP.MapWidth));
 
             ScrollPoint.Y += yDelta;
             DrawingPoint.Y += -yDelta;
 
-            MapRenderVScroll.Value = Math.Max(0, (int)DrawingPoint.Y);
+            MapRenderVScroll.Value = Math.Max(0, Math.Min((int)DrawingPoint.Y, CURRENT_MAP.MapHeight));
 
             PREVIOUS_MOUSE_LOCATION = e.Location;
 
@@ -4949,6 +4953,8 @@ namespace RealmStudio
                             CURRENT_MAP.IsSaved = false;
                             SKGLRenderControl.Invalidate();
                         }
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.LandColorErase:
@@ -6550,6 +6556,8 @@ namespace RealmStudio
                 landform.CoastlineStyleName = CoastlineStyleList.Items[CoastlineStyleList.SelectedIndex].ToString();
 #pragma warning restore CS8601 // Possible null reference assignment.
             }
+
+            landform.IsModified = true;
 
         }
 

@@ -153,6 +153,7 @@ namespace RealmStudio
 
             TOOLTIP.Show("Landform data changes applied", this, new Point(StatusMessageLabel.Left, StatusMessageLabel.Top), 3000);
 
+            Landform.IsModified = true;
             RenderControl.Invalidate();
         }
 

@@ -572,7 +572,6 @@ namespace RealmStudio
         {
             // render and paint vignette
             MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.VIGNETTELAYER);
-
             vignetteLayer.RenderPicture?.Dispose();
 
             // Create an SKPictureRecorder to record the Canvas Draw commands to an SKPicture
@@ -581,7 +580,6 @@ namespace RealmStudio
 
             // Start recording 
             recorder.BeginRecording(clippingBounds);
-
             vignetteLayer.Render(recorder.RecordingCanvas);
 
             // Create a new SKPicture with recorded Draw commands 

@@ -64,6 +64,8 @@ namespace RealmStudio
             Task cpt16 = Task.Run(() => landform.OuterPath8 = DrawingMethods.GetInnerOrOuterPath(contourPoints, 8 * pathDistance, ParallelEnum.Above));
 
             Task.WaitAll(cpt1, cpt2, cpt3, cpt4, cpt4, cpt6, cpt7, cpt8, cpt9, cpt10, cpt11, cpt12, cpt13, cpt14, cpt15, cpt16);
+
+            landform.IsModified = true;
         }
 
         internal static void CreateInnerAndOuterPathsFromContourPoints(RealmStudioMap map, Landform landform)
@@ -111,7 +113,7 @@ namespace RealmStudio
                     if (diffPath != null)
                     {
                         l.DrawPath = new(diffPath);
-
+                        l.IsModified = true;
                         Task.Run(() => CreateAllPathsFromDrawnPath(map, l));
                     }
                 }
@@ -149,6 +151,7 @@ namespace RealmStudio
                             CreateAllPathsFromDrawnPath(map, landform_i);
 
                             landformLayer.MapLayerComponents[i] = landform_i;
+                            landform_i.IsModified = true;
 
                             mergedLandformGuids.Add(landform_j.LandformGuid);
                         }
