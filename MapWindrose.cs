@@ -52,6 +52,8 @@ namespace RealmStudio
                 // draw circles, if any
                 if (InnerRadius > 0)
                 {
+                    DrawWindroseLines(canvas, true);
+
                     switch (InnerCircles)
                     {
                         case 1:
@@ -62,8 +64,6 @@ namespace RealmStudio
                             canvas.DrawCircle(X, Y, InnerRadius, WindrosePaint);
                             break;
                     }
-
-                    DrawWindroseLines(canvas, true);
                 }
                 else
                 {
@@ -113,14 +113,16 @@ namespace RealmStudio
                 int segmentOpacity = WindroseColor.A;
                 Color argbColor = WindroseColor;
 
+                SKPaint fadedLinePaint = WindrosePaint.Clone();
+
                 for (int j = 0; j < linePoints.Length - 1; j++)
                 {
                     // draw line between points in linePoints, decreasing opacity
 
                     argbColor = Color.FromArgb(segmentOpacity, WindroseColor);
-                    WindrosePaint.Color = argbColor.ToSKColor();
+                    fadedLinePaint.Color = argbColor.ToSKColor();
 
-                    canvas.DrawLine(linePoints[j], linePoints[j + 1], WindrosePaint);
+                    canvas.DrawLine(linePoints[j], linePoints[j + 1], fadedLinePaint);
 
                     segmentOpacity--;
                     segmentOpacity = Math.Max(segmentOpacity, 0);

@@ -31,11 +31,13 @@ namespace RealmStudio
         public void DoOperation()
         {
             MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER).MapLayerComponents.Add(MapBox);
+            MapBuilder.SetLayerModified(Map, MapBuilder.BOXLAYER, true);
         }
 
         public void UndoOperation()
         {
             MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER).MapLayerComponents.Remove(MapBox);
+            MapBuilder.SetLayerModified(Map, MapBuilder.BOXLAYER, true);
         }
     }
 }

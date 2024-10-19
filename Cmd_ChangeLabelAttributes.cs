@@ -1,10 +1,10 @@
 ﻿using SkiaSharp;
-using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
     internal class Cmd_ChangeLabelAttributes : IMapOperation
     {
+        private readonly RealmStudioMap Map;
         private readonly MapLabel Label;
         private readonly Color LabelColor;
         private readonly Color OutlineColor;
@@ -21,8 +21,9 @@ namespace RealmStudio
         private readonly Font StoredSelectedFont;
 
 
-        public Cmd_ChangeLabelAttributes(MapLabel label, Color labelColor, Color outlineColor, float outlineWidth, Color glowColor, int glowStrength, Font selectedFont)
+        public Cmd_ChangeLabelAttributes(RealmStudioMap map, MapLabel label, Color labelColor, Color outlineColor, float outlineWidth, Color glowColor, int glowStrength, Font selectedFont)
         {
+            Map = map;
             Label = label;
             LabelColor = labelColor;
             OutlineColor = outlineColor;
@@ -54,6 +55,8 @@ namespace RealmStudio
             SKRect bounds = new();
             Label.Width = (int)paint.MeasureText(Label.LabelText, ref bounds);
             Label.Height = (int)bounds.Height;
+
+            MapBuilder.SetLayerModified(Map, MapBuilder.LABELLAYER, true);
         }
 
         public void UndoOperation()
@@ -71,6 +74,8 @@ namespace RealmStudio
             SKRect bounds = new();
             Label.Width = (int)paint.MeasureText(Label.LabelText, ref bounds);
             Label.Height = (int)bounds.Height;
+
+            MapBuilder.SetLayerModified(Map, MapBuilder.LABELLAYER, true);
         }
     }
 }

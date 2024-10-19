@@ -105,6 +105,11 @@ namespace RealmStudio
         {
             LayerPaintStrokePoint sp = new(location, BrushRadius);
             PaintStrokePoints.Add(sp);
+
+            if (ParentMap != null)
+            {
+                MapBuilder.SetLayerModified(ParentMap, MapLayerIdentifier, true);
+            }
         }
 
         public override void Render(SKCanvas canvas)

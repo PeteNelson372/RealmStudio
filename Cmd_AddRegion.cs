@@ -31,6 +31,7 @@ namespace RealmStudio
         public void DoOperation()
         {
             MapBuilder.GetMapLayerByIndex(Map, MapBuilder.REGIONLAYER).MapLayerComponents.Add(NewMapRegion);
+            MapBuilder.SetLayerModified(Map, MapBuilder.REGIONLAYER, true);
         }
 
         public void UndoOperation()
@@ -46,6 +47,8 @@ namespace RealmStudio
                     }
                 }
             }
+
+            MapBuilder.SetLayerModified(Map, MapBuilder.REGIONLAYER, true);
         }
     }
 }

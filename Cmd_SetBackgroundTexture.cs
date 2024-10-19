@@ -44,6 +44,7 @@ namespace RealmStudio
                     MapImageBitmap = LayerBitmap.Copy()
                 };
                 baseLayer.MapLayerComponents.Add(BackgroundTexture);
+                baseLayer.IsModified = true;
             }
         }
 
@@ -54,6 +55,7 @@ namespace RealmStudio
             if (BackgroundTexture != null)
             {
                 baseLayer.MapLayerComponents.Remove(BackgroundTexture);
+                baseLayer.IsModified = true;
             }
         }
     }

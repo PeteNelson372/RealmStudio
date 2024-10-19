@@ -41,11 +41,17 @@ namespace RealmStudio
                     }
                 }
             }
+
+            MapBuilder.SetLayerModified(Map, MapBuilder.REGIONLAYER, true);
+            MapBuilder.SetLayerModified(Map, MapBuilder.REGIONOVERLAYLAYER, true);
         }
 
         public void UndoOperation()
         {
             MapBuilder.GetMapLayerByIndex(Map, MapBuilder.REGIONLAYER).MapLayerComponents.Add(NewMapRegion);
+
+            MapBuilder.SetLayerModified(Map, MapBuilder.REGIONLAYER, true);
+            MapBuilder.SetLayerModified(Map, MapBuilder.REGIONOVERLAYLAYER, true);
         }
     }
 }

@@ -4762,8 +4762,6 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(RealmStudioMainMenuStrip);
-            RealmStudioForm.Controls.Add(WaterToolPanel);
-            RealmStudioForm.Controls.Add(LandToolPanel);
             RealmStudioForm.Controls.Add(OceanToolPanel);
             RealmStudioForm.Controls.Add(BackgroundToolPanel);
             RealmStudioForm.Controls.Add(DrawingToolPanel);
@@ -4772,6 +4770,8 @@
             RealmStudioForm.Controls.Add(LabelToolPanel);
             RealmStudioForm.Controls.Add(SymbolToolPanel);
             RealmStudioForm.Controls.Add(PathToolPanel);
+            RealmStudioForm.Controls.Add(WaterToolPanel);
+            RealmStudioForm.Controls.Add(LandToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
             RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
             RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
@@ -5967,21 +5967,21 @@
             // MapPropertiesMenuItem
             // 
             MapPropertiesMenuItem.Name = "MapPropertiesMenuItem";
-            MapPropertiesMenuItem.Size = new Size(180, 22);
+            MapPropertiesMenuItem.Size = new Size(177, 22);
             MapPropertiesMenuItem.Text = "&Properties...";
             MapPropertiesMenuItem.Click += MapPropertiesMenuItem_Click;
             // 
             // ChangeMapSizeMenuItem
             // 
             ChangeMapSizeMenuItem.Name = "ChangeMapSizeMenuItem";
-            ChangeMapSizeMenuItem.Size = new Size(180, 22);
+            ChangeMapSizeMenuItem.Size = new Size(177, 22);
             ChangeMapSizeMenuItem.Text = "&Change Map Size";
             ChangeMapSizeMenuItem.Click += ChangeMapSizeMenuItem_Click;
             // 
             // CreateDetailMapMenuItem
             // 
             CreateDetailMapMenuItem.Name = "CreateDetailMapMenuItem";
-            CreateDetailMapMenuItem.Size = new Size(180, 22);
+            CreateDetailMapMenuItem.Size = new Size(177, 22);
             CreateDetailMapMenuItem.Text = "Create &Detail Map...";
             CreateDetailMapMenuItem.Click += CreateDetailMapMenuItem_Click;
             // 

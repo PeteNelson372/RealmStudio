@@ -154,6 +154,10 @@ namespace RealmStudio
             TOOLTIP.Show("Landform data changes applied", this, new Point(StatusMessageLabel.Left, StatusMessageLabel.Top), 3000);
 
             Landform.IsModified = true;
+
+            MapBuilder.SetLayerModified(Landform.ParentMap, MapBuilder.LANDCOASTLINELAYER, true);
+            MapBuilder.SetLayerModified(Landform.ParentMap, MapBuilder.LANDFORMLAYER, true);
+
             RenderControl.Invalidate();
         }
 

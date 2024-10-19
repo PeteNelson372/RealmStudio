@@ -405,7 +405,6 @@ namespace RealmStudio
                 selectedMapPath.BoundaryPath?.Dispose();
                 selectedMapPath.BoundaryPath = new(path);
                 path.Dispose();
-
             }
         }
 

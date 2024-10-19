@@ -184,7 +184,7 @@ namespace RealmStudio
         public bool PaintCoastlineGradient { get; set; } = true;
 
         public bool IsSelected { get; set; } = false;
-        public bool IsModified { get; set; } = false;
+        public bool IsModified { get; set; } = true;
 
         public SKPicture? LandformRenderPicture { get; set; } = null;
         public SKPicture? CoastlineRenderPicture { get; set; } = null;
@@ -192,7 +192,7 @@ namespace RealmStudio
         #region NO-OP RENDER METHOD
         public override void Render(SKCanvas canvas)
         {
-            // no-op for landforms, because coastline and landform are rendered on different canvases
+            // no-op for landforms, because coastline and landform are rendered on different layers
         }
         #endregion
 
@@ -872,6 +872,8 @@ namespace RealmStudio
                 Bitmap b = new(LandformTexture.TexturePath);
                 Bitmap resizedBitmap = new(b, MapBuilder.MAP_DEFAULT_WIDTH, MapBuilder.MAP_DEFAULT_HEIGHT);
 
+                LandformTexture.TextureBitmap = new(resizedBitmap);
+
                 // create and set a shader from the texture
                 SKShader flpShader = SKShader.CreateBitmap(Extensions.ToSKBitmap(resizedBitmap),
                     SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
@@ -1079,6 +1081,8 @@ namespace RealmStudio
             {
                 throw new Exception("Landform path is not set. Cannot load this map.");
             }
+
+            IsModified = true;
 
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8604 // Possible null reference argument.

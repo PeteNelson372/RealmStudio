@@ -94,6 +94,7 @@ namespace RealmStudio
 
         private static Point PREVIOUS_MOUSE_LOCATION = new(0, 0);
 
+        private static SKPoint CURSOR_POINT = new(0, 0);
         private static SKPoint PREVIOUS_CURSOR_POINT = new(0, 0);
 
         private static readonly ToolTip TOOLTIP = new();
@@ -1659,6 +1660,8 @@ namespace RealmStudio
                 if (selectedComponent != null && selectedComponent is MapRegion region && region == r) continue;
                 r.IsSelected = false;
             }
+
+            MapBuilder.MarkAllLayersModified(CURRENT_MAP);
         }
 
         private static void SetSelectedBrushSize(int brushSize)
@@ -1721,7 +1724,51 @@ namespace RealmStudio
             }
 
             cursorLayer.RenderPicture = recorder.EndRecording();
+        }
 
+        private void DrawCursor2(SKCanvas canvas, SKPoint point, int brushSize)
+        {
+            switch (CURRENT_DRAWING_MODE)
+            {
+                case DrawingModeEnum.SymbolPlace:
+                    {
+                        if (SymbolMethods.SelectedSymbolTableMapSymbol != null && !AreaBrushSwitch.Checked)
+                        {
+                            SKBitmap? symbolBitmap = SymbolMethods.SelectedSymbolTableMapSymbol.ColorMappedBitmap;
+                            if (symbolBitmap != null)
+                            {
+                                float symbolScale = (float)(SymbolScaleTrack.Value / 100.0F * DrawingZoom);
+                                float symbolRotation = SymbolRotationTrack.Value;
+                                SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleBitmap(symbolBitmap, symbolScale);
+
+                                SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateBitmap(scaledSymbolBitmap, symbolRotation, MirrorSymbolSwitch.Checked);
+
+                                if (rotatedAndScaledBitmap != null)
+                                {
+                                    canvas.DrawBitmap(rotatedAndScaledBitmap,
+                                        new SKPoint(point.X - (rotatedAndScaledBitmap.Width / 2), point.Y - (rotatedAndScaledBitmap.Height / 2)), null);
+                                }
+                            }
+                        }
+                        else if (AreaBrushSwitch.Checked)
+                        {
+                            canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                        }
+                        else
+                        {
+                            canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                        }
+                    }
+                    break;
+                default:
+                    {
+                        if (brushSize > 0)
+                        {
+                            canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                        }
+                    }
+                    break;
+            }
         }
 
         private void ColorPresetButtonMouseClickHandler(object sender, MouseEventArgs e)
@@ -1754,8 +1801,6 @@ namespace RealmStudio
                 }
             }
         }
-
-
 
         private static void ResetColorPresetButton(Button b)
         {
@@ -1887,6 +1932,8 @@ namespace RealmStudio
 
                 CURRENT_MAP.IsSaved = true;
 
+                MapRenderHScroll.Maximum = CURRENT_MAP.MapWidth;
+                MapRenderVScroll.Maximum = CURRENT_MAP.MapHeight;
 
                 // finalize loading of ocean drawing layer
                 MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANDRAWINGLAYER);
@@ -1920,11 +1967,28 @@ namespace RealmStudio
 
                         LandformMethods.CreateInnerAndOuterPathsFromContourPoints(CURRENT_MAP, landform);
 
+                        landform.ContourPath.GetBounds(out SKRect boundsRect);
+                        landform.Width = (int)boundsRect.Width;
+                        landform.Height = (int)boundsRect.Height;
+
                         if (landform.LandformTexture != null)
                         {
                             if (landform.LandformTexture.TextureBitmap != null)
                             {
                                 Bitmap resizedBitmap = new(landform.LandformTexture.TextureBitmap, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+
+                                // create and set a shader from the texture
+                                SKShader flpShader = SKShader.CreateBitmap(Extensions.ToSKBitmap(resizedBitmap),
+                                    SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+
+                                landform.LandformFillPaint.Shader = flpShader;
+                            }
+                            else
+                            {
+                                Bitmap b = new(landform.LandformTexture.TexturePath);
+                                Bitmap resizedBitmap = new(b, MapBuilder.MAP_DEFAULT_WIDTH, MapBuilder.MAP_DEFAULT_HEIGHT);
+
+                                landform.LandformTexture.TextureBitmap = new(resizedBitmap);
 
                                 // create and set a shader from the texture
                                 SKShader flpShader = SKShader.CreateBitmap(Extensions.ToSKBitmap(resizedBitmap),
@@ -2275,6 +2339,7 @@ namespace RealmStudio
                 UpdateMapNameAndSize();
                 //UpdateViewportStatus();
 
+                MapBuilder.MarkAllLayersModified(CURRENT_MAP);
                 SKGLRenderControl.Invalidate();
             }
             catch
@@ -2518,7 +2583,7 @@ namespace RealmStudio
                             Color glowColor = GlowColorSelectButton.BackColor;
                             int glowStrength = GlowStrengthTrack.Value;
 
-                            Cmd_ChangeLabelAttributes cmd = new(SELECTED_MAP_LABEL, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, SELECTED_LABEL_FONT);
+                            Cmd_ChangeLabelAttributes cmd = new(CURRENT_MAP, SELECTED_MAP_LABEL, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, SELECTED_LABEL_FONT);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
@@ -3176,11 +3241,6 @@ namespace RealmStudio
         *******************************************************************************************************/
         private void SKGLRenderControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
         {
-            // TODO: can rendering be reworked similar to what is described
-            // here: https://stackoverflow.com/questions/64737621/c-sharp-skiasharp-opentk-winform-how-to-draw-from-a-background-thread
-            // to improve performance of rendering? (rendering when many (1000's) of symbols
-            // have been added is slow)
-
             SKCanvas renderCanvas = e.Surface.Canvas;
 
             // handle zoom-in and zoom-out (TODO: zoom in and out from center of map - how?)
@@ -3241,11 +3301,10 @@ namespace RealmStudio
 
             MapRenderMethods.RenderVignette(CURRENT_MAP, renderCanvas, ScrollPoint);
 
-            MapRenderMethods.RenderSelections(CURRENT_MAP, renderCanvas, ScrollPoint);
-
             if (CURRENT_DRAWING_MODE != DrawingModeEnum.ColorSelect)
             {
-                MapRenderMethods.RenderCursor(CURRENT_MAP, renderCanvas, ScrollPoint);
+                DrawCursor2(renderCanvas, CURSOR_POINT, SELECTED_BRUSH_SIZE);
+                //MapRenderMethods.RenderCursor(CURRENT_MAP, renderCanvas, ScrollPoint);
             }
 
             // work layer
@@ -3285,8 +3344,8 @@ namespace RealmStudio
                 Cursor = AssetManager.EYEDROPPER_CURSOR;
             }
 
-            SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
-            Task.Run(() => UpdateDrawingPointLabel(e.Location.ToSKPoint(), zoomedScrolledPoint));
+            CURSOR_POINT = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
+            //Task.Run(() => UpdateDrawingPointLabel(e.Location.ToSKPoint(), CURSOR_POINT));
 
             // objects are drawn or moved on mouse move
             if (e.Button == MouseButtons.Left)
@@ -3308,7 +3367,7 @@ namespace RealmStudio
 
             if (CURRENT_DRAWING_MODE != DrawingModeEnum.ColorSelect)
             {
-                DrawCursor(zoomedScrolledPoint, SELECTED_BRUSH_SIZE);
+                //DrawCursor(zoomedScrolledPoint, SELECTED_BRUSH_SIZE);
             }
 
             SKGLRenderControl.Invalidate();
@@ -3691,6 +3750,7 @@ namespace RealmStudio
                 case DrawingModeEnum.WaterFeatureSelect:
                     {
                         SELECTED_WATERFEATURE = (IWaterFeature?)SelectWaterFeatureAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WATERLAYER, true);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -3743,6 +3803,7 @@ namespace RealmStudio
                             CURRENT_WATERFEATURE = null;
                         }
 
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WATERLAYER, true);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -3764,6 +3825,9 @@ namespace RealmStudio
 
                             WaterFeatureMethods.ConstructRiverPaintObjects(CURRENT_RIVER);
                             CURRENT_RIVER.RiverPoints.Add(new MapRiverPoint(zoomedScrolledPoint));
+
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WATERLAYER, true);
+                            SKGLRenderControl.Invalidate();
                         }
                     }
                     break;
@@ -3844,6 +3908,11 @@ namespace RealmStudio
 
                             MapPathMethods.ConstructPathPaint(CURRENT_MAP_PATH);
                             CURRENT_MAP_PATH.PathPoints.Add(new MapPathPoint(zoomedScrolledPoint));
+
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
+
+                            SKGLRenderControl.Invalidate();
                         }
                     }
                     break;
@@ -4075,6 +4144,8 @@ namespace RealmStudio
                         }
 
                         PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
+
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONLAYER, true);
                     }
                     break;
                 case DrawingModeEnum.RegionSelect:
@@ -4266,6 +4337,9 @@ namespace RealmStudio
                             }
                         }
 
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER, true);
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDFORMLAYER, true);
+
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -4276,8 +4350,11 @@ namespace RealmStudio
                         LandformMethods.LandformErasePath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
 
                         LandformMethods.EraseLandForm(CURRENT_MAP);
-                        SKGLRenderControl.Invalidate();
 
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER, true);
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDFORMLAYER, true);
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.LandColorErase:
@@ -4288,6 +4365,8 @@ namespace RealmStudio
                         {
                             CURRENT_LAYER_PAINT_STROKE.AddLayerPaintStrokePoint(zoomedScrolledPoint);
                         }
+
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDDRAWINGLAYER, true);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4304,6 +4383,7 @@ namespace RealmStudio
                             Task.Run(() => WaterFeatureMethods.CreateInnerAndOuterPaths(CURRENT_MAP, CURRENT_WATERFEATURE));
                         }
 
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WATERLAYER, true);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -4314,18 +4394,16 @@ namespace RealmStudio
                         WaterFeatureMethods.WaterFeaturErasePath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
 
                         WaterFeatureMethods.EraseWaterFeature(CURRENT_MAP);
-                        SKGLRenderControl.Invalidate();
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WATERLAYER, true);
 
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.WaterColorErase:
                     {
                         Cursor = Cursors.Cross;
 
-                        if (CURRENT_LAYER_PAINT_STROKE != null)
-                        {
-                            CURRENT_LAYER_PAINT_STROKE.AddLayerPaintStrokePoint(zoomedScrolledPoint);
-                        }
+                        CURRENT_LAYER_PAINT_STROKE?.AddLayerPaintStrokePoint(zoomedScrolledPoint);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4336,6 +4414,7 @@ namespace RealmStudio
 
                         CURRENT_RIVER?.RiverPoints.Add(new MapRiverPoint(zoomedScrolledPoint));
 
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WATERLAYER, true);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -4344,6 +4423,9 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
 
                         CURRENT_MAP_PATH?.PathPoints.Add(new MapPathPoint(zoomedScrolledPoint));
+
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4368,6 +4450,11 @@ namespace RealmStudio
 
                             SELECTED_PATH.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(SELECTED_PATH.PathPoints);
                             PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
+
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
+
+                            SKGLRenderControl.Invalidate();
                         }
                     }
                     break;
@@ -4375,6 +4462,9 @@ namespace RealmStudio
                     if (SELECTED_PATHPOINT != null)
                     {
                         MapPathMethods.MoveSelectedMapPathPoint(SELECTED_PATH, SELECTED_PATHPOINT, zoomedScrolledPoint);
+
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
 
                         CURRENT_MAP.IsSaved = false;
                     }
@@ -4390,6 +4480,7 @@ namespace RealmStudio
                     }
 
                     PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
                     SKGLRenderControl.Invalidate();
                     break;
                 case DrawingModeEnum.SymbolColor:
@@ -4400,6 +4491,7 @@ namespace RealmStudio
                     SymbolMethods.ColorSymbolsInArea(CURRENT_MAP, zoomedScrolledPoint, colorBrushRadius, symbolColors);
 
                     CURRENT_MAP.IsSaved = false;
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
                     break;
                 case DrawingModeEnum.SymbolSelect:
                     if (SELECTED_MAP_SYMBOL != null && SELECTED_MAP_SYMBOL.IsSelected)
@@ -4408,6 +4500,7 @@ namespace RealmStudio
                         SELECTED_MAP_SYMBOL.Y = (int)zoomedScrolledPoint.Y - SELECTED_MAP_SYMBOL.Height / 2;
 
                         CURRENT_MAP.IsSaved = false;
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
                     }
 
                     break;
@@ -4425,11 +4518,15 @@ namespace RealmStudio
                             SELECTED_MAP_LABEL.X = (int)zoomedScrolledPoint.X - SELECTED_MAP_LABEL.Width / 2;
                             SELECTED_MAP_LABEL.Y = (int)zoomedScrolledPoint.Y;
                         }
+
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LABELLAYER, true);
                     }
                     else if (SELECTED_PLACED_MAP_BOX != null)
                     {
                         SELECTED_PLACED_MAP_BOX.X = (int)zoomedScrolledPoint.X;
                         SELECTED_PLACED_MAP_BOX.Y = (int)zoomedScrolledPoint.Y;
+
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.BOXLAYER, true);
                     }
                     CURRENT_MAP.IsSaved = false;
                     break;
@@ -4679,6 +4776,9 @@ namespace RealmStudio
                                 PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
                             }
                         }
+
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONLAYER, true);
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONOVERLAYLAYER, true);
                     }
                     break;
                 case DrawingModeEnum.SelectMapScale:
@@ -4689,6 +4789,7 @@ namespace RealmStudio
 
                         CURRENT_MAP.IsSaved = false;
 
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.OVERLAYLAYER, true);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -4747,6 +4848,7 @@ namespace RealmStudio
                         CURRENT_WINDROSE.X = (int)zoomedScrolledPoint.X;
                         CURRENT_WINDROSE.Y = (int)zoomedScrolledPoint.Y;
 
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WINDROSELAYER, true);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -4760,6 +4862,9 @@ namespace RealmStudio
                             }
 
                             SELECTED_PATHPOINT = MapPathMethods.SelectMapPathPointAtPoint(SELECTED_PATH, zoomedScrolledPoint);
+
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
                         }
                     }
                     break;
@@ -4795,6 +4900,11 @@ namespace RealmStudio
                             }
 
                             workLayer.RenderPicture = recorder.EndRecording();
+
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONLAYER, true);
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONOVERLAYLAYER, true);
+
+                            SKGLRenderControl.Invalidate();
                         }
                     }
                     break;
@@ -4874,6 +4984,11 @@ namespace RealmStudio
                                 regionOverlayLayer.RenderPicture = regionOverlayRecorder.EndRecording();
                             }
                         }
+
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONLAYER, true);
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONOVERLAYLAYER, true);
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
             }
@@ -4938,6 +5053,9 @@ namespace RealmStudio
 
                         CURRENT_MAP.IsSaved = false;
 
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER, true);
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDFORMLAYER, true);
+
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -4996,6 +5114,7 @@ namespace RealmStudio
 
                         CURRENT_MAP.IsSaved = false;
 
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WATERLAYER, true);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -5018,6 +5137,7 @@ namespace RealmStudio
 
                         CURRENT_MAP.IsSaved = false;
 
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WATERLAYER, true);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -5056,10 +5176,12 @@ namespace RealmStudio
                         if (CURRENT_MAP_PATH.DrawOverSymbols)
                         {
                             MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER).MapLayerComponents.Add(CURRENT_MAP_PATH);
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
                         }
                         else
                         {
                             MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER).MapLayerComponents.Add(CURRENT_MAP_PATH);
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
                         }
 
                         CURRENT_MAP_PATH = null;
@@ -5087,6 +5209,8 @@ namespace RealmStudio
                         {
                             SELECTED_MAP_SYMBOL.IsSelected = !SELECTED_MAP_SYMBOL.IsSelected;
                         }
+
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -5158,6 +5282,7 @@ namespace RealmStudio
                                 SELECTED_MAP_LABEL = null;
                             }
 
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LABELLAYER, true);
                             SKGLRenderControl.Invalidate();
                         }
                         else
@@ -5184,6 +5309,9 @@ namespace RealmStudio
                             {
                                 SELECTED_PLACED_MAP_BOX = null;
                             }
+
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.BOXLAYER, true);
+                            SKGLRenderControl.Invalidate();
                         }
                     }
                     break;
@@ -5282,6 +5410,9 @@ namespace RealmStudio
                             }
                         }
 
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONLAYER, true);
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONOVERLAYLAYER, true);
+
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -5361,6 +5492,7 @@ namespace RealmStudio
                 case DrawingModeEnum.WaterFeatureSelect:
                     MapComponent? selectedWaterFeature = SelectWaterFeatureAtPoint(CURRENT_MAP, zoomedScrolledPoint);
 
+
                     if (selectedWaterFeature != null && selectedWaterFeature is WaterFeature)
                     {
                         // TODO: info dialog for water feature
@@ -5371,6 +5503,9 @@ namespace RealmStudio
                         // TODO: info dialog for river
                         //MessageBox.Show("selected river");
                     }
+
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WATERLAYER, true);
+                    SKGLRenderControl.Invalidate();
                     break;
                 case DrawingModeEnum.PathSelect:
                     MapPath? selectedPath = SelectMapPathAtPoint(CURRENT_MAP, zoomedScrolledPoint);
@@ -5380,6 +5515,10 @@ namespace RealmStudio
                         // TODO: info dialog for path
                         //MessageBox.Show("selected path");
                     }
+
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
+
                     break;
                 case DrawingModeEnum.SymbolSelect:
                     MapSymbol? selectedSymbol = SelectMapSymbolAtPoint(CURRENT_MAP, zoomedScrolledPoint.ToDrawingPoint());
@@ -5388,6 +5527,7 @@ namespace RealmStudio
                         MapSymbolInfo msi = new(selectedSymbol);
                         msi.ShowDialog();
 
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -5439,6 +5579,9 @@ namespace RealmStudio
                     LABEL_TEXT_BOX.Dispose();
                 }
 
+                // re-render everything
+                MapBuilder.MarkAllLayersModified(CURRENT_MAP);
+
                 SKGLRenderControl.Invalidate();
                 Refresh();
             }
@@ -5488,6 +5631,10 @@ namespace RealmStudio
                                 SELECTED_PATHPOINT = null;
 
                                 CURRENT_MAP.IsSaved = false;
+
+                                MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
+                                MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
+
                                 SKGLRenderControl.Invalidate();
                             }
                         }
@@ -5588,12 +5735,14 @@ namespace RealmStudio
                                 MoveSelectedSymbolInRenderOrder(ComponentMoveDirectionEnum.Up, 1);
                             }
 
-                            SKGLRenderControl.Invalidate();
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
                         }
                         break;
                     case DrawingModeEnum.RegionSelect:
                         {
                             MapRegionMethods.MoveSelectedRegionInRenderOrder(CURRENT_MAP, CURRENT_MAP_REGION, ComponentMoveDirectionEnum.Up);
+
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONLAYER, true);
                         }
                         break;
                 }
@@ -5616,12 +5765,14 @@ namespace RealmStudio
                                 MoveSelectedSymbolInRenderOrder(ComponentMoveDirectionEnum.Down, 1);
                             }
 
-                            SKGLRenderControl.Invalidate();
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
                         }
                         break;
                     case DrawingModeEnum.RegionSelect:
                         {
                             MapRegionMethods.MoveSelectedRegionInRenderOrder(CURRENT_MAP, CURRENT_MAP_REGION, ComponentMoveDirectionEnum.Down);
+
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONLAYER, true);
                         }
                         break;
                 }
@@ -5637,6 +5788,7 @@ namespace RealmStudio
                         {
                             // move symbol to bottom of render order
                             MoveSelectedSymbolInRenderOrder(ComponentMoveDirectionEnum.Down, 1, true);
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
                             SKGLRenderControl.Invalidate();
                         }
                         break;
@@ -5651,6 +5803,7 @@ namespace RealmStudio
                         {
                             // move symbol to top of render order
                             MoveSelectedSymbolInRenderOrder(ComponentMoveDirectionEnum.Up, 1, true);
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
                             SKGLRenderControl.Invalidate();
                         }
                         break;
@@ -5666,6 +5819,7 @@ namespace RealmStudio
                             if (SELECTED_MAP_SYMBOL != null)
                             {
                                 SELECTED_MAP_SYMBOL.Y = Math.Min(SELECTED_MAP_SYMBOL.Y + 1, CURRENT_MAP.MapHeight);
+                                MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
                                 SKGLRenderControl.Invalidate();
                             }
                         }
@@ -5682,6 +5836,7 @@ namespace RealmStudio
                             if (SELECTED_MAP_SYMBOL != null)
                             {
                                 SELECTED_MAP_SYMBOL.Y = Math.Max(0, SELECTED_MAP_SYMBOL.Y - 1);
+                                MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
                                 SKGLRenderControl.Invalidate();
                             }
                         }
@@ -5700,6 +5855,7 @@ namespace RealmStudio
                                 if (SELECTED_MAP_SYMBOL != null)
                                 {
                                     SELECTED_MAP_SYMBOL.X = Math.Max(0, SELECTED_MAP_SYMBOL.X - 1);
+                                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
                                     SKGLRenderControl.Invalidate();
                                 }
                             }
@@ -5717,6 +5873,7 @@ namespace RealmStudio
                             if (SELECTED_MAP_SYMBOL != null)
                             {
                                 SELECTED_MAP_SYMBOL.X = Math.Min(SELECTED_MAP_SYMBOL.X + 1, CURRENT_MAP.MapWidth);
+                                MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
                                 SKGLRenderControl.Invalidate();
                             }
                         }
@@ -5822,6 +5979,7 @@ namespace RealmStudio
                     }
                 }
 
+                MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.VIGNETTELAYER, true);
                 SKGLRenderControl.Invalidate();
             }
         }
@@ -5838,6 +5996,7 @@ namespace RealmStudio
                 }
             }
 
+            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.VIGNETTELAYER, true);
             SKGLRenderControl.Invalidate();
         }
 
@@ -5936,7 +6095,6 @@ namespace RealmStudio
 
         private void OceanApplyTextureButton_Click(object sender, EventArgs e)
         {
-#pragma warning disable CS8604 // Possible null reference argument
             CURRENT_MAP.IsSaved = false;
 
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANTEXTURELAYER);
@@ -5952,7 +6110,6 @@ namespace RealmStudio
 
                 SKGLRenderControl.Invalidate();
             }
-#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         private void OceanRemoveTextureButton_Click(object sender, EventArgs e)
@@ -6638,6 +6795,7 @@ namespace RealmStudio
                 CURRENT_WINDROSE = null;
             }
 
+            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WINDROSELAYER, true);
             SKGLRenderControl.Invalidate();
         }
 
@@ -6664,6 +6822,7 @@ namespace RealmStudio
                 }
             }
 
+            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WINDROSELAYER, true);
             SKGLRenderControl.Invalidate();
         }
 
@@ -6744,6 +6903,8 @@ namespace RealmStudio
                     Color = CURRENT_WINDROSE.WindroseColor.ToSKColor(),
                     IsAntialias = true,
                 };
+
+                MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WINDROSELAYER, true);
             }
         }
 
@@ -7153,6 +7314,9 @@ namespace RealmStudio
 
             SetDrawingModeLabel();
 
+            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
+            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
+
             SKGLRenderControl.Invalidate();
         }
 
@@ -7177,6 +7341,9 @@ namespace RealmStudio
             }
 
             SetDrawingModeLabel();
+
+            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
+            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
 
             Refresh();
             SKGLRenderControl.Invalidate();
@@ -7318,6 +7485,9 @@ namespace RealmStudio
             }
 
             SetDrawingModeLabel();
+
+            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
+            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
 
             Refresh();
             SKGLRenderControl.Invalidate();
@@ -8212,6 +8382,8 @@ namespace RealmStudio
         {
             if (sender != null)
             {
+                MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LABELLAYER);
+
                 TextBox tb = (TextBox)sender;
 
                 Font labelFont = tb.Font;
@@ -8312,7 +8484,6 @@ namespace RealmStudio
 
                         DeselectAllMapComponents(label);
 
-                        MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LABELLAYER);
                         SELECTED_MAP_LABEL = (MapLabel?)labelLayer.MapLayerComponents.Last();
 
                         CURRENT_MAP.IsSaved = false;
@@ -8325,6 +8496,7 @@ namespace RealmStudio
                     SKGLRenderControl.Controls.Remove(tb);
                     tb.Dispose();
 
+                    labelLayer.IsModified = true;
                     SKGLRenderControl.Refresh();
                 }
                 else
@@ -8341,6 +8513,7 @@ namespace RealmStudio
                     int tbWidth = (int)Math.Max(bounds.Width, tb.Width);
                     tb.Width = tbWidth;
 
+                    labelLayer.IsModified = true;
                     SKGLRenderControl.Refresh();
                 }
             }
@@ -8388,7 +8561,7 @@ namespace RealmStudio
                 Color glowColor = GlowColorSelectButton.BackColor;
                 int glowStrength = GlowStrengthTrack.Value;
 
-                Cmd_ChangeLabelAttributes cmd = new(SELECTED_MAP_LABEL, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, SELECTED_LABEL_FONT);
+                Cmd_ChangeLabelAttributes cmd = new(CURRENT_MAP, SELECTED_MAP_LABEL, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, SELECTED_LABEL_FONT);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 
@@ -8943,6 +9116,7 @@ namespace RealmStudio
                 if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents[i] is MapGrid)
                 {
                     MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.RemoveAt(i);
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.DEFAULTGRIDLAYER, true);
                     break;
                 }
             }
@@ -8952,6 +9126,7 @@ namespace RealmStudio
                 if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents[i] is MapGrid)
                 {
                     MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.RemoveAt(i);
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.ABOVEOCEANGRIDLAYER, true);
                     break;
                 }
             }
@@ -8961,6 +9136,7 @@ namespace RealmStudio
                 if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents[i] is MapGrid)
                 {
                     MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.RemoveAt(i);
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.BELOWSYMBOLSGRIDLAYER, true);
                     break;
                 }
             }
@@ -9041,6 +9217,7 @@ namespace RealmStudio
                 placedFrame.FrameScale = FrameScaleTrack.Value / 100F;
                 OverlayMethods.CompletePlacedFrame(placedFrame);
 
+                MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.FRAMELAYER, true);
                 SKGLRenderControl.Invalidate();
             }
         }
@@ -9056,7 +9233,7 @@ namespace RealmStudio
 
                 PlacedMapFrame placedFrame = (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.FRAMELAYER).MapLayerComponents[0];
 
-                Cmd_ChangeFrameColor cmd = new(placedFrame, FrameTintColorSelectButton.BackColor);
+                Cmd_ChangeFrameColor cmd = new(CURRENT_MAP, placedFrame, FrameTintColorSelectButton.BackColor);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 
@@ -9133,6 +9310,8 @@ namespace RealmStudio
 
             MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents.Add(mapScale);
 
+            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.OVERLAYLAYER, true);
+
             SKGLRenderControl.Invalidate();
         }
 
@@ -9146,6 +9325,8 @@ namespace RealmStudio
                     MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents.RemoveAt(i);
                 }
             }
+
+            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.OVERLAYLAYER, true);
 
             SKGLRenderControl.Invalidate();
         }
@@ -9259,6 +9440,7 @@ namespace RealmStudio
                 if (CURRENT_MAP_GRID != null)
                 {
                     MapBuilder.GetMapLayerByIndex(CURRENT_MAP, CURRENT_MAP_GRID.GridLayerIndex).MapLayerComponents.Add(CURRENT_MAP_GRID);
+                    MapBuilder.SetLayerModified(CURRENT_MAP, CURRENT_MAP_GRID.GridLayerIndex, true);
                 }
 
                 SKGLRenderControl.Invalidate();
@@ -9277,7 +9459,7 @@ namespace RealmStudio
             if (CURRENT_MAP_GRID != null)
             {
                 CURRENT_MAP_GRID.GridEnabled = EnableGridSwitch.Checked;
-
+                MapBuilder.SetLayerModified(CURRENT_MAP, CURRENT_MAP_GRID.GridLayerIndex, true);
                 SKGLRenderControl.Invalidate();
             }
         }
@@ -9287,7 +9469,7 @@ namespace RealmStudio
             if (CURRENT_MAP_GRID != null)
             {
                 CURRENT_MAP_GRID.GridType = GridTypeEnum.Square;
-
+                MapBuilder.SetLayerModified(CURRENT_MAP, CURRENT_MAP_GRID.GridLayerIndex, true);
                 SKGLRenderControl.Invalidate();
             }
         }
@@ -9297,7 +9479,7 @@ namespace RealmStudio
             if (CURRENT_MAP_GRID != null)
             {
                 CURRENT_MAP_GRID.GridType = GridTypeEnum.FlatHex;
-
+                MapBuilder.SetLayerModified(CURRENT_MAP, CURRENT_MAP_GRID.GridLayerIndex, true);
                 SKGLRenderControl.Invalidate();
             }
         }
@@ -9307,7 +9489,7 @@ namespace RealmStudio
             if (CURRENT_MAP_GRID != null)
             {
                 CURRENT_MAP_GRID.GridType = GridTypeEnum.PointedHex;
-
+                MapBuilder.SetLayerModified(CURRENT_MAP, CURRENT_MAP_GRID.GridLayerIndex, true);
                 SKGLRenderControl.Invalidate();
             }
         }
@@ -9324,6 +9506,7 @@ namespace RealmStudio
                 if (CURRENT_MAP_GRID != null)
                 {
                     MapBuilder.GetMapLayerByIndex(CURRENT_MAP, CURRENT_MAP_GRID.GridLayerIndex).MapLayerComponents.Add(CURRENT_MAP_GRID);
+                    MapBuilder.SetLayerModified(CURRENT_MAP, CURRENT_MAP_GRID.GridLayerIndex, true);
                 }
 
                 SKGLRenderControl.Invalidate();
@@ -9344,6 +9527,7 @@ namespace RealmStudio
             if (CURRENT_MAP_GRID != null)
             {
                 CURRENT_MAP_GRID.GridSize = GridSizeTrack.Value;
+                MapBuilder.SetLayerModified(CURRENT_MAP, CURRENT_MAP_GRID.GridLayerIndex, true);
                 SKGLRenderControl.Invalidate();
             }
         }
@@ -9364,6 +9548,7 @@ namespace RealmStudio
                     StrokeJoin = SKStrokeJoin.Bevel
                 };
 
+                MapBuilder.SetLayerModified(CURRENT_MAP, CURRENT_MAP_GRID.GridLayerIndex, true);
                 SKGLRenderControl.Invalidate();
             }
         }
@@ -9389,6 +9574,7 @@ namespace RealmStudio
                         StrokeJoin = SKStrokeJoin.Bevel
                     };
 
+                    MapBuilder.SetLayerModified(CURRENT_MAP, CURRENT_MAP_GRID.GridLayerIndex, true);
                     SKGLRenderControl.Invalidate();
                 }
             }
@@ -9399,6 +9585,7 @@ namespace RealmStudio
             if (CURRENT_MAP_GRID != null)
             {
                 CURRENT_MAP_GRID.ShowGridSize = ShowGridSizeSwitch.Checked;
+                MapBuilder.SetLayerModified(CURRENT_MAP, CURRENT_MAP_GRID.GridLayerIndex, true);
                 SKGLRenderControl.Invalidate();
             }
         }
@@ -9532,6 +9719,11 @@ namespace RealmStudio
 
             regionBorderEffect = MapRegionMethods.ConstructRegionBorderEffect(mapRegion);
             MapRegionMethods.ConstructRegionPaintObjects(mapRegion, regionBorderEffect);
+
+            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONLAYER, true);
+            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONOVERLAYLAYER, true);
+
+            SKGLRenderControl.Invalidate();
         }
 
         internal static MapRegion? SelectRegionAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)

@@ -35,6 +35,7 @@ namespace RealmStudio
             if (LayerTexture != null)
             {
                 baseLayer.MapLayerComponents.Remove(LayerTexture);
+                baseLayer.IsModified = true;
             }
         }
 
@@ -45,6 +46,7 @@ namespace RealmStudio
             if (baseLayer.MapLayerComponents.Count() <= 1)
             {
                 baseLayer.MapLayerComponents.Add(LayerTexture);
+                baseLayer.IsModified = true;
             }
         }
     }

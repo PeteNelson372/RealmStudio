@@ -57,6 +57,7 @@ namespace RealmStudio
                 }
             }
 
+            MapBuilder.GetMapLayerByIndex(_map, MapBuilder.WATERLAYER).IsModified = true;
         }
 
         public void UndoOperation()
@@ -72,6 +73,8 @@ namespace RealmStudio
                     MapBuilder.GetMapLayerByIndex(_map, MapBuilder.WATERLAYER).MapLayerComponents.Add(r);
                 }
             }
+
+            MapBuilder.GetMapLayerByIndex(_map, MapBuilder.WATERLAYER).IsModified = true;
         }
     }
 }

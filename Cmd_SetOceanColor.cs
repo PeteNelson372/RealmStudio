@@ -44,6 +44,7 @@ namespace RealmStudio
                     MapImageBitmap = LayerColorBitmap.Copy()
                 };
                 oceanTextureOverlayLayer.MapLayerComponents.Add(OceanColor);
+                oceanTextureOverlayLayer.IsModified = true;
             }
         }
 
@@ -54,6 +55,7 @@ namespace RealmStudio
             if (OceanColor != null)
             {
                 oceanTextureOverlayLayer.MapLayerComponents.Remove(OceanColor);
+                oceanTextureOverlayLayer.IsModified = true;
             }
         }
     }

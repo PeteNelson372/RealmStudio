@@ -32,12 +32,14 @@ namespace RealmStudio
         {
             MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WINDROSELAYER);
             windroseLayer.MapLayerComponents.Add(Windrose);
+            windroseLayer.IsModified = true;
         }
 
         public void UndoOperation()
         {
             MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WINDROSELAYER);
             windroseLayer.MapLayerComponents.Remove(Windrose);
+            windroseLayer.IsModified = true;
         }
     }
 }

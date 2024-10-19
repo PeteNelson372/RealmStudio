@@ -33,11 +33,15 @@ namespace RealmStudio
         public void DoOperation()
         {
             SelectedMapRegion.MapRegionPoints.Insert(LocationIndex, NewMapRegionPoint);
+            MapBuilder.SetLayerModified(Map, MapBuilder.REGIONLAYER, true);
+            MapBuilder.SetLayerModified(Map, MapBuilder.REGIONOVERLAYLAYER, true);
         }
 
         public void UndoOperation()
         {
             SelectedMapRegion.MapRegionPoints.Remove(NewMapRegionPoint);
+            MapBuilder.SetLayerModified(Map, MapBuilder.REGIONLAYER, true);
+            MapBuilder.SetLayerModified(Map, MapBuilder.REGIONOVERLAYLAYER, true);
         }
     }
 }

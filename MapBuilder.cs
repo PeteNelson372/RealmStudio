@@ -63,9 +63,9 @@ namespace RealmStudio
         public static readonly int MAP_LAYER_COUNT = WORKLAYER + 1;
 
         // layer static methods
-        public static MapLayer GetMapLayerByIndex(RealmStudioMap map, int index)
+        public static MapLayer GetMapLayerByIndex(RealmStudioMap map, int layerIndex)
         {
-            return map.MapLayers[index];
+            return map.MapLayers[layerIndex];
         }
 
         public static void ShowLayer(RealmStudioMap map, int layerIndex)
@@ -78,6 +78,19 @@ namespace RealmStudio
         {
             MapLayer l = GetMapLayerByIndex(map, layerIndex);
             l.ShowLayer = false;
+        }
+
+        public static void SetLayerModified(RealmStudioMap map, int layerIndex, bool IsModified)
+        {
+            map.MapLayers[layerIndex].IsModified = IsModified;
+        }
+
+        public static void MarkAllLayersModified(RealmStudioMap map)
+        {
+            for (int i = 0; i < map.MapLayers.Count; i++)
+            {
+                map.MapLayers[i].IsModified = true;
+            }
         }
 
         private static MapLayer ConstructMapLayer(string layerName, ushort layerOrder, uint x, uint y, int width, int height, SKColor clearColor)
