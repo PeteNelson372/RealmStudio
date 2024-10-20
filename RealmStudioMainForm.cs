@@ -139,8 +139,6 @@ namespace RealmStudio
 
             SPLASH_SCREEN = new AppSplashScreen();
 
-            //string? version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString();
-
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 
             if (version != null)
@@ -1669,64 +1667,7 @@ namespace RealmStudio
             SELECTED_BRUSH_SIZE = brushSize;
         }
 
-        private void DrawCursor(SKPoint point, int brushSize)
-        {
-            MapLayer cursorLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.CURSORLAYER);
-            cursorLayer.RenderPicture?.Dispose();
-            cursorLayer.RenderPicture = null;
-
-            using var recorder = new SKPictureRecorder();
-            SKRect clippingBounds = new(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
-
-            // Start recording 
-            recorder.BeginRecording(clippingBounds);
-
-            switch (CURRENT_DRAWING_MODE)
-            {
-                case DrawingModeEnum.SymbolPlace:
-                    {
-                        if (SymbolMethods.SelectedSymbolTableMapSymbol != null && !AreaBrushSwitch.Checked)
-                        {
-                            SKBitmap? symbolBitmap = SymbolMethods.SelectedSymbolTableMapSymbol.ColorMappedBitmap;
-                            if (symbolBitmap != null)
-                            {
-                                float symbolScale = (float)(SymbolScaleTrack.Value / 100.0F * DrawingZoom);
-                                float symbolRotation = SymbolRotationTrack.Value;
-                                SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleBitmap(symbolBitmap, symbolScale);
-
-                                SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateBitmap(scaledSymbolBitmap, symbolRotation, MirrorSymbolSwitch.Checked);
-
-                                if (rotatedAndScaledBitmap != null)
-                                {
-                                    recorder.RecordingCanvas.DrawBitmap(rotatedAndScaledBitmap,
-                                        new SKPoint(point.X - (rotatedAndScaledBitmap.Width / 2), point.Y - (rotatedAndScaledBitmap.Height / 2)), null);
-                                }
-                            }
-                        }
-                        else if (AreaBrushSwitch.Checked)
-                        {
-                            recorder.RecordingCanvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
-                        }
-                        else
-                        {
-                            recorder.RecordingCanvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
-                        }
-                    }
-                    break;
-                default:
-                    {
-                        if (brushSize > 0)
-                        {
-                            recorder.RecordingCanvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
-                        }
-                    }
-                    break;
-            }
-
-            cursorLayer.RenderPicture = recorder.EndRecording();
-        }
-
-        private void DrawCursor2(SKCanvas canvas, SKPoint point, int brushSize)
+        private void DrawCursor(SKCanvas canvas, SKPoint point, int brushSize)
         {
             switch (CURRENT_DRAWING_MODE)
             {
@@ -3303,8 +3244,7 @@ namespace RealmStudio
 
             if (CURRENT_DRAWING_MODE != DrawingModeEnum.ColorSelect)
             {
-                DrawCursor2(renderCanvas, CURSOR_POINT, SELECTED_BRUSH_SIZE);
-                //MapRenderMethods.RenderCursor(CURRENT_MAP, renderCanvas, ScrollPoint);
+                DrawCursor(renderCanvas, CURSOR_POINT, SELECTED_BRUSH_SIZE);
             }
 
             // work layer
@@ -3931,11 +3871,18 @@ namespace RealmStudio
                         }
                         else
                         {
-                            PlaceSelectedSymbolAtCursor(zoomedScrolledPoint);
+                            PlaceSelectedSymbolAtCursor(zoomedScrolledPoint, PREVIOUS_CURSOR_POINT);
                         }
 
                         PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
                     }
+                    break;
+                case DrawingModeEnum.SymbolErase:
+                    int eraserRadius = AreaBrushSizeTrack.Value / 2;
+
+                    SKPoint eraserCursorPoint = new(zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
+
+                    SymbolMethods.RemovePlacedSymbolsFromArea(CURRENT_MAP, eraserCursorPoint, eraserRadius);
                     break;
                 case DrawingModeEnum.DrawArcLabelPath:
                     {
@@ -4478,10 +4425,21 @@ namespace RealmStudio
 
                         PlaceSelectedSymbolInArea(zoomedScrolledPoint, symbolScale, symbolRotation, (int)(AreaBrushSizeTrack.Value / 2.0F));
                     }
+                    else
+                    {
+                        PlaceSelectedSymbolAtCursor(zoomedScrolledPoint, PREVIOUS_CURSOR_POINT);
+                    }
 
                     PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
                     MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
                     SKGLRenderControl.Invalidate();
+                    break;
+                case DrawingModeEnum.SymbolErase:
+                    int eraserRadius = AreaBrushSizeTrack.Value / 2;
+
+                    SymbolMethods.RemovePlacedSymbolsFromArea(CURRENT_MAP, zoomedScrolledPoint, eraserRadius);
+
+                    CURRENT_MAP.IsSaved = false;
                     break;
                 case DrawingModeEnum.SymbolColor:
 
@@ -7709,6 +7667,7 @@ namespace RealmStudio
         private void EraseSymbolsButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolErase;
+            SELECTED_BRUSH_SIZE = AreaBrushSizeTrack.Value;
             SetDrawingModeLabel();
         }
 
@@ -7744,40 +7703,88 @@ namespace RealmStudio
 
         private void StructuresSymbolButton_Click(object sender, EventArgs e)
         {
-            SymbolMethods.SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Structure;
-            List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+            CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolPlace;
+            SetDrawingModeLabel();
 
-            AddSymbolsToSymbolTable(selectedSymbols);
-            AreaBrushSwitch.Checked = false;
-            AreaBrushSwitch.Enabled = false;
+            if (SymbolMethods.SELECTED_SYMBOL_TYPE != SymbolTypeEnum.Structure)
+            {
+                SymbolMethods.SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Structure;
+                List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+
+                AddSymbolsToSymbolTable(selectedSymbols);
+                AreaBrushSwitch.Checked = false;
+                AreaBrushSwitch.Enabled = false;
+            }
+
+            if (SymbolMethods.SelectedSymbolTableMapSymbol == null || SymbolMethods.SelectedSymbolTableMapSymbol.SymbolType != SymbolTypeEnum.Structure)
+            {
+                PictureBox pb = (PictureBox)SymbolTable.Controls[0];
+                SelectPrimarySymbolInSymbolTable(pb);
+            }
         }
 
         private void VegetationSymbolsButton_Click(object sender, EventArgs e)
         {
-            SymbolMethods.SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Vegetation;
-            List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+            CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolPlace;
+            SetDrawingModeLabel();
 
-            AddSymbolsToSymbolTable(selectedSymbols);
-            AreaBrushSwitch.Enabled = true;
+            if (SymbolMethods.SELECTED_SYMBOL_TYPE != SymbolTypeEnum.Vegetation)
+            {
+                SymbolMethods.SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Vegetation;
+                List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+
+                AddSymbolsToSymbolTable(selectedSymbols);
+                AreaBrushSwitch.Enabled = true;
+            }
+
+            if (SymbolMethods.SelectedSymbolTableMapSymbol == null || SymbolMethods.SelectedSymbolTableMapSymbol.SymbolType != SymbolTypeEnum.Vegetation)
+            {
+                PictureBox pb = (PictureBox)SymbolTable.Controls[0];
+                SelectPrimarySymbolInSymbolTable(pb);
+            }
         }
 
         private void TerrainSymbolsButton_Click(object sender, EventArgs e)
         {
-            SymbolMethods.SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Terrain;
-            List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+            CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolPlace;
+            SetDrawingModeLabel();
 
-            AddSymbolsToSymbolTable(selectedSymbols);
-            AreaBrushSwitch.Enabled = true;
+            if (SymbolMethods.SELECTED_SYMBOL_TYPE != SymbolTypeEnum.Terrain)
+            {
+                SymbolMethods.SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Terrain;
+                List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+
+                AddSymbolsToSymbolTable(selectedSymbols);
+                AreaBrushSwitch.Enabled = true;
+            }
+
+            if (SymbolMethods.SelectedSymbolTableMapSymbol == null || SymbolMethods.SelectedSymbolTableMapSymbol.SymbolType != SymbolTypeEnum.Terrain)
+            {
+                PictureBox pb = (PictureBox)SymbolTable.Controls[0];
+                SelectPrimarySymbolInSymbolTable(pb);
+            }
         }
 
         private void OtherSymbolsButton_Click(object sender, EventArgs e)
         {
-            SymbolMethods.SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Other;
-            List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+            CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolPlace;
+            SetDrawingModeLabel();
 
-            AddSymbolsToSymbolTable(selectedSymbols);
-            AreaBrushSwitch.Checked = false;
-            AreaBrushSwitch.Enabled = false;
+            if (SymbolMethods.SELECTED_SYMBOL_TYPE != SymbolTypeEnum.Other)
+            {
+                SymbolMethods.SELECTED_SYMBOL_TYPE = SymbolTypeEnum.Other;
+                List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+
+                AddSymbolsToSymbolTable(selectedSymbols);
+                AreaBrushSwitch.Checked = false;
+                AreaBrushSwitch.Enabled = false;
+            }
+
+            if (SymbolMethods.SelectedSymbolTableMapSymbol == null || SymbolMethods.SelectedSymbolTableMapSymbol.SymbolType != SymbolTypeEnum.Other)
+            {
+                PictureBox pb = (PictureBox)SymbolTable.Controls[0];
+                SelectPrimarySymbolInSymbolTable(pb);
+            }
         }
 
         private void SymbolScaleTrack_Scroll(object sender, EventArgs e)
@@ -7824,16 +7831,22 @@ namespace RealmStudio
 
         private void ResetSymbolColorsButton_Click(object sender, EventArgs e)
         {
-            // TODO: default symbol colors are set from selected theme
-            SymbolColor1Button.BackColor = Color.FromArgb(255, 85, 44, 36);
+            if (AssetManager.CURRENT_THEME != null)
+            {
+                SymbolColor1Button.BackColor = AssetManager.CURRENT_THEME.SymbolCustomColors[0];
+                SymbolColor2Button.BackColor = AssetManager.CURRENT_THEME.SymbolCustomColors[1];
+                SymbolColor3Button.BackColor = AssetManager.CURRENT_THEME.SymbolCustomColors[2];
+            }
+            else
+            {
+                SymbolColor1Button.BackColor = Color.FromArgb(255, 85, 44, 36);
+                SymbolColor2Button.BackColor = Color.FromArgb(255, 53, 45, 32);
+                SymbolColor3Button.BackColor = Color.FromArgb(161, 214, 202, 171);
+            }
+
             SymbolColor1Button.Refresh();
-
-            SymbolColor2Button.BackColor = Color.FromArgb(255, 53, 45, 32);
             SymbolColor2Button.Refresh();
-
-            SymbolColor3Button.BackColor = Color.FromArgb(161, 214, 202, 171);
             SymbolColor3Button.Refresh();
-
         }
 
         private void SymbolColor1Button_Click(object sender, EventArgs e)
@@ -7933,7 +7946,6 @@ namespace RealmStudio
             foreach (var item in SymbolCollectionsListBox.CheckedItems)
             {
                 checkedCollections.Add(item.ToString());
-
             }
 
             if (e.NewValue == CheckState.Checked)
@@ -8014,6 +8026,8 @@ namespace RealmStudio
         {
             SymbolTable.Hide();
             SymbolTable.Controls.Clear();
+            SymbolTable.Refresh();
+
             foreach (MapSymbol symbol in symbols)
             {
 #pragma warning disable CS8604 // Possible null reference argument.
@@ -8044,8 +8058,7 @@ namespace RealmStudio
                 SymbolTable.Controls.Add(pb);
             }
             SymbolTable.Show();
-
-            Refresh();
+            SymbolTable.Refresh();
         }
 
         private void SymbolPictureBox_MouseHover(object sender, EventArgs e)
@@ -8094,44 +8107,11 @@ namespace RealmStudio
                 else if (ModifierKeys == Keys.None)
                 {
                     // primary symbol selection                    
-
                     PictureBox pb = (PictureBox)sender;
 
                     if (pb.Tag is MapSymbol s)
                     {
-                        foreach (Control control in SymbolTable.Controls)
-                        {
-                            if (control != pb)
-                            {
-                                control.BackColor = SystemColors.Control;
-                                control.Refresh();
-                            }
-                        }
-
-                        SymbolMethods.SecondarySelectedSymbols.Clear();
-                        Color pbBackColor = pb.BackColor;
-
-                        if (pbBackColor == SystemColors.Control)
-                        {
-                            // clicked symbol is not selected, so select it
-                            pb.BackColor = Color.LightSkyBlue;
-                            pb.Refresh();
-
-                            SymbolMethods.SelectedSymbolTableMapSymbol = s;
-
-                            CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolPlace;
-                            SetDrawingModeLabel();
-                        }
-                        else
-                        {
-                            // clicked symbol is already selected, so deselect it
-                            pb.BackColor = SystemColors.Control;
-                            pb.Refresh();
-
-                            SymbolMethods.SelectedSymbolTableMapSymbol = null;
-                            CURRENT_DRAWING_MODE = DrawingModeEnum.None;
-                            SetDrawingModeLabel();
-                        }
+                        SelectPrimarySymbolInSymbolTable(pb);
                     }
                 }
             }
@@ -8146,7 +8126,47 @@ namespace RealmStudio
             }
         }
 
-        private void PlaceSelectedSymbolAtCursor(SKPoint mouseCursorPoint)
+        private void SelectPrimarySymbolInSymbolTable(PictureBox pb)
+        {
+            if (pb.Tag is MapSymbol s)
+            {
+                if (SymbolMethods.SelectedSymbolTableMapSymbol == null || s.SymbolGuid.ToString() != SymbolMethods.SelectedSymbolTableMapSymbol.SymbolGuid.ToString())
+                {
+                    foreach (Control control in SymbolTable.Controls)
+                    {
+                        if (control != pb)
+                        {
+                            control.BackColor = SystemColors.Control;
+                            control.Refresh();
+                        }
+                    }
+
+                    SymbolMethods.SecondarySelectedSymbols.Clear();
+                    Color pbBackColor = pb.BackColor;
+
+                    if (pbBackColor == SystemColors.Control)
+                    {
+                        // clicked symbol is not selected, so select it
+                        pb.BackColor = Color.LightSkyBlue;
+                        pb.Refresh();
+
+                        SymbolMethods.SelectedSymbolTableMapSymbol = s;
+                    }
+                    else
+                    {
+                        // clicked symbol is already selected, so deselect it
+                        pb.BackColor = SystemColors.Control;
+                        pb.Refresh();
+
+                        SymbolMethods.SelectedSymbolTableMapSymbol = null;
+                        CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+                        SetDrawingModeLabel();
+                    }
+                }
+            }
+        }
+
+        private void PlaceSelectedSymbolAtCursor(SKPoint mouseCursorPoint, SKPoint previousMousePoint)
         {
             if (SymbolMethods.SelectedSymbolTableMapSymbol != null)
             {
@@ -8159,7 +8179,7 @@ namespace RealmStudio
                     SKBitmap rotatedAndScaledBitmap = RotateAndScaleSymbolBitmap(symbolBitmap, symbolScale, symbolRotation);
                     SKPoint cursorPoint = new(mouseCursorPoint.X - (rotatedAndScaledBitmap.Width / 2), mouseCursorPoint.Y - (rotatedAndScaledBitmap.Height / 2));
 
-                    PlaceSelectedMapSymbolAtPoint(cursorPoint, PREVIOUS_CURSOR_POINT, symbolScale, symbolRotation);
+                    PlaceSelectedMapSymbolAtPoint(cursorPoint, previousMousePoint, symbolScale, symbolRotation);
                 }
             }
         }
@@ -8190,38 +8210,25 @@ namespace RealmStudio
                     SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleBitmap(symbolBitmap, symbolScale);
                     SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateBitmap(scaledSymbolBitmap, symbolRotation, MirrorSymbolSwitch.Checked);
 
-                    if (rotatedAndScaledBitmap != null && AreaBrushSwitch.Checked)
-                    {
-                        float bitmapSize = rotatedAndScaledBitmap.Width + rotatedAndScaledBitmap.Height;
+                    float bitmapRadius = rotatedAndScaledBitmap.Width / 2;
 
-                        // increasing this value reduces the rate of symbol placement on the map
-                        // so high values of placement rate on the placement rate trackbar or updown increase placement rate on the map
-                        float placementRateSize = bitmapSize / PLACEMENT_RATE;
+                    // RE-DONE: PLACEMENT_RATE controls the timer used for placing symbols with the area brush
+                    // PLACEMENT_DENSITY controls how close together symbols can be placed
 
-                        float pointDistanceSquared = SKPoint.DistanceSquared(previousPoint, cursorPoint);
+                    // decreasing this value increases the density of symbol placement on the map
+                    // so high values of placement density on the placement density updown increase placement density on the map
+                    float placementDensityRadius = bitmapRadius / PLACEMENT_DENSITY;
 
-                        if (pointDistanceSquared > placementRateSize)
-                        {
-                            bool canPlaceSymbol = SymbolMethods.CanPlaceSymbol(CURRENT_MAP, symbolToPlace, rotatedAndScaledBitmap, cursorPoint, PLACEMENT_DENSITY);
+                    bool canPlaceSymbol = SymbolMethods.CanPlaceSymbol(CURRENT_MAP, cursorPoint, placementDensityRadius);
 
-                            if (canPlaceSymbol)
-                            {
-                                symbolToPlace.CustomSymbolColors[0] = SymbolColor1Button.BackColor.ToSKColor();
-                                symbolToPlace.CustomSymbolColors[1] = SymbolColor2Button.BackColor.ToSKColor();
-                                symbolToPlace.CustomSymbolColors[2] = SymbolColor3Button.BackColor.ToSKColor();
-
-                                symbolToPlace.Width = rotatedAndScaledBitmap.Width;
-                                symbolToPlace.Height = rotatedAndScaledBitmap.Height;
-
-                                SymbolMethods.PlaceSymbolOnMap(CURRENT_MAP, symbolToPlace, rotatedAndScaledBitmap, cursorPoint);
-                            }
-                        }
-                    }
-                    else
+                    if (canPlaceSymbol)
                     {
                         symbolToPlace.CustomSymbolColors[0] = SymbolColor1Button.BackColor.ToSKColor();
                         symbolToPlace.CustomSymbolColors[1] = SymbolColor2Button.BackColor.ToSKColor();
                         symbolToPlace.CustomSymbolColors[2] = SymbolColor3Button.BackColor.ToSKColor();
+
+                        symbolToPlace.Width = rotatedAndScaledBitmap.Width;
+                        symbolToPlace.Height = rotatedAndScaledBitmap.Height;
 
                         SymbolMethods.PlaceSymbolOnMap(CURRENT_MAP, symbolToPlace, rotatedAndScaledBitmap, cursorPoint);
                     }

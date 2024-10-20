@@ -57,8 +57,7 @@ namespace RealmStudio
         public static readonly int DRAWINGLAYER = 23;
         public static readonly int VIGNETTELAYER = 24;
         public static readonly int SELECTIONLAYER = 25;
-        public static readonly int CURSORLAYER = 26;
-        public static readonly int WORKLAYER = 27;
+        public static readonly int WORKLAYER = 26;
 
         public static readonly int MAP_LAYER_COUNT = WORKLAYER + 1;
 
@@ -244,9 +243,6 @@ namespace RealmStudio
             map.MapLayers.Add(layer);
 
             layer = ConstructMapLayer("selection", (ushort)SELECTIONLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
-            map.MapLayers.Add(layer);
-
-            layer = ConstructMapLayer("cursor", (ushort)CURSORLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
             map.MapLayers.Add(layer);
 
             layer = ConstructMapLayer("work", (ushort)WORKLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);

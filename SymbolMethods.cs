@@ -64,6 +64,13 @@ namespace RealmStudio
             }
         }
 
+        internal static void RemovePlacedSymbolsFromArea(RealmStudioMap map, SKPoint centerPoint, float eraserCircleRadius)
+        {
+            Cmd_RemoveSymbolsFromArea cmd = new(map, eraserCircleRadius, centerPoint);
+            CommandManager.AddCommand(cmd);
+            cmd.DoOperation();
+        }
+
         internal static void AnalyzeSymbolBitmapColors(MapSymbol symbol)
         {
             // gather the colors from each pixel of the bitmap
@@ -236,14 +243,11 @@ namespace RealmStudio
             return typeSymbols;
         }
 
-        internal static bool CanPlaceSymbol(RealmStudioMap map, MapSymbol? mapSymbol, SKBitmap rotatedAndScaledBitmap, SKPoint cursorPoint, float placementDensity)
+        internal static bool CanPlaceSymbol(RealmStudioMap map, SKPoint cursorPoint, float placementDensityRadius)
         {
-            // if the symbol is within the excluded radius from any other symbols, then the symbol cannot be placed at the cursor point
-            if (mapSymbol == null) return false;
+            // if there are any symbols within the placementDensityRadius around the cursor point, then the symbol cannot be placed at the cursor point
 
             bool canPlace = true;
-
-            float exclusionRadius = ((rotatedAndScaledBitmap.Width + rotatedAndScaledBitmap.Height) / 2.0F) / placementDensity;
 
             MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER);
 
@@ -251,7 +255,7 @@ namespace RealmStudio
             {
                 MapSymbol symbol = (MapSymbol)symbolLayer.MapLayerComponents[i];
                 SKPoint symbolPoint = new(symbol.X, symbol.Y);
-                bool placeAllowed = !DrawingMethods.PointInCircle(exclusionRadius, symbolPoint, cursorPoint);
+                bool placeAllowed = !DrawingMethods.PointInCircle(placementDensityRadius, cursorPoint, symbolPoint);
 
                 if (!placeAllowed)
                 {
