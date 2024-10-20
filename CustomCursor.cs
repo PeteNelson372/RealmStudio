@@ -21,27 +21,40 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using System.Runtime.InteropServices;
+
 namespace RealmStudio
 {
-    internal class Cmd_ChangeLabelRotation : IMapOperation
+    // custom cursor code adapted from https://csharpindeep.wordpress.com/2013/10/25/c-tutorial-how-to-use-custom-cursors-intermediate/
+
+    public struct IconInfo
     {
-        private readonly MapLabel Label;
-        private readonly float RotationValue;
+        public bool fIcon;
+        public int xHotspot;
+        public int yHotspot;
+        public IntPtr hbmMask;
+        public IntPtr hbmColor;
+    }
 
-        public Cmd_ChangeLabelRotation(MapLabel label, float rotationValue)
-        {
-            Label = label;
-            RotationValue = rotationValue;
-        }
+    internal class CustomCursor
+    {
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetIconInfo(IntPtr hIcon, ref IconInfo pIconInfo);
 
-        public void DoOperation()
-        {
-            Label.LabelRotationDegrees = RotationValue;
-        }
+        [DllImport("user32.dll")]
+        public static extern IntPtr CreateIconIndirect(ref IconInfo icon);
 
-        public void UndoOperation()
+        public static Cursor CreateCursor(Bitmap bmp, int xHotSpot, int yHotSpot)
         {
-            Label.LabelRotationDegrees = 0;
+            IntPtr ptr = bmp.GetHicon();
+            IconInfo tmp = new IconInfo();
+            GetIconInfo(ptr, ref tmp);
+            tmp.xHotspot = xHotSpot;
+            tmp.yHotspot = yHotSpot;
+            tmp.fIcon = false;
+            ptr = CreateIconIndirect(ref tmp);
+            return new Cursor(ptr);
         }
     }
 }

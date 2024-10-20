@@ -244,7 +244,9 @@ namespace RealmStudio
 
                     if (icon.IconName == "Eye Dropper")
                     {
-                        EYEDROPPER_CURSOR = new Cursor(icon.IconPath);
+                        // create a cursor from the icon bitmap with the hotspot at the top-left corner
+                        Bitmap b = new(icon.IconPath);
+                        EYEDROPPER_CURSOR = CustomCursor.CreateCursor(b, 0, 0);
                     }
 
                 }

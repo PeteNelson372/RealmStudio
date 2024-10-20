@@ -83,6 +83,9 @@ namespace RealmStudio
 
         private static System.Timers.Timer? BRUSH_TIMER = null;
         private static System.Timers.Timer? AUTOSAVE_TIMER = null;
+        private static System.Timers.Timer? SYMBOL_AREA_BRUSH_TIMER = null;
+
+        private static System.Timers.Timer? LOCATION_UPDATE_TIMER = null;
 
         private static int BACKUP_COUNT = 5;
 
@@ -94,6 +97,7 @@ namespace RealmStudio
 
         private static Point PREVIOUS_MOUSE_LOCATION = new(0, 0);
 
+        private static SKPoint MOUSE_LOCATION = new(0, 0);
         private static SKPoint CURSOR_POINT = new(0, 0);
         private static SKPoint PREVIOUS_CURSOR_POINT = new(0, 0);
 
@@ -105,9 +109,6 @@ namespace RealmStudio
 
         private static bool SYMBOL_SCALE_LOCKED = false;
         private static bool CREATING_LABEL = false;
-        private static bool CREATE_MAP_IMAGE = false;
-
-        private static SKImage? MAP_IMAGE = null;
 
         private readonly AppSplashScreen SPLASH_SCREEN;
 
@@ -223,6 +224,7 @@ namespace RealmStudio
 
                 StartAutosaveTimer();
 
+                StartLocationUpdateTimer();
             }
             else
             {
@@ -292,19 +294,22 @@ namespace RealmStudio
 
         private void RealmStudioMainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            BRUSH_TIMER?.Stop();
-            BRUSH_TIMER?.Dispose();
-            BRUSH_TIMER = null;
-
+            // stop timers
+            StopBrushTimer();
             StopAutosaveTimer();
+            StopLocationUpdateTimer();
 
+            // save user preferences
             Settings.Default.Save();
 
+            // save symbol tags and collections
             SymbolMethods.SaveSymbolTags();
             SymbolMethods.SaveCollections();
 
+            // close the name generator dialog
             NAME_GENERATOR_CONFIG.Close();
 
+            // save the map
             if (!CURRENT_MAP.IsSaved)
             {
                 DialogResult result =
@@ -316,6 +321,7 @@ namespace RealmStudio
 
                     if (saveResult == DialogResult.Cancel)
                     {
+                        // cancel application shutdown if the user cancels
                         e.Cancel = true;
                     }
                     else
@@ -325,6 +331,7 @@ namespace RealmStudio
                 }
                 else if (result == DialogResult.Cancel)
                 {
+                    // cancel application shutdown if the user cancels
                     e.Cancel = true;
                 }
             }
@@ -751,54 +758,7 @@ namespace RealmStudio
 
             SKPoint zeroPoint = new(0, 0);
 
-            MapRenderMethods.RenderBackground(CURRENT_MAP, renderCanvas, zeroPoint);
-
-            MapRenderMethods.RenderOcean(CURRENT_MAP, renderCanvas, zeroPoint);
-
-            MapRenderMethods.RenderWindroses(CURRENT_MAP, CURRENT_WINDROSE, renderCanvas, zeroPoint);
-
-            // lower grid layer (above ocean)
-            MapRenderMethods.RenderLowerGrid(CURRENT_MAP, renderCanvas, zeroPoint);
-
-            MapRenderMethods.RenderLandforms(CURRENT_MAP, CURRENT_LANDFORM, renderCanvas, zeroPoint);
-
-            MapRenderMethods.RenderWaterFeatures(CURRENT_MAP, CURRENT_WATERFEATURE, CURRENT_RIVER, renderCanvas, zeroPoint);
-
-            // upper grid layer (above water features)
-            MapRenderMethods.RenderUpperGrid(CURRENT_MAP, renderCanvas, zeroPoint);
-
-            MapRenderMethods.RenderLowerMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, renderCanvas, zeroPoint);
-
-            MapRenderMethods.RenderSymbols(CURRENT_MAP, renderCanvas, zeroPoint);
-
-            MapRenderMethods.RenderUpperMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, renderCanvas, zeroPoint);
-
-            // region and region overlay layers
-            MapRenderMethods.RenderRegions(CURRENT_MAP, renderCanvas, zeroPoint);
-
-            // default grid layer
-            MapRenderMethods.RenderDefaultGrid(CURRENT_MAP, renderCanvas, zeroPoint);
-
-            // box layer
-            MapRenderMethods.RenderBoxes(CURRENT_MAP, renderCanvas, zeroPoint);
-
-            // label layer
-            MapRenderMethods.RenderLabels(CURRENT_MAP, renderCanvas, zeroPoint);
-
-            // overlay layer (map scale)
-            MapRenderMethods.RenderOverlays(CURRENT_MAP, renderCanvas, zeroPoint);
-
-            // render frame
-            MapRenderMethods.RenderFrame(CURRENT_MAP, renderCanvas, zeroPoint);
-
-            // measure layer
-            MapRenderMethods.RenderMeasures(CURRENT_MAP, renderCanvas, zeroPoint);
-
-            // TODO: drawing layer
-            MapRenderMethods.RenderDrawing(CURRENT_MAP, renderCanvas, zeroPoint);
-
-            // vignette layer
-            MapRenderMethods.RenderVignette(CURRENT_MAP, renderCanvas, zeroPoint);
+            RenderMapToCanvas(CURRENT_MAP, renderCanvas, zeroPoint);
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 
@@ -1058,12 +1018,13 @@ namespace RealmStudio
 
         private void StartAutosaveTimer()
         {
+            // stop the autosave timer
+            StopAutosaveTimer();
+
             bool autosave = Settings.Default.RealmAutosave;
 
             if (autosave)
             {
-                StopAutosaveTimer();
-
                 int saveIntervalMinutes = Settings.Default.AutosaveInterval;
 
                 // save interval cannot be less than 5 minutes (300000 milliseconds)
@@ -1082,6 +1043,73 @@ namespace RealmStudio
             }
         }
 
+        private void StartBrushTimer(int brushIntervalMillis)
+        {
+            // stop the brush timer if it is running
+            StopBrushTimer();
+
+            // start the brush timer
+            BRUSH_TIMER = new System.Timers.Timer
+            {
+                Interval = brushIntervalMillis,
+                AutoReset = true,
+                SynchronizingObject = SKGLRenderControl,
+            };
+
+            BRUSH_TIMER.Elapsed += new ElapsedEventHandler(BrushTimerEventHandler);
+            BRUSH_TIMER.Start();
+        }
+
+        private void StartSymbolAreaBrushTimer(int brushIntervalMillis)
+        {
+            // stop the symbols area brush timer if it is running
+            StopSymbolAreaBrushTimer();
+
+            // start the brush timer
+            SYMBOL_AREA_BRUSH_TIMER = new System.Timers.Timer
+            {
+                Interval = brushIntervalMillis,
+                AutoReset = true,
+                SynchronizingObject = SKGLRenderControl,
+            };
+
+            SYMBOL_AREA_BRUSH_TIMER.Elapsed += new ElapsedEventHandler(SymbolAreaBrushTimerEventHandler);
+            SYMBOL_AREA_BRUSH_TIMER.Start();
+        }
+
+
+        private void StartLocationUpdateTimer()
+        {
+            // stop the location update timer if it is running
+            StopLocationUpdateTimer();
+
+            // start the location update timer
+            LOCATION_UPDATE_TIMER = new System.Timers.Timer
+            {
+                Interval = 50,
+                AutoReset = true,
+                SynchronizingObject = this,
+            };
+
+            LOCATION_UPDATE_TIMER.Elapsed += new ElapsedEventHandler(LocationUpdateTimerEventHandler);
+            LOCATION_UPDATE_TIMER.Start();
+        }
+
+        private void LocationUpdateTimerEventHandler(object? sender, ElapsedEventArgs e)
+        {
+            UpdateDrawingPointLabel();
+        }
+
+        private static void StopBrushTimer()
+        {
+            if (BRUSH_TIMER != null)
+            {
+                BRUSH_TIMER.Stop();
+                BRUSH_TIMER.Dispose();
+                BRUSH_TIMER = null;
+            }
+        }
+
         private static void StopAutosaveTimer()
         {
             if (AUTOSAVE_TIMER != null)
@@ -1089,6 +1117,26 @@ namespace RealmStudio
                 AUTOSAVE_TIMER.Stop();
                 AUTOSAVE_TIMER.Dispose();
                 AUTOSAVE_TIMER = null;
+            }
+        }
+
+        private static void StopSymbolAreaBrushTimer()
+        {
+            if (SYMBOL_AREA_BRUSH_TIMER != null)
+            {
+                SYMBOL_AREA_BRUSH_TIMER.Stop();
+                SYMBOL_AREA_BRUSH_TIMER.Dispose();
+                SYMBOL_AREA_BRUSH_TIMER = null;
+            }
+        }
+
+        private static void StopLocationUpdateTimer()
+        {
+            if (LOCATION_UPDATE_TIMER != null)
+            {
+                LOCATION_UPDATE_TIMER.Stop();
+                LOCATION_UPDATE_TIMER.Dispose();
+                LOCATION_UPDATE_TIMER = null;
             }
         }
 
@@ -1402,16 +1450,16 @@ namespace RealmStudio
             ApplicationStatusStrip.Items[0].Text = text;
         }
 
-        private void UpdateDrawingPointLabel(SKPoint cursorPoint, SKPoint mapPoint)
+        private void UpdateDrawingPointLabel()
         {
             DrawingPointLabel.Text = "Cursor Point: "
-                + ((int)cursorPoint.X).ToString()
+                + ((int)MOUSE_LOCATION.X).ToString()
                 + " , "
-                + ((int)cursorPoint.Y).ToString()
+                + ((int)MOUSE_LOCATION.Y).ToString()
                 + "   Map Point: "
-                + ((int)mapPoint.X).ToString()
+                + ((int)CURSOR_POINT.X).ToString()
                 + " , "
-                + ((int)mapPoint.Y).ToString();
+                + ((int)CURSOR_POINT.Y).ToString();
 
             ApplicationStatusStrip.Invalidate();
         }
@@ -1667,6 +1715,57 @@ namespace RealmStudio
             SELECTED_BRUSH_SIZE = brushSize;
         }
 
+        public void RenderMapToCanvas(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
+        {
+            MapRenderMethods.RenderBackground(CURRENT_MAP, renderCanvas, scrollPoint);
+
+            MapRenderMethods.RenderOcean(CURRENT_MAP, renderCanvas, scrollPoint);
+
+            MapRenderMethods.RenderWindroses(CURRENT_MAP, CURRENT_WINDROSE, renderCanvas, scrollPoint);
+
+            // lower grid layer (above ocean)
+            MapRenderMethods.RenderLowerGrid(CURRENT_MAP, renderCanvas, scrollPoint);
+
+            MapRenderMethods.RenderLandforms(CURRENT_MAP, CURRENT_LANDFORM, renderCanvas, scrollPoint);
+
+            MapRenderMethods.RenderWaterFeatures(CURRENT_MAP, CURRENT_WATERFEATURE, CURRENT_RIVER, renderCanvas, scrollPoint);
+
+            // upper grid layer (above water features)
+            MapRenderMethods.RenderUpperGrid(CURRENT_MAP, renderCanvas, scrollPoint);
+
+            MapRenderMethods.RenderLowerMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, renderCanvas, scrollPoint);
+
+            MapRenderMethods.RenderSymbols(CURRENT_MAP, renderCanvas, scrollPoint);
+
+            MapRenderMethods.RenderUpperMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, renderCanvas, scrollPoint);
+
+            // region and region overlay layers
+            MapRenderMethods.RenderRegions(CURRENT_MAP, renderCanvas, scrollPoint);
+
+            // default grid layer
+            MapRenderMethods.RenderDefaultGrid(CURRENT_MAP, renderCanvas, scrollPoint);
+
+            // box layer
+            MapRenderMethods.RenderBoxes(CURRENT_MAP, renderCanvas, scrollPoint);
+
+            // label layer
+            MapRenderMethods.RenderLabels(CURRENT_MAP, renderCanvas, scrollPoint);
+
+            // overlay layer (map scale)
+            MapRenderMethods.RenderOverlays(CURRENT_MAP, renderCanvas, scrollPoint);
+
+            // render frame
+            MapRenderMethods.RenderFrame(CURRENT_MAP, renderCanvas, scrollPoint);
+
+            // measure layer
+            MapRenderMethods.RenderMeasures(CURRENT_MAP, renderCanvas, scrollPoint);
+
+            // TODO: drawing layer
+            MapRenderMethods.RenderDrawing(CURRENT_MAP, renderCanvas, scrollPoint);
+
+            MapRenderMethods.RenderVignette(CURRENT_MAP, renderCanvas, scrollPoint);
+        }
+
         private void DrawCursor(SKCanvas canvas, SKPoint point, int brushSize)
         {
             switch (CURRENT_DRAWING_MODE)
@@ -1860,6 +1959,8 @@ namespace RealmStudio
             // open an existing map
             try
             {
+                Cursor = Cursors.WaitCursor;
+
                 SetStatusText("Loading: " + Path.GetFileName(mapFilePath));
 
                 try
@@ -2309,6 +2410,10 @@ namespace RealmStudio
 
                 CURRENT_MAP.IsSaved = false;
                 throw;
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
             }
         }
 
@@ -3190,71 +3295,17 @@ namespace RealmStudio
             // paint the SKGLRenderControl surface, compositing the surfaces from all of the layers
             renderCanvas.Clear(SKColors.Black);
 
-            // The order that the layers are rendered here matters;
-            // each layer has to be rendered separately in the correct order
-            MapRenderMethods.ClearSelectionLayer(CURRENT_MAP);
-
-            MapRenderMethods.RenderBackground(CURRENT_MAP, renderCanvas, ScrollPoint);
-
-            MapRenderMethods.RenderOcean(CURRENT_MAP, renderCanvas, ScrollPoint);
-
-            MapRenderMethods.RenderWindroses(CURRENT_MAP, CURRENT_WINDROSE, renderCanvas, ScrollPoint);
-
-            // lower grid layer (above ocean)
-            MapRenderMethods.RenderLowerGrid(CURRENT_MAP, renderCanvas, ScrollPoint);
-
-            MapRenderMethods.RenderLandforms(CURRENT_MAP, CURRENT_LANDFORM, renderCanvas, ScrollPoint);
-
-            MapRenderMethods.RenderWaterFeatures(CURRENT_MAP, CURRENT_WATERFEATURE, CURRENT_RIVER, renderCanvas, ScrollPoint);
-
-            // upper grid layer (above water features)
-            MapRenderMethods.RenderUpperGrid(CURRENT_MAP, renderCanvas, ScrollPoint);
-
-            MapRenderMethods.RenderLowerMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, renderCanvas, ScrollPoint);
-
-            MapRenderMethods.RenderSymbols(CURRENT_MAP, renderCanvas, ScrollPoint);
-
-            MapRenderMethods.RenderUpperMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, renderCanvas, ScrollPoint);
-
-            // region and region overlay layers
-            MapRenderMethods.RenderRegions(CURRENT_MAP, renderCanvas, ScrollPoint);
-
-            // default grid layer
-            MapRenderMethods.RenderDefaultGrid(CURRENT_MAP, renderCanvas, ScrollPoint);
-
-            // box layer
-            MapRenderMethods.RenderBoxes(CURRENT_MAP, renderCanvas, ScrollPoint);
-
-            // label layer
-            MapRenderMethods.RenderLabels(CURRENT_MAP, renderCanvas, ScrollPoint);
-
-            // overlay layer (map scale)
-            MapRenderMethods.RenderOverlays(CURRENT_MAP, renderCanvas, ScrollPoint);
-
-            // render frame
-            MapRenderMethods.RenderFrame(CURRENT_MAP, renderCanvas, ScrollPoint);
-
-            // measure layer
-            MapRenderMethods.RenderMeasures(CURRENT_MAP, renderCanvas, ScrollPoint);
-
-            // TODO: drawing layer
-            MapRenderMethods.RenderDrawing(CURRENT_MAP, renderCanvas, ScrollPoint);
-
-            MapRenderMethods.RenderVignette(CURRENT_MAP, renderCanvas, ScrollPoint);
+            RenderMapToCanvas(CURRENT_MAP, renderCanvas, ScrollPoint);
 
             if (CURRENT_DRAWING_MODE != DrawingModeEnum.ColorSelect)
             {
-                DrawCursor(renderCanvas, CURSOR_POINT, SELECTED_BRUSH_SIZE);
+                // TODO: experiment with using custom cursor for the circle cursor,
+                // rather than drawing the circle cursor
+                DrawCursor(renderCanvas, new SKPoint(CURSOR_POINT.X - ScrollPoint.X, CURSOR_POINT.Y - ScrollPoint.Y), SELECTED_BRUSH_SIZE);
             }
 
             // work layer
             MapRenderMethods.RenderWorkLayer(CURRENT_MAP, renderCanvas, ScrollPoint);
-
-            if (CREATE_MAP_IMAGE)
-            {
-                MAP_IMAGE?.Dispose();
-                MAP_IMAGE = e.Surface.Snapshot();
-            }
         }
 
         private void SKGLRenderControl_MouseDown(object sender, MouseEventArgs e)
@@ -3284,8 +3335,8 @@ namespace RealmStudio
                 Cursor = AssetManager.EYEDROPPER_CURSOR;
             }
 
-            CURSOR_POINT = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
-            //Task.Run(() => UpdateDrawingPointLabel(e.Location.ToSKPoint(), CURSOR_POINT));
+            MOUSE_LOCATION = e.Location.ToSKPoint();
+            CURSOR_POINT = new((e.X / DrawingZoom) - DrawingPoint.X, (e.Y / DrawingZoom) - DrawingPoint.Y);
 
             // objects are drawn or moved on mouse move
             if (e.Button == MouseButtons.Left)
@@ -3303,11 +3354,6 @@ namespace RealmStudio
             else if (e.Button == MouseButtons.None)
             {
                 NoButtonMouseMoveHandler(sender, e, SELECTED_BRUSH_SIZE / 2);
-            }
-
-            if (CURRENT_DRAWING_MODE != DrawingModeEnum.ColorSelect)
-            {
-                //DrawCursor(zoomedScrolledPoint, SELECTED_BRUSH_SIZE);
             }
 
             SKGLRenderControl.Invalidate();
@@ -3328,7 +3374,6 @@ namespace RealmStudio
             {
                 MiddleButtonMouseUpHandler(sender, e);
             }
-
         }
 
         private void SKGLRenderControl_MouseEnter(object sender, EventArgs e)
@@ -3572,24 +3617,9 @@ namespace RealmStudio
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
-                            if (BRUSH_TIMER != null)
-                            {
-                                BRUSH_TIMER.Stop();
-                                BRUSH_TIMER.Dispose();
-                            }
-
                             BRUSH_VELOCITY = Math.Max(1, BASE_MILLIS_PER_PAINT_EVENT / (OceanBrushVelocityTrack.Value / 100.0));
 
-                            // start the brush timer
-                            BRUSH_TIMER = new System.Timers.Timer
-                            {
-                                Interval = (int)BRUSH_VELOCITY,
-                                AutoReset = true,
-                                SynchronizingObject = SKGLRenderControl,
-                            };
-
-                            BRUSH_TIMER.Elapsed += new ElapsedEventHandler(BrushTimerEventHandler);
-                            BRUSH_TIMER.Start();
+                            StartBrushTimer((int)BRUSH_VELOCITY);
                         }
                     }
                     break;
@@ -3648,24 +3678,9 @@ namespace RealmStudio
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
-                            if (BRUSH_TIMER != null)
-                            {
-                                BRUSH_TIMER.Stop();
-                                BRUSH_TIMER.Dispose();
-                            }
-
                             BRUSH_VELOCITY = Math.Max(1, BASE_MILLIS_PER_PAINT_EVENT / (LandBrushVelocityTrack.Value / 100.0));
 
-                            // start the brush timer
-                            BRUSH_TIMER = new System.Timers.Timer
-                            {
-                                Interval = (int)BRUSH_VELOCITY,
-                                AutoReset = true,
-                                SynchronizingObject = SKGLRenderControl,
-                            };
-
-                            BRUSH_TIMER.Elapsed += new ElapsedEventHandler(BrushTimerEventHandler);
-                            BRUSH_TIMER.Start();
+                            StartBrushTimer((int)BRUSH_VELOCITY);
                         }
                     }
                     break;
@@ -3785,24 +3800,9 @@ namespace RealmStudio
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
-                            if (BRUSH_TIMER != null)
-                            {
-                                BRUSH_TIMER.Stop();
-                                BRUSH_TIMER.Dispose();
-                            }
-
                             BRUSH_VELOCITY = Math.Max(1, BASE_MILLIS_PER_PAINT_EVENT / (LandBrushVelocityTrack.Value / 100.0));
 
-                            // start the brush timer
-                            BRUSH_TIMER = new System.Timers.Timer
-                            {
-                                Interval = (int)BRUSH_VELOCITY,
-                                AutoReset = true,
-                                SynchronizingObject = SKGLRenderControl,
-                            };
-
-                            BRUSH_TIMER.Elapsed += new ElapsedEventHandler(BrushTimerEventHandler);
-                            BRUSH_TIMER.Start();
+                            StartBrushTimer((int)BRUSH_VELOCITY);
                         }
                     }
                     break;
@@ -3860,14 +3860,8 @@ namespace RealmStudio
                     {
                         if (AreaBrushSwitch.Checked)
                         {
-                            SELECTED_BRUSH_SIZE = AreaBrushSizeTrack.Value;
-                            SKGLRenderControl.Invalidate();
-
-                            float symbolScale = SymbolScaleTrack.Value / 100.0F;
-                            float symbolRotation = SymbolRotationTrack.Value;
-                            float areaBrushSize = AreaBrushSizeTrack.Value / 2.0F;
-
-                            Task.Run(() => PlaceSelectedSymbolInArea(new SKPoint(zoomedScrolledPoint.X, zoomedScrolledPoint.Y), symbolScale, symbolRotation, (int)areaBrushSize));
+                            int brushInterval = (int)(200.0F / PLACEMENT_RATE);
+                            StartSymbolAreaBrushTimer(brushInterval);
                         }
                         else
                         {
@@ -4417,15 +4411,7 @@ namespace RealmStudio
                     }
                     break;
                 case DrawingModeEnum.SymbolPlace:
-                    if (AreaBrushSwitch.Checked)
-                    {
-                        float symbolScale = SymbolScaleTrack.Value / 100.0F;
-                        float symbolRotation = SymbolRotationTrack.Value;
-                        SELECTED_BRUSH_SIZE = AreaBrushSizeTrack.Value;
-
-                        PlaceSelectedSymbolInArea(zoomedScrolledPoint, symbolScale, symbolRotation, (int)(AreaBrushSizeTrack.Value / 2.0F));
-                    }
-                    else
+                    if (!AreaBrushSwitch.Checked)
                     {
                         PlaceSelectedSymbolAtCursor(zoomedScrolledPoint, PREVIOUS_CURSOR_POINT);
                     }
@@ -4962,13 +4948,13 @@ namespace RealmStudio
         {
             SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
 
+            StopSymbolAreaBrushTimer();
+
             switch (CURRENT_DRAWING_MODE)
             {
                 case DrawingModeEnum.OceanPaint:
                     {
-                        BRUSH_TIMER?.Stop();
-                        BRUSH_TIMER?.Dispose();
-                        BRUSH_TIMER = null;
+                        StopBrushTimer();
 
                         if (CURRENT_LAYER_PAINT_STROKE != null)
                         {
@@ -5019,9 +5005,7 @@ namespace RealmStudio
                     break;
                 case DrawingModeEnum.LandColor:
                     {
-                        BRUSH_TIMER?.Stop();
-                        BRUSH_TIMER?.Dispose();
-                        BRUSH_TIMER = null;
+                        StopBrushTimer();
 
                         if (CURRENT_LAYER_PAINT_STROKE != null)
                         {
@@ -5101,9 +5085,7 @@ namespace RealmStudio
                     break;
                 case DrawingModeEnum.WaterColor:
                     {
-                        BRUSH_TIMER?.Stop();
-                        BRUSH_TIMER?.Dispose();
-                        BRUSH_TIMER = null;
+                        StopBrushTimer();
 
                         if (CURRENT_LAYER_PAINT_STROKE != null)
                         {
@@ -5376,21 +5358,20 @@ namespace RealmStudio
                     break;
                 case DrawingModeEnum.ColorSelect:
                     {
-                        // TODO: refactor this to render the map to a bitmap
-                        // using the  code that is now in the main menu Export
-                        // handler (move that code out to a separate methods
-                        // so it is reusable)
-
                         // eyedropper color select function
-                        CREATE_MAP_IMAGE = true;
-
+                        MapBuilder.MarkAllLayersModified(CURRENT_MAP);
                         SKGLRenderControl.Refresh();
 
-                        Bitmap b = MAP_IMAGE.ToBitmap();
+                        using SKBitmap colorBitmap = new(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+                        using SKCanvas renderCanvas = new(colorBitmap);
 
-                        CREATE_MAP_IMAGE = false;
+                        SKPoint zeroPoint = new(0, 0);
 
-                        Color pixelColor = b.GetPixel(e.X, e.Y);
+                        RenderMapToCanvas(CURRENT_MAP, renderCanvas, zeroPoint);
+
+                        Bitmap b = colorBitmap.ToBitmap();
+
+                        Color pixelColor = b.GetPixel((int)zoomedScrolledPoint.X, (int)zoomedScrolledPoint.Y);
 
                         switch (MainTab.SelectedIndex)
                         {
@@ -5510,9 +5491,10 @@ namespace RealmStudio
                 // what else?
 
                 // stop and dispose of the brush timer
-                BRUSH_TIMER?.Stop();
-                BRUSH_TIMER?.Dispose();
-                BRUSH_TIMER = null;
+                StopBrushTimer();
+
+                // stop placing symbols
+                StopSymbolAreaBrushTimer();
 
                 // clear drawing mode and set brush size to 0
                 CURRENT_DRAWING_MODE = DrawingModeEnum.None;
@@ -7887,6 +7869,8 @@ namespace RealmStudio
             if (AreaBrushSwitch.Checked)
             {
                 SetSelectedBrushSize(AreaBrushSizeTrack.Value);
+                //int brushInterval = (int)(200.0F / PLACEMENT_RATE);
+                //StartSymbolAreaBrushTimer(brushInterval);
             }
             else
             {
@@ -8009,6 +7993,14 @@ namespace RealmStudio
             }
         }
 
+        private void SymbolAreaBrushTimerEventHandler(object? sender, ElapsedEventArgs e)
+        {
+            float symbolScale = SymbolScaleTrack.Value / 100.0F;
+            float symbolRotation = SymbolRotationTrack.Value;
+            SELECTED_BRUSH_SIZE = AreaBrushSizeTrack.Value;
+
+            PlaceSelectedSymbolInArea(CURSOR_POINT, symbolScale, symbolRotation, (int)(AreaBrushSizeTrack.Value / 2.0F));
+        }
 
         #endregion
 
@@ -8212,7 +8204,7 @@ namespace RealmStudio
 
                     float bitmapRadius = rotatedAndScaledBitmap.Width / 2;
 
-                    // RE-DONE: PLACEMENT_RATE controls the timer used for placing symbols with the area brush
+                    // PLACEMENT_RATE controls the timer used for placing symbols with the area brush
                     // PLACEMENT_DENSITY controls how close together symbols can be placed
 
                     // decreasing this value increases the density of symbol placement on the map
@@ -8247,9 +8239,13 @@ namespace RealmStudio
 
                     SKPoint cursorPoint = new(mouseCursorPoint.X - (rotatedAndScaledBitmap.Width / 2), mouseCursorPoint.Y - (rotatedAndScaledBitmap.Height / 2));
 
-                    int exclusionRadius = (int)Math.Ceiling(PLACEMENT_DENSITY * ((rotatedAndScaledBitmap.Width + rotatedAndScaledBitmap.Height) / 2.0F));
+                    float bitmapRadius = rotatedAndScaledBitmap.Width / 2;
 
-                    List<SKPoint> areaPoints = DrawingMethods.GetPointsInCircle(cursorPoint, (int)Math.Ceiling((double)areaBrushSize), exclusionRadius);
+                    // decreasing this value increases the density of symbol placement on the map
+                    // so high values of placement density on the placement density updown increase placement density on the map
+                    float placementDensityRadius = bitmapRadius / PLACEMENT_DENSITY;
+
+                    List<SKPoint> areaPoints = DrawingMethods.GetPointsInCircle(cursorPoint, (int)Math.Ceiling((double)areaBrushSize), (int)placementDensityRadius);
 
                     foreach (SKPoint p in areaPoints)
                     {
@@ -9021,7 +9017,7 @@ namespace RealmStudio
         }
         #endregion
 
-        #region Overlay Tab Methods
+        #region Overlay Tab Methods (Frame, Grid, Scale, Measure)
 
         private void AddMapFramesToFrameTable(List<MapFrame> mapFrames)
         {
@@ -9151,7 +9147,7 @@ namespace RealmStudio
 
         #endregion
 
-        #region Overlay Tab Event Handlers
+        #region Overlay Tab Event Handlers (Frame, Grid, Scale, Measure)
 
         #region Frame Event Handlers
 
@@ -9666,6 +9662,8 @@ namespace RealmStudio
 
         #endregion
 
+        #endregion 
+
         #region Region Methods
 
         internal void SetRegionData(MapRegion mapRegion)
@@ -9990,8 +9988,6 @@ namespace RealmStudio
         {
             RegionBorderedLightSolidRadio.Checked = true;
         }
-
-        #endregion
 
         #endregion
 
