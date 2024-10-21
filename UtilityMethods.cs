@@ -62,7 +62,7 @@ namespace RealmStudio
             }
             else
             {
-                return Color.Empty;
+                return initialColor;
             }
         }
 

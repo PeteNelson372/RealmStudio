@@ -9,9 +9,9 @@
     <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2024.294.12431</AssemblyVersion>
-    <FileVersion>1.2024.294.12431</FileVersion>
-    <Version>1.2024.1-alpha-206</Version>  
+    <AssemblyVersion>1.2024.295.13747</AssemblyVersion>
+    <FileVersion>1.2024.295.13747</FileVersion>
+    <Version>1.2024.1-alpha-219</Version>  
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

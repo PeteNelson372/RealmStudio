@@ -5829,6 +5829,14 @@ namespace RealmStudio
         /******************************************************************************************************* 
         * BACKGROUND TAB EVENT HANDLERS
         *******************************************************************************************************/
+        private void ShowBaseLayerSwitch_CheckedChanged()
+        {
+            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BASELAYER);
+            baseLayer.ShowLayer = ShowBaseLayerSwitch.Checked;
+            baseLayer.IsModified = true;
+            SKGLRenderControl.Invalidate();
+        }
+
         private void NextBackgroundTextureButton_Click(object sender, EventArgs e)
         {
             if (AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX < AssetManager.BACKGROUND_TEXTURE_LIST.Count - 1)
@@ -5966,6 +5974,25 @@ namespace RealmStudio
         #endregion
 
         #region Ocean Tab Event Handlers
+
+        private void ShowOceanLayerSwitch_CheckedChanged()
+        {
+            MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANTEXTURELAYER);
+            MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
+            MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANDRAWINGLAYER);
+
+            oceanTextureLayer.ShowLayer = ShowOceanLayerSwitch.Checked;
+            oceanTextureLayer.IsModified = true;
+
+            oceanTextureOverlayLayer.ShowLayer = ShowOceanLayerSwitch.Checked;
+            oceanTextureOverlayLayer.IsModified = true;
+
+            oceanDrawingLayer.ShowLayer = ShowOceanLayerSwitch.Checked;
+            oceanDrawingLayer.IsModified = true;
+
+            SKGLRenderControl.Invalidate();
+        }
+
         private void OceanTextureOpacityTrack_ValueChanged(object sender, EventArgs e)
         {
             TOOLTIP.Show(OceanTextureOpacityTrack.Value.ToString(), OceanTextureGroup, new Point(OceanTextureOpacityTrack.Right - 30, OceanTextureOpacityTrack.Top - 20), 2000);
@@ -6316,6 +6343,25 @@ namespace RealmStudio
         /******************************************************************************************************* 
         * LAND TAB EVENT HANDLERS
         *******************************************************************************************************/
+
+        private void ShowLandLayerSwitch_CheckedChanged()
+        {
+            MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER);
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+            MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDDRAWINGLAYER);
+
+            landCoastlineLayer.ShowLayer = ShowLandLayerSwitch.Checked;
+            landCoastlineLayer.IsModified = true;
+
+            landformLayer.ShowLayer = ShowLandLayerSwitch.Checked;
+            landformLayer.IsModified = true;
+
+            landDrawingLayer.ShowLayer = ShowLandLayerSwitch.Checked;
+            landDrawingLayer.IsModified = true;
+
+            SKGLRenderControl.Invalidate();
+        }
+
         private void LandformSelectButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.LandformSelect;
@@ -6852,6 +6898,20 @@ namespace RealmStudio
 
         #region Water Tab Event Handlers
 
+        private void ShowWaterLayerSwitch_CheckedChanged()
+        {
+            MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER);
+            MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERDRAWINGLAYER);
+
+            waterLayer.ShowLayer = ShowWaterLayerSwitch.Checked;
+            waterLayer.IsModified = true;
+
+            waterDrawingLayer.ShowLayer = ShowWaterLayerSwitch.Checked;
+            waterDrawingLayer.IsModified = true;
+
+            SKGLRenderControl.Invalidate();
+        }
+
         private void WaterFeatureSelectButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.WaterFeatureSelect;
@@ -7125,6 +7185,20 @@ namespace RealmStudio
         #endregion
 
         #region Path Tab Event Handlers
+
+        private void ShowPathLayerSwitch_CheckedChanged()
+        {
+            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
+            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
+
+            pathLowerLayer.ShowLayer = ShowPathLayerSwitch.Checked;
+            pathLowerLayer.IsModified = true;
+
+            pathUpperLayer.ShowLayer = ShowPathLayerSwitch.Checked;
+            pathUpperLayer.IsModified = true;
+
+            SKGLRenderControl.Invalidate();
+        }
 
         private void PathSelectButton_Click(object sender, EventArgs e)
         {
@@ -7639,6 +7713,17 @@ namespace RealmStudio
         #endregion
 
         #region Symbol Tab Event Handlers
+
+        private void ShowSymbolLayerSwitch_CheckedChanged()
+        {
+            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.SYMBOLLAYER);
+
+            symbolLayer.ShowLayer = ShowSymbolLayerSwitch.Checked;
+            symbolLayer.IsModified = true;
+
+            SKGLRenderControl.Invalidate();
+        }
+
         private void SymbolSelectButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolSelect;
@@ -7668,6 +7753,7 @@ namespace RealmStudio
                     CommandManager.AddCommand(cmd);
                     cmd.DoOperation();
 
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
                     SKGLRenderControl.Invalidate();
                 }
             }
@@ -7831,37 +7917,97 @@ namespace RealmStudio
             SymbolColor3Button.Refresh();
         }
 
-        private void SymbolColor1Button_Click(object sender, EventArgs e)
+        private void SymbolColor1Button_MouseUp(object sender, MouseEventArgs e)
         {
-            Color c = UtilityMethods.SelectColorFromDialog(this, SymbolColor1Button.BackColor);
+            if (e.Button == MouseButtons.Left)
+            {
+                Color c = UtilityMethods.SelectColorFromDialog(this, SymbolColor1Button.BackColor);
 
-            SymbolColor1Button.BackColor = c;
-            SymbolColor1Button.Refresh();
+                SymbolColor1Button.BackColor = c;
+                SymbolColor1Button.Refresh();
 
-            List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
-            AddSymbolsToSymbolTable(selectedSymbols);
+                List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+                AddSymbolsToSymbolTable(selectedSymbols);
+            }
+            else if (e.Button == MouseButtons.Right && SELECTED_MAP_SYMBOL != null)
+            {
+                // if a symbol has been selected and is grayscale, then color it with the
+                // selected custom color
+
+                SKColor paintColor = SymbolColor1Button.BackColor.ToSKColor();
+
+                if (SELECTED_MAP_SYMBOL.IsGrayscale)
+                {
+                    Cmd_PaintSymbol cmd = new(SELECTED_MAP_SYMBOL, paintColor);
+                    CommandManager.AddCommand(cmd);
+                    cmd.DoOperation();
+
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
+                    SKGLRenderControl.Invalidate();
+                }
+            }
         }
 
-        private void SymbolColor2Button_Click(object sender, EventArgs e)
+        private void SymbolColor2Button_MouseUp(object sender, MouseEventArgs e)
         {
-            Color c = UtilityMethods.SelectColorFromDialog(this, SymbolColor2Button.BackColor);
+            if (e.Button == MouseButtons.Left)
+            {
+                Color c = UtilityMethods.SelectColorFromDialog(this, SymbolColor2Button.BackColor);
 
-            SymbolColor2Button.BackColor = c;
-            SymbolColor2Button.Refresh();
+                SymbolColor2Button.BackColor = c;
+                SymbolColor2Button.Refresh();
 
-            List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
-            AddSymbolsToSymbolTable(selectedSymbols);
+                List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+                AddSymbolsToSymbolTable(selectedSymbols);
+            }
+            else if (e.Button == MouseButtons.Right && SELECTED_MAP_SYMBOL != null)
+            {
+                // if a symbol has been selected and is grayscale, then color it with the
+                // selected custom color
+
+                SKColor paintColor = SymbolColor2Button.BackColor.ToSKColor();
+
+                if (SELECTED_MAP_SYMBOL.IsGrayscale)
+                {
+                    Cmd_PaintSymbol cmd = new(SELECTED_MAP_SYMBOL, paintColor);
+                    CommandManager.AddCommand(cmd);
+                    cmd.DoOperation();
+
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
+                    SKGLRenderControl.Invalidate();
+                }
+            }
         }
 
-        private void SymbolColor3Button_Click(object sender, EventArgs e)
+        private void SymbolColor3Button_MouseUp(object sender, MouseEventArgs e)
         {
-            Color c = UtilityMethods.SelectColorFromDialog(this, SymbolColor3Button.BackColor);
+            if (e.Button == MouseButtons.Left)
+            {
+                Color c = UtilityMethods.SelectColorFromDialog(this, SymbolColor3Button.BackColor);
 
-            SymbolColor3Button.BackColor = c;
-            SymbolColor3Button.Refresh();
+                SymbolColor3Button.BackColor = c;
+                SymbolColor3Button.Refresh();
 
-            List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
-            AddSymbolsToSymbolTable(selectedSymbols);
+                List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+                AddSymbolsToSymbolTable(selectedSymbols);
+            }
+            else if (e.Button == MouseButtons.Right && SELECTED_MAP_SYMBOL != null)
+            {
+                // if a symbol has been selected and is grayscale, then color it with the
+                // selected custom color
+
+                SKColor paintColor = SymbolColor3Button.BackColor.ToSKColor();
+
+                if (SELECTED_MAP_SYMBOL.IsGrayscale)
+                {
+                    Cmd_PaintSymbol cmd = new(SELECTED_MAP_SYMBOL, paintColor);
+                    CommandManager.AddCommand(cmd);
+                    cmd.DoOperation();
+
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
+                    SKGLRenderControl.Invalidate();
+                }
+            }
         }
 
         private void AreaBrushSwitch_CheckedChanged()
@@ -7869,8 +8015,6 @@ namespace RealmStudio
             if (AreaBrushSwitch.Checked)
             {
                 SetSelectedBrushSize(AreaBrushSizeTrack.Value);
-                //int brushInterval = (int)(200.0F / PLACEMENT_RATE);
-                //StartSymbolAreaBrushTimer(brushInterval);
             }
             else
             {
@@ -8672,6 +8816,21 @@ namespace RealmStudio
 
         #region Label Tab Event Handlers
 
+        private void ShowLabelLayerSwitch_CheckedChanged()
+        {
+            MapLayer labellLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LABELLAYER);
+
+            labellLayer.ShowLayer = ShowLabelLayerSwitch.Checked;
+            labellLayer.IsModified = true;
+
+            MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BOXLAYER);
+
+            boxLayer.ShowLayer = ShowLabelLayerSwitch.Checked;
+            boxLayer.IsModified = true;
+
+            SKGLRenderControl.Invalidate();
+        }
+
         private void MapBoxPictureBox_MouseClick(object sender, EventArgs e)
         {
             if (((MouseEventArgs)e).Button == MouseButtons.Left)
@@ -9148,6 +9307,43 @@ namespace RealmStudio
         #endregion
 
         #region Overlay Tab Event Handlers (Frame, Grid, Scale, Measure)
+
+        private void ShowOverlayLayerSwitch_CheckedChanged()
+        {
+            MapLayer overlayLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER);
+
+            overlayLayer.ShowLayer = ShowOverlayLayerSwitch.Checked;
+            overlayLayer.IsModified = true;
+
+            MapLayer frameLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.FRAMELAYER);
+
+            frameLayer.ShowLayer = ShowOverlayLayerSwitch.Checked;
+            frameLayer.IsModified = true;
+
+            MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.ABOVEOCEANGRIDLAYER);
+
+            aboveOceanGridLayer.ShowLayer = ShowOverlayLayerSwitch.Checked;
+            aboveOceanGridLayer.IsModified = true;
+
+            MapLayer belowSymbolsGridLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BELOWSYMBOLSGRIDLAYER);
+
+            belowSymbolsGridLayer.ShowLayer = ShowOverlayLayerSwitch.Checked;
+            belowSymbolsGridLayer.IsModified = true;
+
+            MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.DEFAULTGRIDLAYER);
+
+            defaultGridLayer.ShowLayer = ShowOverlayLayerSwitch.Checked;
+            defaultGridLayer.IsModified = true;
+
+            MapLayer measureLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.MEASURELAYER);
+
+            measureLayer.ShowLayer = ShowOverlayLayerSwitch.Checked;
+            measureLayer.IsModified = true;
+
+
+
+            SKGLRenderControl.Invalidate();
+        }
 
         #region Frame Event Handlers
 
@@ -9768,40 +9964,24 @@ namespace RealmStudio
 
         #region Region Tab Event Handlers
 
+        private void ShowRegionLayerSwitch_CheckedChanged()
+        {
+            MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.REGIONLAYER);
+
+            regionLayer.ShowLayer = ShowRegionLayerSwitch.Checked;
+            regionLayer.IsModified = true;
+
+            MapLayer regionOverlayLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.REGIONOVERLAYLAYER);
+
+            regionOverlayLayer.ShowLayer = ShowRegionLayerSwitch.Checked;
+            regionOverlayLayer.IsModified = true;
+        }
+
         private void SelectRegionButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.RegionSelect;
             SetDrawingModeLabel();
             SetSelectedBrushSize(0);
-
-            //DeselectAllMapComponents(null);
-
-            /*
-            if (CURRENT_DRAWING_MODE != DrawingModeEnum.RegionSelect)
-            {
-                // unselect all regions
-                if (CURRENT_MAP_REGION != null)
-                {
-                    for (int i = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.REGIONLAYER).MapLayerComponents.Count - 1; i > 0; i--)
-                    {
-                        if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.REGIONLAYER).MapLayerComponents[i] is MapRegion r)
-                        {
-                            if (r.RegionGuid.ToString() == CURRENT_MAP_REGION.RegionGuid.ToString())
-                            {
-                                r.IsSelected = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    CURRENT_MAP_REGION.IsSelected = false;
-                }
-
-                CURRENT_MAP_REGION = null;
-
-                SKGLRenderControl.Invalidate();
-            }
-            */
         }
 
         private void CreateRegionButton_Click(object sender, EventArgs e)

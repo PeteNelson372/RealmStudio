@@ -129,7 +129,7 @@
             WaterFeatureLakeButton = new FontAwesome.Sharp.IconToolStripButton();
             WaterFeatureRiverButton = new FontAwesome.Sharp.IconToolStripButton();
             WaterFeatureEraseButton = new FontAwesome.Sharp.IconToolStripButton();
-            cyberSwitch1 = new ReaLTaiizor.Controls.CyberSwitch();
+            ShowWaterLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label5 = new Label();
             PathTab = new TabPage();
             groupBox9 = new GroupBox();
@@ -148,7 +148,7 @@
             PathToolStrip = new ToolStrip();
             PathSelectButton = new FontAwesome.Sharp.IconToolStripButton();
             DrawPathButton = new FontAwesome.Sharp.IconToolStripButton();
-            cyberSwitch2 = new ReaLTaiizor.Controls.CyberSwitch();
+            ShowPathLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label6 = new Label();
             SymbolTab = new TabPage();
             groupBox14 = new GroupBox();
@@ -189,7 +189,7 @@
             VegetationSymbolsButton = new FontAwesome.Sharp.IconToolStripButton();
             TerrainSymbolsButton = new FontAwesome.Sharp.IconToolStripButton();
             OtherSymbolsButton = new FontAwesome.Sharp.IconToolStripButton();
-            cyberSwitch3 = new ReaLTaiizor.Controls.CyberSwitch();
+            ShowSymbolLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label7 = new Label();
             LabelTab = new TabPage();
             groupBox20 = new GroupBox();
@@ -219,7 +219,7 @@
             PlaceLabelButton = new FontAwesome.Sharp.IconToolStripButton();
             CreateBoxButton = new FontAwesome.Sharp.IconToolStripButton();
             GenerateNameButton = new FontAwesome.Sharp.IconToolStripButton();
-            cyberSwitch4 = new ReaLTaiizor.Controls.CyberSwitch();
+            ShowLabelLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label8 = new Label();
             OverlayTab = new TabPage();
             groupBox23 = new GroupBox();
@@ -255,7 +255,7 @@
             ScaleButton = new FontAwesome.Sharp.IconToolStripButton();
             GridButton = new FontAwesome.Sharp.IconToolStripButton();
             MeasureButton = new FontAwesome.Sharp.IconToolStripButton();
-            cyberSwitch5 = new ReaLTaiizor.Controls.CyberSwitch();
+            ShowOverlayLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label9 = new Label();
             RegionTab = new TabPage();
             RegionHelpRichText = new RichTextBox();
@@ -270,12 +270,12 @@
             RegionToolStrip = new ToolStrip();
             SelectRegionButton = new FontAwesome.Sharp.IconToolStripButton();
             CreateRegionButton = new FontAwesome.Sharp.IconToolStripButton();
-            cyberSwitch6 = new ReaLTaiizor.Controls.CyberSwitch();
+            ShowRegionLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label10 = new Label();
             DrawingTab = new TabPage();
             DrawingToolStrip = new ToolStrip();
             iconToolStripButton8 = new FontAwesome.Sharp.IconToolStripButton();
-            cyberSwitch7 = new ReaLTaiizor.Controls.CyberSwitch();
+            ShowDrawingLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label11 = new Label();
             labelPresetBindingSource = new BindingSource(components);
             crownContextMenuStrip1 = new ReaLTaiizor.Controls.CrownContextMenuStrip();
@@ -391,59 +391,6 @@
             HelpContentsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
-            OceanToolPanel = new Panel();
-            label72 = new Label();
-            OceanBrushVelocityTrack = new TrackBar();
-            OceanPaintButton = new FontAwesome.Sharp.IconButton();
-            label18 = new Label();
-            OceanEraserSizeTrack = new TrackBar();
-            OceanCustomColorButton8 = new Button();
-            OceanCustomColorButton7 = new Button();
-            OceanCustomColorButton6 = new Button();
-            OceanCustomColorButton5 = new Button();
-            OceanCustomColorButton4 = new Button();
-            OceanCustomColorButton3 = new Button();
-            OceanCustomColorButton2 = new Button();
-            OceanCustomColorButton1 = new Button();
-            OceanHardBrushButton = new Button();
-            OceanSoftBrushButton = new Button();
-            OceanButton42718D = new Button();
-            OceanButton6BA5B9 = new Button();
-            OceanButton88B5BB = new Button();
-            OceanButton91CBB8 = new Button();
-            OceanColorEraseButton = new FontAwesome.Sharp.IconButton();
-            label23 = new Label();
-            OceanBrushSizeTrack = new TrackBar();
-            label57 = new Label();
-            OceanPaintColorSelectButton = new FontAwesome.Sharp.IconButton();
-            BackgroundToolPanel = new Panel();
-            DrawingToolPanel = new Panel();
-            label26 = new Label();
-            RegionToolPanel = new Panel();
-            label90 = new Label();
-            LightSolidRegionBorderPicture = new PictureBox();
-            GradientRegionBorderPicture = new PictureBox();
-            SolidAndDashRegionBorderPicture = new PictureBox();
-            DoubleSolidRegionBorderPicture = new PictureBox();
-            DashDotDotRegionBorderPicture = new PictureBox();
-            DashDotRegionBorderPicture = new PictureBox();
-            DashedRegionBorderPicture = new PictureBox();
-            DottedRegionBorderPicture = new PictureBox();
-            SolidRegionBorderPicture = new PictureBox();
-            RegionDoubleSolidBorderRadio = new RadioButton();
-            RegionBorderedLightSolidRadio = new RadioButton();
-            RegionBorderedGradientRadio = new RadioButton();
-            RegionSolidAndDashesBorderRadio = new RadioButton();
-            RegionDashDotDotBorderRadio = new RadioButton();
-            RegionDashDotBorderRadio = new RadioButton();
-            RegionDashBorderRadio = new RadioButton();
-            RegionDottedBorderRadio = new RadioButton();
-            RegionSolidBorderRadio = new RadioButton();
-            OverlayToolPanel = new Panel();
-            FrameStyleTable = new TableLayoutPanel();
-            LabelToolPanel = new Panel();
-            SelectBoxTintButton = new FontAwesome.Sharp.IconButton();
-            LabelBoxStyleTable = new TableLayoutPanel();
             SymbolToolPanel = new Panel();
             label22 = new Label();
             SymbolSearchTextBox = new TextBox();
@@ -536,6 +483,59 @@
             LandColorBrushSizeTrack = new TrackBar();
             label60 = new Label();
             LandColorSelectionButton = new FontAwesome.Sharp.IconButton();
+            OceanToolPanel = new Panel();
+            label72 = new Label();
+            OceanBrushVelocityTrack = new TrackBar();
+            OceanPaintButton = new FontAwesome.Sharp.IconButton();
+            label18 = new Label();
+            OceanEraserSizeTrack = new TrackBar();
+            OceanCustomColorButton8 = new Button();
+            OceanCustomColorButton7 = new Button();
+            OceanCustomColorButton6 = new Button();
+            OceanCustomColorButton5 = new Button();
+            OceanCustomColorButton4 = new Button();
+            OceanCustomColorButton3 = new Button();
+            OceanCustomColorButton2 = new Button();
+            OceanCustomColorButton1 = new Button();
+            OceanHardBrushButton = new Button();
+            OceanSoftBrushButton = new Button();
+            OceanButton42718D = new Button();
+            OceanButton6BA5B9 = new Button();
+            OceanButton88B5BB = new Button();
+            OceanButton91CBB8 = new Button();
+            OceanColorEraseButton = new FontAwesome.Sharp.IconButton();
+            label23 = new Label();
+            OceanBrushSizeTrack = new TrackBar();
+            label57 = new Label();
+            OceanPaintColorSelectButton = new FontAwesome.Sharp.IconButton();
+            BackgroundToolPanel = new Panel();
+            DrawingToolPanel = new Panel();
+            label26 = new Label();
+            RegionToolPanel = new Panel();
+            label90 = new Label();
+            LightSolidRegionBorderPicture = new PictureBox();
+            GradientRegionBorderPicture = new PictureBox();
+            SolidAndDashRegionBorderPicture = new PictureBox();
+            DoubleSolidRegionBorderPicture = new PictureBox();
+            DashDotDotRegionBorderPicture = new PictureBox();
+            DashDotRegionBorderPicture = new PictureBox();
+            DashedRegionBorderPicture = new PictureBox();
+            DottedRegionBorderPicture = new PictureBox();
+            SolidRegionBorderPicture = new PictureBox();
+            RegionDoubleSolidBorderRadio = new RadioButton();
+            RegionBorderedLightSolidRadio = new RadioButton();
+            RegionBorderedGradientRadio = new RadioButton();
+            RegionSolidAndDashesBorderRadio = new RadioButton();
+            RegionDashDotDotBorderRadio = new RadioButton();
+            RegionDashDotBorderRadio = new RadioButton();
+            RegionDashBorderRadio = new RadioButton();
+            RegionDottedBorderRadio = new RadioButton();
+            RegionSolidBorderRadio = new RadioButton();
+            OverlayToolPanel = new Panel();
+            FrameStyleTable = new TableLayoutPanel();
+            LabelToolPanel = new Panel();
+            SelectBoxTintButton = new FontAwesome.Sharp.IconButton();
+            LabelBoxStyleTable = new TableLayoutPanel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
             OceanTab = new TabPage();
@@ -645,23 +645,6 @@
             MapStatusStrip.SuspendLayout();
             ApplicationStatusStrip.SuspendLayout();
             RealmStudioMainMenuStrip.SuspendLayout();
-            OceanToolPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).BeginInit();
-            DrawingToolPanel.SuspendLayout();
-            RegionToolPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)SolidAndDashRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DoubleSolidRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DashDotDotRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DashDotRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).BeginInit();
-            OverlayToolPanel.SuspendLayout();
-            LabelToolPanel.SuspendLayout();
             SymbolToolPanel.SuspendLayout();
             PathToolPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RailroadTracksPictureBox).BeginInit();
@@ -689,6 +672,23 @@
             ((System.ComponentModel.ISupportInitialize)LandBrushVelocityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LandColorEraserSizeTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LandColorBrushSizeTrack).BeginInit();
+            OceanToolPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).BeginInit();
+            DrawingToolPanel.SuspendLayout();
+            RegionToolPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SolidAndDashRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DoubleSolidRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DashDotDotRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DashDotRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).BeginInit();
+            OverlayToolPanel.SuspendLayout();
+            LabelToolPanel.SuspendLayout();
             SuspendLayout();
             // 
             // OceanTab
@@ -1189,6 +1189,7 @@
             ShowOceanLayerSwitch.Tag = "Cyber";
             ShowOceanLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowOceanLayerSwitch.Timer_RGB = 300;
+            ShowOceanLayerSwitch.CheckedChanged += ShowOceanLayerSwitch_CheckedChanged;
             // 
             // label3
             // 
@@ -1457,6 +1458,7 @@
             ShowBaseLayerSwitch.Tag = "Cyber";
             ShowBaseLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowBaseLayerSwitch.Timer_RGB = 300;
+            ShowBaseLayerSwitch.CheckedChanged += ShowBaseLayerSwitch_CheckedChanged;
             // 
             // label2
             // 
@@ -1851,6 +1853,7 @@
             ShowLandLayerSwitch.Tag = "Cyber";
             ShowLandLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowLandLayerSwitch.Timer_RGB = 300;
+            ShowLandLayerSwitch.CheckedChanged += ShowLandLayerSwitch_CheckedChanged;
             // 
             // label4
             // 
@@ -1870,7 +1873,7 @@
             WaterTab.Controls.Add(groupBox7);
             WaterTab.Controls.Add(groupBox6);
             WaterTab.Controls.Add(WaterToolStrip);
-            WaterTab.Controls.Add(cyberSwitch1);
+            WaterTab.Controls.Add(ShowWaterLayerSwitch);
             WaterTab.Controls.Add(label5);
             WaterTab.Location = new Point(26, 4);
             WaterTab.Name = "WaterTab";
@@ -2219,43 +2222,44 @@
             WaterFeatureEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
             WaterFeatureEraseButton.Click += WaterFeatureEraseButton_Click;
             // 
-            // cyberSwitch1
+            // ShowWaterLayerSwitch
             // 
-            cyberSwitch1.Alpha = 50;
-            cyberSwitch1.BackColor = Color.Transparent;
-            cyberSwitch1.Background = true;
-            cyberSwitch1.Background_WidthPen = 2F;
-            cyberSwitch1.BackgroundPen = false;
-            cyberSwitch1.Checked = true;
-            cyberSwitch1.ColorBackground = Color.FromArgb(223, 219, 210);
-            cyberSwitch1.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch1.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch1.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            cyberSwitch1.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            cyberSwitch1.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            cyberSwitch1.ColorLighting = Color.FromArgb(223, 219, 210);
-            cyberSwitch1.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch1.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch1.ColorValue = Color.ForestGreen;
-            cyberSwitch1.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            cyberSwitch1.Font = new Font("Arial", 11F);
-            cyberSwitch1.ForeColor = Color.FromArgb(245, 245, 245);
-            cyberSwitch1.Lighting = true;
-            cyberSwitch1.LinearGradient_Background = false;
-            cyberSwitch1.LinearGradient_Value = false;
-            cyberSwitch1.LinearGradientPen = false;
-            cyberSwitch1.Location = new Point(6, 6);
-            cyberSwitch1.Name = "cyberSwitch1";
-            cyberSwitch1.PenWidth = 10;
-            cyberSwitch1.RGB = false;
-            cyberSwitch1.Rounding = true;
-            cyberSwitch1.RoundingInt = 90;
-            cyberSwitch1.Size = new Size(35, 20);
-            cyberSwitch1.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            cyberSwitch1.TabIndex = 14;
-            cyberSwitch1.Tag = "Cyber";
-            cyberSwitch1.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            cyberSwitch1.Timer_RGB = 300;
+            ShowWaterLayerSwitch.Alpha = 50;
+            ShowWaterLayerSwitch.BackColor = Color.Transparent;
+            ShowWaterLayerSwitch.Background = true;
+            ShowWaterLayerSwitch.Background_WidthPen = 2F;
+            ShowWaterLayerSwitch.BackgroundPen = false;
+            ShowWaterLayerSwitch.Checked = true;
+            ShowWaterLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            ShowWaterLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            ShowWaterLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            ShowWaterLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            ShowWaterLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            ShowWaterLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            ShowWaterLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            ShowWaterLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            ShowWaterLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowWaterLayerSwitch.ColorValue = Color.ForestGreen;
+            ShowWaterLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowWaterLayerSwitch.Font = new Font("Arial", 11F);
+            ShowWaterLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowWaterLayerSwitch.Lighting = true;
+            ShowWaterLayerSwitch.LinearGradient_Background = false;
+            ShowWaterLayerSwitch.LinearGradient_Value = false;
+            ShowWaterLayerSwitch.LinearGradientPen = false;
+            ShowWaterLayerSwitch.Location = new Point(6, 6);
+            ShowWaterLayerSwitch.Name = "ShowWaterLayerSwitch";
+            ShowWaterLayerSwitch.PenWidth = 10;
+            ShowWaterLayerSwitch.RGB = false;
+            ShowWaterLayerSwitch.Rounding = true;
+            ShowWaterLayerSwitch.RoundingInt = 90;
+            ShowWaterLayerSwitch.Size = new Size(35, 20);
+            ShowWaterLayerSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowWaterLayerSwitch.TabIndex = 14;
+            ShowWaterLayerSwitch.Tag = "Cyber";
+            ShowWaterLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowWaterLayerSwitch.Timer_RGB = 300;
+            ShowWaterLayerSwitch.CheckedChanged += ShowWaterLayerSwitch_CheckedChanged;
             // 
             // label5
             // 
@@ -2273,7 +2277,7 @@
             PathTab.BackColor = SystemColors.Control;
             PathTab.Controls.Add(groupBox9);
             PathTab.Controls.Add(PathToolStrip);
-            PathTab.Controls.Add(cyberSwitch2);
+            PathTab.Controls.Add(ShowPathLayerSwitch);
             PathTab.Controls.Add(label6);
             PathTab.Location = new Point(26, 4);
             PathTab.Name = "PathTab";
@@ -2561,43 +2565,44 @@
             DrawPathButton.TextImageRelation = TextImageRelation.TextAboveImage;
             DrawPathButton.Click += DrawPathButton_Click;
             // 
-            // cyberSwitch2
+            // ShowPathLayerSwitch
             // 
-            cyberSwitch2.Alpha = 50;
-            cyberSwitch2.BackColor = Color.Transparent;
-            cyberSwitch2.Background = true;
-            cyberSwitch2.Background_WidthPen = 2F;
-            cyberSwitch2.BackgroundPen = false;
-            cyberSwitch2.Checked = true;
-            cyberSwitch2.ColorBackground = Color.FromArgb(223, 219, 210);
-            cyberSwitch2.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch2.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch2.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            cyberSwitch2.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            cyberSwitch2.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            cyberSwitch2.ColorLighting = Color.FromArgb(223, 219, 210);
-            cyberSwitch2.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch2.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch2.ColorValue = Color.ForestGreen;
-            cyberSwitch2.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            cyberSwitch2.Font = new Font("Arial", 11F);
-            cyberSwitch2.ForeColor = Color.FromArgb(245, 245, 245);
-            cyberSwitch2.Lighting = true;
-            cyberSwitch2.LinearGradient_Background = false;
-            cyberSwitch2.LinearGradient_Value = false;
-            cyberSwitch2.LinearGradientPen = false;
-            cyberSwitch2.Location = new Point(6, 6);
-            cyberSwitch2.Name = "cyberSwitch2";
-            cyberSwitch2.PenWidth = 10;
-            cyberSwitch2.RGB = false;
-            cyberSwitch2.Rounding = true;
-            cyberSwitch2.RoundingInt = 90;
-            cyberSwitch2.Size = new Size(35, 20);
-            cyberSwitch2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            cyberSwitch2.TabIndex = 16;
-            cyberSwitch2.Tag = "Cyber";
-            cyberSwitch2.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            cyberSwitch2.Timer_RGB = 300;
+            ShowPathLayerSwitch.Alpha = 50;
+            ShowPathLayerSwitch.BackColor = Color.Transparent;
+            ShowPathLayerSwitch.Background = true;
+            ShowPathLayerSwitch.Background_WidthPen = 2F;
+            ShowPathLayerSwitch.BackgroundPen = false;
+            ShowPathLayerSwitch.Checked = true;
+            ShowPathLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            ShowPathLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            ShowPathLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            ShowPathLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            ShowPathLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            ShowPathLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            ShowPathLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            ShowPathLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            ShowPathLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowPathLayerSwitch.ColorValue = Color.ForestGreen;
+            ShowPathLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowPathLayerSwitch.Font = new Font("Arial", 11F);
+            ShowPathLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowPathLayerSwitch.Lighting = true;
+            ShowPathLayerSwitch.LinearGradient_Background = false;
+            ShowPathLayerSwitch.LinearGradient_Value = false;
+            ShowPathLayerSwitch.LinearGradientPen = false;
+            ShowPathLayerSwitch.Location = new Point(6, 6);
+            ShowPathLayerSwitch.Name = "ShowPathLayerSwitch";
+            ShowPathLayerSwitch.PenWidth = 10;
+            ShowPathLayerSwitch.RGB = false;
+            ShowPathLayerSwitch.Rounding = true;
+            ShowPathLayerSwitch.RoundingInt = 90;
+            ShowPathLayerSwitch.Size = new Size(35, 20);
+            ShowPathLayerSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowPathLayerSwitch.TabIndex = 16;
+            ShowPathLayerSwitch.Tag = "Cyber";
+            ShowPathLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowPathLayerSwitch.Timer_RGB = 300;
+            ShowPathLayerSwitch.CheckedChanged += ShowPathLayerSwitch_CheckedChanged;
             // 
             // label6
             // 
@@ -2619,7 +2624,7 @@
             SymbolTab.Controls.Add(SymbolColorGroup);
             SymbolTab.Controls.Add(SymbolScaleGroup);
             SymbolTab.Controls.Add(SymbolToolStrip);
-            SymbolTab.Controls.Add(cyberSwitch3);
+            SymbolTab.Controls.Add(ShowSymbolLayerSwitch);
             SymbolTab.Controls.Add(label7);
             SymbolTab.Location = new Point(26, 4);
             SymbolTab.Name = "SymbolTab";
@@ -2990,7 +2995,7 @@
             SymbolColor3Button.Size = new Size(46, 46);
             SymbolColor3Button.TabIndex = 27;
             SymbolColor3Button.UseVisualStyleBackColor = false;
-            SymbolColor3Button.Click += SymbolColor3Button_Click;
+            SymbolColor3Button.MouseUp += SymbolColor3Button_MouseUp;
             // 
             // SymbolColor2Button
             // 
@@ -3008,7 +3013,7 @@
             SymbolColor2Button.Size = new Size(46, 46);
             SymbolColor2Button.TabIndex = 26;
             SymbolColor2Button.UseVisualStyleBackColor = false;
-            SymbolColor2Button.Click += SymbolColor2Button_Click;
+            SymbolColor2Button.MouseUp += SymbolColor2Button_MouseUp;
             // 
             // SymbolColor1Button
             // 
@@ -3026,7 +3031,7 @@
             SymbolColor1Button.Size = new Size(46, 46);
             SymbolColor1Button.TabIndex = 25;
             SymbolColor1Button.UseVisualStyleBackColor = false;
-            SymbolColor1Button.Click += SymbolColor1Button_Click;
+            SymbolColor1Button.MouseUp += SymbolColor1Button_MouseUp;
             // 
             // SymbolScaleGroup
             // 
@@ -3227,43 +3232,44 @@
             OtherSymbolsButton.ToolTipText = "Other Symbols";
             OtherSymbolsButton.Click += OtherSymbolsButton_Click;
             // 
-            // cyberSwitch3
+            // ShowSymbolLayerSwitch
             // 
-            cyberSwitch3.Alpha = 50;
-            cyberSwitch3.BackColor = Color.Transparent;
-            cyberSwitch3.Background = true;
-            cyberSwitch3.Background_WidthPen = 2F;
-            cyberSwitch3.BackgroundPen = false;
-            cyberSwitch3.Checked = true;
-            cyberSwitch3.ColorBackground = Color.FromArgb(223, 219, 210);
-            cyberSwitch3.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch3.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch3.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            cyberSwitch3.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            cyberSwitch3.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            cyberSwitch3.ColorLighting = Color.FromArgb(223, 219, 210);
-            cyberSwitch3.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch3.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch3.ColorValue = Color.ForestGreen;
-            cyberSwitch3.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            cyberSwitch3.Font = new Font("Arial", 11F);
-            cyberSwitch3.ForeColor = Color.FromArgb(245, 245, 245);
-            cyberSwitch3.Lighting = true;
-            cyberSwitch3.LinearGradient_Background = false;
-            cyberSwitch3.LinearGradient_Value = false;
-            cyberSwitch3.LinearGradientPen = false;
-            cyberSwitch3.Location = new Point(6, 6);
-            cyberSwitch3.Name = "cyberSwitch3";
-            cyberSwitch3.PenWidth = 10;
-            cyberSwitch3.RGB = false;
-            cyberSwitch3.Rounding = true;
-            cyberSwitch3.RoundingInt = 90;
-            cyberSwitch3.Size = new Size(35, 20);
-            cyberSwitch3.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            cyberSwitch3.TabIndex = 18;
-            cyberSwitch3.Tag = "Cyber";
-            cyberSwitch3.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            cyberSwitch3.Timer_RGB = 300;
+            ShowSymbolLayerSwitch.Alpha = 50;
+            ShowSymbolLayerSwitch.BackColor = Color.Transparent;
+            ShowSymbolLayerSwitch.Background = true;
+            ShowSymbolLayerSwitch.Background_WidthPen = 2F;
+            ShowSymbolLayerSwitch.BackgroundPen = false;
+            ShowSymbolLayerSwitch.Checked = true;
+            ShowSymbolLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            ShowSymbolLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            ShowSymbolLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            ShowSymbolLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            ShowSymbolLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            ShowSymbolLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            ShowSymbolLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            ShowSymbolLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            ShowSymbolLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowSymbolLayerSwitch.ColorValue = Color.ForestGreen;
+            ShowSymbolLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowSymbolLayerSwitch.Font = new Font("Arial", 11F);
+            ShowSymbolLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowSymbolLayerSwitch.Lighting = true;
+            ShowSymbolLayerSwitch.LinearGradient_Background = false;
+            ShowSymbolLayerSwitch.LinearGradient_Value = false;
+            ShowSymbolLayerSwitch.LinearGradientPen = false;
+            ShowSymbolLayerSwitch.Location = new Point(6, 6);
+            ShowSymbolLayerSwitch.Name = "ShowSymbolLayerSwitch";
+            ShowSymbolLayerSwitch.PenWidth = 10;
+            ShowSymbolLayerSwitch.RGB = false;
+            ShowSymbolLayerSwitch.Rounding = true;
+            ShowSymbolLayerSwitch.RoundingInt = 90;
+            ShowSymbolLayerSwitch.Size = new Size(35, 20);
+            ShowSymbolLayerSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowSymbolLayerSwitch.TabIndex = 18;
+            ShowSymbolLayerSwitch.Tag = "Cyber";
+            ShowSymbolLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowSymbolLayerSwitch.Timer_RGB = 300;
+            ShowSymbolLayerSwitch.CheckedChanged += ShowSymbolLayerSwitch_CheckedChanged;
             // 
             // label7
             // 
@@ -3286,7 +3292,7 @@
             LabelTab.Controls.Add(groupBox16);
             LabelTab.Controls.Add(groupBox15);
             LabelTab.Controls.Add(LabelToolStrip);
-            LabelTab.Controls.Add(cyberSwitch4);
+            LabelTab.Controls.Add(ShowLabelLayerSwitch);
             LabelTab.Controls.Add(label8);
             LabelTab.Location = new Point(26, 4);
             LabelTab.Name = "LabelTab";
@@ -3692,43 +3698,44 @@
             GenerateNameButton.TextImageRelation = TextImageRelation.TextAboveImage;
             GenerateNameButton.Click += GenerateNameButton_Click;
             // 
-            // cyberSwitch4
+            // ShowLabelLayerSwitch
             // 
-            cyberSwitch4.Alpha = 50;
-            cyberSwitch4.BackColor = Color.Transparent;
-            cyberSwitch4.Background = true;
-            cyberSwitch4.Background_WidthPen = 2F;
-            cyberSwitch4.BackgroundPen = false;
-            cyberSwitch4.Checked = true;
-            cyberSwitch4.ColorBackground = Color.FromArgb(223, 219, 210);
-            cyberSwitch4.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch4.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch4.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            cyberSwitch4.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            cyberSwitch4.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            cyberSwitch4.ColorLighting = Color.FromArgb(223, 219, 210);
-            cyberSwitch4.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch4.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch4.ColorValue = Color.ForestGreen;
-            cyberSwitch4.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            cyberSwitch4.Font = new Font("Arial", 11F);
-            cyberSwitch4.ForeColor = Color.FromArgb(245, 245, 245);
-            cyberSwitch4.Lighting = true;
-            cyberSwitch4.LinearGradient_Background = false;
-            cyberSwitch4.LinearGradient_Value = false;
-            cyberSwitch4.LinearGradientPen = false;
-            cyberSwitch4.Location = new Point(6, 6);
-            cyberSwitch4.Name = "cyberSwitch4";
-            cyberSwitch4.PenWidth = 10;
-            cyberSwitch4.RGB = false;
-            cyberSwitch4.Rounding = true;
-            cyberSwitch4.RoundingInt = 90;
-            cyberSwitch4.Size = new Size(35, 20);
-            cyberSwitch4.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            cyberSwitch4.TabIndex = 20;
-            cyberSwitch4.Tag = "Cyber";
-            cyberSwitch4.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            cyberSwitch4.Timer_RGB = 300;
+            ShowLabelLayerSwitch.Alpha = 50;
+            ShowLabelLayerSwitch.BackColor = Color.Transparent;
+            ShowLabelLayerSwitch.Background = true;
+            ShowLabelLayerSwitch.Background_WidthPen = 2F;
+            ShowLabelLayerSwitch.BackgroundPen = false;
+            ShowLabelLayerSwitch.Checked = true;
+            ShowLabelLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            ShowLabelLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            ShowLabelLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            ShowLabelLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            ShowLabelLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            ShowLabelLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            ShowLabelLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            ShowLabelLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            ShowLabelLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowLabelLayerSwitch.ColorValue = Color.ForestGreen;
+            ShowLabelLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowLabelLayerSwitch.Font = new Font("Arial", 11F);
+            ShowLabelLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowLabelLayerSwitch.Lighting = true;
+            ShowLabelLayerSwitch.LinearGradient_Background = false;
+            ShowLabelLayerSwitch.LinearGradient_Value = false;
+            ShowLabelLayerSwitch.LinearGradientPen = false;
+            ShowLabelLayerSwitch.Location = new Point(6, 6);
+            ShowLabelLayerSwitch.Name = "ShowLabelLayerSwitch";
+            ShowLabelLayerSwitch.PenWidth = 10;
+            ShowLabelLayerSwitch.RGB = false;
+            ShowLabelLayerSwitch.Rounding = true;
+            ShowLabelLayerSwitch.RoundingInt = 90;
+            ShowLabelLayerSwitch.Size = new Size(35, 20);
+            ShowLabelLayerSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowLabelLayerSwitch.TabIndex = 20;
+            ShowLabelLayerSwitch.Tag = "Cyber";
+            ShowLabelLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowLabelLayerSwitch.Timer_RGB = 300;
+            ShowLabelLayerSwitch.CheckedChanged += ShowLabelLayerSwitch_CheckedChanged;
             // 
             // label8
             // 
@@ -3748,7 +3755,7 @@
             OverlayTab.Controls.Add(groupBox22);
             OverlayTab.Controls.Add(groupBox21);
             OverlayTab.Controls.Add(OverlayToolStrip);
-            OverlayTab.Controls.Add(cyberSwitch5);
+            OverlayTab.Controls.Add(ShowOverlayLayerSwitch);
             OverlayTab.Controls.Add(label9);
             OverlayTab.Location = new Point(26, 4);
             OverlayTab.Name = "OverlayTab";
@@ -4345,43 +4352,44 @@
             MeasureButton.TextImageRelation = TextImageRelation.TextAboveImage;
             MeasureButton.Click += MeasureButton_Click;
             // 
-            // cyberSwitch5
+            // ShowOverlayLayerSwitch
             // 
-            cyberSwitch5.Alpha = 50;
-            cyberSwitch5.BackColor = Color.Transparent;
-            cyberSwitch5.Background = true;
-            cyberSwitch5.Background_WidthPen = 2F;
-            cyberSwitch5.BackgroundPen = false;
-            cyberSwitch5.Checked = true;
-            cyberSwitch5.ColorBackground = Color.FromArgb(223, 219, 210);
-            cyberSwitch5.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch5.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch5.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            cyberSwitch5.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            cyberSwitch5.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            cyberSwitch5.ColorLighting = Color.FromArgb(223, 219, 210);
-            cyberSwitch5.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch5.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch5.ColorValue = Color.ForestGreen;
-            cyberSwitch5.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            cyberSwitch5.Font = new Font("Arial", 11F);
-            cyberSwitch5.ForeColor = Color.FromArgb(245, 245, 245);
-            cyberSwitch5.Lighting = true;
-            cyberSwitch5.LinearGradient_Background = false;
-            cyberSwitch5.LinearGradient_Value = false;
-            cyberSwitch5.LinearGradientPen = false;
-            cyberSwitch5.Location = new Point(6, 6);
-            cyberSwitch5.Name = "cyberSwitch5";
-            cyberSwitch5.PenWidth = 10;
-            cyberSwitch5.RGB = false;
-            cyberSwitch5.Rounding = true;
-            cyberSwitch5.RoundingInt = 90;
-            cyberSwitch5.Size = new Size(35, 20);
-            cyberSwitch5.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            cyberSwitch5.TabIndex = 20;
-            cyberSwitch5.Tag = "Cyber";
-            cyberSwitch5.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            cyberSwitch5.Timer_RGB = 300;
+            ShowOverlayLayerSwitch.Alpha = 50;
+            ShowOverlayLayerSwitch.BackColor = Color.Transparent;
+            ShowOverlayLayerSwitch.Background = true;
+            ShowOverlayLayerSwitch.Background_WidthPen = 2F;
+            ShowOverlayLayerSwitch.BackgroundPen = false;
+            ShowOverlayLayerSwitch.Checked = true;
+            ShowOverlayLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            ShowOverlayLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            ShowOverlayLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            ShowOverlayLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            ShowOverlayLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            ShowOverlayLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            ShowOverlayLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            ShowOverlayLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            ShowOverlayLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowOverlayLayerSwitch.ColorValue = Color.ForestGreen;
+            ShowOverlayLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowOverlayLayerSwitch.Font = new Font("Arial", 11F);
+            ShowOverlayLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowOverlayLayerSwitch.Lighting = true;
+            ShowOverlayLayerSwitch.LinearGradient_Background = false;
+            ShowOverlayLayerSwitch.LinearGradient_Value = false;
+            ShowOverlayLayerSwitch.LinearGradientPen = false;
+            ShowOverlayLayerSwitch.Location = new Point(6, 6);
+            ShowOverlayLayerSwitch.Name = "ShowOverlayLayerSwitch";
+            ShowOverlayLayerSwitch.PenWidth = 10;
+            ShowOverlayLayerSwitch.RGB = false;
+            ShowOverlayLayerSwitch.Rounding = true;
+            ShowOverlayLayerSwitch.RoundingInt = 90;
+            ShowOverlayLayerSwitch.Size = new Size(35, 20);
+            ShowOverlayLayerSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowOverlayLayerSwitch.TabIndex = 20;
+            ShowOverlayLayerSwitch.Tag = "Cyber";
+            ShowOverlayLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowOverlayLayerSwitch.Timer_RGB = 300;
+            ShowOverlayLayerSwitch.CheckedChanged += ShowOverlayLayerSwitch_CheckedChanged;
             // 
             // label9
             // 
@@ -4400,7 +4408,7 @@
             RegionTab.Controls.Add(RegionHelpRichText);
             RegionTab.Controls.Add(groupBox24);
             RegionTab.Controls.Add(RegionToolStrip);
-            RegionTab.Controls.Add(cyberSwitch6);
+            RegionTab.Controls.Add(ShowRegionLayerSwitch);
             RegionTab.Controls.Add(label10);
             RegionTab.Location = new Point(26, 4);
             RegionTab.Name = "RegionTab";
@@ -4577,43 +4585,44 @@
             CreateRegionButton.TextImageRelation = TextImageRelation.TextAboveImage;
             CreateRegionButton.Click += CreateRegionButton_Click;
             // 
-            // cyberSwitch6
+            // ShowRegionLayerSwitch
             // 
-            cyberSwitch6.Alpha = 50;
-            cyberSwitch6.BackColor = Color.Transparent;
-            cyberSwitch6.Background = true;
-            cyberSwitch6.Background_WidthPen = 2F;
-            cyberSwitch6.BackgroundPen = false;
-            cyberSwitch6.Checked = true;
-            cyberSwitch6.ColorBackground = Color.FromArgb(223, 219, 210);
-            cyberSwitch6.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch6.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch6.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            cyberSwitch6.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            cyberSwitch6.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            cyberSwitch6.ColorLighting = Color.FromArgb(223, 219, 210);
-            cyberSwitch6.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch6.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch6.ColorValue = Color.ForestGreen;
-            cyberSwitch6.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            cyberSwitch6.Font = new Font("Arial", 11F);
-            cyberSwitch6.ForeColor = Color.FromArgb(245, 245, 245);
-            cyberSwitch6.Lighting = true;
-            cyberSwitch6.LinearGradient_Background = false;
-            cyberSwitch6.LinearGradient_Value = false;
-            cyberSwitch6.LinearGradientPen = false;
-            cyberSwitch6.Location = new Point(6, 6);
-            cyberSwitch6.Name = "cyberSwitch6";
-            cyberSwitch6.PenWidth = 10;
-            cyberSwitch6.RGB = false;
-            cyberSwitch6.Rounding = true;
-            cyberSwitch6.RoundingInt = 90;
-            cyberSwitch6.Size = new Size(35, 20);
-            cyberSwitch6.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            cyberSwitch6.TabIndex = 20;
-            cyberSwitch6.Tag = "Cyber";
-            cyberSwitch6.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            cyberSwitch6.Timer_RGB = 300;
+            ShowRegionLayerSwitch.Alpha = 50;
+            ShowRegionLayerSwitch.BackColor = Color.Transparent;
+            ShowRegionLayerSwitch.Background = true;
+            ShowRegionLayerSwitch.Background_WidthPen = 2F;
+            ShowRegionLayerSwitch.BackgroundPen = false;
+            ShowRegionLayerSwitch.Checked = true;
+            ShowRegionLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            ShowRegionLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            ShowRegionLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            ShowRegionLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            ShowRegionLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            ShowRegionLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            ShowRegionLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            ShowRegionLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            ShowRegionLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowRegionLayerSwitch.ColorValue = Color.ForestGreen;
+            ShowRegionLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowRegionLayerSwitch.Font = new Font("Arial", 11F);
+            ShowRegionLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowRegionLayerSwitch.Lighting = true;
+            ShowRegionLayerSwitch.LinearGradient_Background = false;
+            ShowRegionLayerSwitch.LinearGradient_Value = false;
+            ShowRegionLayerSwitch.LinearGradientPen = false;
+            ShowRegionLayerSwitch.Location = new Point(6, 6);
+            ShowRegionLayerSwitch.Name = "ShowRegionLayerSwitch";
+            ShowRegionLayerSwitch.PenWidth = 10;
+            ShowRegionLayerSwitch.RGB = false;
+            ShowRegionLayerSwitch.Rounding = true;
+            ShowRegionLayerSwitch.RoundingInt = 90;
+            ShowRegionLayerSwitch.Size = new Size(35, 20);
+            ShowRegionLayerSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowRegionLayerSwitch.TabIndex = 20;
+            ShowRegionLayerSwitch.Tag = "Cyber";
+            ShowRegionLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowRegionLayerSwitch.Timer_RGB = 300;
+            ShowRegionLayerSwitch.CheckedChanged += ShowRegionLayerSwitch_CheckedChanged;
             // 
             // label10
             // 
@@ -4630,7 +4639,7 @@
             // 
             DrawingTab.BackColor = SystemColors.Control;
             DrawingTab.Controls.Add(DrawingToolStrip);
-            DrawingTab.Controls.Add(cyberSwitch7);
+            DrawingTab.Controls.Add(ShowDrawingLayerSwitch);
             DrawingTab.Controls.Add(label11);
             DrawingTab.Location = new Point(26, 4);
             DrawingTab.Name = "DrawingTab";
@@ -4672,43 +4681,43 @@
             iconToolStripButton8.Text = "Select";
             iconToolStripButton8.TextImageRelation = TextImageRelation.TextAboveImage;
             // 
-            // cyberSwitch7
+            // ShowDrawingLayerSwitch
             // 
-            cyberSwitch7.Alpha = 50;
-            cyberSwitch7.BackColor = Color.Transparent;
-            cyberSwitch7.Background = true;
-            cyberSwitch7.Background_WidthPen = 2F;
-            cyberSwitch7.BackgroundPen = false;
-            cyberSwitch7.Checked = true;
-            cyberSwitch7.ColorBackground = Color.FromArgb(223, 219, 210);
-            cyberSwitch7.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch7.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch7.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            cyberSwitch7.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            cyberSwitch7.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            cyberSwitch7.ColorLighting = Color.FromArgb(223, 219, 210);
-            cyberSwitch7.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch7.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch7.ColorValue = Color.ForestGreen;
-            cyberSwitch7.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            cyberSwitch7.Font = new Font("Arial", 11F);
-            cyberSwitch7.ForeColor = Color.FromArgb(245, 245, 245);
-            cyberSwitch7.Lighting = true;
-            cyberSwitch7.LinearGradient_Background = false;
-            cyberSwitch7.LinearGradient_Value = false;
-            cyberSwitch7.LinearGradientPen = false;
-            cyberSwitch7.Location = new Point(6, 6);
-            cyberSwitch7.Name = "cyberSwitch7";
-            cyberSwitch7.PenWidth = 10;
-            cyberSwitch7.RGB = false;
-            cyberSwitch7.Rounding = true;
-            cyberSwitch7.RoundingInt = 90;
-            cyberSwitch7.Size = new Size(35, 20);
-            cyberSwitch7.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            cyberSwitch7.TabIndex = 20;
-            cyberSwitch7.Tag = "Cyber";
-            cyberSwitch7.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            cyberSwitch7.Timer_RGB = 300;
+            ShowDrawingLayerSwitch.Alpha = 50;
+            ShowDrawingLayerSwitch.BackColor = Color.Transparent;
+            ShowDrawingLayerSwitch.Background = true;
+            ShowDrawingLayerSwitch.Background_WidthPen = 2F;
+            ShowDrawingLayerSwitch.BackgroundPen = false;
+            ShowDrawingLayerSwitch.Checked = true;
+            ShowDrawingLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            ShowDrawingLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            ShowDrawingLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            ShowDrawingLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            ShowDrawingLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            ShowDrawingLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            ShowDrawingLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            ShowDrawingLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            ShowDrawingLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowDrawingLayerSwitch.ColorValue = Color.ForestGreen;
+            ShowDrawingLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowDrawingLayerSwitch.Font = new Font("Arial", 11F);
+            ShowDrawingLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowDrawingLayerSwitch.Lighting = true;
+            ShowDrawingLayerSwitch.LinearGradient_Background = false;
+            ShowDrawingLayerSwitch.LinearGradient_Value = false;
+            ShowDrawingLayerSwitch.LinearGradientPen = false;
+            ShowDrawingLayerSwitch.Location = new Point(6, 6);
+            ShowDrawingLayerSwitch.Name = "ShowDrawingLayerSwitch";
+            ShowDrawingLayerSwitch.PenWidth = 10;
+            ShowDrawingLayerSwitch.RGB = false;
+            ShowDrawingLayerSwitch.Rounding = true;
+            ShowDrawingLayerSwitch.RoundingInt = 90;
+            ShowDrawingLayerSwitch.Size = new Size(35, 20);
+            ShowDrawingLayerSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowDrawingLayerSwitch.TabIndex = 20;
+            ShowDrawingLayerSwitch.Tag = "Cyber";
+            ShowDrawingLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowDrawingLayerSwitch.Timer_RGB = 300;
             // 
             // label11
             // 
@@ -6081,733 +6090,6 @@
             AboutToolStripMenuItem.Text = "&About...";
             AboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
             // 
-            // OceanToolPanel
-            // 
-            OceanToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            OceanToolPanel.BackColor = SystemColors.Control;
-            OceanToolPanel.Controls.Add(label72);
-            OceanToolPanel.Controls.Add(OceanBrushVelocityTrack);
-            OceanToolPanel.Controls.Add(OceanPaintButton);
-            OceanToolPanel.Controls.Add(label18);
-            OceanToolPanel.Controls.Add(OceanEraserSizeTrack);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton8);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton7);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton6);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton5);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton4);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton3);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton2);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton1);
-            OceanToolPanel.Controls.Add(OceanHardBrushButton);
-            OceanToolPanel.Controls.Add(OceanSoftBrushButton);
-            OceanToolPanel.Controls.Add(OceanButton42718D);
-            OceanToolPanel.Controls.Add(OceanButton6BA5B9);
-            OceanToolPanel.Controls.Add(OceanButton88B5BB);
-            OceanToolPanel.Controls.Add(OceanButton91CBB8);
-            OceanToolPanel.Controls.Add(OceanColorEraseButton);
-            OceanToolPanel.Controls.Add(label23);
-            OceanToolPanel.Controls.Add(OceanBrushSizeTrack);
-            OceanToolPanel.Controls.Add(label57);
-            OceanToolPanel.Controls.Add(OceanPaintColorSelectButton);
-            OceanToolPanel.Location = new Point(1421, 90);
-            OceanToolPanel.Margin = new Padding(0);
-            OceanToolPanel.Name = "OceanToolPanel";
-            OceanToolPanel.Size = new Size(152, 806);
-            OceanToolPanel.TabIndex = 29;
-            // 
-            // label72
-            // 
-            label72.AutoSize = true;
-            label72.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label72.ForeColor = SystemColors.ControlDarkDark;
-            label72.Location = new Point(17, 141);
-            label72.Name = "label72";
-            label72.Size = new Size(74, 13);
-            label72.TabIndex = 82;
-            label72.Text = "Brush Velocity";
-            // 
-            // OceanBrushVelocityTrack
-            // 
-            OceanBrushVelocityTrack.AutoSize = false;
-            OceanBrushVelocityTrack.Location = new Point(14, 155);
-            OceanBrushVelocityTrack.Maximum = 100;
-            OceanBrushVelocityTrack.Minimum = 1;
-            OceanBrushVelocityTrack.Name = "OceanBrushVelocityTrack";
-            OceanBrushVelocityTrack.Size = new Size(126, 20);
-            OceanBrushVelocityTrack.TabIndex = 81;
-            OceanBrushVelocityTrack.TickFrequency = 2;
-            OceanBrushVelocityTrack.TickStyle = TickStyle.None;
-            OceanBrushVelocityTrack.Value = 100;
-            OceanBrushVelocityTrack.ValueChanged += OceanBrushVelocityTrack_ValueChanged;
-            // 
-            // OceanPaintButton
-            // 
-            OceanPaintButton.BackColor = SystemColors.ControlLightLight;
-            OceanPaintButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanPaintButton.FlatStyle = FlatStyle.Flat;
-            OceanPaintButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanPaintButton.ForeColor = SystemColors.ControlDarkDark;
-            OceanPaintButton.IconChar = FontAwesome.Sharp.IconChar.Brush;
-            OceanPaintButton.IconColor = Color.Black;
-            OceanPaintButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            OceanPaintButton.IconSize = 24;
-            OceanPaintButton.Location = new Point(14, 248);
-            OceanPaintButton.Name = "OceanPaintButton";
-            OceanPaintButton.Size = new Size(60, 60);
-            OceanPaintButton.TabIndex = 79;
-            OceanPaintButton.Text = "Color";
-            OceanPaintButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            OceanPaintButton.UseVisualStyleBackColor = false;
-            OceanPaintButton.Click += OceanPaintButton_Click;
-            // 
-            // label18
-            // 
-            label18.AutoSize = true;
-            label18.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label18.ForeColor = SystemColors.ControlDarkDark;
-            label18.Location = new Point(17, 178);
-            label18.Name = "label18";
-            label18.Size = new Size(60, 13);
-            label18.TabIndex = 77;
-            label18.Text = "Eraser Size";
-            // 
-            // OceanEraserSizeTrack
-            // 
-            OceanEraserSizeTrack.AutoSize = false;
-            OceanEraserSizeTrack.Location = new Point(14, 194);
-            OceanEraserSizeTrack.Maximum = 256;
-            OceanEraserSizeTrack.Minimum = 2;
-            OceanEraserSizeTrack.Name = "OceanEraserSizeTrack";
-            OceanEraserSizeTrack.Size = new Size(126, 20);
-            OceanEraserSizeTrack.TabIndex = 76;
-            OceanEraserSizeTrack.TickFrequency = 2;
-            OceanEraserSizeTrack.TickStyle = TickStyle.None;
-            OceanEraserSizeTrack.Value = 20;
-            OceanEraserSizeTrack.ValueChanged += OceanEraserSizeTrack_ValueChanged;
-            // 
-            // OceanCustomColorButton8
-            // 
-            OceanCustomColorButton8.BackColor = Color.White;
-            OceanCustomColorButton8.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton8.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanCustomColorButton8.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton8.Location = new Point(80, 737);
-            OceanCustomColorButton8.Name = "OceanCustomColorButton8";
-            OceanCustomColorButton8.Size = new Size(60, 57);
-            OceanCustomColorButton8.TabIndex = 74;
-            OceanCustomColorButton8.UseVisualStyleBackColor = false;
-            OceanCustomColorButton8.MouseClick += OceanCustomColorButton8_Click;
-            // 
-            // OceanCustomColorButton7
-            // 
-            OceanCustomColorButton7.BackColor = Color.White;
-            OceanCustomColorButton7.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton7.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton7.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanCustomColorButton7.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton7.Location = new Point(14, 737);
-            OceanCustomColorButton7.Name = "OceanCustomColorButton7";
-            OceanCustomColorButton7.Size = new Size(60, 57);
-            OceanCustomColorButton7.TabIndex = 73;
-            OceanCustomColorButton7.UseVisualStyleBackColor = false;
-            OceanCustomColorButton7.MouseClick += OceanCustomColorButton7_Click;
-            // 
-            // OceanCustomColorButton6
-            // 
-            OceanCustomColorButton6.BackColor = Color.White;
-            OceanCustomColorButton6.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton6.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton6.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanCustomColorButton6.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton6.Location = new Point(80, 674);
-            OceanCustomColorButton6.Name = "OceanCustomColorButton6";
-            OceanCustomColorButton6.Size = new Size(60, 57);
-            OceanCustomColorButton6.TabIndex = 72;
-            OceanCustomColorButton6.UseVisualStyleBackColor = false;
-            OceanCustomColorButton6.MouseClick += OceanCustomColorButton6_Click;
-            // 
-            // OceanCustomColorButton5
-            // 
-            OceanCustomColorButton5.BackColor = Color.White;
-            OceanCustomColorButton5.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton5.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton5.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanCustomColorButton5.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton5.Location = new Point(14, 674);
-            OceanCustomColorButton5.Name = "OceanCustomColorButton5";
-            OceanCustomColorButton5.Size = new Size(60, 57);
-            OceanCustomColorButton5.TabIndex = 71;
-            OceanCustomColorButton5.UseVisualStyleBackColor = false;
-            OceanCustomColorButton5.MouseClick += OceanCustomColorButton5_Click;
-            // 
-            // OceanCustomColorButton4
-            // 
-            OceanCustomColorButton4.BackColor = Color.White;
-            OceanCustomColorButton4.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton4.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton4.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanCustomColorButton4.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton4.Location = new Point(80, 611);
-            OceanCustomColorButton4.Name = "OceanCustomColorButton4";
-            OceanCustomColorButton4.Size = new Size(60, 57);
-            OceanCustomColorButton4.TabIndex = 70;
-            OceanCustomColorButton4.UseVisualStyleBackColor = false;
-            OceanCustomColorButton4.MouseClick += OceanCustomColorButton4_Click;
-            // 
-            // OceanCustomColorButton3
-            // 
-            OceanCustomColorButton3.BackColor = Color.White;
-            OceanCustomColorButton3.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton3.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton3.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanCustomColorButton3.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton3.Location = new Point(14, 611);
-            OceanCustomColorButton3.Name = "OceanCustomColorButton3";
-            OceanCustomColorButton3.Size = new Size(60, 57);
-            OceanCustomColorButton3.TabIndex = 69;
-            OceanCustomColorButton3.UseVisualStyleBackColor = false;
-            OceanCustomColorButton3.MouseClick += OceanCustomColorButton3_Click;
-            // 
-            // OceanCustomColorButton2
-            // 
-            OceanCustomColorButton2.BackColor = Color.White;
-            OceanCustomColorButton2.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton2.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton2.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanCustomColorButton2.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton2.Location = new Point(80, 548);
-            OceanCustomColorButton2.Name = "OceanCustomColorButton2";
-            OceanCustomColorButton2.Size = new Size(60, 57);
-            OceanCustomColorButton2.TabIndex = 68;
-            OceanCustomColorButton2.UseVisualStyleBackColor = false;
-            OceanCustomColorButton2.MouseClick += OceanCustomColorButton2_Click;
-            // 
-            // OceanCustomColorButton1
-            // 
-            OceanCustomColorButton1.BackColor = Color.White;
-            OceanCustomColorButton1.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton1.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton1.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanCustomColorButton1.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton1.Location = new Point(14, 548);
-            OceanCustomColorButton1.Name = "OceanCustomColorButton1";
-            OceanCustomColorButton1.Size = new Size(60, 57);
-            OceanCustomColorButton1.TabIndex = 67;
-            OceanCustomColorButton1.UseVisualStyleBackColor = false;
-            OceanCustomColorButton1.MouseClick += OceanCustomColorButton1_Click;
-            // 
-            // OceanHardBrushButton
-            // 
-            OceanHardBrushButton.BackColor = Color.Black;
-            OceanHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
-            OceanHardBrushButton.FlatAppearance.BorderSize = 3;
-            OceanHardBrushButton.FlatStyle = FlatStyle.Flat;
-            OceanHardBrushButton.Image = (Image)resources.GetObject("OceanHardBrushButton.Image");
-            OceanHardBrushButton.Location = new Point(80, 31);
-            OceanHardBrushButton.Name = "OceanHardBrushButton";
-            OceanHardBrushButton.Size = new Size(60, 60);
-            OceanHardBrushButton.TabIndex = 65;
-            OceanHardBrushButton.UseVisualStyleBackColor = false;
-            OceanHardBrushButton.Click += OceanHardBrushButton_Click;
-            // 
-            // OceanSoftBrushButton
-            // 
-            OceanSoftBrushButton.BackColor = Color.Black;
-            OceanSoftBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
-            OceanSoftBrushButton.FlatAppearance.BorderSize = 3;
-            OceanSoftBrushButton.FlatStyle = FlatStyle.Flat;
-            OceanSoftBrushButton.Image = (Image)resources.GetObject("OceanSoftBrushButton.Image");
-            OceanSoftBrushButton.Location = new Point(14, 31);
-            OceanSoftBrushButton.Name = "OceanSoftBrushButton";
-            OceanSoftBrushButton.Size = new Size(60, 60);
-            OceanSoftBrushButton.TabIndex = 64;
-            OceanSoftBrushButton.UseVisualStyleBackColor = false;
-            OceanSoftBrushButton.Click += OceanSoftBrushButton_Click;
-            // 
-            // OceanButton42718D
-            // 
-            OceanButton42718D.BackColor = Color.FromArgb(66, 113, 141);
-            OceanButton42718D.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanButton42718D.FlatStyle = FlatStyle.Flat;
-            OceanButton42718D.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanButton42718D.ForeColor = SystemColors.ControlDark;
-            OceanButton42718D.Location = new Point(80, 485);
-            OceanButton42718D.Name = "OceanButton42718D";
-            OceanButton42718D.Size = new Size(60, 57);
-            OceanButton42718D.TabIndex = 63;
-            OceanButton42718D.Text = "#42718D";
-            OceanButton42718D.UseVisualStyleBackColor = false;
-            OceanButton42718D.Click += OceanButton42718D_Click;
-            // 
-            // OceanButton6BA5B9
-            // 
-            OceanButton6BA5B9.BackColor = Color.FromArgb(107, 165, 185);
-            OceanButton6BA5B9.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanButton6BA5B9.FlatStyle = FlatStyle.Flat;
-            OceanButton6BA5B9.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanButton6BA5B9.ForeColor = SystemColors.ControlDarkDark;
-            OceanButton6BA5B9.Location = new Point(14, 485);
-            OceanButton6BA5B9.Name = "OceanButton6BA5B9";
-            OceanButton6BA5B9.Size = new Size(60, 57);
-            OceanButton6BA5B9.TabIndex = 62;
-            OceanButton6BA5B9.Text = "#6BA5B9";
-            OceanButton6BA5B9.UseVisualStyleBackColor = false;
-            OceanButton6BA5B9.Click += OceanButton6BA5B9_Click;
-            // 
-            // OceanButton88B5BB
-            // 
-            OceanButton88B5BB.BackColor = Color.FromArgb(136, 181, 187);
-            OceanButton88B5BB.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanButton88B5BB.FlatStyle = FlatStyle.Flat;
-            OceanButton88B5BB.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanButton88B5BB.ForeColor = SystemColors.ControlDarkDark;
-            OceanButton88B5BB.Location = new Point(80, 422);
-            OceanButton88B5BB.Name = "OceanButton88B5BB";
-            OceanButton88B5BB.Size = new Size(60, 57);
-            OceanButton88B5BB.TabIndex = 61;
-            OceanButton88B5BB.Text = "#88B5BB";
-            OceanButton88B5BB.UseVisualStyleBackColor = false;
-            OceanButton88B5BB.Click += OceanButton88B5BB_Click;
-            // 
-            // OceanButton91CBB8
-            // 
-            OceanButton91CBB8.BackColor = Color.FromArgb(145, 203, 184);
-            OceanButton91CBB8.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanButton91CBB8.FlatStyle = FlatStyle.Flat;
-            OceanButton91CBB8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanButton91CBB8.ForeColor = SystemColors.ControlDarkDark;
-            OceanButton91CBB8.Location = new Point(14, 422);
-            OceanButton91CBB8.Name = "OceanButton91CBB8";
-            OceanButton91CBB8.Size = new Size(60, 57);
-            OceanButton91CBB8.TabIndex = 60;
-            OceanButton91CBB8.Text = "#91CBB8";
-            OceanButton91CBB8.UseVisualStyleBackColor = false;
-            OceanButton91CBB8.Click += OceanButton91CBB8_Click;
-            // 
-            // OceanColorEraseButton
-            // 
-            OceanColorEraseButton.BackColor = SystemColors.ControlLightLight;
-            OceanColorEraseButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanColorEraseButton.FlatStyle = FlatStyle.Flat;
-            OceanColorEraseButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanColorEraseButton.ForeColor = SystemColors.ControlDarkDark;
-            OceanColorEraseButton.IconChar = FontAwesome.Sharp.IconChar.Eraser;
-            OceanColorEraseButton.IconColor = Color.Black;
-            OceanColorEraseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            OceanColorEraseButton.IconSize = 24;
-            OceanColorEraseButton.Location = new Point(80, 248);
-            OceanColorEraseButton.Name = "OceanColorEraseButton";
-            OceanColorEraseButton.Size = new Size(60, 60);
-            OceanColorEraseButton.TabIndex = 59;
-            OceanColorEraseButton.Text = "Erase";
-            OceanColorEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            OceanColorEraseButton.UseVisualStyleBackColor = false;
-            OceanColorEraseButton.Click += OceanColorEraseButton_Click;
-            // 
-            // label23
-            // 
-            label23.AutoSize = true;
-            label23.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label23.ForeColor = SystemColors.ControlDarkDark;
-            label23.Location = new Point(17, 100);
-            label23.Name = "label23";
-            label23.Size = new Size(56, 13);
-            label23.TabIndex = 58;
-            label23.Text = "Brush Size";
-            // 
-            // OceanBrushSizeTrack
-            // 
-            OceanBrushSizeTrack.AutoSize = false;
-            OceanBrushSizeTrack.Location = new Point(14, 116);
-            OceanBrushSizeTrack.Maximum = 256;
-            OceanBrushSizeTrack.Minimum = 2;
-            OceanBrushSizeTrack.Name = "OceanBrushSizeTrack";
-            OceanBrushSizeTrack.Size = new Size(126, 20);
-            OceanBrushSizeTrack.TabIndex = 57;
-            OceanBrushSizeTrack.TickFrequency = 2;
-            OceanBrushSizeTrack.TickStyle = TickStyle.None;
-            OceanBrushSizeTrack.Value = 20;
-            OceanBrushSizeTrack.ValueChanged += OceanBrushSizeTrack_ValueChanged;
-            // 
-            // label57
-            // 
-            label57.AutoSize = true;
-            label57.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label57.ForeColor = SystemColors.ControlDarkDark;
-            label57.Location = new Point(16, 15);
-            label57.Name = "label57";
-            label57.Size = new Size(62, 13);
-            label57.TabIndex = 55;
-            label57.Text = "Color Brush";
-            // 
-            // OceanPaintColorSelectButton
-            // 
-            OceanPaintColorSelectButton.BackColor = Color.FromArgb(128, 145, 203, 184);
-            OceanPaintColorSelectButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanPaintColorSelectButton.FlatStyle = FlatStyle.Flat;
-            OceanPaintColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            OceanPaintColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
-            OceanPaintColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            OceanPaintColorSelectButton.IconColor = Color.Tan;
-            OceanPaintColorSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            OceanPaintColorSelectButton.Location = new Point(14, 314);
-            OceanPaintColorSelectButton.Name = "OceanPaintColorSelectButton";
-            OceanPaintColorSelectButton.Size = new Size(126, 60);
-            OceanPaintColorSelectButton.TabIndex = 54;
-            OceanPaintColorSelectButton.Text = "Select Brush Color";
-            OceanPaintColorSelectButton.UseVisualStyleBackColor = false;
-            OceanPaintColorSelectButton.Click += OceanPaintColorSelectButton_Click;
-            // 
-            // BackgroundToolPanel
-            // 
-            BackgroundToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            BackgroundToolPanel.BackColor = SystemColors.Control;
-            BackgroundToolPanel.Location = new Point(1421, 90);
-            BackgroundToolPanel.Margin = new Padding(0);
-            BackgroundToolPanel.Name = "BackgroundToolPanel";
-            BackgroundToolPanel.Size = new Size(152, 806);
-            BackgroundToolPanel.TabIndex = 15;
-            // 
-            // DrawingToolPanel
-            // 
-            DrawingToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            DrawingToolPanel.BackColor = SystemColors.Control;
-            DrawingToolPanel.Controls.Add(label26);
-            DrawingToolPanel.Location = new Point(1421, 90);
-            DrawingToolPanel.Margin = new Padding(0);
-            DrawingToolPanel.Name = "DrawingToolPanel";
-            DrawingToolPanel.Size = new Size(152, 806);
-            DrawingToolPanel.TabIndex = 26;
-            // 
-            // label26
-            // 
-            label26.AutoSize = true;
-            label26.Location = new Point(22, 15);
-            label26.Name = "label26";
-            label26.Size = new Size(51, 15);
-            label26.TabIndex = 0;
-            label26.Text = "Drawing";
-            // 
-            // RegionToolPanel
-            // 
-            RegionToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            RegionToolPanel.BackColor = SystemColors.Control;
-            RegionToolPanel.Controls.Add(label90);
-            RegionToolPanel.Controls.Add(LightSolidRegionBorderPicture);
-            RegionToolPanel.Controls.Add(GradientRegionBorderPicture);
-            RegionToolPanel.Controls.Add(SolidAndDashRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DoubleSolidRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DashDotDotRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DashDotRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DashedRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DottedRegionBorderPicture);
-            RegionToolPanel.Controls.Add(SolidRegionBorderPicture);
-            RegionToolPanel.Controls.Add(RegionDoubleSolidBorderRadio);
-            RegionToolPanel.Controls.Add(RegionBorderedLightSolidRadio);
-            RegionToolPanel.Controls.Add(RegionBorderedGradientRadio);
-            RegionToolPanel.Controls.Add(RegionSolidAndDashesBorderRadio);
-            RegionToolPanel.Controls.Add(RegionDashDotDotBorderRadio);
-            RegionToolPanel.Controls.Add(RegionDashDotBorderRadio);
-            RegionToolPanel.Controls.Add(RegionDashBorderRadio);
-            RegionToolPanel.Controls.Add(RegionDottedBorderRadio);
-            RegionToolPanel.Controls.Add(RegionSolidBorderRadio);
-            RegionToolPanel.Location = new Point(1421, 90);
-            RegionToolPanel.Margin = new Padding(0);
-            RegionToolPanel.Name = "RegionToolPanel";
-            RegionToolPanel.Size = new Size(152, 806);
-            RegionToolPanel.TabIndex = 25;
-            // 
-            // label90
-            // 
-            label90.AutoSize = true;
-            label90.CausesValidation = false;
-            label90.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label90.ForeColor = SystemColors.ControlDarkDark;
-            label90.Location = new Point(17, 22);
-            label90.Name = "label90";
-            label90.Size = new Size(93, 20);
-            label90.TabIndex = 120;
-            label90.Text = "Border Style";
-            label90.UseMnemonic = false;
-            // 
-            // LightSolidRegionBorderPicture
-            // 
-            LightSolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            LightSolidRegionBorderPicture.Image = (Image)resources.GetObject("LightSolidRegionBorderPicture.Image");
-            LightSolidRegionBorderPicture.InitialImage = null;
-            LightSolidRegionBorderPicture.Location = new Point(31, 246);
-            LightSolidRegionBorderPicture.Name = "LightSolidRegionBorderPicture";
-            LightSolidRegionBorderPicture.Size = new Size(106, 18);
-            LightSolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            LightSolidRegionBorderPicture.TabIndex = 119;
-            LightSolidRegionBorderPicture.TabStop = false;
-            LightSolidRegionBorderPicture.Click += LightSolidRegionBorderPicture_Click;
-            // 
-            // GradientRegionBorderPicture
-            // 
-            GradientRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            GradientRegionBorderPicture.Image = (Image)resources.GetObject("GradientRegionBorderPicture.Image");
-            GradientRegionBorderPicture.InitialImage = null;
-            GradientRegionBorderPicture.Location = new Point(31, 220);
-            GradientRegionBorderPicture.Name = "GradientRegionBorderPicture";
-            GradientRegionBorderPicture.Size = new Size(106, 18);
-            GradientRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            GradientRegionBorderPicture.TabIndex = 118;
-            GradientRegionBorderPicture.TabStop = false;
-            GradientRegionBorderPicture.Click += GradientRegionBorderPicture_Click;
-            // 
-            // SolidAndDashRegionBorderPicture
-            // 
-            SolidAndDashRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            SolidAndDashRegionBorderPicture.Image = (Image)resources.GetObject("SolidAndDashRegionBorderPicture.Image");
-            SolidAndDashRegionBorderPicture.InitialImage = null;
-            SolidAndDashRegionBorderPicture.Location = new Point(31, 194);
-            SolidAndDashRegionBorderPicture.Name = "SolidAndDashRegionBorderPicture";
-            SolidAndDashRegionBorderPicture.Size = new Size(106, 18);
-            SolidAndDashRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            SolidAndDashRegionBorderPicture.TabIndex = 117;
-            SolidAndDashRegionBorderPicture.TabStop = false;
-            SolidAndDashRegionBorderPicture.Click += SolidAndDashRegionBorderPicture_Click;
-            // 
-            // DoubleSolidRegionBorderPicture
-            // 
-            DoubleSolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DoubleSolidRegionBorderPicture.Image = (Image)resources.GetObject("DoubleSolidRegionBorderPicture.Image");
-            DoubleSolidRegionBorderPicture.InitialImage = null;
-            DoubleSolidRegionBorderPicture.Location = new Point(31, 170);
-            DoubleSolidRegionBorderPicture.Name = "DoubleSolidRegionBorderPicture";
-            DoubleSolidRegionBorderPicture.Size = new Size(106, 18);
-            DoubleSolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DoubleSolidRegionBorderPicture.TabIndex = 116;
-            DoubleSolidRegionBorderPicture.TabStop = false;
-            DoubleSolidRegionBorderPicture.Click += DoubleSolidRegionBorderPicture_Click;
-            // 
-            // DashDotDotRegionBorderPicture
-            // 
-            DashDotDotRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DashDotDotRegionBorderPicture.Image = (Image)resources.GetObject("DashDotDotRegionBorderPicture.Image");
-            DashDotDotRegionBorderPicture.InitialImage = null;
-            DashDotDotRegionBorderPicture.Location = new Point(31, 145);
-            DashDotDotRegionBorderPicture.Name = "DashDotDotRegionBorderPicture";
-            DashDotDotRegionBorderPicture.Size = new Size(106, 18);
-            DashDotDotRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DashDotDotRegionBorderPicture.TabIndex = 115;
-            DashDotDotRegionBorderPicture.TabStop = false;
-            DashDotDotRegionBorderPicture.Click += DashDotDotRegionBorderPicture_Click;
-            // 
-            // DashDotRegionBorderPicture
-            // 
-            DashDotRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DashDotRegionBorderPicture.Image = (Image)resources.GetObject("DashDotRegionBorderPicture.Image");
-            DashDotRegionBorderPicture.InitialImage = null;
-            DashDotRegionBorderPicture.Location = new Point(31, 120);
-            DashDotRegionBorderPicture.Name = "DashDotRegionBorderPicture";
-            DashDotRegionBorderPicture.Size = new Size(106, 18);
-            DashDotRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DashDotRegionBorderPicture.TabIndex = 114;
-            DashDotRegionBorderPicture.TabStop = false;
-            DashDotRegionBorderPicture.Click += DashDotRegionBorderPicture_Click;
-            // 
-            // DashedRegionBorderPicture
-            // 
-            DashedRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DashedRegionBorderPicture.Image = (Image)resources.GetObject("DashedRegionBorderPicture.Image");
-            DashedRegionBorderPicture.InitialImage = null;
-            DashedRegionBorderPicture.Location = new Point(31, 95);
-            DashedRegionBorderPicture.Name = "DashedRegionBorderPicture";
-            DashedRegionBorderPicture.Size = new Size(106, 18);
-            DashedRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DashedRegionBorderPicture.TabIndex = 113;
-            DashedRegionBorderPicture.TabStop = false;
-            DashedRegionBorderPicture.Click += DashedRegionBorderPicture_Click;
-            // 
-            // DottedRegionBorderPicture
-            // 
-            DottedRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DottedRegionBorderPicture.Image = (Image)resources.GetObject("DottedRegionBorderPicture.Image");
-            DottedRegionBorderPicture.InitialImage = null;
-            DottedRegionBorderPicture.Location = new Point(31, 69);
-            DottedRegionBorderPicture.Name = "DottedRegionBorderPicture";
-            DottedRegionBorderPicture.Size = new Size(106, 18);
-            DottedRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DottedRegionBorderPicture.TabIndex = 112;
-            DottedRegionBorderPicture.TabStop = false;
-            DottedRegionBorderPicture.Click += DottedRegionBorderPicture_Click;
-            // 
-            // SolidRegionBorderPicture
-            // 
-            SolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            SolidRegionBorderPicture.Image = (Image)resources.GetObject("SolidRegionBorderPicture.Image");
-            SolidRegionBorderPicture.InitialImage = null;
-            SolidRegionBorderPicture.Location = new Point(31, 45);
-            SolidRegionBorderPicture.Name = "SolidRegionBorderPicture";
-            SolidRegionBorderPicture.Size = new Size(106, 18);
-            SolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            SolidRegionBorderPicture.TabIndex = 111;
-            SolidRegionBorderPicture.TabStop = false;
-            SolidRegionBorderPicture.Click += SolidRegionBorderPicture_Click;
-            // 
-            // RegionDoubleSolidBorderRadio
-            // 
-            RegionDoubleSolidBorderRadio.AutoSize = true;
-            RegionDoubleSolidBorderRadio.Location = new Point(16, 175);
-            RegionDoubleSolidBorderRadio.Name = "RegionDoubleSolidBorderRadio";
-            RegionDoubleSolidBorderRadio.Size = new Size(14, 13);
-            RegionDoubleSolidBorderRadio.TabIndex = 110;
-            RegionDoubleSolidBorderRadio.UseVisualStyleBackColor = true;
-            RegionDoubleSolidBorderRadio.CheckedChanged += RegionDoubleSolidBorderRadio_CheckedChanged;
-            // 
-            // RegionBorderedLightSolidRadio
-            // 
-            RegionBorderedLightSolidRadio.AutoSize = true;
-            RegionBorderedLightSolidRadio.Location = new Point(16, 251);
-            RegionBorderedLightSolidRadio.Name = "RegionBorderedLightSolidRadio";
-            RegionBorderedLightSolidRadio.Size = new Size(14, 13);
-            RegionBorderedLightSolidRadio.TabIndex = 109;
-            RegionBorderedLightSolidRadio.UseVisualStyleBackColor = true;
-            RegionBorderedLightSolidRadio.CheckedChanged += RegionBorderedLightSolidRadio_CheckedChanged;
-            // 
-            // RegionBorderedGradientRadio
-            // 
-            RegionBorderedGradientRadio.AutoSize = true;
-            RegionBorderedGradientRadio.Location = new Point(16, 225);
-            RegionBorderedGradientRadio.Name = "RegionBorderedGradientRadio";
-            RegionBorderedGradientRadio.Size = new Size(14, 13);
-            RegionBorderedGradientRadio.TabIndex = 108;
-            RegionBorderedGradientRadio.UseVisualStyleBackColor = true;
-            RegionBorderedGradientRadio.CheckedChanged += RegionBorderedGradientRadio_CheckedChanged;
-            // 
-            // RegionSolidAndDashesBorderRadio
-            // 
-            RegionSolidAndDashesBorderRadio.AutoSize = true;
-            RegionSolidAndDashesBorderRadio.Location = new Point(16, 199);
-            RegionSolidAndDashesBorderRadio.Name = "RegionSolidAndDashesBorderRadio";
-            RegionSolidAndDashesBorderRadio.Size = new Size(14, 13);
-            RegionSolidAndDashesBorderRadio.TabIndex = 107;
-            RegionSolidAndDashesBorderRadio.UseVisualStyleBackColor = true;
-            RegionSolidAndDashesBorderRadio.CheckedChanged += RegionSolidAndDashesBorderRadio_CheckedChanged;
-            // 
-            // RegionDashDotDotBorderRadio
-            // 
-            RegionDashDotDotBorderRadio.AutoSize = true;
-            RegionDashDotDotBorderRadio.Location = new Point(16, 150);
-            RegionDashDotDotBorderRadio.Name = "RegionDashDotDotBorderRadio";
-            RegionDashDotDotBorderRadio.Size = new Size(14, 13);
-            RegionDashDotDotBorderRadio.TabIndex = 106;
-            RegionDashDotDotBorderRadio.UseVisualStyleBackColor = true;
-            RegionDashDotDotBorderRadio.CheckedChanged += RegionDashDotDotBorderRadio_CheckedChanged;
-            // 
-            // RegionDashDotBorderRadio
-            // 
-            RegionDashDotBorderRadio.AutoSize = true;
-            RegionDashDotBorderRadio.Location = new Point(16, 125);
-            RegionDashDotBorderRadio.Name = "RegionDashDotBorderRadio";
-            RegionDashDotBorderRadio.Size = new Size(14, 13);
-            RegionDashDotBorderRadio.TabIndex = 105;
-            RegionDashDotBorderRadio.UseVisualStyleBackColor = true;
-            RegionDashDotBorderRadio.CheckedChanged += RegionDashDotBorderRadio_CheckedChanged;
-            // 
-            // RegionDashBorderRadio
-            // 
-            RegionDashBorderRadio.AutoSize = true;
-            RegionDashBorderRadio.Location = new Point(16, 100);
-            RegionDashBorderRadio.Name = "RegionDashBorderRadio";
-            RegionDashBorderRadio.Size = new Size(14, 13);
-            RegionDashBorderRadio.TabIndex = 104;
-            RegionDashBorderRadio.UseVisualStyleBackColor = true;
-            RegionDashBorderRadio.CheckedChanged += RegionDashBorderRadio_CheckedChanged;
-            // 
-            // RegionDottedBorderRadio
-            // 
-            RegionDottedBorderRadio.AutoSize = true;
-            RegionDottedBorderRadio.Location = new Point(16, 75);
-            RegionDottedBorderRadio.Name = "RegionDottedBorderRadio";
-            RegionDottedBorderRadio.Size = new Size(14, 13);
-            RegionDottedBorderRadio.TabIndex = 103;
-            RegionDottedBorderRadio.UseVisualStyleBackColor = true;
-            RegionDottedBorderRadio.CheckedChanged += RegionDottedBorderRadio_CheckedChanged;
-            // 
-            // RegionSolidBorderRadio
-            // 
-            RegionSolidBorderRadio.AutoSize = true;
-            RegionSolidBorderRadio.BackgroundImageLayout = ImageLayout.Stretch;
-            RegionSolidBorderRadio.Checked = true;
-            RegionSolidBorderRadio.Location = new Point(16, 50);
-            RegionSolidBorderRadio.Name = "RegionSolidBorderRadio";
-            RegionSolidBorderRadio.Size = new Size(14, 13);
-            RegionSolidBorderRadio.TabIndex = 102;
-            RegionSolidBorderRadio.TabStop = true;
-            RegionSolidBorderRadio.UseVisualStyleBackColor = true;
-            RegionSolidBorderRadio.CheckedChanged += RegionSolidBorderRadio_CheckedChanged;
-            // 
-            // OverlayToolPanel
-            // 
-            OverlayToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            OverlayToolPanel.BackColor = SystemColors.Control;
-            OverlayToolPanel.Controls.Add(FrameStyleTable);
-            OverlayToolPanel.Location = new Point(1421, 90);
-            OverlayToolPanel.Margin = new Padding(0);
-            OverlayToolPanel.Name = "OverlayToolPanel";
-            OverlayToolPanel.Size = new Size(152, 806);
-            OverlayToolPanel.TabIndex = 24;
-            // 
-            // FrameStyleTable
-            // 
-            FrameStyleTable.AutoScroll = true;
-            FrameStyleTable.CausesValidation = false;
-            FrameStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
-            FrameStyleTable.ColumnCount = 1;
-            FrameStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
-            FrameStyleTable.Location = new Point(20, 15);
-            FrameStyleTable.Name = "FrameStyleTable";
-            FrameStyleTable.RowCount = 1;
-            FrameStyleTable.RowStyles.Add(new RowStyle());
-            FrameStyleTable.Size = new Size(122, 779);
-            FrameStyleTable.TabIndex = 74;
-            // 
-            // LabelToolPanel
-            // 
-            LabelToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            LabelToolPanel.BackColor = SystemColors.Control;
-            LabelToolPanel.Controls.Add(SelectBoxTintButton);
-            LabelToolPanel.Controls.Add(LabelBoxStyleTable);
-            LabelToolPanel.Location = new Point(1421, 90);
-            LabelToolPanel.Margin = new Padding(0);
-            LabelToolPanel.Name = "LabelToolPanel";
-            LabelToolPanel.Size = new Size(152, 806);
-            LabelToolPanel.TabIndex = 27;
-            // 
-            // SelectBoxTintButton
-            // 
-            SelectBoxTintButton.BackColor = Color.White;
-            SelectBoxTintButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            SelectBoxTintButton.ForeColor = SystemColors.ControlDarkDark;
-            SelectBoxTintButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            SelectBoxTintButton.IconColor = Color.Tan;
-            SelectBoxTintButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            SelectBoxTintButton.Location = new Point(15, 20);
-            SelectBoxTintButton.Name = "SelectBoxTintButton";
-            SelectBoxTintButton.Size = new Size(120, 60);
-            SelectBoxTintButton.TabIndex = 113;
-            SelectBoxTintButton.Text = "Select Tint Color";
-            SelectBoxTintButton.UseVisualStyleBackColor = false;
-            SelectBoxTintButton.Click += SelectBoxTintButton_Click;
-            // 
-            // LabelBoxStyleTable
-            // 
-            LabelBoxStyleTable.AutoScroll = true;
-            LabelBoxStyleTable.CausesValidation = false;
-            LabelBoxStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
-            LabelBoxStyleTable.ColumnCount = 1;
-            LabelBoxStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
-            LabelBoxStyleTable.Location = new Point(15, 86);
-            LabelBoxStyleTable.Name = "LabelBoxStyleTable";
-            LabelBoxStyleTable.RowCount = 1;
-            LabelBoxStyleTable.RowStyles.Add(new RowStyle());
-            LabelBoxStyleTable.Size = new Size(122, 708);
-            LabelBoxStyleTable.TabIndex = 112;
-            // 
             // SymbolToolPanel
             // 
             SymbolToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
@@ -8069,6 +7351,733 @@
             LandColorSelectionButton.UseVisualStyleBackColor = false;
             LandColorSelectionButton.Click += LandColorSelectionButton_Click;
             // 
+            // OceanToolPanel
+            // 
+            OceanToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            OceanToolPanel.BackColor = SystemColors.Control;
+            OceanToolPanel.Controls.Add(label72);
+            OceanToolPanel.Controls.Add(OceanBrushVelocityTrack);
+            OceanToolPanel.Controls.Add(OceanPaintButton);
+            OceanToolPanel.Controls.Add(label18);
+            OceanToolPanel.Controls.Add(OceanEraserSizeTrack);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton8);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton7);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton6);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton5);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton4);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton3);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton2);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton1);
+            OceanToolPanel.Controls.Add(OceanHardBrushButton);
+            OceanToolPanel.Controls.Add(OceanSoftBrushButton);
+            OceanToolPanel.Controls.Add(OceanButton42718D);
+            OceanToolPanel.Controls.Add(OceanButton6BA5B9);
+            OceanToolPanel.Controls.Add(OceanButton88B5BB);
+            OceanToolPanel.Controls.Add(OceanButton91CBB8);
+            OceanToolPanel.Controls.Add(OceanColorEraseButton);
+            OceanToolPanel.Controls.Add(label23);
+            OceanToolPanel.Controls.Add(OceanBrushSizeTrack);
+            OceanToolPanel.Controls.Add(label57);
+            OceanToolPanel.Controls.Add(OceanPaintColorSelectButton);
+            OceanToolPanel.Location = new Point(1421, 90);
+            OceanToolPanel.Margin = new Padding(0);
+            OceanToolPanel.Name = "OceanToolPanel";
+            OceanToolPanel.Size = new Size(152, 806);
+            OceanToolPanel.TabIndex = 29;
+            // 
+            // label72
+            // 
+            label72.AutoSize = true;
+            label72.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label72.ForeColor = SystemColors.ControlDarkDark;
+            label72.Location = new Point(17, 141);
+            label72.Name = "label72";
+            label72.Size = new Size(74, 13);
+            label72.TabIndex = 82;
+            label72.Text = "Brush Velocity";
+            // 
+            // OceanBrushVelocityTrack
+            // 
+            OceanBrushVelocityTrack.AutoSize = false;
+            OceanBrushVelocityTrack.Location = new Point(14, 155);
+            OceanBrushVelocityTrack.Maximum = 100;
+            OceanBrushVelocityTrack.Minimum = 1;
+            OceanBrushVelocityTrack.Name = "OceanBrushVelocityTrack";
+            OceanBrushVelocityTrack.Size = new Size(126, 20);
+            OceanBrushVelocityTrack.TabIndex = 81;
+            OceanBrushVelocityTrack.TickFrequency = 2;
+            OceanBrushVelocityTrack.TickStyle = TickStyle.None;
+            OceanBrushVelocityTrack.Value = 100;
+            OceanBrushVelocityTrack.ValueChanged += OceanBrushVelocityTrack_ValueChanged;
+            // 
+            // OceanPaintButton
+            // 
+            OceanPaintButton.BackColor = SystemColors.ControlLightLight;
+            OceanPaintButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanPaintButton.FlatStyle = FlatStyle.Flat;
+            OceanPaintButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanPaintButton.ForeColor = SystemColors.ControlDarkDark;
+            OceanPaintButton.IconChar = FontAwesome.Sharp.IconChar.Brush;
+            OceanPaintButton.IconColor = Color.Black;
+            OceanPaintButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            OceanPaintButton.IconSize = 24;
+            OceanPaintButton.Location = new Point(14, 248);
+            OceanPaintButton.Name = "OceanPaintButton";
+            OceanPaintButton.Size = new Size(60, 60);
+            OceanPaintButton.TabIndex = 79;
+            OceanPaintButton.Text = "Color";
+            OceanPaintButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            OceanPaintButton.UseVisualStyleBackColor = false;
+            OceanPaintButton.Click += OceanPaintButton_Click;
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label18.ForeColor = SystemColors.ControlDarkDark;
+            label18.Location = new Point(17, 178);
+            label18.Name = "label18";
+            label18.Size = new Size(60, 13);
+            label18.TabIndex = 77;
+            label18.Text = "Eraser Size";
+            // 
+            // OceanEraserSizeTrack
+            // 
+            OceanEraserSizeTrack.AutoSize = false;
+            OceanEraserSizeTrack.Location = new Point(14, 194);
+            OceanEraserSizeTrack.Maximum = 256;
+            OceanEraserSizeTrack.Minimum = 2;
+            OceanEraserSizeTrack.Name = "OceanEraserSizeTrack";
+            OceanEraserSizeTrack.Size = new Size(126, 20);
+            OceanEraserSizeTrack.TabIndex = 76;
+            OceanEraserSizeTrack.TickFrequency = 2;
+            OceanEraserSizeTrack.TickStyle = TickStyle.None;
+            OceanEraserSizeTrack.Value = 20;
+            OceanEraserSizeTrack.ValueChanged += OceanEraserSizeTrack_ValueChanged;
+            // 
+            // OceanCustomColorButton8
+            // 
+            OceanCustomColorButton8.BackColor = Color.White;
+            OceanCustomColorButton8.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton8.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton8.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton8.Location = new Point(80, 737);
+            OceanCustomColorButton8.Name = "OceanCustomColorButton8";
+            OceanCustomColorButton8.Size = new Size(60, 57);
+            OceanCustomColorButton8.TabIndex = 74;
+            OceanCustomColorButton8.UseVisualStyleBackColor = false;
+            OceanCustomColorButton8.MouseClick += OceanCustomColorButton8_Click;
+            // 
+            // OceanCustomColorButton7
+            // 
+            OceanCustomColorButton7.BackColor = Color.White;
+            OceanCustomColorButton7.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton7.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton7.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton7.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton7.Location = new Point(14, 737);
+            OceanCustomColorButton7.Name = "OceanCustomColorButton7";
+            OceanCustomColorButton7.Size = new Size(60, 57);
+            OceanCustomColorButton7.TabIndex = 73;
+            OceanCustomColorButton7.UseVisualStyleBackColor = false;
+            OceanCustomColorButton7.MouseClick += OceanCustomColorButton7_Click;
+            // 
+            // OceanCustomColorButton6
+            // 
+            OceanCustomColorButton6.BackColor = Color.White;
+            OceanCustomColorButton6.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton6.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton6.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton6.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton6.Location = new Point(80, 674);
+            OceanCustomColorButton6.Name = "OceanCustomColorButton6";
+            OceanCustomColorButton6.Size = new Size(60, 57);
+            OceanCustomColorButton6.TabIndex = 72;
+            OceanCustomColorButton6.UseVisualStyleBackColor = false;
+            OceanCustomColorButton6.MouseClick += OceanCustomColorButton6_Click;
+            // 
+            // OceanCustomColorButton5
+            // 
+            OceanCustomColorButton5.BackColor = Color.White;
+            OceanCustomColorButton5.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton5.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton5.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton5.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton5.Location = new Point(14, 674);
+            OceanCustomColorButton5.Name = "OceanCustomColorButton5";
+            OceanCustomColorButton5.Size = new Size(60, 57);
+            OceanCustomColorButton5.TabIndex = 71;
+            OceanCustomColorButton5.UseVisualStyleBackColor = false;
+            OceanCustomColorButton5.MouseClick += OceanCustomColorButton5_Click;
+            // 
+            // OceanCustomColorButton4
+            // 
+            OceanCustomColorButton4.BackColor = Color.White;
+            OceanCustomColorButton4.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton4.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton4.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton4.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton4.Location = new Point(80, 611);
+            OceanCustomColorButton4.Name = "OceanCustomColorButton4";
+            OceanCustomColorButton4.Size = new Size(60, 57);
+            OceanCustomColorButton4.TabIndex = 70;
+            OceanCustomColorButton4.UseVisualStyleBackColor = false;
+            OceanCustomColorButton4.MouseClick += OceanCustomColorButton4_Click;
+            // 
+            // OceanCustomColorButton3
+            // 
+            OceanCustomColorButton3.BackColor = Color.White;
+            OceanCustomColorButton3.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton3.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton3.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton3.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton3.Location = new Point(14, 611);
+            OceanCustomColorButton3.Name = "OceanCustomColorButton3";
+            OceanCustomColorButton3.Size = new Size(60, 57);
+            OceanCustomColorButton3.TabIndex = 69;
+            OceanCustomColorButton3.UseVisualStyleBackColor = false;
+            OceanCustomColorButton3.MouseClick += OceanCustomColorButton3_Click;
+            // 
+            // OceanCustomColorButton2
+            // 
+            OceanCustomColorButton2.BackColor = Color.White;
+            OceanCustomColorButton2.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton2.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton2.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton2.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton2.Location = new Point(80, 548);
+            OceanCustomColorButton2.Name = "OceanCustomColorButton2";
+            OceanCustomColorButton2.Size = new Size(60, 57);
+            OceanCustomColorButton2.TabIndex = 68;
+            OceanCustomColorButton2.UseVisualStyleBackColor = false;
+            OceanCustomColorButton2.MouseClick += OceanCustomColorButton2_Click;
+            // 
+            // OceanCustomColorButton1
+            // 
+            OceanCustomColorButton1.BackColor = Color.White;
+            OceanCustomColorButton1.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton1.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton1.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton1.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton1.Location = new Point(14, 548);
+            OceanCustomColorButton1.Name = "OceanCustomColorButton1";
+            OceanCustomColorButton1.Size = new Size(60, 57);
+            OceanCustomColorButton1.TabIndex = 67;
+            OceanCustomColorButton1.UseVisualStyleBackColor = false;
+            OceanCustomColorButton1.MouseClick += OceanCustomColorButton1_Click;
+            // 
+            // OceanHardBrushButton
+            // 
+            OceanHardBrushButton.BackColor = Color.Black;
+            OceanHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+            OceanHardBrushButton.FlatAppearance.BorderSize = 3;
+            OceanHardBrushButton.FlatStyle = FlatStyle.Flat;
+            OceanHardBrushButton.Image = (Image)resources.GetObject("OceanHardBrushButton.Image");
+            OceanHardBrushButton.Location = new Point(80, 31);
+            OceanHardBrushButton.Name = "OceanHardBrushButton";
+            OceanHardBrushButton.Size = new Size(60, 60);
+            OceanHardBrushButton.TabIndex = 65;
+            OceanHardBrushButton.UseVisualStyleBackColor = false;
+            OceanHardBrushButton.Click += OceanHardBrushButton_Click;
+            // 
+            // OceanSoftBrushButton
+            // 
+            OceanSoftBrushButton.BackColor = Color.Black;
+            OceanSoftBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            OceanSoftBrushButton.FlatAppearance.BorderSize = 3;
+            OceanSoftBrushButton.FlatStyle = FlatStyle.Flat;
+            OceanSoftBrushButton.Image = (Image)resources.GetObject("OceanSoftBrushButton.Image");
+            OceanSoftBrushButton.Location = new Point(14, 31);
+            OceanSoftBrushButton.Name = "OceanSoftBrushButton";
+            OceanSoftBrushButton.Size = new Size(60, 60);
+            OceanSoftBrushButton.TabIndex = 64;
+            OceanSoftBrushButton.UseVisualStyleBackColor = false;
+            OceanSoftBrushButton.Click += OceanSoftBrushButton_Click;
+            // 
+            // OceanButton42718D
+            // 
+            OceanButton42718D.BackColor = Color.FromArgb(66, 113, 141);
+            OceanButton42718D.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanButton42718D.FlatStyle = FlatStyle.Flat;
+            OceanButton42718D.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanButton42718D.ForeColor = SystemColors.ControlDark;
+            OceanButton42718D.Location = new Point(80, 485);
+            OceanButton42718D.Name = "OceanButton42718D";
+            OceanButton42718D.Size = new Size(60, 57);
+            OceanButton42718D.TabIndex = 63;
+            OceanButton42718D.Text = "#42718D";
+            OceanButton42718D.UseVisualStyleBackColor = false;
+            OceanButton42718D.Click += OceanButton42718D_Click;
+            // 
+            // OceanButton6BA5B9
+            // 
+            OceanButton6BA5B9.BackColor = Color.FromArgb(107, 165, 185);
+            OceanButton6BA5B9.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanButton6BA5B9.FlatStyle = FlatStyle.Flat;
+            OceanButton6BA5B9.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanButton6BA5B9.ForeColor = SystemColors.ControlDarkDark;
+            OceanButton6BA5B9.Location = new Point(14, 485);
+            OceanButton6BA5B9.Name = "OceanButton6BA5B9";
+            OceanButton6BA5B9.Size = new Size(60, 57);
+            OceanButton6BA5B9.TabIndex = 62;
+            OceanButton6BA5B9.Text = "#6BA5B9";
+            OceanButton6BA5B9.UseVisualStyleBackColor = false;
+            OceanButton6BA5B9.Click += OceanButton6BA5B9_Click;
+            // 
+            // OceanButton88B5BB
+            // 
+            OceanButton88B5BB.BackColor = Color.FromArgb(136, 181, 187);
+            OceanButton88B5BB.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanButton88B5BB.FlatStyle = FlatStyle.Flat;
+            OceanButton88B5BB.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanButton88B5BB.ForeColor = SystemColors.ControlDarkDark;
+            OceanButton88B5BB.Location = new Point(80, 422);
+            OceanButton88B5BB.Name = "OceanButton88B5BB";
+            OceanButton88B5BB.Size = new Size(60, 57);
+            OceanButton88B5BB.TabIndex = 61;
+            OceanButton88B5BB.Text = "#88B5BB";
+            OceanButton88B5BB.UseVisualStyleBackColor = false;
+            OceanButton88B5BB.Click += OceanButton88B5BB_Click;
+            // 
+            // OceanButton91CBB8
+            // 
+            OceanButton91CBB8.BackColor = Color.FromArgb(145, 203, 184);
+            OceanButton91CBB8.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanButton91CBB8.FlatStyle = FlatStyle.Flat;
+            OceanButton91CBB8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanButton91CBB8.ForeColor = SystemColors.ControlDarkDark;
+            OceanButton91CBB8.Location = new Point(14, 422);
+            OceanButton91CBB8.Name = "OceanButton91CBB8";
+            OceanButton91CBB8.Size = new Size(60, 57);
+            OceanButton91CBB8.TabIndex = 60;
+            OceanButton91CBB8.Text = "#91CBB8";
+            OceanButton91CBB8.UseVisualStyleBackColor = false;
+            OceanButton91CBB8.Click += OceanButton91CBB8_Click;
+            // 
+            // OceanColorEraseButton
+            // 
+            OceanColorEraseButton.BackColor = SystemColors.ControlLightLight;
+            OceanColorEraseButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanColorEraseButton.FlatStyle = FlatStyle.Flat;
+            OceanColorEraseButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanColorEraseButton.ForeColor = SystemColors.ControlDarkDark;
+            OceanColorEraseButton.IconChar = FontAwesome.Sharp.IconChar.Eraser;
+            OceanColorEraseButton.IconColor = Color.Black;
+            OceanColorEraseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            OceanColorEraseButton.IconSize = 24;
+            OceanColorEraseButton.Location = new Point(80, 248);
+            OceanColorEraseButton.Name = "OceanColorEraseButton";
+            OceanColorEraseButton.Size = new Size(60, 60);
+            OceanColorEraseButton.TabIndex = 59;
+            OceanColorEraseButton.Text = "Erase";
+            OceanColorEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            OceanColorEraseButton.UseVisualStyleBackColor = false;
+            OceanColorEraseButton.Click += OceanColorEraseButton_Click;
+            // 
+            // label23
+            // 
+            label23.AutoSize = true;
+            label23.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label23.ForeColor = SystemColors.ControlDarkDark;
+            label23.Location = new Point(17, 100);
+            label23.Name = "label23";
+            label23.Size = new Size(56, 13);
+            label23.TabIndex = 58;
+            label23.Text = "Brush Size";
+            // 
+            // OceanBrushSizeTrack
+            // 
+            OceanBrushSizeTrack.AutoSize = false;
+            OceanBrushSizeTrack.Location = new Point(14, 116);
+            OceanBrushSizeTrack.Maximum = 256;
+            OceanBrushSizeTrack.Minimum = 2;
+            OceanBrushSizeTrack.Name = "OceanBrushSizeTrack";
+            OceanBrushSizeTrack.Size = new Size(126, 20);
+            OceanBrushSizeTrack.TabIndex = 57;
+            OceanBrushSizeTrack.TickFrequency = 2;
+            OceanBrushSizeTrack.TickStyle = TickStyle.None;
+            OceanBrushSizeTrack.Value = 20;
+            OceanBrushSizeTrack.ValueChanged += OceanBrushSizeTrack_ValueChanged;
+            // 
+            // label57
+            // 
+            label57.AutoSize = true;
+            label57.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label57.ForeColor = SystemColors.ControlDarkDark;
+            label57.Location = new Point(16, 15);
+            label57.Name = "label57";
+            label57.Size = new Size(62, 13);
+            label57.TabIndex = 55;
+            label57.Text = "Color Brush";
+            // 
+            // OceanPaintColorSelectButton
+            // 
+            OceanPaintColorSelectButton.BackColor = Color.FromArgb(128, 145, 203, 184);
+            OceanPaintColorSelectButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanPaintColorSelectButton.FlatStyle = FlatStyle.Flat;
+            OceanPaintColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanPaintColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            OceanPaintColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            OceanPaintColorSelectButton.IconColor = Color.Tan;
+            OceanPaintColorSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            OceanPaintColorSelectButton.Location = new Point(14, 314);
+            OceanPaintColorSelectButton.Name = "OceanPaintColorSelectButton";
+            OceanPaintColorSelectButton.Size = new Size(126, 60);
+            OceanPaintColorSelectButton.TabIndex = 54;
+            OceanPaintColorSelectButton.Text = "Select Brush Color";
+            OceanPaintColorSelectButton.UseVisualStyleBackColor = false;
+            OceanPaintColorSelectButton.Click += OceanPaintColorSelectButton_Click;
+            // 
+            // BackgroundToolPanel
+            // 
+            BackgroundToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            BackgroundToolPanel.BackColor = SystemColors.Control;
+            BackgroundToolPanel.Location = new Point(1421, 90);
+            BackgroundToolPanel.Margin = new Padding(0);
+            BackgroundToolPanel.Name = "BackgroundToolPanel";
+            BackgroundToolPanel.Size = new Size(152, 806);
+            BackgroundToolPanel.TabIndex = 15;
+            // 
+            // DrawingToolPanel
+            // 
+            DrawingToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            DrawingToolPanel.BackColor = SystemColors.Control;
+            DrawingToolPanel.Controls.Add(label26);
+            DrawingToolPanel.Location = new Point(1421, 90);
+            DrawingToolPanel.Margin = new Padding(0);
+            DrawingToolPanel.Name = "DrawingToolPanel";
+            DrawingToolPanel.Size = new Size(152, 806);
+            DrawingToolPanel.TabIndex = 26;
+            // 
+            // label26
+            // 
+            label26.AutoSize = true;
+            label26.Location = new Point(22, 15);
+            label26.Name = "label26";
+            label26.Size = new Size(51, 15);
+            label26.TabIndex = 0;
+            label26.Text = "Drawing";
+            // 
+            // RegionToolPanel
+            // 
+            RegionToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            RegionToolPanel.BackColor = SystemColors.Control;
+            RegionToolPanel.Controls.Add(label90);
+            RegionToolPanel.Controls.Add(LightSolidRegionBorderPicture);
+            RegionToolPanel.Controls.Add(GradientRegionBorderPicture);
+            RegionToolPanel.Controls.Add(SolidAndDashRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DoubleSolidRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DashDotDotRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DashDotRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DashedRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DottedRegionBorderPicture);
+            RegionToolPanel.Controls.Add(SolidRegionBorderPicture);
+            RegionToolPanel.Controls.Add(RegionDoubleSolidBorderRadio);
+            RegionToolPanel.Controls.Add(RegionBorderedLightSolidRadio);
+            RegionToolPanel.Controls.Add(RegionBorderedGradientRadio);
+            RegionToolPanel.Controls.Add(RegionSolidAndDashesBorderRadio);
+            RegionToolPanel.Controls.Add(RegionDashDotDotBorderRadio);
+            RegionToolPanel.Controls.Add(RegionDashDotBorderRadio);
+            RegionToolPanel.Controls.Add(RegionDashBorderRadio);
+            RegionToolPanel.Controls.Add(RegionDottedBorderRadio);
+            RegionToolPanel.Controls.Add(RegionSolidBorderRadio);
+            RegionToolPanel.Location = new Point(1421, 90);
+            RegionToolPanel.Margin = new Padding(0);
+            RegionToolPanel.Name = "RegionToolPanel";
+            RegionToolPanel.Size = new Size(152, 806);
+            RegionToolPanel.TabIndex = 25;
+            // 
+            // label90
+            // 
+            label90.AutoSize = true;
+            label90.CausesValidation = false;
+            label90.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label90.ForeColor = SystemColors.ControlDarkDark;
+            label90.Location = new Point(17, 22);
+            label90.Name = "label90";
+            label90.Size = new Size(93, 20);
+            label90.TabIndex = 120;
+            label90.Text = "Border Style";
+            label90.UseMnemonic = false;
+            // 
+            // LightSolidRegionBorderPicture
+            // 
+            LightSolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            LightSolidRegionBorderPicture.Image = (Image)resources.GetObject("LightSolidRegionBorderPicture.Image");
+            LightSolidRegionBorderPicture.InitialImage = null;
+            LightSolidRegionBorderPicture.Location = new Point(31, 246);
+            LightSolidRegionBorderPicture.Name = "LightSolidRegionBorderPicture";
+            LightSolidRegionBorderPicture.Size = new Size(106, 18);
+            LightSolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            LightSolidRegionBorderPicture.TabIndex = 119;
+            LightSolidRegionBorderPicture.TabStop = false;
+            LightSolidRegionBorderPicture.Click += LightSolidRegionBorderPicture_Click;
+            // 
+            // GradientRegionBorderPicture
+            // 
+            GradientRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            GradientRegionBorderPicture.Image = (Image)resources.GetObject("GradientRegionBorderPicture.Image");
+            GradientRegionBorderPicture.InitialImage = null;
+            GradientRegionBorderPicture.Location = new Point(31, 220);
+            GradientRegionBorderPicture.Name = "GradientRegionBorderPicture";
+            GradientRegionBorderPicture.Size = new Size(106, 18);
+            GradientRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            GradientRegionBorderPicture.TabIndex = 118;
+            GradientRegionBorderPicture.TabStop = false;
+            GradientRegionBorderPicture.Click += GradientRegionBorderPicture_Click;
+            // 
+            // SolidAndDashRegionBorderPicture
+            // 
+            SolidAndDashRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            SolidAndDashRegionBorderPicture.Image = (Image)resources.GetObject("SolidAndDashRegionBorderPicture.Image");
+            SolidAndDashRegionBorderPicture.InitialImage = null;
+            SolidAndDashRegionBorderPicture.Location = new Point(31, 194);
+            SolidAndDashRegionBorderPicture.Name = "SolidAndDashRegionBorderPicture";
+            SolidAndDashRegionBorderPicture.Size = new Size(106, 18);
+            SolidAndDashRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            SolidAndDashRegionBorderPicture.TabIndex = 117;
+            SolidAndDashRegionBorderPicture.TabStop = false;
+            SolidAndDashRegionBorderPicture.Click += SolidAndDashRegionBorderPicture_Click;
+            // 
+            // DoubleSolidRegionBorderPicture
+            // 
+            DoubleSolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DoubleSolidRegionBorderPicture.Image = (Image)resources.GetObject("DoubleSolidRegionBorderPicture.Image");
+            DoubleSolidRegionBorderPicture.InitialImage = null;
+            DoubleSolidRegionBorderPicture.Location = new Point(31, 170);
+            DoubleSolidRegionBorderPicture.Name = "DoubleSolidRegionBorderPicture";
+            DoubleSolidRegionBorderPicture.Size = new Size(106, 18);
+            DoubleSolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DoubleSolidRegionBorderPicture.TabIndex = 116;
+            DoubleSolidRegionBorderPicture.TabStop = false;
+            DoubleSolidRegionBorderPicture.Click += DoubleSolidRegionBorderPicture_Click;
+            // 
+            // DashDotDotRegionBorderPicture
+            // 
+            DashDotDotRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DashDotDotRegionBorderPicture.Image = (Image)resources.GetObject("DashDotDotRegionBorderPicture.Image");
+            DashDotDotRegionBorderPicture.InitialImage = null;
+            DashDotDotRegionBorderPicture.Location = new Point(31, 145);
+            DashDotDotRegionBorderPicture.Name = "DashDotDotRegionBorderPicture";
+            DashDotDotRegionBorderPicture.Size = new Size(106, 18);
+            DashDotDotRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DashDotDotRegionBorderPicture.TabIndex = 115;
+            DashDotDotRegionBorderPicture.TabStop = false;
+            DashDotDotRegionBorderPicture.Click += DashDotDotRegionBorderPicture_Click;
+            // 
+            // DashDotRegionBorderPicture
+            // 
+            DashDotRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DashDotRegionBorderPicture.Image = (Image)resources.GetObject("DashDotRegionBorderPicture.Image");
+            DashDotRegionBorderPicture.InitialImage = null;
+            DashDotRegionBorderPicture.Location = new Point(31, 120);
+            DashDotRegionBorderPicture.Name = "DashDotRegionBorderPicture";
+            DashDotRegionBorderPicture.Size = new Size(106, 18);
+            DashDotRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DashDotRegionBorderPicture.TabIndex = 114;
+            DashDotRegionBorderPicture.TabStop = false;
+            DashDotRegionBorderPicture.Click += DashDotRegionBorderPicture_Click;
+            // 
+            // DashedRegionBorderPicture
+            // 
+            DashedRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DashedRegionBorderPicture.Image = (Image)resources.GetObject("DashedRegionBorderPicture.Image");
+            DashedRegionBorderPicture.InitialImage = null;
+            DashedRegionBorderPicture.Location = new Point(31, 95);
+            DashedRegionBorderPicture.Name = "DashedRegionBorderPicture";
+            DashedRegionBorderPicture.Size = new Size(106, 18);
+            DashedRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DashedRegionBorderPicture.TabIndex = 113;
+            DashedRegionBorderPicture.TabStop = false;
+            DashedRegionBorderPicture.Click += DashedRegionBorderPicture_Click;
+            // 
+            // DottedRegionBorderPicture
+            // 
+            DottedRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DottedRegionBorderPicture.Image = (Image)resources.GetObject("DottedRegionBorderPicture.Image");
+            DottedRegionBorderPicture.InitialImage = null;
+            DottedRegionBorderPicture.Location = new Point(31, 69);
+            DottedRegionBorderPicture.Name = "DottedRegionBorderPicture";
+            DottedRegionBorderPicture.Size = new Size(106, 18);
+            DottedRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DottedRegionBorderPicture.TabIndex = 112;
+            DottedRegionBorderPicture.TabStop = false;
+            DottedRegionBorderPicture.Click += DottedRegionBorderPicture_Click;
+            // 
+            // SolidRegionBorderPicture
+            // 
+            SolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            SolidRegionBorderPicture.Image = (Image)resources.GetObject("SolidRegionBorderPicture.Image");
+            SolidRegionBorderPicture.InitialImage = null;
+            SolidRegionBorderPicture.Location = new Point(31, 45);
+            SolidRegionBorderPicture.Name = "SolidRegionBorderPicture";
+            SolidRegionBorderPicture.Size = new Size(106, 18);
+            SolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            SolidRegionBorderPicture.TabIndex = 111;
+            SolidRegionBorderPicture.TabStop = false;
+            SolidRegionBorderPicture.Click += SolidRegionBorderPicture_Click;
+            // 
+            // RegionDoubleSolidBorderRadio
+            // 
+            RegionDoubleSolidBorderRadio.AutoSize = true;
+            RegionDoubleSolidBorderRadio.Location = new Point(16, 175);
+            RegionDoubleSolidBorderRadio.Name = "RegionDoubleSolidBorderRadio";
+            RegionDoubleSolidBorderRadio.Size = new Size(14, 13);
+            RegionDoubleSolidBorderRadio.TabIndex = 110;
+            RegionDoubleSolidBorderRadio.UseVisualStyleBackColor = true;
+            RegionDoubleSolidBorderRadio.CheckedChanged += RegionDoubleSolidBorderRadio_CheckedChanged;
+            // 
+            // RegionBorderedLightSolidRadio
+            // 
+            RegionBorderedLightSolidRadio.AutoSize = true;
+            RegionBorderedLightSolidRadio.Location = new Point(16, 251);
+            RegionBorderedLightSolidRadio.Name = "RegionBorderedLightSolidRadio";
+            RegionBorderedLightSolidRadio.Size = new Size(14, 13);
+            RegionBorderedLightSolidRadio.TabIndex = 109;
+            RegionBorderedLightSolidRadio.UseVisualStyleBackColor = true;
+            RegionBorderedLightSolidRadio.CheckedChanged += RegionBorderedLightSolidRadio_CheckedChanged;
+            // 
+            // RegionBorderedGradientRadio
+            // 
+            RegionBorderedGradientRadio.AutoSize = true;
+            RegionBorderedGradientRadio.Location = new Point(16, 225);
+            RegionBorderedGradientRadio.Name = "RegionBorderedGradientRadio";
+            RegionBorderedGradientRadio.Size = new Size(14, 13);
+            RegionBorderedGradientRadio.TabIndex = 108;
+            RegionBorderedGradientRadio.UseVisualStyleBackColor = true;
+            RegionBorderedGradientRadio.CheckedChanged += RegionBorderedGradientRadio_CheckedChanged;
+            // 
+            // RegionSolidAndDashesBorderRadio
+            // 
+            RegionSolidAndDashesBorderRadio.AutoSize = true;
+            RegionSolidAndDashesBorderRadio.Location = new Point(16, 199);
+            RegionSolidAndDashesBorderRadio.Name = "RegionSolidAndDashesBorderRadio";
+            RegionSolidAndDashesBorderRadio.Size = new Size(14, 13);
+            RegionSolidAndDashesBorderRadio.TabIndex = 107;
+            RegionSolidAndDashesBorderRadio.UseVisualStyleBackColor = true;
+            RegionSolidAndDashesBorderRadio.CheckedChanged += RegionSolidAndDashesBorderRadio_CheckedChanged;
+            // 
+            // RegionDashDotDotBorderRadio
+            // 
+            RegionDashDotDotBorderRadio.AutoSize = true;
+            RegionDashDotDotBorderRadio.Location = new Point(16, 150);
+            RegionDashDotDotBorderRadio.Name = "RegionDashDotDotBorderRadio";
+            RegionDashDotDotBorderRadio.Size = new Size(14, 13);
+            RegionDashDotDotBorderRadio.TabIndex = 106;
+            RegionDashDotDotBorderRadio.UseVisualStyleBackColor = true;
+            RegionDashDotDotBorderRadio.CheckedChanged += RegionDashDotDotBorderRadio_CheckedChanged;
+            // 
+            // RegionDashDotBorderRadio
+            // 
+            RegionDashDotBorderRadio.AutoSize = true;
+            RegionDashDotBorderRadio.Location = new Point(16, 125);
+            RegionDashDotBorderRadio.Name = "RegionDashDotBorderRadio";
+            RegionDashDotBorderRadio.Size = new Size(14, 13);
+            RegionDashDotBorderRadio.TabIndex = 105;
+            RegionDashDotBorderRadio.UseVisualStyleBackColor = true;
+            RegionDashDotBorderRadio.CheckedChanged += RegionDashDotBorderRadio_CheckedChanged;
+            // 
+            // RegionDashBorderRadio
+            // 
+            RegionDashBorderRadio.AutoSize = true;
+            RegionDashBorderRadio.Location = new Point(16, 100);
+            RegionDashBorderRadio.Name = "RegionDashBorderRadio";
+            RegionDashBorderRadio.Size = new Size(14, 13);
+            RegionDashBorderRadio.TabIndex = 104;
+            RegionDashBorderRadio.UseVisualStyleBackColor = true;
+            RegionDashBorderRadio.CheckedChanged += RegionDashBorderRadio_CheckedChanged;
+            // 
+            // RegionDottedBorderRadio
+            // 
+            RegionDottedBorderRadio.AutoSize = true;
+            RegionDottedBorderRadio.Location = new Point(16, 75);
+            RegionDottedBorderRadio.Name = "RegionDottedBorderRadio";
+            RegionDottedBorderRadio.Size = new Size(14, 13);
+            RegionDottedBorderRadio.TabIndex = 103;
+            RegionDottedBorderRadio.UseVisualStyleBackColor = true;
+            RegionDottedBorderRadio.CheckedChanged += RegionDottedBorderRadio_CheckedChanged;
+            // 
+            // RegionSolidBorderRadio
+            // 
+            RegionSolidBorderRadio.AutoSize = true;
+            RegionSolidBorderRadio.BackgroundImageLayout = ImageLayout.Stretch;
+            RegionSolidBorderRadio.Checked = true;
+            RegionSolidBorderRadio.Location = new Point(16, 50);
+            RegionSolidBorderRadio.Name = "RegionSolidBorderRadio";
+            RegionSolidBorderRadio.Size = new Size(14, 13);
+            RegionSolidBorderRadio.TabIndex = 102;
+            RegionSolidBorderRadio.TabStop = true;
+            RegionSolidBorderRadio.UseVisualStyleBackColor = true;
+            RegionSolidBorderRadio.CheckedChanged += RegionSolidBorderRadio_CheckedChanged;
+            // 
+            // OverlayToolPanel
+            // 
+            OverlayToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            OverlayToolPanel.BackColor = SystemColors.Control;
+            OverlayToolPanel.Controls.Add(FrameStyleTable);
+            OverlayToolPanel.Location = new Point(1421, 90);
+            OverlayToolPanel.Margin = new Padding(0);
+            OverlayToolPanel.Name = "OverlayToolPanel";
+            OverlayToolPanel.Size = new Size(152, 806);
+            OverlayToolPanel.TabIndex = 24;
+            // 
+            // FrameStyleTable
+            // 
+            FrameStyleTable.AutoScroll = true;
+            FrameStyleTable.CausesValidation = false;
+            FrameStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
+            FrameStyleTable.ColumnCount = 1;
+            FrameStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
+            FrameStyleTable.Location = new Point(20, 15);
+            FrameStyleTable.Name = "FrameStyleTable";
+            FrameStyleTable.RowCount = 1;
+            FrameStyleTable.RowStyles.Add(new RowStyle());
+            FrameStyleTable.Size = new Size(122, 779);
+            FrameStyleTable.TabIndex = 74;
+            // 
+            // LabelToolPanel
+            // 
+            LabelToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            LabelToolPanel.BackColor = SystemColors.Control;
+            LabelToolPanel.Controls.Add(SelectBoxTintButton);
+            LabelToolPanel.Controls.Add(LabelBoxStyleTable);
+            LabelToolPanel.Location = new Point(1421, 90);
+            LabelToolPanel.Margin = new Padding(0);
+            LabelToolPanel.Name = "LabelToolPanel";
+            LabelToolPanel.Size = new Size(152, 806);
+            LabelToolPanel.TabIndex = 27;
+            // 
+            // SelectBoxTintButton
+            // 
+            SelectBoxTintButton.BackColor = Color.White;
+            SelectBoxTintButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SelectBoxTintButton.ForeColor = SystemColors.ControlDarkDark;
+            SelectBoxTintButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SelectBoxTintButton.IconColor = Color.Tan;
+            SelectBoxTintButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectBoxTintButton.Location = new Point(15, 20);
+            SelectBoxTintButton.Name = "SelectBoxTintButton";
+            SelectBoxTintButton.Size = new Size(120, 60);
+            SelectBoxTintButton.TabIndex = 113;
+            SelectBoxTintButton.Text = "Select Tint Color";
+            SelectBoxTintButton.UseVisualStyleBackColor = false;
+            SelectBoxTintButton.Click += SelectBoxTintButton_Click;
+            // 
+            // LabelBoxStyleTable
+            // 
+            LabelBoxStyleTable.AutoScroll = true;
+            LabelBoxStyleTable.CausesValidation = false;
+            LabelBoxStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
+            LabelBoxStyleTable.ColumnCount = 1;
+            LabelBoxStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
+            LabelBoxStyleTable.Location = new Point(15, 86);
+            LabelBoxStyleTable.Name = "LabelBoxStyleTable";
+            LabelBoxStyleTable.RowCount = 1;
+            LabelBoxStyleTable.RowStyles.Add(new RowStyle());
+            LabelBoxStyleTable.Size = new Size(122, 708);
+            LabelBoxStyleTable.TabIndex = 112;
+            // 
             // materialCheckBox1
             // 
             materialCheckBox1.AutoSize = true;
@@ -8276,26 +8285,6 @@
             ApplicationStatusStrip.PerformLayout();
             RealmStudioMainMenuStrip.ResumeLayout(false);
             RealmStudioMainMenuStrip.PerformLayout();
-            OceanToolPanel.ResumeLayout(false);
-            OceanToolPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).EndInit();
-            ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).EndInit();
-            ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).EndInit();
-            DrawingToolPanel.ResumeLayout(false);
-            DrawingToolPanel.PerformLayout();
-            RegionToolPanel.ResumeLayout(false);
-            RegionToolPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)SolidAndDashRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DoubleSolidRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DashDotDotRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DashDotRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).EndInit();
-            OverlayToolPanel.ResumeLayout(false);
-            LabelToolPanel.ResumeLayout(false);
             SymbolToolPanel.ResumeLayout(false);
             SymbolToolPanel.PerformLayout();
             PathToolPanel.ResumeLayout(false);
@@ -8327,6 +8316,26 @@
             ((System.ComponentModel.ISupportInitialize)LandBrushVelocityTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LandColorEraserSizeTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LandColorBrushSizeTrack).EndInit();
+            OceanToolPanel.ResumeLayout(false);
+            OceanToolPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).EndInit();
+            DrawingToolPanel.ResumeLayout(false);
+            DrawingToolPanel.PerformLayout();
+            RegionToolPanel.ResumeLayout(false);
+            RegionToolPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SolidAndDashRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DoubleSolidRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DashDotDotRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DashDotRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).EndInit();
+            OverlayToolPanel.ResumeLayout(false);
+            LabelToolPanel.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -8383,19 +8392,19 @@
         private Label label3;
         private ReaLTaiizor.Controls.CyberSwitch ShowLandLayerSwitch;
         private Label label4;
-        private ReaLTaiizor.Controls.CyberSwitch cyberSwitch1;
+        private ReaLTaiizor.Controls.CyberSwitch ShowWaterLayerSwitch;
         private Label label5;
-        private ReaLTaiizor.Controls.CyberSwitch cyberSwitch2;
+        private ReaLTaiizor.Controls.CyberSwitch ShowPathLayerSwitch;
         private Label label6;
-        private ReaLTaiizor.Controls.CyberSwitch cyberSwitch3;
+        private ReaLTaiizor.Controls.CyberSwitch ShowSymbolLayerSwitch;
         private Label label7;
-        private ReaLTaiizor.Controls.CyberSwitch cyberSwitch4;
+        private ReaLTaiizor.Controls.CyberSwitch ShowLabelLayerSwitch;
         private Label label8;
-        private ReaLTaiizor.Controls.CyberSwitch cyberSwitch5;
+        private ReaLTaiizor.Controls.CyberSwitch ShowOverlayLayerSwitch;
         private Label label9;
-        private ReaLTaiizor.Controls.CyberSwitch cyberSwitch6;
+        private ReaLTaiizor.Controls.CyberSwitch ShowRegionLayerSwitch;
         private Label label10;
-        private ReaLTaiizor.Controls.CyberSwitch cyberSwitch7;
+        private ReaLTaiizor.Controls.CyberSwitch ShowDrawingLayerSwitch;
         private Label label11;
         private GroupBox groupBox1;
         private TrackBar LandBrushSizeTrack;
