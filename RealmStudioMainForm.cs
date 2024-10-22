@@ -6457,6 +6457,54 @@ namespace RealmStudio
 
         }
 
+        private void LandformFillButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+
+            if (LandformTexturePreviewPicture.Image != null)
+            {
+                MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+
+                if (landformLayer.MapLayerComponents.Count > 0)
+                {
+                    MessageBox.Show("Landforms have already been drawn. Please clear them before filling the map.", "Landforms Already Drawn", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+                else
+                {
+                    Landform landform = new();
+                    SetLandformData(landform);
+
+                    LandformMethods.FillMapWithLandForm(CURRENT_MAP, landform);
+
+                    CURRENT_MAP.IsSaved = false;
+                    SKGLRenderControl.Invalidate();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a landform texture.", "Select Texture", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+            }
+        }
+
+        private void LandformClearButton_Click(object sender, EventArgs e)
+        {
+            DialogResult confirmResult = MessageBox.Show("This action will clear all landform drawing and any drawn landforms.\nPlease confirm.", "Clear All?", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+            if (confirmResult != DialogResult.OK)
+            {
+                return;
+            }
+
+            CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+
+            Cmd_ClearAllLandforms cmd = new(CURRENT_MAP);
+
+            CommandManager.AddCommand(cmd);
+            cmd.DoOperation();
+
+            SKGLRenderControl.Invalidate();
+        }
+
         private void LandColorButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.LandColor;
@@ -10170,6 +10218,7 @@ namespace RealmStudio
         }
 
         #endregion
+
 
     }
 }

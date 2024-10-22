@@ -84,6 +84,17 @@
             LandformSelectButton = new FontAwesome.Sharp.IconToolStripButton();
             LandformPaintButton = new FontAwesome.Sharp.IconToolStripButton();
             LandformEraseButton = new FontAwesome.Sharp.IconToolStripButton();
+            LandformFillButton = new FontAwesome.Sharp.IconToolStripButton();
+            LandformClearButton = new FontAwesome.Sharp.IconToolStripButton();
+            LandformGenerateButton = new FontAwesome.Sharp.IconToolStripButton();
+            LandformTypeButton = new ToolStripSplitButton();
+            RegionMenuItem = new ToolStripMenuItem();
+            ContinentMenuItem = new ToolStripMenuItem();
+            IslandMenuItem = new ToolStripMenuItem();
+            ArchipelagoMenuItem = new ToolStripMenuItem();
+            AtollMenuItem = new ToolStripMenuItem();
+            WorldMenuItem = new ToolStripMenuItem();
+            EquirectangularMenuItem = new ToolStripMenuItem();
             groupBox3 = new GroupBox();
             label17 = new Label();
             label19 = new Label();
@@ -1495,7 +1506,7 @@
             LandToolStrip.Dock = DockStyle.None;
             LandToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             LandToolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            LandToolStrip.Items.AddRange(new ToolStripItem[] { LandformSelectButton, LandformPaintButton, LandformEraseButton });
+            LandToolStrip.Items.AddRange(new ToolStripItem[] { LandformSelectButton, LandformPaintButton, LandformEraseButton, LandformFillButton, LandformClearButton, LandformGenerateButton, LandformTypeButton });
             LandToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
             LandToolStrip.Location = new Point(158, 0);
             LandToolStrip.Name = "LandToolStrip";
@@ -1555,6 +1566,131 @@
             LandformEraseButton.Text = "Erase";
             LandformEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
             LandformEraseButton.Click += LandformEraseButton_Click;
+            // 
+            // LandformFillButton
+            // 
+            LandformFillButton.AutoSize = false;
+            LandformFillButton.ForeColor = SystemColors.ControlDarkDark;
+            LandformFillButton.IconChar = FontAwesome.Sharp.IconChar.Fill;
+            LandformFillButton.IconColor = Color.Black;
+            LandformFillButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LandformFillButton.IconSize = 24;
+            LandformFillButton.ImageScaling = ToolStripItemImageScaling.None;
+            LandformFillButton.ImageTransparentColor = Color.Magenta;
+            LandformFillButton.Margin = new Padding(0, 50, 0, 2);
+            LandformFillButton.Name = "LandformFillButton";
+            LandformFillButton.Size = new Size(60, 60);
+            LandformFillButton.Text = "Fill";
+            LandformFillButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            LandformFillButton.Click += LandformFillButton_Click;
+            // 
+            // LandformClearButton
+            // 
+            LandformClearButton.AutoSize = false;
+            LandformClearButton.ForeColor = SystemColors.ControlDarkDark;
+            LandformClearButton.IconChar = FontAwesome.Sharp.IconChar.Square;
+            LandformClearButton.IconColor = Color.Black;
+            LandformClearButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LandformClearButton.IconSize = 24;
+            LandformClearButton.ImageScaling = ToolStripItemImageScaling.None;
+            LandformClearButton.ImageTransparentColor = Color.Magenta;
+            LandformClearButton.Name = "LandformClearButton";
+            LandformClearButton.Size = new Size(60, 60);
+            LandformClearButton.Text = "Clear";
+            LandformClearButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            LandformClearButton.Click += LandformClearButton_Click;
+            // 
+            // LandformGenerateButton
+            // 
+            LandformGenerateButton.AutoSize = false;
+            LandformGenerateButton.ForeColor = SystemColors.ControlDarkDark;
+            LandformGenerateButton.IconChar = FontAwesome.Sharp.IconChar.Splotch;
+            LandformGenerateButton.IconColor = Color.Black;
+            LandformGenerateButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LandformGenerateButton.IconSize = 24;
+            LandformGenerateButton.ImageScaling = ToolStripItemImageScaling.None;
+            LandformGenerateButton.ImageTransparentColor = Color.Magenta;
+            LandformGenerateButton.Margin = new Padding(0, 50, 0, 2);
+            LandformGenerateButton.Name = "LandformGenerateButton";
+            LandformGenerateButton.Size = new Size(60, 60);
+            LandformGenerateButton.Text = "Generate";
+            LandformGenerateButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // LandformTypeButton
+            // 
+            LandformTypeButton.AutoSize = false;
+            LandformTypeButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            LandformTypeButton.DropDownItems.AddRange(new ToolStripItem[] { RegionMenuItem, ContinentMenuItem, IslandMenuItem, ArchipelagoMenuItem, AtollMenuItem, WorldMenuItem, EquirectangularMenuItem });
+            LandformTypeButton.ForeColor = SystemColors.ControlDarkDark;
+            LandformTypeButton.Image = (Image)resources.GetObject("LandformTypeButton.Image");
+            LandformTypeButton.ImageTransparentColor = Color.Magenta;
+            LandformTypeButton.Name = "LandformTypeButton";
+            LandformTypeButton.Size = new Size(60, 21);
+            LandformTypeButton.Text = "Type";
+            LandformTypeButton.TextImageRelation = TextImageRelation.Overlay;
+            // 
+            // RegionMenuItem
+            // 
+            RegionMenuItem.Checked = true;
+            RegionMenuItem.CheckOnClick = true;
+            RegionMenuItem.CheckState = CheckState.Checked;
+            RegionMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            RegionMenuItem.Name = "RegionMenuItem";
+            RegionMenuItem.Size = new Size(167, 22);
+            RegionMenuItem.Text = "&Region";
+            RegionMenuItem.TextImageRelation = TextImageRelation.Overlay;
+            // 
+            // ContinentMenuItem
+            // 
+            ContinentMenuItem.CheckOnClick = true;
+            ContinentMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            ContinentMenuItem.Name = "ContinentMenuItem";
+            ContinentMenuItem.Size = new Size(167, 22);
+            ContinentMenuItem.Text = "&Continent";
+            // 
+            // IslandMenuItem
+            // 
+            IslandMenuItem.CheckOnClick = true;
+            IslandMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            IslandMenuItem.Name = "IslandMenuItem";
+            IslandMenuItem.Size = new Size(167, 22);
+            IslandMenuItem.Text = "&Island";
+            // 
+            // ArchipelagoMenuItem
+            // 
+            ArchipelagoMenuItem.CheckOnClick = true;
+            ArchipelagoMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            ArchipelagoMenuItem.Name = "ArchipelagoMenuItem";
+            ArchipelagoMenuItem.Size = new Size(167, 22);
+            ArchipelagoMenuItem.Text = "A&rchipelago";
+            ArchipelagoMenuItem.TextImageRelation = TextImageRelation.Overlay;
+            // 
+            // AtollMenuItem
+            // 
+            AtollMenuItem.CheckOnClick = true;
+            AtollMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            AtollMenuItem.Name = "AtollMenuItem";
+            AtollMenuItem.Size = new Size(167, 22);
+            AtollMenuItem.Text = "A&toll";
+            AtollMenuItem.TextImageRelation = TextImageRelation.Overlay;
+            // 
+            // WorldMenuItem
+            // 
+            WorldMenuItem.CheckOnClick = true;
+            WorldMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            WorldMenuItem.Name = "WorldMenuItem";
+            WorldMenuItem.Size = new Size(167, 22);
+            WorldMenuItem.Text = "&World";
+            WorldMenuItem.TextImageRelation = TextImageRelation.Overlay;
+            // 
+            // EquirectangularMenuItem
+            // 
+            EquirectangularMenuItem.CheckOnClick = true;
+            EquirectangularMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            EquirectangularMenuItem.Name = "EquirectangularMenuItem";
+            EquirectangularMenuItem.Size = new Size(167, 22);
+            EquirectangularMenuItem.Text = "&Equirectangular";
+            EquirectangularMenuItem.TextImageRelation = TextImageRelation.Overlay;
             // 
             // groupBox3
             // 
@@ -8849,5 +8985,16 @@
         private ToolStripMenuItem NameGeneratorConfigurationToolStripMenuItem;
         private NumericUpDown LabelRotationUpDown;
         private NumericUpDown SymbolRotationUpDown;
+        private FontAwesome.Sharp.IconToolStripButton LandformFillButton;
+        private FontAwesome.Sharp.IconToolStripButton LandformClearButton;
+        private FontAwesome.Sharp.IconToolStripButton LandformGenerateButton;
+        private ToolStripSplitButton LandformTypeButton;
+        private ToolStripMenuItem ContinentMenuItem;
+        private ToolStripMenuItem ArchipelagoMenuItem;
+        private ToolStripMenuItem AtollMenuItem;
+        private ToolStripMenuItem WorldMenuItem;
+        private ToolStripMenuItem EquirectangularMenuItem;
+        private ToolStripMenuItem RegionMenuItem;
+        private ToolStripMenuItem IslandMenuItem;
     }
 }

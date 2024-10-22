@@ -200,5 +200,12 @@ namespace RealmStudio
 
             return pathsMerged;
         }
+
+        public static void FillMapWithLandForm(RealmStudioMap map, Landform landform)
+        {
+            Cmd_FillMapWithLandform cmd = new(map, landform);
+            CommandManager.AddCommand(cmd);
+            cmd.DoOperation();
+        }
     }
 }
