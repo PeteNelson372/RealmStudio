@@ -1615,6 +1615,7 @@
             LandformGenerateButton.Size = new Size(60, 60);
             LandformGenerateButton.Text = "Generate";
             LandformGenerateButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            LandformGenerateButton.Click += LandformGenerateButton_Click;
             // 
             // LandformTypeButton
             // 
@@ -1636,61 +1637,68 @@
             RegionMenuItem.CheckState = CheckState.Checked;
             RegionMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             RegionMenuItem.Name = "RegionMenuItem";
-            RegionMenuItem.Size = new Size(167, 22);
+            RegionMenuItem.Size = new Size(180, 22);
             RegionMenuItem.Text = "&Region";
             RegionMenuItem.TextImageRelation = TextImageRelation.Overlay;
+            RegionMenuItem.Click += RegionMenuItem_Click;
             // 
             // ContinentMenuItem
             // 
             ContinentMenuItem.CheckOnClick = true;
             ContinentMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             ContinentMenuItem.Name = "ContinentMenuItem";
-            ContinentMenuItem.Size = new Size(167, 22);
+            ContinentMenuItem.Size = new Size(180, 22);
             ContinentMenuItem.Text = "&Continent";
+            ContinentMenuItem.Click += ContinentMenuItem_Click;
             // 
             // IslandMenuItem
             // 
             IslandMenuItem.CheckOnClick = true;
             IslandMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             IslandMenuItem.Name = "IslandMenuItem";
-            IslandMenuItem.Size = new Size(167, 22);
+            IslandMenuItem.Size = new Size(180, 22);
             IslandMenuItem.Text = "&Island";
+            IslandMenuItem.Click += IslandMenuItem_Click;
             // 
             // ArchipelagoMenuItem
             // 
             ArchipelagoMenuItem.CheckOnClick = true;
             ArchipelagoMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             ArchipelagoMenuItem.Name = "ArchipelagoMenuItem";
-            ArchipelagoMenuItem.Size = new Size(167, 22);
+            ArchipelagoMenuItem.Size = new Size(180, 22);
             ArchipelagoMenuItem.Text = "A&rchipelago";
             ArchipelagoMenuItem.TextImageRelation = TextImageRelation.Overlay;
+            ArchipelagoMenuItem.Click += ArchipelagoMenuItem_Click;
             // 
             // AtollMenuItem
             // 
             AtollMenuItem.CheckOnClick = true;
             AtollMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             AtollMenuItem.Name = "AtollMenuItem";
-            AtollMenuItem.Size = new Size(167, 22);
+            AtollMenuItem.Size = new Size(180, 22);
             AtollMenuItem.Text = "A&toll";
             AtollMenuItem.TextImageRelation = TextImageRelation.Overlay;
+            AtollMenuItem.Click += AtollMenuItem_Click;
             // 
             // WorldMenuItem
             // 
             WorldMenuItem.CheckOnClick = true;
             WorldMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             WorldMenuItem.Name = "WorldMenuItem";
-            WorldMenuItem.Size = new Size(167, 22);
+            WorldMenuItem.Size = new Size(180, 22);
             WorldMenuItem.Text = "&World";
             WorldMenuItem.TextImageRelation = TextImageRelation.Overlay;
+            WorldMenuItem.Click += WorldMenuItem_Click;
             // 
             // EquirectangularMenuItem
             // 
             EquirectangularMenuItem.CheckOnClick = true;
             EquirectangularMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             EquirectangularMenuItem.Name = "EquirectangularMenuItem";
-            EquirectangularMenuItem.Size = new Size(167, 22);
+            EquirectangularMenuItem.Size = new Size(180, 22);
             EquirectangularMenuItem.Text = "&Equirectangular";
             EquirectangularMenuItem.TextImageRelation = TextImageRelation.Overlay;
+            EquirectangularMenuItem.Click += EquirectangularMenuItem_Click;
             // 
             // groupBox3
             // 

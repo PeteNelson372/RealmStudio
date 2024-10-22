@@ -24,6 +24,7 @@
 using AForge;
 using AForge.Math.Geometry;
 using DelaunatorSharp;
+using SimplexNoise;
 using SkiaSharp;
 
 namespace RealmStudio
@@ -108,19 +109,21 @@ namespace RealmStudio
 
         public static Bitmap GetNoiseGeneratedLakeShape()
         {
+            // LAKE
+
             // see: https://www.redblobgames.com/maps/terrain-from-noise/#demo
             // and https://github.com/WardBenjamin/SimplexNoise
 
             float width = 500;
             float height = 500;
 
-            SimplexNoise.Noise.Seed = Random.Shared.Next(int.MaxValue - 1);
+            Noise.Seed = Random.Shared.Next(int.MaxValue - 1);
 
             // scale parameter: larger scale value = denser noise, so scale = wavelength (higher wavelength = denser noise)
             // or scale is inverse of frequency
 
-            float[,] noiseArray1 = SimplexNoise.Noise.Calc2D((int)width, (int)height, 0.008F);
-            float[,] noiseArray2 = SimplexNoise.Noise.Calc2D((int)width, (int)height, 0.015F);
+            float[,] noiseArray1 = Noise.Calc2D((int)width, (int)height, 0.008F);
+            float[,] noiseArray2 = Noise.Calc2D((int)width, (int)height, 0.015F);
 
             float[,] elevation = new float[(int)width, (int)height];
 
@@ -188,6 +191,96 @@ namespace RealmStudio
             lockedBitmap.UnlockBits();
 
             return lakeBitmap;
+        }
+
+        public static Bitmap GetNoiseGeneratedIslandShape(int width, int height, float islandSize)
+        {
+            // ISLAND
+
+            Noise.Seed = Random.Shared.Next(int.MaxValue - 1);
+
+            // scale parameter: larger scale value = denser noise, so scale = wavelength (higher wavelength = denser noise)
+            // or scale is inverse of frequency
+
+            // generate height map from simplex noise
+            float[,] elevation = new float[width, height];
+
+            float waterLevel = 0.5F;
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    elevation[x, y] = Noise.CalcPixel2D(x, y, 0.005F) / 255.0F;
+                }
+            }
+
+            Bitmap elevationBitmap = ConvertValuesToBWBitmap(elevation, width, height, waterLevel);
+            elevationBitmap.Save("C:\\Users\\Pete Nelson\\OneDrive\\Desktop\\elevationbitmap.bmp");
+
+            // calculate distance of point from center of bitmap
+            float[,] distance = new float[width, height];
+
+            SKPoint mapCenter = new SKPoint(width / 2, height / 2);
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    distance[x, y] = 1 - (SKPoint.Distance(mapCenter, new SKPoint(x, y)) / (float)Math.Sqrt(width * width + height * height));
+                }
+            }
+
+            Bitmap distanceBitmap = ConvertValuesToBWBitmap(distance, width, height, islandSize);
+            distanceBitmap.Save("C:\\Users\\Pete Nelson\\OneDrive\\Desktop\\distancebitmap.bmp");
+
+            // interpolate distance with elevation
+            float interpolationWeight = 0.6F;
+
+            float[,] interpolatedElevationAndDistance = new float[width, height];
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    interpolatedElevationAndDistance[x, y] = float.Lerp(elevation[x, y], 1 - distance[x, y], interpolationWeight);
+                }
+            }
+
+            // convert interpolated values into black/white pixels on a bitmap based on water level
+
+            Bitmap islandBitmap = ConvertValuesToBWBitmap(interpolatedElevationAndDistance, width, height, waterLevel);
+            return islandBitmap;
+        }
+
+
+        internal static Bitmap ConvertValuesToBWBitmap(float[,] values, int width, int height, float threshold)
+        {
+            Bitmap b = new(width, height);
+            using Graphics g = Graphics.FromImage(b);
+            g.Clear(Color.White);
+
+            var lockedBitmap = new LockBitmap(b);
+            lockedBitmap.LockBits();
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (values[x, y] > threshold)
+                    {
+                        lockedBitmap.SetPixel(x, y, Color.White);
+                    }
+                    else
+                    {
+                        lockedBitmap.SetPixel(x, y, Color.Black);
+                    }
+                }
+            }
+
+            lockedBitmap.UnlockBits();
+
+            return b;
         }
     }
 }

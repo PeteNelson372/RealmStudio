@@ -162,10 +162,12 @@ namespace RealmStudio
 
     public enum GeneratedLandformTypeEnum
     {
-        Random,
+        NotSet,
+        Region,
         Continent,
-        Atoll,
+        Island,
         Archipelago,
+        Atoll,
         World,
         Equirectangular
     }

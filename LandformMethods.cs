@@ -207,5 +207,18 @@ namespace RealmStudio
             CommandManager.AddCommand(cmd);
             cmd.DoOperation();
         }
+
+
+        internal static SKPath GenerateRandomIslandPath(SKSize size)
+        {
+            float islandSize = 0.85F;
+
+            SKPath islandDrawPath = new SKPath();
+            Bitmap islandBitmap = ShapeGenerator.GetNoiseGeneratedIslandShape((int)size.Width, (int)size.Height, islandSize);
+
+            islandBitmap.Save("C:\\Users\\Pete Nelson\\OneDrive\\Desktop\\islandbitmap.bmp");
+
+            return islandDrawPath;
+        }
     }
 }

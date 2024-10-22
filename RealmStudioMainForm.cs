@@ -65,6 +65,7 @@ namespace RealmStudio
         private static MapScale? SELECTED_MAP_SCALE = null;
         private static IWaterFeature? SELECTED_WATERFEATURE = null;
         private static ColorPaintBrush SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.SoftBrush;
+        private static GeneratedLandformTypeEnum SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.NotSet;
 
         private static Font SELECTED_LABEL_FONT = new("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
         private static Font SELECTED_MAP_SCALE_FONT = new("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -6676,12 +6677,97 @@ namespace RealmStudio
             SetSelectedBrushSize(LandformMethods.LandformColorEraserBrushSize);
         }
 
+        #region Landform Generation
+
+        private void LandformGenerateButton_Click(object sender, EventArgs e)
+        {
+            switch (SELECTED_LANDFORM_TYPE)
+            {
+                case GeneratedLandformTypeEnum.Region:
+                    break;
+                case GeneratedLandformTypeEnum.Continent:
+                    break;
+                case GeneratedLandformTypeEnum.Island:
+                    GenerateRandomIsland(CURRENT_MAP);
+                    break;
+                case GeneratedLandformTypeEnum.Archipelago:
+                    break;
+                case GeneratedLandformTypeEnum.Atoll:
+                    break;
+                case GeneratedLandformTypeEnum.World:
+                    break;
+                case GeneratedLandformTypeEnum.Equirectangular:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void RegionMenuItem_Click(object sender, EventArgs e)
+        {
+            UncheckAllLandformTypeMenuItems();
+            RegionMenuItem.Checked = true;
+            SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Region;
+        }
+
+        private void ContinentMenuItem_Click(object sender, EventArgs e)
+        {
+            UncheckAllLandformTypeMenuItems();
+            ContinentMenuItem.Checked = true;
+            SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Continent;
+        }
+
+        private void IslandMenuItem_Click(object sender, EventArgs e)
+        {
+            UncheckAllLandformTypeMenuItems();
+            IslandMenuItem.Checked = true;
+            SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Island;
+        }
+
+        private void ArchipelagoMenuItem_Click(object sender, EventArgs e)
+        {
+            UncheckAllLandformTypeMenuItems();
+            ArchipelagoMenuItem.Checked = true;
+            SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Archipelago;
+        }
+
+        private void AtollMenuItem_Click(object sender, EventArgs e)
+        {
+            UncheckAllLandformTypeMenuItems();
+            AtollMenuItem.Checked = true;
+            SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Atoll;
+        }
+
+        private void WorldMenuItem_Click(object sender, EventArgs e)
+        {
+            UncheckAllLandformTypeMenuItems();
+            WorldMenuItem.Checked = true;
+            SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.World;
+        }
+
+        private void EquirectangularMenuItem_Click(object sender, EventArgs e)
+        {
+            UncheckAllLandformTypeMenuItems();
+            EquirectangularMenuItem.Checked = true;
+            SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Equirectangular;
+        }
+
+        #endregion
+
         #endregion
 
         #region Landform Methods
         /******************************************************************************************************* 
         * LANDFORM METHODS
         *******************************************************************************************************/
+
+        internal static void GenerateRandomIsland(RealmStudioMap map)
+        {
+            SKPoint location = new SKPoint();
+            SKSize size = new(map.MapWidth, map.MapHeight);
+
+            SKPath islandPath = LandformMethods.GenerateRandomIslandPath(size);
+        }
 
         private void SetLandformData(Landform landform)
         {
@@ -6806,6 +6892,17 @@ namespace RealmStudio
             LandColorSelectionButton.BackColor = landColor;
 
             LandColorSelectionButton.Refresh();
+        }
+
+        private void UncheckAllLandformTypeMenuItems()
+        {
+            RegionMenuItem.Checked = false;
+            ContinentMenuItem.Checked = false;
+            IslandMenuItem.Checked = false;
+            ArchipelagoMenuItem.Checked = false;
+            AtollMenuItem.Checked = false;
+            WorldMenuItem.Checked = false;
+            EquirectangularMenuItem.Checked = false;
         }
 
         #endregion
@@ -10218,6 +10315,7 @@ namespace RealmStudio
         }
 
         #endregion
+
 
 
     }
