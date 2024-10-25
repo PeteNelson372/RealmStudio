@@ -209,14 +209,55 @@ namespace RealmStudio
         }
 
 
-        internal static SKPath GenerateRandomIslandPath(SKSize size)
+        internal static SKPath GenerateRandomIslandPath(SKPoint location, SKSize size)
         {
             float islandSize = 0.85F;
 
             SKPath islandDrawPath = new SKPath();
             Bitmap islandBitmap = ShapeGenerator.GetNoiseGeneratedIslandShape((int)size.Width, (int)size.Height, islandSize);
 
-            islandBitmap.Save("C:\\Users\\Pete Nelson\\OneDrive\\Desktop\\islandbitmap.bmp");
+            // fill any holes in the bitmap
+            Bitmap filledBitmap = DrawingMethods.FillHoles(islandBitmap);
+
+            // extract the largest blob from the bitmap; this will be the island shape
+            Bitmap? unscaledIslandBitmap = DrawingMethods.ExtractLargestBlob(filledBitmap);
+
+            if (unscaledIslandBitmap != null)
+            {
+                // scale the bitmap
+                Bitmap scaledIslandBitmap = new(unscaledIslandBitmap, new Size((int)size.Width, (int)size.Height));
+
+                DrawingMethods.FlattenBitmapColors(ref scaledIslandBitmap);
+
+                using Graphics g = Graphics.FromImage(scaledIslandBitmap);
+                using Pen p = new(Color.White, 3);
+
+                g.DrawLine(p, new Point(2, 2), new Point(scaledIslandBitmap.Width - 2, 2));
+                g.DrawLine(p, new Point(2, scaledIslandBitmap.Height - 2), new Point(scaledIslandBitmap.Width - 2, scaledIslandBitmap.Height - 2));
+                g.DrawLine(p, new Point(2, 2), new Point(2, scaledIslandBitmap.Height - 2));
+                g.DrawLine(p, new Point(scaledIslandBitmap.Width - 2, 2), new Point(scaledIslandBitmap.Width - 2, scaledIslandBitmap.Height - 2));
+
+                // run Moore meighborhood algorithm to get the perimeter path
+                List<SKPoint> contourPoints = DrawingMethods.GetBitmapContourPoints(scaledIslandBitmap);
+
+                if (contourPoints.Count > 2)
+                {
+                    // the Moore-Neighbor algorithm sets the first (0th) pixel in the list of contour points to
+                    // an empty pixel, so remove it before constructing the path from the contour points
+                    contourPoints.RemoveAt(0);
+
+                    islandDrawPath.MoveTo(contourPoints[0]);
+
+                    for (int i = 1; i < contourPoints.Count; i++)
+                    {
+                        islandDrawPath.LineTo(contourPoints[i]);
+                    }
+
+                    islandDrawPath.Close();
+                }
+
+                islandDrawPath.Transform(SKMatrix.CreateTranslation(location.X - (size.Width / 2.0F), location.Y - (size.Height / 2.0F)));
+            }
 
             return islandDrawPath;
         }

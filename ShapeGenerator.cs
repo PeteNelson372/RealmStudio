@@ -123,7 +123,7 @@ namespace RealmStudio
             // or scale is inverse of frequency
 
             float[,] noiseArray1 = Noise.Calc2D((int)width, (int)height, 0.008F);
-            float[,] noiseArray2 = Noise.Calc2D((int)width, (int)height, 0.015F);
+            float[,] noiseArray2 = Noise.Calc2D((int)width, (int)height, 0.05F);
 
             float[,] elevation = new float[(int)width, (int)height];
 
@@ -133,8 +133,8 @@ namespace RealmStudio
             {
                 for (int y = 0; y < height; y++)
                 {
-                    float e = (noiseArray1[x, y] / 255.0F);
-                    //float e = ((noiseArray1[x, y] / 255.0F) + (noiseArray2[x, y] / 255.0F)) / 2.0F;
+                    //float e = (noiseArray1[x, y] / 255.0F);
+                    float e = ((noiseArray1[x, y] / 255.0F) + (noiseArray2[x, y] / 255.0F)) / 2.0F;
                     elevation[x, y] = e;
                 }
             }
@@ -205,7 +205,7 @@ namespace RealmStudio
             // generate height map from simplex noise
             float[,] elevation = new float[width, height];
 
-            float waterLevel = 0.5F;
+            float waterLevel = 0.4F;
 
             for (int x = 0; x < width; x++)
             {
@@ -215,27 +215,22 @@ namespace RealmStudio
                 }
             }
 
-            Bitmap elevationBitmap = ConvertValuesToBWBitmap(elevation, width, height, waterLevel);
-            elevationBitmap.Save("C:\\Users\\Pete Nelson\\OneDrive\\Desktop\\elevationbitmap.bmp");
-
+            // shaping function
             // calculate distance of point from center of bitmap
             float[,] distance = new float[width, height];
 
-            SKPoint mapCenter = new SKPoint(width / 2, height / 2);
+            SKPoint mapCenter = new(width / 2, height / 2);
 
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    distance[x, y] = 1 - (SKPoint.Distance(mapCenter, new SKPoint(x, y)) / (float)Math.Sqrt(width * width + height * height));
+                    distance[x, y] = ((1 - (SKPoint.Distance(mapCenter, new SKPoint(x, y)) / (float)Math.Sqrt(width * width + height * height))) - 0.5F) * 2.0F;
                 }
             }
 
-            Bitmap distanceBitmap = ConvertValuesToBWBitmap(distance, width, height, islandSize);
-            distanceBitmap.Save("C:\\Users\\Pete Nelson\\OneDrive\\Desktop\\distancebitmap.bmp");
-
             // interpolate distance with elevation
-            float interpolationWeight = 0.6F;
+            float interpolationWeight = 0.85F;
 
             float[,] interpolatedElevationAndDistance = new float[width, height];
 

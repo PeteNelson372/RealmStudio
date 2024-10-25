@@ -66,6 +66,7 @@ namespace RealmStudio
         private static IWaterFeature? SELECTED_WATERFEATURE = null;
         private static ColorPaintBrush SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.SoftBrush;
         private static GeneratedLandformTypeEnum SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.NotSet;
+        private static SKRect SELECTED_LANDFORM_AREA = SKRect.Empty;
 
         private static Font SELECTED_LABEL_FONT = new("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
         private static Font SELECTED_MAP_SCALE_FONT = new("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -4107,6 +4108,10 @@ namespace RealmStudio
                         PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
                     }
                     break;
+                case DrawingModeEnum.LandformAreaSelect:
+                    Cursor = Cursors.Cross;
+                    PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
+                    break;
 
             }
         }
@@ -4735,6 +4740,26 @@ namespace RealmStudio
                         CURRENT_MAP.IsSaved = false;
 
                         MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.OVERLAYLAYER, true);
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.LandformAreaSelect:
+                    {
+                        SELECTED_LANDFORM_AREA = new(PREVIOUS_CURSOR_POINT.X, PREVIOUS_CURSOR_POINT.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
+
+                        MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
+                        workLayer.RenderPicture?.Dispose();
+                        workLayer.RenderPicture = null;
+
+                        using var recorder = new SKPictureRecorder();
+                        SKRect clippingBounds = new(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+
+                        // Start recording 
+                        recorder.BeginRecording(clippingBounds);
+
+                        recorder.RecordingCanvas.DrawRect((SKRect)SELECTED_LANDFORM_AREA, PaintObjects.LandformAreaSelectPaint);
+                        workLayer.RenderPicture = recorder.EndRecording();
+
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -5404,6 +5429,26 @@ namespace RealmStudio
                         SetDrawingModeLabel();
 
                         CURRENT_MAP.IsSaved = false;
+                    }
+                    break;
+                case DrawingModeEnum.LandformAreaSelect:
+                    {
+                        SELECTED_LANDFORM_AREA = new(PREVIOUS_CURSOR_POINT.X, PREVIOUS_CURSOR_POINT.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
+
+                        MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
+                        workLayer.RenderPicture?.Dispose();
+                        workLayer.RenderPicture = null;
+
+                        using var recorder = new SKPictureRecorder();
+                        SKRect clippingBounds = new(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+
+                        // Start recording 
+                        recorder.BeginRecording(clippingBounds);
+
+                        recorder.RecordingCanvas.DrawRect((SKRect)SELECTED_LANDFORM_AREA, PaintObjects.LandformAreaSelectPaint);
+                        workLayer.RenderPicture = recorder.EndRecording();
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
             }
@@ -6688,7 +6733,16 @@ namespace RealmStudio
                 case GeneratedLandformTypeEnum.Continent:
                     break;
                 case GeneratedLandformTypeEnum.Island:
-                    GenerateRandomIsland(CURRENT_MAP);
+                    GenerateRandomIsland(CURRENT_MAP, SELECTED_LANDFORM_AREA);
+                    SELECTED_LANDFORM_AREA = SKRect.Empty;
+
+                    MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
+                    workLayer.RenderPicture?.Dispose();
+                    workLayer.RenderPicture = null;
+
+                    CURRENT_MAP.IsSaved = false;
+
+                    SKGLRenderControl.Invalidate();
                     break;
                 case GeneratedLandformTypeEnum.Archipelago:
                     break;
@@ -6752,6 +6806,11 @@ namespace RealmStudio
             SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Equirectangular;
         }
 
+        private void LandformAreaSelectButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.LandformAreaSelect;
+        }
+
         #endregion
 
         #endregion
@@ -6761,12 +6820,46 @@ namespace RealmStudio
         * LANDFORM METHODS
         *******************************************************************************************************/
 
-        internal static void GenerateRandomIsland(RealmStudioMap map)
+        internal void GenerateRandomIsland(RealmStudioMap map, SKRect selectedArea)
         {
-            SKPoint location = new SKPoint();
+            SKPoint location = new SKPoint(map.MapWidth / 2, map.MapHeight / 2);
             SKSize size = new(map.MapWidth, map.MapHeight);
 
-            SKPath islandPath = LandformMethods.GenerateRandomIslandPath(size);
+            if (!selectedArea.IsEmpty)
+            {
+                location = new SKPoint(selectedArea.MidX, selectedArea.MidY);
+                size = selectedArea.Size;
+            }
+
+            SKPath islandPath = LandformMethods.GenerateRandomIslandPath(location, size);
+
+            Landform landform = new()
+            {
+                ParentMap = CURRENT_MAP,
+                IsModified = true,
+                DrawPath = islandPath,
+            };
+
+            SetLandformData(landform);
+
+            LandformMethods.CreateAllPathsFromDrawnPath(CURRENT_MAP, landform);
+
+            landform.ContourPath.GetBounds(out SKRect boundsRect);
+            landform.X = (int)location.X;
+            landform.Y = (int)location.Y;
+            landform.Width = (int)boundsRect.Width;
+            landform.Height = (int)boundsRect.Height;
+
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+            landformLayer.MapLayerComponents.Add(landform);
+            landformLayer.IsModified = true;
+
+            MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER);
+            landCoastlineLayer.IsModified = true;
+
+            selectedArea = SKRect.Empty;
+
+            SKGLRenderControl.Invalidate();
         }
 
         private void SetLandformData(Landform landform)
@@ -10315,6 +10408,7 @@ namespace RealmStudio
         }
 
         #endregion
+
 
 
 

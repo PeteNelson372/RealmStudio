@@ -50,6 +50,15 @@ namespace RealmStudio
             IsAntialias = true,
         };
 
+        public static readonly SKPaint LandformAreaSelectPaint = new()
+        {
+            Style = SKPaintStyle.Stroke,
+            IsAntialias = true,
+            Color = SKColors.Cyan,
+            StrokeWidth = 2,
+            PathEffect = SKPathEffect.CreateDash([4F, 4F], 8F),
+        };
+
         public static SKPaint WaterFeatureSelectPaint { get; } = new()
         {
             Style = SKPaintStyle.Stroke,

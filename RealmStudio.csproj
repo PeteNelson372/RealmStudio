@@ -9,9 +9,9 @@
     <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2024.296.13406</AssemblyVersion>
-    <FileVersion>1.2024.296.13406</FileVersion>
-    <Version>1.2024.1-alpha-243</Version>  
+    <AssemblyVersion>1.2024.298.14341</AssemblyVersion>
+    <FileVersion>1.2024.298.14341</FileVersion>
+    <Version>1.2024.2-alpha-03</Version>  
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -40,7 +40,7 @@
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>AssemblyFileVersion</InheritWinAppVersionFrom>
     <AssemblyFileVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyFileVersionSettings>
-    <PackageVersionSettings>AssemblyVersion.IncrementOnce.Alpha</PackageVersionSettings>
+    <PackageVersionSettings>AssemblyVersion.NoneWithAutoReset.Alpha</PackageVersionSettings>
   </PropertyGroup>
 
   <ItemGroup>

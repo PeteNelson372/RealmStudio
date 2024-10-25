@@ -549,6 +549,7 @@
             LabelBoxStyleTable = new TableLayoutPanel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
+            LandformAreaSelectButton = new FontAwesome.Sharp.IconToolStripButton();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -1506,7 +1507,7 @@
             LandToolStrip.Dock = DockStyle.None;
             LandToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             LandToolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            LandToolStrip.Items.AddRange(new ToolStripItem[] { LandformSelectButton, LandformPaintButton, LandformEraseButton, LandformFillButton, LandformClearButton, LandformGenerateButton, LandformTypeButton });
+            LandToolStrip.Items.AddRange(new ToolStripItem[] { LandformSelectButton, LandformPaintButton, LandformEraseButton, LandformFillButton, LandformClearButton, LandformGenerateButton, LandformTypeButton, LandformAreaSelectButton });
             LandToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
             LandToolStrip.Location = new Point(158, 0);
             LandToolStrip.Name = "LandToolStrip";
@@ -1637,7 +1638,7 @@
             RegionMenuItem.CheckState = CheckState.Checked;
             RegionMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             RegionMenuItem.Name = "RegionMenuItem";
-            RegionMenuItem.Size = new Size(180, 22);
+            RegionMenuItem.Size = new Size(167, 22);
             RegionMenuItem.Text = "&Region";
             RegionMenuItem.TextImageRelation = TextImageRelation.Overlay;
             RegionMenuItem.Click += RegionMenuItem_Click;
@@ -1647,7 +1648,7 @@
             ContinentMenuItem.CheckOnClick = true;
             ContinentMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             ContinentMenuItem.Name = "ContinentMenuItem";
-            ContinentMenuItem.Size = new Size(180, 22);
+            ContinentMenuItem.Size = new Size(167, 22);
             ContinentMenuItem.Text = "&Continent";
             ContinentMenuItem.Click += ContinentMenuItem_Click;
             // 
@@ -1656,7 +1657,7 @@
             IslandMenuItem.CheckOnClick = true;
             IslandMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             IslandMenuItem.Name = "IslandMenuItem";
-            IslandMenuItem.Size = new Size(180, 22);
+            IslandMenuItem.Size = new Size(167, 22);
             IslandMenuItem.Text = "&Island";
             IslandMenuItem.Click += IslandMenuItem_Click;
             // 
@@ -1665,7 +1666,7 @@
             ArchipelagoMenuItem.CheckOnClick = true;
             ArchipelagoMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             ArchipelagoMenuItem.Name = "ArchipelagoMenuItem";
-            ArchipelagoMenuItem.Size = new Size(180, 22);
+            ArchipelagoMenuItem.Size = new Size(167, 22);
             ArchipelagoMenuItem.Text = "A&rchipelago";
             ArchipelagoMenuItem.TextImageRelation = TextImageRelation.Overlay;
             ArchipelagoMenuItem.Click += ArchipelagoMenuItem_Click;
@@ -1675,7 +1676,7 @@
             AtollMenuItem.CheckOnClick = true;
             AtollMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             AtollMenuItem.Name = "AtollMenuItem";
-            AtollMenuItem.Size = new Size(180, 22);
+            AtollMenuItem.Size = new Size(167, 22);
             AtollMenuItem.Text = "A&toll";
             AtollMenuItem.TextImageRelation = TextImageRelation.Overlay;
             AtollMenuItem.Click += AtollMenuItem_Click;
@@ -1685,7 +1686,7 @@
             WorldMenuItem.CheckOnClick = true;
             WorldMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             WorldMenuItem.Name = "WorldMenuItem";
-            WorldMenuItem.Size = new Size(180, 22);
+            WorldMenuItem.Size = new Size(167, 22);
             WorldMenuItem.Text = "&World";
             WorldMenuItem.TextImageRelation = TextImageRelation.Overlay;
             WorldMenuItem.Click += WorldMenuItem_Click;
@@ -1695,7 +1696,7 @@
             EquirectangularMenuItem.CheckOnClick = true;
             EquirectangularMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             EquirectangularMenuItem.Name = "EquirectangularMenuItem";
-            EquirectangularMenuItem.Size = new Size(180, 22);
+            EquirectangularMenuItem.Size = new Size(167, 22);
             EquirectangularMenuItem.Text = "&Equirectangular";
             EquirectangularMenuItem.TextImageRelation = TextImageRelation.Overlay;
             EquirectangularMenuItem.Click += EquirectangularMenuItem_Click;
@@ -8256,6 +8257,23 @@
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
             // 
+            // LandformAreaSelectButton
+            // 
+            LandformAreaSelectButton.AutoSize = false;
+            LandformAreaSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            LandformAreaSelectButton.IconChar = FontAwesome.Sharp.IconChar.BorderTopLeft;
+            LandformAreaSelectButton.IconColor = Color.Black;
+            LandformAreaSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LandformAreaSelectButton.IconSize = 24;
+            LandformAreaSelectButton.ImageScaling = ToolStripItemImageScaling.None;
+            LandformAreaSelectButton.ImageTransparentColor = Color.Magenta;
+            LandformAreaSelectButton.Margin = new Padding(0, 50, 0, 2);
+            LandformAreaSelectButton.Name = "LandformAreaSelectButton";
+            LandformAreaSelectButton.Size = new Size(60, 60);
+            LandformAreaSelectButton.Text = "Area";
+            LandformAreaSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            LandformAreaSelectButton.Click += LandformAreaSelectButton_Click;
+            // 
             // RealmStudioMainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -9004,5 +9022,6 @@
         private ToolStripMenuItem EquirectangularMenuItem;
         private ToolStripMenuItem RegionMenuItem;
         private ToolStripMenuItem IslandMenuItem;
+        private FontAwesome.Sharp.IconToolStripButton LandformAreaSelectButton;
     }
 }
