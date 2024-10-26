@@ -29,9 +29,8 @@
         private void InitializeComponent()
         {
             RealmConfigDialog = new ReaLTaiizor.Forms.DungeonForm();
-            CancelConfigButton = new FontAwesome.Sharp.IconButton();
-            OkayButton = new FontAwesome.Sharp.IconButton();
             groupBox5 = new GroupBox();
+            MapThemeList = new ListBox();
             groupBox4 = new GroupBox();
             MapAreaHeightLabel = new Label();
             label5 = new Label();
@@ -75,7 +74,8 @@
             RegionRadioButton = new RadioButton();
             WorldRadioButton = new RadioButton();
             RealmNameTextBox = new ReaLTaiizor.Controls.PoisonTextBox();
-            MapThemeList = new ListBox();
+            OKButton = new Button();
+            CancelConfigButton = new Button();
             RealmConfigDialog.SuspendLayout();
             groupBox5.SuspendLayout();
             groupBox4.SuspendLayout();
@@ -92,7 +92,7 @@
             RealmConfigDialog.BackColor = Color.FromArgb(244, 241, 243);
             RealmConfigDialog.BorderColor = Color.FromArgb(38, 38, 38);
             RealmConfigDialog.Controls.Add(CancelConfigButton);
-            RealmConfigDialog.Controls.Add(OkayButton);
+            RealmConfigDialog.Controls.Add(OKButton);
             RealmConfigDialog.Controls.Add(groupBox5);
             RealmConfigDialog.Controls.Add(groupBox4);
             RealmConfigDialog.Controls.Add(groupBox3);
@@ -119,35 +119,6 @@
             RealmConfigDialog.Text = "Realm Configuration";
             RealmConfigDialog.TitleColor = Color.FromArgb(223, 219, 210);
             // 
-            // CancelConfigButton
-            // 
-            CancelConfigButton.DialogResult = DialogResult.Cancel;
-            CancelConfigButton.ForeColor = SystemColors.ControlDarkDark;
-            CancelConfigButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            CancelConfigButton.IconColor = Color.Black;
-            CancelConfigButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            CancelConfigButton.Location = new Point(516, 466);
-            CancelConfigButton.Name = "CancelConfigButton";
-            CancelConfigButton.Size = new Size(60, 60);
-            CancelConfigButton.TabIndex = 22;
-            CancelConfigButton.Text = "&Cancel";
-            CancelConfigButton.UseVisualStyleBackColor = true;
-            // 
-            // OkayButton
-            // 
-            OkayButton.DialogResult = DialogResult.OK;
-            OkayButton.ForeColor = SystemColors.ControlDarkDark;
-            OkayButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            OkayButton.IconColor = Color.Black;
-            OkayButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            OkayButton.Location = new Point(450, 466);
-            OkayButton.Name = "OkayButton";
-            OkayButton.Size = new Size(60, 60);
-            OkayButton.TabIndex = 21;
-            OkayButton.Text = "O&K";
-            OkayButton.UseVisualStyleBackColor = true;
-            OkayButton.Click += OkayButton_Click;
-            // 
             // groupBox5
             // 
             groupBox5.Controls.Add(MapThemeList);
@@ -157,6 +128,16 @@
             groupBox5.TabIndex = 20;
             groupBox5.TabStop = false;
             groupBox5.Text = "Realm Map Theme";
+            // 
+            // MapThemeList
+            // 
+            MapThemeList.FormattingEnabled = true;
+            MapThemeList.ItemHeight = 15;
+            MapThemeList.Location = new Point(6, 22);
+            MapThemeList.Name = "MapThemeList";
+            MapThemeList.Size = new Size(193, 79);
+            MapThemeList.TabIndex = 0;
+            MapThemeList.SelectedIndexChanged += MapThemes_SelectedIndexChanged;
             // 
             // groupBox4
             // 
@@ -709,21 +690,33 @@
             RealmNameTextBox.WaterMarkColor = Color.FromArgb(109, 109, 109);
             RealmNameTextBox.WaterMarkFont = new Font("Segoe UI", 12F, FontStyle.Italic, GraphicsUnit.Pixel);
             // 
-            // MapThemeList
+            // OKButton
             // 
-            MapThemeList.FormattingEnabled = true;
-            MapThemeList.ItemHeight = 15;
-            MapThemeList.Location = new Point(6, 22);
-            MapThemeList.Name = "MapThemeList";
-            MapThemeList.Size = new Size(193, 79);
-            MapThemeList.TabIndex = 0;
-            MapThemeList.SelectedIndexChanged += MapThemes_SelectedIndexChanged;
+            OKButton.DialogResult = DialogResult.OK;
+            OKButton.ForeColor = SystemColors.ControlDarkDark;
+            OKButton.Location = new Point(450, 466);
+            OKButton.Name = "OKButton";
+            OKButton.Size = new Size(60, 60);
+            OKButton.TabIndex = 23;
+            OKButton.Text = "O&K";
+            OKButton.UseVisualStyleBackColor = true;
+            OKButton.Click += OkayButton_Click;
+            // 
+            // CancelConfigButton
+            // 
+            CancelConfigButton.DialogResult = DialogResult.Cancel;
+            CancelConfigButton.ForeColor = SystemColors.ControlDarkDark;
+            CancelConfigButton.Location = new Point(516, 466);
+            CancelConfigButton.Name = "CancelConfigButton";
+            CancelConfigButton.Size = new Size(60, 60);
+            CancelConfigButton.TabIndex = 24;
+            CancelConfigButton.Text = "&Cancel";
+            CancelConfigButton.UseVisualStyleBackColor = true;
             // 
             // RealmConfiguration
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            CancelButton = CancelConfigButton;
             ClientSize = new Size(601, 557);
             ControlBox = false;
             Controls.Add(RealmConfigDialog);
@@ -798,8 +791,8 @@
         private Label label5;
         private ComboBox MapAreaUnitCombo;
         private GroupBox groupBox5;
-        private FontAwesome.Sharp.IconButton CancelConfigButton;
-        private FontAwesome.Sharp.IconButton OkayButton;
         private ListBox MapThemeList;
+        private Button OKButton;
+        private Button CancelConfigButton;
     }
 }

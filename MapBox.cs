@@ -30,6 +30,7 @@ namespace RealmStudio
     {
         public string? BoxName { get; set; }
 
+        [XmlIgnore]
         public Bitmap? BoxBitmap { get; set; }
 
         public string? BoxBitmapPath { get; set; }

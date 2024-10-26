@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             FormOverlay = new ReaLTaiizor.Forms.DungeonForm();
-            AssetsImportCloseButton = new FontAwesome.Sharp.IconButton();
             AddCollectionButton = new FontAwesome.Sharp.IconButton();
             FilePreviewTree = new TreeView();
             ImportButton = new FontAwesome.Sharp.IconButton();
             ZipFilePathLabel = new Label();
             ChooseZipFileButton = new FontAwesome.Sharp.IconButton();
+            AssetsImportCloseButton = new Button();
             FormOverlay.SuspendLayout();
             SuspendLayout();
             // 
@@ -67,20 +67,6 @@
             FormOverlay.TabIndex = 0;
             FormOverlay.Text = "Import Wonderdraft Assets";
             FormOverlay.TitleColor = Color.FromArgb(223, 219, 210);
-            // 
-            // AssetsImportCloseButton
-            // 
-            AssetsImportCloseButton.ForeColor = SystemColors.ControlDarkDark;
-            AssetsImportCloseButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            AssetsImportCloseButton.IconColor = Color.Black;
-            AssetsImportCloseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            AssetsImportCloseButton.Location = new Point(458, 371);
-            AssetsImportCloseButton.Name = "AssetsImportCloseButton";
-            AssetsImportCloseButton.Size = new Size(60, 60);
-            AssetsImportCloseButton.TabIndex = 5;
-            AssetsImportCloseButton.Text = "&Close";
-            AssetsImportCloseButton.UseVisualStyleBackColor = true;
-            AssetsImportCloseButton.Click += AssetsImportCloseButton_Click;
             // 
             // AddCollectionButton
             // 
@@ -148,6 +134,17 @@
             ChooseZipFileButton.UseVisualStyleBackColor = true;
             ChooseZipFileButton.Click += ChooseZipFileButton_Click;
             // 
+            // AssetsImportCloseButton
+            // 
+            AssetsImportCloseButton.ForeColor = SystemColors.ControlDarkDark;
+            AssetsImportCloseButton.Location = new Point(458, 371);
+            AssetsImportCloseButton.Name = "AssetsImportCloseButton";
+            AssetsImportCloseButton.Size = new Size(60, 60);
+            AssetsImportCloseButton.TabIndex = 5;
+            AssetsImportCloseButton.Text = "&Close";
+            AssetsImportCloseButton.UseVisualStyleBackColor = true;
+            AssetsImportCloseButton.Click += AssetsImportCloseButton_Click;
+            // 
             // WonderdraftAssetImportDialog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -172,6 +169,6 @@
         private FontAwesome.Sharp.IconButton AddCollectionButton;
         private TreeView FilePreviewTree;
         private FontAwesome.Sharp.IconButton ImportButton;
-        private FontAwesome.Sharp.IconButton AssetsImportCloseButton;
+        private Button AssetsImportCloseButton;
     }
 }

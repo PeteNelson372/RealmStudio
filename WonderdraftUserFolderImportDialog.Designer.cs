@@ -31,11 +31,11 @@
             FormOverlay = new ReaLTaiizor.Forms.DungeonForm();
             CheckAllCheckbox = new CheckBox();
             CollectionListBox = new CheckedListBox();
-            UserFolderImportCloseButton = new FontAwesome.Sharp.IconButton();
             AddAssetsButton = new FontAwesome.Sharp.IconButton();
             ImportFoldersButton = new FontAwesome.Sharp.IconButton();
             WDUserFolderLabel = new Label();
             ChooseUserFolderButton = new FontAwesome.Sharp.IconButton();
+            UserFolderImportCloseButton = new Button();
             FormOverlay.SuspendLayout();
             SuspendLayout();
             // 
@@ -43,9 +43,9 @@
             // 
             FormOverlay.BackColor = Color.FromArgb(244, 241, 243);
             FormOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            FormOverlay.Controls.Add(UserFolderImportCloseButton);
             FormOverlay.Controls.Add(CheckAllCheckbox);
             FormOverlay.Controls.Add(CollectionListBox);
-            FormOverlay.Controls.Add(UserFolderImportCloseButton);
             FormOverlay.Controls.Add(AddAssetsButton);
             FormOverlay.Controls.Add(ImportFoldersButton);
             FormOverlay.Controls.Add(WDUserFolderLabel);
@@ -88,20 +88,6 @@
             CollectionListBox.Name = "CollectionListBox";
             CollectionListBox.Size = new Size(429, 184);
             CollectionListBox.TabIndex = 6;
-            // 
-            // UserFolderImportCloseButton
-            // 
-            UserFolderImportCloseButton.ForeColor = SystemColors.ControlDarkDark;
-            UserFolderImportCloseButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            UserFolderImportCloseButton.IconColor = Color.Black;
-            UserFolderImportCloseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            UserFolderImportCloseButton.Location = new Point(458, 371);
-            UserFolderImportCloseButton.Name = "UserFolderImportCloseButton";
-            UserFolderImportCloseButton.Size = new Size(60, 60);
-            UserFolderImportCloseButton.TabIndex = 5;
-            UserFolderImportCloseButton.Text = "&Close";
-            UserFolderImportCloseButton.UseVisualStyleBackColor = true;
-            UserFolderImportCloseButton.Click += UserFolderImportCloseButton_Click;
             // 
             // AddAssetsButton
             // 
@@ -162,6 +148,17 @@
             ChooseUserFolderButton.Click += ChooseUserFolderButton_Click;
             ChooseUserFolderButton.MouseHover += ChooseUserFolderButton_MouseHover;
             // 
+            // UserFolderImportCloseButton
+            // 
+            UserFolderImportCloseButton.ForeColor = SystemColors.ControlDarkDark;
+            UserFolderImportCloseButton.Location = new Point(458, 371);
+            UserFolderImportCloseButton.Name = "UserFolderImportCloseButton";
+            UserFolderImportCloseButton.Size = new Size(60, 60);
+            UserFolderImportCloseButton.TabIndex = 8;
+            UserFolderImportCloseButton.Text = "&Close";
+            UserFolderImportCloseButton.UseVisualStyleBackColor = true;
+            UserFolderImportCloseButton.Click += UserFolderImportCloseButton_Click;
+            // 
             // WonderdraftUserFolderImportDialog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -186,8 +183,8 @@
         private FontAwesome.Sharp.IconButton ChooseUserFolderButton;
         private FontAwesome.Sharp.IconButton AddAssetsButton;
         private FontAwesome.Sharp.IconButton ImportFoldersButton;
-        private FontAwesome.Sharp.IconButton UserFolderImportCloseButton;
         private CheckedListBox CollectionListBox;
         private CheckBox CheckAllCheckbox;
+        private Button UserFolderImportCloseButton;
     }
 }

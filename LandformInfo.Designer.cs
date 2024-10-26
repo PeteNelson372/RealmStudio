@@ -29,8 +29,7 @@
         private void InitializeComponent()
         {
             LandformDataPanel = new ReaLTaiizor.Forms.DungeonForm();
-            CloseLandformDataButton = new FontAwesome.Sharp.IconButton();
-            ApplyChangesButton = new FontAwesome.Sharp.IconButton();
+            StatusMessageLabel = new Label();
             groupBox2 = new GroupBox();
             label16 = new Label();
             label15 = new Label();
@@ -49,7 +48,8 @@
             NameTextbox = new TextBox();
             GuidLabel = new Label();
             label1 = new Label();
-            StatusMessageLabel = new Label();
+            ApplyChangesButton = new Button();
+            CloseLandformDataButton = new Button();
             LandformDataPanel.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)CoastlineEffectDistanceTrack).BeginInit();
@@ -61,9 +61,9 @@
             // 
             LandformDataPanel.BackColor = Color.FromArgb(223, 219, 210);
             LandformDataPanel.BorderColor = Color.FromArgb(38, 38, 38);
-            LandformDataPanel.Controls.Add(StatusMessageLabel);
             LandformDataPanel.Controls.Add(CloseLandformDataButton);
             LandformDataPanel.Controls.Add(ApplyChangesButton);
+            LandformDataPanel.Controls.Add(StatusMessageLabel);
             LandformDataPanel.Controls.Add(groupBox2);
             LandformDataPanel.Controls.Add(groupBox1);
             LandformDataPanel.Controls.Add(label2);
@@ -90,41 +90,12 @@
             LandformDataPanel.Text = "Landform Data";
             LandformDataPanel.TitleColor = Color.FromArgb(223, 219, 210);
             // 
-            // CloseLandformDataButton
+            // StatusMessageLabel
             // 
-            CloseLandformDataButton.BackColor = SystemColors.ControlLightLight;
-            CloseLandformDataButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
-            CloseLandformDataButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            CloseLandformDataButton.ForeColor = SystemColors.ControlDarkDark;
-            CloseLandformDataButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            CloseLandformDataButton.IconColor = Color.Black;
-            CloseLandformDataButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            CloseLandformDataButton.IconSize = 18;
-            CloseLandformDataButton.Location = new Point(303, 409);
-            CloseLandformDataButton.Name = "CloseLandformDataButton";
-            CloseLandformDataButton.Size = new Size(60, 60);
-            CloseLandformDataButton.TabIndex = 89;
-            CloseLandformDataButton.Text = "&Cancel";
-            CloseLandformDataButton.UseVisualStyleBackColor = false;
-            CloseLandformDataButton.Click += CloseLandformDataButton_Click;
-            // 
-            // ApplyChangesButton
-            // 
-            ApplyChangesButton.BackColor = SystemColors.ControlLightLight;
-            ApplyChangesButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
-            ApplyChangesButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            ApplyChangesButton.ForeColor = SystemColors.ControlDarkDark;
-            ApplyChangesButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            ApplyChangesButton.IconColor = Color.Black;
-            ApplyChangesButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ApplyChangesButton.IconSize = 18;
-            ApplyChangesButton.Location = new Point(221, 409);
-            ApplyChangesButton.Name = "ApplyChangesButton";
-            ApplyChangesButton.Size = new Size(60, 60);
-            ApplyChangesButton.TabIndex = 88;
-            ApplyChangesButton.Text = "&Apply";
-            ApplyChangesButton.UseVisualStyleBackColor = false;
-            ApplyChangesButton.Click += ApplyChangesButton_Click;
+            StatusMessageLabel.Location = new Point(34, 448);
+            StatusMessageLabel.Name = "StatusMessageLabel";
+            StatusMessageLabel.Size = new Size(64, 22);
+            StatusMessageLabel.TabIndex = 90;
             // 
             // groupBox2
             // 
@@ -350,12 +321,27 @@
             label1.Text = "Identifier";
             label1.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // StatusMessageLabel
+            // ApplyChangesButton
             // 
-            StatusMessageLabel.Location = new Point(34, 448);
-            StatusMessageLabel.Name = "StatusMessageLabel";
-            StatusMessageLabel.Size = new Size(64, 22);
-            StatusMessageLabel.TabIndex = 90;
+            ApplyChangesButton.ForeColor = SystemColors.ControlDarkDark;
+            ApplyChangesButton.Location = new Point(221, 409);
+            ApplyChangesButton.Name = "ApplyChangesButton";
+            ApplyChangesButton.Size = new Size(60, 60);
+            ApplyChangesButton.TabIndex = 91;
+            ApplyChangesButton.Text = "&Apply";
+            ApplyChangesButton.UseVisualStyleBackColor = true;
+            ApplyChangesButton.Click += ApplyChangesButton_Click;
+            // 
+            // CloseLandformDataButton
+            // 
+            CloseLandformDataButton.ForeColor = SystemColors.ControlDarkDark;
+            CloseLandformDataButton.Location = new Point(303, 409);
+            CloseLandformDataButton.Name = "CloseLandformDataButton";
+            CloseLandformDataButton.Size = new Size(60, 60);
+            CloseLandformDataButton.TabIndex = 92;
+            CloseLandformDataButton.Text = "&Close";
+            CloseLandformDataButton.UseVisualStyleBackColor = true;
+            CloseLandformDataButton.Click += CloseLandformDataButton_Click;
             // 
             // LandformInfo
             // 
@@ -402,8 +388,8 @@
         private FontAwesome.Sharp.IconButton CoastlineColorSelectionButton;
         private Label label14;
         private TrackBar CoastlineEffectDistanceTrack;
-        private FontAwesome.Sharp.IconButton CloseLandformDataButton;
-        private FontAwesome.Sharp.IconButton ApplyChangesButton;
         private Label StatusMessageLabel;
+        private Button ApplyChangesButton;
+        private Button CloseLandformDataButton;
     }
 }

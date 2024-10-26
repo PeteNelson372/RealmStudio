@@ -921,6 +921,7 @@ namespace RealmStudio
             if (result == DialogResult.OK)
             {
                 CURRENT_MAP.MapName = propertiesDialog.NameTextbox.Text;
+                UpdateMapNameAndSize();
             }
         }
 
@@ -8910,9 +8911,12 @@ namespace RealmStudio
             LabelBoxStyleTable.Controls.Clear();
             foreach (MapBox box in mapBoxes)
             {
-                if (box.BoxBitmap == null && box.BoxBitmapPath != null)
+                if (box.BoxBitmap == null && !string.IsNullOrEmpty(box.BoxBitmapPath))
                 {
-                    box.BoxBitmap ??= new Bitmap(box.BoxBitmapPath);
+                    if (File.Exists(box.BoxBitmapPath))
+                    {
+                        box.BoxBitmap ??= new Bitmap(box.BoxBitmapPath);
+                    }
                 }
 
                 if (box.BoxBitmap != null)

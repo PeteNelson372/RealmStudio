@@ -29,9 +29,6 @@
         private void InitializeComponent()
         {
             ThemeListOverlay = new ReaLTaiizor.Forms.DungeonForm();
-            ApplyThemeButton = new FontAwesome.Sharp.IconButton();
-            SaveThemeButton = new FontAwesome.Sharp.IconButton();
-            CloseThemeDialogButton = new FontAwesome.Sharp.IconButton();
             ApplyLabelPresetSettingsCheck = new CheckBox();
             ApplySymbolSettingsCheck = new CheckBox();
             ApplyPathSettingsCheck = new CheckBox();
@@ -45,6 +42,9 @@
             CheckAllCheck = new CheckBox();
             label1 = new Label();
             ThemeListComboBox = new ComboBox();
+            ApplyThemeButton = new Button();
+            CloseThemeDialogButton = new Button();
+            SaveThemeButton = new Button();
             ThemeListOverlay.SuspendLayout();
             SuspendLayout();
             // 
@@ -52,9 +52,9 @@
             // 
             ThemeListOverlay.BackColor = Color.FromArgb(244, 241, 243);
             ThemeListOverlay.BorderColor = Color.FromArgb(38, 38, 38);
-            ThemeListOverlay.Controls.Add(ApplyThemeButton);
             ThemeListOverlay.Controls.Add(SaveThemeButton);
             ThemeListOverlay.Controls.Add(CloseThemeDialogButton);
+            ThemeListOverlay.Controls.Add(ApplyThemeButton);
             ThemeListOverlay.Controls.Add(ApplyLabelPresetSettingsCheck);
             ThemeListOverlay.Controls.Add(ApplySymbolSettingsCheck);
             ThemeListOverlay.Controls.Add(ApplyPathSettingsCheck);
@@ -87,60 +87,6 @@
             ThemeListOverlay.TabIndex = 0;
             ThemeListOverlay.Text = "Save or Apply Theme";
             ThemeListOverlay.TitleColor = Color.FromArgb(223, 219, 210);
-            // 
-            // ApplyThemeButton
-            // 
-            ApplyThemeButton.BackColor = SystemColors.ControlLightLight;
-            ApplyThemeButton.DialogResult = DialogResult.OK;
-            ApplyThemeButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
-            ApplyThemeButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            ApplyThemeButton.ForeColor = SystemColors.ControlDarkDark;
-            ApplyThemeButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            ApplyThemeButton.IconColor = Color.Black;
-            ApplyThemeButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ApplyThemeButton.IconSize = 18;
-            ApplyThemeButton.Location = new Point(31, 451);
-            ApplyThemeButton.Name = "ApplyThemeButton";
-            ApplyThemeButton.Size = new Size(60, 60);
-            ApplyThemeButton.TabIndex = 94;
-            ApplyThemeButton.Text = "&Apply";
-            ApplyThemeButton.UseVisualStyleBackColor = false;
-            // 
-            // SaveThemeButton
-            // 
-            SaveThemeButton.BackColor = SystemColors.ControlLightLight;
-            SaveThemeButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
-            SaveThemeButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            SaveThemeButton.ForeColor = SystemColors.ControlDarkDark;
-            SaveThemeButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            SaveThemeButton.IconColor = Color.Black;
-            SaveThemeButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            SaveThemeButton.IconSize = 18;
-            SaveThemeButton.Location = new Point(97, 451);
-            SaveThemeButton.Name = "SaveThemeButton";
-            SaveThemeButton.Size = new Size(60, 60);
-            SaveThemeButton.TabIndex = 93;
-            SaveThemeButton.Text = "&Save As";
-            SaveThemeButton.UseVisualStyleBackColor = false;
-            SaveThemeButton.Click += SaveThemeButton_Click;
-            // 
-            // CloseThemeDialogButton
-            // 
-            CloseThemeDialogButton.BackColor = SystemColors.ControlLightLight;
-            CloseThemeDialogButton.DialogResult = DialogResult.Cancel;
-            CloseThemeDialogButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
-            CloseThemeDialogButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            CloseThemeDialogButton.ForeColor = SystemColors.ControlDarkDark;
-            CloseThemeDialogButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            CloseThemeDialogButton.IconColor = Color.Black;
-            CloseThemeDialogButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            CloseThemeDialogButton.IconSize = 18;
-            CloseThemeDialogButton.Location = new Point(163, 451);
-            CloseThemeDialogButton.Name = "CloseThemeDialogButton";
-            CloseThemeDialogButton.Size = new Size(60, 60);
-            CloseThemeDialogButton.TabIndex = 92;
-            CloseThemeDialogButton.Text = "&Close";
-            CloseThemeDialogButton.UseVisualStyleBackColor = false;
             // 
             // ApplyLabelPresetSettingsCheck
             // 
@@ -317,12 +263,43 @@
             ThemeListComboBox.TabIndex = 0;
             ThemeListComboBox.SelectionChangeCommitted += ThemeListComboBox_SelectionChangeCommitted;
             // 
+            // ApplyThemeButton
+            // 
+            ApplyThemeButton.DialogResult = DialogResult.OK;
+            ApplyThemeButton.ForeColor = SystemColors.ControlDarkDark;
+            ApplyThemeButton.Location = new Point(34, 451);
+            ApplyThemeButton.Name = "ApplyThemeButton";
+            ApplyThemeButton.Size = new Size(60, 60);
+            ApplyThemeButton.TabIndex = 94;
+            ApplyThemeButton.Text = "&Apply";
+            ApplyThemeButton.UseVisualStyleBackColor = true;
+            // 
+            // CloseThemeDialogButton
+            // 
+            CloseThemeDialogButton.DialogResult = DialogResult.Cancel;
+            CloseThemeDialogButton.ForeColor = SystemColors.ControlDarkDark;
+            CloseThemeDialogButton.Location = new Point(166, 451);
+            CloseThemeDialogButton.Name = "CloseThemeDialogButton";
+            CloseThemeDialogButton.Size = new Size(60, 60);
+            CloseThemeDialogButton.TabIndex = 95;
+            CloseThemeDialogButton.Text = "&Cancel";
+            CloseThemeDialogButton.UseVisualStyleBackColor = true;
+            // 
+            // SaveThemeButton
+            // 
+            SaveThemeButton.ForeColor = SystemColors.ControlDarkDark;
+            SaveThemeButton.Location = new Point(100, 451);
+            SaveThemeButton.Name = "SaveThemeButton";
+            SaveThemeButton.Size = new Size(60, 60);
+            SaveThemeButton.TabIndex = 96;
+            SaveThemeButton.Text = "&Save As";
+            SaveThemeButton.UseVisualStyleBackColor = true;
+            SaveThemeButton.Click += SaveThemeButton_Click;
+            // 
             // ThemeList
             // 
-            AcceptButton = ApplyThemeButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            CancelButton = CloseThemeDialogButton;
             ClientSize = new Size(261, 530);
             Controls.Add(ThemeListOverlay);
             FormBorderStyle = FormBorderStyle.None;
@@ -352,8 +329,8 @@
         private CheckBox ApplyBackgroundSettingsCheck;
         private CheckBox ApplyLabelPresetSettingsCheck;
         private CheckBox ApplySymbolSettingsCheck;
-        private FontAwesome.Sharp.IconButton ApplyThemeButton;
-        private FontAwesome.Sharp.IconButton SaveThemeButton;
-        private FontAwesome.Sharp.IconButton CloseThemeDialogButton;
+        private Button SaveThemeButton;
+        private Button CloseThemeDialogButton;
+        private Button ApplyThemeButton;
     }
 }

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             PreferencesFormOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            AutosaveIntervalTooltipButton = new FontAwesome.Sharp.IconButton();
             DrawContourTooltipButton = new FontAwesome.Sharp.IconButton();
             AutosaveRealmSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             RealmDirectoryButton = new FontAwesome.Sharp.IconButton();
@@ -36,7 +37,6 @@
             label10 = new Label();
             AutosaveDirButton = new FontAwesome.Sharp.IconButton();
             RealmAssetDirButton = new FontAwesome.Sharp.IconButton();
-            ClosePreferencesButton = new FontAwesome.Sharp.IconButton();
             label9 = new Label();
             label8 = new Label();
             DrawContoursWhilePaintingSwitch = new ReaLTaiizor.Controls.CyberSwitch();
@@ -70,7 +70,7 @@
             WH1024x768Radio = new RadioButton();
             label1 = new Label();
             MeasurementUnitsCombo = new ComboBox();
-            AutosaveIntervalTooltipButton = new FontAwesome.Sharp.IconButton();
+            ClosePreferencesButton = new Button();
             PreferencesFormOverlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)AutosaveIntervalTrack).BeginInit();
             groupBox2.SuspendLayout();
@@ -80,6 +80,7 @@
             // 
             PreferencesFormOverlay.BackColor = Color.FromArgb(244, 241, 243);
             PreferencesFormOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            PreferencesFormOverlay.Controls.Add(ClosePreferencesButton);
             PreferencesFormOverlay.Controls.Add(AutosaveIntervalTooltipButton);
             PreferencesFormOverlay.Controls.Add(DrawContourTooltipButton);
             PreferencesFormOverlay.Controls.Add(AutosaveRealmSwitch);
@@ -88,7 +89,6 @@
             PreferencesFormOverlay.Controls.Add(label10);
             PreferencesFormOverlay.Controls.Add(AutosaveDirButton);
             PreferencesFormOverlay.Controls.Add(RealmAssetDirButton);
-            PreferencesFormOverlay.Controls.Add(ClosePreferencesButton);
             PreferencesFormOverlay.Controls.Add(label9);
             PreferencesFormOverlay.Controls.Add(label8);
             PreferencesFormOverlay.Controls.Add(DrawContoursWhilePaintingSwitch);
@@ -125,6 +125,21 @@
             PreferencesFormOverlay.TabIndex = 0;
             PreferencesFormOverlay.Text = "Preferences";
             PreferencesFormOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // AutosaveIntervalTooltipButton
+            // 
+            AutosaveIntervalTooltipButton.FlatAppearance.BorderSize = 0;
+            AutosaveIntervalTooltipButton.FlatStyle = FlatStyle.Flat;
+            AutosaveIntervalTooltipButton.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
+            AutosaveIntervalTooltipButton.IconColor = Color.DeepSkyBlue;
+            AutosaveIntervalTooltipButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            AutosaveIntervalTooltipButton.IconSize = 20;
+            AutosaveIntervalTooltipButton.Location = new Point(490, 205);
+            AutosaveIntervalTooltipButton.Name = "AutosaveIntervalTooltipButton";
+            AutosaveIntervalTooltipButton.Size = new Size(24, 24);
+            AutosaveIntervalTooltipButton.TabIndex = 60;
+            AutosaveIntervalTooltipButton.UseVisualStyleBackColor = true;
+            AutosaveIntervalTooltipButton.MouseHover += AutosaveIntervalTooltipButton_MouseHover;
             // 
             // DrawContourTooltipButton
             // 
@@ -234,21 +249,6 @@
             RealmAssetDirButton.TabIndex = 53;
             RealmAssetDirButton.UseVisualStyleBackColor = true;
             RealmAssetDirButton.Click += RealmAssetDirButton_Click;
-            // 
-            // ClosePreferencesButton
-            // 
-            ClosePreferencesButton.DialogResult = DialogResult.Cancel;
-            ClosePreferencesButton.ForeColor = SystemColors.ControlDarkDark;
-            ClosePreferencesButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            ClosePreferencesButton.IconColor = Color.Black;
-            ClosePreferencesButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ClosePreferencesButton.Location = new Point(474, 693);
-            ClosePreferencesButton.Name = "ClosePreferencesButton";
-            ClosePreferencesButton.Size = new Size(60, 60);
-            ClosePreferencesButton.TabIndex = 52;
-            ClosePreferencesButton.Text = "&Close";
-            ClosePreferencesButton.UseVisualStyleBackColor = true;
-            ClosePreferencesButton.Click += ClosePreferencesButton_Click;
             // 
             // label9
             // 
@@ -686,20 +686,17 @@
             MeasurementUnitsCombo.TabIndex = 0;
             MeasurementUnitsCombo.SelectionChangeCommitted += MeasurementUnitsCombo_SelectionChangeCommitted;
             // 
-            // AutosaveIntervalTooltipButton
+            // ClosePreferencesButton
             // 
-            AutosaveIntervalTooltipButton.FlatAppearance.BorderSize = 0;
-            AutosaveIntervalTooltipButton.FlatStyle = FlatStyle.Flat;
-            AutosaveIntervalTooltipButton.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
-            AutosaveIntervalTooltipButton.IconColor = Color.DeepSkyBlue;
-            AutosaveIntervalTooltipButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            AutosaveIntervalTooltipButton.IconSize = 20;
-            AutosaveIntervalTooltipButton.Location = new Point(490, 205);
-            AutosaveIntervalTooltipButton.Name = "AutosaveIntervalTooltipButton";
-            AutosaveIntervalTooltipButton.Size = new Size(24, 24);
-            AutosaveIntervalTooltipButton.TabIndex = 60;
-            AutosaveIntervalTooltipButton.UseVisualStyleBackColor = true;
-            AutosaveIntervalTooltipButton.MouseHover += AutosaveIntervalTooltipButton_MouseHover;
+            ClosePreferencesButton.DialogResult = DialogResult.Cancel;
+            ClosePreferencesButton.ForeColor = SystemColors.ControlDarkDark;
+            ClosePreferencesButton.Location = new Point(474, 693);
+            ClosePreferencesButton.Name = "ClosePreferencesButton";
+            ClosePreferencesButton.Size = new Size(60, 60);
+            ClosePreferencesButton.TabIndex = 61;
+            ClosePreferencesButton.Text = "&Close";
+            ClosePreferencesButton.UseVisualStyleBackColor = true;
+            ClosePreferencesButton.Click += ClosePreferencesButton_Click;
             // 
             // UserPreferences
             // 
@@ -757,7 +754,6 @@
         private Label label8;
         private ReaLTaiizor.Controls.CyberSwitch DrawContoursWhilePaintingSwitch;
         private Label label9;
-        private FontAwesome.Sharp.IconButton ClosePreferencesButton;
         private FontAwesome.Sharp.IconButton AutosaveDirButton;
         private FontAwesome.Sharp.IconButton RealmAssetDirButton;
         private FontAwesome.Sharp.IconButton RealmDirectoryButton;
@@ -766,5 +762,6 @@
         private ReaLTaiizor.Controls.CyberSwitch AutosaveRealmSwitch;
         private FontAwesome.Sharp.IconButton DrawContourTooltipButton;
         private FontAwesome.Sharp.IconButton AutosaveIntervalTooltipButton;
+        private Button ClosePreferencesButton;
     }
 }

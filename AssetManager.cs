@@ -23,6 +23,7 @@
 ***************************************************************************************************************************/
 using RealmStudio.Properties;
 using SkiaSharp;
+using SkiaSharp.Views.Desktop;
 using System.Xml.Linq;
 
 namespace RealmStudio
@@ -343,17 +344,87 @@ namespace RealmStudio
 
             foreach (var f in files)
             {
+                bool rewriteTheme = false;
+
                 string path = Path.GetFullPath(f.File);
 
                 MapTheme? t = MapFileMethods.ReadThemeFromXml(path);
 
                 if (t != null)
                 {
+                    if (!File.Exists(t.ThemePath))
+                    {
+                        rewriteTheme = true;
+                        t.ThemePath = path;
+                    }
+
+                    if (t.BackgroundTexture != null)
+                    {
+                        if (!File.Exists(t.BackgroundTexture.TexturePath))
+                        {
+                            string fileName = Path.GetFileName(t.BackgroundTexture.TexturePath);
+
+                            string textureDirectory = assetDirectory + Path.DirectorySeparatorChar + "Textures"
+                                + Path.DirectorySeparatorChar + "Background" + Path.DirectorySeparatorChar;
+
+                            string bitmapPath = textureDirectory + fileName;
+
+                            if (File.Exists(bitmapPath))
+                            {
+                                t.BackgroundTexture.TexturePath = bitmapPath;
+                                rewriteTheme = true;
+                            }
+                        }
+                    }
+
+                    if (t.OceanTexture != null)
+                    {
+                        if (!File.Exists(t.OceanTexture.TexturePath))
+                        {
+                            string fileName = Path.GetFileName(t.OceanTexture.TexturePath);
+
+                            string textureDirectory = assetDirectory + Path.DirectorySeparatorChar + "Textures"
+                                + Path.DirectorySeparatorChar + "Water" + Path.DirectorySeparatorChar;
+
+                            string bitmapPath = textureDirectory + fileName;
+
+                            if (File.Exists(bitmapPath))
+                            {
+                                t.OceanTexture.TexturePath = bitmapPath;
+                                rewriteTheme = true;
+                            }
+                        }
+                    }
+
+                    if (t.LandformTexture != null)
+                    {
+                        if (!File.Exists(t.LandformTexture.TexturePath))
+                        {
+                            string fileName = Path.GetFileName(t.LandformTexture.TexturePath);
+
+                            string textureDirectory = assetDirectory + Path.DirectorySeparatorChar + "Textures"
+                                + Path.DirectorySeparatorChar + "Land" + Path.DirectorySeparatorChar;
+
+                            string bitmapPath = textureDirectory + fileName;
+
+                            if (File.Exists(bitmapPath))
+                            {
+                                t.LandformTexture.TexturePath = bitmapPath;
+                                rewriteTheme = true;
+                            }
+                        }
+                    }
+
                     THEME_LIST.Add(t);
 
                     if (t.IsDefaultTheme)
                     {
                         CURRENT_THEME = t;
+                    }
+
+                    if (rewriteTheme)
+                    {
+                        MapFileMethods.SerializeTheme(t);
                     }
                 }
             }
@@ -387,6 +458,10 @@ namespace RealmStudio
 
                         MAP_SYMBOL_COLLECTIONS.Add(collection);
 
+                        collection.CollectionPath = f.File;
+
+                        bool rewriteCollectionFile = false;
+
                         // load symbol file into object
                         foreach (MapSymbol symbol in collection.GetCollectionMapSymbols())
                         {
@@ -398,7 +473,23 @@ namespace RealmStudio
                                     || symbol.SymbolFormat == SymbolFormatEnum.JPG
                                     || symbol.SymbolFormat == SymbolFormatEnum.BMP)
                                 {
-                                    symbol.SetSymbolBitmapFromPath(symbol.SymbolFilePath);
+                                    if (!string.IsNullOrEmpty(symbol.SymbolFilePath))
+                                    {
+                                        if (!File.Exists(symbol.SymbolFilePath))
+                                        {
+                                            rewriteCollectionFile = true;
+
+                                            string fileName = Path.GetFileName(symbol.SymbolFilePath);
+                                            string bitmapPath = Path.GetDirectoryName(collection.CollectionPath) + Path.DirectorySeparatorChar + fileName;
+
+                                            symbol.SymbolFilePath = bitmapPath;
+                                        }
+
+                                        if (File.Exists(symbol.SymbolFilePath))
+                                        {
+                                            symbol.SetSymbolBitmapFromPath(symbol.SymbolFilePath);
+                                        }
+                                    }
                                 }
 
                                 MAP_SYMBOL_LIST.Add(symbol);
@@ -415,8 +506,15 @@ namespace RealmStudio
                             }
                         }
 
+                        if (rewriteCollectionFile)
+                        {
+                            MapFileMethods.SerializeSymbolCollection(collection);
+                        }
+
+
                         LoadPercentage += statusIncrement;
                         LOADING_STATUS_FORM.SetStatusPercentage(LoadPercentage);
+
                     }
                 }
 
@@ -449,8 +547,39 @@ namespace RealmStudio
 
                 if (mapFrame != null)
                 {
-                    numFrames++;
-                    MAP_FRAME_TEXTURES.Add(mapFrame);
+                    bool rewriteFrameFile = false;
+
+                    if (!File.Exists(mapFrame.FrameXmlFilePath))
+                    {
+                        rewriteFrameFile = true;
+                        mapFrame.FrameXmlFilePath = f.File;
+                    }
+
+                    if (!string.IsNullOrEmpty(mapFrame.FrameBitmapPath))
+                    {
+                        if (!File.Exists(mapFrame.FrameBitmapPath))
+                        {
+                            rewriteFrameFile = true;
+
+                            string fileName = Path.GetFileName(mapFrame.FrameBitmapPath);
+                            string bitmapPath = frameAssetDirectory + fileName;
+
+                            mapFrame.FrameBitmapPath = bitmapPath;
+                        }
+
+                        if (File.Exists(mapFrame.FrameBitmapPath))
+                        {
+                            mapFrame.FrameBitmap = new Bitmap(mapFrame.FrameBitmapPath).ToSKBitmap();
+
+                            if (rewriteFrameFile)
+                            {
+                                MapFileMethods.SerializeFrameAsset(mapFrame);
+                            }
+
+                            numFrames++;
+                            MAP_FRAME_TEXTURES.Add(mapFrame);
+                        }
+                    }
                 }
 
             }
@@ -478,8 +607,38 @@ namespace RealmStudio
 
                 if (mapBox != null)
                 {
-                    numBoxes++;
-                    MAP_BOX_LIST.Add(mapBox);
+                    bool rewriteBoxFile = false;
+
+                    if (!File.Exists(mapBox.BoxXmlFilePath))
+                    {
+                        rewriteBoxFile = true;
+                        mapBox.BoxXmlFilePath = f.File;
+                    }
+
+                    if (!string.IsNullOrEmpty(mapBox.BoxBitmapPath))
+                    {
+                        if (!File.Exists(mapBox.BoxBitmapPath))
+                        {
+                            rewriteBoxFile = true;
+                            string fileName = Path.GetFileName(mapBox.BoxBitmapPath);
+                            string bitmapPath = boxAssetDirectory + fileName;
+
+                            mapBox.BoxBitmapPath = bitmapPath;
+                        }
+
+                        if (File.Exists(mapBox.BoxBitmapPath))
+                        {
+                            mapBox.BoxBitmap = new Bitmap(mapBox.BoxBitmapPath);
+
+                            if (rewriteBoxFile)
+                            {
+                                MapFileMethods.SerializeBoxAsset(mapBox);
+                            }
+
+                            numBoxes++;
+                            MAP_BOX_LIST.Add(mapBox);
+                        }
+                    }
                 }
 
             }

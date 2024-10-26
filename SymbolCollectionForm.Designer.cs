@@ -60,9 +60,9 @@
             CollectionNameTextBox = new TextBox();
             label1 = new Label();
             CollectionPathLabel = new Label();
-            OpenCollectionDirectoryButton = new FontAwesome.Sharp.IconButton();
-            CloseCollectionFormButton = new FontAwesome.Sharp.IconButton();
-            SaveButton = new FontAwesome.Sharp.IconButton();
+            OpenCollectionDirectoryButton = new Button();
+            SaveButton = new Button();
+            CloseCollectionFormButton = new Button();
             SymbolCollectionFormOverlay.SuspendLayout();
             groupBox3.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -75,6 +75,9 @@
             // 
             SymbolCollectionFormOverlay.BackColor = Color.FromArgb(244, 241, 243);
             SymbolCollectionFormOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            SymbolCollectionFormOverlay.Controls.Add(CloseCollectionFormButton);
+            SymbolCollectionFormOverlay.Controls.Add(SaveButton);
+            SymbolCollectionFormOverlay.Controls.Add(OpenCollectionDirectoryButton);
             SymbolCollectionFormOverlay.Controls.Add(AddTagButton);
             SymbolCollectionFormOverlay.Controls.Add(ResetTagsButton);
             SymbolCollectionFormOverlay.Controls.Add(NewTagTextBox);
@@ -96,9 +99,6 @@
             SymbolCollectionFormOverlay.Controls.Add(CollectionNameTextBox);
             SymbolCollectionFormOverlay.Controls.Add(label1);
             SymbolCollectionFormOverlay.Controls.Add(CollectionPathLabel);
-            SymbolCollectionFormOverlay.Controls.Add(OpenCollectionDirectoryButton);
-            SymbolCollectionFormOverlay.Controls.Add(CloseCollectionFormButton);
-            SymbolCollectionFormOverlay.Controls.Add(SaveButton);
             SymbolCollectionFormOverlay.Dock = DockStyle.Fill;
             SymbolCollectionFormOverlay.FillEdgeColorA = Color.FromArgb(69, 68, 63);
             SymbolCollectionFormOverlay.FillEdgeColorB = Color.FromArgb(69, 68, 63);
@@ -480,57 +480,36 @@
             // 
             // OpenCollectionDirectoryButton
             // 
-            OpenCollectionDirectoryButton.BackColor = SystemColors.ControlLightLight;
-            OpenCollectionDirectoryButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
-            OpenCollectionDirectoryButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             OpenCollectionDirectoryButton.ForeColor = SystemColors.ControlDarkDark;
-            OpenCollectionDirectoryButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            OpenCollectionDirectoryButton.IconColor = Color.Black;
-            OpenCollectionDirectoryButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            OpenCollectionDirectoryButton.IconSize = 18;
             OpenCollectionDirectoryButton.Location = new Point(23, 59);
             OpenCollectionDirectoryButton.Name = "OpenCollectionDirectoryButton";
             OpenCollectionDirectoryButton.Size = new Size(60, 60);
-            OpenCollectionDirectoryButton.TabIndex = 92;
+            OpenCollectionDirectoryButton.TabIndex = 112;
             OpenCollectionDirectoryButton.Text = "&Open";
-            OpenCollectionDirectoryButton.UseVisualStyleBackColor = false;
+            OpenCollectionDirectoryButton.UseVisualStyleBackColor = true;
             OpenCollectionDirectoryButton.Click += OpenCollectionDirectoryButton_Click;
-            // 
-            // CloseCollectionFormButton
-            // 
-            CloseCollectionFormButton.BackColor = SystemColors.ControlLightLight;
-            CloseCollectionFormButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
-            CloseCollectionFormButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            CloseCollectionFormButton.ForeColor = SystemColors.ControlDarkDark;
-            CloseCollectionFormButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            CloseCollectionFormButton.IconColor = Color.Black;
-            CloseCollectionFormButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            CloseCollectionFormButton.IconSize = 18;
-            CloseCollectionFormButton.Location = new Point(654, 481);
-            CloseCollectionFormButton.Name = "CloseCollectionFormButton";
-            CloseCollectionFormButton.Size = new Size(60, 60);
-            CloseCollectionFormButton.TabIndex = 91;
-            CloseCollectionFormButton.Text = "&Close";
-            CloseCollectionFormButton.UseVisualStyleBackColor = false;
-            CloseCollectionFormButton.Click += CloseCollectionFormButton_Click;
             // 
             // SaveButton
             // 
-            SaveButton.BackColor = SystemColors.ControlLightLight;
-            SaveButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
-            SaveButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             SaveButton.ForeColor = SystemColors.ControlDarkDark;
-            SaveButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            SaveButton.IconColor = Color.Black;
-            SaveButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            SaveButton.IconSize = 18;
             SaveButton.Location = new Point(588, 481);
             SaveButton.Name = "SaveButton";
             SaveButton.Size = new Size(60, 60);
-            SaveButton.TabIndex = 90;
+            SaveButton.TabIndex = 113;
             SaveButton.Text = "&Save";
-            SaveButton.UseVisualStyleBackColor = false;
+            SaveButton.UseVisualStyleBackColor = true;
             SaveButton.Click += SaveButton_Click;
+            // 
+            // CloseCollectionFormButton
+            // 
+            CloseCollectionFormButton.ForeColor = SystemColors.ControlDarkDark;
+            CloseCollectionFormButton.Location = new Point(654, 481);
+            CloseCollectionFormButton.Name = "CloseCollectionFormButton";
+            CloseCollectionFormButton.Size = new Size(60, 60);
+            CloseCollectionFormButton.TabIndex = 114;
+            CloseCollectionFormButton.Text = "&Close";
+            CloseCollectionFormButton.UseVisualStyleBackColor = true;
+            CloseCollectionFormButton.Click += CloseCollectionFormButton_Click;
             // 
             // SymbolCollectionForm
             // 
@@ -560,9 +539,6 @@
         #endregion
 
         private ReaLTaiizor.Forms.DungeonForm SymbolCollectionFormOverlay;
-        private FontAwesome.Sharp.IconButton CloseCollectionFormButton;
-        private FontAwesome.Sharp.IconButton SaveButton;
-        private FontAwesome.Sharp.IconButton OpenCollectionDirectoryButton;
         private Label CollectionPathLabel;
         private PictureBox SymbolPictureBox;
         private TextBox CollectionNameTextBox;
@@ -594,5 +570,8 @@
         private Label TaggedSymbolCountLabel;
         private FontAwesome.Sharp.IconButton AddTagButton;
         private FlowLayoutPanel AvailableTagsPanel;
+        private Button OpenCollectionDirectoryButton;
+        private Button SaveButton;
+        private Button CloseCollectionFormButton;
     }
 }

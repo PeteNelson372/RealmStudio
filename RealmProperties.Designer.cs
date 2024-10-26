@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             RealmPropertiesOverlay = new ReaLTaiizor.Forms.DungeonForm();
-            CloseRealmPropertiesButton = new FontAwesome.Sharp.IconButton();
-            ApplyChangesButton = new FontAwesome.Sharp.IconButton();
             RealmTypeLabel = new Label();
             RealmTypeLbl = new Label();
             MapFilePathLabel = new Label();
@@ -43,6 +41,8 @@
             NameTextbox = new TextBox();
             RealmGuidLabel = new Label();
             GuidLabel = new Label();
+            ApplyChangesButton = new Button();
+            CloseRealmPropertiesButton = new Button();
             RealmPropertiesOverlay.SuspendLayout();
             SuspendLayout();
             // 
@@ -84,42 +84,6 @@
             RealmPropertiesOverlay.TabIndex = 0;
             RealmPropertiesOverlay.Text = "Realm Properties";
             RealmPropertiesOverlay.TitleColor = Color.FromArgb(223, 219, 210);
-            // 
-            // CloseRealmPropertiesButton
-            // 
-            CloseRealmPropertiesButton.BackColor = SystemColors.ControlLightLight;
-            CloseRealmPropertiesButton.DialogResult = DialogResult.Cancel;
-            CloseRealmPropertiesButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
-            CloseRealmPropertiesButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            CloseRealmPropertiesButton.ForeColor = SystemColors.ControlDarkDark;
-            CloseRealmPropertiesButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            CloseRealmPropertiesButton.IconColor = Color.Black;
-            CloseRealmPropertiesButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            CloseRealmPropertiesButton.IconSize = 18;
-            CloseRealmPropertiesButton.Location = new Point(333, 236);
-            CloseRealmPropertiesButton.Name = "CloseRealmPropertiesButton";
-            CloseRealmPropertiesButton.Size = new Size(60, 60);
-            CloseRealmPropertiesButton.TabIndex = 91;
-            CloseRealmPropertiesButton.Text = "&Cancel";
-            CloseRealmPropertiesButton.UseVisualStyleBackColor = false;
-            // 
-            // ApplyChangesButton
-            // 
-            ApplyChangesButton.BackColor = SystemColors.ControlLightLight;
-            ApplyChangesButton.DialogResult = DialogResult.OK;
-            ApplyChangesButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
-            ApplyChangesButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            ApplyChangesButton.ForeColor = SystemColors.ControlDarkDark;
-            ApplyChangesButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            ApplyChangesButton.IconColor = Color.Black;
-            ApplyChangesButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ApplyChangesButton.IconSize = 18;
-            ApplyChangesButton.Location = new Point(267, 236);
-            ApplyChangesButton.Name = "ApplyChangesButton";
-            ApplyChangesButton.Size = new Size(60, 60);
-            ApplyChangesButton.TabIndex = 90;
-            ApplyChangesButton.Text = "&Apply";
-            ApplyChangesButton.UseVisualStyleBackColor = false;
             // 
             // RealmTypeLabel
             // 
@@ -245,12 +209,32 @@
             GuidLabel.Text = "Identifier";
             GuidLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // ApplyChangesButton
+            // 
+            ApplyChangesButton.DialogResult = DialogResult.OK;
+            ApplyChangesButton.ForeColor = SystemColors.ControlDarkDark;
+            ApplyChangesButton.Location = new Point(267, 236);
+            ApplyChangesButton.Name = "ApplyChangesButton";
+            ApplyChangesButton.Size = new Size(60, 60);
+            ApplyChangesButton.TabIndex = 92;
+            ApplyChangesButton.Text = "&Apply";
+            ApplyChangesButton.UseVisualStyleBackColor = true;
+            // 
+            // CloseRealmPropertiesButton
+            // 
+            CloseRealmPropertiesButton.DialogResult = DialogResult.Cancel;
+            CloseRealmPropertiesButton.ForeColor = SystemColors.ControlDarkDark;
+            CloseRealmPropertiesButton.Location = new Point(333, 236);
+            CloseRealmPropertiesButton.Name = "CloseRealmPropertiesButton";
+            CloseRealmPropertiesButton.Size = new Size(60, 60);
+            CloseRealmPropertiesButton.TabIndex = 93;
+            CloseRealmPropertiesButton.Text = "&Cancel";
+            CloseRealmPropertiesButton.UseVisualStyleBackColor = true;
+            // 
             // RealmProperties
             // 
-            AcceptButton = ApplyChangesButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            CancelButton = CloseRealmPropertiesButton;
             ClientSize = new Size(421, 321);
             Controls.Add(RealmPropertiesOverlay);
             FormBorderStyle = FormBorderStyle.None;
@@ -278,8 +262,8 @@
         private Label MapFilePathLbl;
         private Label RealmTypeLabel;
         private Label RealmTypeLbl;
-        private FontAwesome.Sharp.IconButton CloseRealmPropertiesButton;
-        private FontAwesome.Sharp.IconButton ApplyChangesButton;
         public TextBox NameTextbox;
+        private Button ApplyChangesButton;
+        private Button CloseRealmPropertiesButton;
     }
 }
