@@ -2,16 +2,18 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2024.300.12826</AssemblyVersion>
-    <FileVersion>1.2024.300.12826</FileVersion>
-    <Version>1.2024.2-alpha-17</Version>  
+    <AssemblyVersion>1.2024.302.9407</AssemblyVersion>
+    <FileVersion>1.2024.302.9407</FileVersion>
+    <Version>1.2024.2-alpha-20</Version>
+    <SignAssembly>False</SignAssembly>
+    <StartupObject>RealmStudio.Program</StartupObject>  
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -27,6 +29,7 @@
     <AssemblyFileVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyFileVersionSettings>
     <AssemblyInfoVersionSettings>None.None.None.None</AssemblyInfoVersionSettings>
     <PackageVersionSettings>AssemblyVersion.NoneWithAutoReset.Alpha</PackageVersionSettings>
+    <IsPublishable>False</IsPublishable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -41,6 +44,7 @@
     <InheritWinAppVersionFrom>AssemblyFileVersion</InheritWinAppVersionFrom>
     <AssemblyFileVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyFileVersionSettings>
     <PackageVersionSettings>AssemblyVersion.NoneWithAutoReset.Alpha</PackageVersionSettings>
+    <IsPublishable>False</IsPublishable>
   </PropertyGroup>
 
   <ItemGroup>
