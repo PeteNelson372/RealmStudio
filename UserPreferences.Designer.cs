@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             PreferencesFormOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            ClosePreferencesButton = new Button();
             AutosaveIntervalTooltipButton = new FontAwesome.Sharp.IconButton();
             DrawContourTooltipButton = new FontAwesome.Sharp.IconButton();
             AutosaveRealmSwitch = new ReaLTaiizor.Controls.CyberSwitch();
@@ -70,7 +71,6 @@
             WH1024x768Radio = new RadioButton();
             label1 = new Label();
             MeasurementUnitsCombo = new ComboBox();
-            ClosePreferencesButton = new Button();
             PreferencesFormOverlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)AutosaveIntervalTrack).BeginInit();
             groupBox2.SuspendLayout();
@@ -125,6 +125,18 @@
             PreferencesFormOverlay.TabIndex = 0;
             PreferencesFormOverlay.Text = "Preferences";
             PreferencesFormOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // ClosePreferencesButton
+            // 
+            ClosePreferencesButton.DialogResult = DialogResult.Cancel;
+            ClosePreferencesButton.ForeColor = SystemColors.ControlDarkDark;
+            ClosePreferencesButton.Location = new Point(474, 693);
+            ClosePreferencesButton.Name = "ClosePreferencesButton";
+            ClosePreferencesButton.Size = new Size(60, 60);
+            ClosePreferencesButton.TabIndex = 61;
+            ClosePreferencesButton.Text = "&Close";
+            ClosePreferencesButton.UseVisualStyleBackColor = true;
+            ClosePreferencesButton.Click += ClosePreferencesButton_Click;
             // 
             // AutosaveIntervalTooltipButton
             // 
@@ -193,6 +205,7 @@
             AutosaveRealmSwitch.Tag = "Cyber";
             AutosaveRealmSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             AutosaveRealmSwitch.Timer_RGB = 300;
+            AutosaveRealmSwitch.Click += AutosaveRealmSwitch_Click;
             // 
             // RealmDirectoryButton
             // 
@@ -685,18 +698,6 @@
             MeasurementUnitsCombo.Size = new Size(121, 23);
             MeasurementUnitsCombo.TabIndex = 0;
             MeasurementUnitsCombo.SelectionChangeCommitted += MeasurementUnitsCombo_SelectionChangeCommitted;
-            // 
-            // ClosePreferencesButton
-            // 
-            ClosePreferencesButton.DialogResult = DialogResult.Cancel;
-            ClosePreferencesButton.ForeColor = SystemColors.ControlDarkDark;
-            ClosePreferencesButton.Location = new Point(474, 693);
-            ClosePreferencesButton.Name = "ClosePreferencesButton";
-            ClosePreferencesButton.Size = new Size(60, 60);
-            ClosePreferencesButton.TabIndex = 61;
-            ClosePreferencesButton.Text = "&Close";
-            ClosePreferencesButton.UseVisualStyleBackColor = true;
-            ClosePreferencesButton.Click += ClosePreferencesButton_Click;
             // 
             // UserPreferences
             // 

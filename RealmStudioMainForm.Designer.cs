@@ -95,6 +95,7 @@
             AtollMenuItem = new ToolStripMenuItem();
             WorldMenuItem = new ToolStripMenuItem();
             EquirectangularMenuItem = new ToolStripMenuItem();
+            LandformAreaSelectButton = new FontAwesome.Sharp.IconToolStripButton();
             groupBox3 = new GroupBox();
             label17 = new Label();
             label19 = new Label();
@@ -549,7 +550,6 @@
             LabelBoxStyleTable = new TableLayoutPanel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
-            LandformAreaSelectButton = new FontAwesome.Sharp.IconToolStripButton();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -1700,6 +1700,23 @@
             EquirectangularMenuItem.Text = "&Equirectangular";
             EquirectangularMenuItem.TextImageRelation = TextImageRelation.Overlay;
             EquirectangularMenuItem.Click += EquirectangularMenuItem_Click;
+            // 
+            // LandformAreaSelectButton
+            // 
+            LandformAreaSelectButton.AutoSize = false;
+            LandformAreaSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            LandformAreaSelectButton.IconChar = FontAwesome.Sharp.IconChar.BorderTopLeft;
+            LandformAreaSelectButton.IconColor = Color.Black;
+            LandformAreaSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LandformAreaSelectButton.IconSize = 24;
+            LandformAreaSelectButton.ImageScaling = ToolStripItemImageScaling.None;
+            LandformAreaSelectButton.ImageTransparentColor = Color.Magenta;
+            LandformAreaSelectButton.Margin = new Padding(0, 50, 0, 2);
+            LandformAreaSelectButton.Name = "LandformAreaSelectButton";
+            LandformAreaSelectButton.Size = new Size(60, 60);
+            LandformAreaSelectButton.Text = "Area";
+            LandformAreaSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            LandformAreaSelectButton.Click += LandformAreaSelectButton_Click;
             // 
             // groupBox3
             // 
@@ -4916,8 +4933,6 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(RealmStudioMainMenuStrip);
-            RealmStudioForm.Controls.Add(SymbolToolPanel);
-            RealmStudioForm.Controls.Add(PathToolPanel);
             RealmStudioForm.Controls.Add(WaterToolPanel);
             RealmStudioForm.Controls.Add(LandToolPanel);
             RealmStudioForm.Controls.Add(OceanToolPanel);
@@ -4926,6 +4941,8 @@
             RealmStudioForm.Controls.Add(RegionToolPanel);
             RealmStudioForm.Controls.Add(OverlayToolPanel);
             RealmStudioForm.Controls.Add(LabelToolPanel);
+            RealmStudioForm.Controls.Add(SymbolToolPanel);
+            RealmStudioForm.Controls.Add(PathToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
             RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
             RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
@@ -8256,23 +8273,6 @@
             materialCheckBox2.Text = "materialCheckBox2";
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
-            // 
-            // LandformAreaSelectButton
-            // 
-            LandformAreaSelectButton.AutoSize = false;
-            LandformAreaSelectButton.ForeColor = SystemColors.ControlDarkDark;
-            LandformAreaSelectButton.IconChar = FontAwesome.Sharp.IconChar.BorderTopLeft;
-            LandformAreaSelectButton.IconColor = Color.Black;
-            LandformAreaSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            LandformAreaSelectButton.IconSize = 24;
-            LandformAreaSelectButton.ImageScaling = ToolStripItemImageScaling.None;
-            LandformAreaSelectButton.ImageTransparentColor = Color.Magenta;
-            LandformAreaSelectButton.Margin = new Padding(0, 50, 0, 2);
-            LandformAreaSelectButton.Name = "LandformAreaSelectButton";
-            LandformAreaSelectButton.Size = new Size(60, 60);
-            LandformAreaSelectButton.Text = "Area";
-            LandformAreaSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            LandformAreaSelectButton.Click += LandformAreaSelectButton_Click;
             // 
             // RealmStudioMainForm
             // 

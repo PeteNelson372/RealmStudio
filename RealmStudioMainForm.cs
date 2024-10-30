@@ -24,6 +24,7 @@
 using RealmStudio.Properties;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Media;
@@ -348,7 +349,7 @@ namespace RealmStudio
             Settings.Default.RealmAutosave = AutosaveSwitch.Checked;
             Settings.Default.Save();
 
-            if (Settings.Default.RealmAutosave)
+            if (AutosaveSwitch.Checked)
             {
                 StartAutosaveTimer();
             }
@@ -992,7 +993,17 @@ namespace RealmStudio
 
         private void HelpContentsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "https://petenelson372.github.io/RealmStudioDocs/",
+                UseShellExecute = true
+            };
 
+            try
+            {
+                Process.Start(psi);
+            }
+            catch { }
         }
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)

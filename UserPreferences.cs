@@ -403,5 +403,11 @@ namespace RealmStudio
             string tt = "The time in minutes between automatic backups of the current realm.";
             TOOLTIP.Show(tt, this, new Point(AutosaveIntervalTooltipButton.Right - 30, AutosaveIntervalTooltipButton.Top - 20), 4000);
         }
+
+        private void AutosaveRealmSwitch_Click(object sender, EventArgs e)
+        {
+            Settings.Default.RealmAutosave = AutosaveRealmSwitch.Checked;
+            Settings.Default.Save();
+        }
     }
 }
