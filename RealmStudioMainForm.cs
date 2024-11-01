@@ -3752,11 +3752,10 @@ namespace RealmStudio
                         {
                             CURRENT_WATERFEATURE.WaterFeaturePath = lakePath;
                             WaterFeatureMethods.CreateInnerAndOuterPaths(CURRENT_MAP, CURRENT_WATERFEATURE);
+                            WaterFeatureMethods.MergeWaterFeatures(CURRENT_MAP);
+                            WaterFeatureMethods.ConstructWaterFeaturePaintObjects(CURRENT_WATERFEATURE);
 
                             MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER).MapLayerComponents.Add(CURRENT_WATERFEATURE);
-                            WaterFeatureMethods.MergeWaterFeatures(CURRENT_MAP);
-
-                            WaterFeatureMethods.ConstructWaterFeaturePaintObjects(CURRENT_WATERFEATURE);
                         }
                         else
                         {
@@ -3764,6 +3763,7 @@ namespace RealmStudio
                         }
 
                         MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WATERLAYER, true);
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WATERDRAWINGLAYER, true);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
