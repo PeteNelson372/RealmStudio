@@ -8013,14 +8013,16 @@ namespace RealmStudio
         {
             if (SELECTED_MAP_SYMBOL != null)
             {
-                // if a symbol has been selected and is grayscale, then color it with the
-                // selected custom color
+                // if a symbol has been selected and is grayscale or custom colored, then color it with the
+                // selected custom colors
 
-                SKColor paintColor = SymbolColor1Button.BackColor.ToSKColor();
+                SKColor paintColor1 = SymbolColor1Button.BackColor.ToSKColor();
+                SKColor paintColor2 = SymbolColor2Button.BackColor.ToSKColor();
+                SKColor paintColor3 = SymbolColor3Button.BackColor.ToSKColor();
 
-                if (SELECTED_MAP_SYMBOL.IsGrayscale)
+                if (SELECTED_MAP_SYMBOL.IsGrayscale || SELECTED_MAP_SYMBOL.UseCustomColors)
                 {
-                    Cmd_PaintSymbol cmd = new(SELECTED_MAP_SYMBOL, paintColor);
+                    Cmd_PaintSymbol cmd = new(SELECTED_MAP_SYMBOL, paintColor1, paintColor1, paintColor2, paintColor3);
                     CommandManager.AddCommand(cmd);
                     cmd.DoOperation();
 
@@ -8202,14 +8204,16 @@ namespace RealmStudio
             }
             else if (e.Button == MouseButtons.Right && SELECTED_MAP_SYMBOL != null)
             {
-                // if a symbol has been selected and is grayscale, then color it with the
-                // selected custom color
-
-                SKColor paintColor = SymbolColor1Button.BackColor.ToSKColor();
-
-                if (SELECTED_MAP_SYMBOL.IsGrayscale)
+                if (SELECTED_MAP_SYMBOL.IsGrayscale || SELECTED_MAP_SYMBOL.UseCustomColors)
                 {
-                    Cmd_PaintSymbol cmd = new(SELECTED_MAP_SYMBOL, paintColor);
+                    // if a symbol has been selected and is grayscale or custom colored, then color it with the
+                    // selected custom colors
+
+                    SKColor paintColor1 = SymbolColor1Button.BackColor.ToSKColor();
+                    SKColor paintColor2 = SymbolColor2Button.BackColor.ToSKColor();
+                    SKColor paintColor3 = SymbolColor3Button.BackColor.ToSKColor();
+
+                    Cmd_PaintSymbol cmd = new(SELECTED_MAP_SYMBOL, paintColor1, paintColor1, paintColor2, paintColor3);
                     CommandManager.AddCommand(cmd);
                     cmd.DoOperation();
 
@@ -8233,14 +8237,16 @@ namespace RealmStudio
             }
             else if (e.Button == MouseButtons.Right && SELECTED_MAP_SYMBOL != null)
             {
-                // if a symbol has been selected and is grayscale, then color it with the
-                // selected custom color
-
-                SKColor paintColor = SymbolColor2Button.BackColor.ToSKColor();
-
-                if (SELECTED_MAP_SYMBOL.IsGrayscale)
+                if (SELECTED_MAP_SYMBOL.IsGrayscale || SELECTED_MAP_SYMBOL.UseCustomColors)
                 {
-                    Cmd_PaintSymbol cmd = new(SELECTED_MAP_SYMBOL, paintColor);
+                    // if a symbol has been selected and is grayscale or custom colored, then color it with the
+                    // selected custom colors
+
+                    SKColor paintColor1 = SymbolColor1Button.BackColor.ToSKColor();
+                    SKColor paintColor2 = SymbolColor2Button.BackColor.ToSKColor();
+                    SKColor paintColor3 = SymbolColor3Button.BackColor.ToSKColor();
+
+                    Cmd_PaintSymbol cmd = new(SELECTED_MAP_SYMBOL, paintColor2, paintColor1, paintColor2, paintColor3);
                     CommandManager.AddCommand(cmd);
                     cmd.DoOperation();
 
@@ -8264,14 +8270,16 @@ namespace RealmStudio
             }
             else if (e.Button == MouseButtons.Right && SELECTED_MAP_SYMBOL != null)
             {
-                // if a symbol has been selected and is grayscale, then color it with the
-                // selected custom color
-
-                SKColor paintColor = SymbolColor3Button.BackColor.ToSKColor();
-
-                if (SELECTED_MAP_SYMBOL.IsGrayscale)
+                if (SELECTED_MAP_SYMBOL.IsGrayscale || SELECTED_MAP_SYMBOL.UseCustomColors)
                 {
-                    Cmd_PaintSymbol cmd = new(SELECTED_MAP_SYMBOL, paintColor);
+                    // if a symbol has been selected and is grayscale or custom colored, then color it with the
+                    // selected custom colors
+
+                    SKColor paintColor1 = SymbolColor1Button.BackColor.ToSKColor();
+                    SKColor paintColor2 = SymbolColor2Button.BackColor.ToSKColor();
+                    SKColor paintColor3 = SymbolColor3Button.BackColor.ToSKColor();
+
+                    Cmd_PaintSymbol cmd = new(SELECTED_MAP_SYMBOL, paintColor3, paintColor1, paintColor2, paintColor3);
                     CommandManager.AddCommand(cmd);
                     cmd.DoOperation();
 
@@ -8437,18 +8445,16 @@ namespace RealmStudio
 
             foreach (MapSymbol symbol in symbols)
             {
-#pragma warning disable CS8604 // Possible null reference argument.
-                symbol.ColorMappedBitmap = symbol.SymbolBitmap;
-#pragma warning restore CS8604 // Possible null reference argument.
+                symbol.ColorMappedBitmap = symbol.SymbolBitmap?.Copy();
 
-                Bitmap colorMappedBitmap = Extensions.ToBitmap(symbol.ColorMappedBitmap);
+                Bitmap colorMappedBitmap = (Bitmap)Extensions.ToBitmap(symbol.ColorMappedBitmap).Clone();
 
                 if (symbol.UseCustomColors)
                 {
                     SymbolMethods.MapCustomColorsToColorableBitmap(ref colorMappedBitmap, SymbolColor1Button.BackColor, SymbolColor2Button.BackColor, SymbolColor3Button.BackColor);
                 }
 
-                symbol.ColorMappedBitmap = Extensions.ToSKBitmap(colorMappedBitmap);
+                symbol.ColorMappedBitmap = Extensions.ToSKBitmap((Bitmap)colorMappedBitmap.Clone());
 
                 PictureBox pb = new()
                 {
@@ -8513,6 +8519,9 @@ namespace RealmStudio
                 }
                 else if (ModifierKeys == Keys.None)
                 {
+                    CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolPlace;
+                    SetDrawingModeLabel();
+
                     // primary symbol selection                    
                     PictureBox pb = (PictureBox)sender;
 

@@ -22,29 +22,60 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
+using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class Cmd_PaintSymbol(MapSymbol symbol, SKColor color) : IMapOperation
+    internal class Cmd_PaintSymbol(MapSymbol? symbol, SKColor paintColor, SKColor color1, SKColor color2, SKColor color3) : IMapOperation
     {
-        private MapSymbol Symbol = symbol;
-        private readonly SKColor SymbolColor = color;
+        private MapSymbol? Symbol = symbol;
+        private readonly SKColor PaintColor = paintColor;
+        private readonly SKColor SymbolColor1 = color1;
+        private readonly SKColor SymbolColor2 = color2;
+        private readonly SKColor SymbolColor3 = color3;
 
         public void DoOperation()
         {
-            Symbol.CustomSymbolColors[0] = SymbolColor;
-            SKPaint paint = new()
-            {
-                ColorFilter = SKColorFilter.CreateBlendMode(SymbolColor,
-                    SKBlendMode.Modulate) // combine the selected color with the bitmap colors
-            };
+            if (Symbol == null) { return; }
 
-            Symbol.SymbolPaint = paint;
+            Symbol.CustomSymbolColors[0] = SymbolColor1;
+            Symbol.CustomSymbolColors[1] = SymbolColor2;
+            Symbol.CustomSymbolColors[2] = SymbolColor3;
+
+            if (Symbol.IsGrayscale)
+            {
+                SKPaint paint = new()
+                {
+                    ColorFilter = SKColorFilter.CreateBlendMode(PaintColor,
+                        SKBlendMode.Modulate) // combine the selected color with the bitmap colors
+                };
+
+                Symbol.SymbolPaint = paint;
+            }
+            else if (Symbol.UseCustomColors)
+            {
+                Symbol.ColorMappedBitmap = Symbol.SymbolBitmap?.Copy();
+
+                Bitmap colorMappedBitmap = Extensions.ToBitmap(Symbol.SymbolBitmap?.Copy());
+
+                SymbolMethods.MapCustomColorsToColorableBitmap(ref colorMappedBitmap,
+                    Symbol.CustomSymbolColors[0].ToDrawingColor(),
+                    Symbol.CustomSymbolColors[1].ToDrawingColor(),
+                    Symbol.CustomSymbolColors[2].ToDrawingColor());
+
+                Symbol.ColorMappedBitmap = Extensions.ToSKBitmap(colorMappedBitmap).Copy();
+
+                Symbol.PlacedBitmap = Extensions.ToSKBitmap(colorMappedBitmap).Copy();
+            }
         }
 
         public void UndoOperation()
         {
-            Symbol.SymbolPaint = null;
+            if (Symbol != null)
+            {
+                // TODO: undo custom coloring
+                Symbol.SymbolPaint = null;
+            }
         }
     }
 }
