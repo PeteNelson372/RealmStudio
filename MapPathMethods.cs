@@ -300,7 +300,7 @@ namespace RealmStudio
             return path;
         }
 
-        public static MapPathPoint? SelectMapPathPointAtPoint(MapPath mapPath, SKPoint mapClickPoint)
+        public static MapPathPoint? SelectMapPathPointAtPoint(MapPath mapPath, SKPoint mapClickPoint, bool selectOnlyControlPoints = true)
         {
             MapPathPoint? selectedPoint = null;
 
@@ -309,7 +309,15 @@ namespace RealmStudio
                 using SKPath controlPointPath = new();
                 controlPointPath.AddCircle(mapPath.PathPoints[i].MapPoint.X, mapPath.PathPoints[i].MapPoint.Y, mapPath.PathWidth);
 
-                if (controlPointPath.Contains(mapClickPoint.X, mapClickPoint.Y))
+                if (selectOnlyControlPoints)
+                {
+                    if (controlPointPath.Contains(mapClickPoint.X, mapClickPoint.Y) && mapPath.PathPoints[i].IsControlPoint)
+                    {
+                        selectedPoint = mapPath.PathPoints[i];
+                        break;
+                    }
+                }
+                else if (controlPointPath.Contains(mapClickPoint.X, mapClickPoint.Y))
                 {
                     selectedPoint = mapPath.PathPoints[i];
                     break;

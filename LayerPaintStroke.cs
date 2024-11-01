@@ -49,11 +49,7 @@ namespace RealmStudio
 
         public LayerPaintStroke()
         {
-            ShaderPaint = new()
-            {
-                Style = SKPaintStyle.Fill,
-                Color = SKColor.Empty,
-            };
+            ShaderPaint = new();
         }
 
         public LayerPaintStroke(RealmStudioMap parentMap, SKColor strokeColor, ColorPaintBrush colorPaintBrush, int brushRadius, int mapLayerIdentifier, bool erase = false)
@@ -89,7 +85,15 @@ namespace RealmStudio
             }
             else if (MapLayerIdentifier == MapBuilder.WATERDRAWINGLAYER)
             {
-                ShaderPaint = PaintObjects.WaterColorPaint;
+                if (!Erase)
+                {
+                    ShaderPaint = PaintObjects.WaterColorPaint;
+                }
+                else
+                {
+                    ShaderPaint = PaintObjects.WaterColorEraserPaint;
+                }
+
             }
             else
             {

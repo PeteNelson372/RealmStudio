@@ -90,7 +90,7 @@ namespace RealmStudio
 
         private static System.Timers.Timer? LOCATION_UPDATE_TIMER = null;
 
-        private static int BACKUP_COUNT = 5;
+        private static readonly int BACKUP_COUNT = 5;
 
         private static SKPath CURRENT_MAP_LABEL_PATH = new();
         private static readonly List<SKPoint> CURRENT_MAP_LABEL_PATH_POINTS = [];
@@ -243,41 +243,44 @@ namespace RealmStudio
 
             try
             {
-                PruneOldBackupsOfMap(CURRENT_MAP);
-
-                // realm autosave folder (location where map backups are saved during autosave)
-                string defaultAutosaveFolder = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
-
-                string autosaveDirectory = Settings.Default.AutosaveDirectory;
-
-                if (string.IsNullOrEmpty(autosaveDirectory))
+                if (AutosaveSwitch.Checked)
                 {
-                    autosaveDirectory = defaultAutosaveFolder;
-                }
+                    PruneOldBackupsOfMap(CURRENT_MAP);
 
-                string autosaveFilename = CURRENT_MAP.MapGuid.ToString();
+                    // realm autosave folder (location where map backups are saved during autosave)
+                    string defaultAutosaveFolder = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
 
-                string saveTime = DateTime.Now.ToFileTimeUtc().ToString();
+                    string autosaveDirectory = Settings.Default.AutosaveDirectory;
 
-                autosaveFilename += "_" + saveTime + ".rsmapx";
-
-                string autosaveFullPath = autosaveDirectory + Path.DirectorySeparatorChar + autosaveFilename;
-
-                CURRENT_MAP.MapPath = autosaveFullPath;
-
-                MapFileMethods.SaveMap(CURRENT_MAP);
-
-                if (Settings.Default.PlaySoundOnSave)
-                {
-                    Stream s = new MemoryStream(Resources.savesound2);
-
-                    if (s != null)
+                    if (string.IsNullOrEmpty(autosaveDirectory))
                     {
-                        SoundPlayer player = new SoundPlayer(s);
-                        player.Play();
+                        autosaveDirectory = defaultAutosaveFolder;
                     }
 
-                    SetStatusText("A backup of the realm has been saved.");
+                    string autosaveFilename = CURRENT_MAP.MapGuid.ToString();
+
+                    string saveTime = DateTime.Now.ToFileTimeUtc().ToString();
+
+                    autosaveFilename += "_" + saveTime + ".rsmapx";
+
+                    string autosaveFullPath = autosaveDirectory + Path.DirectorySeparatorChar + autosaveFilename;
+
+                    CURRENT_MAP.MapPath = autosaveFullPath;
+
+                    MapFileMethods.SaveMap(CURRENT_MAP);
+
+                    if (Settings.Default.PlaySoundOnSave)
+                    {
+                        Stream s = new MemoryStream(Resources.savesound2);
+
+                        if (s != null)
+                        {
+                            SoundPlayer player = new SoundPlayer(s);
+                            player.Play();
+                        }
+
+                        SetStatusText("A backup of the realm has been saved.");
+                    }
                 }
             }
             catch (Exception ex)
@@ -1035,7 +1038,7 @@ namespace RealmStudio
             // stop the autosave timer
             StopAutosaveTimer();
 
-            bool autosave = Settings.Default.RealmAutosave;
+            bool autosave = Settings.Default.RealmAutosave && AutosaveSwitch.Checked;
 
             if (autosave)
             {
@@ -1116,42 +1119,30 @@ namespace RealmStudio
 
         private static void StopBrushTimer()
         {
-            if (BRUSH_TIMER != null)
-            {
-                BRUSH_TIMER.Stop();
-                BRUSH_TIMER.Dispose();
-                BRUSH_TIMER = null;
-            }
+            BRUSH_TIMER?.Stop();
+            BRUSH_TIMER?.Dispose();
+            BRUSH_TIMER = null;
         }
 
         private static void StopAutosaveTimer()
         {
-            if (AUTOSAVE_TIMER != null)
-            {
-                AUTOSAVE_TIMER.Stop();
-                AUTOSAVE_TIMER.Dispose();
-                AUTOSAVE_TIMER = null;
-            }
+            AUTOSAVE_TIMER?.Stop();
+            AUTOSAVE_TIMER?.Dispose();
+            AUTOSAVE_TIMER = null;
         }
 
         private static void StopSymbolAreaBrushTimer()
         {
-            if (SYMBOL_AREA_BRUSH_TIMER != null)
-            {
-                SYMBOL_AREA_BRUSH_TIMER.Stop();
-                SYMBOL_AREA_BRUSH_TIMER.Dispose();
-                SYMBOL_AREA_BRUSH_TIMER = null;
-            }
+            SYMBOL_AREA_BRUSH_TIMER?.Stop();
+            SYMBOL_AREA_BRUSH_TIMER?.Dispose();
+            SYMBOL_AREA_BRUSH_TIMER = null;
         }
 
         private static void StopLocationUpdateTimer()
         {
-            if (LOCATION_UPDATE_TIMER != null)
-            {
-                LOCATION_UPDATE_TIMER.Stop();
-                LOCATION_UPDATE_TIMER.Dispose();
-                LOCATION_UPDATE_TIMER = null;
-            }
+            LOCATION_UPDATE_TIMER?.Stop();
+            LOCATION_UPDATE_TIMER?.Dispose();
+            LOCATION_UPDATE_TIMER = null;
         }
 
         private static void PruneOldBackupsOfMap(RealmStudioMap cURRENT_MAP)
@@ -3644,7 +3635,7 @@ namespace RealmStudio
 
                         if (CURRENT_LAYER_PAINT_STROKE == null)
                         {
-                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.Empty,
+                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.Transparent,
                                 ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.OCEANDRAWINGLAYER, true);
 
                             Cmd_AddOceanPaintStroke cmd = new(CURRENT_MAP, CURRENT_LAYER_PAINT_STROKE);
@@ -3868,6 +3859,34 @@ namespace RealmStudio
 
                             SKGLRenderControl.Invalidate();
                         }
+                    }
+                    break;
+                case DrawingModeEnum.PathEdit:
+                    {
+                        // if the ctrl key is pressed and the user clicks on a path, find
+                        // the nearest point on the path and make it a path control point
+                        // so it can be moved
+                        if (ModifierKeys == Keys.Control)
+                        {
+                            if (SELECTED_PATH != null)
+                            {
+                                foreach (MapPathPoint mp in SELECTED_PATH.PathPoints)
+                                {
+                                    mp.IsSelected = false;
+                                }
+
+                                SELECTED_PATHPOINT = MapPathMethods.SelectMapPathPointAtPoint(SELECTED_PATH, zoomedScrolledPoint, false);
+
+                                if (SELECTED_PATHPOINT != null)
+                                {
+                                    SELECTED_PATHPOINT.IsControlPoint = true;
+                                }
+
+                                MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
+                                MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
+                            }
+                        }
+
                     }
                     break;
                 case DrawingModeEnum.SymbolPlace:
@@ -4393,6 +4412,7 @@ namespace RealmStudio
                     {
                         if (SELECTED_PATH != null)
                         {
+                            // move the entire selected path with the mouse
                             SizeF delta = new()
                             {
                                 Width = zoomedScrolledPoint.X - PREVIOUS_CURSOR_POINT.X,
@@ -4420,6 +4440,7 @@ namespace RealmStudio
                 case DrawingModeEnum.PathEdit:
                     if (SELECTED_PATHPOINT != null)
                     {
+                        // move the selected point on the path
                         MapPathMethods.MoveSelectedMapPathPoint(SELECTED_PATH, SELECTED_PATHPOINT, zoomedScrolledPoint);
 
                         MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);

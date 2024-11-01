@@ -182,9 +182,11 @@ namespace RealmStudio
             for (int i = 0; i < PathPoints.Count - 10; i += 10)
             {
                 mapPathPoints.Add(PathPoints[i]);
+                PathPoints[i].IsControlPoint = true;
             }
 
-            mapPathPoints.Add(PathPoints[PathPoints.Count - 1]);
+            mapPathPoints.Add(PathPoints[^1]);
+            PathPoints[^1].IsControlPoint = true;
 
             return mapPathPoints;
         }

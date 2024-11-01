@@ -9,9 +9,9 @@
     <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2024.303.36537</AssemblyVersion>
-    <FileVersion>1.2024.303.36537</FileVersion>
-    <Version>1.2024.2-alpha-22</Version>
+    <AssemblyVersion>1.2024.306.32644</AssemblyVersion>
+    <FileVersion>1.2024.306.32644</FileVersion>
+    <Version>1.2024.2-alpha-86</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>  
   </PropertyGroup>

@@ -260,9 +260,9 @@ namespace RealmStudio
 
         public static readonly SKPaint OceanEraserPaint = new()
         {
-            Color = SKColor.Empty,
+            Color = SKColors.Empty,
             Style = SKPaintStyle.Fill,
-            BlendMode = SKBlendMode.Src,
+            BlendMode = SKBlendMode.Src
         };
 
     }

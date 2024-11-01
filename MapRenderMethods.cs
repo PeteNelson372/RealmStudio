@@ -312,24 +312,15 @@ namespace RealmStudio
 
             if (landDrawingLayer.ShowLayer)
             {
-                if (!landDrawingLayer.IsModified && landDrawingLayer.RenderPicture != null)
-                {
-                    // paint land drawing layer
-                    renderCanvas.DrawPicture(landDrawingLayer.RenderPicture, scrollPoint);
-                }
-                else
-                {
-                    landDrawingLayer.RenderPicture?.Dispose();
+                // using a picture recorder to provide a canvas to draw on
+                // causes transparent (or empty) color to render as black;
+                // using a bitmap canvas correctly renders transparent and empty colors
 
-                    using var drawingRecorder = new SKPictureRecorder();
-                    drawingRecorder.BeginRecording(clippingBounds);
-                    landDrawingLayer.Render(drawingRecorder.RecordingCanvas);
-                    landDrawingLayer.RenderPicture = drawingRecorder.EndRecording();
+                SKBitmap b = new SKBitmap(map.MapWidth, map.MapHeight);
+                SKCanvas canvas = new(b);
+                landDrawingLayer.Render(canvas);
 
-                    // paint land drawing layer
-                    renderCanvas.DrawPicture(landDrawingLayer.RenderPicture, scrollPoint);
-                    landDrawingLayer.IsModified = false;
-                }
+                renderCanvas.DrawBitmap(b, scrollPoint);
             }
 
             if (landformLayer.ShowLayer)
@@ -406,14 +397,14 @@ namespace RealmStudio
                             {
                                 if (p.IsSelected)
                                 {
-                                    recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathSelectedControlPointPaint);
+                                    recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathSelectedControlPointPaint);
                                 }
                                 else
                                 {
-                                    recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointPaint);
+                                    recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathControlPointPaint);
                                 }
 
-                                recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointOutlinePaint);
+                                recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathControlPointOutlinePaint);
                             }
                         }
                     }
@@ -440,7 +431,7 @@ namespace RealmStudio
                     {
                         if (mp.BoundaryPath != null)
                         {
-                            // only one pathcan be selected
+                            // only one path can be selected
                             // draw an outline around the path to show that it is selected
                             mp.BoundaryPath.GetTightBounds(out SKRect boundRect);
                             using SKPath boundsPath = new();
@@ -503,14 +494,14 @@ namespace RealmStudio
                             {
                                 if (p.IsSelected)
                                 {
-                                    recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathSelectedControlPointPaint);
+                                    recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathSelectedControlPointPaint);
                                 }
                                 else
                                 {
-                                    recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointPaint);
+                                    recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathControlPointPaint);
                                 }
 
-                                recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 2.0F, PaintObjects.MapPathControlPointOutlinePaint);
+                                recorder.RecordingCanvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathControlPointOutlinePaint);
                             }
                         }
                     }
@@ -647,28 +638,18 @@ namespace RealmStudio
                 }
             }
 
+
             if (oceanDrawingLayer.ShowLayer)
             {
-                // render ocean drawing layer (color painting on ocean)
-                if (!oceanDrawingLayer.IsModified && oceanDrawingLayer.RenderPicture != null)
-                {
-                    // paint the ocean drawing layer
-                    renderCanvas.DrawPicture(oceanDrawingLayer.RenderPicture, scrollPoint);
-                }
-                else
-                {
-                    oceanDrawingLayer.RenderPicture?.Dispose();
+                // using a picture recorder to provide a canvas to draw on
+                // causes transparent (or empty) color to render as black;
+                // using a bitmap canvas correctly renders transparent and empty colors
 
-                    using var oceanDrawingRecorder = new SKPictureRecorder();
-                    oceanDrawingRecorder.BeginRecording(clippingBounds);
+                SKBitmap b = new SKBitmap(map.MapWidth, map.MapHeight);
+                SKCanvas canvas = new(b);
+                oceanDrawingLayer.Render(canvas);
 
-                    // render ocean drawing layer (user-painted color)
-                    oceanDrawingLayer.Render(oceanDrawingRecorder.RecordingCanvas);
-                    oceanDrawingLayer.RenderPicture = oceanDrawingRecorder.EndRecording();
-
-                    renderCanvas.DrawPicture(oceanDrawingLayer.RenderPicture, scrollPoint);
-                    oceanDrawingLayer.IsModified = false;
-                }
+                renderCanvas.DrawBitmap(b, scrollPoint);
             }
         }
 
@@ -932,26 +913,15 @@ namespace RealmStudio
 
             if (waterDrawingLayer.ShowLayer)
             {
-                if (!waterDrawingLayer.IsModified && waterDrawingLayer.RenderPicture != null)
-                {
-                    // paint the symbol layer
-                    renderCanvas.DrawPicture(waterDrawingLayer.RenderPicture, scrollPoint);
-                }
-                else
-                {
-                    waterDrawingLayer.RenderPicture?.Dispose();
+                // using a picture recorder to provide a canvas to draw on
+                // causes transparent (or empty) color to render as black;
+                // using a bitmap canvas correctly renders transparent and empty colors
 
-                    using var drawingRecorder = new SKPictureRecorder();
-                    drawingRecorder.BeginRecording(clippingBounds);
+                SKBitmap b = new SKBitmap(map.MapWidth, map.MapHeight);
+                SKCanvas canvas = new(b);
+                waterDrawingLayer.Render(canvas);
 
-                    // render layer paint strokes
-                    waterDrawingLayer.Render(drawingRecorder.RecordingCanvas);
-                    waterDrawingLayer.RenderPicture = drawingRecorder.EndRecording();
-
-                    // paint water drawing layer
-                    renderCanvas.DrawPicture(waterDrawingLayer.RenderPicture, scrollPoint);
-                    waterDrawingLayer.IsModified = false;
-                }
+                renderCanvas.DrawBitmap(b, scrollPoint);
             }
 
             // selection layer
