@@ -33,6 +33,7 @@ namespace RealmStudio
         private readonly SKColor SymbolColor1 = color1;
         private readonly SKColor SymbolColor2 = color2;
         private readonly SKColor SymbolColor3 = color3;
+        private SKBitmap? SavedPlacedBitmap = null;
 
         public void DoOperation()
         {
@@ -65,6 +66,7 @@ namespace RealmStudio
 
                 Symbol.ColorMappedBitmap = Extensions.ToSKBitmap(colorMappedBitmap).Copy();
 
+                SavedPlacedBitmap = Symbol.PlacedBitmap?.Copy();
                 Symbol.PlacedBitmap = Extensions.ToSKBitmap(colorMappedBitmap).Copy();
             }
         }
@@ -73,8 +75,13 @@ namespace RealmStudio
         {
             if (Symbol != null)
             {
-                // TODO: undo custom coloring
+                // undo coloring
                 Symbol.SymbolPaint = null;
+
+                if (SavedPlacedBitmap != null)
+                {
+                    Symbol.PlacedBitmap = SavedPlacedBitmap.Copy();
+                }
             }
         }
     }

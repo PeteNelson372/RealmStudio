@@ -865,12 +865,14 @@ namespace RealmStudio
         private void UndoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CommandManager.Undo();
+            MapBuilder.MarkAllLayersModified(CURRENT_MAP);
             SKGLRenderControl.Invalidate();
         }
 
         private void RedoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CommandManager.Redo();
+            MapBuilder.MarkAllLayersModified(CURRENT_MAP);
             SKGLRenderControl.Invalidate();
         }
 
