@@ -265,5 +265,16 @@ namespace RealmStudio
             BlendMode = SKBlendMode.Src
         };
 
+        public static SKPaint BoxPaint = new();
+
+        public static SKPaint BoxSelectPaint = new()
+        {
+            Style = SKPaintStyle.Stroke,
+            IsAntialias = true,
+            Color = SKColors.Coral,
+            StrokeWidth = 2,
+            PathEffect = SKPathEffect.CreateDash([4F, 2F], 6F),
+        };
+
     }
 }

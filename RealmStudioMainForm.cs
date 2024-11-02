@@ -2333,7 +2333,7 @@ namespace RealmStudio
                 MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BOXLAYER);
                 for (int i = 0; i < boxLayer.MapLayerComponents.Count; i++)
                 {
-                    if (boxLayer.MapLayerComponents[i] is PlacedMapBox box)
+                    if (boxLayer.MapLayerComponents[i] is PlacedMapBox box && box.BoxBitmap != null)
                     {
                         SKRectI center = new((int)box.BoxCenterLeft, (int)box.BoxCenterTop,
                             (int)(box.Width - box.BoxCenterRight), (int)(box.Height - box.BoxCenterBottom));
@@ -2355,7 +2355,7 @@ namespace RealmStudio
                             }
                         }
 
-                        SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(box.BoxBitmap.ToSKBitmap(), center);
+                        SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(box.BoxBitmap, center);
 
                         box.Patch_A = bitmapSlices[0].Copy();   // top-left corner
                         box.Patch_B = bitmapSlices[1].Copy();   // top
@@ -3952,12 +3952,38 @@ namespace RealmStudio
                     break;
                 case DrawingModeEnum.DrawBox:
                     {
-                        // initialize new box
-                        Cursor = Cursors.Cross;
+                        if (SELECTED_MAP_BOX != null)
+                        {
+                            // initialize new box
+                            Cursor = Cursors.Cross;
 
-                        PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
+                            PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
 
-                        SELECTED_PLACED_MAP_BOX = new();
+                            SELECTED_PLACED_MAP_BOX = new()
+                            {
+                                X = (int)zoomedScrolledPoint.X,
+                                Y = (int)zoomedScrolledPoint.Y,
+
+                                BoxCenterLeft = SELECTED_MAP_BOX.BoxCenterLeft,
+                                BoxCenterTop = SELECTED_MAP_BOX.BoxCenterTop,
+                                BoxCenterRight = SELECTED_MAP_BOX.BoxCenterRight,
+                                BoxCenterBottom = SELECTED_MAP_BOX.BoxCenterBottom,
+
+                                BoxTint = SelectBoxTintButton.BackColor
+                            };
+
+                            PaintObjects.BoxPaint.Dispose();
+
+                            PaintObjects.BoxPaint = new()
+                            {
+                                Style = SKPaintStyle.Fill,
+                                ColorFilter = SKColorFilter.CreateBlendMode(
+                                    Extensions.ToSKColor(SelectBoxTintButton.BackColor),
+                                    SKBlendMode.Modulate) // combine the tint with the bitmap color
+                            };
+
+                            SELECTED_PLACED_MAP_BOX.BoxPaint = PaintObjects.BoxPaint.Clone();
+                        }
                     }
                     break;
                 case DrawingModeEnum.DrawMapMeasure:
@@ -4517,11 +4543,12 @@ namespace RealmStudio
                     }
                     else if (SELECTED_PLACED_MAP_BOX != null)
                     {
-                        SELECTED_PLACED_MAP_BOX.X = (int)zoomedScrolledPoint.X;
-                        SELECTED_PLACED_MAP_BOX.Y = (int)zoomedScrolledPoint.Y;
+                        SELECTED_PLACED_MAP_BOX.X = (int)zoomedScrolledPoint.X - (SELECTED_PLACED_MAP_BOX.Width / 2);
+                        SELECTED_PLACED_MAP_BOX.Y = (int)zoomedScrolledPoint.Y - (SELECTED_PLACED_MAP_BOX.Height / 2);
 
                         MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.BOXLAYER, true);
                     }
+
                     CURRENT_MAP.IsSaved = false;
                     break;
                 case DrawingModeEnum.DrawArcLabelPath:
@@ -4571,40 +4598,21 @@ namespace RealmStudio
                     break;
                 case DrawingModeEnum.DrawBox:
                     // draw box as mouse is moved
-                    if (SELECTED_MAP_BOX != null)
+                    if (SELECTED_MAP_BOX != null && SELECTED_PLACED_MAP_BOX != null)
                     {
                         SKRect boxRect = new(PREVIOUS_CURSOR_POINT.X, PREVIOUS_CURSOR_POINT.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
 
                         if (boxRect.Width > 0 && boxRect.Height > 0)
                         {
-                            Bitmap? b = SELECTED_MAP_BOX.BoxBitmap;
+                            SKBitmap? b = SELECTED_MAP_BOX.BoxBitmap.ToSKBitmap();
 
                             if (b != null)
                             {
-                                using Bitmap resizedBitmap = new(b, (int)boxRect.Width, (int)boxRect.Height);
+                                SKBitmap resizedBitmap = b.Resize(new SKSizeI((int)boxRect.Width, (int)boxRect.Height), SKFilterQuality.High);
 
-                                SELECTED_PLACED_MAP_BOX ??= new();
-
-                                SELECTED_PLACED_MAP_BOX.SetBoxBitmap(new(resizedBitmap));
-                                SELECTED_PLACED_MAP_BOX.X = (int)PREVIOUS_CURSOR_POINT.X;
-                                SELECTED_PLACED_MAP_BOX.Y = (int)PREVIOUS_CURSOR_POINT.Y;
+                                SELECTED_PLACED_MAP_BOX.SetBoxBitmap(resizedBitmap);
                                 SELECTED_PLACED_MAP_BOX.Width = resizedBitmap.Width;
                                 SELECTED_PLACED_MAP_BOX.Height = resizedBitmap.Height;
-
-                                SELECTED_PLACED_MAP_BOX.BoxCenterLeft = SELECTED_MAP_BOX.BoxCenterLeft;
-                                SELECTED_PLACED_MAP_BOX.BoxCenterTop = SELECTED_MAP_BOX.BoxCenterTop;
-                                SELECTED_PLACED_MAP_BOX.BoxCenterRight = SELECTED_MAP_BOX.BoxCenterRight;
-                                SELECTED_PLACED_MAP_BOX.BoxCenterBottom = SELECTED_MAP_BOX.BoxCenterBottom;
-
-                                SELECTED_PLACED_MAP_BOX.BoxTint = SelectBoxTintButton.BackColor;
-
-                                using SKPaint boxPaint = new()
-                                {
-                                    Style = SKPaintStyle.Fill,
-                                    ColorFilter = SKColorFilter.CreateBlendMode(
-                                        Extensions.ToSKColor(SELECTED_PLACED_MAP_BOX.BoxTint),
-                                        SKBlendMode.Modulate) // combine the tint with the bitmap color
-                                };
 
                                 MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
                                 workLayer.RenderPicture?.Dispose();
@@ -4616,7 +4624,7 @@ namespace RealmStudio
                                 // Start recording 
                                 recorder.BeginRecording(clippingBounds);
 
-                                recorder.RecordingCanvas.DrawBitmap(Extensions.ToSKBitmap(resizedBitmap), PREVIOUS_CURSOR_POINT, boxPaint);
+                                recorder.RecordingCanvas.DrawBitmap(resizedBitmap, PREVIOUS_CURSOR_POINT, PaintObjects.BoxPaint);
 
                                 workLayer.RenderPicture = recorder.EndRecording();
                                 SKGLRenderControl.Invalidate();
@@ -5304,7 +5312,7 @@ namespace RealmStudio
                             if (selectedMapBox != null)
                             {
                                 bool isSelected = !selectedMapBox.IsSelected;
-                                selectedMapBox.IsSelected = !isSelected;
+                                selectedMapBox.IsSelected = isSelected;
 
                                 if (selectedMapBox.IsSelected)
                                 {
@@ -5332,7 +5340,7 @@ namespace RealmStudio
                     MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).RenderPicture?.Dispose();
                     MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).RenderPicture = null;
 
-                    if (SELECTED_PLACED_MAP_BOX != null)
+                    if (SELECTED_PLACED_MAP_BOX != null && SELECTED_PLACED_MAP_BOX.BoxBitmap != null)
                     {
                         SKRectI center = new((int)SELECTED_PLACED_MAP_BOX.BoxCenterLeft,
                             (int)SELECTED_PLACED_MAP_BOX.BoxCenterTop,
@@ -5357,7 +5365,7 @@ namespace RealmStudio
                             }
                         }
 
-                        SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(SELECTED_PLACED_MAP_BOX.BoxBitmap.ToSKBitmap(), center);
+                        SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(SELECTED_PLACED_MAP_BOX.BoxBitmap, center);
 
                         SELECTED_PLACED_MAP_BOX.Patch_A = bitmapSlices[0].Copy();   // top-left corner
                         SELECTED_PLACED_MAP_BOX.Patch_B = bitmapSlices[1].Copy();   // top
@@ -9377,6 +9385,7 @@ namespace RealmStudio
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 
+                MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LABELLAYER, true);
                 SKGLRenderControl.Invalidate();
             }
         }
@@ -9393,6 +9402,7 @@ namespace RealmStudio
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 
+                MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LABELLAYER, true);
                 SKGLRenderControl.Invalidate();
             }
         }
@@ -9443,6 +9453,7 @@ namespace RealmStudio
                     CommandManager.AddCommand(cmd);
                     cmd.DoOperation();
 
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.BOXLAYER, true);
                     SKGLRenderControl.Invalidate();
                 }
             }

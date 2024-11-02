@@ -21,6 +21,9 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using SkiaSharp;
+using SkiaSharp.Views.Desktop;
+
 namespace RealmStudio
 {
     internal class Cmd_ChangeBoxColor : IMapOperation
@@ -39,11 +42,35 @@ namespace RealmStudio
         public void DoOperation()
         {
             SelectedBox.BoxTint = BoxColor;
+
+            PaintObjects.BoxPaint.Dispose();
+
+            PaintObjects.BoxPaint = new()
+            {
+                Style = SKPaintStyle.Fill,
+                ColorFilter = SKColorFilter.CreateBlendMode(
+                    Extensions.ToSKColor(SelectedBox.BoxTint),
+                    SKBlendMode.Modulate) // combine the tint with the bitmap color
+            };
+
+            SelectedBox.BoxPaint = PaintObjects.BoxPaint.Clone();
         }
 
         public void UndoOperation()
         {
             SelectedBox.BoxTint = PreviousBoxColor;
+
+            PaintObjects.BoxPaint.Dispose();
+
+            PaintObjects.BoxPaint = new()
+            {
+                Style = SKPaintStyle.Fill,
+                ColorFilter = SKColorFilter.CreateBlendMode(
+                    Extensions.ToSKColor(SelectedBox.BoxTint),
+                    SKBlendMode.Modulate) // combine the tint with the bitmap color
+            };
+
+            SelectedBox.BoxPaint = PaintObjects.BoxPaint.Clone();
         }
     }
 }

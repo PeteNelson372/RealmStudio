@@ -22,12 +22,12 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
+using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using Extensions = SkiaSharp.Views.Desktop.Extensions;
 
 namespace RealmStudio
 {
@@ -35,7 +35,7 @@ namespace RealmStudio
     {
         public Guid BoxGuid = Guid.NewGuid();
 
-        public Bitmap? BoxBitmap { get; set; } = null;
+        public SKBitmap? BoxBitmap { get; set; } = null;
 
         public Color BoxTint { get; set; } = Color.White;
 
@@ -58,7 +58,7 @@ namespace RealmStudio
         public SKBitmap Patch_H { get; set; } = new(); // bottom middle
         public SKBitmap Patch_I { get; set; } = new(); // bottom right corner
 
-        public void SetBoxBitmap(Bitmap b)
+        public void SetBoxBitmap(SKBitmap b)
         {
             BoxBitmap = b;
         }
@@ -76,16 +76,6 @@ namespace RealmStudio
                 && (!Patch_H.IsNull && Patch_H.Width > 0 && Patch_H.Height > 0)
                 && (!Patch_I.IsNull && Patch_I.Width > 0 && Patch_I.Height > 0))
             {
-                using SKPaint boxPaint = new()
-                {
-                    Style = SKPaintStyle.Fill,
-                    ColorFilter = SKColorFilter.CreateBlendMode(
-                        Extensions.ToSKColor(BoxTint),
-                        SKBlendMode.Modulate) // combine the tint with the bitmap color
-                };
-
-                BoxPaint = boxPaint.Clone();
-
                 // frame top
                 canvas.DrawBitmap(Patch_A, X, Y, BoxPaint);
 
@@ -203,6 +193,11 @@ namespace RealmStudio
                 // box center
                 canvas.DrawBitmap(Patch_E, X + Patch_D.Width, Y + Patch_B.Height, BoxPaint);
 
+                if (IsSelected)
+                {
+                    canvas.DrawRect(X, Y, Width, Height, PaintObjects.BoxSelectPaint);
+                }
+
             }
         }
 
@@ -214,7 +209,8 @@ namespace RealmStudio
 
             using (var mstream = new MemoryStream())
             {
-                BoxBitmap.Save(mstream, ImageFormat.Bmp);
+                Bitmap b = BoxBitmap.ToBitmap();
+                b.Save(mstream, ImageFormat.Bmp);
                 bbBytes = mstream.ToArray();
             }
 
@@ -306,7 +302,7 @@ namespace RealmStudio
                 // Create an image from the byte array
                 using (MemoryStream ms = new(imageBytes))
                 {
-                    BoxBitmap = Extensions.ToBitmap(SKBitmap.Decode(ms));
+                    BoxBitmap = SKBitmap.Decode(ms);
                 }
             }
 
@@ -459,7 +455,7 @@ namespace RealmStudio
 
             using MemoryStream ms = new();
             using SKManagedWStream wstream = new(ms);
-            Extensions.ToSKBitmap(BoxBitmap).Encode(wstream, SKEncodedImageFormat.Png, 100);
+            BoxBitmap?.Encode(wstream, SKEncodedImageFormat.Png, 100);
             byte[] bitmapData = ms.ToArray();
             writer.WriteStartElement("BoxBitmap");
             writer.WriteBase64(bitmapData, 0, bitmapData.Length);

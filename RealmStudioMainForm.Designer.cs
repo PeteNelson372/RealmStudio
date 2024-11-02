@@ -4933,6 +4933,9 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(RealmStudioMainMenuStrip);
+            RealmStudioForm.Controls.Add(LabelToolPanel);
+            RealmStudioForm.Controls.Add(SymbolToolPanel);
+            RealmStudioForm.Controls.Add(PathToolPanel);
             RealmStudioForm.Controls.Add(WaterToolPanel);
             RealmStudioForm.Controls.Add(LandToolPanel);
             RealmStudioForm.Controls.Add(OceanToolPanel);
@@ -4940,9 +4943,6 @@
             RealmStudioForm.Controls.Add(DrawingToolPanel);
             RealmStudioForm.Controls.Add(RegionToolPanel);
             RealmStudioForm.Controls.Add(OverlayToolPanel);
-            RealmStudioForm.Controls.Add(LabelToolPanel);
-            RealmStudioForm.Controls.Add(SymbolToolPanel);
-            RealmStudioForm.Controls.Add(PathToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
             RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
             RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
