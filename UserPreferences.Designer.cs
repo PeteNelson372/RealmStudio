@@ -205,7 +205,7 @@
             AutosaveRealmSwitch.Tag = "Cyber";
             AutosaveRealmSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             AutosaveRealmSwitch.Timer_RGB = 300;
-            AutosaveRealmSwitch.Click += AutosaveRealmSwitch_Click;
+            AutosaveRealmSwitch.CheckedChanged += AutosaveRealmSwitch_CheckedChanged;
             // 
             // RealmDirectoryButton
             // 

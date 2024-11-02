@@ -247,40 +247,47 @@ namespace RealmStudio
                 {
                     PruneOldBackupsOfMap(CURRENT_MAP);
 
-                    // realm autosave folder (location where map backups are saved during autosave)
-                    string defaultAutosaveFolder = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
-
-                    string autosaveDirectory = Settings.Default.AutosaveDirectory;
-
-                    if (string.IsNullOrEmpty(autosaveDirectory))
+                    if (!CURRENT_MAP.IsSaved)
                     {
-                        autosaveDirectory = defaultAutosaveFolder;
-                    }
-
-                    string autosaveFilename = CURRENT_MAP.MapGuid.ToString();
-
-                    string saveTime = DateTime.Now.ToFileTimeUtc().ToString();
-
-                    autosaveFilename += "_" + saveTime + ".rsmapx";
-
-                    string autosaveFullPath = autosaveDirectory + Path.DirectorySeparatorChar + autosaveFilename;
-
-                    CURRENT_MAP.MapPath = autosaveFullPath;
-
-                    MapFileMethods.SaveMap(CURRENT_MAP);
-
-                    if (Settings.Default.PlaySoundOnSave)
-                    {
-                        Stream s = new MemoryStream(Resources.savesound2);
-
-                        if (s != null)
+                        if (!string.IsNullOrWhiteSpace(CURRENT_MAP.MapPath))
                         {
-                            SoundPlayer player = new SoundPlayer(s);
-                            player.Play();
+                            MapFileMethods.SaveMap(CURRENT_MAP);
                         }
 
-                        SetStatusText("A backup of the realm has been saved.");
+                        // realm autosave folder (location where map backups are saved during autosave)
+                        string autosaveDirectory = Settings.Default.AutosaveDirectory;
+
+                        if (string.IsNullOrEmpty(autosaveDirectory))
+                        {
+                            autosaveDirectory = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
+                        }
+
+                        string autosaveFilename = CURRENT_MAP.MapGuid.ToString();
+
+                        string saveTime = DateTime.Now.ToFileTimeUtc().ToString();
+
+                        autosaveFilename += "_" + saveTime + ".rsmapx";
+
+                        string autosaveFullPath = autosaveDirectory + Path.DirectorySeparatorChar + autosaveFilename;
+
+                        CURRENT_MAP.MapPath = autosaveFullPath;
+
+                        MapFileMethods.SaveMap(CURRENT_MAP);
+
+                        if (Settings.Default.PlaySoundOnSave)
+                        {
+                            using Stream s = new MemoryStream(Resources.savesound2);
+
+                            if (s != null)
+                            {
+                                using SoundPlayer player = new(s);
+                                player.Play();
+                            }
+
+                            SetStatusText("A backup of the realm has been saved.");
+                        }
                     }
+
                 }
             }
             catch (Exception ex)
@@ -347,7 +354,7 @@ namespace RealmStudio
             }
         }
 
-        private void AutosaveSwitch_Click(object sender, EventArgs e)
+        private void AutosaveSwitch_CheckedChanged()
         {
             Settings.Default.RealmAutosave = AutosaveSwitch.Checked;
             Settings.Default.Save();
@@ -983,10 +990,12 @@ namespace RealmStudio
 
             if (!Settings.Default.RealmAutosave)
             {
+                AutosaveSwitch.Checked = false;
                 StopAutosaveTimer();
             }
             else
             {
+                AutosaveSwitch.Checked = true;
                 StartAutosaveTimer();
             }
         }
@@ -5544,7 +5553,7 @@ namespace RealmStudio
                     MapSymbol? selectedSymbol = SelectMapSymbolAtPoint(CURRENT_MAP, zoomedScrolledPoint.ToDrawingPoint());
                     if (selectedSymbol != null)
                     {
-                        MapSymbolInfo msi = new(selectedSymbol);
+                        MapSymbolInfo msi = new(CURRENT_MAP, selectedSymbol);
                         msi.ShowDialog();
 
                         MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
@@ -10455,8 +10464,6 @@ namespace RealmStudio
         }
 
         #endregion
-
-
 
 
     }

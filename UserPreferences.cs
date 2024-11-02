@@ -23,6 +23,8 @@ namespace RealmStudio
                 MeasurementUnitsCombo.SelectedIndex = MeasurementUnitsCombo.FindString(measurementUnitsSetting);
             }
 
+            AutosaveRealmSwitch.Checked = Settings.Default.RealmAutosave;
+
             // realm assets
             string assetDirectory = Settings.Default.MapAssetDirectory;
 
