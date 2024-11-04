@@ -316,8 +316,8 @@ namespace RealmStudio
                 // causes transparent (or empty) color to render as black;
                 // using a bitmap canvas correctly renders transparent and empty colors
 
-                SKBitmap b = new SKBitmap(map.MapWidth, map.MapHeight);
-                SKCanvas canvas = new(b);
+                using SKBitmap b = new SKBitmap(map.MapWidth, map.MapHeight);
+                using SKCanvas canvas = new(b);
                 landDrawingLayer.Render(canvas);
 
                 renderCanvas.DrawBitmap(b, scrollPoint);
@@ -645,8 +645,8 @@ namespace RealmStudio
                 // causes transparent (or empty) color to render as black;
                 // using a bitmap canvas correctly renders transparent and empty colors
 
-                SKBitmap b = new(map.MapWidth, map.MapHeight);
-                SKCanvas canvas = new(b);
+                using SKBitmap b = new(map.MapWidth, map.MapHeight);
+                using SKCanvas canvas = new(b);
                 oceanDrawingLayer.Render(canvas);
 
                 renderCanvas.DrawBitmap(b, scrollPoint);
@@ -917,8 +917,8 @@ namespace RealmStudio
                 // causes transparent (or empty) color to render as black;
                 // using a bitmap canvas correctly renders transparent and empty colors
 
-                SKBitmap b = new SKBitmap(map.MapWidth, map.MapHeight);
-                SKCanvas canvas = new(b);
+                using SKBitmap b = new SKBitmap(map.MapWidth, map.MapHeight);
+                using SKCanvas canvas = new(b);
                 waterDrawingLayer.Render(canvas);
 
                 renderCanvas.DrawBitmap(b, scrollPoint);
