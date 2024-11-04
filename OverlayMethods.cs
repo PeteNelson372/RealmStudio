@@ -32,8 +32,8 @@ namespace RealmStudio
         {
             if (mapFrame.FrameBitmap != null)
             {
-                float mapWidthScale = (float)mapFrame.MapWidth / mapFrame.FrameBitmap.Width;
-                float mapHeightScale = (float)mapFrame.MapHeight / mapFrame.FrameBitmap.Height;
+                float mapWidthScale = (float)mapFrame.Width / mapFrame.FrameBitmap.Width;
+                float mapHeightScale = (float)mapFrame.Height / mapFrame.FrameBitmap.Height;
 
                 SKRectI center = new((int)mapFrame.FrameCenterLeft,
                     (int)mapFrame.FrameCenterTop,
@@ -58,27 +58,28 @@ namespace RealmStudio
                     }
                 }
 
-                SKBitmap[] slicedBitmaps = DrawingMethods.SliceNinePatchBitmap(mapFrame.FrameBitmap, center);
 
-                mapFrame.Patch_A = slicedBitmaps[0].Copy();
-                mapFrame.Patch_B = slicedBitmaps[1].Copy();
-                mapFrame.Patch_C = slicedBitmaps[2].Copy();
-                mapFrame.Patch_D = slicedBitmaps[3].Copy();
-                mapFrame.Patch_E = slicedBitmaps[4].Copy();
-                mapFrame.Patch_F = slicedBitmaps[5].Copy();
-                mapFrame.Patch_G = slicedBitmaps[6].Copy();
-                mapFrame.Patch_H = slicedBitmaps[7].Copy();
-                mapFrame.Patch_I = slicedBitmaps[8].Copy();
+                SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(mapFrame.FrameBitmap, center);
 
-                slicedBitmaps[0].Dispose();
-                slicedBitmaps[1].Dispose();
-                slicedBitmaps[2].Dispose();
-                slicedBitmaps[3].Dispose();
-                slicedBitmaps[4].Dispose();
-                slicedBitmaps[5].Dispose();
-                slicedBitmaps[6].Dispose();
-                slicedBitmaps[7].Dispose();
-                slicedBitmaps[8].Dispose();
+                mapFrame.Patch_A = bitmapSlices[0].Copy();
+                mapFrame.Patch_B = bitmapSlices[1].Copy();
+                mapFrame.Patch_C = bitmapSlices[2].Copy();
+                mapFrame.Patch_D = bitmapSlices[3].Copy();
+                mapFrame.Patch_E = bitmapSlices[4].Copy();
+                mapFrame.Patch_F = bitmapSlices[5].Copy();
+                mapFrame.Patch_G = bitmapSlices[6].Copy();
+                mapFrame.Patch_H = bitmapSlices[7].Copy();
+                mapFrame.Patch_I = bitmapSlices[8].Copy();
+
+                bitmapSlices[0].Dispose();
+                bitmapSlices[1].Dispose();
+                bitmapSlices[2].Dispose();
+                bitmapSlices[3].Dispose();
+                bitmapSlices[4].Dispose();
+                bitmapSlices[5].Dispose();
+                bitmapSlices[6].Dispose();
+                bitmapSlices[7].Dispose();
+                bitmapSlices[8].Dispose();
 
                 if (mapFrame.FrameBitmap != null
                     && mapFrame.Patch_A != null
@@ -94,14 +95,14 @@ namespace RealmStudio
                     // have to account for the total width and height of the map
                     while ((mapFrame.Patch_A.Width * mapFrame.FrameScale * mapWidthScale)
                         + (mapFrame.Patch_B.Width * mapFrame.FrameScale * mapWidthScale)
-                        + (mapFrame.Patch_C.Width * mapFrame.FrameScale * mapWidthScale) > mapFrame.MapWidth)
+                        + (mapFrame.Patch_C.Width * mapFrame.FrameScale * mapWidthScale) > mapFrame.Width)
                     {
                         mapFrame.FrameScale = mapFrame.FrameScale - 0.1F;
                     }
 
                     while ((mapFrame.Patch_A.Height * mapFrame.FrameScale * mapHeightScale)
                         + (mapFrame.Patch_D.Height * mapFrame.FrameScale * mapHeightScale)
-                        + (mapFrame.Patch_G.Height * mapFrame.FrameScale * mapHeightScale) > mapFrame.MapHeight)
+                        + (mapFrame.Patch_G.Height * mapFrame.FrameScale * mapHeightScale) > mapFrame.Height)
                     {
                         mapFrame.FrameScale = mapFrame.FrameScale - 0.1F;
                     }
@@ -171,8 +172,6 @@ namespace RealmStudio
                 Y = 0,
                 Width = map.MapWidth,
                 Height = map.MapHeight,
-                MapWidth = map.MapWidth,
-                MapHeight = map.MapHeight,
                 FrameBitmap = frame.FrameBitmap.Copy(),
                 FrameScale = frameScale,
                 FrameCenterLeft = frame.FrameCenterLeft,

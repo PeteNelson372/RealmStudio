@@ -52,9 +52,6 @@ namespace RealmStudio
 
         public SKPaint? FramePaint { get; set; } = null;
 
-        public int MapWidth { get; set; } = 1024;
-        public int MapHeight { get; set; } = 768;
-
         public float FrameCenterLeft { get; set; } = 0;
         public float FrameCenterTop { get; set; } = 0;
         public float FrameCenterRight { get; set; } = 0;
@@ -91,7 +88,7 @@ namespace RealmStudio
                 canvas.DrawBitmap(Patch_A, 0, 0, FramePaint);
 
                 // tile Patch_B - has to be an integral number of tiles;
-                float patch_b_tile_length = (int)Width - Patch_A.Width - Patch_C.Width;
+                float patch_b_tile_length = Width - Patch_A.Width - Patch_C.Width;
 
                 int num_patch_b_tiles = Math.Max((int)Math.Floor(patch_b_tile_length / Patch_B.Width), 1);
 
@@ -115,11 +112,10 @@ namespace RealmStudio
                     canvas.DrawBitmap(scaled_B, left, 0, FramePaint);
                     left += scaled_B.Width;
                 }
-
                 canvas.DrawBitmap(Patch_C, Width - Patch_C.Width, 0, FramePaint);
 
                 // tile Patch_D - has to be an integral number of tiles;
-                float patch_d_tile_height = (int)Height - Patch_A.Height - Patch_G.Height;
+                float patch_d_tile_height = Height - Patch_A.Height - Patch_G.Height;
 
                 int num_patch_d_tiles = Math.Max((int)(patch_d_tile_height / Patch_D.Height), 1);
 
@@ -145,7 +141,7 @@ namespace RealmStudio
                     top += scaled_D.Height;
                 }
 
-                float patch_f_tile_height = (int)Height - Patch_C.Height - Patch_I.Height;
+                float patch_f_tile_height = Height - Patch_C.Height - Patch_I.Height;
 
                 int num_patch_f_tiles = Math.Max((int)(patch_f_tile_height / Patch_F.Height), 1);
 
@@ -174,7 +170,7 @@ namespace RealmStudio
                 canvas.DrawBitmap(Patch_G, 0, Height - Patch_G.Height, FramePaint);
 
                 // scale Patch_H so that it tiles an integral number of times
-                float patch_h_tile_length = (int)Width - Patch_G.Width - Patch_I.Width;
+                float patch_h_tile_length = Width - Patch_G.Width - Patch_I.Width;
 
                 int num_patch_h_tiles = Math.Max((int)Math.Floor(patch_h_tile_length / Patch_H.Width), 1);
 
@@ -218,6 +214,30 @@ namespace RealmStudio
             string content = reader.ReadOuterXml();
             XDocument mapFrameDoc = XDocument.Parse(content);
 
+            XAttribute? xAttr = mapFrameDoc.Root.Attribute("X");
+            if (xAttr != null)
+            {
+                X = int.Parse(xAttr.Value);
+            }
+
+            XAttribute? yAttr = mapFrameDoc.Root.Attribute("Y");
+            if (yAttr != null)
+            {
+                Y = int.Parse(yAttr.Value);
+            }
+
+            XAttribute? wAttr = mapFrameDoc.Root.Attribute("Width");
+            if (wAttr != null)
+            {
+                Width = int.Parse(wAttr.Value);
+            }
+
+            XAttribute? hAttr = mapFrameDoc.Root.Attribute("Height");
+            if (hAttr != null)
+            {
+                Height = int.Parse(hAttr.Value);
+            }
+
             IEnumerable<XElement?> guidElemEnum = mapFrameDoc.Descendants().Select(x => x.Element(ns + "FrameGuid"));
             if (guidElemEnum.First() != null)
             {
@@ -253,20 +273,6 @@ namespace RealmStudio
                 FrameScale = float.Parse(frameScale);
             }
 
-            IEnumerable<XElement?> mapWidthElem = mapFrameDoc.Descendants().Select(x => x.Element(ns + "MapWidth"));
-            if (mapWidthElem.First() != null)
-            {
-                string? mapWidth = mapFrameDoc.Descendants().Select(x => x.Element(ns + "MapWidth").Value).FirstOrDefault();
-                MapWidth = int.Parse(mapWidth);
-            }
-
-            IEnumerable<XElement?> mapHeightElem = mapFrameDoc.Descendants().Select(x => x.Element(ns + "MapHeight"));
-            if (mapHeightElem.First() != null)
-            {
-                string? mapHeight = mapFrameDoc.Descendants().Select(x => x.Element(ns + "MapHeight").Value).FirstOrDefault();
-                MapHeight = int.Parse(mapHeight);
-            }
-
             IEnumerable<XElement?> frameCenterLeftElem = mapFrameDoc.Descendants().Select(x => x.Element(ns + "FrameCenterLeft"));
             if (frameCenterLeftElem.First() != null)
             {
@@ -295,14 +301,16 @@ namespace RealmStudio
                 FrameCenterBottom = float.Parse(frameCenterBottom);
             }
 
-            Width = MapWidth;
-            Height = MapHeight;
-
             OverlayMethods.CompletePlacedFrame(this);
         }
 
         public void WriteXml(XmlWriter writer)
         {
+            writer.WriteAttributeString("X", X.ToString());
+            writer.WriteAttributeString("Y", Y.ToString());
+            writer.WriteAttributeString("Width", Width.ToString());
+            writer.WriteAttributeString("Height", Height.ToString());
+
             // frame GUID
             writer.WriteStartElement("FrameGuid");
             writer.WriteString(FrameGuid.ToString());
@@ -323,14 +331,6 @@ namespace RealmStudio
 
             writer.WriteStartElement("FrameScale");
             writer.WriteValue(FrameScale);
-            writer.WriteEndElement();
-
-            writer.WriteStartElement("MapWidth");
-            writer.WriteValue(MapWidth);
-            writer.WriteEndElement();
-
-            writer.WriteStartElement("MapHeight");
-            writer.WriteValue(MapHeight);
             writer.WriteEndElement();
 
             writer.WriteStartElement("FrameCenterLeft");

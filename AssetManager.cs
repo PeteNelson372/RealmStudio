@@ -23,7 +23,6 @@
 ***************************************************************************************************************************/
 using RealmStudio.Properties;
 using SkiaSharp;
-using SkiaSharp.Views.Desktop;
 using System.Xml.Linq;
 
 namespace RealmStudio
@@ -569,7 +568,10 @@ namespace RealmStudio
 
                         if (File.Exists(mapFrame.FrameBitmapPath))
                         {
-                            mapFrame.FrameBitmap = new Bitmap(mapFrame.FrameBitmapPath).ToSKBitmap();
+                            using (Stream stream = new FileStream(mapFrame.FrameBitmapPath, FileMode.Open))
+                            {
+                                mapFrame.FrameBitmap = SKBitmap.Decode(stream);
+                            };
 
                             if (rewriteFrameFile)
                             {

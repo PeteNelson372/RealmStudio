@@ -645,7 +645,7 @@ namespace RealmStudio
                 // causes transparent (or empty) color to render as black;
                 // using a bitmap canvas correctly renders transparent and empty colors
 
-                SKBitmap b = new SKBitmap(map.MapWidth, map.MapHeight);
+                SKBitmap b = new(map.MapWidth, map.MapHeight);
                 SKCanvas canvas = new(b);
                 oceanDrawingLayer.Render(canvas);
 
@@ -659,9 +659,9 @@ namespace RealmStudio
 
             if (frameLayer.ShowLayer && frameLayer.MapLayerComponents.Count > 0)
             {
-                // there can only be one frame on the map, so get it and check to see if it is enabled
                 PlacedMapFrame placedFrame = (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents[0];
 
+                // there can only be one frame on the map, so get it and check to see if it is enabled
                 if (!frameLayer.IsModified && frameLayer.RenderPicture != null && placedFrame.FrameEnabled)
                 {
                     // paint the framelayer

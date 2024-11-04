@@ -1733,26 +1733,34 @@ namespace RealmStudio
 
         public void RenderMapToCanvas(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
+            // background
             MapRenderMethods.RenderBackground(CURRENT_MAP, renderCanvas, scrollPoint);
 
+            // ocean layers
             MapRenderMethods.RenderOcean(CURRENT_MAP, renderCanvas, scrollPoint);
 
+            // wind roses
             MapRenderMethods.RenderWindroses(CURRENT_MAP, CURRENT_WINDROSE, renderCanvas, scrollPoint);
 
             // lower grid layer (above ocean)
             MapRenderMethods.RenderLowerGrid(CURRENT_MAP, renderCanvas, scrollPoint);
 
+            // landforms
             MapRenderMethods.RenderLandforms(CURRENT_MAP, CURRENT_LANDFORM, renderCanvas, scrollPoint);
 
+            // water features
             MapRenderMethods.RenderWaterFeatures(CURRENT_MAP, CURRENT_WATERFEATURE, CURRENT_RIVER, renderCanvas, scrollPoint);
 
             // upper grid layer (above water features)
             MapRenderMethods.RenderUpperGrid(CURRENT_MAP, renderCanvas, scrollPoint);
 
+            // lower path layer
             MapRenderMethods.RenderLowerMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, renderCanvas, scrollPoint);
 
+            // symbol layer
             MapRenderMethods.RenderSymbols(CURRENT_MAP, renderCanvas, scrollPoint);
 
+            // upper path layer
             MapRenderMethods.RenderUpperMapPaths(CURRENT_MAP, CURRENT_MAP_PATH, renderCanvas, scrollPoint);
 
             // region and region overlay layers
@@ -1779,6 +1787,7 @@ namespace RealmStudio
             // TODO: drawing layer
             MapRenderMethods.RenderDrawing(CURRENT_MAP, renderCanvas, scrollPoint);
 
+            // vignette layer
             MapRenderMethods.RenderVignette(CURRENT_MAP, renderCanvas, scrollPoint);
         }
 
@@ -9494,7 +9503,7 @@ namespace RealmStudio
                     if (frame.FrameBitmap == null)
                     {
                         SKImage image = SKImage.FromEncodedData(frame.FrameBitmapPath);
-                        frame.FrameBitmap ??= SKBitmap.FromImage(image);
+                        frame.FrameBitmap = SKBitmap.FromImage(image);
                     }
 
                     PictureBox pb = new()
@@ -9687,6 +9696,7 @@ namespace RealmStudio
 
                             CURRENT_MAP.IsSaved = false;
 
+                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.FRAMELAYER, true);
                             SKGLRenderControl.Invalidate();
                         }
                         else
