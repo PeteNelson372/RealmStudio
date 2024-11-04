@@ -73,7 +73,7 @@ namespace RealmStudio
                     pathPaint.Style = SKPaintStyle.Stroke;
                     break;
                 case PathTypeEnum.BorderAndTexturePath:
-                    pathPaint.StrokeCap = SKStrokeCap.Round;
+                    pathPaint.StrokeCap = SKStrokeCap.Butt;
 
                     // construct a shader from the selected path texture
                     pathPaint.Shader = SKShader.CreateBitmap(mapPath.PathTexture, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
