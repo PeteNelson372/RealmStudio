@@ -21,7 +21,9 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using RealmStudio.Properties;
 using SkiaSharp;
+using System.Media;
 
 namespace RealmStudio
 {
@@ -63,6 +65,17 @@ namespace RealmStudio
             else
             {
                 return initialColor;
+            }
+        }
+
+        public static void PlaySaveSound()
+        {
+            Stream s = new MemoryStream(Resources.savesound2);
+
+            if (s != null)
+            {
+                SoundPlayer player = new SoundPlayer(s);
+                player.Play();
             }
         }
 

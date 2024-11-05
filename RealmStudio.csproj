@@ -9,12 +9,15 @@
     <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2024.309.31169</AssemblyVersion>
-    <FileVersion>1.2024.309.31169</FileVersion>
-    <Version>1.2024.2-alpha-187</Version>
+    <AssemblyVersion>1.2024.310.4184</AssemblyVersion>
+    <FileVersion>1.2024.310.4184</FileVersion>
+    <Version>1.2024.2-alpha-200</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
-    <Copyright>Copyright 2024. Peter R. Nelson</Copyright>  
+    <Copyright>Copyright 2024. Peter R. Nelson</Copyright>
+    <ApplicationIcon>realm_studio_icon_1024x1024_g3u_icon.ico</ApplicationIcon>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <PackageIcon>Realm Studio Icon 128x128.png</PackageIcon>  
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -47,6 +50,10 @@
     <PackageVersionSettings>AssemblyVersion.NoneWithAutoReset.Alpha</PackageVersionSettings>
     <IsPublishable>False</IsPublishable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="realm_studio_icon_1024x1024_g3u_icon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AForge.Imaging" Version="2.2.5" />
@@ -103,6 +110,13 @@
 
   <ItemGroup>
     <Folder Include="Properties\DataSources\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="D:\The Brookmonte Group\Brookmonte Software\Realm Studio\Realm Studio Icon 128x128.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

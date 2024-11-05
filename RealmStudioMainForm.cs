@@ -27,7 +27,6 @@ using SkiaSharp.Views.Desktop;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
-using System.Media;
 using System.Timers;
 using Control = System.Windows.Forms.Control;
 
@@ -276,14 +275,7 @@ namespace RealmStudio
 
                         if (Settings.Default.PlaySoundOnSave)
                         {
-                            using Stream s = new MemoryStream(Resources.savesound2);
-
-                            if (s != null)
-                            {
-                                using SoundPlayer player = new(s);
-                                player.Play();
-                            }
-
+                            UtilityMethods.PlaySaveSound();
                             SetStatusText("A backup of the realm has been saved.");
                         }
                     }
@@ -330,7 +322,7 @@ namespace RealmStudio
 
                 if (result == DialogResult.Yes)
                 {
-                    DialogResult saveResult = SaveMap();
+                    DialogResult saveResult = SaveMapAs();
 
                     if (saveResult == DialogResult.Cancel)
                     {
@@ -635,7 +627,7 @@ namespace RealmStudio
             if (!CURRENT_MAP.IsSaved)
             {
                 DialogResult result =
-                    MessageBox.Show("The map has not been saved. Do you want to save the map?", "Exit Application", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    MessageBox.Show("The map has not been saved. Do you want to save the map?", "Save Map", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
                 if (result == DialogResult.Yes)
                 {
@@ -643,107 +635,19 @@ namespace RealmStudio
 
                     if (saveResult == DialogResult.OK)
                     {
-
-                        // this creates the CURRENT_MAP
-                        MapBuilder.DisposeMap(CURRENT_MAP);
-
-                        // this creates the CURRENT_MAP
-                        DialogResult newResult = OpenRealmConfigurationDialog();
-
-                        if (newResult == DialogResult.OK)
-                        {
-                            Cursor = Cursors.WaitCursor;
-
-                            AssetManager.LOADING_STATUS_FORM.ResetLoadingProgress();
-                            AssetManager.LOADING_STATUS_FORM.Show(this);
-
-                            SetDrawingModeLabel();
-
-                            int assetCount = AssetManager.LoadAllAssets();
-
-                            PopulateControlsWithAssets(assetCount);
-
-                            AssetManager.LOADING_STATUS_FORM.Hide();
-
-                            LogoPictureBox.Hide();
-                            SKGLRenderControl.Show();
-                            SKGLRenderControl.Select();
-                            SKGLRenderControl.Refresh();
-                            SKGLRenderControl.Invalidate();
-
-                            Activate();
-                        }
-
+                        CreateNewMap();
                         Cursor = Cursors.Default;
                     }
                 }
                 else if (result == DialogResult.No)
                 {
-                    // this creates the CURRENT_MAP
-                    MapBuilder.DisposeMap(CURRENT_MAP);
-
-                    // this creates the CURRENT_MAP
-                    DialogResult newResult = OpenRealmConfigurationDialog();
-
-                    if (newResult == DialogResult.OK)
-                    {
-                        Cursor = Cursors.WaitCursor;
-
-                        AssetManager.LOADING_STATUS_FORM.ResetLoadingProgress();
-                        AssetManager.LOADING_STATUS_FORM.Show(this);
-
-                        SetDrawingModeLabel();
-
-                        int assetCount = AssetManager.LoadAllAssets();
-
-                        PopulateControlsWithAssets(assetCount);
-
-                        AssetManager.LOADING_STATUS_FORM.Hide();
-
-                        LogoPictureBox.Hide();
-                        SKGLRenderControl.Show();
-                        SKGLRenderControl.Select();
-                        SKGLRenderControl.Refresh();
-                        SKGLRenderControl.Invalidate();
-
-                        Activate();
-                    }
-
+                    CreateNewMap();
                     Cursor = Cursors.Default;
                 }
             }
             else
             {
-                // this creates the CURRENT_MAP
-                MapBuilder.DisposeMap(CURRENT_MAP);
-
-                // this creates the CURRENT_MAP
-                DialogResult newResult = OpenRealmConfigurationDialog();
-
-                if (newResult == DialogResult.OK)
-                {
-                    Cursor = Cursors.WaitCursor;
-
-                    AssetManager.LOADING_STATUS_FORM.ResetLoadingProgress();
-                    AssetManager.LOADING_STATUS_FORM.Show(this);
-
-                    SetDrawingModeLabel();
-
-                    int assetCount = AssetManager.LoadAllAssets();
-
-                    PopulateControlsWithAssets(assetCount);
-
-                    AssetManager.LOADING_STATUS_FORM.Hide();
-
-                    LogoPictureBox.Hide();
-                    SKGLRenderControl.Show();
-                    SKGLRenderControl.Select();
-                    SKGLRenderControl.Refresh();
-                    SKGLRenderControl.Invalidate();
-
-                    Activate();
-                }
-
+                CreateNewMap();
                 Cursor = Cursors.Default;
             }
         }
@@ -755,12 +659,40 @@ namespace RealmStudio
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveMap();
+            if (CURRENT_MAP.IsSaved)
+            {
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(CURRENT_MAP.MapPath))
+            {
+                try
+                {
+                    // serialize the map to disk as an XML file
+                    MapFileMethods.SaveMap(CURRENT_MAP);
+                    CURRENT_MAP.IsSaved = true;
+
+                    if (Settings.Default.PlaySoundOnSave)
+                    {
+                        UtilityMethods.PlaySaveSound();
+                        SetStatusText("Realm " + Path.GetFileNameWithoutExtension(CURRENT_MAP.MapPath) + " has been saved.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Program.LOGGER.Error(ex);
+                    MessageBox.Show("An error has occurred while saving the map. The map file map be corrupted.", "Map Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+            }
+            else
+            {
+                SaveMap();
+            }
         }
 
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveMap();
+            SaveMapAs();
         }
 
         private void ExportMapMenuItem_Click(object sender, EventArgs e)
@@ -1043,6 +975,39 @@ namespace RealmStudio
         /******************************************************************************************************* 
          * MAIN FORM METHODS
          *******************************************************************************************************/
+
+        private void CreateNewMap()
+        {
+            // this creates the CURRENT_MAP
+            MapBuilder.DisposeMap(CURRENT_MAP);
+
+            // this creates the CURRENT_MAP
+            DialogResult newResult = OpenRealmConfigurationDialog();
+
+            if (newResult == DialogResult.OK)
+            {
+                Cursor = Cursors.WaitCursor;
+
+                AssetManager.LOADING_STATUS_FORM.ResetLoadingProgress();
+                AssetManager.LOADING_STATUS_FORM.Show(this);
+
+                SetDrawingModeLabel();
+
+                int assetCount = AssetManager.LoadAllAssets();
+
+                PopulateControlsWithAssets(assetCount);
+
+                AssetManager.LOADING_STATUS_FORM.Hide();
+
+                LogoPictureBox.Hide();
+                SKGLRenderControl.Show();
+                SKGLRenderControl.Select();
+                SKGLRenderControl.Refresh();
+                SKGLRenderControl.Invalidate();
+
+                Activate();
+            }
+        }
 
         private void StartAutosaveTimer()
         {
@@ -1883,6 +1848,42 @@ namespace RealmStudio
 
         private DialogResult SaveMap()
         {
+            if (CURRENT_MAP.IsSaved)
+            {
+                return DialogResult.OK;
+            }
+
+            if (!string.IsNullOrEmpty(CURRENT_MAP.MapPath))
+            {
+                try
+                {
+                    MapFileMethods.SaveMap(CURRENT_MAP);
+                    CURRENT_MAP.IsSaved = true;
+
+                    if (Settings.Default.PlaySoundOnSave)
+                    {
+                        UtilityMethods.PlaySaveSound();
+                    }
+
+                    SetStatusText("Realm " + Path.GetFileNameWithoutExtension(CURRENT_MAP.MapPath) + " has been saved.");
+                    return DialogResult.OK;
+                }
+                catch (Exception ex)
+                {
+                    Program.LOGGER.Error(ex);
+                    MessageBox.Show("An error has occurred while saving the map. The map file map be corrupted.", "Map Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+                    return DialogResult.Cancel;
+                }
+            }
+            else
+            {
+                return SaveMapAs();
+            }
+        }
+
+        private DialogResult SaveMapAs()
+        {
             SaveFileDialog sfd = new()
             {
                 DefaultExt = "rsmapx",
@@ -1911,6 +1912,10 @@ namespace RealmStudio
                 if (!string.IsNullOrEmpty(sfd.FileName))
                 {
                     CURRENT_MAP.MapPath = sfd.FileName;
+                    CURRENT_MAP.MapName = Path.GetFileNameWithoutExtension(sfd.FileName);
+
+                    UpdateMapNameAndSize();
+
                     try
                     {
                         MapFileMethods.SaveMap(CURRENT_MAP);
@@ -1918,16 +1923,10 @@ namespace RealmStudio
 
                         if (Settings.Default.PlaySoundOnSave)
                         {
-                            Stream s = new MemoryStream(Resources.savesound2);
-
-                            if (s != null)
-                            {
-                                SoundPlayer player = new SoundPlayer(s);
-                                player.Play();
-                            }
-
-                            SetStatusText("Realm " + Path.GetFileNameWithoutExtension(sfd.FileName) + " has been saved.");
+                            UtilityMethods.PlaySaveSound();
                         }
+
+                        SetStatusText("Realm " + Path.GetFileNameWithoutExtension(sfd.FileName) + " has been saved.");
                     }
                     catch (Exception ex)
                     {
@@ -2404,7 +2403,6 @@ namespace RealmStudio
                 SetStatusText("Loaded: " + CURRENT_MAP.MapName);
 
                 UpdateMapNameAndSize();
-                //UpdateViewportStatus();
 
                 MapBuilder.MarkAllLayersModified(CURRENT_MAP);
                 SKGLRenderControl.Invalidate();
@@ -8026,14 +8024,14 @@ namespace RealmStudio
         private void SymbolSelectButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolSelect;
-            SELECTED_BRUSH_SIZE = 0;
+            SetSelectedBrushSize(0);
             SetDrawingModeLabel();
         }
 
         private void EraseSymbolsButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolErase;
-            SELECTED_BRUSH_SIZE = AreaBrushSizeTrack.Value;
+            SetSelectedBrushSize(AreaBrushSizeTrack.Value);
             SetDrawingModeLabel();
         }
 
@@ -8065,7 +8063,11 @@ namespace RealmStudio
 
                 if (AreaBrushSwitch.Checked)
                 {
-                    SELECTED_BRUSH_SIZE = AreaBrushSizeTrack.Value;
+                    SetSelectedBrushSize(AreaBrushSizeTrack.Value);
+                }
+                else
+                {
+                    SetSelectedBrushSize(0);
                 }
             }
         }
@@ -8074,6 +8076,7 @@ namespace RealmStudio
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolPlace;
             SetDrawingModeLabel();
+            SetSelectedBrushSize(0);
 
             if (SymbolMethods.SELECTED_SYMBOL_TYPE != SymbolTypeEnum.Structure)
             {
@@ -8096,6 +8099,7 @@ namespace RealmStudio
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolPlace;
             SetDrawingModeLabel();
+            SetSelectedBrushSize(0);
 
             if (SymbolMethods.SELECTED_SYMBOL_TYPE != SymbolTypeEnum.Vegetation)
             {
@@ -8117,6 +8121,7 @@ namespace RealmStudio
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolPlace;
             SetDrawingModeLabel();
+            SetSelectedBrushSize(0);
 
             if (SymbolMethods.SELECTED_SYMBOL_TYPE != SymbolTypeEnum.Terrain)
             {
@@ -8138,6 +8143,7 @@ namespace RealmStudio
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolPlace;
             SetDrawingModeLabel();
+            SetSelectedBrushSize(0);
 
             if (SymbolMethods.SELECTED_SYMBOL_TYPE != SymbolTypeEnum.Other)
             {
@@ -8549,6 +8555,7 @@ namespace RealmStudio
                 {
                     CURRENT_DRAWING_MODE = DrawingModeEnum.SymbolPlace;
                     SetDrawingModeLabel();
+                    SetSelectedBrushSize(0);
 
                     // primary symbol selection                    
                     PictureBox pb = (PictureBox)sender;
@@ -9051,7 +9058,7 @@ namespace RealmStudio
             return selectedLabel;
         }
 
-        private PlacedMapBox? SelectMapBoxAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
+        private static PlacedMapBox? SelectMapBoxAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
         {
             PlacedMapBox? selectedBox = null;
 
@@ -9419,30 +9426,35 @@ namespace RealmStudio
         private void CircleTextPathButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.DrawArcLabelPath;
+            SetSelectedBrushSize(0);
             SetDrawingModeLabel();
         }
 
         private void BezierTextPathButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.DrawBezierLabelPath;
+            SetSelectedBrushSize(0);
             SetDrawingModeLabel();
         }
 
         private void LabelSelectButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.LabelSelect;
+            SetSelectedBrushSize(0);
             SetDrawingModeLabel();
         }
 
         private void PlaceLabelButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.DrawLabel;
+            SetSelectedBrushSize(0);
             SetDrawingModeLabel();
         }
 
         private void CreateBoxButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.DrawBox;
+            SetSelectedBrushSize(0);
             SetDrawingModeLabel();
         }
 

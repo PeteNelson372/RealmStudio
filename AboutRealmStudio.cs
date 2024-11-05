@@ -118,5 +118,20 @@ namespace RealmStudio
             }
             catch { }
         }
+
+        private void HelpFileLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "https://petenelson372.github.io/RealmStudioDocs/",
+                UseShellExecute = true
+            };
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch { }
+        }
     }
 }

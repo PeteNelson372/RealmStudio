@@ -79,6 +79,7 @@
             MinimumSize = new Size(261, 65);
             Name = "LoadingStatusForm";
             ShowIcon = false;
+            ShowInTaskbar = false;
             SizeGripStyle = SizeGripStyle.Hide;
             StartPosition = FormStartPosition.CenterParent;
             Text = "Loading...";

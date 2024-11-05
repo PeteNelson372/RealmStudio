@@ -403,6 +403,8 @@
             HelpContentsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
+            OverlayToolPanel = new Panel();
+            FrameStyleTable = new TableLayoutPanel();
             LabelToolPanel = new Panel();
             SelectBoxTintButton = new FontAwesome.Sharp.IconButton();
             LabelBoxStyleTable = new TableLayoutPanel();
@@ -546,8 +548,6 @@
             RegionDashBorderRadio = new RadioButton();
             RegionDottedBorderRadio = new RadioButton();
             RegionSolidBorderRadio = new RadioButton();
-            OverlayToolPanel = new Panel();
-            FrameStyleTable = new TableLayoutPanel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
             OceanTab = new TabPage();
@@ -657,6 +657,7 @@
             MapStatusStrip.SuspendLayout();
             ApplicationStatusStrip.SuspendLayout();
             RealmStudioMainMenuStrip.SuspendLayout();
+            OverlayToolPanel.SuspendLayout();
             LabelToolPanel.SuspendLayout();
             SymbolToolPanel.SuspendLayout();
             PathToolPanel.SuspendLayout();
@@ -700,7 +701,6 @@
             ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).BeginInit();
-            OverlayToolPanel.SuspendLayout();
             SuspendLayout();
             // 
             // OceanTab
@@ -5734,11 +5734,13 @@
             // 
             // LogoPictureBox
             // 
+            LogoPictureBox.BackColor = Color.Transparent;
             LogoPictureBox.BackgroundImage = (Image)resources.GetObject("LogoPictureBox.BackgroundImage");
-            LogoPictureBox.BackgroundImageLayout = ImageLayout.Stretch;
-            LogoPictureBox.Location = new Point(548, 235);
+            LogoPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            LogoPictureBox.InitialImage = (Image)resources.GetObject("LogoPictureBox.InitialImage");
+            LogoPictureBox.Location = new Point(509, 212);
             LogoPictureBox.Name = "LogoPictureBox";
-            LogoPictureBox.Size = new Size(656, 518);
+            LogoPictureBox.Size = new Size(640, 640);
             LogoPictureBox.TabIndex = 14;
             LogoPictureBox.TabStop = false;
             // 
@@ -5838,10 +5840,10 @@
             TopLogoPictureBox.BackgroundImageLayout = ImageLayout.None;
             TopLogoPictureBox.Image = (Image)resources.GetObject("TopLogoPictureBox.Image");
             TopLogoPictureBox.InitialImage = (Image)resources.GetObject("TopLogoPictureBox.InitialImage");
-            TopLogoPictureBox.Location = new Point(9, 3);
+            TopLogoPictureBox.Location = new Point(20, 2);
             TopLogoPictureBox.Name = "TopLogoPictureBox";
-            TopLogoPictureBox.Size = new Size(55, 41);
-            TopLogoPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            TopLogoPictureBox.Size = new Size(38, 41);
+            TopLogoPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             TopLogoPictureBox.TabIndex = 8;
             TopLogoPictureBox.TabStop = false;
             // 
@@ -6251,6 +6253,31 @@
             AboutToolStripMenuItem.Size = new Size(122, 22);
             AboutToolStripMenuItem.Text = "&About...";
             AboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
+            // 
+            // OverlayToolPanel
+            // 
+            OverlayToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            OverlayToolPanel.BackColor = SystemColors.Control;
+            OverlayToolPanel.Controls.Add(FrameStyleTable);
+            OverlayToolPanel.Location = new Point(1421, 90);
+            OverlayToolPanel.Margin = new Padding(0);
+            OverlayToolPanel.Name = "OverlayToolPanel";
+            OverlayToolPanel.Size = new Size(152, 806);
+            OverlayToolPanel.TabIndex = 24;
+            // 
+            // FrameStyleTable
+            // 
+            FrameStyleTable.AutoScroll = true;
+            FrameStyleTable.CausesValidation = false;
+            FrameStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
+            FrameStyleTable.ColumnCount = 1;
+            FrameStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
+            FrameStyleTable.Location = new Point(20, 15);
+            FrameStyleTable.Name = "FrameStyleTable";
+            FrameStyleTable.RowCount = 1;
+            FrameStyleTable.RowStyles.Add(new RowStyle());
+            FrameStyleTable.Size = new Size(122, 779);
+            FrameStyleTable.TabIndex = 74;
             // 
             // LabelToolPanel
             // 
@@ -8215,31 +8242,6 @@
             RegionSolidBorderRadio.UseVisualStyleBackColor = true;
             RegionSolidBorderRadio.CheckedChanged += RegionSolidBorderRadio_CheckedChanged;
             // 
-            // OverlayToolPanel
-            // 
-            OverlayToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            OverlayToolPanel.BackColor = SystemColors.Control;
-            OverlayToolPanel.Controls.Add(FrameStyleTable);
-            OverlayToolPanel.Location = new Point(1421, 90);
-            OverlayToolPanel.Margin = new Padding(0);
-            OverlayToolPanel.Name = "OverlayToolPanel";
-            OverlayToolPanel.Size = new Size(152, 806);
-            OverlayToolPanel.TabIndex = 24;
-            // 
-            // FrameStyleTable
-            // 
-            FrameStyleTable.AutoScroll = true;
-            FrameStyleTable.CausesValidation = false;
-            FrameStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
-            FrameStyleTable.ColumnCount = 1;
-            FrameStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
-            FrameStyleTable.Location = new Point(20, 15);
-            FrameStyleTable.Name = "FrameStyleTable";
-            FrameStyleTable.RowCount = 1;
-            FrameStyleTable.RowStyles.Add(new RowStyle());
-            FrameStyleTable.Size = new Size(122, 779);
-            FrameStyleTable.TabIndex = 74;
-            // 
             // materialCheckBox1
             // 
             materialCheckBox1.AutoSize = true;
@@ -8285,11 +8287,11 @@
             DoubleBuffered = true;
             ForeColor = SystemColors.Control;
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             KeyPreview = true;
             MaximumSize = new Size(1920, 1200);
             MinimumSize = new Size(261, 65);
             Name = "RealmStudioMainForm";
-            ShowIcon = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Realm Studio";
             TransparencyKey = Color.Fuchsia;
@@ -8447,6 +8449,7 @@
             ApplicationStatusStrip.PerformLayout();
             RealmStudioMainMenuStrip.ResumeLayout(false);
             RealmStudioMainMenuStrip.PerformLayout();
+            OverlayToolPanel.ResumeLayout(false);
             LabelToolPanel.ResumeLayout(false);
             SymbolToolPanel.ResumeLayout(false);
             SymbolToolPanel.PerformLayout();
@@ -8497,7 +8500,6 @@
             ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).EndInit();
             ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).EndInit();
             ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).EndInit();
-            OverlayToolPanel.ResumeLayout(false);
             ResumeLayout(false);
         }
 

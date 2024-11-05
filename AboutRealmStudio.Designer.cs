@@ -46,6 +46,7 @@
             AboutOkButton = new Button();
             pictureBox2 = new PictureBox();
             pictureBox1 = new PictureBox();
+            HelpFileLinkLabel = new LinkLabel();
             AboutRealmStudioOverlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)GPL3LicensePictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)GithubPictureBox).BeginInit();
@@ -57,6 +58,7 @@
             // 
             AboutRealmStudioOverlay.BackColor = Color.FromArgb(244, 241, 243);
             AboutRealmStudioOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            AboutRealmStudioOverlay.Controls.Add(HelpFileLinkLabel);
             AboutRealmStudioOverlay.Controls.Add(RealmStudioSupportLink);
             AboutRealmStudioOverlay.Controls.Add(ReleaseNotesLink);
             AboutRealmStudioOverlay.Controls.Add(GPL3LicensePictureBox);
@@ -271,6 +273,17 @@
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
+            // HelpFileLinkLabel
+            // 
+            HelpFileLinkLabel.AutoSize = true;
+            HelpFileLinkLabel.Location = new Point(23, 476);
+            HelpFileLinkLabel.Name = "HelpFileLinkLabel";
+            HelpFileLinkLabel.Size = new Size(158, 15);
+            HelpFileLinkLabel.TabIndex = 17;
+            HelpFileLinkLabel.TabStop = true;
+            HelpFileLinkLabel.Text = "Open Realm Studio Help File";
+            HelpFileLinkLabel.LinkClicked += HelpFileLinkLabel_LinkClicked;
+            // 
             // AboutRealmStudio
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -311,5 +324,6 @@
         private PictureBox GPL3LicensePictureBox;
         private LinkLabel ReleaseNotesLink;
         private LinkLabel RealmStudioSupportLink;
+        private LinkLabel HelpFileLinkLabel;
     }
 }
