@@ -36,8 +36,7 @@ namespace RealmStudio
                 {
                     if (iwf is WaterFeature wf)
                     {
-                        WaterFeature? swf = selectedWaterFeature as WaterFeature;
-                        if (swf != null && wf.WaterFeatureGuid.ToString() == swf.WaterFeatureGuid.ToString())
+                        if (selectedWaterFeature is WaterFeature swf && wf.WaterFeatureGuid.ToString() == swf.WaterFeatureGuid.ToString())
                         {
                             storedWaterFeature = wf;
                             MapBuilder.GetMapLayerByIndex(_map, MapBuilder.WATERLAYER).MapLayerComponents.RemoveAt(i);

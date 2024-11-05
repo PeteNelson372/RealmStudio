@@ -56,6 +56,7 @@ namespace RealmStudio
         private static LayerPaintStroke? CURRENT_LAYER_PAINT_STROKE = null;
 
         // objects that are currently selected
+        private static Landform? SELECTED_LANDFORM = null;
         private static MapPath? SELECTED_PATH = null;
         private static MapPathPoint? SELECTED_PATHPOINT = null;
         private static MapSymbol? SELECTED_MAP_SYMBOL = null;
@@ -3668,7 +3669,9 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Default;
 
-                        SelectLandformAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+                        SELECTED_LANDFORM = SelectLandformAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDFORMLAYER, true);
+
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -5524,12 +5527,15 @@ namespace RealmStudio
 
                     LandformSelectButton.Checked = false;
 
-                    Landform? selectedLandform = SelectLandformAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+                    SELECTED_LANDFORM = SelectLandformAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDFORMLAYER, true);
+
                     SKGLRenderControl.Invalidate();
 
-                    if (selectedLandform != null)
+                    if (SELECTED_LANDFORM != null)
                     {
-                        LandformInfo landformInfo = new(CURRENT_MAP, selectedLandform, SKGLRenderControl);
+                        LandformInfo landformInfo = new(CURRENT_MAP, SELECTED_LANDFORM, SKGLRenderControl);
                         landformInfo.ShowDialog(this);
                     }
                     break;
@@ -5635,6 +5641,18 @@ namespace RealmStudio
             {
                 switch (CURRENT_DRAWING_MODE)
                 {
+                    case DrawingModeEnum.LandformSelect:
+                        if (SELECTED_LANDFORM != null)
+                        {
+                            Cmd_RemoveLandform cmd = new(CURRENT_MAP, SELECTED_LANDFORM);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            SELECTED_LANDFORM = null;
+                            CURRENT_MAP.IsSaved = false;
+                            SKGLRenderControl.Invalidate();
+                        }
+                        break;
                     case DrawingModeEnum.WaterFeatureSelect:
                         // delete water features, rivers
                         if (SELECTED_WATERFEATURE != null)
