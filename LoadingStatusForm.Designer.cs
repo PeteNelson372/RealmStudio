@@ -35,17 +35,17 @@
             // 
             // LoadingStatusFormOverlay
             // 
-            LoadingStatusFormOverlay.BackColor = Color.FromArgb(38, 38, 38);
-            LoadingStatusFormOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            LoadingStatusFormOverlay.BackColor = Color.FromArgb(71, 68, 64);
+            LoadingStatusFormOverlay.BorderColor = Color.FromArgb(71, 68, 64);
             LoadingStatusFormOverlay.Controls.Add(LoadingProgressBar);
             LoadingStatusFormOverlay.Dock = DockStyle.Fill;
-            LoadingStatusFormOverlay.FillEdgeColorA = Color.FromArgb(69, 68, 63);
-            LoadingStatusFormOverlay.FillEdgeColorB = Color.FromArgb(69, 68, 63);
+            LoadingStatusFormOverlay.FillEdgeColorA = Color.FromArgb(71, 68, 64);
+            LoadingStatusFormOverlay.FillEdgeColorB = Color.FromArgb(71, 68, 64);
             LoadingStatusFormOverlay.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LoadingStatusFormOverlay.FooterEdgeColor = Color.FromArgb(69, 68, 63);
+            LoadingStatusFormOverlay.FooterEdgeColor = Color.FromArgb(71, 68, 64);
             LoadingStatusFormOverlay.ForeColor = Color.FromArgb(223, 219, 210);
-            LoadingStatusFormOverlay.HeaderEdgeColorA = Color.FromArgb(87, 85, 77);
-            LoadingStatusFormOverlay.HeaderEdgeColorB = Color.FromArgb(69, 68, 63);
+            LoadingStatusFormOverlay.HeaderEdgeColorA = Color.FromArgb(71, 68, 64);
+            LoadingStatusFormOverlay.HeaderEdgeColorB = Color.FromArgb(71, 68, 64);
             LoadingStatusFormOverlay.Location = new Point(0, 0);
             LoadingStatusFormOverlay.Name = "LoadingStatusFormOverlay";
             LoadingStatusFormOverlay.Padding = new Padding(20, 56, 20, 16);
@@ -60,6 +60,7 @@
             // 
             // LoadingProgressBar
             // 
+            LoadingProgressBar.BackColor = Color.FromArgb(71, 68, 64);
             LoadingProgressBar.Location = new Point(12, 53);
             LoadingProgressBar.Name = "LoadingProgressBar";
             LoadingProgressBar.Size = new Size(495, 30);

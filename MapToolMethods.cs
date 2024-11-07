@@ -29,44 +29,38 @@ namespace RealmStudio
     {
         public static List<NameGenerator> NameGenerators { get; set; } = [];
         public static List<NameBase> NameBases { get; set; } = [];
-        public static List<string> NameLanguages { get; set; } = [];
-        public static List<string> NameBaseNames { get; set; } = [];
-        public static List<string> NameGeneratorNames { get; set; } = [];
+        public static List<NameBaseLanguage> NameLanguages { get; set; } = [];
 
-        public static string GenerateRandomPlaceName()
+        public static string GenerateRandomPlaceName(List<INameGenerator> generators)
         {
             string generatedName = string.Empty;
 
-            List<INameGenerator> generators = [];
-
-            foreach (NameGenerator generator in NameGenerators)
-            {
-                if (generator.IsSelected)
-                {
-                    generators.Add(generator);
-                }
-            }
-
-            foreach (NameBase nameBase in NameBases)
-            {
-                if (nameBase.IsNameBaseSelected && nameBase.IsLanguageSelected)
-                {
-                    generators.Add(nameBase);
-                }
-            }
-
             if (generators.Count > 0)
             {
-                int selectedGeneratorIndex = Random.Shared.Next(0, generators.Count);
+                int selectedGeneratorIndex = -1;
+                int guardCount = 0;
+                int maxTries = generators.Count * generators.Count;
+
+                while (guardCount < maxTries && (selectedGeneratorIndex < 0 || generators[selectedGeneratorIndex] is NameBaseLanguage))
+                {
+                    guardCount++;
+                    selectedGeneratorIndex = Random.Shared.Next(0, generators.Count);
+                }
+
+                Random.Shared.Next(0, generators.Count);
 
                 if (generators[selectedGeneratorIndex] is NameGenerator nameGen)
                 {
-                    generatedName = GenerateName(nameGen);
+                    generatedName = GenerateName(nameGen, generators);
                 }
                 else if (generators[selectedGeneratorIndex] is NameBase nameBase)
                 {
-                    generatedName = GenerateName(nameBase);
+                    generatedName = GenerateName(nameBase, generators);
                 }
+                //else if (generators[selectedGeneratorIndex] is NameBaseLanguage language)
+                //{
+                //    generatedName = GenerateName(language);
+                //}
             }
 
             return generatedName;
@@ -79,9 +73,15 @@ namespace RealmStudio
 
             foreach (NameBase nameBase in NameBases)
             {
-                if (nameBase.IsLanguageSelected)
+                if (nameBase.IsNameBaseSelected)
                 {
-                    generators.Add(nameBase);
+                    foreach (NameBaseLanguage language in nameBase.Languages)
+                    {
+                        if (language.IsLanguageSelected)
+                        {
+                            generators.Add(language);
+                        }
+                    }
                 }
             }
 
@@ -90,14 +90,46 @@ namespace RealmStudio
                 int selectedGeneratorIndex = Random.Shared.Next(0, generators.Count);
                 if (generators[selectedGeneratorIndex] is NameBase nameBase)
                 {
-                    generatedName = GenerateName(nameBase);
+                    generatedName = GenerateName(nameBase, generators);
                 }
             }
 
             return generatedName;
         }
 
-        private static string GenerateName(NameGenerator nameGen)
+        private static string GenerateRandomNameForLanguage(List<INameGenerator> selectedGenerators)
+        {
+            if (selectedGenerators.Count > 0)
+            {
+                List<NameBaseLanguage> SelectedNameLanguages = [];
+
+                foreach (INameGenerator gen in selectedGenerators)
+                {
+                    if (gen is NameBaseLanguage l && l.IsLanguageSelected)
+                    {
+                        SelectedNameLanguages.Add(l);
+                    }
+                }
+
+                if (SelectedNameLanguages.Count > 0)
+                {
+                    // select a random language from the namebase
+                    int languageIndex = Random.Shared.Next(0, SelectedNameLanguages.Count);
+
+                    // simplified version of namebase name generation for now; select a name from the language
+                    return SelectedNameLanguages[languageIndex].NameStrings[Random.Shared.Next(0, SelectedNameLanguages[languageIndex].NameStrings.Count)];
+
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+
+            return string.Empty;
+        }
+
+        private static string GenerateName(NameGenerator nameGen, List<INameGenerator> selectedGenerators)
         {
             string generatedName = string.Empty;
 
@@ -129,11 +161,11 @@ namespace RealmStudio
             }
             else
             {
-                string nameBaseName = GenerateRandomNameBaseName();
+                string name = GenerateRandomNameForLanguage(selectedGenerators);
 
-                if (!string.IsNullOrEmpty(nameBaseName))
+                if (!string.IsNullOrEmpty(name))
                 {
-                    generatedName = column1Value.Replace("%", nameBaseName);
+                    generatedName = column1Value.Replace("%", name);
                 }
                 else
                 {
@@ -144,10 +176,40 @@ namespace RealmStudio
             return generatedName;
         }
 
-        private static string GenerateName(NameBase nameBase)
+        private static string GenerateName(NameBase nameBase, List<INameGenerator> selectedGenerators)
         {
-            // simplified version of namebase name generation for now
-            return nameBase.NameStrings[Random.Shared.Next(0, nameBase.NameStrings.Count)];
+            List<NameBaseLanguage> SelectedNameLanguages = [];
+
+            foreach (INameGenerator gen in selectedGenerators)
+            {
+                if (gen is NameBaseLanguage l && l.IsLanguageSelected)
+                {
+                    foreach (NameBaseLanguage nbl in nameBase.Languages)
+                    {
+                        if (nbl.Language == l.Language)
+                        {
+                            SelectedNameLanguages.Add(nbl);
+                        }
+                    }
+                }
+            }
+
+            if (SelectedNameLanguages.Count > 0)
+            {
+                // select a random language from the namebase
+                int languageIndex = Random.Shared.Next(0, SelectedNameLanguages.Count);
+
+                // simplified version of namebase name generation for now; select a name from the language
+                return SelectedNameLanguages[languageIndex].NameStrings[Random.Shared.Next(0, SelectedNameLanguages[languageIndex].NameStrings.Count)];
+            }
+
+            return string.Empty;
+        }
+
+        private static string GenerateName(NameBaseLanguage language)
+        {
+            // simplified version of namebase name generation for now; select a name from the language
+            return language.NameStrings[Random.Shared.Next(0, language.NameStrings.Count)];
         }
 
         public static void LoadNameGeneratorFiles()
@@ -180,22 +242,15 @@ namespace RealmStudio
 
             foreach (NameBase nameBase in NameBases)
             {
-                if (!string.IsNullOrEmpty(nameBase.NameBaseLanguage) && !NameLanguages.Contains(nameBase.NameBaseLanguage))
+                if (nameBase.Languages.Count > 0)
                 {
-                    NameLanguages.Add(nameBase.NameBaseLanguage.Trim());
-                }
-
-                if (!NameBaseNames.Contains(nameBase.NameBaseName))
-                {
-                    NameBaseNames.Add(nameBase.NameBaseName);
-                }
-            }
-
-            foreach (NameGenerator nameGenerator in NameGenerators)
-            {
-                if (!NameGeneratorNames.Contains(nameGenerator.NameGeneratorName))
-                {
-                    NameGeneratorNames.Add(nameGenerator.NameGeneratorName);
+                    foreach (var language in nameBase.Languages)
+                    {
+                        if (!NameLanguages.Contains(language))
+                        {
+                            NameLanguages.Add(language);
+                        }
+                    }
                 }
             }
         }
@@ -206,27 +261,29 @@ namespace RealmStudio
 
             if (lines.Any())
             {
+                NameBase nameBase = new()
+                {
+                    NameBaseName = Path.GetFileNameWithoutExtension(path)
+                };
+
                 foreach (var line in lines)
                 {
-                    NameBase nameBase = new()
-                    {
-                        NameBaseName = Path.GetFileNameWithoutExtension(path)
-                    };
-
                     string[] lineParts = line.Split('|');
 
                     if (lineParts.Length == 6)
                     {
-                        nameBase.NameBaseLanguage = lineParts[0].Trim();
-                        nameBase.MinNameLength = int.Parse(lineParts[1]);
-                        nameBase.MaxNameLength = int.Parse(lineParts[2]);
+                        NameBaseLanguage language = new();
+
+                        language.Language = lineParts[0].Trim();
+                        language.MinNameLength = int.Parse(lineParts[1]);
+                        language.MaxNameLength = int.Parse(lineParts[2]);
 
                         foreach (char c in lineParts[3])
                         {
-                            nameBase.RepeatableCharacters.Add(c);
+                            language.RepeatableCharacters.Add(c);
                         }
 
-                        nameBase.SingleWordTransformProportion = float.Parse(lineParts[4]);
+                        language.SingleWordTransformProportion = float.Parse(lineParts[4]);
 
                         string[] nameBaseNames = lineParts[5].Split(",");
 
@@ -235,14 +292,18 @@ namespace RealmStudio
                             nameBaseNames[i] = nameBaseNames[i].Trim();
                         }
 
-                        nameBase.NameStrings.AddRange(nameBaseNames);
+                        language.NameStrings.AddRange(nameBaseNames);
 
-                        if (!string.IsNullOrEmpty(nameBase.NameBaseLanguage) && nameBase.NameStrings.Count > 0)
+                        if (!string.IsNullOrEmpty(language.Language) && language.NameStrings.Count > 0)
                         {
-                            NameBases.Add(nameBase);
+                            nameBase.Languages.Add(language);
                         }
                     }
+                }
 
+                if (nameBase.Languages.Count > 0)
+                {
+                    NameBases.Add(nameBase);
                 }
             }
         }

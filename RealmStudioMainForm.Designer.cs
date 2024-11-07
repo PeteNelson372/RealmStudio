@@ -5738,7 +5738,7 @@
             LogoPictureBox.BackgroundImage = (Image)resources.GetObject("LogoPictureBox.BackgroundImage");
             LogoPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
             LogoPictureBox.InitialImage = (Image)resources.GetObject("LogoPictureBox.InitialImage");
-            LogoPictureBox.Location = new Point(466, 204);
+            LogoPictureBox.Location = new Point(469, 204);
             LogoPictureBox.Name = "LogoPictureBox";
             LogoPictureBox.Size = new Size(640, 640);
             LogoPictureBox.TabIndex = 14;

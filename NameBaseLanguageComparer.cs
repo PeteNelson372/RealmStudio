@@ -23,7 +23,12 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    public interface INameGenerator
+    internal class NameBaseLanguageComparer : Comparer<NameBaseLanguage>
     {
+        public override int Compare(NameBaseLanguage? lang1, NameBaseLanguage? lang2)
+        {
+            if (lang1 == null || lang2 == null) return 0;
+            return lang1.Language.CompareTo(lang2.Language);
+        }
     }
 }

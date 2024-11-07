@@ -37,6 +37,69 @@ namespace RealmStudio
             InitializeComponent();
         }
 
+        public List<INameGenerator> GetSelectedNameGenerators()
+        {
+            for (int i = 0; i < NameGeneratorsListBox.Items.Count; i++)
+            {
+                ((NameGenerator)NameGeneratorsListBox.Items[i]).IsSelected = NameGeneratorsListBox.GetItemChecked(i);
+            }
+
+            for (int i = 0; i < NamebasesListBox.Items.Count; i++)
+            {
+                ((NameBase)NamebasesListBox.Items[i]).IsNameBaseSelected = NamebasesListBox.GetItemChecked(i);
+            }
+
+            for (int i = 0; i < LanguagesListBox.Items.Count; i++)
+            {
+                ((NameBaseLanguage)LanguagesListBox.Items[i]).IsLanguageSelected = LanguagesListBox.GetItemChecked(i);
+            }
+
+            List<INameGenerator> generators = [];
+
+            foreach (NameGenerator generator in NameGeneratorsListBox.Items)
+            {
+                if (generator.IsSelected)
+                {
+                    generators.Add(generator);
+                }
+            }
+
+            foreach (NameBase nameBase in NamebasesListBox.Items)
+            {
+                if (nameBase.IsNameBaseSelected)
+                {
+                    generators.Add(nameBase);
+
+                    foreach (NameBaseLanguage language in nameBase.Languages)
+                    {
+                        foreach (NameBaseLanguage l in LanguagesListBox.Items)
+                        {
+                            if (l.Language == language.Language && l.IsLanguageSelected)
+                            {
+                                if (!generators.Contains(l))
+                                {
+                                    generators.Add(l);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (NameBaseLanguage l in LanguagesListBox.Items)
+            {
+                if (l.IsLanguageSelected)
+                {
+                    if (!generators.Contains(l))
+                    {
+                        generators.Add(l);
+                    }
+                }
+            }
+
+            return generators;
+        }
+
         private void ApplySelectedNameButton_Click(object sender, EventArgs e)
         {
             // apply name generator settings
@@ -55,18 +118,35 @@ namespace RealmStudio
 
         private void GenerateNamesButton_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < NumberOfNamesToGenerate; i++)
-            {
-                string name = MapToolMethods.GenerateRandomPlaceName();
-                GeneratedNamesList.Items.Add(name);
+            List<INameGenerator> generators = GetSelectedNameGenerators();
 
-                if (GeneratedNamesList.Items.Count > NumberOfNamesToKeep)
+            if (generators.Count > 0)
+            {
+                int generatedNameCount = 0;
+
+                int guardCount = 0;
+                int maxTries = 100;
+
+                while (generatedNameCount < NumberOfNamesToGenerate && guardCount < maxTries)
                 {
-                    GeneratedNamesList.Items.RemoveAt(0);
+                    guardCount++;
+                    string name = MapToolMethods.GenerateRandomPlaceName(generators);
+
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        generatedNameCount++;
+                        GeneratedNamesList.Items.Add(name);
+
+                        if (GeneratedNamesList.Items.Count > NumberOfNamesToKeep)
+                        {
+                            GeneratedNamesList.Items.RemoveAt(0);
+                        }
+                    }
                 }
             }
 
             GeneratedNamesList.Refresh();
+            GeneratedNamesList.TopIndex = GeneratedNamesList.Items.Count - 1;
         }
 
         private void GeneratedNamesList_SelectedIndexChanged(object sender, EventArgs e)

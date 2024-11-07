@@ -108,7 +108,7 @@ namespace RealmStudio
 
         private TextBox? LABEL_TEXT_BOX;
 
-        private readonly NameGeneratorConfiguration NAME_GENERATOR_CONFIG = new();
+        public static readonly NameGeneratorConfiguration NAME_GENERATOR_CONFIG = new();
 
         private static bool SYMBOL_SCALE_LOCKED = false;
         private static bool CREATING_LABEL = false;
@@ -784,6 +784,7 @@ namespace RealmStudio
 
                     if (saveResult == DialogResult.OK)
                     {
+                        Close();
                         MapBuilder.DisposeMap(CURRENT_MAP);
                         Application.Exit();
                     }
@@ -791,12 +792,14 @@ namespace RealmStudio
                 else if (result == DialogResult.No)
                 {
                     CURRENT_MAP.IsSaved = true;
+                    Close();
                     MapBuilder.DisposeMap(CURRENT_MAP);
                     Application.Exit();
                 }
             }
             else
             {
+                Close();
                 MapBuilder.DisposeMap(CURRENT_MAP);
                 Application.Exit();
             }
@@ -1398,26 +1401,48 @@ namespace RealmStudio
             NAME_GENERATOR_CONFIG.NameGenerated += new EventHandler(NameGenerator_NameGenerated);
 
             NAME_GENERATOR_CONFIG.NameGeneratorsListBox.Items.Clear();
+            NAME_GENERATOR_CONFIG.NameGeneratorsListBox.DisplayMember = "NameGeneratorName";
 
-            foreach (string nameGeneratorName in MapToolMethods.NameGeneratorNames)
+            foreach (NameGenerator nameGenerator in MapToolMethods.NameGenerators)
             {
-                NAME_GENERATOR_CONFIG.NameGeneratorsListBox.Items.Add(nameGeneratorName);
+                NAME_GENERATOR_CONFIG.NameGeneratorsListBox.Items.Add(nameGenerator);
+
                 NAME_GENERATOR_CONFIG.NameGeneratorsListBox.SetItemChecked(
                     NAME_GENERATOR_CONFIG.NameGeneratorsListBox.Items.Count - 1, true);
             }
 
-            foreach (string nameBaseName in MapToolMethods.NameBaseNames)
+            NAME_GENERATOR_CONFIG.NamebasesListBox.Items.Clear();
+            NAME_GENERATOR_CONFIG.NamebasesListBox.DisplayMember = "NameBaseName";
+
+            foreach (NameBase nameBase in MapToolMethods.NameBases)
             {
-                NAME_GENERATOR_CONFIG.NamebasesListBox.Items.Add(nameBaseName);
-                NAME_GENERATOR_CONFIG.NamebasesListBox.SetItemChecked(
-                    NAME_GENERATOR_CONFIG.NamebasesListBox.Items.Count - 1, true);
+                if (!NAME_GENERATOR_CONFIG.NamebasesListBox.Items.Contains(nameBase))
+                {
+                    NAME_GENERATOR_CONFIG.NamebasesListBox.Items.Add(nameBase);
+                    NAME_GENERATOR_CONFIG.NamebasesListBox.SetItemChecked(
+                        NAME_GENERATOR_CONFIG.NamebasesListBox.Items.Count - 1, true);
+                }
             }
 
 
-            MapToolMethods.NameLanguages.Sort();
-            foreach (string languageName in MapToolMethods.NameLanguages)
+            MapToolMethods.NameLanguages.Sort(new NameBaseLanguageComparer());
+            NAME_GENERATOR_CONFIG.LanguagesListBox.DisplayMember = "Language";
+
+            foreach (NameBaseLanguage language in MapToolMethods.NameLanguages)
             {
-                NAME_GENERATOR_CONFIG.LanguagesListBox.Items.Add(languageName);
+                bool languageFound = false;
+                foreach (NameBaseLanguage l in NAME_GENERATOR_CONFIG.LanguagesListBox.Items)
+                {
+                    if (l.Language == language.Language)
+                    {
+                        languageFound = true;
+                    }
+                }
+
+                if (!languageFound)
+                {
+                    NAME_GENERATOR_CONFIG.LanguagesListBox.Items.Add(language);
+                }
             }
 
             for (int i = 0; i < NAME_GENERATOR_CONFIG.LanguagesListBox.Items.Count; i++)
@@ -9432,7 +9457,7 @@ namespace RealmStudio
 
             if (SELECTED_MAP_LABEL != null)
             {
-                Cmd_ChangeLabelRotation cmd = new(SELECTED_MAP_LABEL, (float)LabelRotationTrack.Value);
+                Cmd_ChangeLabelRotation cmd = new(SELECTED_MAP_LABEL, LabelRotationTrack.Value);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 
@@ -9502,7 +9527,8 @@ namespace RealmStudio
         {
             if (ModifierKeys == Keys.None)
             {
-                string generatedName = MapToolMethods.GenerateRandomPlaceName();
+                List<INameGenerator> generators = NAME_GENERATOR_CONFIG.GetSelectedNameGenerators();
+                string generatedName = MapToolMethods.GenerateRandomPlaceName(generators);
 
                 if (CREATING_LABEL)
                 {
