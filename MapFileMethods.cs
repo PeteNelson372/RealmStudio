@@ -21,8 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using SkiaSharp.Views.Desktop;
 using System.Xml.Serialization;
-
 namespace RealmStudio
 {
     [XmlInclude(typeof(MapLayer))]
@@ -480,6 +480,54 @@ namespace RealmStudio
             }
 
             return null;
+        }
+
+        internal static LandformShapingFunction? ReadShapingFunction(string path)
+        {
+            LandformShapingFunction lsf = new();
+
+            try
+            {
+                lsf.ShapingBitmap = ((Bitmap)(Image.FromFile(path))).ToSKBitmap();
+
+                if (Path.GetFileNameWithoutExtension(path).Contains("Region"))
+                {
+                    lsf.LandformShapeType = GeneratedLandformTypeEnum.Region;
+                }
+                else if (Path.GetFileNameWithoutExtension(path).Contains("Continent"))
+                {
+                    lsf.LandformShapeType = GeneratedLandformTypeEnum.Continent;
+                }
+                else if (Path.GetFileNameWithoutExtension(path).Contains("Island"))
+                {
+                    lsf.LandformShapeType = GeneratedLandformTypeEnum.Island;
+                }
+                else if (Path.GetFileNameWithoutExtension(path).Contains("Archipelago"))
+                {
+                    lsf.LandformShapeType = GeneratedLandformTypeEnum.Archipelago;
+                }
+                else if (Path.GetFileNameWithoutExtension(path).Contains("Atoll"))
+                {
+                    lsf.LandformShapeType = GeneratedLandformTypeEnum.Atoll;
+                }
+                else if (Path.GetFileNameWithoutExtension(path).Contains("World"))
+                {
+                    lsf.LandformShapeType = GeneratedLandformTypeEnum.World;
+                }
+
+                /*
+                    Region,
+                    Continent,
+                    Island,
+                    Archipelago,
+                    Atoll,
+                    World,
+                    Equirectangular
+                 */
+            }
+            catch { }
+
+            return lsf;
         }
     }
 }

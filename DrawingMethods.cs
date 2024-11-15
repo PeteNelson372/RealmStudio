@@ -369,6 +369,14 @@ namespace RealmStudio
 
         }
 
+        internal static SKBitmap ResizeBitmap(SKBitmap bitmap, SKSizeI newsize)
+        {
+            SKBitmap resizedSKBitmap = new(newsize.Width, newsize.Height);
+            bitmap.ScalePixels(resizedSKBitmap, SKFilterQuality.High);
+
+            return resizedSKBitmap;
+        }
+
         internal static SKBitmap ScaleBitmap(SKBitmap bitmap, float scale)
         {
             int bitmapWidth = (int)Math.Round(bitmap.Width * scale);
@@ -420,7 +428,7 @@ namespace RealmStudio
 
             // invert the bitmap colors white -> black; black -> white
             // FillHoles filter looks for black holes in white background
-            // landformBitmap has white holes in black background, so
+            // inputBitmap has white holes in black background, so
             // invert is required
             Invert invert = new();
             using Bitmap invertedBitmap = invert.Apply(inputBitmap);
@@ -428,8 +436,8 @@ namespace RealmStudio
             // fill holes in the input bitmap (black areas surrounded by white)
             FillHoles fillHolesFilter = new()
             {
-                MaxHoleWidth = 200,     // 200 pixels is maximum size of hole filled
-                MaxHoleHeight = 200,
+                //MaxHoleWidth = inputBitmap.Width / 8,     // 1/8 size of bitmap is maximum size of hole filled
+                //MaxHoleHeight = inputBitmap.Height / 8,
                 CoupledSizeFiltering = false
             };
 
@@ -438,7 +446,17 @@ namespace RealmStudio
             // re-invert the colors to restore to original
             Bitmap filledInvertedBitmap = invert.Apply(filledBitmap);
 
-            return filledInvertedBitmap;
+            Bitmap newfilledInvertedBitmap = new(filledInvertedBitmap, filledInvertedBitmap.Width, filledInvertedBitmap.Height);
+
+            using Graphics g = Graphics.FromImage(newfilledInvertedBitmap);
+            using Pen p = new(Color.White, 3);
+
+            g.DrawLine(p, new Point(0, 0), new Point(newfilledInvertedBitmap.Width, 0));
+            g.DrawLine(p, new Point(0, newfilledInvertedBitmap.Height), new Point(newfilledInvertedBitmap.Width, newfilledInvertedBitmap.Height));
+            g.DrawLine(p, new Point(0, 0), new Point(0, newfilledInvertedBitmap.Height));
+            g.DrawLine(p, new Point(newfilledInvertedBitmap.Width, 0), new Point(newfilledInvertedBitmap.Width, newfilledInvertedBitmap.Height));
+
+            return newfilledInvertedBitmap;
         }
 
         internal static Bitmap? ExtractLargestBlob(Bitmap b)
@@ -490,6 +508,66 @@ namespace RealmStudio
 
             return null;
         }
+
+        internal static List<Bitmap> ExtractBlobs(Bitmap b, Size minSize)
+        {
+            List<Bitmap> extractedBlobs = [];
+
+            if (b.PixelFormat != PixelFormat.Format8bppIndexed)
+            {
+                // convert the bitmap to an 8bpp grayscale image for processing
+                b = Grayscale.CommonAlgorithms.BT709.Apply(b);
+            }
+
+            // invert the bitmap colors white -> black; black -> white
+            Invert invert = new();
+            using Bitmap invertedBitmap = invert.Apply(b);
+
+            // extract blobs; these will be the landforms to be created
+            // create an instance of blob counter algorithm
+            BlobCounterBase bc = new BlobCounter()
+            {
+                BackgroundThreshold = Color.FromArgb(10, 10, 10),
+                FilterBlobs = true,
+                MinWidth = minSize.Width,
+                MinHeight = minSize.Height,
+                MaxWidth = b.Width,
+                MaxHeight = b.Height,
+                BlobsFilter = null,
+
+                // set ordering options
+                ObjectsOrder = ObjectsOrder.Size
+            };
+
+            // process binary image
+            bc.ProcessImage(invertedBitmap);
+
+            Blob[] blobs = bc.GetObjects(invertedBitmap, true);
+
+            // extract the blobs
+            if (blobs.Length > 0)
+            {
+                for (int i = 0; i < blobs.Length; i++)
+                {
+                    bc.ExtractBlobsImage(invertedBitmap, blobs[i], true);
+
+                    Blob aBlob = blobs[i];
+                    Bitmap managedImage = aBlob.Image.ToManagedImage();
+
+                    // re-invert the colors
+                    Bitmap invertedBlobBitmap = invert.Apply(managedImage);
+
+                    invertedBlobBitmap = new(invertedBlobBitmap, invertedBlobBitmap.Width, invertedBlobBitmap.Height);
+
+                    extractedBlobs.Add((Bitmap)invertedBlobBitmap.Clone());
+                }
+
+                return extractedBlobs;
+            }
+
+            return extractedBlobs;
+        }
+
 
         internal static SKBitmap[] SliceNinePatchBitmap(SKBitmap resizedBitmap, SKRectI center)
         {
@@ -797,6 +875,7 @@ namespace RealmStudio
             SKPoint contourPoint = new(startPoint.X, startPoint.Y);  // p
 
             SKPoint backPoint = new(startPoint.X, startPoint.Y + 1);  // b
+            SKPoint entryPoint = SKPoint.Empty;
 
             SKPoint checkPoint = new(backPoint.X - 1, backPoint.Y);  // c
 
@@ -816,7 +895,7 @@ namespace RealmStudio
             // that cell becomes the first one checked when looking for the next black contour pixel
             int foundIndex;
 
-            while (!CheckExit(contour, contourPoint))
+            while (!CheckExit2(contour, contourPoint, entryPoint))
             {
                 if (image.GetPixel((int)checkPoint.X, (int)checkPoint.Y).ToArgb() == Color.Black.ToArgb())
                 {
@@ -824,6 +903,12 @@ namespace RealmStudio
 
                     backPoint.X = contourPoint.X;
                     backPoint.Y = contourPoint.Y;
+
+                    if (entryPoint == SKPoint.Empty)
+                    {
+                        entryPoint.X = backPoint.X;
+                        entryPoint.Y = backPoint.Y;
+                    }
 
                     contourPoint.X = checkPoint.X;
                     contourPoint.Y = checkPoint.Y;
@@ -901,6 +986,43 @@ namespace RealmStudio
                         if (contour[foundIndexes[0] - 1].X == contour[foundIndexes[1] - 1].X && contour[foundIndexes[0] - 1].Y == contour[foundIndexes[1] - 1].Y)
                         {
                             boundaryComplete = true;
+                        }
+                    }
+                }
+            }
+
+            return boundaryComplete;
+        }
+
+        private static bool CheckExit2(List<SKPoint> contour, SKPoint startPoint, SKPoint entryPoint)
+        {
+            bool boundaryComplete = false;
+
+            if (contour.Contains(startPoint) && contour.Count > 4)
+            {
+                if (contour.Last().X == startPoint.X && contour.Last().Y == startPoint.Y)
+                {
+                    if (contour[contour.Count - 2].X == entryPoint.X && contour[contour.Count - 2].Y == entryPoint.Y)
+                    {
+                        boundaryComplete = true;
+                    }
+
+                    if (!boundaryComplete)
+                    {
+                        int startCount = 0;
+
+                        for (int i = 0; i < contour.Count; i++)
+                        {
+                            if (contour[i].X == startPoint.X && contour[i].Y == startPoint.Y)
+                            {
+                                startCount++;
+                            }
+
+                            if (startCount >= 7)
+                            {
+                                boundaryComplete = true;
+                                break;
+                            }
                         }
                     }
                 }

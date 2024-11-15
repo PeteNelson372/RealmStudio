@@ -6828,35 +6828,26 @@ namespace RealmStudio
 
         private void LandformGenerateButton_Click(object sender, EventArgs e)
         {
-            switch (SELECTED_LANDFORM_TYPE)
-            {
-                case GeneratedLandformTypeEnum.Region:
-                    break;
-                case GeneratedLandformTypeEnum.Continent:
-                    break;
-                case GeneratedLandformTypeEnum.Island:
-                    GenerateRandomIsland(CURRENT_MAP, SELECTED_LANDFORM_AREA);
-                    SELECTED_LANDFORM_AREA = SKRect.Empty;
+            CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+            SetSelectedBrushSize(0);
+            SetDrawingModeLabel();
 
-                    MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
-                    workLayer.RenderPicture?.Dispose();
-                    workLayer.RenderPicture = null;
+            SKGLRenderControl.Invalidate();
 
-                    CURRENT_MAP.IsSaved = false;
+            Cursor = Cursors.WaitCursor;
 
-                    SKGLRenderControl.Invalidate();
-                    break;
-                case GeneratedLandformTypeEnum.Archipelago:
-                    break;
-                case GeneratedLandformTypeEnum.Atoll:
-                    break;
-                case GeneratedLandformTypeEnum.World:
-                    break;
-                case GeneratedLandformTypeEnum.Equirectangular:
-                    break;
-                default:
-                    break;
-            }
+            GenerateRandomLandform(CURRENT_MAP, SELECTED_LANDFORM_AREA, SELECTED_LANDFORM_TYPE);
+
+            SELECTED_LANDFORM_AREA = SKRect.Empty;
+
+            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
+            workLayer.RenderPicture?.Dispose();
+            workLayer.RenderPicture = null;
+
+            CURRENT_MAP.IsSaved = false;
+            Cursor = Cursors.Default;
+
+            SKGLRenderControl.Invalidate();
         }
 
         private void RegionMenuItem_Click(object sender, EventArgs e)
@@ -6922,47 +6913,74 @@ namespace RealmStudio
         * LANDFORM METHODS
         *******************************************************************************************************/
 
-        internal void GenerateRandomIsland(RealmStudioMap map, SKRect selectedArea)
+        internal void GenerateRandomLandform(RealmStudioMap map, SKRect selectedArea, GeneratedLandformTypeEnum selectedLandformType)
         {
-            SKPoint location = new SKPoint(map.MapWidth / 2, map.MapHeight / 2);
-            SKSize size = new(map.MapWidth, map.MapHeight);
+            SKPoint location = new(map.MapWidth / 2, map.MapHeight / 2);
+            SKSize size = new(map.MapWidth / 2, map.MapHeight / 2);
 
             if (!selectedArea.IsEmpty)
             {
                 location = new SKPoint(selectedArea.MidX, selectedArea.MidY);
                 size = selectedArea.Size;
             }
-
-            SKPath islandPath = LandformMethods.GenerateRandomIslandPath(location, size);
-
-            Landform landform = new()
+            else
             {
-                ParentMap = CURRENT_MAP,
-                IsModified = true,
-                DrawPath = islandPath,
-            };
+                switch (selectedLandformType)
+                {
+                    case GeneratedLandformTypeEnum.Archipelago:
+                        {
+                            size = new SKSize(map.MapWidth * 0.8F, map.MapHeight * 0.8F);
+                        }
+                        break;
+                    case GeneratedLandformTypeEnum.Region:
+                        {
+                            size = new SKSize(map.MapWidth - 8, map.MapHeight - 8);
+                        }
+                        break;
+                }
+            }
 
-            SetLandformData(landform);
-
-            LandformMethods.CreateAllPathsFromDrawnPath(CURRENT_MAP, landform);
-
-            landform.ContourPath.GetBounds(out SKRect boundsRect);
-            landform.X = (int)location.X;
-            landform.Y = (int)location.Y;
-            landform.Width = (int)boundsRect.Width;
-            landform.Height = (int)boundsRect.Height;
-
+            List<SKPath> generatedLandformPaths = LandformMethods.GenerateRandomLandformPaths(location, size, selectedLandformType);
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
-            landformLayer.MapLayerComponents.Add(landform);
+
+            foreach (SKPath path in generatedLandformPaths)
+            {
+                if (!path.IsEmpty)
+                {
+                    Landform landform = new()
+                    {
+                        ParentMap = CURRENT_MAP,
+                        IsModified = true,
+                        DrawPath = new(path),
+                    };
+
+                    LandformMethods.CreateAllPathsFromDrawnPath(CURRENT_MAP, landform);
+
+                    landform.ContourPath.GetBounds(out SKRect boundsRect);
+                    landform.X = (int)location.X;
+                    landform.Y = (int)location.Y;
+                    landform.Width = (int)boundsRect.Width;
+                    landform.Height = (int)boundsRect.Height;
+
+                    SetLandformData(landform);
+
+                    landformLayer.MapLayerComponents.Add(landform);
+
+                    LandformMethods.MergeLandforms(map);
+                }
+            }
+
             landformLayer.IsModified = true;
 
             MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER);
             landCoastlineLayer.IsModified = true;
 
-            selectedArea = SKRect.Empty;
+            MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDDRAWINGLAYER);
+            landDrawingLayer.IsModified = true;
 
-            SKGLRenderControl.Invalidate();
+            map.IsSaved = false;
         }
+
 
         private void SetLandformData(Landform landform)
         {
@@ -6979,7 +6997,7 @@ namespace RealmStudio
                 Bitmap resizedBitmap = new(landform.LandformTexture.TextureBitmap, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
 
                 // create and set a shader from the selected texture
-                SKShader flpShader = SKShader.CreateBitmap(Extensions.ToSKBitmap(resizedBitmap),
+                SKShader flpShader = SKShader.CreateBitmap(resizedBitmap.ToSKBitmap(),
                     SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
 
                 landform.LandformFillPaint.Shader = flpShader;

@@ -338,5 +338,31 @@ namespace RealmStudio
                 NameGenerators.Add(generator);
             }
         }
+
+        internal static void LoadShapingFunctions()
+        {
+            string assetDirectory = Settings.Default.MapAssetDirectory;
+            string nameGeneratorsDirectory = assetDirectory + Path.DirectorySeparatorChar + "ShapingFunctions";
+
+            var files = from file in Directory.EnumerateFiles(assetDirectory, "*.*", SearchOption.AllDirectories).Order()
+                        where file.Contains(".bmp")
+                        select new
+                        {
+                            File = file
+                        };
+
+            foreach (var f in files)
+            {
+                string path = Path.GetFullPath(f.File);
+
+                LandformShapingFunction? shapingFunction = MapFileMethods.ReadShapingFunction(path);
+
+                if (shapingFunction != null)
+                {
+                    AssetManager.LANDFORM_SHAPING_FUNCTIONS.Add(shapingFunction);
+                }
+            }
+
+        }
     }
 }

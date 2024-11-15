@@ -193,7 +193,7 @@ namespace RealmStudio
             return lakeBitmap;
         }
 
-        public static Bitmap GetNoiseGeneratedIslandShape(int width, int height, float islandSize)
+        public static Bitmap? GetNoiseGeneratedIslandShape(int width, int height, float islandSize)
         {
             // ISLAND
 
@@ -205,47 +205,68 @@ namespace RealmStudio
             // generate height map from simplex noise
             float[,] elevation = new float[width, height];
 
-            float waterLevel = 0.4F;
+            float waterLevel = 0.55F;
 
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    elevation[x, y] = Noise.CalcPixel2D(x, y, 0.005F) / 255.0F;
+                    elevation[x, y] = ((Noise.CalcPixel2D(x, y, 0.005F) / 255.0F) + (Noise.CalcPixel2D(x, y, 0.01F) / 255.0F)) / 2.0F;
                 }
             }
 
-            // shaping function
-            // calculate distance of point from center of bitmap
-            float[,] distance = new float[width, height];
+            // get island shaping functions
+            List<LandformShapingFunction> islandShapingFunctions = AssetManager.LANDFORM_SHAPING_FUNCTIONS.FindAll(x => x.LandformShapeType == GeneratedLandformTypeEnum.Island);
 
-            SKPoint mapCenter = new(width / 2, height / 2);
-
-            for (int x = 0; x < width; x++)
+            if (islandShapingFunctions.Count > 0)
             {
-                for (int y = 0; y < height; y++)
+                int shapingFunctionIndex = Random.Shared.Next(0, islandShapingFunctions.Count);
+
+                LandformShapingFunction selectedShapingFunction = islandShapingFunctions[shapingFunctionIndex];
+
+                if (selectedShapingFunction.ShapingBitmap != null)
                 {
-                    distance[x, y] = ((1 - (SKPoint.Distance(mapCenter, new SKPoint(x, y)) / (float)Math.Sqrt(width * width + height * height))) - 0.5F) * 2.0F;
+                    SKBitmap resizedShapingBitmap = selectedShapingFunction.ShapingBitmap.Copy().Resize(new SKSizeI(width, height), SKFilterQuality.High);
+
+                    selectedShapingFunction.ShapeArray = new float[width, height];
+
+                    // shaping function
+                    for (int x = 0; x < width; x++)
+                    {
+                        for (int y = 0; y < height; y++)
+                        {
+                            if (resizedShapingBitmap.GetPixel(x, y) == SKColors.Black)
+                            {
+                                selectedShapingFunction.ShapeArray[x, y] = Math.Min(1.0F, 0.4F + Noise.CalcPixel2D(x, y, 0.1F) / 255.0F);
+                            }
+                            else if (resizedShapingBitmap.GetPixel(x, y) == SKColor.Parse("#C3C3C3"))
+                            {
+                                selectedShapingFunction.ShapeArray[x, y] = Math.Min(1.0F, 0.3F + Noise.CalcPixel2D(x, y, 0.075F) / 255.0F);
+                            }
+                        }
+                    }
+
+                    // interpolate shaping function with elevation
+                    float interpolationWeight = 0.4F;
+
+                    float[,] interpolatedElevationAndShape = new float[width, height];
+
+                    for (int x = 0; x < width; x++)
+                    {
+                        for (int y = 0; y < height; y++)
+                        {
+                            interpolatedElevationAndShape[x, y] = float.Lerp(elevation[x, y], 1 - selectedShapingFunction.ShapeArray[x, y], interpolationWeight);
+                        }
+                    }
+
+                    // convert interpolated values into black/white pixels on a bitmap based on water level
+                    Bitmap islandBitmap = ConvertValuesToBWBitmap(interpolatedElevationAndShape, width, height, waterLevel);
+
+                    return islandBitmap;
                 }
             }
 
-            // interpolate distance with elevation
-            float interpolationWeight = 0.85F;
-
-            float[,] interpolatedElevationAndDistance = new float[width, height];
-
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    interpolatedElevationAndDistance[x, y] = float.Lerp(elevation[x, y], 1 - distance[x, y], interpolationWeight);
-                }
-            }
-
-            // convert interpolated values into black/white pixels on a bitmap based on water level
-
-            Bitmap islandBitmap = ConvertValuesToBWBitmap(interpolatedElevationAndDistance, width, height, waterLevel);
-            return islandBitmap;
+            return null;
         }
 
 
@@ -262,12 +283,15 @@ namespace RealmStudio
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if (values[x, y] > threshold)
+                    // threshold is water level; below the threshold means the pixel is water
+                    if (values[x, y] < threshold)
                     {
+                        // white is water
                         lockedBitmap.SetPixel(x, y, Color.White);
                     }
                     else
                     {
+                        // black is land
                         lockedBitmap.SetPixel(x, y, Color.Black);
                     }
                 }
@@ -276,6 +300,124 @@ namespace RealmStudio
             lockedBitmap.UnlockBits();
 
             return b;
+        }
+
+        internal static Bitmap? GetNoiseGeneratedLandformShape(int width, int height, GeneratedLandformTypeEnum selectedLandformType)
+        {
+            Noise.Seed = Random.Shared.Next(int.MaxValue - 1);
+
+            // scale parameter: larger scale value = denser noise, so scale = wavelength (higher wavelength = denser noise)
+            // or scale is inverse of frequency
+
+            // generate height map from simplex noise
+            float[,] elevation = new float[width, height];
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    elevation[x, y] = ((Noise.CalcPixel2D(x, y, 0.005F) / 255.0F) + (Noise.CalcPixel2D(x, y, 0.01F) / 255.0F)) / 2.0F;
+                }
+            }
+
+            // get shaping function bitmaps for selected landform type
+            List<LandformShapingFunction> shapingFunctions
+                = AssetManager.LANDFORM_SHAPING_FUNCTIONS.FindAll(x => x.LandformShapeType == selectedLandformType);
+
+            if (shapingFunctions.Count > 0)
+            {
+                int shapingFunctionIndex = Random.Shared.Next(0, shapingFunctions.Count);
+
+                LandformShapingFunction selectedShapingFunction = shapingFunctions[shapingFunctionIndex];
+
+                if (selectedShapingFunction.ShapingBitmap != null)
+                {
+                    SKBitmap resizedShapingBitmap = selectedShapingFunction.ShapingBitmap.Copy().Resize(new SKSizeI(width, height), SKFilterQuality.High);
+
+                    selectedShapingFunction.ShapeArray = new float[width, height];
+
+                    // shaping function
+                    for (int x = 0; x < width; x++)
+                    {
+                        for (int y = 0; y < height; y++)
+                        {
+                            if (resizedShapingBitmap.GetPixel(x, y) == SKColors.Black)
+                            {
+                                selectedShapingFunction.ShapeArray[x, y] = Math.Min(1.0F, 0.4F + Noise.CalcPixel2D(x, y, 0.1F) / 255.0F);
+                            }
+                            else if (resizedShapingBitmap.GetPixel(x, y) == SKColor.Parse("#C3C3C3"))
+                            {
+                                selectedShapingFunction.ShapeArray[x, y] = Math.Min(1.0F, 0.15F + Noise.CalcPixel2D(x, y, 0.05F) / 255.0F);
+                            }
+                            else if (resizedShapingBitmap.GetPixel(x, y) == SKColor.Parse("#DEDEDE"))
+                            {
+                                selectedShapingFunction.ShapeArray[x, y] = Math.Min(1.0F, 0.05F + Noise.CalcPixel2D(x, y, 0.075F) / 255.0F);
+                            }
+                            else if (resizedShapingBitmap.GetPixel(x, y).Red > 200)
+                            {
+                                selectedShapingFunction.ShapeArray[x, y] = -1.0F;
+                            }
+                            else
+                            {
+                                // some other color encountered (this shouldn't happen, but maybe does because of antialiasing in the shaping function bitmap?)
+                                selectedShapingFunction.ShapeArray[x, y] = 1.0F;
+                            }
+                        }
+                    }
+
+                    float waterLevel = 0.55F;
+
+                    // interpolate shaping function with elevation
+                    float interpolationWeight = 0.4F;
+
+                    switch (selectedLandformType)
+                    {
+                        case GeneratedLandformTypeEnum.Archipelago:
+                            {
+                                interpolationWeight = 0.5F;
+                                waterLevel = 0.45F;
+                            }
+                            break;
+                        case GeneratedLandformTypeEnum.Atoll:
+                            {
+                                interpolationWeight = 0.6F;
+                                waterLevel = 0.45F;
+                            }
+                            break;
+                        case GeneratedLandformTypeEnum.Island:
+                            {
+                                interpolationWeight = 0.5F;
+                                waterLevel = 0.40F;
+                            }
+                            break;
+                        case GeneratedLandformTypeEnum.Region:
+                            {
+                                interpolationWeight = 0.4F;
+                                waterLevel = 0.4F;
+                            }
+                            break;
+                    }
+
+
+
+                    float[,] interpolatedElevationAndShape = new float[width, height];
+
+                    for (int x = 0; x < width; x++)
+                    {
+                        for (int y = 0; y < height; y++)
+                        {
+                            interpolatedElevationAndShape[x, y] = float.Lerp(elevation[x, y], selectedShapingFunction.ShapeArray[x, y], interpolationWeight);
+                        }
+                    }
+
+                    // convert interpolated values into black/white pixels on a bitmap based on water level
+                    Bitmap landformBitmap = ConvertValuesToBWBitmap(interpolatedElevationAndShape, width, height, waterLevel);
+
+                    return landformBitmap;
+                }
+            }
+
+            return null;
         }
     }
 }

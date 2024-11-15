@@ -69,6 +69,8 @@ namespace RealmStudio
         public static int SELECTED_OCEAN_TEXTURE_INDEX { get; set; } = 0;
         public static int SELECTED_PATH_TEXTURE_INDEX { get; set; } = 0;
 
+        public static List<LandformShapingFunction> LANDFORM_SHAPING_FUNCTIONS = [];
+
         public static string DefaultSymbolDirectory = Settings.Default.MapAssetDirectory + Path.DirectorySeparatorChar + "Symbols";
 
         private static string SymbolTagsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
@@ -127,6 +129,14 @@ namespace RealmStudio
             MapToolMethods.LoadNameGeneratorFiles();
 
             LoadPercentage += 6;
+            LOADING_STATUS_FORM.SetStatusPercentage(LoadPercentage);
+
+            // load shaping function files
+            LOADING_STATUS_FORM.SetStatusText("Loading Shaping Functions");
+
+            MapToolMethods.LoadShapingFunctions();
+
+            LoadPercentage += 2;
             LOADING_STATUS_FORM.SetStatusPercentage(LoadPercentage);
 
             LOADING_STATUS_FORM.SetStatusText("Loading Assets");
@@ -277,6 +287,7 @@ namespace RealmStudio
                         LABEL_PRESETS.Add(preset);
                     }
                 }
+
 
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
