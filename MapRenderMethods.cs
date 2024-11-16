@@ -263,19 +263,28 @@ namespace RealmStudio
                 {
                     landCoastlineLayer.RenderPicture?.Dispose();
 
-                    using var coastlineRecorder = new SKPictureRecorder();
+                    // using a picture recorder to provide a canvas to draw on
+                    // causes transparent (or empty) color to render as black;
+                    // using a bitmap canvas correctly renders transparent and empty colors
 
-                    // Start recording 
-                    coastlineRecorder.BeginRecording(clippingBounds);
-                    currentLandform?.RenderCoastline(coastlineRecorder.RecordingCanvas);
+                    using SKBitmap b = new(map.MapWidth, map.MapHeight);
+                    using SKCanvas canvas = new(b);
 
-                    foreach (Landform l in landformLayer.MapLayerComponents.Cast<Landform>())
+                    currentLandform?.RenderCoastline(canvas);
+
+                    for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
                     {
-                        l.RenderCoastline(coastlineRecorder.RecordingCanvas);
+                        if (landformLayer.MapLayerComponents[i] is Landform l)
+                        {
+                            l.RenderCoastline(canvas);
+                        }
+                        else if (landformLayer.MapLayerComponents[i] is LayerPaintStroke lps)
+                        {
+                            lps.Render(canvas);
+                        }
                     }
 
-                    landCoastlineLayer.RenderPicture = coastlineRecorder?.EndRecording();
-                    renderCanvas.DrawPicture(landCoastlineLayer.RenderPicture, scrollPoint);
+                    renderCanvas.DrawBitmap(b, scrollPoint);
                     landCoastlineLayer.IsModified = false;
                 }
             }
@@ -291,18 +300,28 @@ namespace RealmStudio
                 {
                     landformLayer.RenderPicture?.Dispose();
 
-                    using var landFormRecorder = new SKPictureRecorder();
+                    // using a picture recorder to provide a canvas to draw on
+                    // causes transparent (or empty) color to render as black;
+                    // using a bitmap canvas correctly renders transparent and empty colors
 
-                    landFormRecorder.BeginRecording(clippingBounds);
-                    currentLandform?.RenderLandform(landFormRecorder.RecordingCanvas);
+                    using SKBitmap b = new(map.MapWidth, map.MapHeight);
+                    using SKCanvas canvas = new(b);
 
-                    foreach (Landform l in landformLayer.MapLayerComponents.Cast<Landform>())
+                    currentLandform?.RenderLandform(canvas);
+
+                    for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
                     {
-                        l.RenderLandform(landFormRecorder.RecordingCanvas);
+                        if (landformLayer.MapLayerComponents[i] is Landform l)
+                        {
+                            l.RenderLandform(canvas);
+                        }
+                        else if (landformLayer.MapLayerComponents[i] is LayerPaintStroke lps)
+                        {
+                            lps.Render(canvas);
+                        }
                     }
 
-                    landformLayer.RenderPicture = landFormRecorder?.EndRecording();
-                    renderCanvas.DrawPicture(landformLayer.RenderPicture, scrollPoint);
+                    renderCanvas.DrawBitmap(b, scrollPoint);
                     landformLayer.IsModified = false;
                 }
             }
@@ -331,21 +350,24 @@ namespace RealmStudio
 
                 using var selectionRecorder = new SKPictureRecorder();
 
-                foreach (Landform l in landformLayer.MapLayerComponents.Cast<Landform>())
+                for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
                 {
-                    if (l.IsSelected)
+                    if (landformLayer.MapLayerComponents[i] is Landform l)
                     {
-                        // draw an outline around the landform to show that it is selected
-                        l.ContourPath.GetBounds(out SKRect boundRect);
-                        using SKPath boundsPath = new();
-                        boundsPath.AddRect(boundRect);
+                        if (l.IsSelected)
+                        {
+                            // draw an outline around the landform to show that it is selected
+                            l.ContourPath.GetBounds(out SKRect boundRect);
+                            using SKPath boundsPath = new();
+                            boundsPath.AddRect(boundRect);
 
-                        // only one landform can be selected
-                        selectionRecorder.BeginRecording(clippingBounds);
-                        selectionRecorder.RecordingCanvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
-                        selectionLayer.RenderPicture = selectionRecorder.EndRecording();
+                            // only one landform can be selected
+                            selectionRecorder.BeginRecording(clippingBounds);
+                            selectionRecorder.RecordingCanvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
+                            selectionLayer.RenderPicture = selectionRecorder.EndRecording();
 
-                        break;
+                            break;
+                        }
                     }
                 }
 

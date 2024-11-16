@@ -228,7 +228,15 @@ namespace RealmStudio
             {
                 Bitmap landBitmap = generatedBitmaps[i];
 
+                // the mean filter smooths out pixels that differ a lot in color from their neighbors;
+                // when applied to a monochrome image like the generated landform bitmaps, the filter
+                // will average out black or white pixels that are surrounded (or mostly surrounded)
+                // by pixels of the opposite color. When the bitmap colors are then flattened back to
+                // monochrome (black and white), this has the effect of removing "spikes" from around the
+                // edges of the landform (and other anomalies) that cause the Moore neighborhood algorithm
+                // to fail, causing the landform boundaries not to be computed correctly
                 Mean meanFilter = new();
+                meanFilter.ApplyInPlace(landBitmap);
                 meanFilter.ApplyInPlace(landBitmap);
 
                 DrawingMethods.FlattenBitmapColors(ref landBitmap);

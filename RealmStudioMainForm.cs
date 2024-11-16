@@ -55,6 +55,9 @@ namespace RealmStudio
         private static MapRegion? CURRENT_MAP_REGION = null;
         private static LayerPaintStroke? CURRENT_LAYER_PAINT_STROKE = null;
 
+        private static LayerPaintStroke? CURRENT_LAND_ERASE_STROKE = null;
+        private static LayerPaintStroke? CURRENT_COAST_ERASE_STROKE = null;
+
         // objects that are currently selected
         private static Landform? SELECTED_LANDFORM = null;
         private static MapPath? SELECTED_PATH = null;
@@ -3715,6 +3718,30 @@ namespace RealmStudio
                         SetLandformData(CURRENT_LANDFORM);
                     }
                     break;
+                case DrawingModeEnum.LandErase:
+                    {
+                        CURRENT_MAP.IsSaved = false;
+                        Cursor = Cursors.Cross;
+
+                        if (CURRENT_LAND_ERASE_STROKE == null)
+                        {
+                            CURRENT_LAND_ERASE_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.Empty,
+                                ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.LANDFORMLAYER, true);
+
+                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(CURRENT_LAND_ERASE_STROKE);
+                        }
+
+                        if (CURRENT_COAST_ERASE_STROKE == null)
+                        {
+                            CURRENT_COAST_ERASE_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.Empty,
+                                ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.LANDCOASTLINELAYER, true);
+
+                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(CURRENT_COAST_ERASE_STROKE);
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
                 case DrawingModeEnum.LandColor:
                     {
                         CURRENT_MAP.IsSaved = false;
@@ -4399,7 +4426,15 @@ namespace RealmStudio
 
                         LandformMethods.LandformErasePath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
 
-                        LandformMethods.EraseLandForm(CURRENT_MAP);
+                        if (CURRENT_LAND_ERASE_STROKE != null)
+                        {
+                            CURRENT_LAND_ERASE_STROKE.AddLayerPaintStrokePoint(zoomedScrolledPoint);
+                        }
+
+                        if (CURRENT_COAST_ERASE_STROKE != null)
+                        {
+                            CURRENT_COAST_ERASE_STROKE.AddLayerPaintStrokePoint(zoomedScrolledPoint);
+                        }
 
                         MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER, true);
                         MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDFORMLAYER, true);
@@ -5107,6 +5142,51 @@ namespace RealmStudio
                         LandformMethods.MergeLandforms(CURRENT_MAP);
 
                         CURRENT_LANDFORM = null;
+
+                        CURRENT_MAP.IsSaved = false;
+
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER, true);
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDFORMLAYER, true);
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.LandErase:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+                        MapLayer landcoastLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER);
+
+                        for (int i = landformLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+                        {
+                            if (landformLayer.MapLayerComponents[i] is LayerPaintStroke)
+                            {
+                                landformLayer.MapLayerComponents.RemoveAt(i);
+                            }
+                        }
+
+                        for (int i = landcoastLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+                        {
+                            if (landcoastLayer.MapLayerComponents[i] is LayerPaintStroke)
+                            {
+                                landcoastLayer.MapLayerComponents.RemoveAt(i);
+                            }
+                        }
+
+                        LandformMethods.EraseLandForm(CURRENT_MAP);
+
+                        LandformMethods.MergeLandforms(CURRENT_MAP);
+
+                        if (CURRENT_LAND_ERASE_STROKE != null)
+                        {
+                            CURRENT_LAND_ERASE_STROKE = null;
+                        }
+
+                        if (CURRENT_COAST_ERASE_STROKE != null)
+                        {
+                            CURRENT_COAST_ERASE_STROKE = null;
+                        }
 
                         CURRENT_MAP.IsSaved = false;
 
@@ -6836,6 +6916,8 @@ namespace RealmStudio
 
             Cursor = Cursors.WaitCursor;
 
+            GetSelectedLandformType();
+
             GenerateRandomLandform(CURRENT_MAP, SELECTED_LANDFORM_AREA, SELECTED_LANDFORM_TYPE);
 
             SELECTED_LANDFORM_AREA = SKRect.Empty;
@@ -6913,6 +6995,42 @@ namespace RealmStudio
         * LANDFORM METHODS
         *******************************************************************************************************/
 
+        internal void GetSelectedLandformType()
+        {
+            if (RegionMenuItem.Checked)
+            {
+                SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Region;
+            }
+            else if (ContinentMenuItem.Checked)
+            {
+                SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Continent;
+            }
+            else if (IslandMenuItem.Checked)
+            {
+                SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Island;
+            }
+            else if (ArchipelagoMenuItem.Checked)
+            {
+                SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Archipelago;
+            }
+            else if (AtollMenuItem.Checked)
+            {
+                SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Atoll;
+            }
+            else if (WorldMenuItem.Checked)
+            {
+                SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.World;
+            }
+            else if (EquirectangularMenuItem.Checked)
+            {
+                SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Equirectangular;
+            }
+            else
+            {
+                SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.NotSet;
+            }
+        }
+
         internal void GenerateRandomLandform(RealmStudioMap map, SKRect selectedArea, GeneratedLandformTypeEnum selectedLandformType)
         {
             SKPoint location = new(map.MapWidth / 2, map.MapHeight / 2);
@@ -6930,16 +7048,65 @@ namespace RealmStudio
                     case GeneratedLandformTypeEnum.Archipelago:
                         {
                             size = new SKSize(map.MapWidth * 0.8F, map.MapHeight * 0.8F);
+                            CreateLandformFromGeneratedPaths(location, size, selectedLandformType);
+                        }
+                        break;
+                    case GeneratedLandformTypeEnum.Atoll:
+                        {
+                            CreateLandformFromGeneratedPaths(location, size, selectedLandformType);
+                        }
+                        break;
+                    case GeneratedLandformTypeEnum.Continent:
+                        {
+                            size = new SKSize(map.MapWidth * 0.8F, map.MapHeight * 0.8F);
+                            CreateLandformFromGeneratedPaths(location, size, GeneratedLandformTypeEnum.Island);
+
+                            size = new SKSize(map.MapWidth - 4, map.MapHeight - 4);
+                            CreateLandformFromGeneratedPaths(location, size, GeneratedLandformTypeEnum.Archipelago);
+                        }
+                        break;
+                    case GeneratedLandformTypeEnum.Equirectangular:
+                        {
+
+                        }
+                        break;
+                    case GeneratedLandformTypeEnum.Island:
+                        {
+                            CreateLandformFromGeneratedPaths(location, size, selectedLandformType);
                         }
                         break;
                     case GeneratedLandformTypeEnum.Region:
                         {
-                            size = new SKSize(map.MapWidth - 8, map.MapHeight - 8);
+                            size = new SKSize(map.MapWidth - 4, map.MapHeight - 4);
+                            CreateLandformFromGeneratedPaths(location, size, selectedLandformType);
+                        }
+                        break;
+                    case GeneratedLandformTypeEnum.World:
+                        {
+
                         }
                         break;
                 }
             }
 
+
+
+            LandformMethods.MergeLandforms(map);
+
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+            landformLayer.IsModified = true;
+
+            MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER);
+            landCoastlineLayer.IsModified = true;
+
+            MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDDRAWINGLAYER);
+            landDrawingLayer.IsModified = true;
+
+            map.IsSaved = false;
+        }
+
+        private void CreateLandformFromGeneratedPaths(SKPoint location, SKSize size, GeneratedLandformTypeEnum selectedLandformType)
+        {
             List<SKPath> generatedLandformPaths = LandformMethods.GenerateRandomLandformPaths(location, size, selectedLandformType);
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
 
@@ -6965,22 +7132,9 @@ namespace RealmStudio
                     SetLandformData(landform);
 
                     landformLayer.MapLayerComponents.Add(landform);
-
-                    LandformMethods.MergeLandforms(map);
                 }
             }
-
-            landformLayer.IsModified = true;
-
-            MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER);
-            landCoastlineLayer.IsModified = true;
-
-            MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDDRAWINGLAYER);
-            landDrawingLayer.IsModified = true;
-
-            map.IsSaved = false;
         }
-
 
         private void SetLandformData(Landform landform)
         {

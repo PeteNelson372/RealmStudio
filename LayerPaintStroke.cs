@@ -100,7 +100,8 @@ namespace RealmStudio
                 ShaderPaint = new()
                 {
                     Style = SKPaintStyle.Fill,
-                    Color = SKColor.Empty,
+                    Color = strokeColor,
+                    BlendMode = SKBlendMode.Src
                 };
             }
         }

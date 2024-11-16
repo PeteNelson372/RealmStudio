@@ -360,7 +360,7 @@ namespace RealmStudio
                             else
                             {
                                 // some other color encountered (this shouldn't happen, but maybe does because of antialiasing in the shaping function bitmap?)
-                                selectedShapingFunction.ShapeArray[x, y] = 1.0F;
+                                selectedShapingFunction.ShapeArray[x, y] = 2.0F;
                             }
                         }
                     }
@@ -392,7 +392,7 @@ namespace RealmStudio
                             break;
                         case GeneratedLandformTypeEnum.Region:
                             {
-                                interpolationWeight = 0.4F;
+                                interpolationWeight = 0.35F;
                                 waterLevel = 0.4F;
                             }
                             break;
