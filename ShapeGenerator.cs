@@ -26,6 +26,8 @@ using AForge.Math.Geometry;
 using DelaunatorSharp;
 using SimplexNoise;
 using SkiaSharp;
+using SkiaSharp.Views.Desktop;
+using System.Diagnostics;
 
 namespace RealmStudio
 {
@@ -302,8 +304,10 @@ namespace RealmStudio
             return b;
         }
 
-        internal static Bitmap? GetNoiseGeneratedLandformShape(int width, int height, GeneratedLandformTypeEnum selectedLandformType)
+        internal static Bitmap? GetNoiseGeneratedLandformShape(int width, int height, GeneratedLandformTypeEnum selectedLandformType, bool flipVertical = false)
         {
+            Debug.Assert(width > 0 && height > 0 && width < int.MaxValue && height < int.MaxValue);
+
             Noise.Seed = Random.Shared.Next(int.MaxValue - 1);
 
             // scale parameter: larger scale value = denser noise, so scale = wavelength (higher wavelength = denser noise)
@@ -333,6 +337,13 @@ namespace RealmStudio
                 if (selectedShapingFunction.ShapingBitmap != null)
                 {
                     SKBitmap resizedShapingBitmap = selectedShapingFunction.ShapingBitmap.Copy().Resize(new SKSizeI(width, height), SKFilterQuality.High);
+
+                    if (flipVertical)
+                    {
+                        Bitmap flipBit = resizedShapingBitmap.ToBitmap();
+                        flipBit.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                        resizedShapingBitmap = ((Bitmap)flipBit.Clone()).ToSKBitmap();
+                    }
 
                     selectedShapingFunction.ShapeArray = new float[width, height];
 
@@ -387,6 +398,12 @@ namespace RealmStudio
                         case GeneratedLandformTypeEnum.Island:
                             {
                                 interpolationWeight = 0.5F;
+                                waterLevel = 0.40F;
+                            }
+                            break;
+                        case GeneratedLandformTypeEnum.Icecap:
+                            {
+                                interpolationWeight = 0.6F;
                                 waterLevel = 0.40F;
                             }
                             break;

@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             PreferencesFormOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            ClipColoringTooltipButton = new FontAwesome.Sharp.IconButton();
+            label11 = new Label();
+            ClipColoringToLandformSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             ClosePreferencesButton = new Button();
             AutosaveIntervalTooltipButton = new FontAwesome.Sharp.IconButton();
             DrawContourTooltipButton = new FontAwesome.Sharp.IconButton();
@@ -80,6 +83,9 @@
             // 
             PreferencesFormOverlay.BackColor = Color.FromArgb(244, 241, 243);
             PreferencesFormOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            PreferencesFormOverlay.Controls.Add(ClipColoringTooltipButton);
+            PreferencesFormOverlay.Controls.Add(label11);
+            PreferencesFormOverlay.Controls.Add(ClipColoringToLandformSwitch);
             PreferencesFormOverlay.Controls.Add(ClosePreferencesButton);
             PreferencesFormOverlay.Controls.Add(AutosaveIntervalTooltipButton);
             PreferencesFormOverlay.Controls.Add(DrawContourTooltipButton);
@@ -119,18 +125,81 @@
             PreferencesFormOverlay.Padding = new Padding(20, 56, 20, 16);
             PreferencesFormOverlay.RoundCorners = true;
             PreferencesFormOverlay.Sizable = false;
-            PreferencesFormOverlay.Size = new Size(557, 772);
+            PreferencesFormOverlay.Size = new Size(557, 802);
             PreferencesFormOverlay.SmartBounds = true;
             PreferencesFormOverlay.StartPosition = FormStartPosition.CenterParent;
             PreferencesFormOverlay.TabIndex = 0;
             PreferencesFormOverlay.Text = "Preferences";
             PreferencesFormOverlay.TitleColor = Color.FromArgb(223, 219, 210);
             // 
+            // ClipColoringTooltipButton
+            // 
+            ClipColoringTooltipButton.FlatAppearance.BorderSize = 0;
+            ClipColoringTooltipButton.FlatStyle = FlatStyle.Flat;
+            ClipColoringTooltipButton.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
+            ClipColoringTooltipButton.IconColor = Color.DeepSkyBlue;
+            ClipColoringTooltipButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ClipColoringTooltipButton.IconSize = 20;
+            ClipColoringTooltipButton.Location = new Point(250, 312);
+            ClipColoringTooltipButton.Name = "ClipColoringTooltipButton";
+            ClipColoringTooltipButton.Size = new Size(24, 24);
+            ClipColoringTooltipButton.TabIndex = 64;
+            ClipColoringTooltipButton.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.ForeColor = SystemColors.ControlDarkDark;
+            label11.Location = new Point(48, 317);
+            label11.Name = "label11";
+            label11.Size = new Size(146, 15);
+            label11.TabIndex = 63;
+            label11.Text = "Clip Coloring to Landform";
+            // 
+            // ClipColoringToLandformSwitch
+            // 
+            ClipColoringToLandformSwitch.Alpha = 50;
+            ClipColoringToLandformSwitch.BackColor = Color.Transparent;
+            ClipColoringToLandformSwitch.Background = true;
+            ClipColoringToLandformSwitch.Background_WidthPen = 2F;
+            ClipColoringToLandformSwitch.BackgroundPen = false;
+            ClipColoringToLandformSwitch.Checked = true;
+            ClipColoringToLandformSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            ClipColoringToLandformSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            ClipColoringToLandformSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            ClipColoringToLandformSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            ClipColoringToLandformSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            ClipColoringToLandformSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            ClipColoringToLandformSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            ClipColoringToLandformSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            ClipColoringToLandformSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ClipColoringToLandformSwitch.ColorValue = Color.ForestGreen;
+            ClipColoringToLandformSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ClipColoringToLandformSwitch.Font = new Font("Arial", 11F);
+            ClipColoringToLandformSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ClipColoringToLandformSwitch.Lighting = true;
+            ClipColoringToLandformSwitch.LinearGradient_Background = false;
+            ClipColoringToLandformSwitch.LinearGradient_Value = false;
+            ClipColoringToLandformSwitch.LinearGradientPen = false;
+            ClipColoringToLandformSwitch.Location = new Point(203, 312);
+            ClipColoringToLandformSwitch.Name = "ClipColoringToLandformSwitch";
+            ClipColoringToLandformSwitch.PenWidth = 10;
+            ClipColoringToLandformSwitch.RGB = false;
+            ClipColoringToLandformSwitch.Rounding = true;
+            ClipColoringToLandformSwitch.RoundingInt = 90;
+            ClipColoringToLandformSwitch.Size = new Size(41, 20);
+            ClipColoringToLandformSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ClipColoringToLandformSwitch.TabIndex = 62;
+            ClipColoringToLandformSwitch.Tag = "Cyber";
+            ClipColoringToLandformSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ClipColoringToLandformSwitch.Timer_RGB = 300;
+            ClipColoringToLandformSwitch.CheckedChanged += ClipColoringToLandformSwitch_CheckedChanged;
+            // 
             // ClosePreferencesButton
             // 
             ClosePreferencesButton.DialogResult = DialogResult.Cancel;
             ClosePreferencesButton.ForeColor = SystemColors.ControlDarkDark;
-            ClosePreferencesButton.Location = new Point(474, 693);
+            ClosePreferencesButton.Location = new Point(474, 718);
             ClosePreferencesButton.Name = "ClosePreferencesButton";
             ClosePreferencesButton.Size = new Size(60, 60);
             ClosePreferencesButton.TabIndex = 61;
@@ -267,7 +336,7 @@
             // 
             label9.AutoSize = true;
             label9.ForeColor = SystemColors.ControlDarkDark;
-            label9.Location = new Point(99, 328);
+            label9.Location = new Point(99, 353);
             label9.Name = "label9";
             label9.Size = new Size(95, 15);
             label9.TabIndex = 51;
@@ -477,7 +546,7 @@
             groupBox2.Controls.Add(WH1600x1200Radio);
             groupBox2.Controls.Add(WH1280x1024Radio);
             groupBox2.Controls.Add(WH1024x768Radio);
-            groupBox2.Location = new Point(203, 328);
+            groupBox2.Location = new Point(203, 353);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(205, 425);
             groupBox2.TabIndex = 11;
@@ -703,7 +772,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(557, 772);
+            ClientSize = new Size(557, 802);
             Controls.Add(PreferencesFormOverlay);
             FormBorderStyle = FormBorderStyle.None;
             MinimumSize = new Size(261, 65);
@@ -764,5 +833,8 @@
         private FontAwesome.Sharp.IconButton DrawContourTooltipButton;
         private FontAwesome.Sharp.IconButton AutosaveIntervalTooltipButton;
         private Button ClosePreferencesButton;
+        private FontAwesome.Sharp.IconButton ClipColoringTooltipButton;
+        private Label label11;
+        private ReaLTaiizor.Controls.CyberSwitch ClipColoringToLandformSwitch;
     }
 }

@@ -6725,6 +6725,9 @@ namespace RealmStudio
 
             CURRENT_DRAWING_MODE = DrawingModeEnum.None;
 
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(0);
+
             Cmd_ClearAllLandforms cmd = new(CURRENT_MAP);
 
             CommandManager.AddCommand(cmd);
@@ -6918,13 +6921,13 @@ namespace RealmStudio
 
             GetSelectedLandformType();
 
-            GenerateRandomLandform(CURRENT_MAP, SELECTED_LANDFORM_AREA, SELECTED_LANDFORM_TYPE);
-
-            SELECTED_LANDFORM_AREA = SKRect.Empty;
-
             MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
             workLayer.RenderPicture?.Dispose();
             workLayer.RenderPicture = null;
+
+            GenerateRandomLandform(CURRENT_MAP, SELECTED_LANDFORM_AREA, SELECTED_LANDFORM_TYPE);
+
+            SELECTED_LANDFORM_AREA = SKRect.Empty;
 
             CURRENT_MAP.IsSaved = false;
             Cursor = Cursors.Default;
@@ -7041,59 +7044,99 @@ namespace RealmStudio
                 location = new SKPoint(selectedArea.MidX, selectedArea.MidY);
                 size = selectedArea.Size;
             }
-            else
+
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+
+            switch (selectedLandformType)
             {
-                switch (selectedLandformType)
-                {
-                    case GeneratedLandformTypeEnum.Archipelago:
+                case GeneratedLandformTypeEnum.Archipelago:
+                    {
+                        if (selectedArea.IsEmpty)
                         {
                             size = new SKSize(map.MapWidth * 0.8F, map.MapHeight * 0.8F);
-                            CreateLandformFromGeneratedPaths(location, size, selectedLandformType);
                         }
-                        break;
-                    case GeneratedLandformTypeEnum.Atoll:
-                        {
-                            CreateLandformFromGeneratedPaths(location, size, selectedLandformType);
-                        }
-                        break;
-                    case GeneratedLandformTypeEnum.Continent:
+
+                        CreateLandformFromGeneratedPaths(location, size, selectedLandformType);
+                    }
+                    break;
+                case GeneratedLandformTypeEnum.Atoll:
+                    {
+                        CreateLandformFromGeneratedPaths(location, size, selectedLandformType);
+                    }
+                    break;
+                case GeneratedLandformTypeEnum.Continent:
+                    {
+                        if (selectedArea.IsEmpty)
                         {
                             size = new SKSize(map.MapWidth * 0.8F, map.MapHeight * 0.8F);
-                            CreateLandformFromGeneratedPaths(location, size, GeneratedLandformTypeEnum.Island);
+                        }
 
-                            size = new SKSize(map.MapWidth - 4, map.MapHeight - 4);
-                            CreateLandformFromGeneratedPaths(location, size, GeneratedLandformTypeEnum.Archipelago);
-                        }
-                        break;
-                    case GeneratedLandformTypeEnum.Equirectangular:
-                        {
+                        CreateLandformFromGeneratedPaths(location, size, GeneratedLandformTypeEnum.Island);
 
-                        }
-                        break;
-                    case GeneratedLandformTypeEnum.Island:
-                        {
-                            CreateLandformFromGeneratedPaths(location, size, selectedLandformType);
-                        }
-                        break;
-                    case GeneratedLandformTypeEnum.Region:
+                        if (selectedArea.IsEmpty)
                         {
                             size = new SKSize(map.MapWidth - 4, map.MapHeight - 4);
-                            CreateLandformFromGeneratedPaths(location, size, selectedLandformType);
                         }
-                        break;
-                    case GeneratedLandformTypeEnum.World:
-                        {
 
+                        CreateLandformFromGeneratedPaths(location, size, GeneratedLandformTypeEnum.Archipelago);
+                    }
+                    break;
+                case GeneratedLandformTypeEnum.Equirectangular:
+                    {
+                        SKSizeI rectSize = new();
+
+                        if (map.MapWidth > map.MapHeight)
+                        {
+                            rectSize.Width = map.MapHeight;
+                            rectSize.Height = map.MapHeight;
                         }
-                        break;
-                }
+                        else
+                        {
+                            rectSize.Width = map.MapWidth;
+                            rectSize.Height = map.MapWidth;
+                        }
+
+                        GenerateWorldLandforms(map, rectSize);
+
+                        foreach (Landform l in landformLayer.MapLayerComponents)
+                        {
+                            //l.DrawPath.Transform(SKMatrix.CreateScaleTranslation(map.MapWidth / rectSize.Width, map.MapHeight / rectSize.Height, rectSize.Width - map.MapWidth, rectSize.Height - map.MapHeight));
+
+                            LandformMethods.CreateAllPathsFromDrawnPath(map, l);
+
+                            l.ContourPath.GetBounds(out SKRect boundsRect);
+                            l.X = (int)location.X;
+                            l.Y = (int)location.Y;
+                            l.Width = (int)boundsRect.Width;
+                            l.Height = (int)boundsRect.Height;
+                        }
+                    }
+                    break;
+                case GeneratedLandformTypeEnum.Island:
+                    {
+                        CreateLandformFromGeneratedPaths(location, size, selectedLandformType);
+                    }
+                    break;
+                case GeneratedLandformTypeEnum.Region:
+                    {
+                        if (selectedArea.IsEmpty)
+                        {
+                            size = new SKSize(map.MapWidth - 4, map.MapHeight - 4);
+                        }
+
+                        CreateLandformFromGeneratedPaths(location, size, selectedLandformType);
+                    }
+                    break;
+                case GeneratedLandformTypeEnum.World:
+                    {
+                        GenerateWorldLandforms(map, new SKSizeI(map.MapWidth, map.MapHeight));
+                    }
+                    break;
             }
-
-
 
             LandformMethods.MergeLandforms(map);
 
-            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+
             landformLayer.IsModified = true;
 
             MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER);
@@ -7105,10 +7148,223 @@ namespace RealmStudio
             map.IsSaved = false;
         }
 
-        private void CreateLandformFromGeneratedPaths(SKPoint location, SKSize size, GeneratedLandformTypeEnum selectedLandformType)
+        internal void GenerateWorldLandforms(RealmStudioMap map, SKSizeI size)
         {
-            List<SKPath> generatedLandformPaths = LandformMethods.GenerateRandomLandformPaths(location, size, selectedLandformType);
+            LoadingStatusForm progressForm = new();
+            progressForm.Location = new Point(((Location.X + Width) / 2) - (progressForm.Width / 2), ((Location.Y + Height) / 2) - (progressForm.Height / 2));
+
+            progressForm.Show(this);
+            progressForm.Hide();
+
+            progressForm.SetStatusText("Generating world landforms...");
+            int progressPercentage = 0;
+
+            progressForm.Show(this);
+
+            bool hasNorthernIcecap = Random.Shared.Next(0, 2) == 1;
+            bool hasSouthernIcecap = Random.Shared.Next(0, 2) == 1;
+
+            SKSizeI northernIcecapSize = SKSizeI.Empty;
+            SKSizeI southernIcecapSize = SKSizeI.Empty;
+
+            // if the realm has a northern ice cap, there is a 75% chance it has a southern ice cap also
+            if (hasNorthernIcecap && !hasSouthernIcecap)
+            {
+                hasSouthernIcecap = Random.Shared.NextDouble() > 0.25;
+            }
+
+            // if the realm has a southern ice cap, there is a 75% chance it has a northern ice cap also
+            if (hasSouthernIcecap && !hasNorthernIcecap)
+            {
+                hasNorthernIcecap = Random.Shared.NextDouble() > 0.25;
+            }
+
+            if (hasNorthernIcecap)
+            {
+                progressPercentage += 2;
+                progressForm.SetStatusPercentage(progressPercentage);
+                progressForm.SetStatusText("Generating northern icecap");
+
+                northernIcecapSize.Width = Random.Shared.Next((int)(map.MapWidth / 4.0), map.MapWidth - 8);
+                northernIcecapSize.Height = Random.Shared.Next((int)(map.MapHeight / 8.0), (int)(map.MapWidth / 4.0));
+
+                SKPoint northernIcecapLocation = new(map.MapWidth / 2, 4);
+
+                CreateLandformFromGeneratedPaths(northernIcecapLocation, northernIcecapSize, GeneratedLandformTypeEnum.Icecap, false);
+
+                progressPercentage += 3;
+                progressForm.SetStatusPercentage(progressPercentage);
+                progressForm.SetStatusText("Generated northern icecap");
+
+                SetStatusText("Generated northern icecap");
+            }
+
+            if (hasSouthernIcecap)
+            {
+                progressPercentage += 2;
+                progressForm.SetStatusPercentage(progressPercentage);
+                progressForm.SetStatusText("Generating southern icecap");
+
+                southernIcecapSize.Width = Random.Shared.Next((int)(map.MapWidth / 4.0), map.MapWidth - 8);
+                southernIcecapSize.Height = Random.Shared.Next((int)(map.MapHeight / 8.0), (int)(map.MapWidth / 4.0));
+
+                SKPoint southernIcecapLocation = new(map.MapWidth / 2, map.MapHeight - southernIcecapSize.Height - 4);
+
+                CreateLandformFromGeneratedPaths(southernIcecapLocation, southernIcecapSize, GeneratedLandformTypeEnum.Icecap, true);
+
+                progressPercentage += 3;
+                progressForm.SetStatusPercentage(progressPercentage);
+                progressForm.SetStatusText("Generated southern icecap");
+
+                SetStatusText("Generated southern icecap");
+            }
+
+            int numDivisions = Random.Shared.Next(1, 8);  // max 7 subdivisions of the remaining map area for now
+
+            progressPercentage += 1;
+            progressForm.SetStatusPercentage(progressPercentage);
+            progressForm.SetStatusText("Creating " + numDivisions + " landforms");
+
+            SetStatusText("Creating " + numDivisions + " landforms");
+
+            SKRectI remainingMapRect = new(0, 0, size.Width, size.Height);
+
+            if (hasNorthernIcecap)
+            {
+                remainingMapRect.Top = northernIcecapSize.Height;
+            }
+
+            if (hasSouthernIcecap)
+            {
+                remainingMapRect.Bottom = map.MapHeight - southernIcecapSize.Height;
+            }
+
+            List<SKRectI> continentRects = [];
+
+            if (numDivisions == 1)
+            {
+                continentRects.Add(remainingMapRect);
+            }
+            else
+            {
+                Debug.Assert(remainingMapRect.Top < remainingMapRect.Bottom);
+
+                int minRectSize = 300;
+
+                if (remainingMapRect.Width < remainingMapRect.Height)
+                {
+                    minRectSize = (remainingMapRect.Width / numDivisions) - Random.Shared.Next(10, 50);
+                }
+                else if (remainingMapRect.Height < remainingMapRect.Width)
+                {
+                    minRectSize = (remainingMapRect.Height / numDivisions) - Random.Shared.Next(10, 50);
+                }
+
+                List<SKRectI> rects = DrawingMethods.SubdivideRect2(remainingMapRect, numDivisions, minRectSize);
+
+                int tries = 0;
+                while (rects.Count < numDivisions && tries < 10)
+                {
+                    tries++;
+                    minRectSize -= 20;
+
+                    minRectSize = Math.Max(50, minRectSize);
+
+                    rects = DrawingMethods.SubdivideRect2(remainingMapRect, numDivisions, minRectSize);
+                }
+
+                if (rects.Count == 0)
+                {
+                    SetStatusText("Map rectangle subdivision failed");
+                    progressForm.Hide();
+                    progressForm.Dispose();
+
+                    return;
+                }
+
+                continentRects.AddRange(rects);
+
+                progressPercentage += 1;
+                progressForm.SetStatusPercentage(progressPercentage);
+                progressForm.SetStatusText("Landform rectangles calculated");
+
+                SetStatusText("Landform rectangles calculated");
+            }
+
+            int landformCount = 1;
+
+            int progressStep = (100 - progressPercentage) / continentRects.Count;
+
+            foreach (SKRectI rect in continentRects)
+            {
+                Debug.Assert(rect.Width > 0 && rect.Height > 0 && rect.Width < int.MaxValue && rect.Height < int.MaxValue);
+
+                progressForm.SetStatusText("Generating landform " + landformCount);
+
+                SetStatusText("Generating landform " + landformCount);
+
+                bool success = false;
+                int tries = 0;
+
+                while (!success && tries < 10)
+                {
+                    tries++;
+
+                    double landformTypeRandom = Random.Shared.NextDouble();
+                    GeneratedLandformTypeEnum generateLandformType = GeneratedLandformTypeEnum.Continent;
+
+                    if (landformTypeRandom >= 0.0 && landformTypeRandom < 0.5)
+                    {
+                        // 50% chance of generating continent
+                        generateLandformType = GeneratedLandformTypeEnum.Continent;
+                    }
+                    else if (landformTypeRandom >= 0.5 && landformTypeRandom < 0.75)
+                    {
+                        // 25% chance of generating island
+                        generateLandformType = GeneratedLandformTypeEnum.Island;
+                    }
+                    else if (landformTypeRandom >= 0.75 && landformTypeRandom < 0.90)
+                    {
+                        // 15% chance of generating archipelago
+                        generateLandformType = GeneratedLandformTypeEnum.Archipelago;
+                    }
+                    else
+                    {
+                        // 10% chance of generating atoll
+                        generateLandformType = GeneratedLandformTypeEnum.Atoll;
+                    }
+
+                    success = CreateLandformFromGeneratedPaths(new SKPoint(rect.MidX, rect.MidY), new SKSize(rect.Width, rect.Height), generateLandformType, false);
+                }
+
+                if (success)
+                {
+                    progressPercentage += progressStep;
+                    progressForm.SetStatusPercentage(progressPercentage);
+                    progressForm.SetStatusText("Landform " + landformCount + " generated");
+
+                    SetStatusText("Landform " + landformCount + " generated");
+                }
+                else
+                {
+                    SetStatusText("Landform creation failed");
+                }
+
+                landformCount++;
+            }
+
+            progressForm.Hide();
+            progressForm.Dispose();
+
+        }
+
+        private bool CreateLandformFromGeneratedPaths(SKPoint location, SKSize size, GeneratedLandformTypeEnum selectedLandformType, bool flipVertical = false)
+        {
+            List<SKPath> generatedLandformPaths = LandformMethods.GenerateRandomLandformPaths(location, size, selectedLandformType, flipVertical);
+
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+
+            bool success = false;
 
             foreach (SKPath path in generatedLandformPaths)
             {
@@ -7132,8 +7388,12 @@ namespace RealmStudio
                     SetLandformData(landform);
 
                     landformLayer.MapLayerComponents.Add(landform);
+
+                    success = true;
                 }
             }
+
+            return success;
         }
 
         private void SetLandformData(Landform landform)

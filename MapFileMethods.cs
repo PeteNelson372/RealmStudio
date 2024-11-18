@@ -514,16 +514,10 @@ namespace RealmStudio
                 {
                     lsf.LandformShapeType = GeneratedLandformTypeEnum.World;
                 }
-
-                /*
-                    Region,
-                    Continent,
-                    Island,
-                    Archipelago,
-                    Atoll,
-                    World,
-                    Equirectangular
-                 */
+                else if (Path.GetFileNameWithoutExtension(path).Contains("Icecap"))
+                {
+                    lsf.LandformShapeType = GeneratedLandformTypeEnum.Icecap;
+                }
             }
             catch { }
 

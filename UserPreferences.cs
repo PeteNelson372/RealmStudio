@@ -74,6 +74,8 @@ namespace RealmStudio
 
             DrawContoursWhilePaintingSwitch.Checked = Settings.Default.CalculateContoursWhilePainting;
 
+            ClipColoringToLandformSwitch.Checked = Settings.Default.ClipLandformColoring;
+
             Size defaultMapSize = Settings.Default.DefaultMapSize;
 
             SelectDefaultMapSizeRadioFromSize(defaultMapSize);
@@ -298,6 +300,12 @@ namespace RealmStudio
             Settings.Default.Save();
         }
 
+        private void ClipColoringToLandformSwitch_CheckedChanged()
+        {
+            Settings.Default.ClipLandformColoring = ClipColoringToLandformSwitch.Checked;
+            Settings.Default.Save();
+        }
+
         private void WH1024x768Radio_CheckedChanged(object sender, EventArgs e)
         {
             if (((RadioButton)sender).Checked) Settings.Default.DefaultMapSize = new Size(1024, 768);
@@ -411,5 +419,7 @@ namespace RealmStudio
             Settings.Default.RealmAutosave = AutosaveRealmSwitch.Checked;
             Settings.Default.Save();
         }
+
+
     }
 }

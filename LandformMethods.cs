@@ -209,12 +209,11 @@ namespace RealmStudio
             cmd.DoOperation();
         }
 
-
-        internal static List<SKPath> GenerateRandomLandformPaths(SKPoint location, SKSize size, GeneratedLandformTypeEnum selectedLandformType)
+        internal static List<SKPath> GenerateRandomLandformPaths(SKPoint location, SKSize size, GeneratedLandformTypeEnum selectedLandformType, bool flipVertical = false)
         {
             List<SKPath> generatedLandformPaths = [];
 
-            Bitmap? landformBitmap = ShapeGenerator.GetNoiseGeneratedLandformShape((int)size.Width, (int)size.Height, selectedLandformType);
+            Bitmap? landformBitmap = ShapeGenerator.GetNoiseGeneratedLandformShape((int)size.Width, (int)size.Height, selectedLandformType, flipVertical);
 
             if (landformBitmap == null) { return generatedLandformPaths; }
 
@@ -256,7 +255,7 @@ namespace RealmStudio
                 List<SKPoint> contourPoints = DrawingMethods.GetBitmapContourPoints(filledLandBitmap);
 
                 SKPath landformPath = new();
-                if (contourPoints.Count > 2)
+                if (contourPoints.Count > 4)   // require at least 4 points in the contour to be added as a landform
                 {
                     // the Moore-Neighbor algorithm sets the first (0th) pixel in the list of contour points to
                     // an empty pixel, so remove it before constructing the path from the contour points
@@ -274,7 +273,14 @@ namespace RealmStudio
                         landformPath.Close();
                     }
 
-                    landformPath.Transform(SKMatrix.CreateTranslation(location.X - (size.Width / 2.0F), location.Y - (size.Height / 2.0F)));
+                    if (selectedLandformType != GeneratedLandformTypeEnum.Icecap)
+                    {
+                        landformPath.Transform(SKMatrix.CreateTranslation(location.X - (size.Width / 2.0F), location.Y - (size.Height / 2.0F)));
+                    }
+                    else
+                    {
+                        landformPath.Transform(SKMatrix.CreateTranslation(location.X - (size.Width / 2.0F), location.Y));
+                    }
 
                     generatedLandformPaths.Add(new(landformPath));
                 }

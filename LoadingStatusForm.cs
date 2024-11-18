@@ -49,6 +49,7 @@ namespace RealmStudio
 
         public void SetStatusPercentage(int percentage)
         {
+            percentage = Math.Min(100, percentage);
             LoadingProgressBar.Value = percentage;
             Refresh();
         }

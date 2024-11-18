@@ -186,6 +186,173 @@ namespace RealmStudio
             return area;
         }
 
+        internal static List<SKRectI> SubdivideRect2(SKRectI rect, int numDivisions, int minRectSize = 300)
+        {
+            List<SKRectI> rects = [];
+            const int margin = 20;
+
+            int tries = 0;
+
+            if (rect.Left + margin >= rect.Right - minRectSize - margin || rect.Top + margin >= rect.Bottom - minRectSize - margin)
+            {
+                return rects;
+            }
+
+            while (rects.Count < numDivisions && tries < 100)
+            {
+                tries++;
+
+                int left = Random.Shared.Next(rect.Left + margin, rect.Right - minRectSize - margin);
+                int top = Random.Shared.Next(rect.Top + margin, rect.Bottom - minRectSize - margin);
+
+                while (left + minRectSize > rect.Right - margin)
+                {
+                    left = Random.Shared.Next(rect.Left + margin, rect.Right - minRectSize - margin);
+                }
+
+                int right = Random.Shared.Next(left + minRectSize, rect.Right - margin);
+
+                while (top + minRectSize > rect.Bottom - margin)
+                {
+                    top = Random.Shared.Next(rect.Top + margin, rect.Bottom - minRectSize - margin);
+                }
+
+                int bottom = Random.Shared.Next(top + minRectSize, rect.Bottom - margin);
+
+                SKRectI newRect = new(left, top, right, bottom);
+
+                if (newRect.Width > minRectSize && newRect.Height > minRectSize)
+                {
+                    bool overlapped = false;
+
+                    foreach (SKRectI r in rects)
+                    {
+                        if (newRect.IntersectsWith(r))
+                        {
+                            overlapped = true; break;
+                        }
+                    }
+
+                    if (!overlapped)
+                    {
+                        rects.Add(newRect);
+                    }
+                }
+            }
+
+            return rects;
+        }
+
+        internal static List<SKRectI> SubdivideRect(SKRectI rect, int numDivisions)
+        {
+            List<SKRectI> rects = [];
+
+            SKRectI divideRect = rect;
+
+            int splitCount = 0;
+
+            while (splitCount < numDivisions)
+            {
+                List<SKRectI> splits = SplitRect(divideRect);
+
+                if (splits.Count > 1)
+                {
+                    splitCount++;
+
+                    int split0Size = splits[0].Width * splits[0].Height;
+                    int split1Size = splits[1].Width * splits[1].Height;
+
+                    if (split0Size > split1Size)
+                    {
+                        divideRect = splits[0];
+
+                        if (splits[1].Width > 0 && splits[1].Height > 0)
+                        {
+                            rects.Add(splits[1]);
+                        }
+                    }
+                    else
+                    {
+                        divideRect = splits[1];
+
+                        if (splits[0].Width > 0 && splits[0].Height > 0)
+                        {
+                            rects.Add(splits[0]);
+                        }
+                    }
+                }
+                else if (splits.Count == 1)
+                {
+                    if (splits[0].Width > 0 && splits[0].Height > 0)
+                    {
+                        rects.Add(splits[0]);
+                    }
+                }
+                else
+                {
+                    rects.Add(divideRect);
+                }
+
+            }
+
+            return rects;
+        }
+
+        internal static List<SKRectI> SplitRect(SKRectI rect)
+        {
+            List<SKRectI> rects = [];
+
+            SKRectI divideRect = rect;
+
+            bool vertDivide = Random.Shared.Next(0, 2) == 1;
+
+            int minSplitSize = 200;
+
+            if (vertDivide)
+            {
+                if (rect.Width > minSplitSize * 2)
+                {
+                    int divideLoc = Random.Shared.Next(divideRect.Left + minSplitSize, divideRect.Right - minSplitSize);
+
+                    divideLoc = Math.Max(divideLoc, minSplitSize);
+                    divideLoc = Math.Min(divideLoc, rect.Right);
+
+                    SKRectI rect1 = new(divideRect.Left, divideRect.Top, divideLoc, divideRect.Bottom);
+                    SKRectI rect2 = new(divideLoc + 1, divideRect.Top, divideRect.Right, divideRect.Bottom);
+
+                    rects.Add(rect1);
+                    rects.Add(rect2);
+                }
+                else
+                {
+                    rects.Add(rect);
+                }
+
+            }
+            else
+            {
+                if (rect.Height > minSplitSize * 2)
+                {
+                    int divideLoc = Random.Shared.Next(divideRect.Top + minSplitSize, divideRect.Bottom - minSplitSize);
+
+                    divideLoc = Math.Max(divideLoc, minSplitSize);
+                    divideLoc = Math.Min(divideLoc, rect.Bottom);
+
+                    SKRectI rect1 = new(divideRect.Left, divideRect.Top, divideRect.Right, divideLoc);
+                    SKRectI rect2 = new(divideRect.Left, divideLoc + 1, divideRect.Right, divideRect.Bottom);
+
+                    rects.Add(rect1);
+                    rects.Add(rect2);
+                }
+                else
+                {
+                    rects.Add(rect);
+                }
+            }
+
+            return rects;
+        }
+
         public static bool IsPaintableImage(Bitmap bitmap)
         {
             bool isPaintableImage = true;
@@ -431,7 +598,13 @@ namespace RealmStudio
             // inputBitmap has white holes in black background, so
             // invert is required
             Invert invert = new();
-            using Bitmap invertedBitmap = invert.Apply(inputBitmap);
+            Bitmap invertedBitmap = invert.Apply(inputBitmap);
+
+            Mean meanFilter = new();
+            meanFilter.ApplyInPlace(invertedBitmap);
+            meanFilter.ApplyInPlace(invertedBitmap);
+
+            FlattenBitmapColors(ref invertedBitmap);
 
             // fill holes in the input bitmap (black areas surrounded by white)
             FillHoles fillHolesFilter = new()
@@ -442,6 +615,8 @@ namespace RealmStudio
             };
 
             Bitmap filledBitmap = fillHolesFilter.Apply(invertedBitmap);
+
+            invertedBitmap.Dispose();
 
             // re-invert the colors to restore to original
             Bitmap filledInvertedBitmap = invert.Apply(filledBitmap);
@@ -1070,5 +1245,7 @@ namespace RealmStudio
             foundIndex = -1;
             return SKPoint.Empty;
         }
+
+
     }
 }

@@ -21,6 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using RealmStudio.Properties;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Xml;
@@ -126,22 +127,42 @@ namespace RealmStudio
 
             if (MapLayerIdentifier == MapBuilder.LANDDRAWINGLAYER)
             {
-                // clip drawing to the outer path of landforms
-
-                List<MapComponent> landformList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
-                SKPath clipPath = new();
-                for (int i = 0; i < landformList.Count; i++)
+                if (Settings.Default.ClipLandformColoring)
                 {
-                    SKPath landformOutlinePath = ((Landform)landformList[i]).ContourPath;
+                    // clip drawing to the outer path of landforms
 
-                    if (landformOutlinePath != null && landformOutlinePath.PointCount > 0)
+                    List<MapComponent> landformList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
+                    SKPath clipPath = new();
+
+                    // get the landform at the stroke location; when it is found, set the clip path to the landform outline path
+
+                    bool foundLandform = false;
+                    for (int i = 0; i < landformList.Count; i++)
                     {
-                        clipPath.AddPath(landformOutlinePath);
-                    }
-                }
+                        SKPath landformOutlinePath = ((Landform)landformList[i]).ContourPath;
 
-                canvas.Save();
-                canvas.ClipPath(clipPath);
+                        if (landformOutlinePath != null && landformOutlinePath.PointCount > 0)
+                        {
+                            foreach (LayerPaintStrokePoint point in PaintStrokePoints)
+                            {
+                                if (landformOutlinePath.Contains(point.StrokeLocation.X, point.StrokeLocation.Y))
+                                {
+                                    clipPath.AddPath(landformOutlinePath);
+                                    foundLandform = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (foundLandform)
+                        {
+                            break;
+                        }
+                    }
+
+                    canvas.Save();
+                    canvas.ClipPath(clipPath);
+                }
             }
             else if (MapLayerIdentifier == MapBuilder.WATERDRAWINGLAYER)
             {

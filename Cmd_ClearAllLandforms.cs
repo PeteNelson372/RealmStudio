@@ -27,6 +27,7 @@ namespace RealmStudio
     {
         private readonly RealmStudioMap Map = map;
         private readonly List<Landform> StoredLandforms = [];
+        private readonly List<LayerPaintStroke> StoredLayerPaintStrokes = [];
 
         public void DoOperation()
         {
@@ -41,6 +42,17 @@ namespace RealmStudio
 
             landformLayer.MapLayerComponents.Clear();
             landformLayer.IsModified = true;
+
+            MapLayer landformDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDDRAWINGLAYER);
+
+            for (int i = 0; i < landformDrawingLayer.MapLayerComponents.Count; i++)
+            {
+                StoredLayerPaintStrokes.Add((LayerPaintStroke)landformDrawingLayer.MapLayerComponents[i]);
+            }
+
+            landformDrawingLayer.RenderPicture?.Dispose();
+            landformDrawingLayer.RenderPicture = null;
+            landformDrawingLayer.IsModified = true;
 
             MapLayer landformCoastlineLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDCOASTLINELAYER);
             landformCoastlineLayer.RenderPicture?.Dispose();
@@ -63,6 +75,17 @@ namespace RealmStudio
             }
 
             landformLayer.IsModified = true;
+
+            MapLayer landformDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDDRAWINGLAYER);
+
+            foreach (LayerPaintStroke lps in StoredLayerPaintStrokes)
+            {
+                landformDrawingLayer.MapLayerComponents.Add(lps);
+            }
+
+            landformDrawingLayer.RenderPicture?.Dispose();
+            landformDrawingLayer.RenderPicture = null;
+            landformDrawingLayer.IsModified = true;
 
             MapLayer landformCoastlineLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDCOASTLINELAYER);
             landformCoastlineLayer.RenderPicture?.Dispose();

@@ -169,7 +169,8 @@ namespace RealmStudio
         Archipelago,
         Atoll,
         World,
-        Equirectangular
+        Equirectangular,
+        Icecap
     }
 
     public enum RealmTypeEnum
