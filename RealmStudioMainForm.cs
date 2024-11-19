@@ -3337,6 +3337,7 @@ namespace RealmStudio
         /******************************************************************************************************* 
         * SKGLCONTROL EVENT HANDLERS
         *******************************************************************************************************/
+
         private void SKGLRenderControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
         {
             SKCanvas renderCanvas = e.Surface.Canvas;
@@ -3706,7 +3707,9 @@ namespace RealmStudio
                 case DrawingModeEnum.LandPaint:
                     {
                         CURRENT_MAP.IsSaved = false;
+
                         Cursor = Cursors.Cross;
+
                         CURRENT_LANDFORM = new()
                         {
                             ParentMap = CURRENT_MAP,
@@ -4395,8 +4398,6 @@ namespace RealmStudio
                     break;
                 case DrawingModeEnum.LandPaint:
                     {
-                        Cursor = Cursors.Cross;
-
                         if (CURRENT_LANDFORM != null
                             && zoomedScrolledPoint.X > 0 && zoomedScrolledPoint.X < CURRENT_MAP.MapWidth
                             && zoomedScrolledPoint.Y > 0 && zoomedScrolledPoint.Y < CURRENT_MAP.MapHeight)
@@ -4413,9 +4414,6 @@ namespace RealmStudio
                                 Task.Run(() => LandformMethods.CreateAllPathsFromDrawnPath(CURRENT_MAP, CURRENT_LANDFORM));
                             }
                         }
-
-                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER, true);
-                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDFORMLAYER, true);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -6987,6 +6985,8 @@ namespace RealmStudio
         private void LandformAreaSelectButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.LandformAreaSelect;
+            SetSelectedBrushSize(0);
+            SetDrawingModeLabel();
         }
 
         #endregion
@@ -10973,7 +10973,6 @@ namespace RealmStudio
         }
 
         #endregion
-
 
     }
 }

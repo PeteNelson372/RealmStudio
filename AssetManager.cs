@@ -258,7 +258,6 @@ namespace RealmStudio
                         Bitmap b = new(icon.IconPath);
                         EYEDROPPER_CURSOR = CustomCursor.CreateCursor(b, 0, 0);
                     }
-
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("\\Themes"))
                 {

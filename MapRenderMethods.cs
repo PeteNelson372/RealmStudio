@@ -244,85 +244,32 @@ namespace RealmStudio
 
         internal static void RenderLandforms(RealmStudioMap map, Landform? currentLandform, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
-            SKRect clippingBounds = new(0, 0, map.MapWidth, map.MapHeight);
-
             // render landforms
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
-            MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDCOASTLINELAYER);
-            MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
 
-            if (landCoastlineLayer.ShowLayer)
+            currentLandform?.RenderCoastline(renderCanvas);
+            currentLandform?.RenderLandform(renderCanvas);
+
+            for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
             {
-                // coastline
-                if (!landCoastlineLayer.IsModified && landCoastlineLayer.RenderPicture != null)
+                if (landformLayer.MapLayerComponents[i] is Landform l)
                 {
-                    // paint landform coastline layer
-                    renderCanvas.DrawPicture(landCoastlineLayer.RenderPicture, scrollPoint);
-                }
-                else
-                {
-                    landCoastlineLayer.RenderPicture?.Dispose();
+                    l.RenderCoastline(renderCanvas);
+                    l.RenderLandform(renderCanvas);
 
-                    // using a picture recorder to provide a canvas to draw on
-                    // causes transparent (or empty) color to render as black;
-                    // using a bitmap canvas correctly renders transparent and empty colors
-
-                    using SKBitmap b = new(map.MapWidth, map.MapHeight);
-                    using SKCanvas canvas = new(b);
-
-                    currentLandform?.RenderCoastline(canvas);
-
-                    for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
+                    if (l.IsSelected)
                     {
-                        if (landformLayer.MapLayerComponents[i] is Landform l)
-                        {
-                            l.RenderCoastline(canvas);
-                        }
-                        else if (landformLayer.MapLayerComponents[i] is LayerPaintStroke lps)
-                        {
-                            lps.Render(canvas);
-                        }
+                        // draw an outline around the landform to show that it is selected
+                        l.ContourPath.GetBounds(out SKRect boundRect);
+                        using SKPath boundsPath = new();
+                        boundsPath.AddRect(boundRect);
+
+                        renderCanvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
                     }
-
-                    renderCanvas.DrawBitmap(b, scrollPoint);
-                    landCoastlineLayer.IsModified = false;
                 }
-            }
-
-            if (landformLayer.ShowLayer)
-            {
-                //landform
-                if (!landformLayer.IsModified && landformLayer.RenderPicture != null)
+                else if (landformLayer.MapLayerComponents[i] is LayerPaintStroke lps)
                 {
-                    renderCanvas.DrawPicture(landformLayer.RenderPicture, scrollPoint);
-                }
-                else
-                {
-                    landformLayer.RenderPicture?.Dispose();
-
-                    // using a picture recorder to provide a canvas to draw on
-                    // causes transparent (or empty) color to render as black;
-                    // using a bitmap canvas correctly renders transparent and empty colors
-
-                    using SKBitmap b = new(map.MapWidth, map.MapHeight);
-                    using SKCanvas canvas = new(b);
-
-                    currentLandform?.RenderLandform(canvas);
-
-                    for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
-                    {
-                        if (landformLayer.MapLayerComponents[i] is Landform l)
-                        {
-                            l.RenderLandform(canvas);
-                        }
-                        else if (landformLayer.MapLayerComponents[i] is LayerPaintStroke lps)
-                        {
-                            lps.Render(canvas);
-                        }
-                    }
-
-                    renderCanvas.DrawBitmap(b, scrollPoint);
-                    landformLayer.IsModified = false;
+                    lps.Render(renderCanvas);
                 }
             }
 
@@ -340,42 +287,6 @@ namespace RealmStudio
                 landDrawingLayer.Render(canvas);
 
                 renderCanvas.DrawBitmap(b, scrollPoint);
-            }
-
-            if (landformLayer.ShowLayer)
-            {
-                // landform selection
-                selectionLayer.RenderPicture?.Dispose();
-                selectionLayer.RenderPicture = null;
-
-                using var selectionRecorder = new SKPictureRecorder();
-
-                for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
-                {
-                    if (landformLayer.MapLayerComponents[i] is Landform l)
-                    {
-                        if (l.IsSelected)
-                        {
-                            // draw an outline around the landform to show that it is selected
-                            l.ContourPath.GetBounds(out SKRect boundRect);
-                            using SKPath boundsPath = new();
-                            boundsPath.AddRect(boundRect);
-
-                            // only one landform can be selected
-                            selectionRecorder.BeginRecording(clippingBounds);
-                            selectionRecorder.RecordingCanvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
-                            selectionLayer.RenderPicture = selectionRecorder.EndRecording();
-
-                            break;
-                        }
-                    }
-                }
-
-                if (selectionLayer.RenderPicture != null)
-                {
-                    // paint selection layer
-                    renderCanvas.DrawPicture(selectionLayer.RenderPicture, scrollPoint);
-                }
             }
         }
 
@@ -848,6 +759,9 @@ namespace RealmStudio
             // render and paint vignette
             MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.VIGNETTELAYER);
 
+            vignetteLayer.Render(renderCanvas);
+
+            /*
             if (!vignetteLayer.IsModified && vignetteLayer.RenderPicture != null)
             {
                 // paint the symbol layer
@@ -871,6 +785,7 @@ namespace RealmStudio
                 renderCanvas.DrawPicture(vignetteLayer.RenderPicture, scrollPoint);
                 vignetteLayer.IsModified = false;
             }
+            */
         }
 
         internal static void RenderWaterFeatures(RealmStudioMap map, WaterFeature? currentWaterFeature, River? currentRiver, SKCanvas renderCanvas, SKPoint scrollPoint)
