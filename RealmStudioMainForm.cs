@@ -1795,7 +1795,7 @@ namespace RealmStudio
                             SKBitmap? symbolBitmap = SymbolMethods.SelectedSymbolTableMapSymbol.ColorMappedBitmap;
                             if (symbolBitmap != null)
                             {
-                                float symbolScale = (float)(SymbolScaleTrack.Value / 100.0F * DrawingZoom);
+                                float symbolScale = (float)(SymbolScaleTrack.Value / 100.0F);
                                 float symbolRotation = SymbolRotationTrack.Value;
                                 SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleBitmap(symbolBitmap, symbolScale);
 
@@ -7493,7 +7493,6 @@ namespace RealmStudio
             ArchipelagoMenuItem.Checked = false;
             AtollMenuItem.Checked = false;
             WorldMenuItem.Checked = false;
-            EquirectangularMenuItem.Checked = false;
         }
 
         #endregion
