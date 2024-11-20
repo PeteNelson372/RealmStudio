@@ -6981,13 +6981,6 @@ namespace RealmStudio
             SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.World;
         }
 
-        private void EquirectangularMenuItem_Click(object sender, EventArgs e)
-        {
-            UncheckAllLandformTypeMenuItems();
-            EquirectangularMenuItem.Checked = true;
-            SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Equirectangular;
-        }
-
         private void LandformAreaSelectButton_Click(object sender, EventArgs e)
         {
             CURRENT_DRAWING_MODE = DrawingModeEnum.LandformAreaSelect;
@@ -7029,10 +7022,6 @@ namespace RealmStudio
             else if (WorldMenuItem.Checked)
             {
                 SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.World;
-            }
-            else if (EquirectangularMenuItem.Checked)
-            {
-                SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.Equirectangular;
             }
             else
             {
@@ -7085,37 +7074,6 @@ namespace RealmStudio
                         }
 
                         CreateLandformFromGeneratedPaths(location, size, GeneratedLandformTypeEnum.Archipelago);
-                    }
-                    break;
-                case GeneratedLandformTypeEnum.Equirectangular:
-                    {
-                        SKSizeI rectSize = new();
-
-                        if (map.MapWidth > map.MapHeight)
-                        {
-                            rectSize.Width = map.MapHeight;
-                            rectSize.Height = map.MapHeight;
-                        }
-                        else
-                        {
-                            rectSize.Width = map.MapWidth;
-                            rectSize.Height = map.MapWidth;
-                        }
-
-                        GenerateWorldLandforms(map, rectSize);
-
-                        foreach (Landform l in landformLayer.MapLayerComponents)
-                        {
-                            //l.DrawPath.Transform(SKMatrix.CreateScaleTranslation(map.MapWidth / rectSize.Width, map.MapHeight / rectSize.Height, rectSize.Width - map.MapWidth, rectSize.Height - map.MapHeight));
-
-                            LandformMethods.CreateAllPathsFromDrawnPath(map, l);
-
-                            l.ContourPath.GetBounds(out SKRect boundsRect);
-                            l.X = (int)location.X;
-                            l.Y = (int)location.Y;
-                            l.Width = (int)boundsRect.Width;
-                            l.Height = (int)boundsRect.Height;
-                        }
                     }
                     break;
                 case GeneratedLandformTypeEnum.Island:

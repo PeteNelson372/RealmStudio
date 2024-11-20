@@ -169,7 +169,6 @@ namespace RealmStudio
         Archipelago,
         Atoll,
         World,
-        Equirectangular,
         Icecap
     }
 

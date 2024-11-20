@@ -266,6 +266,8 @@ namespace RealmStudio
 
                         renderCanvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
                     }
+
+                    l.IsModified = false;
                 }
                 else if (landformLayer.MapLayerComponents[i] is LayerPaintStroke lps)
                 {
