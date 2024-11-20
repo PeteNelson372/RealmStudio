@@ -5009,6 +5009,7 @@
             // 
             ExampleTextLabel.BackColor = SystemColors.ControlLightLight;
             ExampleTextLabel.BorderStyle = BorderStyle.FixedSingle;
+            ExampleTextLabel.CausesValidation = false;
             ExampleTextLabel.Location = new Point(6, 62);
             ExampleTextLabel.Name = "ExampleTextLabel";
             ExampleTextLabel.Size = new Size(314, 70);

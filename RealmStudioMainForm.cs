@@ -49,7 +49,6 @@ namespace RealmStudio
         private static WaterFeature? CURRENT_WATERFEATURE = null;
         private static River? CURRENT_RIVER = null;
         private static MapPath? CURRENT_MAP_PATH = null;
-        private static MapFrame? CURRENT_FRAME = null;
         private static MapGrid? CURRENT_MAP_GRID = null;
         private static MapMeasure? CURRENT_MAP_MEASURE = null;
         private static MapRegion? CURRENT_MAP_REGION = null;
@@ -2555,7 +2554,10 @@ namespace RealmStudio
 
         private void SetExampleText()
         {
-            ExampleTextLabel.Font = FONT_PANEL_SELECTED_FONT.SelectedFont;
+            Font textFont = new(FONT_PANEL_SELECTED_FONT.SelectedFont.FontFamily,
+                FONT_PANEL_SELECTED_FONT.SelectedFont.Size * 0.75F, FONT_PANEL_SELECTED_FONT.SelectedFont.Style, GraphicsUnit.Point);
+
+            ExampleTextLabel.Font = textFont;
             ExampleTextLabel.Text = "The quick brown fox";
         }
 
@@ -2669,19 +2671,22 @@ namespace RealmStudio
                 case FontPanelOpenerEnum.LabelFontButton:
                     {
                         SelectLabelFontButton.Font = new Font(FONT_PANEL_SELECTED_FONT.SelectedFont.FontFamily, 12);
+
                         SelectLabelFontButton.Refresh();
 
                         SELECTED_LABEL_FONT = FONT_PANEL_SELECTED_FONT.SelectedFont;
 
                         if (SELECTED_MAP_LABEL != null)
                         {
+                            Font newFont = new(FONT_PANEL_SELECTED_FONT.SelectedFont.FontFamily, FONT_PANEL_SELECTED_FONT.SelectedFont.Size * 0.75F, FONT_PANEL_SELECTED_FONT.SelectedFont.Style, GraphicsUnit.Point);
+
                             Color labelColor = FontColorSelectButton.BackColor;
                             Color outlineColor = OutlineColorSelectButton.BackColor;
                             float outlineWidth = OutlineWidthTrack.Value / 100F;
                             Color glowColor = GlowColorSelectButton.BackColor;
                             int glowStrength = GlowStrengthTrack.Value;
 
-                            Cmd_ChangeLabelAttributes cmd = new(CURRENT_MAP, SELECTED_MAP_LABEL, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, SELECTED_LABEL_FONT);
+                            Cmd_ChangeLabelAttributes cmd = new(CURRENT_MAP, SELECTED_MAP_LABEL, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, newFont);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
@@ -4266,7 +4271,7 @@ namespace RealmStudio
                         {
                             CREATING_LABEL = true;
 
-                            Font labelFont = new Font(SELECTED_MAP_LABEL.LabelFont.FontFamily, SELECTED_MAP_LABEL.LabelFont.Size * 1.33F * DrawingZoom,
+                            Font labelFont = new Font(SELECTED_MAP_LABEL.LabelFont.FontFamily, SELECTED_MAP_LABEL.LabelFont.Size * DrawingZoom,
                                 SELECTED_MAP_LABEL.LabelFont.Style, GraphicsUnit.Pixel);
 
                             Size labelSize = TextRenderer.MeasureText(SELECTED_MAP_LABEL.LabelText, labelFont,
@@ -4289,7 +4294,7 @@ namespace RealmStudio
                                 Margin = Padding.Empty,
                                 Padding = Padding.Empty,
                                 AutoSize = true,
-                                Font = labelFont,
+                                Font = SELECTED_MAP_LABEL.LabelFont,
                                 Visible = true,
                                 BackColor = Color.AliceBlue,
                                 ForeColor = SELECTED_MAP_LABEL.LabelColor,
@@ -5351,9 +5356,10 @@ namespace RealmStudio
                     {
                         CREATING_LABEL = true;
 
-                        Font tbFont = SELECTED_LABEL_FONT;
+                        Font tbFont = new(SELECTED_LABEL_FONT.FontFamily,
+                            SELECTED_LABEL_FONT.Size * 0.75F, SELECTED_LABEL_FONT.Style, GraphicsUnit.Point);
 
-                        Size labelSize = TextRenderer.MeasureText("...Label...", SELECTED_LABEL_FONT,
+                        Size labelSize = TextRenderer.MeasureText("...Label...", tbFont,
                             new Size(int.MaxValue, int.MaxValue),
                             TextFormatFlags.Default | TextFormatFlags.LeftAndRightPadding | TextFormatFlags.ExternalLeading | TextFormatFlags.SingleLine);
 
@@ -9501,7 +9507,10 @@ namespace RealmStudio
                 Color glowColor = GlowColorSelectButton.BackColor;
                 int glowStrength = GlowStrengthTrack.Value;
 
-                Cmd_ChangeLabelAttributes cmd = new(CURRENT_MAP, SELECTED_MAP_LABEL, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, SELECTED_LABEL_FONT);
+                Font tbFont = new(SELECTED_LABEL_FONT.FontFamily,
+                    SELECTED_LABEL_FONT.Size * 0.75F, SELECTED_LABEL_FONT.Style, GraphicsUnit.Point);
+
+                Cmd_ChangeLabelAttributes cmd = new(CURRENT_MAP, SELECTED_MAP_LABEL, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, tbFont);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 
@@ -10174,8 +10183,6 @@ namespace RealmStudio
                             // clicked symbol is not selected, so select it
                             pb.BackColor = Color.LightSkyBlue;
 
-                            CURRENT_FRAME = frame;
-
                             OverlayMethods.RemoveAllFrames(CURRENT_MAP);
 
                             Cmd_CreateMapFrame cmd = new(CURRENT_MAP, frame, FrameTintColorSelectButton.BackColor, (float)(FrameScaleTrack.Value / 100F));
@@ -10191,7 +10198,6 @@ namespace RealmStudio
                         {
                             // clicked symbol is already selected, so deselect it
                             pb.BackColor = SystemColors.Control;
-                            CURRENT_FRAME = null;
                         }
                     }
                 }
