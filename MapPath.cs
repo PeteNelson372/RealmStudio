@@ -39,9 +39,8 @@ namespace RealmStudio
         public PathTypeEnum PathType { get; set; } = PathTypeEnum.SolidLinePath;
         public Color PathColor { get; set; } = ColorTranslator.FromHtml("#4B311A");
         public float PathWidth { get; set; } = 4;
-        public SKBitmap? PathTexture { get; set; } = null;
+        public MapTexture? PathTexture { get; set; } = null;
         public bool DrawOverSymbols { get; set; } = false;
-
         public bool ShowPathPoints { get; set; } = false;
         public bool IsSelected { get; set; } = false;
         public SKPaint? PathPaint { get; set; }

@@ -68,7 +68,7 @@ namespace RealmStudio
 
             if (AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TextureBitmap == null)
             {
-                AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TexturePath);
+                AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TexturePath);
             }
 
             LandformTexturePreviewPicture.Image = AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TextureBitmap;

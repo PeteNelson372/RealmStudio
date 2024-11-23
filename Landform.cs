@@ -211,7 +211,7 @@ namespace RealmStudio
                 CoastlineRenderPicture?.Dispose();
 
                 using var recorder = new SKPictureRecorder();
-                SKRect clippingBounds = new(X, Y, X + Width, Y + Height);
+                SKRect clippingBounds = new(0, 0, ParentMap.MapWidth, ParentMap.MapHeight);
 
                 // Start recording 
                 recorder.BeginRecording(clippingBounds);
@@ -746,7 +746,7 @@ namespace RealmStudio
                 LandformRenderPicture?.Dispose();
 
                 using var recorder = new SKPictureRecorder();
-                SKRect clippingBounds = new(0, 0, X + Width, X + Height);
+                SKRect clippingBounds = new(0, 0, ParentMap.MapWidth, ParentMap.MapHeight);
 
                 // Start recording 
                 recorder.BeginRecording(clippingBounds);

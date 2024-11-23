@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             LandformDataPanel = new ReaLTaiizor.Forms.DungeonForm();
+            CloseLandformDataButton = new Button();
+            ApplyChangesButton = new Button();
             StatusMessageLabel = new Label();
             groupBox2 = new GroupBox();
             label16 = new Label();
@@ -48,8 +50,6 @@
             NameTextbox = new TextBox();
             GuidLabel = new Label();
             label1 = new Label();
-            ApplyChangesButton = new Button();
-            CloseLandformDataButton = new Button();
             LandformDataPanel.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)CoastlineEffectDistanceTrack).BeginInit();
@@ -59,7 +59,7 @@
             // 
             // LandformDataPanel
             // 
-            LandformDataPanel.BackColor = Color.FromArgb(223, 219, 210);
+            LandformDataPanel.BackColor = Color.FromArgb(244, 241, 243);
             LandformDataPanel.BorderColor = Color.FromArgb(38, 38, 38);
             LandformDataPanel.Controls.Add(CloseLandformDataButton);
             LandformDataPanel.Controls.Add(ApplyChangesButton);
@@ -89,6 +89,28 @@
             LandformDataPanel.TabIndex = 0;
             LandformDataPanel.Text = "Landform Data";
             LandformDataPanel.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // CloseLandformDataButton
+            // 
+            CloseLandformDataButton.ForeColor = SystemColors.ControlDarkDark;
+            CloseLandformDataButton.Location = new Point(303, 409);
+            CloseLandformDataButton.Name = "CloseLandformDataButton";
+            CloseLandformDataButton.Size = new Size(60, 60);
+            CloseLandformDataButton.TabIndex = 92;
+            CloseLandformDataButton.Text = "&Close";
+            CloseLandformDataButton.UseVisualStyleBackColor = true;
+            CloseLandformDataButton.Click += CloseLandformDataButton_Click;
+            // 
+            // ApplyChangesButton
+            // 
+            ApplyChangesButton.ForeColor = SystemColors.ControlDarkDark;
+            ApplyChangesButton.Location = new Point(221, 409);
+            ApplyChangesButton.Name = "ApplyChangesButton";
+            ApplyChangesButton.Size = new Size(60, 60);
+            ApplyChangesButton.TabIndex = 91;
+            ApplyChangesButton.Text = "&Apply";
+            ApplyChangesButton.UseVisualStyleBackColor = true;
+            ApplyChangesButton.Click += ApplyChangesButton_Click;
             // 
             // StatusMessageLabel
             // 
@@ -176,7 +198,7 @@
             // CoastlineEffectDistanceTrack
             // 
             CoastlineEffectDistanceTrack.AutoSize = false;
-            CoastlineEffectDistanceTrack.BackColor = Color.FromArgb(223, 219, 210);
+            CoastlineEffectDistanceTrack.BackColor = Color.FromArgb(244, 241, 243);
             CoastlineEffectDistanceTrack.Location = new Point(6, 45);
             CoastlineEffectDistanceTrack.Maximum = 40;
             CoastlineEffectDistanceTrack.Name = "CoastlineEffectDistanceTrack";
@@ -320,28 +342,6 @@
             label1.TabIndex = 0;
             label1.Text = "Identifier";
             label1.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // ApplyChangesButton
-            // 
-            ApplyChangesButton.ForeColor = SystemColors.ControlDarkDark;
-            ApplyChangesButton.Location = new Point(221, 409);
-            ApplyChangesButton.Name = "ApplyChangesButton";
-            ApplyChangesButton.Size = new Size(60, 60);
-            ApplyChangesButton.TabIndex = 91;
-            ApplyChangesButton.Text = "&Apply";
-            ApplyChangesButton.UseVisualStyleBackColor = true;
-            ApplyChangesButton.Click += ApplyChangesButton_Click;
-            // 
-            // CloseLandformDataButton
-            // 
-            CloseLandformDataButton.ForeColor = SystemColors.ControlDarkDark;
-            CloseLandformDataButton.Location = new Point(303, 409);
-            CloseLandformDataButton.Name = "CloseLandformDataButton";
-            CloseLandformDataButton.Size = new Size(60, 60);
-            CloseLandformDataButton.TabIndex = 92;
-            CloseLandformDataButton.Text = "&Close";
-            CloseLandformDataButton.UseVisualStyleBackColor = true;
-            CloseLandformDataButton.Click += CloseLandformDataButton_Click;
             // 
             // LandformInfo
             // 

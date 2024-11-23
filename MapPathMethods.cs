@@ -68,15 +68,22 @@ namespace RealmStudio
                     pathPaint.StrokeCap = SKStrokeCap.Butt;
                     break;
                 case PathTypeEnum.TexturedPath:
-                    // construct a shader from the selected path texture
-                    pathPaint.Shader = SKShader.CreateBitmap(mapPath.PathTexture, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                    if (mapPath.PathTexture != null)
+                    {
+                        // construct a shader from the selected path texture
+                        pathPaint.Shader = SKShader.CreateBitmap(mapPath.PathTexture.TextureBitmap.ToSKBitmap(), SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                    }
+
                     pathPaint.Style = SKPaintStyle.Stroke;
                     break;
                 case PathTypeEnum.BorderAndTexturePath:
                     pathPaint.StrokeCap = SKStrokeCap.Butt;
 
-                    // construct a shader from the selected path texture
-                    pathPaint.Shader = SKShader.CreateBitmap(mapPath.PathTexture, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                    if (mapPath.PathTexture != null)
+                    {
+                        // construct a shader from the selected path texture
+                        pathPaint.Shader = SKShader.CreateBitmap(mapPath.PathTexture.TextureBitmap.ToSKBitmap(), SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                    }
                     pathPaint.Style = SKPaintStyle.Stroke;
                     break;
             }

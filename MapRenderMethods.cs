@@ -244,18 +244,27 @@ namespace RealmStudio
 
         internal static void RenderLandforms(RealmStudioMap map, Landform? currentLandform, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
+            SKRect clippingBounds = new(0, 0, map.MapWidth, map.MapHeight);
+
             // render landforms
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
 
-            currentLandform?.RenderCoastline(renderCanvas);
-            currentLandform?.RenderLandform(renderCanvas);
+            landformLayer.RenderPicture?.Dispose();
+            landformLayer.RenderPicture = null;
+
+            // Create an SKPictureRecorder to record the Canvas Draw commands to an SKPicture
+            using var landrecorder = new SKPictureRecorder();
+            landrecorder.BeginRecording(clippingBounds);
+
+            currentLandform?.RenderCoastline(landrecorder.RecordingCanvas);
+            currentLandform?.RenderLandform(landrecorder.RecordingCanvas);
 
             for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
             {
                 if (landformLayer.MapLayerComponents[i] is Landform l)
                 {
-                    l.RenderCoastline(renderCanvas);
-                    l.RenderLandform(renderCanvas);
+                    l.RenderCoastline(landrecorder.RecordingCanvas);
+                    l.RenderLandform(landrecorder.RecordingCanvas);
 
                     if (l.IsSelected)
                     {
@@ -264,16 +273,36 @@ namespace RealmStudio
                         using SKPath boundsPath = new();
                         boundsPath.AddRect(boundRect);
 
-                        renderCanvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
+                        landrecorder.RecordingCanvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
                     }
 
                     l.IsModified = false;
                 }
-                else if (landformLayer.MapLayerComponents[i] is LayerPaintStroke lps)
+            }
+
+            landformLayer.RenderPicture = landrecorder.EndRecording();
+
+            // paint the recorded picture to the render canvas
+            renderCanvas.DrawPicture(landformLayer.RenderPicture, scrollPoint);
+
+            // draw eraser paint strokes
+            // eraser paint strokes have to be rendered to a bitmap
+            // because using a picture recorder to render transparent
+            // colors will cause them to be rendered as black
+
+            using SKBitmap eraseBitmap = new(map.MapWidth, map.MapHeight);
+            using SKCanvas erasecanvas = new(eraseBitmap);
+
+            for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
+            {
+                if (landformLayer.MapLayerComponents[i] is LayerPaintStroke lps)
                 {
-                    lps.Render(renderCanvas);
+                    lps.Render(erasecanvas);
                 }
             }
+
+            // paint the eraser strokes bitmap to the render canvas
+            renderCanvas.DrawBitmap(eraseBitmap, scrollPoint);
 
             // landform drawing (color painting over landform)
             MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDDRAWINGLAYER);

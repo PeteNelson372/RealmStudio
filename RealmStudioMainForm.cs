@@ -3927,10 +3927,12 @@ namespace RealmStudio
                                 DrawOverSymbols = DrawOverSymbolsSwitch.Checked,
                             };
 
-                            if (PathTexturePreviewPicture.Image != null)
+                            if (AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap == null)
                             {
-                                CURRENT_MAP_PATH.PathTexture = new Bitmap(PathTexturePreviewPicture.Image, PathWidthTrack.Value, PathWidthTrack.Value).ToSKBitmap();
+                                AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TexturePath);
                             }
+
+                            CURRENT_MAP_PATH.PathTexture = AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX];
 
                             MapPathMethods.ConstructPathPaint(CURRENT_MAP_PATH);
                             CURRENT_MAP_PATH.PathPoints.Add(new MapPathPoint(zoomedScrolledPoint));
@@ -4426,6 +4428,8 @@ namespace RealmStudio
                 case DrawingModeEnum.LandErase:
                     {
                         Cursor = Cursors.Cross;
+                        MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+                        MapLayer landcoastLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER);
 
                         LandformMethods.LandformErasePath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
 
@@ -4438,6 +4442,24 @@ namespace RealmStudio
                         {
                             CURRENT_COAST_ERASE_STROKE.AddLayerPaintStrokePoint(zoomedScrolledPoint);
                         }
+
+                        for (int i = landformLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+                        {
+                            if (landformLayer.MapLayerComponents[i] is LayerPaintStroke)
+                            {
+                                landformLayer.MapLayerComponents.RemoveAt(i);
+                            }
+                        }
+
+                        for (int i = landcoastLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+                        {
+                            if (landcoastLayer.MapLayerComponents[i] is LayerPaintStroke)
+                            {
+                                landcoastLayer.MapLayerComponents.RemoveAt(i);
+                            }
+                        }
+
+                        LandformMethods.EraseLandForm(CURRENT_MAP);
 
                         MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER, true);
                         MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDFORMLAYER, true);
@@ -5651,16 +5673,22 @@ namespace RealmStudio
                 case DrawingModeEnum.WaterFeatureSelect:
                     MapComponent? selectedWaterFeature = SelectWaterFeatureAtPoint(CURRENT_MAP, zoomedScrolledPoint);
 
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WATERLAYER, true);
+                    SKGLRenderControl.Invalidate();
 
-                    if (selectedWaterFeature != null && selectedWaterFeature is WaterFeature)
+                    if (selectedWaterFeature != null && selectedWaterFeature is WaterFeature wf)
                     {
-                        // TODO: info dialog for water feature
-                        //MessageBox.Show("selected water feature");
+                        SELECTED_WATERFEATURE = (WaterFeature)selectedWaterFeature;
+
+                        WaterFeatureInfo waterFeatureInfo = new(CURRENT_MAP, wf, SKGLRenderControl);
+                        waterFeatureInfo.ShowDialog(this);
                     }
-                    else if (selectedWaterFeature != null && selectedWaterFeature is River)
+                    else if (selectedWaterFeature != null && selectedWaterFeature is River r)
                     {
-                        // TODO: info dialog for river
-                        //MessageBox.Show("selected river");
+                        SELECTED_WATERFEATURE = (River)selectedWaterFeature;
+
+                        RiverInfo riverInfo = new(CURRENT_MAP, r, SKGLRenderControl);
+                        riverInfo.ShowDialog(this);
                     }
 
                     MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.WATERLAYER, true);
@@ -5669,24 +5697,49 @@ namespace RealmStudio
                 case DrawingModeEnum.PathSelect:
                     MapPath? selectedPath = SelectMapPathAtPoint(CURRENT_MAP, zoomedScrolledPoint);
 
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
+                    MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
+
+                    SKGLRenderControl.Invalidate();
+
                     if (selectedPath != null)
                     {
-                        // TODO: info dialog for path
-                        //MessageBox.Show("selected path");
+                        SELECTED_PATH = selectedPath;
+
+                        MapPathInfo pathInfo = new(CURRENT_MAP, selectedPath, SKGLRenderControl);
+                        pathInfo.ShowDialog(this);
                     }
 
                     MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
                     MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
 
+                    SKGLRenderControl.Invalidate();
                     break;
                 case DrawingModeEnum.SymbolSelect:
                     MapSymbol? selectedSymbol = SelectMapSymbolAtPoint(CURRENT_MAP, zoomedScrolledPoint.ToDrawingPoint());
                     if (selectedSymbol != null)
                     {
+                        SELECTED_MAP_SYMBOL = selectedSymbol;
+
                         MapSymbolInfo msi = new(CURRENT_MAP, selectedSymbol);
-                        msi.ShowDialog();
+                        msi.ShowDialog(this);
 
                         MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.SYMBOLLAYER, true);
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.RegionSelect:
+                    MapRegion? selectedRegion = SelectRegionAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+
+                    if (selectedRegion != null)
+                    {
+                        CURRENT_MAP_REGION = selectedRegion;
+
+                        MapRegionInfo mri = new(CURRENT_MAP, selectedRegion, SKGLRenderControl);
+                        mri.ShowDialog(this);
+
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONLAYER, true);
+                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONOVERLAYLAYER, true);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
