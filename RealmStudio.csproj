@@ -11,7 +11,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <AssemblyVersion>1.2024.328.1303</AssemblyVersion>
     <FileVersion>1.2024.328.1303</FileVersion>
-    <Version>1.2024.2-alpha-634</Version>
+    <Version>1.2024.2-alpha-635</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2024. Peter R. Nelson</Copyright>
