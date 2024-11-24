@@ -117,13 +117,25 @@ namespace RealmStudio
 
         private readonly AppSplashScreen SPLASH_SCREEN;
 
+        private static string MapCommandLinePath = string.Empty;
+
         #region Constructor
         /******************************************************************************************************* 
         * MAIN FORM CONSTRUCTOR
         *******************************************************************************************************/
-        public RealmStudioMainForm()
+        public RealmStudioMainForm(string[] args)
         {
             InitializeComponent();
+
+            if (args.Length > 0)
+            {
+                MapCommandLinePath = args[0];
+
+                if (!File.Exists(MapCommandLinePath))
+                {
+                    MapCommandLinePath = string.Empty;
+                }
+            }
 
             SKGLRenderControl.Hide();
             SKGLRenderControl.MouseWheel += SKGLRenderControl_MouseWheel;
@@ -191,50 +203,105 @@ namespace RealmStudio
 
             MapBuilder.DisposeMap(CURRENT_MAP);
 
-            // this creates the CURRENT_MAP
-            DialogResult result = OpenRealmConfigurationDialog();
-
-            if (result == DialogResult.OK)
+            if (!string.IsNullOrEmpty(MapCommandLinePath))
             {
                 Cursor = Cursors.WaitCursor;
 
                 Refresh();
 
                 AssetManager.LOADING_STATUS_FORM.Show(this);
-
-                SetDrawingModeLabel();
-
                 int assetCount = AssetManager.LoadAllAssets();
 
-                PopulateControlsWithAssets(assetCount);
-                PopulateFontPanelUI();
-                LoadNameGeneratorConfigurationDialog();
-
-                if (AssetManager.CURRENT_THEME != null)
-                {
-                    ThemeFilter themeFilter = new();
-                    ApplyTheme(AssetManager.CURRENT_THEME, themeFilter);
-                }
-
                 LogoPictureBox.Hide();
+
+                AssetManager.LOADING_STATUS_FORM.Hide();
+
+                Activate();
+
+                try
+                {
+                    OpenMap(MapCommandLinePath);
+
+                    SetDrawingModeLabel();
+
+                    PopulateControlsWithAssets(assetCount);
+                    PopulateFontPanelUI();
+                    LoadNameGeneratorConfigurationDialog();
+
+                    if (AssetManager.CURRENT_THEME != null)
+                    {
+                        ThemeFilter themeFilter = new();
+                        ApplyTheme(AssetManager.CURRENT_THEME, themeFilter);
+                    }
+
+                    UpdateMapNameAndSize();
+
+                    StartAutosaveTimer();
+                    StartLocationUpdateTimer();
+                }
+                catch (Exception ex)
+                {
+                    Program.LOGGER.Error(ex);
+                    MessageBox.Show("An error has occurred while opening the map.", "Map Open Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+                }
 
                 SKGLRenderControl.Show();
                 SKGLRenderControl.Select();
                 SKGLRenderControl.Refresh();
                 SKGLRenderControl.Invalidate();
 
-                AssetManager.LOADING_STATUS_FORM.Hide();
-
-                Activate();
-
-                StartAutosaveTimer();
-
-                StartLocationUpdateTimer();
+                Refresh();
             }
             else
             {
-                Application.Exit();
+                // this creates the CURRENT_MAP
+                DialogResult result = OpenRealmConfigurationDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    Cursor = Cursors.WaitCursor;
+
+                    Refresh();
+
+                    AssetManager.LOADING_STATUS_FORM.Show(this);
+
+                    SetDrawingModeLabel();
+
+                    int assetCount = AssetManager.LoadAllAssets();
+
+                    PopulateControlsWithAssets(assetCount);
+                    PopulateFontPanelUI();
+                    LoadNameGeneratorConfigurationDialog();
+
+                    if (AssetManager.CURRENT_THEME != null)
+                    {
+                        ThemeFilter themeFilter = new();
+                        ApplyTheme(AssetManager.CURRENT_THEME, themeFilter);
+                    }
+
+                    LogoPictureBox.Hide();
+
+                    SKGLRenderControl.Show();
+                    SKGLRenderControl.Select();
+                    SKGLRenderControl.Refresh();
+                    SKGLRenderControl.Invalidate();
+
+                    AssetManager.LOADING_STATUS_FORM.Hide();
+
+                    Activate();
+
+                    StartAutosaveTimer();
+
+                    StartLocationUpdateTimer();
+                }
+                else
+                {
+                    Application.Exit();
+                }
             }
+
+
 
             Cursor = Cursors.Default;
         }
@@ -2018,6 +2085,7 @@ namespace RealmStudio
                 try
                 {
                     CURRENT_MAP = MapFileMethods.OpenMap(mapFilePath);
+                    MapBuilder.CreateMap(CURRENT_MAP);
                 }
                 catch
                 {

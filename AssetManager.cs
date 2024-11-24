@@ -341,8 +341,14 @@ namespace RealmStudio
                 assetDirectory = UtilityMethods.DEFAULT_ASSETS_FOLDER;
             }
 
-            string themeDirectory = assetDirectory + Path.DirectorySeparatorChar + "Themes";
+            if (!Directory.Exists(assetDirectory) || (Directory.Exists(assetDirectory) && Directory.GetDirectories(assetDirectory).Length == 0))
+            {
+                MessageBox.Show("No map assets could be found. Realm Studio will close.", "Realm Studio Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                Application.Exit();
+                return;
+            }
 
+            string themeDirectory = assetDirectory + Path.DirectorySeparatorChar + "Themes";
 
             var files = from file in Directory.EnumerateFiles(assetDirectory, "*.*", SearchOption.AllDirectories).Order()
                         where file.Contains(".rstheme")
