@@ -46,6 +46,8 @@ namespace RealmStudio
         public int MapLayerIdentifier { get; set; } = 0;
         public bool Erase { get; set; } = false;
 
+        public bool Rendered { get; set; } = false;
+
         public SKPaint ShaderPaint;
 
         public LayerPaintStroke()
@@ -61,6 +63,7 @@ namespace RealmStudio
             BrushRadius = brushRadius;
             MapLayerIdentifier = mapLayerIdentifier;
             Erase = erase;
+            Rendered = false;
 
             if (MapLayerIdentifier == MapBuilder.OCEANDRAWINGLAYER)
             {
@@ -109,6 +112,8 @@ namespace RealmStudio
 
         public void AddLayerPaintStrokePoint(SKPoint location)
         {
+            Rendered = false;
+
             LayerPaintStrokePoint sp = new(location, BrushRadius);
             PaintStrokePoints.Add(sp);
 
@@ -121,6 +126,8 @@ namespace RealmStudio
         public override void Render(SKCanvas canvas)
         {
             if (ParentMap == null) return;
+
+            if (Rendered) return;
 
             // clip rendering to landforms or water features, depending on what map layer
             // the brush stroke is on; painting on the ocean layer is not clipped
@@ -139,25 +146,29 @@ namespace RealmStudio
                     bool foundLandform = false;
                     for (int i = 0; i < landformList.Count; i++)
                     {
-                        SKPath landformOutlinePath = ((Landform)landformList[i]).ContourPath;
-
-                        if (landformOutlinePath != null && landformOutlinePath.PointCount > 0)
+                        if (landformList[i] is Landform lf)
                         {
-                            foreach (LayerPaintStrokePoint point in PaintStrokePoints)
+                            SKPath landformOutlinePath = lf.ContourPath;
+
+                            if (landformOutlinePath != null && landformOutlinePath.PointCount > 0)
                             {
-                                if (landformOutlinePath.Contains(point.StrokeLocation.X, point.StrokeLocation.Y))
+                                foreach (LayerPaintStrokePoint point in PaintStrokePoints)
                                 {
-                                    clipPath.AddPath(landformOutlinePath);
-                                    foundLandform = true;
-                                    break;
+                                    if (landformOutlinePath.Contains(point.StrokeLocation.X, point.StrokeLocation.Y))
+                                    {
+                                        clipPath.AddPath(landformOutlinePath);
+                                        foundLandform = true;
+                                        break;
+                                    }
                                 }
+                            }
+
+                            if (foundLandform)
+                            {
+                                break;
                             }
                         }
 
-                        if (foundLandform)
-                        {
-                            break;
-                        }
                     }
 
                     canvas.Save();
@@ -220,6 +231,8 @@ namespace RealmStudio
             {
                 canvas.Restore();
             }
+
+            Rendered = true;
         }
 
         public XmlSchema? GetSchema()

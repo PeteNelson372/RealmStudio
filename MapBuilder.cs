@@ -92,7 +92,7 @@ namespace RealmStudio
             }
         }
 
-        private static MapLayer ConstructMapLayer(string layerName, ushort layerOrder, uint x, uint y, int width, int height, SKColor clearColor)
+        private static MapLayer ConstructMapLayer(string layerName, ushort layerOrder, int width, int height, GRContext grContext)
         {
             SKImageInfo imageInfo = new(width, height);
 
@@ -105,12 +105,13 @@ namespace RealmStudio
                 Width = width,
                 Height = height,
                 ShowLayer = true,
+                LayerSurface = SKSurface.Create(grContext, false, imageInfo)
             };
 
             return ml;
         }
 
-        public static RealmStudioMap CreateMap(RealmStudioMap currentMap)
+        public static RealmStudioMap CreateMap(RealmStudioMap currentMap, GRContext grContext)
         {
             // create the map object
             RealmStudioMap map = new()
@@ -128,7 +129,7 @@ namespace RealmStudio
             map.MapPixelWidth = map.MapAreaWidth / map.MapWidth;
             map.MapPixelHeight = map.MapAreaHeight / map.MapHeight;
 
-            CreateMapLayers(ref map);
+            CreateMapLayers(ref map, grContext);
 
             if (MAP_LAYER_COUNT != map.MapLayers.Count)
             {
@@ -138,7 +139,7 @@ namespace RealmStudio
             return map;
         }
 
-        internal static RealmStudioMap CreateMap(string mapPath, string mapName, int width, int height)
+        internal static RealmStudioMap CreateMap(string mapPath, string mapName, int width, int height, GRContext grContext)
         {
             RealmStudioMap map = new()
             {
@@ -155,7 +156,7 @@ namespace RealmStudio
             map.MapPixelWidth = map.MapAreaWidth / map.MapWidth;
             map.MapPixelHeight = map.MapAreaHeight / map.MapHeight;
 
-            CreateMapLayers(ref map);
+            CreateMapLayers(ref map, grContext);
 
             if (MAP_LAYER_COUNT != map.MapLayers.Count)
             {
@@ -164,88 +165,88 @@ namespace RealmStudio
             return map;
         }
 
-        private static void CreateMapLayers(ref RealmStudioMap map)
+        private static void CreateMapLayers(ref RealmStudioMap map, GRContext grContext)
         {
             // create the map layers and add them to the map
-            MapLayer layer = ConstructMapLayer("base", (ushort)BASELAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.White);
+            MapLayer layer = ConstructMapLayer("base", (ushort)BASELAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("oceantexture", (ushort)OCEANTEXTURELAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("oceantexture", (ushort)OCEANTEXTURELAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("oceantextureoverlay", (ushort)OCEANTEXTUREOVERLAYLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("oceantextureoverlay", (ushort)OCEANTEXTUREOVERLAYLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("oceandrawing", (ushort)OCEANDRAWINGLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("oceandrawing", (ushort)OCEANDRAWINGLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("windrose", (ushort)WINDROSELAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("windrose", (ushort)WINDROSELAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("aboveoceangridlayer", (ushort)ABOVEOCEANGRIDLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("aboveoceangridlayer", (ushort)ABOVEOCEANGRIDLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("coastline", (ushort)LANDCOASTLINELAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("coastline", (ushort)LANDCOASTLINELAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("landform", (ushort)LANDFORMLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("landform", (ushort)LANDFORMLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("landdrawing", (ushort)LANDDRAWINGLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("landdrawing", (ushort)LANDDRAWINGLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("water", (ushort)WATERLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("water", (ushort)WATERLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("waterdrawing", (ushort)WATERDRAWINGLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("waterdrawing", (ushort)WATERDRAWINGLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("belowsymbolsgrid", (ushort)BELOWSYMBOLSGRIDLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("belowsymbolsgrid", (ushort)BELOWSYMBOLSGRIDLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("pathlower", (ushort)PATHLOWERLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("pathlower", (ushort)PATHLOWERLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("symbols", (ushort)SYMBOLLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("symbols", (ushort)SYMBOLLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("pathupper", (ushort)PATHUPPERLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("pathupper", (ushort)PATHUPPERLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("region", (ushort)REGIONLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("region", (ushort)REGIONLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("regionoverlay", (ushort)REGIONOVERLAYLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("regionoverlay", (ushort)REGIONOVERLAYLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("grid", (ushort)DEFAULTGRIDLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("grid", (ushort)DEFAULTGRIDLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("boxes", (ushort)BOXLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("boxes", (ushort)BOXLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("labels", (ushort)LABELLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("labels", (ushort)LABELLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("overlay", (ushort)OVERLAYLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("overlay", (ushort)OVERLAYLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("frame", (ushort)FRAMELAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("frame", (ushort)FRAMELAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("measures", (ushort)MEASURELAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("measures", (ushort)MEASURELAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("userdrawing", (ushort)DRAWINGLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("userdrawing", (ushort)DRAWINGLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("vignette", (ushort)VIGNETTELAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("vignette", (ushort)VIGNETTELAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("selection", (ushort)SELECTIONLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("selection", (ushort)SELECTIONLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("work", (ushort)WORKLAYER, 0, 0, map.MapWidth, map.MapHeight, SKColors.Empty);
+            layer = ConstructMapLayer("work", (ushort)WORKLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
         }
 

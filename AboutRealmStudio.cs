@@ -99,16 +99,9 @@ namespace RealmStudio
 
         private void ReleaseNotesLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string startupPath = Application.StartupPath;
-            string releaseNotesPath = Path.GetFullPath(Path.Combine(startupPath, @"..\..\..\", "Resources", "ReleaseNotes.txt"));
-
-            var attributes = File.GetAttributes(releaseNotesPath);
-
-            File.SetAttributes(releaseNotesPath, attributes | FileAttributes.ReadOnly);
-
             var psi = new ProcessStartInfo
             {
-                FileName = releaseNotesPath,
+                FileName = "https://github.com/PeteNelson372/RealmStudio/blob/cfdc91a772a18d41ae010a224846b98dec8653fc/Resources/ReleaseNotes.txt",
                 UseShellExecute = true,
             };
 

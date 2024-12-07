@@ -267,7 +267,7 @@ namespace RealmStudio
             return canPlace;
         }
 
-        internal static void ColorSymbolsInArea(RealmStudioMap map, SKPoint colorCursorPoint, int colorBrushRadius, Color[] symbolColors)
+        internal static void ColorSymbolsInArea(RealmStudioMap map, SKPoint colorCursorPoint, int colorBrushRadius, Color[] symbolColors, bool randomizeColors)
         {
             List<MapComponent> components = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER).MapLayerComponents;
 
@@ -277,21 +277,37 @@ namespace RealmStudio
 
                 SKPoint symbolPoint = new(symbol.X, symbol.Y);
 
+                Color symbolColor = symbolColors[0];
+
                 if (DrawingMethods.PointInCircle(colorBrushRadius, colorCursorPoint, symbolPoint))
                 {
                     if (symbol.IsGrayscale && symbol.SymbolType == SELECTED_SYMBOL_TYPE)
                     {
+                        if (randomizeColors)
+                        {
+                            // vary RGB by 10%
+                            int rVariance = Random.Shared.Next(-25, 26);
+                            int gVariance = Random.Shared.Next(-25, 26);
+                            int bVariance = Random.Shared.Next(-25, 26);
+
+                            rVariance = Math.Max(0, Math.Min(255, symbolColor.R + rVariance));
+                            gVariance = Math.Max(0, Math.Min(255, symbolColor.G + gVariance));
+                            bVariance = Math.Max(0, Math.Min(255, symbolColor.B + bVariance));
+
+                            symbolColor = Color.FromArgb(rVariance, gVariance, bVariance);
+                        }
+
                         SKPaint paint = new()
                         {
                             ColorFilter = SKColorFilter.CreateBlendMode(
-                                Extensions.ToSKColor(symbolColors[0]),
+                                Extensions.ToSKColor(symbolColor),
                                 SKBlendMode.Modulate) // combine the selected color with the bitmap colors
                         };
 
                         symbol.SymbolPaint = paint;
                     }
 
-                    symbol.CustomSymbolColors[0] = Extensions.ToSKColor(symbolColors[0]);
+                    symbol.CustomSymbolColors[0] = Extensions.ToSKColor(symbolColor);
                     symbol.CustomSymbolColors[1] = Extensions.ToSKColor(symbolColors[1]);
                     symbol.CustomSymbolColors[2] = Extensions.ToSKColor(symbolColors[2]);
                 }

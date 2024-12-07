@@ -57,119 +57,130 @@ namespace RealmStudio
 
             for (int i = 0; i < landformList.Count; i++)
             {
-                SKPath landformOutlinePath = ((Landform)landformList[i]).ContourPath;
+                using SKPath clipPath = new();
+                SKPath? landformOutlinePath = null;
+
+                if (landformList[i] is Landform landform)
+                {
+                    landformOutlinePath = landform.ContourPath;
+
+                    if (landformOutlinePath != null && landformOutlinePath.PointCount > 0)
+                    {
+                        clipPath.AddPath(landformOutlinePath);
+                    }
+                }
 
                 if (landformOutlinePath != null && landformOutlinePath.PointCount > 0 && distinctPathPoints.Count > 0 && PathPaint != null)
                 {
-                    canvas.Save();
-                    canvas.ClipPath(landformOutlinePath);
-
-                    switch (PathType)
+                    using (new SKAutoCanvasRestore(canvas))
                     {
-                        case PathTypeEnum.SolidBlackBorderPath:
-                            {
-                                using SKPaint blackBorderPaint = PathPaint.Clone();
-                                blackBorderPaint.StrokeWidth = PathPaint.StrokeWidth * 1.2F;
-                                blackBorderPaint.Color = SKColors.Black;
+                        canvas.ClipPath(clipPath);
 
-                                MapPathMethods.DrawBezierCurvesFromPoints(canvas, distinctPathPoints, blackBorderPaint);
+                        switch (PathType)
+                        {
+                            case PathTypeEnum.SolidBlackBorderPath:
+                                {
+                                    using SKPaint blackBorderPaint = PathPaint.Clone();
+                                    blackBorderPaint.StrokeWidth = PathPaint.StrokeWidth * 1.2F;
+                                    blackBorderPaint.Color = SKColors.Black;
+
+                                    MapPathMethods.DrawBezierCurvesFromPoints(canvas, distinctPathPoints, blackBorderPaint);
+                                    MapPathMethods.DrawBezierCurvesFromPoints(canvas, distinctPathPoints, PathPaint);
+                                }
+                                break;
+                            case PathTypeEnum.BorderedGradientPath:
+                                {
+                                    using SKPaint borderPaint = PathPaint.Clone();
+                                    borderPaint.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
+                                    borderPaint.Color = SKColors.Black;
+
+                                    List<MapPathPoint> parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.2F, ParallelEnum.Below);
+                                    MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
+
+                                    using SKPaint linePaint1 = PathPaint.Clone();
+                                    linePaint1.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
+                                    Color clr = Color.FromArgb(154, PathColor);
+                                    linePaint1.Color = Extensions.ToSKColor(clr);
+
+                                    parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.4F, ParallelEnum.Below);
+                                    MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint1);
+
+                                    using SKPaint linePaint2 = PathPaint.Clone();
+                                    linePaint2.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
+                                    clr = Color.FromArgb(102, PathColor);
+                                    linePaint2.Color = Extensions.ToSKColor(clr);
+
+                                    parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.6F, ParallelEnum.Below);
+                                    MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint2);
+
+                                    using SKPaint linePaint3 = PathPaint.Clone();
+                                    linePaint3.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
+                                    clr = Color.FromArgb(51, PathColor);
+                                    linePaint3.Color = Extensions.ToSKColor(clr);
+
+                                    parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.8F, ParallelEnum.Below);
+                                    MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint3);
+
+                                    using SKPaint linePaint4 = PathPaint.Clone();
+                                    linePaint4.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
+                                    clr = Color.FromArgb(25, PathColor);
+                                    linePaint4.Color = Extensions.ToSKColor(clr);
+
+                                    parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth, ParallelEnum.Below);
+                                    MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint4);
+                                }
+                                break;
+                            case PathTypeEnum.BorderedLightSolidPath:
+                                {
+                                    using SKPaint borderPaint = PathPaint.Clone();
+                                    borderPaint.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
+                                    borderPaint.Color = SKColors.Black;
+
+                                    MapPathMethods.DrawBezierCurvesFromPoints(canvas, distinctPathPoints, borderPaint);
+
+                                    using SKPaint linePaint1 = PathPaint.Clone();
+                                    linePaint1.StrokeWidth = PathPaint.StrokeWidth * 0.8F;
+                                    Color clr = Color.FromArgb(102, PathColor);
+                                    linePaint1.Color = Extensions.ToSKColor(clr);
+
+                                    List<MapPathPoint> parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.2F, ParallelEnum.Below);
+                                    MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint1);
+                                }
+                                break;
+                            case PathTypeEnum.DoubleSolidBorderPath:
+                                {
+                                    using SKPaint borderPaint = PathPaint.Clone();
+                                    borderPaint.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
+
+                                    MapPathMethods.DrawBezierCurvesFromPoints(canvas, distinctPathPoints, borderPaint);
+
+                                    List<MapPathPoint> parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth, ParallelEnum.Below);
+                                    MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
+
+                                }
+                                break;
+                            case PathTypeEnum.BorderAndTexturePath:
+                                {
+                                    MapPathMethods.DrawBezierCurvesFromPoints(canvas, distinctPathPoints, PathPaint);
+
+                                    using SKPaint borderPaint = PathPaint.Clone();
+                                    borderPaint.Shader = null;
+
+                                    borderPaint.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
+
+                                    List<MapPathPoint> parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.5F, ParallelEnum.Above);
+                                    MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
+
+                                    parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.5F, ParallelEnum.Below);
+                                    MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
+                                }
+
+                                break;
+                            default:
                                 MapPathMethods.DrawBezierCurvesFromPoints(canvas, distinctPathPoints, PathPaint);
-                            }
-                            break;
-                        case PathTypeEnum.BorderedGradientPath:
-                            {
-                                using SKPaint borderPaint = PathPaint.Clone();
-                                borderPaint.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
-                                borderPaint.Color = SKColors.Black;
-
-                                List<MapPathPoint> parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.2F, ParallelEnum.Below);
-                                MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
-
-                                using SKPaint linePaint1 = PathPaint.Clone();
-                                linePaint1.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
-                                Color clr = Color.FromArgb(154, PathColor);
-                                linePaint1.Color = Extensions.ToSKColor(clr);
-
-                                parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.4F, ParallelEnum.Below);
-                                MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint1);
-
-                                using SKPaint linePaint2 = PathPaint.Clone();
-                                linePaint2.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
-                                clr = Color.FromArgb(102, PathColor);
-                                linePaint2.Color = Extensions.ToSKColor(clr);
-
-                                parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.6F, ParallelEnum.Below);
-                                MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint2);
-
-                                using SKPaint linePaint3 = PathPaint.Clone();
-                                linePaint3.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
-                                clr = Color.FromArgb(51, PathColor);
-                                linePaint3.Color = Extensions.ToSKColor(clr);
-
-                                parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.8F, ParallelEnum.Below);
-                                MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint3);
-
-                                using SKPaint linePaint4 = PathPaint.Clone();
-                                linePaint4.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
-                                clr = Color.FromArgb(25, PathColor);
-                                linePaint4.Color = Extensions.ToSKColor(clr);
-
-                                parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth, ParallelEnum.Below);
-                                MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint4);
-                            }
-                            break;
-                        case PathTypeEnum.BorderedLightSolidPath:
-                            {
-                                using SKPaint borderPaint = PathPaint.Clone();
-                                borderPaint.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
-                                borderPaint.Color = SKColors.Black;
-
-                                MapPathMethods.DrawBezierCurvesFromPoints(canvas, distinctPathPoints, borderPaint);
-
-                                using SKPaint linePaint1 = PathPaint.Clone();
-                                linePaint1.StrokeWidth = PathPaint.StrokeWidth * 0.8F;
-                                Color clr = Color.FromArgb(102, PathColor);
-                                linePaint1.Color = Extensions.ToSKColor(clr);
-
-                                List<MapPathPoint> parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.2F, ParallelEnum.Below);
-                                MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint1);
-                            }
-                            break;
-                        case PathTypeEnum.DoubleSolidBorderPath:
-                            {
-                                using SKPaint borderPaint = PathPaint.Clone();
-                                borderPaint.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
-
-                                MapPathMethods.DrawBezierCurvesFromPoints(canvas, distinctPathPoints, borderPaint);
-
-                                List<MapPathPoint> parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth, ParallelEnum.Below);
-                                MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
-
-                            }
-                            break;
-                        case PathTypeEnum.BorderAndTexturePath:
-                            {
-                                MapPathMethods.DrawBezierCurvesFromPoints(canvas, distinctPathPoints, PathPaint);
-
-                                using SKPaint borderPaint = PathPaint.Clone();
-                                borderPaint.Shader = null;
-
-                                borderPaint.StrokeWidth = PathPaint.StrokeWidth * 0.2F;
-
-                                List<MapPathPoint> parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.5F, ParallelEnum.Above);
-                                MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
-
-                                parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.5F, ParallelEnum.Below);
-                                MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
-                            }
-
-                            break;
-                        default:
-                            MapPathMethods.DrawBezierCurvesFromPoints(canvas, distinctPathPoints, PathPaint);
-                            break;
+                                break;
+                        }
                     }
-
-                    canvas.Restore();
                 }
             }
         }

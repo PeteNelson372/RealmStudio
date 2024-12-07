@@ -132,33 +132,33 @@ namespace RealmStudio
             }
         }
 
-        public void RenderDistanceLabel(SKCanvas canvas, SKPoint labelPoint, float distance)
+        public void RenderDistanceLabel(SKCanvas? canvas, SKPoint labelPoint, float distance)
         {
             if (UseMapUnits && !string.IsNullOrEmpty(Map.MapAreaUnits))
             {
-                canvas.DrawText(string.Format("{0} {1}", (int)(distance * Map.MapPixelWidth), Map.MapAreaUnits), labelPoint, MeasureValueOutlinePaint);
-                canvas.DrawText(string.Format("{0} {1}", (int)(distance * Map.MapPixelWidth), Map.MapAreaUnits), labelPoint, MeasureValuePaint);
+                canvas?.DrawText(string.Format("{0} {1}", (int)(distance * Map.MapPixelWidth), Map.MapAreaUnits), labelPoint, MeasureValueOutlinePaint);
+                canvas?.DrawText(string.Format("{0} {1}", (int)(distance * Map.MapPixelWidth), Map.MapAreaUnits), labelPoint, MeasureValuePaint);
             }
             else
             {
-                canvas.DrawText(string.Format("{0} {1}", (int)distance, "pixels"), labelPoint, MeasureValueOutlinePaint);
-                canvas.DrawText(string.Format("{0} {1}", (int)distance, "pixels"), labelPoint, MeasureValuePaint);
+                canvas?.DrawText(string.Format("{0} {1}", (int)distance, "pixels"), labelPoint, MeasureValueOutlinePaint);
+                canvas?.DrawText(string.Format("{0} {1}", (int)distance, "pixels"), labelPoint, MeasureValuePaint);
             }
         }
 
-        public void RenderAreaLabel(SKCanvas canvas, SKPoint labelPoint, float measuredArea)
+        public void RenderAreaLabel(SKCanvas? canvas, SKPoint labelPoint, float measuredArea)
         {
             if (UseMapUnits && !string.IsNullOrEmpty(Map.MapAreaUnits))
             {
                 string labelString = string.Format("{0} {1}", (int)(measuredArea * (Map.MapPixelWidth * Map.MapPixelWidth)), Map.MapAreaUnits + "\xB2");
 
-                canvas.DrawText(labelString, labelPoint, MeasureValueOutlinePaint);
-                canvas.DrawText(labelString, labelPoint, MeasureValuePaint);
+                canvas?.DrawText(labelString, labelPoint, MeasureValueOutlinePaint);
+                canvas?.DrawText(labelString, labelPoint, MeasureValuePaint);
             }
             else
             {
-                canvas.DrawText(string.Format("{0} {1}", (int)measuredArea, "pixels\xB2"), labelPoint, MeasureValueOutlinePaint);
-                canvas.DrawText(string.Format("{0} {1}", (int)measuredArea, "pixels\xB2"), labelPoint, MeasureValuePaint);
+                canvas?.DrawText(string.Format("{0} {1}", (int)measuredArea, "pixels\xB2"), labelPoint, MeasureValueOutlinePaint);
+                canvas?.DrawText(string.Format("{0} {1}", (int)measuredArea, "pixels\xB2"), labelPoint, MeasureValuePaint);
             }
         }
     }

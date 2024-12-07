@@ -54,9 +54,9 @@ namespace RealmStudio
 
         public MapRegion() { }
 
-        public override void Render(SKCanvas canvas)
+        public override void Render(SKCanvas? canvas)
         {
-            if (ParentMap == null) return;
+            if (ParentMap == null || canvas == null) return;
 
             SKPath path = new();
 
@@ -105,21 +105,12 @@ namespace RealmStudio
 
                 if (BoundaryPath != null)
                 {
-                    overlayLayer.RenderPicture?.Dispose();
-                    overlayLayer.RenderPicture = null;
-
-                    using var regionOverlayRecorder = new SKPictureRecorder();
-                    SKRect clippingBounds = new(0, 0, ParentMap.MapWidth, ParentMap.MapHeight);
-
-                    // Start recording 
-                    regionOverlayRecorder.BeginRecording(clippingBounds);
-
                     // draw an outline around the region to show that it is selected
                     BoundaryPath.GetTightBounds(out SKRect boundRect);
                     using SKPath boundsPath = new();
                     boundsPath.AddRect(boundRect);
 
-                    regionOverlayRecorder.RecordingCanvas.DrawPath(boundsPath, PaintObjects.RegionSelectPaint);
+                    canvas.DrawPath(boundsPath, PaintObjects.RegionSelectPaint);
 
                     // draw dots on region vertices
 
@@ -150,11 +141,9 @@ namespace RealmStudio
 
                         if (renderPoint)
                         {
-                            p.Render(regionOverlayRecorder.RecordingCanvas);
+                            p.Render(canvas);
                         }
                     }
-
-                    overlayLayer.RenderPicture = regionOverlayRecorder.EndRecording();
                 }
             }
         }

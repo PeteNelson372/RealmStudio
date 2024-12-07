@@ -23,6 +23,8 @@
 ***************************************************************************************************************************/
 using AForge.Imaging.Filters;
 using SkiaSharp;
+using System.Drawing.Imaging;
+
 
 namespace RealmStudio
 {
@@ -287,6 +289,101 @@ namespace RealmStudio
             }
 
             return generatedLandformPaths;
+        }
+
+        internal static SKPath TraceImage(string fileName)
+        {
+            Bitmap b = (Bitmap)Bitmap.FromFile(fileName);
+
+            // convert to monochrome
+            Bitmap gsb = DrawingMethods.MakeGrayscale(b, 0.0F, false);
+
+            if (gsb.PixelFormat != PixelFormat.Format8bppIndexed)
+            {
+                // convert the bitmap to an 8bpp grayscale image for processing
+                Bitmap newB = Grayscale.CommonAlgorithms.BT709.Apply(gsb);
+                gsb = newB;
+            }
+
+            // find edges
+            // create filter
+            SobelEdgeDetector filter = new();
+
+            // apply the filter
+            filter.ApplyInPlace(gsb);
+
+            // remove background
+            gsb.MakeTransparent(Color.Black);
+
+            if (gsb.PixelFormat != PixelFormat.Format8bppIndexed)
+            {
+                // convert the bitmap to an 8bpp grayscale image for processing
+                Bitmap newB = Grayscale.CommonAlgorithms.BT709.Apply(gsb);
+                gsb = newB;
+            }
+
+            Invert invert = new();
+            Bitmap invertedBitmap = invert.Apply(gsb);
+
+            // flatten colors again
+            // convert to monochrome
+            //Bitmap gsbInverted = DrawingMethods.MakeGrayscale(invertedBitmap, 0.5F, true);
+            DrawingMethods.FlattenBitmapColors(ref invertedBitmap);
+
+            Mean meanFilter = new();
+            meanFilter.ApplyInPlace(invertedBitmap);
+            meanFilter.ApplyInPlace(invertedBitmap);
+
+            DrawingMethods.FlattenBitmapColors(ref invertedBitmap);
+
+            /*
+             * Tesseract OCR code - not needed for now
+             * 
+            string engtraineddatapath = AppDomain.CurrentDomain.BaseDirectory + "Resources";
+
+            if (Directory.Exists(engtraineddatapath))
+            {
+                using (var engine = new TesseractEngine(engtraineddatapath, "eng", EngineMode.Default))
+                {
+                    using Pix pixBmp = PixConverter.ToPix(invertedBitmap);
+                    //using Pix pixBmp = Pix.LoadFromFile(fileName);
+
+                    // engine created; ocr the inverted grayscale bitmap
+
+                    using (var page = engine.Process(pixBmp))
+                    {
+                        string text = page.GetTsvText(0);
+                        MessageBox.Show(text);
+                    }
+                }
+            }
+            */
+
+            // run Moore meighborhood algorithm to get the perimeter path
+            List<SKPoint> contourPoints = DrawingMethods.GetBitmapContourPoints(invertedBitmap);
+
+            SKPath landformPath = new();
+            if (contourPoints.Count > 4)   // require at least 4 points in the contour to be added as a landform
+            {
+                // the Moore-Neighbor algorithm sets the first (0th) pixel in the list of contour points to
+                // an empty pixel, so remove it before constructing the path from the contour points
+                contourPoints.RemoveAt(0);
+
+                landformPath.MoveTo(contourPoints[0]);
+
+                for (int j = 1; j < contourPoints.Count; j++)
+                {
+                    landformPath.LineTo(contourPoints[j]);
+                }
+
+                if (landformPath[0] != landformPath[contourPoints.Count - 1])
+                {
+                    landformPath.Close();
+                }
+
+            }
+
+            return landformPath;
         }
     }
 }

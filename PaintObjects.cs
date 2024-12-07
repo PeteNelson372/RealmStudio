@@ -44,7 +44,7 @@ namespace RealmStudio
 
         public static readonly SKPaint LandColorEraserPaint = new()
         {
-            Color = SKColor.Empty,
+            Color = SKColors.Empty,
             Style = SKPaintStyle.Fill,
             BlendMode = SKBlendMode.Src,
             IsAntialias = true,
@@ -88,7 +88,7 @@ namespace RealmStudio
             Color = SKColors.Black,
             StrokeWidth = 1,
             Style = SKPaintStyle.Stroke,
-            IsAntialias = true,
+            //IsAntialias = true,
             PathEffect = SKPathEffect.CreateDash([5F, 5F], 10F),
         };
 

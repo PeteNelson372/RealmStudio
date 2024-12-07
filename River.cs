@@ -87,11 +87,14 @@ namespace RealmStudio
 
             for (int i = 0; i < landformList.Count; i++)
             {
-                SKPath landformOutlinePath = ((Landform)landformList[i]).ContourPath;
-
-                if (landformOutlinePath != null && landformOutlinePath.PointCount > 0)
+                if (landformList[i] is Landform landform)
                 {
-                    clipPath.AddPath(landformOutlinePath);
+                    SKPath landformOutlinePath = landform.ContourPath;
+
+                    if (landformOutlinePath != null && landformOutlinePath.PointCount > 0)
+                    {
+                        clipPath.AddPath(landformOutlinePath);
+                    }
                 }
             }
 

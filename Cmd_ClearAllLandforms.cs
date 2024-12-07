@@ -32,8 +32,6 @@ namespace RealmStudio
         public void DoOperation()
         {
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER);
-            landformLayer.RenderPicture?.Dispose();
-            landformLayer.RenderPicture = null;
 
             for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
             {
@@ -41,7 +39,6 @@ namespace RealmStudio
             }
 
             landformLayer.MapLayerComponents.Clear();
-            landformLayer.IsModified = true;
 
             MapLayer landformDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDDRAWINGLAYER);
 
@@ -49,23 +46,11 @@ namespace RealmStudio
             {
                 StoredLayerPaintStrokes.Add((LayerPaintStroke)landformDrawingLayer.MapLayerComponents[i]);
             }
-
-            landformDrawingLayer.RenderPicture?.Dispose();
-            landformDrawingLayer.RenderPicture = null;
-            landformDrawingLayer.IsModified = true;
-
-            MapLayer landformCoastlineLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDCOASTLINELAYER);
-            landformCoastlineLayer.RenderPicture?.Dispose();
-            landformCoastlineLayer.RenderPicture = null;
-
-            landformCoastlineLayer.IsModified = true;
         }
 
         public void UndoOperation()
         {
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER);
-            landformLayer.RenderPicture?.Dispose();
-            landformLayer.RenderPicture = null;
 
             landformLayer.MapLayerComponents.Clear();
 
@@ -74,23 +59,12 @@ namespace RealmStudio
                 landformLayer.MapLayerComponents.Add(l);
             }
 
-            landformLayer.IsModified = true;
-
             MapLayer landformDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDDRAWINGLAYER);
 
             foreach (LayerPaintStroke lps in StoredLayerPaintStrokes)
             {
                 landformDrawingLayer.MapLayerComponents.Add(lps);
             }
-
-            landformDrawingLayer.RenderPicture?.Dispose();
-            landformDrawingLayer.RenderPicture = null;
-            landformDrawingLayer.IsModified = true;
-
-            MapLayer landformCoastlineLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDCOASTLINELAYER);
-            landformCoastlineLayer.RenderPicture?.Dispose();
-            landformCoastlineLayer.RenderPicture = null;
-            landformCoastlineLayer.IsModified = true;
         }
     }
 }

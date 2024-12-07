@@ -9,15 +9,16 @@
     <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2024.329.3769</AssemblyVersion>
-    <FileVersion>1.2024.329.3769</FileVersion>
-    <Version>1.2024.2-alpha-648</Version>
+    <AssemblyVersion>1.2024.342.31694</AssemblyVersion>
+    <FileVersion>1.2024.342.31694</FileVersion>
+    <Version>1.2024.2-alpha-808</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2024. Peter R. Nelson</Copyright>
     <ApplicationIcon>realm_studio_icon_1024x1024_g3u_icon.ico</ApplicationIcon>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <PackageIcon>Realm Studio Icon 128x128.png</PackageIcon>  
+    <PackageIcon>Realm Studio Icon 128x128.png</PackageIcon>
+    <SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>  
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -62,14 +63,17 @@
     <PackageReference Include="Delaunator" Version="1.0.10" />
     <PackageReference Include="FontAwesome" Version="4.7.0" />
     <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
-    <PackageReference Include="log4net" Version="2.0.17" />
-    <PackageReference Include="ReaLTaiizor" Version="3.8.0.7" />
+    <PackageReference Include="log4net" Version="3.0.3" />
+    <PackageReference Include="ReaLTaiizor" Version="3.8.0.8" />
     <PackageReference Include="SimplexNoise" Version="2.0.0" />
-    <PackageReference Include="SkiaSharp" Version="2.88.8" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="2.88.8" />
+    <PackageReference Include="SkiaSharp" Version="2.88.9" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="2.88.9" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
-    <PackageReference Include="SkiaSharp.Views" Version="2.88.8" />
-    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="2.88.8" />
+    <PackageReference Include="SkiaSharp.Views" Version="2.88.9" />
+    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="2.88.9" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
+    <PackageReference Include="Tesseract" Version="5.2.0" />
+    <PackageReference Include="Tesseract.Drawing" Version="5.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -105,6 +109,9 @@
     <None Update="README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
+    </None>
+    <None Update="Resources\eng.traineddata">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
