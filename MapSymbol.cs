@@ -131,17 +131,20 @@ namespace RealmStudio
 
         public override void Render(SKCanvas canvas)
         {
-            if (PlacedBitmap != null)
+            //using (new SKAutoCanvasRestore(canvas))
             {
-                SKPoint point = new(X, Y);
+                if (PlacedBitmap != null)
+                {
+                    SKPoint point = new(X, Y);
 
-                if (IsGrayscale)
-                {
-                    canvas.DrawBitmap(PlacedBitmap, point, SymbolPaint);
-                }
-                else
-                {
-                    canvas.DrawBitmap(PlacedBitmap, point, null);
+                    if (IsGrayscale)
+                    {
+                        canvas.DrawBitmap(PlacedBitmap, point, SymbolPaint);
+                    }
+                    else
+                    {
+                        canvas.DrawBitmap(PlacedBitmap, point, null);
+                    }
                 }
             }
         }

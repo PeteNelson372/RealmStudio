@@ -64,7 +64,9 @@ namespace RealmStudio
                 return;
             }
 
-            if (FrameBitmap != null
+            //using (new SKAutoCanvasRestore(canvas))
+            {
+                if (FrameBitmap != null
                 && Patch_A != null
                 && Patch_B != null
                 && Patch_C != null
@@ -73,129 +75,130 @@ namespace RealmStudio
                 && Patch_G != null
                 && Patch_H != null
                 && Patch_I != null)
-            {
-                using SKPaint framePaint = new()
                 {
-                    Style = SKPaintStyle.Fill,
-                    ColorFilter = SKColorFilter.CreateBlendMode(
-                    Extensions.ToSKColor(FrameTint),
-                    SKBlendMode.Modulate) // combine the tint with the bitmap color
-                };
+                    using SKPaint framePaint = new()
+                    {
+                        Style = SKPaintStyle.Fill,
+                        ColorFilter = SKColorFilter.CreateBlendMode(
+                        Extensions.ToSKColor(FrameTint),
+                        SKBlendMode.Modulate) // combine the tint with the bitmap color
+                    };
 
-                FramePaint = framePaint.Clone();
+                    FramePaint = framePaint.Clone();
 
-                // frame top
-                canvas.DrawBitmap(Patch_A, 0, 0, FramePaint);
+                    // frame top
+                    canvas.DrawBitmap(Patch_A, 0, 0, FramePaint);
 
-                // tile Patch_B - has to be an integral number of tiles;
-                float patch_b_tile_length = Width - Patch_A.Width - Patch_C.Width;
+                    // tile Patch_B - has to be an integral number of tiles;
+                    float patch_b_tile_length = Width - Patch_A.Width - Patch_C.Width;
 
-                int num_patch_b_tiles = Math.Max((int)Math.Floor(patch_b_tile_length / Patch_B.Width), 1);
+                    int num_patch_b_tiles = Math.Max((int)Math.Floor(patch_b_tile_length / Patch_B.Width), 1);
 
-                int newWidth = (int)Math.Ceiling(patch_b_tile_length / num_patch_b_tiles);
+                    int newWidth = (int)Math.Ceiling(patch_b_tile_length / num_patch_b_tiles);
 
-                num_patch_b_tiles = (int)Math.Round((float)patch_b_tile_length / newWidth);
+                    num_patch_b_tiles = (int)Math.Round((float)patch_b_tile_length / newWidth);
 
-                while ((newWidth * num_patch_b_tiles) + Patch_A.Width + Patch_C.Width < Width)
-                {
-                    newWidth++;
+                    while ((newWidth * num_patch_b_tiles) + Patch_A.Width + Patch_C.Width < Width)
+                    {
+                        newWidth++;
+                    }
+
+                    // scale Patch_B so that it tiles an integral number of times
+                    using SKBitmap scaled_B = new(newWidth, Patch_B.Height);
+                    Patch_B.ScalePixels(scaled_B, SKFilterQuality.High);
+
+                    int left = Patch_A.Width;
+
+                    for (int i = 0; i < num_patch_b_tiles; i++)
+                    {
+                        canvas.DrawBitmap(scaled_B, left, 0, FramePaint);
+                        left += scaled_B.Width;
+                    }
+                    canvas.DrawBitmap(Patch_C, Width - Patch_C.Width, 0, FramePaint);
+
+                    // tile Patch_D - has to be an integral number of tiles;
+                    float patch_d_tile_height = Height - Patch_A.Height - Patch_G.Height;
+
+                    int num_patch_d_tiles = Math.Max((int)(patch_d_tile_height / Patch_D.Height), 1);
+
+                    int newHeight = (int)Math.Ceiling(patch_d_tile_height / num_patch_d_tiles);
+
+                    num_patch_d_tiles = (int)Math.Round((float)patch_d_tile_height / newHeight);
+
+                    while ((newHeight * num_patch_d_tiles) + Patch_A.Height + Patch_G.Height < Height)
+                    {
+                        newHeight++;
+                    }
+
+                    // scale Patch_D so that it tiles an integral number of times
+                    // scaled D patch has same width and new height
+                    using SKBitmap scaled_D = new(Patch_D.Width, newHeight);
+                    Patch_D.ScalePixels(scaled_D, SKFilterQuality.High);
+
+                    int top = Patch_A.Height;
+
+                    for (int i = 0; i < num_patch_d_tiles; i++)
+                    {
+                        canvas.DrawBitmap(scaled_D, 0, top, FramePaint);
+                        top += scaled_D.Height;
+                    }
+
+                    float patch_f_tile_height = Height - Patch_C.Height - Patch_I.Height;
+
+                    int num_patch_f_tiles = Math.Max((int)(patch_f_tile_height / Patch_F.Height), 1);
+
+                    int newFHeight = (int)Math.Ceiling(patch_f_tile_height / num_patch_f_tiles);
+
+                    num_patch_f_tiles = (int)Math.Round((float)patch_f_tile_height / newHeight);
+
+                    while ((newFHeight * num_patch_f_tiles) + Patch_C.Height + Patch_I.Height < Height)
+                    {
+                        newFHeight++;
+                    }
+
+                    // scale Patch_F so that it tiles an integral number of times
+                    using SKBitmap scaled_F = new(Patch_F.Width, newFHeight);
+                    Patch_F.ScalePixels(scaled_F, SKFilterQuality.High);
+
+                    top = Patch_C.Height;
+
+                    for (int i = 0; i < num_patch_f_tiles; i++)
+                    {
+                        canvas.DrawBitmap(scaled_F, Width - scaled_F.Width, top, FramePaint);
+                        top += scaled_F.Height;
+                    }
+
+                    // frame bottom
+                    canvas.DrawBitmap(Patch_G, 0, Height - Patch_G.Height, FramePaint);
+
+                    // scale Patch_H so that it tiles an integral number of times
+                    float patch_h_tile_length = Width - Patch_G.Width - Patch_I.Width;
+
+                    int num_patch_h_tiles = Math.Max((int)Math.Floor(patch_h_tile_length / Patch_H.Width), 1);
+
+                    int newHWidth = (int)Math.Ceiling(patch_h_tile_length / num_patch_h_tiles);
+
+                    num_patch_h_tiles = (int)Math.Round((float)patch_h_tile_length / newWidth);
+
+                    while ((newHWidth * num_patch_h_tiles) + Patch_G.Width + Patch_I.Width < Width)
+                    {
+                        newHWidth++;
+                    }
+
+                    using SKBitmap scaled_H = new(newHWidth, Patch_H.Height);
+                    Patch_H.ScalePixels(scaled_H, SKFilterQuality.High);
+
+                    left = Patch_G.Width;
+
+                    // patch H is tiled the same number of times as patch B
+                    for (int i = 0; i < num_patch_h_tiles; i++)
+                    {
+                        canvas.DrawBitmap(scaled_H, left, Height - Patch_H.Height, FramePaint);
+                        left += scaled_H.Width;
+                    }
+
+                    canvas.DrawBitmap(Patch_I, Width - Patch_I.Width, Height - Patch_I.Height, FramePaint);
                 }
-
-                // scale Patch_B so that it tiles an integral number of times
-                using SKBitmap scaled_B = new(newWidth, Patch_B.Height);
-                Patch_B.ScalePixels(scaled_B, SKFilterQuality.High);
-
-                int left = Patch_A.Width;
-
-                for (int i = 0; i < num_patch_b_tiles; i++)
-                {
-                    canvas.DrawBitmap(scaled_B, left, 0, FramePaint);
-                    left += scaled_B.Width;
-                }
-                canvas.DrawBitmap(Patch_C, Width - Patch_C.Width, 0, FramePaint);
-
-                // tile Patch_D - has to be an integral number of tiles;
-                float patch_d_tile_height = Height - Patch_A.Height - Patch_G.Height;
-
-                int num_patch_d_tiles = Math.Max((int)(patch_d_tile_height / Patch_D.Height), 1);
-
-                int newHeight = (int)Math.Ceiling(patch_d_tile_height / num_patch_d_tiles);
-
-                num_patch_d_tiles = (int)Math.Round((float)patch_d_tile_height / newHeight);
-
-                while ((newHeight * num_patch_d_tiles) + Patch_A.Height + Patch_G.Height < Height)
-                {
-                    newHeight++;
-                }
-
-                // scale Patch_D so that it tiles an integral number of times
-                // scaled D patch has same width and new height
-                using SKBitmap scaled_D = new(Patch_D.Width, newHeight);
-                Patch_D.ScalePixels(scaled_D, SKFilterQuality.High);
-
-                int top = Patch_A.Height;
-
-                for (int i = 0; i < num_patch_d_tiles; i++)
-                {
-                    canvas.DrawBitmap(scaled_D, 0, top, FramePaint);
-                    top += scaled_D.Height;
-                }
-
-                float patch_f_tile_height = Height - Patch_C.Height - Patch_I.Height;
-
-                int num_patch_f_tiles = Math.Max((int)(patch_f_tile_height / Patch_F.Height), 1);
-
-                int newFHeight = (int)Math.Ceiling(patch_f_tile_height / num_patch_f_tiles);
-
-                num_patch_f_tiles = (int)Math.Round((float)patch_f_tile_height / newHeight);
-
-                while ((newFHeight * num_patch_f_tiles) + Patch_C.Height + Patch_I.Height < Height)
-                {
-                    newFHeight++;
-                }
-
-                // scale Patch_F so that it tiles an integral number of times
-                using SKBitmap scaled_F = new(Patch_F.Width, newFHeight);
-                Patch_F.ScalePixels(scaled_F, SKFilterQuality.High);
-
-                top = Patch_C.Height;
-
-                for (int i = 0; i < num_patch_f_tiles; i++)
-                {
-                    canvas.DrawBitmap(scaled_F, Width - scaled_F.Width, top, FramePaint);
-                    top += scaled_F.Height;
-                }
-
-                // frame bottom
-                canvas.DrawBitmap(Patch_G, 0, Height - Patch_G.Height, FramePaint);
-
-                // scale Patch_H so that it tiles an integral number of times
-                float patch_h_tile_length = Width - Patch_G.Width - Patch_I.Width;
-
-                int num_patch_h_tiles = Math.Max((int)Math.Floor(patch_h_tile_length / Patch_H.Width), 1);
-
-                int newHWidth = (int)Math.Ceiling(patch_h_tile_length / num_patch_h_tiles);
-
-                num_patch_h_tiles = (int)Math.Round((float)patch_h_tile_length / newWidth);
-
-                while ((newHWidth * num_patch_h_tiles) + Patch_G.Width + Patch_I.Width < Width)
-                {
-                    newHWidth++;
-                }
-
-                using SKBitmap scaled_H = new(newHWidth, Patch_H.Height);
-                Patch_H.ScalePixels(scaled_H, SKFilterQuality.High);
-
-                left = Patch_G.Width;
-
-                // patch H is tiled the same number of times as patch B
-                for (int i = 0; i < num_patch_h_tiles; i++)
-                {
-                    canvas.DrawBitmap(scaled_H, left, Height - Patch_H.Height, FramePaint);
-                    left += scaled_H.Width;
-                }
-
-                canvas.DrawBitmap(Patch_I, Width - Patch_I.Width, Height - Patch_I.Height, FramePaint);
             }
         }
 

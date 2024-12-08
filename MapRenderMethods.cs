@@ -37,24 +37,54 @@ namespace RealmStudio
         {
             // render base layer
             MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BASELAYER);
+            if (baseLayer.LayerSurface == null) return;
 
-            if (baseLayer.LayerSurface != null)
-            {
-                baseLayer.LayerSurface.Canvas.Clear(SKColors.White);
-                baseLayer.Render(baseLayer.LayerSurface.Canvas);
-                renderCanvas.DrawSurface(baseLayer.LayerSurface, scrollPoint);
-            }
+            baseLayer.LayerSurface.Canvas.Clear(SKColors.White);
+
+            baseLayer.Render(baseLayer.LayerSurface.Canvas);
+            renderCanvas.DrawSurface(baseLayer.LayerSurface, scrollPoint);
+        }
+
+        internal static void RenderBackgroundForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            // render base layer
+            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BASELAYER);
+
+            using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+            using SKCanvas canvas = new(b);
+            canvas.Clear(SKColors.White);
+
+            baseLayer.Render(canvas);
+            renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
         }
 
         internal static void RenderBoxes(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BOXLAYER);
+            if (boxLayer.LayerSurface == null) return;
 
-            if (boxLayer.ShowLayer && boxLayer.LayerSurface != null && boxLayer.MapLayerComponents.Count > 0)
+            if (boxLayer.ShowLayer && boxLayer.MapLayerComponents.Count > 0)
             {
                 boxLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 boxLayer.Render(boxLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(boxLayer.LayerSurface, scrollPoint);
+            }
+        }
+
+        internal static void RenderBoxesForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BOXLAYER);
+
+            if (boxLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                boxLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
             }
         }
 
@@ -63,16 +93,40 @@ namespace RealmStudio
             // TODO
         }
 
+        internal static void RenderDrawingForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            // TODO
+        }
+
         internal static void RenderLowerGrid(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             // render grid below symbols
             MapLayer belowSymbolGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER);
+            if (belowSymbolGridLayer.LayerSurface == null) return;
 
-            if (belowSymbolGridLayer.ShowLayer && belowSymbolGridLayer.LayerSurface != null && belowSymbolGridLayer.MapLayerComponents.Count > 0)
+            if (belowSymbolGridLayer.ShowLayer && belowSymbolGridLayer.MapLayerComponents.Count > 0)
             {
                 belowSymbolGridLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 belowSymbolGridLayer.Render(belowSymbolGridLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(belowSymbolGridLayer.LayerSurface, scrollPoint);
+            }
+        }
+
+        internal static void RenderLowerGridForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            // render grid below symbols
+            MapLayer belowSymbolGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER);
+
+            if (belowSymbolGridLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                belowSymbolGridLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
             }
         }
 
@@ -80,12 +134,31 @@ namespace RealmStudio
         {
             // render grid layer above ocean
             MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER);
+            if (aboveOceanGridLayer.LayerSurface == null) return;
 
             if (aboveOceanGridLayer.ShowLayer && aboveOceanGridLayer.LayerSurface != null && aboveOceanGridLayer.MapLayerComponents.Count > 0)
             {
                 aboveOceanGridLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 aboveOceanGridLayer.Render(aboveOceanGridLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(aboveOceanGridLayer.LayerSurface, scrollPoint);
+            }
+        }
+
+        internal static void RenderUpperGridForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            // render grid layer above ocean
+            MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER);
+
+            if (aboveOceanGridLayer.ShowLayer && aboveOceanGridLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                aboveOceanGridLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
             }
         }
 
@@ -93,24 +166,61 @@ namespace RealmStudio
         {
             // render default grid layer
             MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER);
+            if (defaultGridLayer.LayerSurface == null) return;
 
-            if (defaultGridLayer.ShowLayer && defaultGridLayer.LayerSurface != null && defaultGridLayer.MapLayerComponents.Count > 0)
+            if (defaultGridLayer.ShowLayer && defaultGridLayer.MapLayerComponents.Count > 0)
             {
                 defaultGridLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 defaultGridLayer.Render(defaultGridLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(defaultGridLayer.LayerSurface, scrollPoint);
+            }
+        }
+
+        internal static void RenderDefaultGridForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            // render default grid layer
+            MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER);
+
+            if (defaultGridLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                defaultGridLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
             }
         }
 
         internal static void RenderLabels(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LABELLAYER);
+            if (labelLayer.LayerSurface == null) return;
 
-            if (labelLayer.ShowLayer && labelLayer.LayerSurface != null && labelLayer.MapLayerComponents.Count > 0)
+            if (labelLayer.ShowLayer && labelLayer.MapLayerComponents.Count > 0)
             {
                 labelLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 labelLayer.Render(labelLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(labelLayer.LayerSurface, scrollPoint);
+            }
+        }
+
+        internal static void RenderLabelsForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LABELLAYER);
+
+            if (labelLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                labelLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
             }
         }
 
@@ -118,8 +228,9 @@ namespace RealmStudio
         {
             // render landforms
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
+            if (landformLayer.LayerSurface == null) return;
 
-            if (landformLayer.ShowLayer && landformLayer.LayerSurface != null)
+            if (landformLayer.ShowLayer && landformLayer.MapLayerComponents.Count > 0)
             {
                 landformLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
@@ -149,7 +260,6 @@ namespace RealmStudio
                     }
                 }
 
-                landformLayer.Render(landformLayer.LayerSurface.Canvas);
                 renderCanvas.DrawSurface(landformLayer.LayerSurface, scrollPoint);
             }
 
@@ -164,13 +274,57 @@ namespace RealmStudio
             }
         }
 
+        internal static void RenderLandformsForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            // render landforms
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
+
+            if (landformLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+
+                for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
+                {
+                    if (landformLayer.MapLayerComponents[i] is Landform l)
+                    {
+                        l.RenderCoastline(canvas);
+                        l.RenderLandform(canvas);
+                    }
+                    else if (landformLayer.MapLayerComponents[i] is LayerPaintStroke lps)
+                    {
+                        // eraser strokes
+                        lps.Render(canvas);
+                    }
+                }
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
+            }
+
+
+            // landform drawing (color painting over landform)
+            MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDDRAWINGLAYER);
+
+            if (landDrawingLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                landDrawingLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
+            }
+        }
+
         internal static void RenderLowerMapPaths(RealmStudioMap map, MapPath? currentPath, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
+            if (pathLowerLayer.LayerSurface == null) return;
 
-            if (pathLowerLayer.ShowLayer && pathLowerLayer.LayerSurface != null && pathLowerLayer.MapLayerComponents.Count > 0)
+            if (pathLowerLayer.ShowLayer && pathLowerLayer.MapLayerComponents.Count > 0)
             {
-
                 if (currentPath != null && !currentPath.DrawOverSymbols)
                 {
                     currentPath.Render(pathLowerLayer.LayerSurface.Canvas);
@@ -206,6 +360,8 @@ namespace RealmStudio
 
                 if (selectionLayer.LayerSurface != null)
                 {
+                    selectionLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+
                     foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
                     {
                         if (mp.IsSelected)
@@ -229,6 +385,25 @@ namespace RealmStudio
             }
         }
 
+        internal static void RenderLowerMapPathsForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
+
+            if (pathLowerLayer.ShowLayer && pathLowerLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+
+                using SKCanvas canvas = new(b);
+
+                foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                {
+                    mp.Render(canvas);
+                }
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
+            }
+        }
+
         internal static void RenderUpperMapPaths(RealmStudioMap map, MapPath? currentPath, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             // path upper layer
@@ -236,8 +411,7 @@ namespace RealmStudio
 
             if (pathUpperLayer.ShowLayer && pathUpperLayer.LayerSurface != null && pathUpperLayer.MapLayerComponents.Count > 0)
             {
-
-                if (currentPath != null && !currentPath.DrawOverSymbols)
+                if (currentPath != null && currentPath.DrawOverSymbols)
                 {
                     currentPath.Render(pathUpperLayer.LayerSurface.Canvas);
                 }
@@ -272,6 +446,8 @@ namespace RealmStudio
 
                 if (selectionLayer.LayerSurface != null)
                 {
+                    selectionLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+
                     foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
                     {
                         if (mp.IsSelected)
@@ -295,55 +471,136 @@ namespace RealmStudio
             }
         }
 
+        internal static void RenderUpperMapPathsForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            // path upper layer
+            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER);
+
+            if (pathUpperLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                {
+                    mp.Render(canvas);
+                }
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
+            }
+        }
+
         internal static void RenderMeasures(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             MapLayer measureLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.MEASURELAYER);
+            if (measureLayer.LayerSurface == null) return;
 
-            if (measureLayer.ShowLayer && measureLayer.LayerSurface != null && measureLayer.MapLayerComponents.Count > 0)
+            if (measureLayer.ShowLayer && measureLayer.MapLayerComponents.Count > 0)
             {
                 measureLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 measureLayer.Render(measureLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(measureLayer.LayerSurface, scrollPoint);
+            }
+        }
+
+        internal static void RenderMeasuresForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            MapLayer measureLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.MEASURELAYER);
+
+            if (measureLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                measureLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
             }
         }
 
         internal static void RenderOcean(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
-            SKRect clippingBounds = new(0, 0, map.MapWidth, map.MapHeight);
-
             // render ocean layers
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OCEANTEXTURELAYER);
             MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
             MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OCEANDRAWINGLAYER);
 
-            if (oceanTextureLayer.ShowLayer && oceanTextureLayer.LayerSurface != null && oceanTextureLayer.MapLayerComponents.Count > 0)
+            if (oceanTextureLayer.LayerSurface == null || oceanTextureOverlayLayer.LayerSurface == null || oceanDrawingLayer.LayerSurface == null) return;
+
+            if (oceanTextureLayer.ShowLayer && oceanTextureLayer.MapLayerComponents.Count > 0)
             {
                 oceanTextureLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 oceanTextureLayer.Render(oceanTextureLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(oceanTextureLayer.LayerSurface, scrollPoint);
             }
 
-            if (oceanTextureOverlayLayer.ShowLayer && oceanTextureOverlayLayer.LayerSurface != null
-                && oceanTextureOverlayLayer.MapLayerComponents.Count > 0)
+            if (oceanTextureOverlayLayer.ShowLayer && oceanTextureOverlayLayer.MapLayerComponents.Count > 0)
             {
                 oceanTextureOverlayLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 oceanTextureOverlayLayer.Render(oceanTextureOverlayLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(oceanTextureOverlayLayer.LayerSurface, scrollPoint);
             }
 
-            if (oceanDrawingLayer.ShowLayer && oceanDrawingLayer.LayerSurface != null && oceanDrawingLayer.MapLayerComponents.Count > 0)
+            if (oceanDrawingLayer.ShowLayer && oceanDrawingLayer.MapLayerComponents.Count > 0)
             {
                 oceanDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 oceanDrawingLayer.Render(oceanDrawingLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(oceanDrawingLayer.LayerSurface, scrollPoint);
+            }
+        }
+
+        internal static void RenderOceanForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            // render ocean layers
+            MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OCEANTEXTURELAYER);
+            MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
+            MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OCEANDRAWINGLAYER);
+
+            if (oceanTextureLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                oceanTextureLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
+            }
+
+            if (oceanTextureOverlayLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                oceanTextureOverlayLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
+            }
+
+            if (oceanDrawingLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                oceanDrawingLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
             }
         }
 
         internal static void RenderFrame(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             MapLayer frameLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER);
+            if (frameLayer.LayerSurface == null) return;
 
-            if (frameLayer.ShowLayer && frameLayer.LayerSurface != null && frameLayer.MapLayerComponents.Count > 0)
+            if (frameLayer.ShowLayer && frameLayer.MapLayerComponents.Count > 0)
             {
                 PlacedMapFrame placedFrame = (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents[0];
 
@@ -351,7 +608,29 @@ namespace RealmStudio
                 {
                     frameLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                     frameLayer.Render(frameLayer.LayerSurface.Canvas);
+
                     renderCanvas.DrawSurface(frameLayer.LayerSurface, scrollPoint);
+                }
+            }
+        }
+
+        internal static void RenderFrameForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            MapLayer frameLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER);
+
+            if (frameLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                PlacedMapFrame placedFrame = (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents[0];
+
+                if (placedFrame.FrameEnabled)
+                {
+                    canvas.Clear(SKColors.Transparent);
+                    frameLayer.Render(canvas);
+
+                    renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
                 }
             }
         }
@@ -359,45 +638,114 @@ namespace RealmStudio
         internal static void RenderOverlays(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             MapLayer overlayLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OVERLAYLAYER);
+            if (overlayLayer.LayerSurface == null) return;
 
-            if (overlayLayer.ShowLayer && overlayLayer.LayerSurface != null && overlayLayer.MapLayerComponents.Count > 0)
+            if (overlayLayer.ShowLayer && overlayLayer.MapLayerComponents.Count > 0)
             {
                 overlayLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 overlayLayer.Render(overlayLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(overlayLayer.LayerSurface, scrollPoint);
+            }
+        }
+
+        internal static void RenderOverlaysForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            MapLayer overlayLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OVERLAYLAYER);
+
+            if (overlayLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                overlayLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
             }
         }
 
         internal static void RenderRegions(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONLAYER);
+            MapLayer regionOverlayLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONOVERLAYLAYER);
 
-            if (regionLayer.ShowLayer && regionLayer.LayerSurface != null)
+            if (regionLayer.LayerSurface == null || regionOverlayLayer.LayerSurface == null) return;
+
+            if (regionLayer.ShowLayer && regionLayer.MapLayerComponents.Count > 0)
             {
                 regionLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 regionLayer.Render(regionLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(regionLayer.LayerSurface, scrollPoint);
             }
 
-            MapLayer regionOverlayLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONOVERLAYLAYER);
-
-            if (regionOverlayLayer.ShowLayer && regionOverlayLayer.LayerSurface != null)
+            if (regionOverlayLayer.ShowLayer && regionOverlayLayer.MapLayerComponents.Count > 0)
             {
                 regionOverlayLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 regionOverlayLayer.Render(regionOverlayLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(regionOverlayLayer.LayerSurface, scrollPoint);
             }
         }
 
+        internal static void RenderRegionsForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONLAYER);
+
+            if (regionLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                regionLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
+            }
+
+            MapLayer regionOverlayLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONOVERLAYLAYER);
+
+            if (regionOverlayLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                regionOverlayLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
+            }
+        }
+
+
         internal static void RenderSymbols(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER);
+            if (symbolLayer.LayerSurface == null) return;
 
-            if (symbolLayer.ShowLayer && symbolLayer.LayerSurface != null && symbolLayer.MapLayerComponents.Count > 0)
+            if (symbolLayer.ShowLayer && symbolLayer.MapLayerComponents.Count > 0)
             {
                 symbolLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 symbolLayer.Render(symbolLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(symbolLayer.LayerSurface, scrollPoint);
+            }
+        }
+
+        internal static void RenderSymbolsForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER);
+
+            if (symbolLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                symbolLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
             }
         }
 
@@ -405,12 +753,31 @@ namespace RealmStudio
         {
             // render and paint vignette
             MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.VIGNETTELAYER);
+            if (vignetteLayer.LayerSurface == null) return;
 
-            if (vignetteLayer.ShowLayer && vignetteLayer.LayerSurface != null)
+            if (vignetteLayer.ShowLayer && vignetteLayer.MapLayerComponents.Count > 0)
             {
                 vignetteLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 vignetteLayer.Render(vignetteLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(vignetteLayer.LayerSurface, scrollPoint);
+            }
+        }
+
+        internal static void RenderVignetteForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            // render and paint vignette
+            MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.VIGNETTELAYER);
+
+            if (vignetteLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                vignetteLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
             }
         }
 
@@ -418,8 +785,11 @@ namespace RealmStudio
         {
             // render water features and rivers
             MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER);
+            MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERDRAWINGLAYER);
 
-            if (waterLayer.ShowLayer && waterLayer.LayerSurface != null)
+            if (waterLayer.LayerSurface == null || waterDrawingLayer.LayerSurface == null) return;
+
+            if (waterLayer.ShowLayer && waterLayer.MapLayerComponents.Count > 0)
             {
                 waterLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
@@ -454,16 +824,16 @@ namespace RealmStudio
             }
 
             // water drawing layer (colors painted on top of water features)
-            MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERDRAWINGLAYER);
-
-            if (waterDrawingLayer.ShowLayer && waterDrawingLayer.LayerSurface != null && waterDrawingLayer.MapLayerComponents.Count > 0)
+            if (waterDrawingLayer.ShowLayer && waterDrawingLayer.MapLayerComponents.Count > 0)
             {
                 waterDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 waterDrawingLayer.Render(waterDrawingLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(waterDrawingLayer.LayerSurface, scrollPoint);
             }
 
             // selection layer
+
             MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
 
             if (waterLayer.ShowLayer && waterLayer.MapLayerComponents.Count > 0 && selectionLayer.LayerSurface != null)
@@ -503,29 +873,96 @@ namespace RealmStudio
             }
         }
 
+        internal static void RenderWaterFeaturesForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            // render water features and rivers
+            MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER);
+
+            if (waterLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+
+                // water features
+                foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
+                {
+                    if (w is WaterFeature wf)
+                    {
+                        wf.Render(canvas);
+                    }
+                    else if (w is River r)
+                    {
+                        r.Render(canvas);
+                    }
+                }
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
+            }
+
+            // water drawing layer (colors painted on top of water features)
+            MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERDRAWINGLAYER);
+
+            if (waterDrawingLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                waterDrawingLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
+            }
+        }
+
         internal static void RenderWindroses(RealmStudioMap map, MapWindrose? currentWindrose, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             // render wind rose layer
             MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WINDROSELAYER);
+            if (windroseLayer.LayerSurface == null) return;
 
-            if (windroseLayer.ShowLayer && windroseLayer.LayerSurface != null && windroseLayer.MapLayerComponents.Count > 0)
+            currentWindrose?.Render(windroseLayer.LayerSurface.Canvas);
+
+            if (windroseLayer.ShowLayer && windroseLayer.MapLayerComponents.Count > 0)
             {
                 windroseLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 windroseLayer.Render(windroseLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(windroseLayer.LayerSurface, scrollPoint);
             }
         }
 
-        internal static void RenderWorkLayer(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
+        internal static void RenderWindrosesForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            // render wind rose layer
+            MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WINDROSELAYER);
+
+            if (windroseLayer.MapLayerComponents.Count > 0)
+            {
+                using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+                using SKCanvas canvas = new(b);
+
+                canvas.Clear(SKColors.Transparent);
+                windroseLayer.Render(canvas);
+
+                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
+            }
+        }
+
+        internal static void RenderWorkLayer(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint, bool toSnapShot = false)
         {
             MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
 
             if (workLayer.ShowLayer && workLayer.LayerSurface != null)
             {
-                // code that makes use of the work layer is responsible for clearing
-                // and drawing to the canvas properly; it is only rendered here
-                workLayer.Render(workLayer.LayerSurface.Canvas);
-                renderCanvas.DrawSurface(workLayer.LayerSurface, scrollPoint);
+                if (!toSnapShot)
+                {
+                    // code that makes use of the work layer is responsible for clearing
+                    // and drawing to the canvas properly; it is only rendered here
+                    workLayer.Render(workLayer.LayerSurface.Canvas);
+                    renderCanvas.DrawSurface(workLayer.LayerSurface, scrollPoint);
+                }
             }
         }
     }

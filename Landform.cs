@@ -202,57 +202,37 @@ namespace RealmStudio
         *******************************************************************************************************/
         public void RenderCoastline(SKCanvas canvas)
         {
-            //if (!IsModified && CoastlineRenderPicture != null)
-            //{
-            //    canvas.DrawPicture(CoastlineRenderPicture);
-            //}
-            //else
+            if (!string.IsNullOrEmpty(CoastlineStyleName))
             {
-                //CoastlineRenderPicture?.Dispose();
-
-                //using var recorder = new SKPictureRecorder();
-                //SKRect clippingBounds = new(0, 0, ParentMap.MapWidth, ParentMap.MapHeight);
-
-                // Start recording 
-                //recorder.BeginRecording(clippingBounds);
-
-                if (!string.IsNullOrEmpty(CoastlineStyleName))
+                switch (CoastlineStyleName)
                 {
-                    switch (CoastlineStyleName)
-                    {
-                        case "None":
-                            break;
-                        case "Uniform Band":
-                            DrawUniformBandCoastlineEffect(canvas);
-                            break;
-                        case "Uniform Blend":
-                            DrawUniformBlendCoastlineEffect(canvas);
-                            break;
-                        case "Uniform Outline":
-                            DrawUniformOutlineCoastlineEffect(canvas);
-                            break;
-                        case "Three-Tiered":
-                            DrawThreeTieredCoastlineEffect(canvas);
-                            break;
-                        case "Circular Pattern":
-                            DrawRadialPatternCoastlineEffect(canvas);
-                            break;
-                        case "Dash Pattern":
-                            DrawDashPatternCoastlineEffect(canvas);
-                            break;
-                        case "Hatch Pattern":
-                            DrawHatchPatternCoastlineEffect(canvas);
-                            break;
-                        case "User Defined":
-                            DrawUserDefinedHatchEffect(canvas);
-                            break;
-                    }
+                    case "None":
+                        break;
+                    case "Uniform Band":
+                        DrawUniformBandCoastlineEffect(canvas);
+                        break;
+                    case "Uniform Blend":
+                        DrawUniformBlendCoastlineEffect(canvas);
+                        break;
+                    case "Uniform Outline":
+                        DrawUniformOutlineCoastlineEffect(canvas);
+                        break;
+                    case "Three-Tiered":
+                        DrawThreeTieredCoastlineEffect(canvas);
+                        break;
+                    case "Circular Pattern":
+                        DrawRadialPatternCoastlineEffect(canvas);
+                        break;
+                    case "Dash Pattern":
+                        DrawDashPatternCoastlineEffect(canvas);
+                        break;
+                    case "Hatch Pattern":
+                        DrawHatchPatternCoastlineEffect(canvas);
+                        break;
+                    case "User Defined":
+                        DrawUserDefinedHatchEffect(canvas);
+                        break;
                 }
-
-                // Create a new SKPicture with recorded Draw commands 
-                //CoastlineRenderPicture = recorder.EndRecording();
-
-                //canvas.DrawPicture(CoastlineRenderPicture);
             }
         }
 
@@ -737,20 +717,8 @@ namespace RealmStudio
 
         public void RenderLandform(SKCanvas canvas)
         {
-            //if (!IsModified && LandformRenderPicture != null)
-            //{
-            //    canvas.DrawPicture(LandformRenderPicture);
-            //}
-            //else
+            try
             {
-                //LandformRenderPicture?.Dispose();
-
-                //using var recorder = new SKPictureRecorder();
-                //SKRect clippingBounds = new(0, 0, ParentMap.MapWidth, ParentMap.MapHeight);
-
-                // Start recording 
-                //recorder.BeginRecording(clippingBounds);
-
                 canvas.DrawPath(DrawPath, LandformFillPaint);
 
                 double colorAlphaStep = 1.0 / (256.0 / 8.0);
@@ -793,14 +761,12 @@ namespace RealmStudio
 
                 LandformOutlinePaint.Color = LandformOutlineColor.ToSKColor();
                 canvas.DrawPath(ContourPath, LandformOutlinePaint);
-
-                // Create a new SKPicture with recorded Draw commands 
-                //LandformRenderPicture = recorder.EndRecording();
-
-                //canvas.DrawPicture(LandformRenderPicture);
-
-                //IsModified = false;
             }
+            catch (Exception ex)
+            {
+                Program.LOGGER.Error(ex);
+            }
+
         }
 
         #endregion

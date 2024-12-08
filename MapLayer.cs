@@ -60,7 +60,6 @@ namespace RealmStudio
                         if (component.RenderComponent)
                         {
                             // clip drawing to the boundaries of the layer
-                            canvas.Save();
                             using (new SKAutoCanvasRestore(canvas))
                             {
                                 canvas.ClipRect(new SKRectI(0, 0, Width, Height));

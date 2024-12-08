@@ -119,6 +119,8 @@ namespace RealmStudio
 
         private static string MapCommandLinePath = string.Empty;
 
+        private static SKSurface? RENDER_SURFACE = null;
+
         #region Constructor
         /******************************************************************************************************* 
         * MAIN FORM CONSTRUCTOR
@@ -763,13 +765,6 @@ namespace RealmStudio
 
         private void ExportMapMenuItem_Click(object sender, EventArgs e)
         {
-            // render the map for export
-            using SKBitmap exportBitmap = new(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
-            using SKCanvas renderCanvas = new(exportBitmap);
-
-            SKPoint zeroPoint = new(0, 0);
-
-            RenderMapToCanvas(renderCanvas, zeroPoint);
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 
@@ -815,14 +810,30 @@ namespace RealmStudio
 
                 try
                 {
-                    exportBitmap.ToBitmap().Save(filename);
+                    StopAutosaveTimer();
+                    StopBrushTimer();
+                    StopLocationUpdateTimer();
+                    StopSymbolAreaBrushTimer();
+
+                    SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+                    s.Canvas.Clear();
+
+                    RenderMapForExport(s.Canvas);
+
+                    s.Snapshot().ToBitmap().Save(filename);
+
+                    StartAutosaveTimer();
+                    StartLocationUpdateTimer();
+
                     MessageBox.Show("Map exported to " + ofd.FileName, "Map Exported", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Program.LOGGER.Error(ex);
                     MessageBox.Show("Failed to export map to " + ofd.FileName, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
             }
+
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
@@ -1884,7 +1895,7 @@ namespace RealmStudio
             SELECTED_BRUSH_SIZE = brushSize;
         }
 
-        public static void RenderMapToCanvas(SKCanvas renderCanvas, SKPoint scrollPoint)
+        public static void RenderMapToCanvas(SKCanvas renderCanvas, SKPoint scrollPoint, bool toSnapShot = false)
         {
             // background
             MapRenderMethods.RenderBackground(CURRENT_MAP, renderCanvas, scrollPoint);
@@ -1942,6 +1953,66 @@ namespace RealmStudio
 
             // vignette layer
             MapRenderMethods.RenderVignette(CURRENT_MAP, renderCanvas, scrollPoint);
+        }
+
+        public static void RenderMapForExport(SKCanvas renderCanvas)
+        {
+            // background
+            MapRenderMethods.RenderBackgroundForExport(CURRENT_MAP, renderCanvas);
+
+            // ocean layers
+            MapRenderMethods.RenderOceanForExport(CURRENT_MAP, renderCanvas);
+
+            // wind roses
+            MapRenderMethods.RenderWindrosesForExport(CURRENT_MAP, renderCanvas);
+
+            // lower grid layer (above ocean)
+            MapRenderMethods.RenderLowerGridForExport(CURRENT_MAP, renderCanvas);
+
+            // landforms
+            MapRenderMethods.RenderLandformsForExport(CURRENT_MAP, renderCanvas);
+
+            // water features
+            MapRenderMethods.RenderWaterFeaturesForExport(CURRENT_MAP, renderCanvas);
+
+            // upper grid layer (above water features)
+            MapRenderMethods.RenderUpperGridForExport(CURRENT_MAP, renderCanvas);
+
+            // lower path layer
+            MapRenderMethods.RenderLowerMapPathsForExport(CURRENT_MAP, renderCanvas);
+
+            // symbol layer
+            MapRenderMethods.RenderSymbolsForExport(CURRENT_MAP, renderCanvas);
+
+            // upper path layer
+            MapRenderMethods.RenderUpperMapPathsForExport(CURRENT_MAP, renderCanvas);
+
+            // region and region overlay layers
+            MapRenderMethods.RenderRegionsForExport(CURRENT_MAP, renderCanvas);
+
+            // default grid layer
+            MapRenderMethods.RenderDefaultGridForExport(CURRENT_MAP, renderCanvas);
+
+            // box layer
+            MapRenderMethods.RenderBoxesForExport(CURRENT_MAP, renderCanvas);
+
+            // label layer
+            MapRenderMethods.RenderLabelsForExport(CURRENT_MAP, renderCanvas);
+
+            // overlay layer (map scale)
+            MapRenderMethods.RenderOverlaysForExport(CURRENT_MAP, renderCanvas);
+
+            // render frame
+            MapRenderMethods.RenderFrameForExport(CURRENT_MAP, renderCanvas);
+
+            // measure layer
+            MapRenderMethods.RenderMeasuresForExport(CURRENT_MAP, renderCanvas);
+
+            // TODO: drawing layer
+            MapRenderMethods.RenderDrawingForExport(CURRENT_MAP, renderCanvas);
+
+            // vignette layer
+            MapRenderMethods.RenderVignetteForExport(CURRENT_MAP, renderCanvas);
         }
 
         private void DrawCursor(SKCanvas canvas, SKPoint point, int brushSize)
@@ -3553,25 +3624,27 @@ namespace RealmStudio
 
         private void SKGLRenderControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
         {
-            SKCanvas renderCanvas = e.Surface.Canvas;
+            //using SKCanvas renderCanvas = e.Surface.Canvas;
+
+            //RENDER_SURFACE = e.Surface;
 
             // handle zoom-in and zoom-out (TODO: zoom in and out from center of map - how?)
-            renderCanvas.Scale(DrawingZoom);
+            e.Surface.Canvas.Scale(DrawingZoom);
 
             // paint the SKGLRenderControl surface, compositing the surfaces from all of the layers
-            renderCanvas.Clear(SKColors.White);
+            e.Surface.Canvas.Clear(SKColors.White);
 
             if (SKGLRenderControl.GRContext != null && CURRENT_MAP != null && CURRENT_MAP.MapLayers.Count == MapBuilder.MAP_LAYER_COUNT)
             {
-                RenderMapToCanvas(renderCanvas, ScrollPoint);
+                RenderMapToCanvas(e.Surface.Canvas, ScrollPoint);
 
                 if (CURRENT_DRAWING_MODE != DrawingModeEnum.ColorSelect)
                 {
-                    DrawCursor(renderCanvas, new SKPoint(CURSOR_POINT.X - ScrollPoint.X, CURSOR_POINT.Y - ScrollPoint.Y), SELECTED_BRUSH_SIZE);
+                    DrawCursor(e.Surface.Canvas, new SKPoint(CURSOR_POINT.X - ScrollPoint.X, CURSOR_POINT.Y - ScrollPoint.Y), SELECTED_BRUSH_SIZE);
                 }
 
                 // work layer
-                MapRenderMethods.RenderWorkLayer(CURRENT_MAP, renderCanvas, ScrollPoint);
+                MapRenderMethods.RenderWorkLayer(CURRENT_MAP, e.Surface.Canvas, ScrollPoint);
             }
         }
 
@@ -5713,37 +5786,32 @@ namespace RealmStudio
                 case DrawingModeEnum.ColorSelect:
                     {
                         // eyedropper color select function
-                        MapBuilder.MarkAllLayersModified(CURRENT_MAP);
-                        SKGLRenderControl.Refresh();
-
-                        using SKBitmap colorBitmap = new(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
-                        using SKCanvas renderCanvas = new(colorBitmap);
-
-                        SKPoint zeroPoint = new(0, 0);
-
-                        RenderMapToCanvas(renderCanvas, zeroPoint);
-
-                        Bitmap b = colorBitmap.ToBitmap();
-
-                        Color pixelColor = b.GetPixel((int)zoomedScrolledPoint.X, (int)zoomedScrolledPoint.Y);
-
-                        switch (MainTab.SelectedIndex)
+                        if (RENDER_SURFACE != null)
                         {
-                            case 1:
-                                // ocean layer
-                                OceanPaintColorSelectButton.BackColor = pixelColor;
-                                OceanPaintColorSelectButton.Refresh();
-                                break;
-                            case 2:
-                                // land layer
-                                LandColorSelectionButton.BackColor = pixelColor;
-                                LandColorSelectionButton.Refresh();
-                                break;
-                            case 3:
-                                // water layer
-                                WaterPaintColorSelectButton.BackColor = pixelColor;
-                                WaterPaintColorSelectButton.Refresh();
-                                break;
+                            SKImage mapImage = RENDER_SURFACE.Snapshot(new SKRectI(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+
+                            Bitmap colorBitmap = mapImage.ToBitmap();
+
+                            Color pixelColor = colorBitmap.GetPixel((int)zoomedScrolledPoint.X, (int)zoomedScrolledPoint.Y);
+
+                            switch (MainTab.SelectedIndex)
+                            {
+                                case 1:
+                                    // ocean layer
+                                    OceanPaintColorSelectButton.BackColor = pixelColor;
+                                    OceanPaintColorSelectButton.Refresh();
+                                    break;
+                                case 2:
+                                    // land layer
+                                    LandColorSelectionButton.BackColor = pixelColor;
+                                    LandColorSelectionButton.Refresh();
+                                    break;
+                                case 3:
+                                    // water layer
+                                    WaterPaintColorSelectButton.BackColor = pixelColor;
+                                    WaterPaintColorSelectButton.Refresh();
+                                    break;
+                            }
                         }
                     }
                     break;

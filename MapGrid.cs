@@ -91,73 +91,73 @@ namespace RealmStudio
             int xOffset = GridSize;
             int yOffset = GridSize;
 
-            canvas.Save();
-            canvas.ClipRect(new SKRect(0, 0, ParentMap.MapWidth, ParentMap.MapHeight));
-
-            for (int i = 0; i < numHorizontalLines; i++)
+            using (new SKAutoCanvasRestore(canvas))
             {
-                SKPoint startPoint = new(0, yOffset);
-                SKPoint endPoint = new(Width, yOffset);
-                canvas.DrawLine(startPoint, endPoint, GridPaint);
+                canvas.ClipRect(new SKRect(0, 0, ParentMap.MapWidth, ParentMap.MapHeight));
 
-                yOffset += GridSize;
-            }
-
-            for (int j = 0; j < numVerticalLines; j++)
-            {
-                SKPoint startPoint = new(xOffset, 0);
-                SKPoint endPoint = new(xOffset, Height);
-                canvas.DrawLine(startPoint, endPoint, GridPaint);
-
-                xOffset += GridSize;
-            }
-
-            if (ShowGridSize)
-            {
-                float horizontalGridDistance = ParentMap.MapAreaWidth / numVerticalLines;
-                float verticalGridDistance = ParentMap.MapAreaHeight / numHorizontalLines;
-
-                string mapUnits = ParentMap.MapAreaUnits;
-
-                if (string.IsNullOrEmpty(mapUnits) || mapUnits.Length == 0)
+                for (int i = 0; i < numHorizontalLines; i++)
                 {
-                    mapUnits = "pixels";
+                    SKPoint startPoint = new(0, yOffset);
+                    SKPoint endPoint = new(Width, yOffset);
+                    canvas.DrawLine(startPoint, endPoint, GridPaint);
+
+                    yOffset += GridSize;
                 }
 
-                string gridScaleString = string.Format("One square is {0:N} by {1:N} {2}", horizontalGridDistance, verticalGridDistance, mapUnits);
-
-                using SKPaint glowPaint = new()
+                for (int j = 0; j < numVerticalLines; j++)
                 {
-                    Color = SKColors.Yellow,
-                    MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Outer, 10),
-                    IsAntialias = true,
-                    TextSize = 10,
-                    Typeface = SKTypeface.FromFamilyName(
-                    familyName: "Tahoma",
-                    weight: SKFontStyleWeight.Normal,
-                    width: SKFontStyleWidth.Normal,
-                    slant: SKFontStyleSlant.Upright)
-                };
+                    SKPoint startPoint = new(xOffset, 0);
+                    SKPoint endPoint = new(xOffset, Height);
+                    canvas.DrawLine(startPoint, endPoint, GridPaint);
 
-                canvas.DrawText(gridScaleString, 20, Height - 40, glowPaint);
+                    xOffset += GridSize;
+                }
 
-                using SKPaint paint = new()
+                if (ShowGridSize)
                 {
-                    Color = SKColors.Black,
-                    IsAntialias = true,
-                    TextSize = 10,
-                    Typeface = SKTypeface.FromFamilyName(
-                    familyName: "Tahoma",
-                    weight: SKFontStyleWeight.Normal,
-                    width: SKFontStyleWidth.Normal,
-                    slant: SKFontStyleSlant.Upright)
-                };
+                    float horizontalGridDistance = ParentMap.MapAreaWidth / numVerticalLines;
+                    float verticalGridDistance = ParentMap.MapAreaHeight / numHorizontalLines;
 
-                canvas.DrawText(gridScaleString, 20, Height - 40, paint);
+                    string mapUnits = ParentMap.MapAreaUnits;
+
+                    if (string.IsNullOrEmpty(mapUnits) || mapUnits.Length == 0)
+                    {
+                        mapUnits = "pixels";
+                    }
+
+                    string gridScaleString = string.Format("One square is {0:N} by {1:N} {2}", horizontalGridDistance, verticalGridDistance, mapUnits);
+
+                    using SKPaint glowPaint = new()
+                    {
+                        Color = SKColors.Yellow,
+                        MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Outer, 10),
+                        IsAntialias = true,
+                        TextSize = 10,
+                        Typeface = SKTypeface.FromFamilyName(
+                        familyName: "Tahoma",
+                        weight: SKFontStyleWeight.Normal,
+                        width: SKFontStyleWidth.Normal,
+                        slant: SKFontStyleSlant.Upright)
+                    };
+
+                    canvas.DrawText(gridScaleString, 20, Height - 40, glowPaint);
+
+                    using SKPaint paint = new()
+                    {
+                        Color = SKColors.Black,
+                        IsAntialias = true,
+                        TextSize = 10,
+                        Typeface = SKTypeface.FromFamilyName(
+                        familyName: "Tahoma",
+                        weight: SKFontStyleWeight.Normal,
+                        width: SKFontStyleWidth.Normal,
+                        slant: SKFontStyleSlant.Upright)
+                    };
+
+                    canvas.DrawText(gridScaleString, 20, Height - 40, paint);
+                }
+
             }
-
-            canvas.Restore();
-
         }
 
         private void RenderPointedHexGrid(SKCanvas canvas)
@@ -175,85 +175,86 @@ namespace RealmStudio
             int numHorizontalHexagons = (int)(Width / horizontalSpacing) + 2;
             int numVerticalHexagons = (int)(Height / verticalSpacing) + 2;
 
-            canvas.Save();
-            canvas.ClipRect(new SKRect(0, 0, ParentMap.MapWidth, ParentMap.MapHeight));
-
-            for (int i = 0; i < numVerticalHexagons; i++)
+            using (new SKAutoCanvasRestore(canvas))
             {
-                for (int j = 0; j < numHorizontalHexagons; j++)
+
+                canvas.ClipRect(new SKRect(0, 0, ParentMap.MapWidth, ParentMap.MapHeight));
+
+                for (int i = 0; i < numVerticalHexagons; i++)
                 {
-                    SKPoint[] hexPoints = new SKPoint[6];
-
-                    center.X = j * horizontalSpacing;
-                    center.Y = i * verticalSpacing;
-
-                    for (int k = 0; k < 6; k++)
+                    for (int j = 0; j < numHorizontalHexagons; j++)
                     {
-                        float angle_deg = (60.0F * k) + 30.0F;
-                        float angle_rad = (float)(Math.PI / 180.0F * angle_deg);
+                        SKPoint[] hexPoints = new SKPoint[6];
 
-                        if (int.IsOddInteger(i))
+                        center.X = j * horizontalSpacing;
+                        center.Y = i * verticalSpacing;
+
+                        for (int k = 0; k < 6; k++)
                         {
-                            hexPoints[k] = new SKPoint((float)(center.X + (horizontalSpacing / 2.0F) + GridSize * Math.Cos(angle_rad)),
-                                (float)(center.Y + GridSize * Math.Sin(angle_rad)));
-                        }
-                        else
-                        {
-                            hexPoints[k] = new SKPoint((float)(center.X + GridSize * Math.Cos(angle_rad)),
-                                (float)(center.Y + GridSize * Math.Sin(angle_rad)));
+                            float angle_deg = (60.0F * k) + 30.0F;
+                            float angle_rad = (float)(Math.PI / 180.0F * angle_deg);
+
+                            if (int.IsOddInteger(i))
+                            {
+                                hexPoints[k] = new SKPoint((float)(center.X + (horizontalSpacing / 2.0F) + GridSize * Math.Cos(angle_rad)),
+                                    (float)(center.Y + GridSize * Math.Sin(angle_rad)));
+                            }
+                            else
+                            {
+                                hexPoints[k] = new SKPoint((float)(center.X + GridSize * Math.Cos(angle_rad)),
+                                    (float)(center.Y + GridSize * Math.Sin(angle_rad)));
+                            }
+
                         }
 
+                        canvas.DrawPoints(SKPointMode.Lines, hexPoints, GridPaint);
+                    }
+                }
+
+                if (ShowGridSize)
+                {
+                    float horizontalGridDistance = ParentMap.MapPixelWidth * hexwidth;
+                    float verticalGridDistance = ParentMap.MapPixelHeight * hexheight;
+
+                    string mapUnits = ParentMap.MapAreaUnits;
+
+                    if (string.IsNullOrEmpty(mapUnits) || mapUnits.Length == 0)
+                    {
+                        mapUnits = "pixels";
                     }
 
-                    canvas.DrawPoints(SKPointMode.Lines, hexPoints, GridPaint);
+                    string gridScaleString = string.Format("One hexagon is {0:N} by {1:N} {2}", horizontalGridDistance, verticalGridDistance, mapUnits);
+
+                    using SKPaint glowPaint = new()
+                    {
+                        Color = SKColors.Yellow,
+                        MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Outer, 10),
+                        IsAntialias = true,
+                        TextSize = 10,
+                        Typeface = SKTypeface.FromFamilyName(
+                        familyName: "Tahoma",
+                        weight: SKFontStyleWeight.Normal,
+                        width: SKFontStyleWidth.Normal,
+                        slant: SKFontStyleSlant.Upright)
+                    };
+
+                    canvas.DrawText(gridScaleString, 20, Height - 40, glowPaint);
+
+                    using SKPaint paint = new()
+                    {
+                        Color = SKColors.Black,
+                        IsAntialias = true,
+                        TextSize = 10,
+                        Typeface = SKTypeface.FromFamilyName(
+                        familyName: "Tahoma",
+                        weight: SKFontStyleWeight.Normal,
+                        width: SKFontStyleWidth.Normal,
+                        slant: SKFontStyleSlant.Upright)
+                    };
+
+                    canvas.DrawText(gridScaleString, 20, Height - 40, paint);
                 }
             }
-
-            if (ShowGridSize)
-            {
-                float horizontalGridDistance = ParentMap.MapPixelWidth * hexwidth;
-                float verticalGridDistance = ParentMap.MapPixelHeight * hexheight;
-
-                string mapUnits = ParentMap.MapAreaUnits;
-
-                if (string.IsNullOrEmpty(mapUnits) || mapUnits.Length == 0)
-                {
-                    mapUnits = "pixels";
-                }
-
-                string gridScaleString = string.Format("One hexagon is {0:N} by {1:N} {2}", horizontalGridDistance, verticalGridDistance, mapUnits);
-
-                using SKPaint glowPaint = new()
-                {
-                    Color = SKColors.Yellow,
-                    MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Outer, 10),
-                    IsAntialias = true,
-                    TextSize = 10,
-                    Typeface = SKTypeface.FromFamilyName(
-                    familyName: "Tahoma",
-                    weight: SKFontStyleWeight.Normal,
-                    width: SKFontStyleWidth.Normal,
-                    slant: SKFontStyleSlant.Upright)
-                };
-
-                canvas.DrawText(gridScaleString, 20, Height - 40, glowPaint);
-
-                using SKPaint paint = new()
-                {
-                    Color = SKColors.Black,
-                    IsAntialias = true,
-                    TextSize = 10,
-                    Typeface = SKTypeface.FromFamilyName(
-                    familyName: "Tahoma",
-                    weight: SKFontStyleWeight.Normal,
-                    width: SKFontStyleWidth.Normal,
-                    slant: SKFontStyleSlant.Upright)
-                };
-
-                canvas.DrawText(gridScaleString, 20, Height - 40, paint);
-            }
-
-            canvas.Restore();
         }
 
         private void RenderFlatHexGrid(SKCanvas canvas)
@@ -265,91 +266,92 @@ namespace RealmStudio
             float horizontalSpacing = hexwidth * 0.75F;
             float verticalSpacing = hexheight;
 
-            canvas.Save();
-            canvas.ClipRect(new SKRect(0, 0, ParentMap.MapWidth, ParentMap.MapHeight));
-
-            // tile the grid onto the map
-            SKPoint center = new(hexwidth, hexheight);
-
-            int numHorizontalHexagons = (int)(Width / horizontalSpacing) + 2;
-            int numVerticalHexagons = (int)(Height / verticalSpacing) + 2;
-
-            for (int i = 0; i < numVerticalHexagons; i++)
+            using (new SKAutoCanvasRestore(canvas))
             {
-                for (int j = 0; j < numHorizontalHexagons; j++)
+                canvas.ClipRect(new SKRect(0, 0, ParentMap.MapWidth, ParentMap.MapHeight));
+
+                // tile the grid onto the map
+                SKPoint center = new(hexwidth, hexheight);
+
+                int numHorizontalHexagons = (int)(Width / horizontalSpacing) + 2;
+                int numVerticalHexagons = (int)(Height / verticalSpacing) + 2;
+
+                for (int i = 0; i < numVerticalHexagons; i++)
                 {
-                    SKPoint[] hexPoints = new SKPoint[6];
-
-                    center.X = j * horizontalSpacing;
-                    center.Y = i * verticalSpacing;
-
-                    for (int k = 0; k < 6; k++)
+                    for (int j = 0; j < numHorizontalHexagons; j++)
                     {
-                        float angle_deg = 60.0F * k;
-                        float angle_rad = (float)(Math.PI / 180.0F * angle_deg);
+                        SKPoint[] hexPoints = new SKPoint[6];
 
-                        if (int.IsOddInteger(j))
+                        center.X = j * horizontalSpacing;
+                        center.Y = i * verticalSpacing;
+
+                        for (int k = 0; k < 6; k++)
                         {
-                            hexPoints[k] = new SKPoint((float)(center.X + GridSize * Math.Cos(angle_rad)),
-                                (float)(center.Y + (verticalSpacing / 2.0F) + GridSize * Math.Sin(angle_rad)));
-                        }
-                        else
-                        {
-                            hexPoints[k] = new SKPoint((float)(center.X + GridSize * Math.Cos(angle_rad)),
-                                (float)(center.Y + GridSize * Math.Sin(angle_rad)));
+                            float angle_deg = 60.0F * k;
+                            float angle_rad = (float)(Math.PI / 180.0F * angle_deg);
+
+                            if (int.IsOddInteger(j))
+                            {
+                                hexPoints[k] = new SKPoint((float)(center.X + GridSize * Math.Cos(angle_rad)),
+                                    (float)(center.Y + (verticalSpacing / 2.0F) + GridSize * Math.Sin(angle_rad)));
+                            }
+                            else
+                            {
+                                hexPoints[k] = new SKPoint((float)(center.X + GridSize * Math.Cos(angle_rad)),
+                                    (float)(center.Y + GridSize * Math.Sin(angle_rad)));
+                            }
+
                         }
 
+                        canvas.DrawPoints(SKPointMode.Lines, hexPoints, GridPaint);
+                    }
+                }
+
+                if (ShowGridSize)
+                {
+                    float horizontalGridDistance = ParentMap.MapPixelWidth * hexwidth;
+                    float verticalGridDistance = ParentMap.MapPixelHeight * hexheight;
+
+                    string mapUnits = ParentMap.MapAreaUnits;
+
+                    if (string.IsNullOrEmpty(mapUnits) || mapUnits.Length == 0)
+                    {
+                        mapUnits = "pixels";
                     }
 
-                    canvas.DrawPoints(SKPointMode.Lines, hexPoints, GridPaint);
+                    string gridScaleString = string.Format("One hexagon is {0:N} by {1:N} {2}", horizontalGridDistance, verticalGridDistance, mapUnits);
+
+                    using SKPaint glowPaint = new()
+                    {
+                        Color = SKColors.Yellow,
+                        MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Outer, 10),
+                        IsAntialias = true,
+                        TextSize = 10,
+                        Typeface = SKTypeface.FromFamilyName(
+                        familyName: "Tahoma",
+                        weight: SKFontStyleWeight.Normal,
+                        width: SKFontStyleWidth.Normal,
+                        slant: SKFontStyleSlant.Upright)
+                    };
+
+                    canvas.DrawText(gridScaleString, 20, Height - 40, glowPaint);
+
+                    using SKPaint paint = new()
+                    {
+                        Color = SKColors.Black,
+                        IsAntialias = true,
+                        TextSize = 10,
+                        Typeface = SKTypeface.FromFamilyName(
+                        familyName: "Tahoma",
+                        weight: SKFontStyleWeight.Normal,
+                        width: SKFontStyleWidth.Normal,
+                        slant: SKFontStyleSlant.Upright)
+                    };
+
+                    canvas.DrawText(gridScaleString, 20, Height - 40, paint);
                 }
+
             }
-
-            if (ShowGridSize)
-            {
-                float horizontalGridDistance = ParentMap.MapPixelWidth * hexwidth;
-                float verticalGridDistance = ParentMap.MapPixelHeight * hexheight;
-
-                string mapUnits = ParentMap.MapAreaUnits;
-
-                if (string.IsNullOrEmpty(mapUnits) || mapUnits.Length == 0)
-                {
-                    mapUnits = "pixels";
-                }
-
-                string gridScaleString = string.Format("One hexagon is {0:N} by {1:N} {2}", horizontalGridDistance, verticalGridDistance, mapUnits);
-
-                using SKPaint glowPaint = new()
-                {
-                    Color = SKColors.Yellow,
-                    MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Outer, 10),
-                    IsAntialias = true,
-                    TextSize = 10,
-                    Typeface = SKTypeface.FromFamilyName(
-                    familyName: "Tahoma",
-                    weight: SKFontStyleWeight.Normal,
-                    width: SKFontStyleWidth.Normal,
-                    slant: SKFontStyleSlant.Upright)
-                };
-
-                canvas.DrawText(gridScaleString, 20, Height - 40, glowPaint);
-
-                using SKPaint paint = new()
-                {
-                    Color = SKColors.Black,
-                    IsAntialias = true,
-                    TextSize = 10,
-                    Typeface = SKTypeface.FromFamilyName(
-                    familyName: "Tahoma",
-                    weight: SKFontStyleWeight.Normal,
-                    width: SKFontStyleWidth.Normal,
-                    slant: SKFontStyleSlant.Upright)
-                };
-
-                canvas.DrawText(gridScaleString, 20, Height - 40, paint);
-            }
-
-            canvas.Restore();
         }
 
         public XmlSchema? GetSchema()
