@@ -252,8 +252,24 @@ namespace RealmStudio
 
         public static void DisposeMap(RealmStudioMap map)
         {
-
+            foreach (var layer in map.MapLayers)
+            {
+                if (layer.MapLayerName == "landform")
+                {
+                    foreach (MapComponent mc in layer.MapLayerComponents)
+                    {
+                        if (mc is Landform lf)
+                        {
+                            lf.LandformRenderSurface?.Dispose();
+                            lf.LandformRenderSurface = null;
+                            lf.CoastlineRenderSurface?.Dispose();
+                            lf.CoastlineRenderSurface = null;
+                        }
+                    }
+                }
+                layer.LayerSurface?.Dispose();
+                layer.LayerSurface = null;
+            }
         }
-
     }
 }

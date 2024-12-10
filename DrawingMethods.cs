@@ -27,6 +27,7 @@ using Clipper2Lib;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using Blob = AForge.Imaging.Blob;
 
 namespace RealmStudio
@@ -539,7 +540,7 @@ namespace RealmStudio
         internal static SKBitmap ResizeBitmap(SKBitmap bitmap, SKSizeI newsize)
         {
             SKBitmap resizedSKBitmap = new(newsize.Width, newsize.Height);
-            bitmap.ScalePixels(resizedSKBitmap, SKFilterQuality.High);
+            bitmap.ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
 
             return resizedSKBitmap;
         }
@@ -550,7 +551,7 @@ namespace RealmStudio
             int bitmapHeight = (int)Math.Round(bitmap.Height * scale);
 
             SKBitmap resizedSKBitmap = new(bitmapWidth, bitmapHeight);
-            bitmap.ScalePixels(resizedSKBitmap, SKFilterQuality.High);
+            bitmap.ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
 
             return resizedSKBitmap;
         }
@@ -850,41 +851,59 @@ namespace RealmStudio
         {
             if (points.Count == 0) return points;
 
-            PathD clipperPath = [];
+            //int pointCount = points.Count;
 
-            foreach (SKPoint point in points)
+            PathD clipperPath = new(points.Count);
+
+            /*
+            for (int i = 0; i < pointCount; i++)
             {
-                clipperPath.Add(new PointD(point.X, point.Y));
+                clipperPath.Add(new PointD(points[i].X, points[i].Y));
+            }
+            */
+
+            foreach (SKPoint p in CollectionsMarshal.AsSpan(points))
+            {
+                clipperPath.Add(new PointD((float)p.X, (float)p.Y));
             }
 
             SKPoint firstPoint = points.First();
             clipperPath.Add(new PointD(firstPoint.X, firstPoint.Y));
 
             PathsD clipperPaths = [];
-            PathsD inflatedPaths = [];
 
             clipperPaths.Add(clipperPath);
 
-            double d = distance;
+            //double d = distance;
 
             if (location == ParallelEnum.Below)
             {
-                d = distance * -1.0;
+                distance = -distance;
             }
 
             // offset polyline
-            inflatedPaths = Clipper.InflatePaths(clipperPaths, d, JoinType.Round, EndType.Polygon);
+            PathsD inflatedPaths = Clipper.InflatePaths(clipperPaths, distance, JoinType.Round, EndType.Polygon);
 
             if (inflatedPaths.Count > 0)
             {
                 PathD inflatedPathD = inflatedPaths.First();
 
-                List<SKPoint> inflatedPath = [];
+                List<SKPoint> inflatedPath = new(inflatedPathD.Count);
 
-                foreach (PointD p in inflatedPathD)
+                //int inflatedPathCount = inflatedPathD.Count;
+
+                foreach (PointD p in CollectionsMarshal.AsSpan(inflatedPathD))
                 {
                     inflatedPath.Add(new SKPoint((float)p.x, (float)p.y));
                 }
+
+                /*
+                for (int i = 0; i < inflatedPathCount; i++)
+                {
+                    inflatedPath.Add(new SKPoint((float)inflatedPathD[i].x, (float)inflatedPathD[i].y));
+
+                }
+                */
 
                 return inflatedPath;
             }

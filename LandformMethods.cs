@@ -101,22 +101,18 @@ namespace RealmStudio
             landform.OuterPath8 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 8 * pathDistance, ParallelEnum.Above);
         }
 
-        internal static void EraseLandForm(RealmStudioMap map)
+        internal static void EraseLandForm(RealmStudioMap map, Landform lf)
         {
             if (LandformErasePath.PointCount > 0)
             {
                 MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
 
-                foreach (Landform l in landformLayer.MapLayerComponents.Cast<Landform>())
-                {
-                    using SKPath diffPath = l.DrawPath.Op(LandformErasePath, SKPathOp.Difference);
+                using SKPath diffPath = lf.DrawPath.Op(LandformErasePath, SKPathOp.Difference);
 
-                    if (diffPath != null)
-                    {
-                        l.DrawPath = new(diffPath);
-                        l.IsModified = true;
-                        Task.Run(() => CreateAllPathsFromDrawnPath(map, l));
-                    }
+                if (diffPath != null)
+                {
+                    lf.DrawPath = new(diffPath);
+                    lf.IsModified = true;
                 }
 
                 LandformErasePath.Reset();
@@ -135,26 +131,32 @@ namespace RealmStudio
                 for (int j = 0; j < landformLayer.MapLayerComponents.Count; j++)
                 {
                     if (i != j
+                        && landformLayer.MapLayerComponents[i] is Landform landform_i
+                        && landformLayer.MapLayerComponents[j] is Landform landform_j
                         && !mergedLandformGuids.Contains(((Landform)landformLayer.MapLayerComponents[i]).LandformGuid)
                         && !mergedLandformGuids.Contains(((Landform)landformLayer.MapLayerComponents[j]).LandformGuid))
                     {
-                        Landform landform_i = (Landform)landformLayer.MapLayerComponents[i];
-                        Landform landform_j = (Landform)landformLayer.MapLayerComponents[j];
+                        landform_i.IsModified = true;
+                        landform_j.IsModified = true;
 
                         SKPath landformPath1 = landform_i.ContourPath;
                         SKPath landformPath2 = landform_j.ContourPath;
 
-                        bool pathsMerged = MergeLandformPaths(landformPath2, ref landformPath1);
+                        landformPath1.GetTightBounds(out SKRect lpb1);
+                        landformPath2.GetTightBounds(out SKRect lpb2);
 
-                        if (pathsMerged)
+                        if (lpb1.IntersectsWith(lpb2))
                         {
-                            landform_i.DrawPath = new(landformPath1);
-                            CreateAllPathsFromDrawnPath(map, landform_i);
+                            bool pathsMerged = MergeLandformPaths(landformPath2, ref landformPath1);
 
-                            landformLayer.MapLayerComponents[i] = landform_i;
-                            landform_i.IsModified = true;
+                            if (pathsMerged)
+                            {
+                                landform_i.DrawPath = new(landformPath1);
+                                CreateAllPathsFromDrawnPath(map, landform_i);
 
-                            mergedLandformGuids.Add(landform_j.LandformGuid);
+                                landformLayer.MapLayerComponents[i] = landform_i;
+                                mergedLandformGuids.Add(landform_j.LandformGuid);
+                            }
                         }
                     }
                 }
@@ -162,8 +164,11 @@ namespace RealmStudio
 
             for (int k = landformLayer.MapLayerComponents.Count - 1; k >= 0; k--)
             {
-                if (mergedLandformGuids.Contains(((Landform)landformLayer.MapLayerComponents[k]).LandformGuid))
+                if (landformLayer.MapLayerComponents[k] is Landform lf
+                    && mergedLandformGuids.Contains(((Landform)landformLayer.MapLayerComponents[k]).LandformGuid))
                 {
+                    lf.LandformRenderSurface?.Dispose();
+                    lf.CoastlineRenderSurface?.Dispose();
                     landformLayer.MapLayerComponents.RemoveAt(k);
                 }
             }

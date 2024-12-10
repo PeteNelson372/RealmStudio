@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "RealmStudio": {
+      "commandName": "Project",
+      "nativeDebugging": false,
+      "hotReloadEnabled": false
+    }
+  }
+}

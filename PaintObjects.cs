@@ -47,15 +47,15 @@ namespace RealmStudio
             Color = SKColors.Empty,
             Style = SKPaintStyle.Fill,
             BlendMode = SKBlendMode.Src,
-            IsAntialias = true,
+            IsAntialias = false,
         };
 
         public static readonly SKPaint LandformAreaSelectPaint = new()
         {
             Style = SKPaintStyle.Stroke,
             IsAntialias = true,
-            Color = SKColors.Cyan,
-            StrokeWidth = 2,
+            Color = SKColors.SteelBlue,
+            StrokeWidth = 3,
             PathEffect = SKPathEffect.CreateDash([4F, 4F], 8F),
         };
 
@@ -86,7 +86,7 @@ namespace RealmStudio
         public static readonly SKPaint CursorCirclePaint = new()
         {
             Color = SKColors.Black,
-            StrokeWidth = 1,
+            StrokeWidth = 2,
             Style = SKPaintStyle.Stroke,
             //IsAntialias = true,
             PathEffect = SKPathEffect.CreateDash([5F, 5F], 10F),

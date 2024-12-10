@@ -55,7 +55,7 @@ namespace RealmStudio
         private static LayerPaintStroke? CURRENT_LAYER_PAINT_STROKE = null;
 
         private static LayerPaintStroke? CURRENT_LAND_ERASE_STROKE = null;
-        private static LayerPaintStroke? CURRENT_COAST_ERASE_STROKE = null;
+        //private static LayerPaintStroke? CURRENT_COAST_ERASE_STROKE = null;
 
         // objects that are currently selected
         private static Landform? SELECTED_LANDFORM = null;
@@ -205,13 +205,9 @@ namespace RealmStudio
 
             MapBuilder.DisposeMap(CURRENT_MAP);
 
-            //Activate();
-
             SKGLRenderControl.CreateControl();
             SKGLRenderControl.Show();
             SKGLRenderControl.Select();
-
-            //Refresh();
 
             if (!string.IsNullOrEmpty(MapCommandLinePath))
             {
@@ -220,11 +216,12 @@ namespace RealmStudio
                 Refresh();
 
                 AssetManager.LOADING_STATUS_FORM.Show(this);
+
                 int assetCount = AssetManager.LoadAllAssets();
 
-                LogoPictureBox.Hide();
-
                 AssetManager.LOADING_STATUS_FORM.Hide();
+
+                LogoPictureBox.Hide();
 
                 try
                 {
@@ -256,6 +253,16 @@ namespace RealmStudio
             }
             else
             {
+                Refresh();
+
+                AssetManager.LOADING_STATUS_FORM.Show(this);
+
+                int assetCount = AssetManager.LoadAllAssets();
+
+                AssetManager.LOADING_STATUS_FORM.Hide();
+
+                LogoPictureBox.Hide();
+
                 // this creates the CURRENT_MAP
                 DialogResult result = OpenRealmConfigurationDialog();
 
@@ -263,14 +270,7 @@ namespace RealmStudio
                 {
                     Cursor = Cursors.WaitCursor;
 
-                    Refresh();
-
-                    AssetManager.LOADING_STATUS_FORM.Show(this);
-
                     SetDrawingModeLabel();
-
-                    int assetCount = AssetManager.LoadAllAssets();
-
                     PopulateControlsWithAssets(assetCount);
                     PopulateFontPanelUI();
                     LoadNameGeneratorConfigurationDialog();
@@ -280,10 +280,6 @@ namespace RealmStudio
                         ThemeFilter themeFilter = new();
                         ApplyTheme(AssetManager.CURRENT_THEME, themeFilter);
                     }
-
-                    LogoPictureBox.Hide();
-
-                    AssetManager.LOADING_STATUS_FORM.Hide();
 
                     Activate();
 
@@ -1153,7 +1149,6 @@ namespace RealmStudio
 
         private void CreateNewMap()
         {
-            // this creates the CURRENT_MAP
             MapBuilder.DisposeMap(CURRENT_MAP);
 
             // this creates the CURRENT_MAP
@@ -1361,8 +1356,6 @@ namespace RealmStudio
 
             if (result == DialogResult.OK)
             {
-                SKGLRenderControl.GRContext.ResetContext();
-
                 // create the map from the settings on the dialog
                 CURRENT_MAP = MapBuilder.CreateMap(rcd.map, SKGLRenderControl.GRContext);
 
@@ -3704,7 +3697,7 @@ namespace RealmStudio
             // objects are finalized or reset on mouse up
             if (e.Button == MouseButtons.Left)
             {
-                LeftButtonMouseUpHandler(sender, e);
+                LeftButtonMouseUpHandler(sender, e, SELECTED_BRUSH_SIZE / 2);
             }
             else if (e.Button == MouseButtons.Right)
             {
@@ -4005,6 +3998,14 @@ namespace RealmStudio
                             IsModified = true,
                         };
 
+                        CURRENT_LANDFORM.LandformRenderSurface =
+                            SKSurface.Create(SKGLRenderControl.GRContext, false,
+                            new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+
+                        CURRENT_LANDFORM.CoastlineRenderSurface =
+                            SKSurface.Create(SKGLRenderControl.GRContext, false,
+                            new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+
                         SetLandformData(CURRENT_LANDFORM);
                     }
                     break;
@@ -4015,21 +4016,15 @@ namespace RealmStudio
 
                         if (CURRENT_LAND_ERASE_STROKE == null)
                         {
-                            CURRENT_LAND_ERASE_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.Empty,
+                            CURRENT_LAND_ERASE_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.White,
                                 ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.LANDFORMLAYER, true);
 
                             MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(CURRENT_LAND_ERASE_STROKE);
                         }
 
-                        if (CURRENT_COAST_ERASE_STROKE == null)
-                        {
-                            CURRENT_COAST_ERASE_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.Empty,
-                                ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.LANDCOASTLINELAYER, true);
+                        CURRENT_LAND_ERASE_STROKE?.AddLayerPaintStrokePoint(zoomedScrolledPoint);
 
-                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(CURRENT_COAST_ERASE_STROKE);
-                        }
-
-                        SKGLRenderControl.Invalidate();
+                        SKGLRenderControl.Refresh();
                     }
                     break;
                 case DrawingModeEnum.LandColor:
@@ -4427,7 +4422,7 @@ namespace RealmStudio
 
                             if (landform1 != null && coastlinePointIndex >= 0)
                             {
-                                MapRegionPoint mrp = new MapRegionPoint(landform1.ContourPoints[coastlinePointIndex]);
+                                MapRegionPoint mrp = new(landform1.ContourPoints[coastlinePointIndex]);
                                 CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
 
                                 if (CURRENT_MAP_REGION.MapRegionPoints.Count > 1 && coastlinePointIndex > 1)
@@ -4712,38 +4707,8 @@ namespace RealmStudio
 
                         LandformMethods.LandformErasePath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
 
-                        if (CURRENT_LAND_ERASE_STROKE != null)
-                        {
-                            CURRENT_LAND_ERASE_STROKE.AddLayerPaintStrokePoint(zoomedScrolledPoint);
-                        }
-
-                        if (CURRENT_COAST_ERASE_STROKE != null)
-                        {
-                            CURRENT_COAST_ERASE_STROKE.AddLayerPaintStrokePoint(zoomedScrolledPoint);
-                        }
-
-                        for (int i = landformLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-                        {
-                            if (landformLayer.MapLayerComponents[i] is LayerPaintStroke)
-                            {
-                                landformLayer.MapLayerComponents.RemoveAt(i);
-                            }
-                        }
-
-                        for (int i = landcoastLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-                        {
-                            if (landcoastLayer.MapLayerComponents[i] is LayerPaintStroke)
-                            {
-                                landcoastLayer.MapLayerComponents.RemoveAt(i);
-                            }
-                        }
-
-                        LandformMethods.EraseLandForm(CURRENT_MAP);
-
-                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER, true);
-                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDFORMLAYER, true);
-
-                        SKGLRenderControl.Invalidate();
+                        CURRENT_LAND_ERASE_STROKE?.AddLayerPaintStrokePoint(zoomedScrolledPoint);
+                        SKGLRenderControl.Refresh();
                     }
                     break;
                 case DrawingModeEnum.LandColorErase:
@@ -5212,9 +5177,57 @@ namespace RealmStudio
                     break;
                 case DrawingModeEnum.RegionPaint:
                     {
-                        if (CURRENT_MAP_REGION != null)
+                        if (CURRENT_MAP_REGION == null || CURRENT_MAP_REGION.MapRegionPoints.Count == 1)
                         {
-                            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
+                            if (ModifierKeys == Keys.Shift)
+                            {
+                                // find the closest point to the current point
+                                // on the contour path of a coastline;
+                                // if the nearest point on the coastline
+                                // is within 5 pixels of the current point,
+                                // then set the region point to be the point
+                                // on the coastline
+                                // then check the *previous* region point; if the previous
+                                // region point is on the coastline of the same landform
+                                // then add all of the points on the coastline contour
+                                // to the region points
+
+                                int coastlinePointIndex = -1;
+                                SKPoint coastlinePoint = SKPoint.Empty;
+
+                                float currentDistance = float.MaxValue;
+
+                                MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+                                MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
+                                workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+                                // get the distance from the cursor point to the contour points of all landforms
+                                foreach (Landform lf in landformLayer.MapLayerComponents.Cast<Landform>())
+                                {
+                                    for (int i = 0; i < lf.ContourPoints.Count; i++)
+                                    {
+                                        SKPoint p = lf.ContourPoints[i];
+                                        float distance = SKPoint.Distance(zoomedScrolledPoint, p);
+
+                                        if (distance < currentDistance && distance < 5)
+                                        {
+                                            coastlinePointIndex = i;
+                                            coastlinePoint = p;
+                                            currentDistance = distance;
+                                        }
+                                    }
+
+                                    if (coastlinePointIndex >= 0) break;
+                                }
+
+                                if (coastlinePoint != SKPoint.Empty)
+                                {
+                                    workLayer.LayerSurface?.Canvas.DrawCircle(coastlinePoint, 5, PaintObjects.MapPathSelectedControlPointPaint);
+                                }
+                            }
+                        }
+                        else
+                        {
                             MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                             if (CURRENT_MAP_REGION.MapRegionPoints.Count > 1)
@@ -5233,9 +5246,6 @@ namespace RealmStudio
                             {
                                 MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawLine(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint, CURRENT_MAP_REGION.RegionBorderPaint);
                             }
-
-                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONLAYER, true);
-                            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.REGIONOVERLAYLAYER, true);
 
                             SKGLRenderControl.Invalidate();
                         }
@@ -5324,7 +5334,7 @@ namespace RealmStudio
 
         #region SKGLRenderControl Mouse Up Event Handling Methods (called from event handers)
 
-        private void LeftButtonMouseUpHandler(object sender, MouseEventArgs e)
+        private void LeftButtonMouseUpHandler(object sender, MouseEventArgs e, int brushRadius)
         {
             SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
 
@@ -5370,15 +5380,14 @@ namespace RealmStudio
                             LandformMethods.CreateAllPathsFromDrawnPath(CURRENT_MAP, CURRENT_LANDFORM);
                         }
 
+                        CURRENT_LANDFORM.IsModified = true;
+
                         MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(CURRENT_LANDFORM);
                         LandformMethods.MergeLandforms(CURRENT_MAP);
 
                         CURRENT_LANDFORM = null;
 
                         CURRENT_MAP.IsSaved = false;
-
-                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER, true);
-                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDFORMLAYER, true);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -5388,7 +5397,6 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
 
                         MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
-                        MapLayer landcoastLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER);
 
                         for (int i = landformLayer.MapLayerComponents.Count - 1; i >= 0; i--)
                         {
@@ -5398,34 +5406,23 @@ namespace RealmStudio
                             }
                         }
 
-                        for (int i = landcoastLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+                        CURRENT_LAND_ERASE_STROKE = null;
+
+                        Landform? erasedLandform = GetLandformIntersectingCircle(CURRENT_MAP, zoomedScrolledPoint, brushRadius);
+
+                        if (erasedLandform != null)
                         {
-                            if (landcoastLayer.MapLayerComponents[i] is LayerPaintStroke)
-                            {
-                                landcoastLayer.MapLayerComponents.RemoveAt(i);
-                            }
-                        }
+                            LandformMethods.EraseLandForm(CURRENT_MAP, erasedLandform);
 
-                        LandformMethods.EraseLandForm(CURRENT_MAP);
+                            LandformMethods.MergeLandforms(CURRENT_MAP);
 
-                        LandformMethods.MergeLandforms(CURRENT_MAP);
+                            LandformMethods.CreateAllPathsFromDrawnPath(CURRENT_MAP, erasedLandform);
 
-                        if (CURRENT_LAND_ERASE_STROKE != null)
-                        {
-                            CURRENT_LAND_ERASE_STROKE = null;
-                        }
-
-                        if (CURRENT_COAST_ERASE_STROKE != null)
-                        {
-                            CURRENT_COAST_ERASE_STROKE = null;
+                            erasedLandform.IsModified = true;
                         }
 
                         CURRENT_MAP.IsSaved = false;
-
-                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER, true);
-                        MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.LANDFORMLAYER, true);
-
-                        SKGLRenderControl.Invalidate();
+                        SKGLRenderControl.Refresh();
                     }
                     break;
                 case DrawingModeEnum.LandColor:
@@ -7171,7 +7168,6 @@ namespace RealmStudio
 
             GetSelectedLandformType();
 
-            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
             MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
             GenerateRandomLandform(CURRENT_MAP, SELECTED_LANDFORM_AREA, SELECTED_LANDFORM_TYPE);
@@ -7586,6 +7582,12 @@ namespace RealmStudio
                         DrawPath = new(path),
                     };
 
+                    landform.LandformRenderSurface =
+                        SKSurface.Create(SKGLRenderControl.GRContext, false, new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+
+                    landform.CoastlineRenderSurface =
+                        SKSurface.Create(SKGLRenderControl.GRContext, false, new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+
                     LandformMethods.CreateAllPathsFromDrawnPath(CURRENT_MAP, landform);
 
                     landform.ContourPath.GetBounds(out SKRect boundsRect);
@@ -7672,6 +7674,30 @@ namespace RealmStudio
 
             landform.IsModified = true;
 
+        }
+
+        internal static Landform? GetLandformIntersectingCircle(RealmStudioMap map, SKPoint mapPoint, int circleRadius)
+        {
+            using SKPath circlePath = new();
+            circlePath.AddCircle(mapPoint.X, mapPoint.Y, circleRadius);
+
+            List<MapComponent> landformComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents;
+
+            for (int i = 0; i < landformComponents.Count; i++)
+            {
+                if (landformComponents[i] is Landform mapLandform)
+                {
+                    if (mapLandform.DrawPath != null && mapLandform.DrawPath.PointCount > 0)
+                    {
+                        if (!mapLandform.DrawPath.Op(circlePath, SKPathOp.Intersect).IsEmpty)
+                        {
+                            return mapLandform;
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         internal static Landform? SelectLandformAtPoint(RealmStudioMap map, SKPoint mapClickPoint)

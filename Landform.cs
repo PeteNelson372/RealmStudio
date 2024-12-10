@@ -33,8 +33,6 @@ namespace RealmStudio
 {
     public class Landform : MapComponent, IXmlSerializable
     {
-        public Landform() { }
-
         public RealmStudioMap ParentMap { get; set; } = new RealmStudioMap();
 
         public string LandformName { get; set; } = string.Empty;
@@ -186,8 +184,10 @@ namespace RealmStudio
         public bool IsSelected { get; set; } = false;
         public bool IsModified { get; set; } = true;
 
-        public SKPicture? LandformRenderPicture { get; set; } = null;
-        public SKPicture? CoastlineRenderPicture { get; set; } = null;
+        public SKSurface? LandformRenderSurface { get; set; } = null;
+        public SKSurface? CoastlineRenderSurface { get; set; } = null;
+
+        public Landform() { }
 
         #region NO-OP RENDER METHOD
         public override void Render(SKCanvas canvas)
@@ -202,36 +202,54 @@ namespace RealmStudio
         *******************************************************************************************************/
         public void RenderCoastline(SKCanvas canvas)
         {
-            if (!string.IsNullOrEmpty(CoastlineStyleName))
+            if (CoastlineRenderSurface == null)
             {
-                switch (CoastlineStyleName)
+                return;
+            }
+
+            if (!IsModified)
+            {
+                canvas.DrawSurface(CoastlineRenderSurface, new SKPoint(0, 0));
+            }
+            else
+            {
+                SKCanvas coastlineCanvas = CoastlineRenderSurface.Canvas;
+
+                coastlineCanvas.Clear(SKColors.Transparent);
+
+                if (!string.IsNullOrEmpty(CoastlineStyleName))
                 {
-                    case "None":
-                        break;
-                    case "Uniform Band":
-                        DrawUniformBandCoastlineEffect(canvas);
-                        break;
-                    case "Uniform Blend":
-                        DrawUniformBlendCoastlineEffect(canvas);
-                        break;
-                    case "Uniform Outline":
-                        DrawUniformOutlineCoastlineEffect(canvas);
-                        break;
-                    case "Three-Tiered":
-                        DrawThreeTieredCoastlineEffect(canvas);
-                        break;
-                    case "Circular Pattern":
-                        DrawRadialPatternCoastlineEffect(canvas);
-                        break;
-                    case "Dash Pattern":
-                        DrawDashPatternCoastlineEffect(canvas);
-                        break;
-                    case "Hatch Pattern":
-                        DrawHatchPatternCoastlineEffect(canvas);
-                        break;
-                    case "User Defined":
-                        DrawUserDefinedHatchEffect(canvas);
-                        break;
+                    switch (CoastlineStyleName)
+                    {
+                        case "None":
+                            break;
+                        case "Uniform Band":
+                            DrawUniformBandCoastlineEffect(coastlineCanvas);
+                            break;
+                        case "Uniform Blend":
+                            DrawUniformBlendCoastlineEffect(coastlineCanvas);
+                            break;
+                        case "Uniform Outline":
+                            DrawUniformOutlineCoastlineEffect(coastlineCanvas);
+                            break;
+                        case "Three-Tiered":
+                            DrawThreeTieredCoastlineEffect(coastlineCanvas);
+                            break;
+                        case "Circular Pattern":
+                            DrawRadialPatternCoastlineEffect(coastlineCanvas);
+                            break;
+                        case "Dash Pattern":
+                            DrawDashPatternCoastlineEffect(coastlineCanvas);
+                            break;
+                        case "Hatch Pattern":
+                            DrawHatchPatternCoastlineEffect(coastlineCanvas);
+                            break;
+                        case "User Defined":
+                            DrawUserDefinedHatchEffect(coastlineCanvas);
+                            break;
+                    }
+
+                    canvas.DrawSurface(CoastlineRenderSurface, new SKPoint(0, 0));
                 }
             }
         }
@@ -717,9 +735,22 @@ namespace RealmStudio
 
         public void RenderLandform(SKCanvas canvas)
         {
-            try
+            if (LandformRenderSurface == null)
             {
-                canvas.DrawPath(DrawPath, LandformFillPaint);
+                return;
+            }
+
+            if (!IsModified)
+            {
+                canvas.DrawSurface(LandformRenderSurface, new SKPoint(0, 0));
+            }
+            else
+            {
+                SKCanvas landformCanvas = LandformRenderSurface.Canvas;
+
+                landformCanvas.Clear(SKColors.Transparent);
+
+                landformCanvas.DrawPath(DrawPath, LandformFillPaint);
 
                 double colorAlphaStep = 1.0 / (256.0 / 8.0);
 
@@ -729,42 +760,42 @@ namespace RealmStudio
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 LandformGradientPaint.StrokeWidth = CoastlineEffectDistance / 8;
 
-                canvas.DrawPath(InnerPath8, LandformGradientPaint);
+                landformCanvas.DrawPath(InnerPath8, LandformGradientPaint);
 
                 landformColor = Color.FromArgb((int)(LandformFillColor.A * (8 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
-                canvas.DrawPath(InnerPath7, LandformGradientPaint);
+                landformCanvas.DrawPath(InnerPath7, LandformGradientPaint);
 
                 landformColor = Color.FromArgb((int)(LandformFillColor.A * (12 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
-                canvas.DrawPath(InnerPath6, LandformGradientPaint);
+                landformCanvas.DrawPath(InnerPath6, LandformGradientPaint);
 
                 landformColor = Color.FromArgb((int)(LandformFillColor.A * (16 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
-                canvas.DrawPath(InnerPath5, LandformGradientPaint);
+                landformCanvas.DrawPath(InnerPath5, LandformGradientPaint);
 
                 landformColor = Color.FromArgb((int)(LandformFillColor.A * (20 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
-                canvas.DrawPath(InnerPath4, LandformGradientPaint);
+                landformCanvas.DrawPath(InnerPath4, LandformGradientPaint);
 
                 landformColor = Color.FromArgb((int)(LandformFillColor.A * (24 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
-                canvas.DrawPath(InnerPath3, LandformGradientPaint);
+                landformCanvas.DrawPath(InnerPath3, LandformGradientPaint);
 
                 landformColor = Color.FromArgb((int)(LandformFillColor.A * (28 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
-                canvas.DrawPath(InnerPath2, LandformGradientPaint);
+                landformCanvas.DrawPath(InnerPath2, LandformGradientPaint);
 
                 landformColor = Color.FromArgb((int)(LandformFillColor.A * (32 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
-                canvas.DrawPath(InnerPath1, LandformGradientPaint);
+                landformCanvas.DrawPath(InnerPath1, LandformGradientPaint);
 
                 LandformOutlinePaint.Color = LandformOutlineColor.ToSKColor();
-                canvas.DrawPath(ContourPath, LandformOutlinePaint);
-            }
-            catch (Exception ex)
-            {
-                Program.LOGGER.Error(ex);
+                landformCanvas.DrawPath(ContourPath, LandformOutlinePaint);
+
+                canvas.DrawSurface(LandformRenderSurface, new SKPoint(0, 0));
+
+                IsModified = false;
             }
 
         }

@@ -127,7 +127,7 @@ namespace RealmStudio
         {
             if (ParentMap == null) return;
 
-            if (Rendered) return;
+            //if (Rendered) return;
 
             using (new SKAutoCanvasRestore(canvas))
             {

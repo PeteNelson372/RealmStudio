@@ -127,6 +127,7 @@ namespace RealmStudio
 
                     string gridScaleString = string.Format("One square is {0:N} by {1:N} {2}", horizontalGridDistance, verticalGridDistance, mapUnits);
 
+
                     using SKPaint glowPaint = new()
                     {
                         Color = SKColors.Yellow,

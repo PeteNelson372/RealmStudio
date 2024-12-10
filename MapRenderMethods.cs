@@ -228,20 +228,23 @@ namespace RealmStudio
         {
             // render landforms
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
-            if (landformLayer.LayerSurface == null) return;
+            MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDCOASTLINELAYER);
+
+            if (landformLayer.LayerSurface == null || landCoastlineLayer.LayerSurface == null) return;
 
             if (landformLayer.ShowLayer && landformLayer.MapLayerComponents.Count > 0)
             {
+                landCoastlineLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 landformLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
-                currentLandform?.RenderCoastline(landformLayer.LayerSurface.Canvas);
+                currentLandform?.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
                 currentLandform?.RenderLandform(landformLayer.LayerSurface.Canvas);
 
                 for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
                 {
                     if (landformLayer.MapLayerComponents[i] is Landform l)
                     {
-                        l.RenderCoastline(landformLayer.LayerSurface.Canvas);
+                        l.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
                         l.RenderLandform(landformLayer.LayerSurface.Canvas);
 
                         if (l.IsSelected)
@@ -260,6 +263,7 @@ namespace RealmStudio
                     }
                 }
 
+                renderCanvas.DrawSurface(landCoastlineLayer.LayerSurface, scrollPoint);
                 renderCanvas.DrawSurface(landformLayer.LayerSurface, scrollPoint);
             }
 
@@ -269,6 +273,7 @@ namespace RealmStudio
 
             if (landDrawingLayer.ShowLayer && landDrawingLayer.LayerSurface != null && landDrawingLayer.MapLayerComponents.Count > 0)
             {
+                landDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
                 landDrawingLayer.Render(landDrawingLayer.LayerSurface.Canvas);
                 renderCanvas.DrawSurface(landDrawingLayer.LayerSurface, scrollPoint);
             }
@@ -950,19 +955,16 @@ namespace RealmStudio
             }
         }
 
-        internal static void RenderWorkLayer(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint, bool toSnapShot = false)
+        internal static void RenderWorkLayer(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
 
-            if (workLayer.ShowLayer && workLayer.LayerSurface != null)
+            if (workLayer.LayerSurface != null)
             {
-                if (!toSnapShot)
-                {
-                    // code that makes use of the work layer is responsible for clearing
-                    // and drawing to the canvas properly; it is only rendered here
-                    workLayer.Render(workLayer.LayerSurface.Canvas);
-                    renderCanvas.DrawSurface(workLayer.LayerSurface, scrollPoint);
-                }
+                // code that makes use of the work layer is responsible for clearing
+                // and drawing to the canvas properly; it is only rendered here
+                //workLayer.Render(workLayer.LayerSurface.Canvas);
+                renderCanvas.DrawSurface(workLayer.LayerSurface, scrollPoint);
             }
         }
     }
