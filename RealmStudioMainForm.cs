@@ -716,7 +716,32 @@ namespace RealmStudio
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenExistingMap();
+            if (!CURRENT_MAP.IsSaved)
+            {
+                DialogResult result =
+                    MessageBox.Show("The map has not been saved. Do you want to save the map?", "Save Map", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+                if (result == DialogResult.Yes)
+                {
+                    DialogResult saveResult = SaveMap();
+
+                    if (saveResult == DialogResult.OK)
+                    {
+                        OpenExistingMap();
+                        Cursor = Cursors.Default;
+                    }
+                }
+                else if (result == DialogResult.No)
+                {
+                    OpenExistingMap();
+                    Cursor = Cursors.Default;
+                }
+            }
+            else
+            {
+                OpenExistingMap();
+                Cursor = Cursors.Default;
+            }
         }
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2290,6 +2315,7 @@ namespace RealmStudio
 
                 // finalize loading of landforms
                 MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+                SKImageInfo lfImageInfo = new(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
 
                 for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
                 {
@@ -2297,6 +2323,9 @@ namespace RealmStudio
                     {
                         landform.ParentMap = CURRENT_MAP;
                         landform.IsModified = true;
+
+                        landform.LandformRenderSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, false, lfImageInfo);
+                        landform.CoastlineRenderSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, false, lfImageInfo);
 
                         LandformMethods.CreateInnerAndOuterPathsFromContourPoints(CURRENT_MAP, landform);
 
@@ -2360,7 +2389,7 @@ namespace RealmStudio
 
                             SKBitmap resizedSKBitmap = new(100, 100);
 
-                            Extensions.ToSKBitmap(dashTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKFilterQuality.High);
+                            Extensions.ToSKBitmap(dashTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
 
                             landform.DashShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
                         }
@@ -2373,7 +2402,7 @@ namespace RealmStudio
 
                             SKBitmap resizedSKBitmap = new(100, 100);
 
-                            Extensions.ToSKBitmap(lineHatchTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKFilterQuality.High);
+                            Extensions.ToSKBitmap(lineHatchTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
 
                             landform.LineHatchBitmapShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
                         }
@@ -2388,14 +2417,16 @@ namespace RealmStudio
                     if (landDrawingLayer.MapLayerComponents[i] is LayerPaintStroke paintStroke)
                     {
                         paintStroke.ParentMap = CURRENT_MAP;
+                        paintStroke.RenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false, lfImageInfo);
+                        paintStroke.Rendered = false;
 
-                        if (!paintStroke.Erase)
+                        if (paintStroke.Erase)
                         {
-                            paintStroke.ShaderPaint = PaintObjects.LandColorPaint;
+                            paintStroke.ShaderPaint = PaintObjects.LandColorEraserPaint;
                         }
                         else
                         {
-                            paintStroke.ShaderPaint = PaintObjects.LandColorEraserPaint;
+                            paintStroke.ShaderPaint = PaintObjects.LandColorPaint;
                         }
                     }
                 }
@@ -2528,7 +2559,7 @@ namespace RealmStudio
                                     // resize the placed bitmap to match the size set in the symbol - this shouldn't be necessary
                                     SKBitmap resizedPlacedBitmap = new SKBitmap(symbol.Width, symbol.Height);
 
-                                    symbol.PlacedBitmap.ScalePixels(resizedPlacedBitmap, SKFilterQuality.High);
+                                    symbol.PlacedBitmap.ScalePixels(resizedPlacedBitmap, SKSamplingOptions.Default);
                                     symbol.SetPlacedBitmap(resizedPlacedBitmap);
 
                                 }
@@ -3730,7 +3761,7 @@ namespace RealmStudio
         {
             int cursorDelta = 5;
 
-            if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.LandErase)
+            if (ModifierKeys == Keys.None && CURRENT_DRAWING_MODE == DrawingModeEnum.LandErase)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
                 int newValue = LandEraserSizeTrack.Value + sizeDelta;
@@ -3741,7 +3772,7 @@ namespace RealmStudio
                 SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
-            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.LandPaint)
+            else if (ModifierKeys == Keys.None && CURRENT_DRAWING_MODE == DrawingModeEnum.LandPaint)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
                 int newValue = LandBrushSizeTrack.Value + sizeDelta;
@@ -3751,7 +3782,7 @@ namespace RealmStudio
                 SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
-            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.LandColor)
+            else if (ModifierKeys == Keys.None && CURRENT_DRAWING_MODE == DrawingModeEnum.LandColor)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
                 int newValue = LandColorBrushSizeTrack.Value + sizeDelta;
@@ -3762,7 +3793,7 @@ namespace RealmStudio
                 SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
-            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.LandColorErase)
+            else if (ModifierKeys == Keys.None && CURRENT_DRAWING_MODE == DrawingModeEnum.LandColorErase)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
                 int newValue = LandColorEraserSizeTrack.Value + sizeDelta;
@@ -3774,18 +3805,18 @@ namespace RealmStudio
                 SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
-            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.OceanErase)
+            else if (ModifierKeys == Keys.None && CURRENT_DRAWING_MODE == DrawingModeEnum.OceanErase)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
-                int newValue = OceanBrushSizeTrack.Value + sizeDelta;
-                newValue = Math.Max(OceanBrushSizeTrack.Minimum, Math.Min(newValue, OceanBrushSizeTrack.Maximum));
+                int newValue = OceanEraserSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(OceanEraserSizeTrack.Minimum, Math.Min(newValue, OceanEraserSizeTrack.Maximum));
 
                 OceanEraserSizeTrack.Value = newValue;
                 OceanMethods.OceanPaintEraserSize = newValue;
                 SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
-            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.OceanPaint)
+            else if (ModifierKeys == Keys.None && CURRENT_DRAWING_MODE == DrawingModeEnum.OceanPaint)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
                 int newValue = OceanBrushSizeTrack.Value + sizeDelta;
@@ -3796,7 +3827,7 @@ namespace RealmStudio
                 SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
-            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterPaint)
+            else if (ModifierKeys == Keys.None && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterPaint)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
                 int newValue = WaterBrushSizeTrack.Value + sizeDelta;
@@ -3806,7 +3837,7 @@ namespace RealmStudio
                 SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
-            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterErase)
+            else if (ModifierKeys == Keys.None && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterErase)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
                 int newValue = WaterEraserSizeTrack.Value + sizeDelta;
@@ -3816,7 +3847,7 @@ namespace RealmStudio
                 SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
-            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.LakePaint)
+            else if (ModifierKeys == Keys.None && CURRENT_DRAWING_MODE == DrawingModeEnum.LakePaint)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
                 int newValue = WaterBrushSizeTrack.Value + sizeDelta;
@@ -3826,7 +3857,7 @@ namespace RealmStudio
                 SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
-            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterColor)
+            else if (ModifierKeys == Keys.None && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterColor)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
                 int newValue = WaterColorBrushSizeTrack.Value + sizeDelta;
@@ -3836,17 +3867,17 @@ namespace RealmStudio
                 SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
-            else if (ModifierKeys == Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterColorErase)
+            else if (ModifierKeys == Keys.None && CURRENT_DRAWING_MODE == DrawingModeEnum.WaterColorErase)
             {
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
-                int newValue = WaterColorBrushSizeTrack.Value + sizeDelta;
-                newValue = Math.Max(WaterColorBrushSizeTrack.Minimum, Math.Min(newValue, WaterColorBrushSizeTrack.Maximum));
+                int newValue = WaterColorEraserSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(WaterColorEraserSizeTrack.Minimum, Math.Min(newValue, WaterColorEraserSizeTrack.Maximum));
 
-                WaterColorBrushSizeTrack.Value = newValue;
+                WaterColorEraserSizeTrack.Value = newValue;
                 SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
-            else if (ModifierKeys != Keys.Shift && CURRENT_DRAWING_MODE == DrawingModeEnum.SymbolPlace)
+            else if (ModifierKeys != Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.SymbolPlace)
             {
                 // TODO: should area brush size be changed when AreaBrushSwitch is checked?
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
@@ -3856,7 +3887,7 @@ namespace RealmStudio
                 SymbolScaleUpDown.Value = newValue;
                 SKGLRenderControl.Invalidate();
             }
-            else if (ModifierKeys != Keys.Shift && CURRENT_DRAWING_MODE == DrawingModeEnum.LabelSelect)
+            else if (ModifierKeys != Keys.Control && CURRENT_DRAWING_MODE == DrawingModeEnum.LabelSelect)
             {
                 if (SELECTED_MAP_LABEL != null)
                 {
@@ -3869,7 +3900,7 @@ namespace RealmStudio
                     SKGLRenderControl.Invalidate();
                 }
             }
-            else if (ModifierKeys == Keys.Shift)
+            else if (ModifierKeys == Keys.Control)
             {
                 SetZoomLevel(e.Delta);
 
@@ -4036,6 +4067,9 @@ namespace RealmStudio
                         {
                             CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, LandColorSelectionButton.BackColor.ToSKColor(),
                                 SELECTED_COLOR_PAINT_BRUSH, SELECTED_BRUSH_SIZE / 2, MapBuilder.LANDDRAWINGLAYER);
+
+                            CURRENT_LAYER_PAINT_STROKE.RenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false,
+                            new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
 
                             Cmd_AddLandPaintStroke cmd = new(CURRENT_MAP, CURRENT_LAYER_PAINT_STROKE);
                             CommandManager.AddCommand(cmd);
@@ -4929,7 +4963,7 @@ namespace RealmStudio
 
                             if (b != null)
                             {
-                                SKBitmap resizedBitmap = b.Resize(new SKSizeI((int)boxRect.Width, (int)boxRect.Height), SKFilterQuality.High);
+                                SKBitmap resizedBitmap = b.Resize(new SKSizeI((int)boxRect.Width, (int)boxRect.Height), SKSamplingOptions.Default);
 
                                 SELECTED_PLACED_MAP_BOX.SetBoxBitmap(resizedBitmap);
                                 SELECTED_PLACED_MAP_BOX.Width = resizedBitmap.Width;
@@ -7636,7 +7670,7 @@ namespace RealmStudio
 
                 SKBitmap resizedSKBitmap = new(100, 100);
 
-                Extensions.ToSKBitmap(dashTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKFilterQuality.High);
+                Extensions.ToSKBitmap(dashTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
 
                 landform.DashShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
             }
@@ -7649,7 +7683,7 @@ namespace RealmStudio
 
                 SKBitmap resizedSKBitmap = new(100, 100);
 
-                Extensions.ToSKBitmap(lineHatchTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKFilterQuality.High);
+                Extensions.ToSKBitmap(lineHatchTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
 
                 landform.LineHatchBitmapShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
             }
@@ -8546,27 +8580,6 @@ namespace RealmStudio
             PathTexturePreviewPicture.Image = AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap;
             PathTextureNameLabel.Text = AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureName;
         }
-
-        private void ShowPathBoundariesSwitch_CheckedChanged()
-        {
-            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER);
-            foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-            {
-                mp.IsSelected = ShowPathBoundariesSwitch.Checked;
-            }
-
-            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER);
-            foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-            {
-                mp.IsSelected = ShowPathBoundariesSwitch.Checked;
-            }
-
-            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHLOWERLAYER, true);
-            MapBuilder.SetLayerModified(CURRENT_MAP, MapBuilder.PATHUPPERLAYER, true);
-
-            SKGLRenderControl.Invalidate();
-        }
-
 
         private void SolidLinePictureBox_Click(object sender, EventArgs e)
         {

@@ -50,6 +50,8 @@ namespace RealmStudio
 
         public SKPaint ShaderPaint;
 
+        public SKSurface? RenderSurface { get; set; }
+
         public LayerPaintStroke()
         {
             ShaderPaint = new();
@@ -116,21 +118,22 @@ namespace RealmStudio
 
             LayerPaintStrokePoint sp = new(location, BrushRadius);
             PaintStrokePoints.Add(sp);
-
-            if (ParentMap != null)
-            {
-                MapBuilder.SetLayerModified(ParentMap, MapLayerIdentifier, true);
-            }
         }
 
         public override void Render(SKCanvas canvas)
         {
-            if (ParentMap == null) return;
+            if (ParentMap == null || RenderSurface == null) return;
 
-            //if (Rendered) return;
-
-            using (new SKAutoCanvasRestore(canvas))
+            if (Rendered)
             {
+                canvas.DrawSurface(RenderSurface, new SKPoint(0, 0));
+                return;
+            }
+
+            using (new SKAutoCanvasRestore(RenderSurface.Canvas))
+            {
+                RenderSurface?.Canvas.Clear(SKColors.Transparent);
+
                 // clip rendering to landforms or water features, depending on what map layer
                 // the brush stroke is on; painting on the ocean layer is not clipped
 
@@ -173,7 +176,7 @@ namespace RealmStudio
 
                         }
 
-                        canvas.ClipPath(clipPath);
+                        RenderSurface?.Canvas.ClipPath(clipPath);
                     }
                 }
                 else if (MapLayerIdentifier == MapBuilder.WATERDRAWINGLAYER)
@@ -204,7 +207,7 @@ namespace RealmStudio
                         }
                     }
 
-                    canvas.ClipPath(clipPath);
+                    RenderSurface?.Canvas.ClipPath(clipPath);
                 }
 
                 foreach (LayerPaintStrokePoint point in PaintStrokePoints)
@@ -223,11 +226,12 @@ namespace RealmStudio
                         ShaderPaint.Shader = StrokeShader;
                     }
 
-                    canvas.DrawCircle(point.StrokeLocation.X, point.StrokeLocation.Y, point.StrokeRadius, ShaderPaint);
+                    RenderSurface?.Canvas.DrawCircle(point.StrokeLocation.X, point.StrokeLocation.Y, point.StrokeRadius, ShaderPaint);
                 }
-            }
 
-            Rendered = true;
+                canvas.DrawSurface(RenderSurface, new SKPoint(0, 0));
+                Rendered = true;
+            }
         }
 
         public XmlSchema? GetSchema()

@@ -265,8 +265,25 @@ namespace RealmStudio
                             lf.CoastlineRenderSurface?.Dispose();
                             lf.CoastlineRenderSurface = null;
                         }
+                        else if (mc is LayerPaintStroke lps)
+                        {
+                            lps.RenderSurface?.Dispose();
+                            lps.RenderSurface = null;
+                        }
                     }
                 }
+                else if (layer.MapLayerName == "landdrawing")
+                {
+                    foreach (MapComponent mc in layer.MapLayerComponents)
+                    {
+                        if (mc is LayerPaintStroke lps)
+                        {
+                            lps.RenderSurface?.Dispose();
+                            lps.RenderSurface = null;
+                        }
+                    }
+                }
+
                 layer.LayerSurface?.Dispose();
                 layer.LayerSurface = null;
             }

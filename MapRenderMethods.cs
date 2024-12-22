@@ -843,6 +843,8 @@ namespace RealmStudio
 
             if (waterLayer.ShowLayer && waterLayer.MapLayerComponents.Count > 0 && selectionLayer.LayerSurface != null)
             {
+                selectionLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+
                 foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
                 {
                     if (w is WaterFeature wf)
