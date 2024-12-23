@@ -51,8 +51,6 @@ namespace RealmStudio
                     }
                 }
             }
-
-            symbolLayer.IsModified = true;
         }
 
         public void UndoOperation()
@@ -65,7 +63,6 @@ namespace RealmStudio
             }
 
             RemovedSymbolList.Clear();
-            symbolLayer.IsModified = true;
         }
     }
 }

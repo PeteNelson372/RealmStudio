@@ -54,10 +54,6 @@ namespace RealmStudio
                     }
                 }
             }
-
-            MapBuilder.GetMapLayerByIndex(_map, MapBuilder.PATHLOWERLAYER).IsModified = true;
-            MapBuilder.GetMapLayerByIndex(_map, MapBuilder.PATHUPPERLAYER).IsModified = true;
-
         }
 
         public void UndoOperation()
@@ -73,9 +69,6 @@ namespace RealmStudio
                     MapBuilder.GetMapLayerByIndex(_map, MapBuilder.PATHLOWERLAYER).MapLayerComponents.Add(storedMapPath);
                 }
             }
-
-            MapBuilder.GetMapLayerByIndex(_map, MapBuilder.PATHLOWERLAYER).IsModified = true;
-            MapBuilder.GetMapLayerByIndex(_map, MapBuilder.PATHUPPERLAYER).IsModified = true;
         }
     }
 }

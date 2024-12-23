@@ -33,7 +33,6 @@ namespace RealmStudio
             MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.SYMBOLLAYER);
 
             symbolLayer.MapLayerComponents.Add(PlacedSymbol);
-            symbolLayer.IsModified = true;
         }
 
         public void UndoOperation()
@@ -48,8 +47,6 @@ namespace RealmStudio
                     break;
                 }
             }
-
-            symbolLayer.IsModified = true;
         }
     }
 }

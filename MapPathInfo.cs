@@ -156,12 +156,10 @@ namespace RealmStudio
             if (MapPath.DrawOverSymbols)
             {
                 MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHUPPERLAYER).MapLayerComponents.Add(MapPath);
-                MapBuilder.SetLayerModified(Map, MapBuilder.PATHUPPERLAYER, true);
             }
             else
             {
                 MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHLOWERLAYER).MapLayerComponents.Add(MapPath);
-                MapBuilder.SetLayerModified(Map, MapBuilder.PATHLOWERLAYER, true);
             }
             TOOLTIP.Show("Map path data changes applied", this, new Point(StatusMessageLabel.Left, StatusMessageLabel.Top), 3000);
 

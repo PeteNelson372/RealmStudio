@@ -95,7 +95,7 @@ namespace RealmStudio
 
                 // scale Patch_B so that it tiles an integral number of times
                 using SKBitmap scaled_B = new(newWidth, Patch_B.Height);
-                Patch_B.ScalePixels(scaled_B, SKFilterQuality.High);
+                Patch_B.ScalePixels(scaled_B, SKSamplingOptions.Default);
 
                 int left = X + Patch_A.Width;
 
@@ -124,7 +124,7 @@ namespace RealmStudio
                 // scale Patch_D so that it tiles an integral number of times
                 // scaled D patch has same width and new height
                 using SKBitmap scaled_D = new(Patch_D.Width, newHeight);
-                Patch_D.ScalePixels(scaled_D, SKFilterQuality.High);
+                Patch_D.ScalePixels(scaled_D, SKSamplingOptions.Default);
 
                 int top = Y + Patch_A.Height;
 
@@ -149,7 +149,7 @@ namespace RealmStudio
 
                 // scale Patch_F so that it tiles an integral number of times
                 using SKBitmap scaled_F = new(Patch_F.Width, newFHeight);
-                Patch_F.ScalePixels(scaled_F, SKFilterQuality.High);
+                Patch_F.ScalePixels(scaled_F, SKSamplingOptions.Default);
 
                 top = Y + Patch_C.Height;
 
@@ -177,7 +177,7 @@ namespace RealmStudio
                 }
 
                 using SKBitmap scaled_H = new(newHWidth, Patch_H.Height);
-                Patch_H.ScalePixels(scaled_H, SKFilterQuality.High);
+                Patch_H.ScalePixels(scaled_H, SKSamplingOptions.Default);
 
                 left = X + Patch_G.Width;
 

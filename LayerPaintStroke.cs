@@ -124,7 +124,7 @@ namespace RealmStudio
         {
             if (ParentMap == null || RenderSurface == null) return;
 
-            if (Rendered)
+            if (Rendered && !Erase)
             {
                 canvas.DrawSurface(RenderSurface, new SKPoint(0, 0));
                 return;
@@ -210,6 +210,8 @@ namespace RealmStudio
                     RenderSurface?.Canvas.ClipPath(clipPath);
                 }
 
+                // when erasing (painting with transparent color), painting to the RenderSurface canvas doesn't paint over
+                // previously painted color; painting directly to the canvas that is passed in does (a Skia bug?)
                 foreach (LayerPaintStrokePoint point in PaintStrokePoints)
                 {
                     if (!Erase)
@@ -224,13 +226,19 @@ namespace RealmStudio
                         }
 
                         ShaderPaint.Shader = StrokeShader;
+                        RenderSurface?.Canvas.DrawCircle(point.StrokeLocation.X, point.StrokeLocation.Y, point.StrokeRadius, ShaderPaint);
                     }
-
-                    RenderSurface?.Canvas.DrawCircle(point.StrokeLocation.X, point.StrokeLocation.Y, point.StrokeRadius, ShaderPaint);
+                    else
+                    {
+                        canvas.DrawCircle(point.StrokeLocation.X, point.StrokeLocation.Y, point.StrokeRadius, ShaderPaint);
+                    }
                 }
 
-                canvas.DrawSurface(RenderSurface, new SKPoint(0, 0));
-                Rendered = true;
+                if (!Erase)
+                {
+                    canvas.DrawSurface(RenderSurface, new SKPoint(0, 0));
+                    Rendered = true;
+                }
             }
         }
 

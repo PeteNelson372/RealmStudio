@@ -40,8 +40,6 @@ namespace RealmStudio
                     boxLayer.MapLayerComponents.RemoveAt(i);
                 }
             }
-
-            boxLayer.IsModified = true;
         }
 
         public void UndoOperation()
@@ -51,7 +49,6 @@ namespace RealmStudio
             MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER);
 
             boxLayer.MapLayerComponents.Add(SelectedBox);
-            boxLayer.IsModified = true;
         }
     }
 }

@@ -44,7 +44,7 @@ namespace RealmStudio
 
         public static readonly SKPaint LandColorEraserPaint = new()
         {
-            Color = SKColors.Empty,
+            Color = SKColors.Transparent,
             Style = SKPaintStyle.Fill,
             BlendMode = SKBlendMode.Src,
             IsAntialias = false,

@@ -79,19 +79,6 @@ namespace RealmStudio
             l.ShowLayer = false;
         }
 
-        public static void SetLayerModified(RealmStudioMap map, int layerIndex, bool IsModified)
-        {
-            map.MapLayers[layerIndex].IsModified = IsModified;
-        }
-
-        public static void MarkAllLayersModified(RealmStudioMap map)
-        {
-            for (int i = 0; i < map.MapLayers.Count; i++)
-            {
-                map.MapLayers[i].IsModified = true;
-            }
-        }
-
         private static MapLayer ConstructMapLayer(string layerName, ushort layerOrder, int width, int height, GRContext grContext)
         {
             SKImageInfo imageInfo = new(width, height);

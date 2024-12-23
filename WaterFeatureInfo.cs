@@ -86,9 +86,6 @@ namespace RealmStudio
 
             WaterFeatureMethods.ConstructWaterFeaturePaintObjects(WaterFeature);
 
-            MapBuilder.SetLayerModified(Map, MapBuilder.WATERLAYER, true);
-            MapBuilder.SetLayerModified(Map, MapBuilder.WATERDRAWINGLAYER, true);
-
             RenderControl.Invalidate();
         }
     }

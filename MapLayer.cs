@@ -46,9 +46,6 @@ namespace RealmStudio
         [XmlIgnore]
         public bool ShowLayer { get; set; } = true;
 
-        [XmlIgnore]
-        public bool IsModified { get; set; } = true;
-
         public override void Render(SKCanvas canvas)
         {
             if (ShowLayer)

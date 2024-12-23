@@ -32,7 +32,6 @@ namespace RealmStudio
         {
             MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WATERDRAWINGLAYER);
             waterDrawingLayer.MapLayerComponents.Add(PaintStroke);
-            waterDrawingLayer.IsModified = true;
         }
 
         public void UndoOperation()
@@ -46,8 +45,6 @@ namespace RealmStudio
                     waterDrawingLayer.MapLayerComponents.RemoveAt(i);
                 }
             }
-
-            waterDrawingLayer.IsModified = true;
         }
     }
 }

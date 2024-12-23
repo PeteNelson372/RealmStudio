@@ -42,8 +42,6 @@ namespace RealmStudio
                     }
                 }
             }
-
-            MapBuilder.MarkAllLayersModified(_map);
         }
 
         public void UndoOperation()
@@ -53,8 +51,6 @@ namespace RealmStudio
                 MapBuilder.GetMapLayerByIndex(_map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(storedLandform);
                 LandformMethods.MergeLandforms(_map);
             }
-
-            MapBuilder.MarkAllLayersModified(_map);
         }
     }
 }

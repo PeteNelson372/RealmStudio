@@ -45,7 +45,6 @@ namespace RealmStudio
                 };
 
                 oceanTextureLayer.MapLayerComponents.Add(OceanTexture);
-                oceanTextureLayer.IsModified = true;
             }
         }
 
@@ -56,7 +55,6 @@ namespace RealmStudio
             if (OceanTexture != null)
             {
                 oceanTextureLayer.MapLayerComponents.Remove(OceanTexture);
-                oceanTextureLayer.IsModified = true;
             }
         }
     }

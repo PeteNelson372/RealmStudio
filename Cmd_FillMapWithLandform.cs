@@ -45,20 +45,12 @@ namespace RealmStudio
 
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER);
             landformLayer.MapLayerComponents.Add(FilledLandform);
-            landformLayer.IsModified = true;
-
-            MapLayer landformCoastlineLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDCOASTLINELAYER);
-            landformCoastlineLayer.IsModified = true;
         }
 
         public void UndoOperation()
         {
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER);
             landformLayer.MapLayerComponents.Remove(FilledLandform);
-            landformLayer.IsModified = true;
-
-            MapLayer landformCoastlineLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDCOASTLINELAYER);
-            landformCoastlineLayer.IsModified = true;
         }
     }
 }

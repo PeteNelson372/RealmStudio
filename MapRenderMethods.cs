@@ -88,6 +88,7 @@ namespace RealmStudio
             }
         }
 
+        /*
         internal static void RenderDrawing(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             // TODO
@@ -97,6 +98,7 @@ namespace RealmStudio
         {
             // TODO
         }
+        */
 
         internal static void RenderLowerGrid(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {

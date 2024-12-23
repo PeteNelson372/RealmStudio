@@ -39,8 +39,6 @@ namespace RealmStudio
                     labelLayer.MapLayerComponents.RemoveAt(i);
                 }
             }
-
-            labelLayer.IsModified = true;
         }
 
         public void UndoOperation()
@@ -49,8 +47,6 @@ namespace RealmStudio
 
             MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LABELLAYER);
             labelLayer.MapLayerComponents.Add(Label);
-            labelLayer.IsModified = true;
-
         }
     }
 }

@@ -178,9 +178,6 @@ namespace RealmStudio
 
             Landform.IsModified = true;
 
-            MapBuilder.SetLayerModified(Landform.ParentMap, MapBuilder.LANDCOASTLINELAYER, true);
-            MapBuilder.SetLayerModified(Landform.ParentMap, MapBuilder.LANDFORMLAYER, true);
-
             RenderControl.Invalidate();
         }
 

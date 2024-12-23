@@ -74,14 +74,11 @@ namespace RealmStudio
 
             SKPaint paint = MapLabelMethods.CreateLabelPaint(Label.LabelFont, LabelColor, LabelTextAlignEnum.AlignLeft);
 
-            //SKFont f = Label.LabelFont
 
             Label.LabelPaint = paint;
             SKRect bounds = new();
             Label.Width = (int)paint.MeasureText(Label.LabelText, ref bounds);
             Label.Height = (int)bounds.Height;
-
-            MapBuilder.SetLayerModified(Map, MapBuilder.LABELLAYER, true);
         }
 
         public void UndoOperation()
@@ -99,8 +96,6 @@ namespace RealmStudio
             SKRect bounds = new();
             Label.Width = (int)paint.MeasureText(Label.LabelText, ref bounds);
             Label.Height = (int)bounds.Height;
-
-            MapBuilder.SetLayerModified(Map, MapBuilder.LABELLAYER, true);
         }
     }
 }

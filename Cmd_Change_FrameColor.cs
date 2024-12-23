@@ -41,13 +41,11 @@ namespace RealmStudio
         public void DoOperation()
         {
             SelectedFrame.FrameTint = FrameTint;
-            MapBuilder.SetLayerModified(Map, MapBuilder.FRAMELAYER, true);
         }
 
         public void UndoOperation()
         {
             SelectedFrame.FrameTint = PreviousFrameTint;
-            MapBuilder.SetLayerModified(Map, MapBuilder.FRAMELAYER, true);
         }
     }
 }

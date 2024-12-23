@@ -32,7 +32,6 @@ namespace RealmStudio
         {
             MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.OCEANDRAWINGLAYER);
             oceanDrawingLayer.MapLayerComponents.Add(PaintStroke);
-            oceanDrawingLayer.IsModified = true;
         }
 
         public void UndoOperation()
@@ -44,7 +43,6 @@ namespace RealmStudio
                 if (oceanDrawingLayer.MapLayerComponents[i] is LayerPaintStroke l && l.StrokeId.ToString() == PaintStroke.StrokeId.ToString())
                 {
                     oceanDrawingLayer.MapLayerComponents.RemoveAt(i);
-                    oceanDrawingLayer.IsModified = true;
                 }
             }
         }

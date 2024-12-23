@@ -35,7 +35,6 @@ namespace RealmStudio
             if (LayerColor != null)
             {
                 oceanTextureOverlayLayer.MapLayerComponents.Remove(LayerColor);
-                oceanTextureOverlayLayer.IsModified = true;
             }
         }
 
@@ -46,7 +45,6 @@ namespace RealmStudio
             if (oceanTextureOverlayLayer.MapLayerComponents.Count() < 1)
             {
                 oceanTextureOverlayLayer.MapLayerComponents.Add(LayerColor);
-                oceanTextureOverlayLayer.IsModified = true;
             }
         }
     }

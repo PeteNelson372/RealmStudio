@@ -44,8 +44,6 @@ namespace RealmStudio
                 }
 
                 SelectedMapRegion.MapRegionPoints.Remove(DeletedMapRegionPoint);
-                MapBuilder.SetLayerModified(Map, MapBuilder.REGIONLAYER, true);
-                MapBuilder.SetLayerModified(Map, MapBuilder.REGIONOVERLAYLAYER, true);
             }
         }
 
@@ -54,8 +52,6 @@ namespace RealmStudio
             if (PointIndex >= 0 && PointIndex < SelectedMapRegion.MapRegionPoints.Count)
             {
                 SelectedMapRegion.MapRegionPoints.Insert(PointIndex, DeletedMapRegionPoint);
-                MapBuilder.SetLayerModified(Map, MapBuilder.REGIONLAYER, true);
-                MapBuilder.SetLayerModified(Map, MapBuilder.REGIONOVERLAYLAYER, true);
             }
         }
     }

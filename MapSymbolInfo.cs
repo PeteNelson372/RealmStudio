@@ -216,8 +216,6 @@ namespace RealmStudio
                 Cmd_PaintSymbol cmd = new(symbol, paintColor1, paintColor1, paintColor2, paintColor3);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
-
-                MapBuilder.SetLayerModified(Map, MapBuilder.SYMBOLLAYER, true);
             }
         }
 
@@ -237,8 +235,6 @@ namespace RealmStudio
                 Cmd_PaintSymbol cmd = new(symbol, paintColor2, paintColor1, paintColor2, paintColor3);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
-
-                MapBuilder.SetLayerModified(Map, MapBuilder.SYMBOLLAYER, true);
             }
         }
 
@@ -258,8 +254,6 @@ namespace RealmStudio
                 Cmd_PaintSymbol cmd = new(symbol, paintColor3, paintColor1, paintColor2, paintColor3);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
-
-                MapBuilder.SetLayerModified(Map, MapBuilder.SYMBOLLAYER, true);
             }
         }
 
@@ -278,8 +272,6 @@ namespace RealmStudio
                 Cmd_PaintSymbol cmd = new(symbol, paintColor3, paintColor1, paintColor2, paintColor3);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
-
-                MapBuilder.SetLayerModified(Map, MapBuilder.SYMBOLLAYER, true);
             }
         }
     }
