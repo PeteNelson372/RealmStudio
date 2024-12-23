@@ -330,6 +330,8 @@ namespace RealmStudio
             MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
             if (pathLowerLayer.LayerSurface == null) return;
 
+            pathLowerLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+
             if (pathLowerLayer.ShowLayer && pathLowerLayer.MapLayerComponents.Count > 0)
             {
                 if (currentPath != null && !currentPath.DrawOverSymbols)
@@ -415,6 +417,9 @@ namespace RealmStudio
         {
             // path upper layer
             MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER);
+            if (pathUpperLayer.LayerSurface == null) return;
+
+            pathUpperLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
             if (pathUpperLayer.ShowLayer && pathUpperLayer.LayerSurface != null && pathUpperLayer.MapLayerComponents.Count > 0)
             {

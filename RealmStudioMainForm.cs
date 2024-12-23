@@ -121,6 +121,8 @@ namespace RealmStudio
 
         private static readonly SKSurface? RENDER_SURFACE = null;
 
+        private static float SELECTED_PATH_ANGLE = -1;
+
         #region Constructor
         /******************************************************************************************************* 
         * MAIN FORM CONSTRUCTOR
@@ -4715,7 +4717,66 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        CURRENT_MAP_PATH?.PathPoints.Add(new MapPathPoint(zoomedScrolledPoint));
+                        SKPoint newPathPoint = zoomedScrolledPoint;
+                        MapPathPoint? previousPoint = CURRENT_MAP_PATH?.PathPoints.First();
+
+                        if (ModifierKeys == Keys.Shift && CURRENT_MAP_PATH?.PathPoints.Count > 5)
+                        {
+                            // draw straight path, clamped to 5 degree angles
+                            if (previousPoint != null)
+                            {
+                                if (SELECTED_PATH_ANGLE == -1)
+                                {
+                                    float lineAngle = DrawingMethods.CalculateLineAngle(previousPoint.MapPoint, zoomedScrolledPoint);
+
+                                    lineAngle = (lineAngle < 0) ? lineAngle + 360 : lineAngle;
+
+                                    lineAngle = (float)(Math.Round(lineAngle / 5, MidpointRounding.AwayFromZero) * 5);
+
+                                    SELECTED_PATH_ANGLE = lineAngle;
+                                }
+
+                                float distance = SKPoint.Distance(previousPoint.MapPoint, zoomedScrolledPoint);
+                                newPathPoint = DrawingMethods.PointOnCircle(distance, SELECTED_PATH_ANGLE, previousPoint.MapPoint);
+                            }
+                        }
+                        else if (ModifierKeys == Keys.Control)
+                        {
+                            // draw straight horizontal or vertical path
+                            if (previousPoint != null)
+                            {
+                                if (SELECTED_PATH_ANGLE == -1)
+                                {
+                                    float lineAngle = DrawingMethods.CalculateLineAngle(previousPoint.MapPoint, zoomedScrolledPoint);
+
+                                    lineAngle = (lineAngle < 0) ? lineAngle + 360 : lineAngle;
+                                    SELECTED_PATH_ANGLE = lineAngle;
+                                }
+
+                                if (SELECTED_PATH_ANGLE >= 0 && SELECTED_PATH_ANGLE < 45)
+                                {
+                                    newPathPoint.Y = previousPoint.MapPoint.Y;
+                                }
+                                else if (SELECTED_PATH_ANGLE >= 45 && SELECTED_PATH_ANGLE < 135)
+                                {
+                                    newPathPoint.X = previousPoint.MapPoint.X;
+                                }
+                                else if (SELECTED_PATH_ANGLE >= 135 && SELECTED_PATH_ANGLE < 225)
+                                {
+                                    newPathPoint.Y = previousPoint.MapPoint.Y;
+                                }
+                                else if (SELECTED_PATH_ANGLE >= 225 && SELECTED_PATH_ANGLE < 315)
+                                {
+                                    newPathPoint.X = previousPoint.MapPoint.X;
+                                }
+                                else if (SELECTED_PATH_ANGLE >= 315 && SELECTED_PATH_ANGLE < 360)
+                                {
+                                    newPathPoint.Y = previousPoint.MapPoint.Y;
+                                }
+                            }
+                        }
+
+                        CURRENT_MAP_PATH?.PathPoints.Add(new MapPathPoint(newPathPoint));
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -5455,6 +5516,7 @@ namespace RealmStudio
                         }
 
                         CURRENT_MAP_PATH = null;
+                        SELECTED_PATH_ANGLE = -1;
 
                         CURRENT_MAP.IsSaved = false;
 
@@ -11026,7 +11088,5 @@ namespace RealmStudio
         }
 
         #endregion
-
-
     }
 }
