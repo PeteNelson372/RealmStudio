@@ -270,6 +270,28 @@ namespace RealmStudio
                         }
                     }
                 }
+                else if (layer.MapLayerName == "oceandrawing")
+                {
+                    foreach (MapComponent mc in layer.MapLayerComponents)
+                    {
+                        if (mc is LayerPaintStroke lps)
+                        {
+                            lps.RenderSurface?.Dispose();
+                            lps.RenderSurface = null;
+                        }
+                    }
+                }
+                else if (layer.MapLayerName == "waterdrawing")
+                {
+                    foreach (MapComponent mc in layer.MapLayerComponents)
+                    {
+                        if (mc is LayerPaintStroke lps)
+                        {
+                            lps.RenderSurface?.Dispose();
+                            lps.RenderSurface = null;
+                        }
+                    }
+                }
 
                 layer.LayerSurface?.Dispose();
                 layer.LayerSurface = null;

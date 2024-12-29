@@ -978,7 +978,7 @@ namespace RealmStudio
 
         private void CreateDetailMapMenuItem_Click(object sender, EventArgs e)
         {
-
+            RealmMapMethods.CreateDetailMap(CURRENT_MAP, SELECTED_LANDFORM_AREA);
         }
 
         private void TraceToolStripMenuItem_Click(object sender, EventArgs e)
