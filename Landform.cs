@@ -748,6 +748,8 @@ namespace RealmStudio
             {
                 SKCanvas landformCanvas = LandformRenderSurface.Canvas;
 
+                landformCanvas.ClipRect(new SKRect(0, 0, ParentMap.MapWidth, ParentMap.MapHeight));
+
                 landformCanvas.Clear(SKColors.Transparent);
 
                 landformCanvas.DrawPath(DrawPath, LandformFillPaint);

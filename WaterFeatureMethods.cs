@@ -304,12 +304,12 @@ namespace RealmStudio
 
             if (riverTexture != null)
             {
-                riverTexture.TextureBitmap ??= System.Drawing.Image.FromFile(riverTexture.TexturePath) as Bitmap;
+                riverTexture.TextureBitmap ??= Image.FromFile(riverTexture.TexturePath) as Bitmap;
 
                 SKBitmap bitmap = Extensions.ToSKBitmap(riverTexture.TextureBitmap);
                 SKBitmap resizedSKBitmap = new((int)mapRiver.RiverWidth, (int)mapRiver.RiverWidth);
 
-                bitmap.ScalePixels(resizedSKBitmap, SKFilterQuality.High);
+                bitmap.ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
 
                 SKShader bitmapShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
 
@@ -320,7 +320,7 @@ namespace RealmStudio
                 combinedShader = colorShader;
             }
 
-            int pathDistance = (int)(mapRiver.RiverWidth / 3);
+            int pathDistance = (int)mapRiver.RiverWidth;
 
             SKColor riverColor = Extensions.ToSKColor(Color.FromArgb(mapRiver.RiverColor.A, mapRiver.RiverColor));
 
@@ -391,6 +391,240 @@ namespace RealmStudio
                 }
 
                 WaterFeaturErasePath.Reset();
+            }
+        }
+
+        internal static void ConstructRiverPaths(River river)
+        {
+            List<MapRiverPoint> distinctRiverPoints = river.RiverPoints.Distinct(new RiverPointComparer()).ToList();
+
+            if (distinctRiverPoints.Count < 3)
+            {
+                return;
+            }
+
+            using SKPath riverPath = new();
+
+            if (distinctRiverPoints.Count > 2)
+            {
+                riverPath.MoveTo(distinctRiverPoints[0].RiverPoint);
+
+                for (int j = 0; j < distinctRiverPoints.Count; j += 3)
+                {
+                    if (j < distinctRiverPoints.Count - 2)
+                    {
+                        riverPath.CubicTo(distinctRiverPoints[j].RiverPoint, distinctRiverPoints[j + 1].RiverPoint, distinctRiverPoints[j + 2].RiverPoint);
+                    }
+                }
+            }
+
+            river.RiverPath?.Dispose();
+            river.RiverPath = new(riverPath);
+
+            List<MapRiverPoint> abovePoints = GetParallelRiverPoints(distinctRiverPoints, river.RiverPaint.StrokeWidth / 2.0F, ParallelEnum.Above, river.RiverSourceFadeIn);
+            List<MapRiverPoint> belowPoints = GetParallelRiverPoints(distinctRiverPoints, river.RiverPaint.StrokeWidth / 2.0F, ParallelEnum.Below, river.RiverSourceFadeIn);
+
+            using SKPath riverBoundaryPath = new();
+
+            if (abovePoints.Count > 2)
+            {
+                riverBoundaryPath.MoveTo(abovePoints[0].RiverPoint);
+
+                for (int j = 0; j < abovePoints.Count; j += 3)
+                {
+                    if (j < abovePoints.Count - 2)
+                    {
+                        riverBoundaryPath.CubicTo(abovePoints[j].RiverPoint, abovePoints[j + 1].RiverPoint, abovePoints[j + 2].RiverPoint);
+                    }
+                }
+            }
+
+            if (belowPoints.Count > 2)
+            {
+                riverBoundaryPath.LineTo(belowPoints.Last().RiverPoint);
+
+                for (int j = belowPoints.Count - 1; j >= 2; j -= 3)
+                {
+                    if (j < belowPoints.Count - 2)
+                    {
+                        riverBoundaryPath.CubicTo(belowPoints[j].RiverPoint, belowPoints[j - 1].RiverPoint, belowPoints[j - 2].RiverPoint);
+                    }
+                }
+            }
+
+            if (abovePoints.Count > 2 && belowPoints.Count > 2)
+            {
+                riverBoundaryPath.LineTo(abovePoints[0].RiverPoint);
+
+                river.RiverBoundaryPath?.Dispose();
+                river.RiverBoundaryPath = new(riverBoundaryPath);
+            }
+
+            int pathDistance = (int)(river.RiverWidth / 3);
+
+            List<MapRiverPoint> shorelineAbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 2, ParallelEnum.Above, river.RiverSourceFadeIn);
+            List<MapRiverPoint> shorelineBelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 2, ParallelEnum.Below, river.RiverSourceFadeIn);
+            using SKPath shorelinePath = new();
+
+            if (shorelineAbovePoints.Count > 2)
+            {
+                shorelinePath.MoveTo(shorelineAbovePoints[0].RiverPoint);
+
+                for (int j = 0; j < shorelineAbovePoints.Count; j += 3)
+                {
+                    if (j < shorelineAbovePoints.Count - 2)
+                    {
+                        shorelinePath.CubicTo(shorelineAbovePoints[j].RiverPoint, shorelineAbovePoints[j + 1].RiverPoint, shorelineAbovePoints[j + 2].RiverPoint);
+                    }
+                }
+            }
+
+            if (shorelineBelowPoints.Count > 2)
+            {
+                shorelinePath.MoveTo(shorelineBelowPoints[0].RiverPoint);
+
+                for (int j = 0; j < shorelineBelowPoints.Count; j += 3)
+                {
+                    if (j < shorelineBelowPoints.Count - 2)
+                    {
+                        shorelinePath.CubicTo(shorelineBelowPoints[j].RiverPoint, shorelineBelowPoints[j + 1].RiverPoint, shorelineBelowPoints[j + 2].RiverPoint);
+                    }
+                }
+
+                river.ShorelinePath?.Dispose();
+                river.ShorelinePath = new(shorelinePath);
+            }
+
+            List<MapRiverPoint> gradient1AbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 3, ParallelEnum.Above, river.RiverSourceFadeIn);
+            List<MapRiverPoint> gradient1BelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 3, ParallelEnum.Below, river.RiverSourceFadeIn);
+            using SKPath gradient1Path = new();
+
+            if (gradient1AbovePoints.Count > 2)
+            {
+                gradient1Path.MoveTo(gradient1AbovePoints[0].RiverPoint);
+
+                for (int j = 0; j < gradient1AbovePoints.Count; j += 3)
+                {
+                    if (j < gradient1AbovePoints.Count - 2)
+                    {
+                        gradient1Path.CubicTo(gradient1AbovePoints[j].RiverPoint, gradient1AbovePoints[j + 1].RiverPoint, gradient1AbovePoints[j + 2].RiverPoint);
+                    }
+                }
+            }
+
+            if (gradient1BelowPoints.Count > 2)
+            {
+                gradient1Path.MoveTo(gradient1BelowPoints[0].RiverPoint);
+
+                for (int j = 0; j < gradient1BelowPoints.Count; j += 3)
+                {
+                    if (j < gradient1BelowPoints.Count - 2)
+                    {
+                        gradient1Path.CubicTo(gradient1BelowPoints[j].RiverPoint, gradient1BelowPoints[j + 1].RiverPoint, gradient1BelowPoints[j + 2].RiverPoint);
+                    }
+                }
+
+                river.Gradient1Path?.Dispose();
+                river.Gradient1Path = new(gradient1Path);
+            }
+
+            List<MapRiverPoint> gradient2AbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 4, ParallelEnum.Above, river.RiverSourceFadeIn);
+            List<MapRiverPoint> gradient2BelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 4, ParallelEnum.Below, river.RiverSourceFadeIn);
+            using SKPath gradient2Path = new();
+
+            if (gradient2AbovePoints.Count > 2)
+            {
+                gradient2Path.MoveTo(gradient2AbovePoints[0].RiverPoint);
+
+                for (int j = 0; j < gradient2AbovePoints.Count; j += 3)
+                {
+                    if (j < gradient2AbovePoints.Count - 2)
+                    {
+                        gradient2Path.CubicTo(gradient2AbovePoints[j].RiverPoint, gradient2AbovePoints[j + 1].RiverPoint, gradient2AbovePoints[j + 2].RiverPoint);
+                    }
+                }
+            }
+
+            if (gradient2BelowPoints.Count > 2)
+            {
+                gradient2Path.MoveTo(gradient2BelowPoints[0].RiverPoint);
+
+                for (int j = 0; j < gradient2BelowPoints.Count; j += 3)
+                {
+                    if (j < gradient2BelowPoints.Count - 2)
+                    {
+                        gradient2Path.CubicTo(gradient2BelowPoints[j].RiverPoint, gradient2BelowPoints[j + 1].RiverPoint, gradient2BelowPoints[j + 2].RiverPoint);
+                    }
+                }
+
+                river.Gradient2Path?.Dispose();
+                river.Gradient2Path = new(gradient2Path);
+            }
+
+            List<MapRiverPoint> gradient3AbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 5, ParallelEnum.Above, river.RiverSourceFadeIn);
+            List<MapRiverPoint> gradient3BelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 5, ParallelEnum.Below, river.RiverSourceFadeIn);
+            using SKPath gradient3Path = new();
+
+            if (gradient3AbovePoints.Count > 2)
+            {
+                gradient3Path.MoveTo(gradient3AbovePoints[0].RiverPoint);
+
+                for (int j = 0; j < gradient3AbovePoints.Count; j += 3)
+                {
+                    if (j < gradient3AbovePoints.Count - 2)
+                    {
+                        gradient3Path.CubicTo(gradient3AbovePoints[j].RiverPoint, gradient3AbovePoints[j + 1].RiverPoint, gradient3AbovePoints[j + 2].RiverPoint);
+                    }
+                }
+            }
+
+            if (gradient3BelowPoints.Count > 2)
+            {
+                gradient3Path.MoveTo(gradient3BelowPoints[0].RiverPoint);
+
+                for (int j = 0; j < gradient3BelowPoints.Count; j += 3)
+                {
+                    if (j < gradient3BelowPoints.Count - 2)
+                    {
+                        gradient3Path.CubicTo(gradient3BelowPoints[j].RiverPoint, gradient3BelowPoints[j + 1].RiverPoint, gradient3BelowPoints[j + 2].RiverPoint);
+                    }
+                }
+
+                river.Gradient3Path?.Dispose();
+                river.Gradient3Path = new(gradient3Path);
+            }
+
+            List<MapRiverPoint> shallowWaterAbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 0.9F, ParallelEnum.Above, river.RiverSourceFadeIn);
+            List<MapRiverPoint> shallowWaterBelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 0.9F, ParallelEnum.Below, river.RiverSourceFadeIn);
+            using SKPath shallowWaterPath = new();
+
+            if (shallowWaterAbovePoints.Count > 2)
+            {
+                shallowWaterPath.MoveTo(shallowWaterAbovePoints[0].RiverPoint);
+
+                for (int j = 0; j < shallowWaterAbovePoints.Count; j += 3)
+                {
+                    if (j < shallowWaterAbovePoints.Count - 2)
+                    {
+                        shallowWaterPath.CubicTo(shallowWaterAbovePoints[j].RiverPoint, shallowWaterAbovePoints[j + 1].RiverPoint, shallowWaterAbovePoints[j + 2].RiverPoint);
+                    }
+                }
+            }
+
+            if (shallowWaterBelowPoints.Count > 2)
+            {
+                shallowWaterPath.MoveTo(shallowWaterBelowPoints[0].RiverPoint);
+
+                for (int j = 0; j < shallowWaterBelowPoints.Count; j += 3)
+                {
+                    if (j < shallowWaterBelowPoints.Count - 2)
+                    {
+                        shallowWaterPath.CubicTo(shallowWaterBelowPoints[j].RiverPoint, shallowWaterBelowPoints[j + 1].RiverPoint, shallowWaterBelowPoints[j + 2].RiverPoint);
+                    }
+                }
+
+                river.ShallowWaterPath?.Dispose();
+                river.ShallowWaterPath = new(shallowWaterPath);
             }
         }
     }

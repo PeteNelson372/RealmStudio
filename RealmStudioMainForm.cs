@@ -978,7 +978,26 @@ namespace RealmStudio
 
         private void CreateDetailMapMenuItem_Click(object sender, EventArgs e)
         {
-            RealmMapMethods.CreateDetailMap(CURRENT_MAP, SELECTED_LANDFORM_AREA);
+            RealmStudioMap? detailMap = RealmMapMethods.CreateDetailMap(this, CURRENT_MAP, SELECTED_LANDFORM_AREA);
+
+            if (detailMap != null)
+            {
+                MapBuilder.DisposeMap(CURRENT_MAP);
+                CURRENT_MAP = detailMap;
+
+                MAP_WIDTH = CURRENT_MAP.MapWidth;
+                MAP_HEIGHT = CURRENT_MAP.MapHeight;
+
+                MapRenderHScroll.Maximum = MAP_WIDTH;
+                MapRenderVScroll.Maximum = MAP_HEIGHT;
+
+                MapRenderHScroll.Value = 0;
+                MapRenderVScroll.Value = 0;
+
+                UpdateMapNameAndSize();
+
+                SKGLRenderControl.Invalidate();
+            }
         }
 
         private void TraceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -4710,6 +4729,11 @@ namespace RealmStudio
 
                         CURRENT_RIVER?.RiverPoints.Add(new MapRiverPoint(zoomedScrolledPoint));
 
+                        if (CURRENT_RIVER != null)
+                        {
+                            WaterFeatureMethods.ConstructRiverPaths(CURRENT_RIVER);
+                        }
+
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -5467,6 +5491,7 @@ namespace RealmStudio
                 case DrawingModeEnum.RiverPaint:
                     if (CURRENT_RIVER != null)
                     {
+                        WaterFeatureMethods.ConstructRiverPaths(CURRENT_RIVER);
                         MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER).MapLayerComponents.Add(CURRENT_RIVER);
 
                         CURRENT_RIVER = null;

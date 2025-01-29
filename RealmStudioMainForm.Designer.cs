@@ -8548,7 +8548,6 @@
         private TabControl MainTab;
         private TabPage BackgroundTab;
         private TabPage OceanTab;
-        private SkiaSharp.Views.Desktop.SKGLControl SKGLRenderControl;
         private TabPage LandTab;
         private TabPage WaterTab;
         private TabPage PathTab;
@@ -9039,5 +9038,6 @@
         private FontAwesome.Sharp.IconToolStripButton LandformAreaSelectButton;
         private ToolStripMenuItem TraceToolStripMenuItem;
         private CheckBox RandomizeColorCheck;
+        internal SkiaSharp.Views.Desktop.SKGLControl SKGLRenderControl;
     }
 }

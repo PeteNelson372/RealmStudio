@@ -124,6 +124,7 @@
             OKButton.TabIndex = 25;
             OKButton.Text = "O&K";
             OKButton.UseVisualStyleBackColor = true;
+            OKButton.Click += OKButton_Click;
             // 
             // groupBox3
             // 
@@ -322,6 +323,7 @@
             MapHeightUpDown.Size = new Size(67, 23);
             MapHeightUpDown.TabIndex = 8;
             MapHeightUpDown.TextAlign = HorizontalAlignment.Center;
+            MapHeightUpDown.ValueChanged += MapHeightUpDown_ValueChanged;
             // 
             // MapWidthUpDown
             // 
@@ -332,6 +334,7 @@
             MapWidthUpDown.Size = new Size(67, 23);
             MapWidthUpDown.TabIndex = 7;
             MapWidthUpDown.TextAlign = HorizontalAlignment.Center;
+            MapWidthUpDown.ValueChanged += MapWidthUpDown_ValueChanged;
             // 
             // MapLeftUpDown
             // 
@@ -342,6 +345,7 @@
             MapLeftUpDown.Size = new Size(67, 23);
             MapLeftUpDown.TabIndex = 6;
             MapLeftUpDown.TextAlign = HorizontalAlignment.Center;
+            MapLeftUpDown.ValueChanged += MapLeftUpDown_ValueChanged;
             // 
             // MapTopUpDown
             // 
@@ -352,6 +356,7 @@
             MapTopUpDown.Size = new Size(67, 23);
             MapTopUpDown.TabIndex = 5;
             MapTopUpDown.TextAlign = HorizontalAlignment.Center;
+            MapTopUpDown.ValueChanged += MapTopUpDown_ValueChanged;
             // 
             // label5
             // 

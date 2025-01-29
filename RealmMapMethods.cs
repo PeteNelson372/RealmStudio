@@ -4,7 +4,7 @@ namespace RealmStudio
 {
     internal class RealmMapMethods
     {
-        internal static void CreateDetailMap(RealmStudioMap currentMap, SKRect selectedArea)
+        internal static RealmStudioMap? CreateDetailMap(RealmStudioMainForm mainForm, RealmStudioMap currentMap, SKRect selectedArea)
         {
             if (selectedArea.IsEmpty)
             {
@@ -12,10 +12,18 @@ namespace RealmStudio
             }
             else
             {
-                DetailMapForm detailMapForm = new(currentMap, selectedArea);
+                DetailMapForm detailMapForm = new(mainForm, currentMap, selectedArea);
                 DialogResult result = detailMapForm.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    return detailMapForm.detailMap;
+                }
+
+                return null;
             }
 
+            return null;
 
         }
     }
