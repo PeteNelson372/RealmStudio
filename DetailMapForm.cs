@@ -5,8 +5,8 @@ namespace RealmStudio
 {
     public partial class DetailMapForm : Form
     {
-        private RealmStudioMainForm mainForm;
-        private RealmStudioMap currentMap;
+        private readonly RealmStudioMainForm mainForm;
+        private readonly RealmStudioMap currentMap;
         private SKRect selectedArea;
 
         public RealmStudioMap? detailMap = null;
@@ -187,6 +187,8 @@ namespace RealmStudio
                         }
                     }
                 }
+
+                // TODO:layer paint strokes in land layer
             }
 
             // go through the current map to get textures, painted colors, etc. and assign them to the detail map
@@ -195,7 +197,7 @@ namespace RealmStudio
             MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.BASELAYER);
             MapLayer detailBaseLayer = MapBuilder.GetMapLayerByIndex(detailMap, MapBuilder.BASELAYER);
 
-            foreach (MapImage mi in baseLayer.MapLayerComponents)
+            foreach (MapImage mi in baseLayer.MapLayerComponents.Cast<MapImage>())
             {
                 Bitmap resizedBitmap = new(mi.MapImageBitmap.ToBitmap(), detailMap.MapWidth, detailMap.MapHeight);
 
@@ -213,7 +215,7 @@ namespace RealmStudio
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.OCEANTEXTURELAYER);
             MapLayer detailOceanTextureLayer = MapBuilder.GetMapLayerByIndex(detailMap, MapBuilder.OCEANTEXTURELAYER);
 
-            foreach (MapImage mi in oceanTextureLayer.MapLayerComponents)
+            foreach (MapImage mi in oceanTextureLayer.MapLayerComponents.Cast<MapImage>())
             {
                 Bitmap resizedBitmap = new(mi.MapImageBitmap.ToBitmap(), detailMap.MapWidth, detailMap.MapHeight);
 
@@ -231,7 +233,7 @@ namespace RealmStudio
             MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
             MapLayer detailOceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(detailMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
 
-            foreach (MapImage mi in oceanTextureOverlayLayer.MapLayerComponents)
+            foreach (MapImage mi in oceanTextureOverlayLayer.MapLayerComponents.Cast<MapImage>())
             {
                 Bitmap resizedBitmap = new(mi.MapImageBitmap.ToBitmap(), detailMap.MapWidth, detailMap.MapHeight);
 
@@ -245,29 +247,76 @@ namespace RealmStudio
                 detailOceanTextureOverlayLayer.MapLayerComponents.Add(OceanColor);
             }
 
-            // TODO: ocean drawing layer
+            // ocean drawing layer
+            MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.OCEANDRAWINGLAYER);
+            MapLayer detailOceanDrawingLayer = MapBuilder.GetMapLayerByIndex(detailMap, MapBuilder.OCEANDRAWINGLAYER);
 
-            MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.LANDDRAWINGLAYER);
-            MapLayer detailLandDrawingLayer = MapBuilder.GetMapLayerByIndex(detailMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
-
-            for (int i = 0; i < baseLayer.MapLayerComponents.Count; i++)
+            foreach (LayerPaintStroke lps in oceanDrawingLayer.MapLayerComponents.Cast<LayerPaintStroke>())
             {
-                // might have to construct a new LayerPaintStroke from the existing one
+                LayerPaintStroke newPaintStroke = new()
+                {
+                    ParentMap = detailMap,
+                    StrokeColor = lps.StrokeColor,
+                    PaintBrush = lps.PaintBrush,
+                    BrushRadius = (int)(lps.BrushRadius * scaleX),
+                    MapLayerIdentifier = lps.MapLayerIdentifier,
+                    Erase = lps.Erase,
+                    Rendered = false,
+                };
+
+                foreach (LayerPaintStrokePoint point in lps.PaintStrokePoints)
+                {
+                    LayerPaintStrokePoint newStrokePoint = new()
+                    {
+                        StrokeLocation = new SKPoint((point.X * scaleX) + deltaX, (point.Y * scaleY) + deltaY),
+                        StrokeRadius = (int)(point.StrokeRadius * scaleX)
+                    };
+
+                    newPaintStroke.PaintStrokePoints.Add(newStrokePoint);
+                }
+
+                SKImageInfo imageInfo = new(detailMap.MapWidth, detailMap.MapHeight);
+                newPaintStroke.RenderSurface ??= SKSurface.Create(mainForm.SKGLRenderControl.GRContext, false, imageInfo);
+                detailOceanDrawingLayer.MapLayerComponents.Add(newPaintStroke);
+            }
+
+
+            // land drawing layer
+            MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.LANDDRAWINGLAYER);
+            MapLayer detailLandDrawingLayer = MapBuilder.GetMapLayerByIndex(detailMap, MapBuilder.LANDDRAWINGLAYER);
+
+            for (int i = 0; i < landDrawingLayer.MapLayerComponents.Count; i++)
+            {
+                // construct a new LayerPaintStroke from the existing one
                 // and create a new paint surface for it
 
                 if (landDrawingLayer.MapLayerComponents[i] is LayerPaintStroke lps)
                 {
-                    lps.ParentMap = detailMap;
+                    LayerPaintStroke newPaintStroke = new()
+                    {
+                        ParentMap = detailMap,
+                        StrokeColor = lps.StrokeColor,
+                        PaintBrush = lps.PaintBrush,
+                        BrushRadius = (int)(lps.BrushRadius * scaleX),
+                        MapLayerIdentifier = lps.MapLayerIdentifier,
+                        Erase = lps.Erase,
+                        Rendered = false,
+                    };
 
                     foreach (LayerPaintStrokePoint point in lps.PaintStrokePoints)
                     {
-                        SKPoint strokeLocation = point.StrokeLocation;
-                        SKPoint.Add(strokeLocation, new SKPoint(deltaX, deltaY));
+                        LayerPaintStrokePoint newStrokePoint = new()
+                        {
+                            StrokeLocation = new SKPoint((point.X * scaleX) + deltaX, (point.Y * scaleY) + deltaY),
+                            StrokeRadius = (int)(point.StrokeRadius * scaleX)
+                        };
 
-                        point.StrokeRadius = (int)(point.StrokeRadius * scaleX);
+                        newPaintStroke.PaintStrokePoints.Add(newStrokePoint);
                     }
 
-                    detailLandDrawingLayer.MapLayerComponents.Add(lps);
+                    SKImageInfo imageInfo = new(detailMap.MapWidth, detailMap.MapHeight);
+                    newPaintStroke.RenderSurface ??= SKSurface.Create(mainForm.SKGLRenderControl.GRContext, false, imageInfo);
+                    detailLandDrawingLayer.MapLayerComponents.Add(newPaintStroke);
                 }
             }
 
@@ -365,8 +414,48 @@ namespace RealmStudio
                 }
             }
 
+            // water drawing layer
+            MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.WATERDRAWINGLAYER);
+            MapLayer detailWaterDrawingLayer = MapBuilder.GetMapLayerByIndex(detailMap, MapBuilder.WATERDRAWINGLAYER);
+
+            for (int i = 0; i < waterDrawingLayer.MapLayerComponents.Count; i++)
+            {
+                // construct a new LayerPaintStroke from the existing one
+                // and create a new paint surface for it
+
+                if (waterDrawingLayer.MapLayerComponents[i] is LayerPaintStroke lps)
+                {
+                    LayerPaintStroke newPaintStroke = new()
+                    {
+                        ParentMap = detailMap,
+                        StrokeColor = lps.StrokeColor,
+                        PaintBrush = lps.PaintBrush,
+                        BrushRadius = (int)(lps.BrushRadius * scaleX),
+                        MapLayerIdentifier = lps.MapLayerIdentifier,
+                        Erase = lps.Erase,
+                        Rendered = false,
+                    };
+
+                    foreach (LayerPaintStrokePoint point in lps.PaintStrokePoints)
+                    {
+                        LayerPaintStrokePoint newStrokePoint = new()
+                        {
+                            StrokeLocation = new SKPoint((point.X * scaleX) + deltaX, (point.Y * scaleY) + deltaY),
+                            StrokeRadius = (int)(point.StrokeRadius * scaleX)
+                        };
+
+                        newPaintStroke.PaintStrokePoints.Add(newStrokePoint);
+                    }
+
+                    SKImageInfo imageInfo = new(detailMap.MapWidth, detailMap.MapHeight);
+                    newPaintStroke.RenderSurface ??= SKSurface.Create(mainForm.SKGLRenderControl.GRContext, false, imageInfo);
+                    detailWaterDrawingLayer.MapLayerComponents.Add(newPaintStroke);
+                }
+            }
+
             // gather the symbols in the selected area
             MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.SYMBOLLAYER);
+            MapLayer detailSymbolLayer = MapBuilder.GetMapLayerByIndex(detailMap, MapBuilder.SYMBOLLAYER);
 
             for (int i = 0; i < symbolLayer.MapLayerComponents.Count; i++)
             {
@@ -392,15 +481,31 @@ namespace RealmStudio
                 }
             }
 
-            // TODO: scale the symbols and add them to the detail map
+            // scale the symbols and add them to the detail map
+            foreach (MapSymbol ms in gatheredSymbols)
+            {
+                MapSymbol newSymbol = new(ms)
+                {
+                    X = (int)((ms.X * scaleX) + deltaX),
+                    Y = (int)((ms.Y * scaleY) + deltaY),
+                    SymbolWidth = (int)(ms.SymbolWidth * scaleX),
+                    SymbolHeight = (int)(ms.SymbolHeight * scaleY),
+                    SymbolPaint = ms.SymbolPaint,
+                };
+
+                Bitmap resizedPlacedBitmap = new(ms.PlacedBitmap.ToBitmap(), newSymbol.SymbolWidth, newSymbol.SymbolHeight);
+                newSymbol.PlacedBitmap = resizedPlacedBitmap.ToSKBitmap();
+
+                detailSymbolLayer.MapLayerComponents.Add(newSymbol);
+            }
 
 
-            // more to do here
+            // more to do here (labels, paths)
 
             MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.VIGNETTELAYER);
             MapLayer detailVignetteLayer = MapBuilder.GetMapLayerByIndex(detailMap, MapBuilder.VIGNETTELAYER);
 
-            foreach (MapVignette mv in vignetteLayer.MapLayerComponents)
+            foreach (MapVignette mv in vignetteLayer.MapLayerComponents.Cast<MapVignette>())
             {
                 mv.ParentMap = detailMap;
                 detailVignetteLayer.MapLayerComponents.Add(mv);

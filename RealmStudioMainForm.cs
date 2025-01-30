@@ -3983,6 +3983,12 @@ namespace RealmStudio
                         };
 
                         SetLandformData(CURRENT_LANDFORM);
+
+                        CURRENT_LANDFORM.IsModified = true;
+
+                        CURRENT_LANDFORM.DrawPath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushSize / 2);
+
+                        SKGLRenderControl.Refresh();
                     }
                     break;
                 case DrawingModeEnum.LandErase:
@@ -4664,7 +4670,7 @@ namespace RealmStudio
                             }
                         }
 
-                        SKGLRenderControl.Invalidate();
+                        SKGLRenderControl.Refresh();
                     }
                     break;
                 case DrawingModeEnum.LandErase:
@@ -4734,7 +4740,7 @@ namespace RealmStudio
                             WaterFeatureMethods.ConstructRiverPaths(CURRENT_RIVER);
                         }
 
-                        SKGLRenderControl.Invalidate();
+                        SKGLRenderControl.Refresh();
                     }
                     break;
                 case DrawingModeEnum.PathPaint:
@@ -5387,7 +5393,7 @@ namespace RealmStudio
 
                         CURRENT_MAP.IsSaved = false;
 
-                        SKGLRenderControl.Invalidate();
+                        SKGLRenderControl.Refresh();
                     }
                     break;
                 case DrawingModeEnum.LandErase:

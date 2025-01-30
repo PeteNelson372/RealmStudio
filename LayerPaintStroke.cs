@@ -176,7 +176,10 @@ namespace RealmStudio
 
                         }
 
-                        RenderSurface?.Canvas.ClipPath(clipPath);
+                        if (clipPath.PointCount > 2)
+                        {
+                            RenderSurface?.Canvas.ClipPath(clipPath);
+                        }
                     }
                 }
                 else if (MapLayerIdentifier == MapBuilder.WATERDRAWINGLAYER)
@@ -237,7 +240,7 @@ namespace RealmStudio
                 if (!Erase)
                 {
                     canvas.DrawSurface(RenderSurface, new SKPoint(0, 0));
-                    Rendered = true;
+                    //Rendered = true;
                 }
             }
         }

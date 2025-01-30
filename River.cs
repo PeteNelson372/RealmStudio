@@ -54,11 +54,6 @@ namespace RealmStudio
 
         public bool IsSelected { get; set; } = false;
 
-        public SKPaint RiverPaint { get; set; } = new()
-        {
-            Style = SKPaintStyle.Stroke,
-        };
-
         public SKPaint RiverFillPaint { get; set; } = new();
 
         public SKPaint RiverShorelinePaint { get; set; } = new()
@@ -76,15 +71,17 @@ namespace RealmStudio
         public SKPath? RiverBoundaryPath { get; set; } = null;
         public SKPath? ShorelinePath { get; set; } = null;
         public SKPath? Gradient1Path { get; set; } = null;
-        public SKPath? Gradient2Path { get; set; } = null;
-        public SKPath? Gradient3Path { get; set; } = null;
+        //public SKPath? Gradient2Path { get; set; } = null;
+        //public SKPath? Gradient3Path { get; set; } = null;
         public SKPath? ShallowWaterPath { get; set; } = null;
 
         public override void Render(SKCanvas canvas)
         {
-            if (ParentMap == null || RiverPaint == null) return;
-
-            List<MapRiverPoint> distinctRiverPoints = RiverPoints.Distinct(new RiverPointComparer()).ToList();
+            if (ParentMap == null || RiverBoundaryPath == null
+                || ShorelinePath == null || Gradient1Path == null || ShallowWaterPath == null)
+            {
+                return;
+            }
 
             // clip the river drawing to the outer path of landforms
             List<MapComponent> landformList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
@@ -108,16 +105,8 @@ namespace RealmStudio
             {
                 canvas.ClipPath(clipPath);
 
-                if (RiverBoundaryPath == null || ShorelinePath == null || Gradient1Path == null
-                    || Gradient2Path == null || Gradient3Path == null || ShallowWaterPath == null)
-                {
-                    return;
-                }
-
                 // use multiple paths and multiple sets of parallel points and paint objects
                 // to draw lines as gradients to shade rivers
-
-                canvas.DrawPath(RiverBoundaryPath, RiverFillPaint);
 
                 // shoreline
                 byte alpha = 192;
@@ -133,20 +122,20 @@ namespace RealmStudio
 
                 canvas.DrawPath(Gradient1Path, RiverShorelinePaint);
 
-
                 // shoreline gradient 2
-                alpha = 64;
-                shorelineColor = Color.FromArgb(alpha, RiverShorelinePaint.Color.ToDrawingColor());
-                RiverShorelinePaint.Color = shorelineColor.ToSKColor();
+                //alpha = 64;
+                //shorelineColor = Color.FromArgb(alpha, RiverShorelinePaint.Color.ToDrawingColor());
+                //RiverShorelinePaint.Color = shorelineColor.ToSKColor();
 
-                canvas.DrawPath(Gradient2Path, RiverShorelinePaint);
+                //canvas.DrawPath(Gradient2Path, RiverShorelinePaint);
 
                 // shoreline gradient 3
-                alpha = 32;
-                shorelineColor = Color.FromArgb(alpha, RiverShorelinePaint.Color.ToDrawingColor());
-                RiverShorelinePaint.Color = shorelineColor.ToSKColor();
+                //alpha = 32;
+                //shorelineColor = Color.FromArgb(alpha, RiverShorelinePaint.Color.ToDrawingColor());
+                //RiverShorelinePaint.Color = shorelineColor.ToSKColor();
+                //canvas.DrawPath(Gradient3Path, RiverShorelinePaint);
 
-                canvas.DrawPath(Gradient3Path, RiverShorelinePaint);
+                canvas.DrawPath(RiverBoundaryPath, RiverFillPaint);
 
                 canvas.DrawPath(ShallowWaterPath, RiverShallowWaterPaint);
             }
@@ -224,7 +213,7 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> mapPointsElem = mapRiverDoc.Descendants().Select(x => x.Element(ns + "MapRiverPoints"));
-            if (mapPointsElem.Count() > 0 && mapPointsElem.First() != null)
+            if (mapPointsElem.Any() && mapPointsElem.First() != null)
             {
                 var settings = new XmlReaderSettings
                 {
