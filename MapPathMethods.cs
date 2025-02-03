@@ -50,10 +50,11 @@ namespace RealmStudio
                 Style = SKPaintStyle.Stroke,
                 StrokeCap = SKStrokeCap.Round,
                 StrokeJoin = SKStrokeJoin.Round,
+                StrokeMiter = 1.0F,
                 IsAntialias = true,
             };
 
-            SKPathEffect pathLineEffect = ConstructPathLineEffect(mapPath.PathType, mapPath.PathWidth * 2);
+            SKPathEffect? pathLineEffect = ConstructPathLineEffect(mapPath.PathType, mapPath.PathWidth * 2);
 
             if (pathLineEffect != null)
             {
@@ -77,7 +78,7 @@ namespace RealmStudio
                     pathPaint.Style = SKPaintStyle.Stroke;
                     break;
                 case PathTypeEnum.BorderAndTexturePath:
-                    pathPaint.StrokeCap = SKStrokeCap.Butt;
+                    pathPaint.StrokeCap = SKStrokeCap.Round;
 
                     if (mapPath.PathTexture != null)
                     {
@@ -91,7 +92,7 @@ namespace RealmStudio
             mapPath.PathPaint = pathPaint;
         }
 
-        private static SKPathEffect ConstructPathLineEffect(PathTypeEnum pathType, float pathWidth)
+        private static SKPathEffect? ConstructPathLineEffect(PathTypeEnum pathType, float pathWidth)
         {
             SKPathEffect? pathLineEffect = null;
 
@@ -204,9 +205,7 @@ namespace RealmStudio
 
             }
 
-#pragma warning disable CS8603 // Possible null reference return.
             return pathLineEffect;
-#pragma warning restore CS8603 // Possible null reference return.
         }
 
         private static SKPath? GetPathFromSvg(string vectorName, float pathWidth)
@@ -249,18 +248,268 @@ namespace RealmStudio
         {
             List<MapPathPoint> parallelPoints = [];
 
-            for (int i = 0; i < points.Count - 1; i += 2)
+            float d = (location == ParallelEnum.Below) ? distance : -distance;
+            float offsetAngle = (location == ParallelEnum.Above) ? 90 : -90;
+
+            SKPoint maxXPoint = new SKPoint(-1.0F, 0);
+            SKPoint maxYPoint = new SKPoint(0, -1.0F);
+
+            SKPoint minXPoint = new SKPoint(65535.0F, 0);
+            SKPoint minYPoint = new SKPoint(0, 65535.0F);
+
+            for (int i = 0; i < points.Count - 1; i++)
             {
-                float lineAngle = DrawingMethods.CalculateLineAngle(points[i].MapPoint, points[i + 1].MapPoint);
+                SKPoint newPoint;
 
-                float angle = (location == ParallelEnum.Below) ? 90 : -90;
+                if (i == 0)
+                {
+                    float lineAngle = DrawingMethods.CalculateLineAngle(points[i].MapPoint, points[i + 1].MapPoint);
+                    newPoint = DrawingMethods.PointOnCircle(distance, lineAngle + offsetAngle, points[i].MapPoint);
+                    parallelPoints.Add(new MapPathPoint(newPoint));
 
-                SKPoint p1 = DrawingMethods.PointOnCircle(distance, lineAngle + angle, points[i].MapPoint);
-                SKPoint p2 = DrawingMethods.PointOnCircle(distance, lineAngle + angle, points[i + 1].MapPoint);
+                    if (newPoint.X > maxXPoint.X)
+                    {
+                        maxXPoint = newPoint;
+                    }
 
-                parallelPoints.Add(new MapPathPoint(p1));
-                parallelPoints.Add(new MapPathPoint(p2));
+                    if (newPoint.Y < minYPoint.Y)
+                    {
+                        minYPoint = newPoint;
+                    }
+
+                    if (newPoint.X < minXPoint.X)
+                    {
+                        minXPoint = newPoint;
+                    }
+
+                    if (newPoint.Y > maxYPoint.Y)
+                    {
+                        maxYPoint = newPoint;
+                    }
+                }
+                else
+                {
+                    float lineAngle1 = DrawingMethods.CalculateLineAngle(points[i - 1].MapPoint, points[i].MapPoint);
+                    float lineAngle2 = DrawingMethods.CalculateLineAngle(points[i].MapPoint, points[i + 1].MapPoint);
+
+                    float angleDifference = (float)((lineAngle2 - lineAngle1 >= 0) ? Math.Round(lineAngle2 - lineAngle1) : Math.Round((lineAngle2 - lineAngle1) + 360.0F));
+                    float circleRadius = (float)Math.Sqrt(distance * distance + distance * distance);
+
+                    if (angleDifference == 0.0F)
+                    {
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle1 + offsetAngle, points[i + 1].MapPoint);
+                        parallelPoints.Add(new MapPathPoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference > 0.0F && angleDifference < 90.0F)
+                    {
+                        //1
+                        float circleAngle = lineAngle1 + offsetAngle + (angleDifference / 2.0F);
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, circleAngle, points[i + 1].MapPoint);
+                        parallelPoints.Add(new MapPathPoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference == 90.0F)
+                    {
+                        // edge case - do not add a point if the lines are 90 degrees from each other
+                    }
+                    else if (angleDifference > 90.0F && angleDifference < 180.0F)
+                    {
+                        //2
+                        float circleAngle = lineAngle1 + offsetAngle + (angleDifference / 2.0F);
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, circleAngle, points[i + 1].MapPoint);
+                        parallelPoints.Add(new MapPathPoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference == 180.0F) //====================================
+                    {
+                        newPoint = DrawingMethods.PointOnCircle(distance, lineAngle1 + offsetAngle, points[i + 1].MapPoint);
+                        parallelPoints.Add(new MapPathPoint(newPoint));
+                    }
+                    else if (angleDifference > 180.0F && angleDifference < 270.0F)
+                    {
+                        //3
+                        float circleAngle = lineAngle1 - offsetAngle + (angleDifference / 2.0F);
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, circleAngle, points[i + 1].MapPoint);
+                        parallelPoints.Add(new MapPathPoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference == 270.0F)
+                    {
+                        // edge case - do not add a point if the lines are 270 degrees from each other
+                    }
+                    else if (angleDifference > 270.0F && angleDifference < 360.0F)
+                    {
+                        //4
+                        float circleAngle = lineAngle1 - offsetAngle + (angleDifference / 2.0F);
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, circleAngle, points[i + 1].MapPoint);
+                        parallelPoints.Add(new MapPathPoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference == 360.0F)
+                    {
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle1 + offsetAngle, points[i + 1].MapPoint);
+                        parallelPoints.Add(new MapPathPoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                }
             }
+
+            // remove points that cause loops in the parallel path when
+            // the path has a sharp turn in it; his is done by finding the
+            // point where the lines in the path intersect, then removing
+            // the points that are outside the lines (X value is greater
+            // than the intersection point X value and Y value is less than
+            // the intersection point Y value)
+
+            // this algorithm doesn't work consistently, so it is
+            // commented out; need to figure out a reliable algorithm
+            // for removing the loops, maybe by taking into account the
+            // "direction" of the line?
+
+            /*
+            bool pointsRemoved = false;
+
+            if (parallelPoints.Count > 3)
+            {
+                // get the intersection between the lines
+                // Line AB represented as a1x + b1y = c1
+                // Line CD represented as a2x + b2y = c2 
+                // A is parallelPoints[0].MapPoint
+                // B is maxXPoint
+                // C is minYPoint
+                // D is parallelPoints.Last().MapPoint
+
+                double a1 = maxXPoint.Y - parallelPoints[0].MapPoint.Y;
+                double b1 = parallelPoints[0].MapPoint.X - maxXPoint.X;
+                double c1 = a1 * (parallelPoints[0].MapPoint.X) + b1 * (parallelPoints[0].MapPoint.Y);
+
+                // Line CD represented as a2x + b2y = c2 
+                double a2 = parallelPoints.Last().MapPoint.Y - minYPoint.Y;
+                double b2 = minYPoint.X - parallelPoints.Last().MapPoint.X;
+                double c2 = a2 * (minYPoint.X) + b2 * (minYPoint.Y);
+
+                double determinant = a1 * b2 - a2 * b1;
+
+                SKPoint intersectionPoint = SKPoint.Empty;
+
+                if (determinant != 0)
+                {
+                    double x = (b2 * c1 - b1 * c2) / determinant;
+                    double y = (a1 * c2 - a2 * c1) / determinant;
+
+                    intersectionPoint = new SKPoint((float)x, (float)y);
+                }
+
+                if (!intersectionPoint.IsEmpty)
+                {
+                    for (int i = parallelPoints.Count - 1; i >= 0; i--)
+                    {
+                        if (parallelPoints[i].MapPoint.X > intersectionPoint.X
+                            && parallelPoints[i].MapPoint.Y <= intersectionPoint.Y)
+                        {
+                            parallelPoints.RemoveAt(i);
+                            pointsRemoved = true;
+                        }
+                    }
+                }
+            }
+
+            if (parallelPoints.Count > 3 && !pointsRemoved)
+            {
+                // A is parallelPoints[0].MapPoint
+                // B is minYPoint
+                // C is minXPoint
+                // D is parallelPoints.Last().MapPoint
+
+                double a1 = minYPoint.Y - parallelPoints[0].MapPoint.Y;
+                double b1 = parallelPoints[0].MapPoint.X - minYPoint.X;
+                double c1 = a1 * (parallelPoints[0].MapPoint.X) + b1 * (parallelPoints[0].MapPoint.Y);
+
+                // Line CD represented as a2x + b2y = c2 
+                double a2 = parallelPoints.Last().MapPoint.Y - minXPoint.Y;
+                double b2 = minXPoint.X - parallelPoints.Last().MapPoint.X;
+                double c2 = a2 * (minXPoint.X) + b2 * (minXPoint.Y);
+
+                double determinant = a1 * b2 - a2 * b1;
+
+                SKPoint intersectionPoint = SKPoint.Empty;
+
+                if (determinant != 0)
+                {
+                    double x = (b2 * c1 - b1 * c2) / determinant;
+                    double y = (a1 * c2 - a2 * c1) / determinant;
+
+                    intersectionPoint = new SKPoint((float)x, (float)y);
+                }
+
+                if (!intersectionPoint.IsEmpty)
+                {
+                    for (int i = parallelPoints.Count - 1; i >= 0; i--)
+                    {
+                        if (parallelPoints[i].MapPoint.X < intersectionPoint.X
+                            && parallelPoints[i].MapPoint.Y <= intersectionPoint.Y)
+                        {
+                            parallelPoints.RemoveAt(i);
+                        }
+                    }
+                }
+            }
+            */
 
             return parallelPoints;
         }
@@ -276,12 +525,9 @@ namespace RealmStudio
                 using SKPath path = new();
                 path.MoveTo(curvePoints[0].MapPoint);
 
-                for (int j = 0; j < curvePoints.Count; j += 3)
+                for (int j = 0; j < curvePoints.Count - 2; j += 3)
                 {
-                    if (j < curvePoints.Count - 2)
-                    {
-                        path.CubicTo(curvePoints[j].MapPoint, curvePoints[j + 1].MapPoint, curvePoints[j + 2].MapPoint);
-                    }
+                    path.CubicTo(curvePoints[j].MapPoint, curvePoints[j + 1].MapPoint, curvePoints[j + 2].MapPoint);
                 }
 
                 canvas.DrawPath(path, paint);

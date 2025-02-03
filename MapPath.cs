@@ -154,9 +154,8 @@ namespace RealmStudio
 
                                     MapPathMethods.DrawBezierCurvesFromPoints(canvas, distinctPathPoints, borderPaint);
 
-                                    List<MapPathPoint> parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth, ParallelEnum.Below);
+                                    List<MapPathPoint> parallelPoints = MapPathMethods.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth, ParallelEnum.Above);
                                     MapPathMethods.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
-
                                 }
                                 break;
                             case PathTypeEnum.BorderAndTexturePath:

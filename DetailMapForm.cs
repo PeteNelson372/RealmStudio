@@ -104,8 +104,6 @@ namespace RealmStudio
         private void CreateDetailMap(bool includeTerrainSymbols, bool includeVegetationSymbols,
             bool includeStructureSymbols, bool includeLabels, bool includePaths)
         {
-            List<MapSymbol> gatheredSymbols = [];
-
             int detailMapWidth = Math.Min((int)(MapWidthUpDown.Value * MapZoomUpDown.Value), 10000);
             int detailMapHeight = Math.Min((int)(MapHeightUpDown.Value * MapZoomUpDown.Value), 10000);
 
@@ -115,10 +113,10 @@ namespace RealmStudio
                 MapWidth = detailMapWidth,
                 MapHeight = detailMapHeight,
                 MapName = MapNameTextBox.Text,
-                IsSaved = false,
             };
 
             detailMap = MapBuilder.CreateMap(detailMap, mainForm.SKGLRenderControl.GRContext);
+            detailMap.IsSaved = false;
 
             // the location and size of each symbol, landforms, painted colors, paths, and labels
             // has to be determined based on the location, size, and scale of the current map
@@ -456,6 +454,7 @@ namespace RealmStudio
             // gather the symbols in the selected area
             MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.SYMBOLLAYER);
             MapLayer detailSymbolLayer = MapBuilder.GetMapLayerByIndex(detailMap, MapBuilder.SYMBOLLAYER);
+            List<MapSymbol> gatheredSymbols = [];
 
             for (int i = 0; i < symbolLayer.MapLayerComponents.Count; i++)
             {
@@ -502,6 +501,97 @@ namespace RealmStudio
 
             // more to do here (labels, paths)
 
+            List<MapPath> gatheredPaths = [];
+
+            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.PATHLOWERLAYER);
+            MapLayer detailPathLowerLayer = MapBuilder.GetMapLayerByIndex(detailMap, MapBuilder.PATHLOWERLAYER);
+
+            for (int i = 0; i < pathLowerLayer.MapLayerComponents.Count; i++)
+            {
+                if (pathLowerLayer.MapLayerComponents[i] is MapPath mp)
+                {
+                    foreach (MapPathPoint point in mp.PathPoints)
+                    {
+                        if (selectedArea.Contains(point.MapPoint.X, point.MapPoint.Y))
+                        {
+                            gatheredPaths.Add(mp);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.PATHUPPERLAYER);
+            MapLayer detailPathUpperLayer = MapBuilder.GetMapLayerByIndex(detailMap, MapBuilder.PATHUPPERLAYER);
+
+            for (int i = 0; i < pathUpperLayer.MapLayerComponents.Count; i++)
+            {
+                if (pathUpperLayer.MapLayerComponents[i] is MapPath mp)
+                {
+                    foreach (MapPathPoint point in mp.PathPoints)
+                    {
+                        if (selectedArea.Contains(point.MapPoint.X, point.MapPoint.Y))
+                        {
+                            gatheredPaths.Add(mp);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            foreach (MapPath mp in gatheredPaths)
+            {
+                if (mp.PathPoints.Count > 0)
+                {
+                    MapPath newPath = new()
+                    {
+                        DrawOverSymbols = mp.DrawOverSymbols,
+                        IsSelected = false,
+                        MapPathName = mp.MapPathName,
+                        ParentMap = detailMap,
+                        PathColor = mp.PathColor,
+                        PathWidth = mp.PathWidth * scaleX,
+                        X = (int)((mp.X * scaleX) + deltaX),
+                        Y = (int)((mp.Y * scaleY) + deltaY),
+                        PathType = mp.PathType,
+                    };
+
+                    foreach (MapPathPoint point in mp.PathPoints)
+                    {
+                        MapPathPoint newPathPoint = new()
+                        {
+                            MapPoint = new SKPoint((point.MapPoint.X * scaleX) + deltaX, (point.MapPoint.Y * scaleY) + deltaY),
+                        };
+
+                        newPath.PathPoints.Add(newPathPoint);
+                    }
+
+                    if (mp.PathTexture != null)
+                    {
+                        newPath.PathTexture = new MapTexture
+                        {
+                            TextureName = mp.PathTexture.TextureName,
+                            TexturePath = mp.PathTexture.TexturePath,
+                            TextureBitmap = (Bitmap?)Bitmap.FromFile(mp.PathTexture.TexturePath)
+                        };
+                    }
+
+                    newPath.PathPaint = null;   // force to null so that PathPaint is constructed
+                    MapPathMethods.ConstructPathPaint(newPath);
+
+                    if (mp.DrawOverSymbols)
+                    {
+                        detailPathUpperLayer.MapLayerComponents.Add(newPath);
+                    }
+                    else
+                    {
+                        detailPathLowerLayer.MapLayerComponents.Add(newPath);
+                    }
+                }
+            }
+
+
+            // vignette
             MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.VIGNETTELAYER);
             MapLayer detailVignetteLayer = MapBuilder.GetMapLayerByIndex(detailMap, MapBuilder.VIGNETTELAYER);
 

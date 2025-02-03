@@ -33,7 +33,7 @@ namespace RealmStudio
 
         public int GetHashCode(MapPathPoint obj)
         {
-            // don't want points compared by hashcode, so return 0, forcing comarison through Equals method
+            // don't want points compared by hashcode, so return 0, forcing comparison through Equals method
             return 0;
         }
     }
