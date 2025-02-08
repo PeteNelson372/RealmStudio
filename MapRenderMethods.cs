@@ -336,7 +336,7 @@ namespace RealmStudio
                             {
                                 // only one path can be selected
                                 // draw an outline around the path to show that it is selected
-                                mp.BoundaryPath.GetTightBounds(out SKRect boundRect);
+                                mp.BoundaryPath.GetBounds(out SKRect boundRect);
                                 using SKPath boundsPath = new();
                                 boundsPath.AddRect(boundRect);
 
@@ -422,7 +422,7 @@ namespace RealmStudio
                             {
                                 // only one path can be selected
                                 // draw an outline around the path to show that it is selected
-                                mp.BoundaryPath.GetTightBounds(out SKRect boundRect);
+                                mp.BoundaryPath.GetBounds(out SKRect boundRect);
                                 using SKPath boundsPath = new();
                                 boundsPath.AddRect(boundRect);
 

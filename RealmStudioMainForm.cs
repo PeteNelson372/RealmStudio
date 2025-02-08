@@ -5570,6 +5570,7 @@ namespace RealmStudio
                 case DrawingModeEnum.PathSelect:
                     {
                         SELECTED_PATH = SelectMapPathAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.PathEdit:
@@ -8602,37 +8603,16 @@ namespace RealmStudio
 
                     if (boundaryPath != null && boundaryPath.PointCount > 0)
                     {
-                        // if the boundary path is within 10 pixels of the click point, then select/deselect the path
-                        for (int j = (int)(mapClickPoint.X - 10); j < mapClickPoint.X + 10; j++)
+                        boundaryPath.GetBounds(out SKRect boundRect);
+
+                        if (boundRect.Contains(mapClickPoint))
                         {
-                            for (int k = (int)(mapClickPoint.Y - 10); k < mapClickPoint.Y + 10; k++)
+                            mapPath.IsSelected = !mapPath.IsSelected;
+                            if (mapPath.IsSelected)
                             {
-                                if (boundaryPath.Contains(j, k))
-                                {
-                                    mapPath.IsSelected = !mapPath.IsSelected;
-
-                                    if (mapPath.IsSelected)
-                                    {
-                                        selectedMapPath = mapPath;
-                                    }
-                                    break;
-                                }
-
-                                for (int m = 0; m < boundaryPath.PointCount; m++)
-                                {
-                                    SKPoint boundaryPoint = new((int)boundaryPath.Points[m].X, (int)boundaryPath.Points[m].Y);
-                                    if (boundaryPoint.Equals(new SKPoint(j, k)))
-                                    {
-                                        mapPath.IsSelected = !mapPath.IsSelected;
-
-                                        if (mapPath.IsSelected)
-                                        {
-                                            selectedMapPath = mapPath;
-                                        }
-                                        break;
-                                    }
-                                }
+                                selectedMapPath = mapPath;
                             }
+                            break;
                         }
                     }
                     else
@@ -8652,37 +8632,16 @@ namespace RealmStudio
 
                     if (boundaryPath != null && boundaryPath.PointCount > 0)
                     {
-                        // if the boundary path is within 10 pixels of the click point, then select/deselect the path
-                        for (int j = (int)(mapClickPoint.X - 10); j < mapClickPoint.X + 10; j++)
+                        boundaryPath.GetBounds(out SKRect boundRect);
+
+                        if (boundRect.Contains(mapClickPoint))
                         {
-                            for (int k = (int)(mapClickPoint.Y - 10); k < mapClickPoint.Y + 10; k++)
+                            mapPath.IsSelected = !mapPath.IsSelected;
+                            if (mapPath.IsSelected)
                             {
-                                if (boundaryPath.Contains(j, k))
-                                {
-                                    mapPath.IsSelected = !mapPath.IsSelected;
-
-                                    if (mapPath.IsSelected)
-                                    {
-                                        selectedMapPath = mapPath;
-                                    }
-                                    break;
-                                }
-
-                                for (int m = 0; m < boundaryPath.PointCount; m++)
-                                {
-                                    SKPoint boundaryPoint = new((int)boundaryPath.Points[m].X, (int)boundaryPath.Points[m].Y);
-                                    if (boundaryPoint.Equals(new SKPoint(j, k)))
-                                    {
-                                        mapPath.IsSelected = !mapPath.IsSelected;
-
-                                        if (mapPath.IsSelected)
-                                        {
-                                            selectedMapPath = mapPath;
-                                        }
-                                        break;
-                                    }
-                                }
+                                selectedMapPath = mapPath;
                             }
+                            break;
                         }
                     }
                     else

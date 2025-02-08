@@ -510,11 +510,6 @@ namespace RealmStudio
 
         internal static void DrawBezierCurvesFromPoints(SKCanvas canvas, List<MapPathPoint> curvePoints, SKPaint paint)
         {
-            //if (curvePoints.Count == 2)
-            //{
-            //    canvas.DrawLine(curvePoints[0].MapPoint, curvePoints[1].MapPoint, paint);
-            //}
-            //else 
             if (curvePoints.Count > 2)
             {
                 using SKPath path = new();
@@ -554,12 +549,9 @@ namespace RealmStudio
 
             path.MoveTo(points[0].MapPoint);
 
-            for (int j = 0; j < points.Count; j += 3)
+            for (int j = 0; j < points.Count - 2; j += 3)
             {
-                if (j < points.Count - 2)
-                {
-                    path.CubicTo(points[j].MapPoint, points[j + 1].MapPoint, points[j + 2].MapPoint);
-                }
+                path.CubicTo(points[j].MapPoint, points[j + 1].MapPoint, points[j + 2].MapPoint);
             }
 
             return path;
