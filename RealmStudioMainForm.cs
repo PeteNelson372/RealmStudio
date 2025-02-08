@@ -4806,7 +4806,20 @@ namespace RealmStudio
                             }
                         }
 
-                        CURRENT_MAP_PATH?.PathPoints.Add(new MapPathPoint(newPathPoint));
+                        // make the spacing between points consistent
+                        float spacing = 4.0F;
+
+                        if (CURRENT_MAP_PATH?.PathType == PathTypeEnum.RailroadTracksPath)
+                        {
+                            // railroad track points are further apart to make them look better
+                            spacing = 2.0F;
+                        }
+
+                        if (CURRENT_MAP_PATH != null
+                            && SKPoint.Distance(CURRENT_MAP_PATH.PathPoints.Last().MapPoint, newPathPoint) >= CURRENT_MAP_PATH.PathWidth / spacing)
+                        {
+                            CURRENT_MAP_PATH?.PathPoints.Add(new MapPathPoint(newPathPoint));
+                        }
 
                         SKGLRenderControl.Invalidate();
                     }

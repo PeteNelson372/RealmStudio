@@ -205,6 +205,8 @@ namespace RealmStudio
                             {
                                 string[] viewBoxElements = viewBoxAttr.Split(' ');
 
+                                v.ViewBoxLeft = float.Parse(viewBoxElements[0]);
+                                v.ViewBoxTop = float.Parse(viewBoxElements[1]);
                                 v.ViewBoxSizeWidth = float.Parse(viewBoxElements[2]);
                                 v.ViewBoxSizeHeight = float.Parse(viewBoxElements[3]);
                             }

@@ -143,6 +143,8 @@
             // IncludeLabelsCheck
             // 
             IncludeLabelsCheck.AutoSize = true;
+            IncludeLabelsCheck.Checked = true;
+            IncludeLabelsCheck.CheckState = CheckState.Checked;
             IncludeLabelsCheck.ForeColor = SystemColors.ControlDarkDark;
             IncludeLabelsCheck.Location = new Point(6, 121);
             IncludeLabelsCheck.Name = "IncludeLabelsCheck";
@@ -154,6 +156,8 @@
             // IncludePathsCheck
             // 
             IncludePathsCheck.AutoSize = true;
+            IncludePathsCheck.Checked = true;
+            IncludePathsCheck.CheckState = CheckState.Checked;
             IncludePathsCheck.ForeColor = SystemColors.ControlDarkDark;
             IncludePathsCheck.Location = new Point(6, 96);
             IncludePathsCheck.Name = "IncludePathsCheck";
@@ -165,6 +169,8 @@
             // IncludeStructuresCheck
             // 
             IncludeStructuresCheck.AutoSize = true;
+            IncludeStructuresCheck.Checked = true;
+            IncludeStructuresCheck.CheckState = CheckState.Checked;
             IncludeStructuresCheck.ForeColor = SystemColors.ControlDarkDark;
             IncludeStructuresCheck.Location = new Point(6, 71);
             IncludeStructuresCheck.Name = "IncludeStructuresCheck";
@@ -176,6 +182,8 @@
             // IncludeVegetationCheck
             // 
             IncludeVegetationCheck.AutoSize = true;
+            IncludeVegetationCheck.Checked = true;
+            IncludeVegetationCheck.CheckState = CheckState.Checked;
             IncludeVegetationCheck.ForeColor = SystemColors.ControlDarkDark;
             IncludeVegetationCheck.Location = new Point(6, 46);
             IncludeVegetationCheck.Name = "IncludeVegetationCheck";
@@ -187,6 +195,8 @@
             // IncludeTerrainCheck
             // 
             IncludeTerrainCheck.AutoSize = true;
+            IncludeTerrainCheck.Checked = true;
+            IncludeTerrainCheck.CheckState = CheckState.Checked;
             IncludeTerrainCheck.ForeColor = SystemColors.ControlDarkDark;
             IncludeTerrainCheck.Location = new Point(6, 23);
             IncludeTerrainCheck.Name = "IncludeTerrainCheck";

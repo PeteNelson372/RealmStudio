@@ -44,6 +44,10 @@ namespace RealmStudio
 
         public string VectorPath { get; set; }
 
+        public float ViewBoxLeft { get; set; }
+
+        public float ViewBoxTop { get; set; }
+
         public float ViewBoxSizeWidth { get; set; }
 
         public float ViewBoxSizeHeight { get; set; }

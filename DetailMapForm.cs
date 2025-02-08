@@ -499,7 +499,7 @@ namespace RealmStudio
             }
 
 
-            // more to do here (labels, paths)
+            // get paths
 
             List<MapPath> gatheredPaths = [];
 
@@ -589,6 +589,8 @@ namespace RealmStudio
                     }
                 }
             }
+
+            // TODO: get labels
 
 
             // vignette

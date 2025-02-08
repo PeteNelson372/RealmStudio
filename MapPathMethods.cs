@@ -28,7 +28,7 @@ namespace RealmStudio
 {
     internal class MapPathMethods
     {
-        private static SKShader? PathTextureShader { get; set; } = null;
+        //private static SKShader? PathTextureShader { get; set; } = null;
 
         public static void ConstructPathPaint(MapPath mapPath)
         {
@@ -124,38 +124,10 @@ namespace RealmStudio
                         + " L0 0"
                         + " Z";
 
-                    pathLineEffect = SKPathEffect.Create1DPath(SKPath.ParseSvgPathData(svgPath), pathWidth * 2, 0, SKPath1DPathEffectStyle.Rotate);
-                    break;
-                case PathTypeEnum.LineAndDashesPath:
+                    SKPath chevronPath = SKPath.ParseSvgPathData(svgPath);
+                    chevronPath.Transform(SKMatrix.CreateScale(0.5F, 0.5F));
 
-                    float ldWidth = Math.Max(1, pathWidth / 2.0F);
-
-                    svgPath = "M 0 0"
-                        + " h" + (pathWidth).ToString()
-                        + " v" + Math.Max(1, ldWidth / 2.0F).ToString()
-                        + " h" + (-pathWidth).ToString()
-                        + " M0" + "," + (pathWidth - 1.0F).ToString()
-                        + " h" + (ldWidth).ToString()
-                        + " v2"
-                        + " h" + (-ldWidth).ToString();
-
-                    pathLineEffect = SKPathEffect.Create1DPath(SKPath.ParseSvgPathData(svgPath),
-                        pathWidth, 0, SKPath1DPathEffectStyle.Morph);
-                    break;
-                case PathTypeEnum.ShortIrregularDashPath:
-                    svgPath = "m0 0"
-                        + " v " + pathWidth.ToString()
-                        + " h " + (pathWidth / 4.0F).ToString()
-                        + " v " + (-pathWidth).ToString()
-                        + " z"
-                        + " m" + pathWidth.ToString() + " 0"
-                        + " v " + pathWidth.ToString()
-                        + " h " + (pathWidth / 4.0F).ToString()
-                        + " v " + (-pathWidth).ToString()
-                        + " z";
-
-                    pathLineEffect = SKPathEffect.Create1DPath(SKPath.ParseSvgPathData(svgPath),
-                        pathWidth * 2, 0, SKPath1DPathEffectStyle.Rotate);
+                    pathLineEffect = SKPathEffect.Create1DPath(chevronPath, pathWidth, 0, SKPath1DPathEffectStyle.Rotate);
                     break;
                 case PathTypeEnum.BearTracksPath:
                     SKPath? bearTrackPath = GetPathFromSvg("Bear Tracks", pathWidth);
@@ -185,24 +157,25 @@ namespace RealmStudio
                             pathWidth, 0, SKPath1DPathEffectStyle.Rotate);
                     }
                     break;
-                case PathTypeEnum.RailroadTracksPath:
-                    // TODO: the railroad tracks path doesn't look great; improve it
-                    svgPath = "M0,0"
-                        + " h " + pathWidth.ToString()
-                        + " v" + (pathWidth * 0.2F).ToString()
-                        + " h " + (-pathWidth).ToString()
-                        + " M" + (pathWidth / 3.33F).ToString() + ", " + (pathWidth * 0.2F).ToString()
-                        + " v " + pathWidth.ToString()
-                        + " h" + (pathWidth * 0.2F).ToString()
-                        + " v " + (-pathWidth).ToString()
-                        + " M0," + (pathWidth * 1.2F).ToString()
-                        + " h " + pathWidth.ToString()
-                        + " v" + (-pathWidth * 0.2F).ToString()
-                        + " h " + (-pathWidth).ToString();
+                    /*
+                    case PathTypeEnum.RailroadTracksPath:
+                        // TODO: the railroad tracks path doesn't look great; improve it
+                        svgPath = "M0,0"
+                            + " h " + pathWidth.ToString()
+                            + " v" + (pathWidth * 0.2F).ToString()
+                            + " h " + (-pathWidth).ToString()
+                            + " M" + (pathWidth / 3.33F).ToString() + ", " + (pathWidth * 0.2F).ToString()
+                            + " v " + pathWidth.ToString()
+                            + " h" + (pathWidth * 0.2F).ToString()
+                            + " v " + (-pathWidth).ToString()
+                            + " M0," + (pathWidth * 1.2F).ToString()
+                            + " h " + pathWidth.ToString()
+                            + " v" + (-pathWidth * 0.2F).ToString()
+                            + " h " + (-pathWidth).ToString();
 
-                    pathLineEffect = SKPathEffect.Create1DPath(SKPath.ParseSvgPathData(svgPath), pathWidth, 0, SKPath1DPathEffectStyle.Morph);
-                    break;
-
+                        pathLineEffect = SKPathEffect.Create1DPath(SKPath.ParseSvgPathData(svgPath), pathWidth, 0, SKPath1DPathEffectStyle.Morph);
+                        break;
+                    */
             }
 
             return pathLineEffect;
@@ -228,6 +201,9 @@ namespace RealmStudio
                 float xSize = pathWidth;
                 float ySize = pathWidth;
 
+                float xDelta = 0.0F;
+                float yDelta = 0.0F;
+
                 if (pathVector.ViewBoxSizeWidth != 0 && pathVector.ViewBoxSizeHeight != 0)
                 {
                     xSize = pathVector.ViewBoxSizeWidth;
@@ -237,7 +213,18 @@ namespace RealmStudio
                 float xScale = pathWidth / xSize;
                 float yScale = pathWidth / ySize;
 
-                pathVector.ScaledPath.Transform(SKMatrix.CreateScale(xScale, yScale));
+
+                if (pathVector.ViewBoxLeft != 0)
+                {
+                    xDelta = -pathVector.ViewBoxLeft * xScale;
+                }
+
+                if (pathVector.ViewBoxTop != 0)
+                {
+                    yDelta = -pathVector.ViewBoxTop * yScale;
+                }
+
+                pathVector.ScaledPath.Transform(SKMatrix.CreateScaleTranslation(xScale, yScale, xDelta, yDelta));
                 return pathVector.ScaledPath;
             }
 
@@ -248,14 +235,14 @@ namespace RealmStudio
         {
             List<MapPathPoint> parallelPoints = [];
 
-            float d = (location == ParallelEnum.Below) ? distance : -distance;
+            //float d = (location == ParallelEnum.Below) ? distance : -distance;
             float offsetAngle = (location == ParallelEnum.Above) ? 90 : -90;
 
-            SKPoint maxXPoint = new SKPoint(-1.0F, 0);
-            SKPoint maxYPoint = new SKPoint(0, -1.0F);
+            SKPoint maxXPoint = new(-1.0F, 0);
+            SKPoint maxYPoint = new(0, -1.0F);
 
-            SKPoint minXPoint = new SKPoint(65535.0F, 0);
-            SKPoint minYPoint = new SKPoint(0, 65535.0F);
+            SKPoint minXPoint = new(65535.0F, 0);
+            SKPoint minYPoint = new(0, 65535.0F);
 
             for (int i = 0; i < points.Count - 1; i++)
             {
@@ -264,7 +251,8 @@ namespace RealmStudio
                 if (i == 0)
                 {
                     float lineAngle = DrawingMethods.CalculateLineAngle(points[i].MapPoint, points[i + 1].MapPoint);
-                    newPoint = DrawingMethods.PointOnCircle(distance, lineAngle + offsetAngle, points[i].MapPoint);
+                    float circleRadius = (float)Math.Sqrt(distance * distance + distance * distance);
+                    newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle + offsetAngle, points[i].MapPoint);
                     parallelPoints.Add(new MapPathPoint(newPoint));
 
                     if (newPoint.X > maxXPoint.X)
@@ -350,7 +338,7 @@ namespace RealmStudio
                     }
                     else if (angleDifference == 180.0F) //====================================
                     {
-                        newPoint = DrawingMethods.PointOnCircle(distance, lineAngle1 + offsetAngle, points[i + 1].MapPoint);
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle1 + offsetAngle, points[i + 1].MapPoint);
                         parallelPoints.Add(new MapPathPoint(newPoint));
                     }
                     else if (angleDifference > 180.0F && angleDifference < 270.0F)
@@ -420,6 +408,12 @@ namespace RealmStudio
             // commented out; need to figure out a reliable algorithm
             // for removing the loops, maybe by taking into account the
             // "direction" of the line?
+            //
+            // it may be that looking at whether the original path line (set
+            // of points) is above/below or left/right of the parallel line
+            // (set of points) will give the information needed to know
+            // if loops need to be culled or not; however, how to know which
+            // points should be culled still has to be determined
 
             /*
             bool pointsRemoved = false;
@@ -516,11 +510,12 @@ namespace RealmStudio
 
         internal static void DrawBezierCurvesFromPoints(SKCanvas canvas, List<MapPathPoint> curvePoints, SKPaint paint)
         {
-            if (curvePoints.Count == 2)
-            {
-                canvas.DrawLine(curvePoints[0].MapPoint, curvePoints[1].MapPoint, paint);
-            }
-            else if (curvePoints.Count > 2)
+            //if (curvePoints.Count == 2)
+            //{
+            //    canvas.DrawLine(curvePoints[0].MapPoint, curvePoints[1].MapPoint, paint);
+            //}
+            //else 
+            if (curvePoints.Count > 2)
             {
                 using SKPath path = new();
                 path.MoveTo(curvePoints[0].MapPoint);
@@ -533,6 +528,23 @@ namespace RealmStudio
                 canvas.DrawPath(path, paint);
             }
         }
+
+        internal static void DrawLineFromPoints(SKCanvas canvas, List<MapPathPoint> linePoints, SKPaint paint)
+        {
+            if (linePoints.Count > 0)
+            {
+                using SKPath path = new();
+                path.MoveTo(linePoints[0].MapPoint);
+
+                for (int j = 1; j < linePoints.Count - 1; j++)
+                {
+                    path.LineTo(linePoints[j].MapPoint);
+                }
+
+                canvas.DrawPath(path, paint);
+            }
+        }
+
 
         public static SKPath GenerateMapPathBoundaryPath(List<MapPathPoint> points)
         {
