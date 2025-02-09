@@ -192,7 +192,7 @@ namespace RealmStudio
                     {
                         if (waterFeatureList[i] is WaterFeature feature)
                         {
-                            SKPath waterFeatureOutlinePath = feature.ContourPath;
+                            SKPath waterFeatureOutlinePath = feature.OuterPath3;
 
                             if (waterFeatureOutlinePath != null && waterFeatureOutlinePath.PointCount > 0)
                             {
@@ -201,7 +201,7 @@ namespace RealmStudio
                         }
                         else if (waterFeatureList[i] is River river)
                         {
-                            SKPath? riverBoundaryPath = river.RiverBoundaryPath;
+                            SKPath? riverBoundaryPath = river.ShorelinePath;
 
                             if (riverBoundaryPath != null && riverBoundaryPath.PointCount > 0)
                             {

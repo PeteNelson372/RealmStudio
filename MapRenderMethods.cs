@@ -687,16 +687,15 @@ namespace RealmStudio
             waterLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
             // water features
-            currentWaterFeature?.Render(waterLayer.LayerSurface.Canvas);
             currentRiver?.Render(waterLayer.LayerSurface.Canvas);
+            currentWaterFeature?.Render(waterLayer.LayerSurface.Canvas);
 
+            // render rivers first, then water features (lakes, painted water features)
+            // so that water features are painted on top of rivers to make it appear that
+            // rivers flow into/out of water features
             foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
             {
-                if (w is WaterFeature wf)
-                {
-                    wf.Render(waterLayer.LayerSurface.Canvas);
-                }
-                else if (w is River r)
+                if (w is River r)
                 {
                     r.Render(waterLayer.LayerSurface.Canvas);
 
@@ -706,10 +705,26 @@ namespace RealmStudio
 
                         foreach (MapRiverPoint p in controlPoints)
                         {
-                            waterLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, 2.0F, PaintObjects.RiverControlPointPaint);
-                            waterLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, 2.0F, PaintObjects.RiverControlPointOutlinePaint);
+                            if (p.IsSelected)
+                            {
+                                waterLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, r.RiverWidth / 2.0F, PaintObjects.RiverSelectedControlPointPaint);
+                                waterLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, r.RiverWidth / 2.0F, PaintObjects.RiverControlPointOutlinePaint);
+                            }
+                            else
+                            {
+                                waterLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, r.RiverWidth / 2.0F, PaintObjects.RiverControlPointPaint);
+                                waterLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, r.RiverWidth / 2.0F, PaintObjects.RiverControlPointOutlinePaint);
+                            }
                         }
                     }
+                }
+            }
+
+            foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
+            {
+                if (w is WaterFeature wf)
+                {
+                    wf.Render(waterLayer.LayerSurface.Canvas);
                 }
             }
 

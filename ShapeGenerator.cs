@@ -125,7 +125,7 @@ namespace RealmStudio
             // or scale is inverse of frequency
 
             float[,] noiseArray1 = Noise.Calc2D((int)width, (int)height, 0.008F);
-            float[,] noiseArray2 = Noise.Calc2D((int)width, (int)height, 0.05F);
+            float[,] noiseArray2 = Noise.Calc2D((int)width, (int)height, 0.01F);
 
             float[,] elevation = new float[(int)width, (int)height];
 

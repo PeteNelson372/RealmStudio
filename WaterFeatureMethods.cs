@@ -266,25 +266,171 @@ namespace RealmStudio
         {
             List<MapRiverPoint> parallelPoints = [];
 
-            float calcDistance = distance;
+            float offsetAngle = (location == ParallelEnum.Above) ? 90 : -90;
 
-            for (int i = 0; i < points.Count - 1; i += 2)
+            SKPoint maxXPoint = new(-1.0F, 0);
+            SKPoint maxYPoint = new(0, -1.0F);
+
+            SKPoint minXPoint = new(65535.0F, 0);
+            SKPoint minYPoint = new(0, 65535.0F);
+
+            for (int i = 0; i < points.Count - 1; i++)
             {
-                float lineAngle = DrawingMethods.CalculateLineAngle(points[i].RiverPoint, points[i + 1].RiverPoint);
+                SKPoint newPoint;
 
-                float angle = (location == ParallelEnum.Below) ? 90 : -90;
+                float circleRadius = (float)Math.Sqrt(distance * distance + distance * distance);
 
                 if (fromStartingPoint)
                 {
-                    calcDistance = distance * (i / (float)points.Count);
+                    circleRadius = distance * (i / (float)points.Count);
                 }
 
-                SKPoint p1 = DrawingMethods.PointOnCircle(calcDistance, lineAngle + angle, points[i].RiverPoint);
-                SKPoint p2 = DrawingMethods.PointOnCircle(calcDistance, lineAngle + angle, points[i + 1].RiverPoint);
+                if (i == 0)
+                {
+                    float lineAngle = DrawingMethods.CalculateLineAngle(points[i].RiverPoint, points[i + 1].RiverPoint);
+                    newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle + offsetAngle, points[i].RiverPoint);
+                    parallelPoints.Add(new MapRiverPoint(newPoint));
 
-                parallelPoints.Add(new MapRiverPoint(p1));
-                parallelPoints.Add(new MapRiverPoint(p2));
+                    if (newPoint.X > maxXPoint.X)
+                    {
+                        maxXPoint = newPoint;
+                    }
+
+                    if (newPoint.Y < minYPoint.Y)
+                    {
+                        minYPoint = newPoint;
+                    }
+
+                    if (newPoint.X < minXPoint.X)
+                    {
+                        minXPoint = newPoint;
+                    }
+
+                    if (newPoint.Y > maxYPoint.Y)
+                    {
+                        maxYPoint = newPoint;
+                    }
+                }
+                else
+                {
+                    float lineAngle1 = DrawingMethods.CalculateLineAngle(points[i - 1].RiverPoint, points[i].RiverPoint);
+                    float lineAngle2 = DrawingMethods.CalculateLineAngle(points[i].RiverPoint, points[i + 1].RiverPoint);
+
+                    float angleDifference = (float)((lineAngle2 - lineAngle1 >= 0) ? Math.Round(lineAngle2 - lineAngle1) : Math.Round((lineAngle2 - lineAngle1) + 360.0F));
+                    if (angleDifference == 0.0F)
+                    {
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle1 + offsetAngle, points[i + 1].RiverPoint);
+                        parallelPoints.Add(new MapRiverPoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference > 0.0F && angleDifference < 90.0F)
+                    {
+                        //1
+                        float circleAngle = lineAngle1 + offsetAngle + (angleDifference / 2.0F);
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, circleAngle, points[i + 1].RiverPoint);
+                        parallelPoints.Add(new MapRiverPoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference == 90.0F)
+                    {
+                        // edge case - do not add a point if the lines are 90 degrees from each other
+                    }
+                    else if (angleDifference > 90.0F && angleDifference < 180.0F)
+                    {
+                        //2
+                        float circleAngle = lineAngle1 + offsetAngle + (angleDifference / 2.0F);
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, circleAngle, points[i + 1].RiverPoint);
+                        parallelPoints.Add(new MapRiverPoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference == 180.0F) //====================================
+                    {
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle1 + offsetAngle, points[i + 1].RiverPoint);
+                        parallelPoints.Add(new MapRiverPoint(newPoint));
+                    }
+                    else if (angleDifference > 180.0F && angleDifference < 270.0F)
+                    {
+                        //3
+                        float circleAngle = lineAngle1 - offsetAngle + (angleDifference / 2.0F);
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, circleAngle, points[i + 1].RiverPoint);
+                        parallelPoints.Add(new MapRiverPoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference == 270.0F)
+                    {
+                        // edge case - do not add a point if the lines are 270 degrees from each other
+                    }
+                    else if (angleDifference > 270.0F && angleDifference < 360.0F)
+                    {
+                        //4
+                        float circleAngle = lineAngle1 - offsetAngle + (angleDifference / 2.0F);
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, circleAngle, points[i + 1].RiverPoint);
+                        parallelPoints.Add(new MapRiverPoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference == 360.0F)
+                    {
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle1 + offsetAngle, points[i + 1].RiverPoint);
+                        parallelPoints.Add(new MapRiverPoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                }
             }
+
 
             return parallelPoints;
         }
@@ -299,7 +445,7 @@ namespace RealmStudio
 
             SKShader combinedShader;
 
-            if (riverTexture != null)
+            if (riverTexture != null && mapRiver.RenderRiverTexture)
             {
                 riverTexture.TextureBitmap ??= Image.FromFile(riverTexture.TexturePath) as Bitmap;
 
@@ -618,6 +764,223 @@ namespace RealmStudio
 
                 river.ShallowWaterPath?.Dispose();
                 river.ShallowWaterPath = new(shallowWaterPath);
+            }
+        }
+
+        public static MapRiverPoint? SelectRiverPointAtPoint(River river, SKPoint mapClickPoint, bool selectOnlyControlPoints = true)
+        {
+            MapRiverPoint? selectedPoint = null;
+
+            for (int i = 0; i < river.RiverPoints.Count; i++)
+            {
+                using SKPath controlPointPath = new();
+                controlPointPath.AddCircle(river.RiverPoints[i].RiverPoint.X, river.RiverPoints[i].RiverPoint.Y, river.RiverWidth);
+
+                if (selectOnlyControlPoints)
+                {
+                    if (controlPointPath.Contains(mapClickPoint.X, mapClickPoint.Y) && river.RiverPoints[i].IsControlPoint)
+                    {
+                        selectedPoint = river.RiverPoints[i];
+                        break;
+                    }
+                }
+                else if (controlPointPath.Contains(mapClickPoint.X, mapClickPoint.Y))
+                {
+                    selectedPoint = river.RiverPoints[i];
+                    break;
+                }
+            }
+
+            if (selectedPoint != null)
+            {
+                selectedPoint.IsSelected = true;
+            }
+
+            return selectedPoint;
+        }
+
+        public static int GetRiverPointIndexById(River river, Guid guid)
+        {
+            for (int i = 0; i < river.RiverPoints.Count; i++)
+            {
+                if (river.RiverPoints[i].PointGuid == guid)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        internal static void MoveSelectedRiverPoint(River? selectedRiver, MapRiverPoint mapRiverPoint, SKPoint movePoint)
+        {
+            if (selectedRiver != null && selectedRiver != null)
+            {
+                int selectedIndex = GetRiverPointIndexById(selectedRiver, mapRiverPoint.PointGuid);
+
+                if (selectedIndex > -1)
+                {
+                    // move the selected river point and the 10 points before and after it
+                    if (selectedIndex - 10 > 0)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.1F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.1F;
+                        SKPoint newPoint = new(movePoint.X - xDelta, movePoint.Y - yDelta);
+                        selectedRiver.RiverPoints[selectedIndex - 10].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex - 9 > 0)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.2F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.2F;
+                        SKPoint newPoint = new(movePoint.X - xDelta, movePoint.Y - yDelta);
+                        selectedRiver.RiverPoints[selectedIndex - 9].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex - 8 > 0)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.3F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.3F;
+                        SKPoint newPoint = new(movePoint.X - xDelta, movePoint.Y - yDelta);
+                        selectedRiver.RiverPoints[selectedIndex - 8].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex - 7 > 0)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.4F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.4F;
+                        SKPoint newPoint = new(movePoint.X - xDelta, movePoint.Y - yDelta);
+                        selectedRiver.RiverPoints[selectedIndex - 7].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex - 6 > 0)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.5F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.5F;
+                        SKPoint newPoint = new(movePoint.X - xDelta, movePoint.Y - yDelta);
+                        selectedRiver.RiverPoints[selectedIndex - 6].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex - 5 > 0)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.6F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.6F;
+                        SKPoint newPoint = new(movePoint.X - xDelta, movePoint.Y - yDelta);
+                        selectedRiver.RiverPoints[selectedIndex - 5].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex - 4 > 0)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.7F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.7F;
+                        SKPoint newPoint = new(movePoint.X - xDelta, movePoint.Y - yDelta);
+                        selectedRiver.RiverPoints[selectedIndex - 4].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex - 3 > 0)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.8F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.8F;
+                        SKPoint newPoint = new(movePoint.X - xDelta, movePoint.Y - yDelta);
+                        selectedRiver.RiverPoints[selectedIndex - 3].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex - 2 > 0)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.9F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.9F;
+                        SKPoint newPoint = new(movePoint.X - xDelta, movePoint.Y - yDelta);
+                        selectedRiver.RiverPoints[selectedIndex - 2].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex - 1 > 0)
+                    {
+                        selectedRiver.RiverPoints[selectedIndex - 1].RiverPoint = movePoint;
+                    }
+
+                    selectedRiver.RiverPoints[selectedIndex].RiverPoint = movePoint;
+
+                    if (selectedIndex + 1 < selectedRiver.RiverPoints.Count - 1)
+                    {
+                        selectedRiver.RiverPoints[selectedIndex + 1].RiverPoint = movePoint;
+                    }
+
+                    if (selectedIndex + 2 < selectedRiver.RiverPoints.Count - 1)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.9F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.9F;
+                        SKPoint newPoint = new(movePoint.X + xDelta, movePoint.Y + yDelta);
+                        selectedRiver.RiverPoints[selectedIndex + 2].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex + 3 < selectedRiver.RiverPoints.Count - 1)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.8F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.8F;
+                        SKPoint newPoint = new(movePoint.X + xDelta, movePoint.Y + yDelta);
+                        selectedRiver.RiverPoints[selectedIndex + 3].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex + 4 < selectedRiver.RiverPoints.Count - 1)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.7F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.7F;
+                        SKPoint newPoint = new(movePoint.X + xDelta, movePoint.Y + yDelta);
+                        selectedRiver.RiverPoints[selectedIndex + 4].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex + 5 < selectedRiver.RiverPoints.Count - 1)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.6F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.6F;
+                        SKPoint newPoint = new(movePoint.X + xDelta, movePoint.Y + yDelta);
+                        selectedRiver.RiverPoints[selectedIndex + 5].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex + 6 < selectedRiver.RiverPoints.Count - 1)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.5F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.5F;
+                        SKPoint newPoint = new(movePoint.X + xDelta, movePoint.Y + yDelta);
+                        selectedRiver.RiverPoints[selectedIndex + 6].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex + 7 < selectedRiver.RiverPoints.Count - 1)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.4F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.4F;
+                        SKPoint newPoint = new(movePoint.X + xDelta, movePoint.Y + yDelta);
+                        selectedRiver.RiverPoints[selectedIndex + 7].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex + 8 < selectedRiver.RiverPoints.Count - 1)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.3F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.3F;
+                        SKPoint newPoint = new(movePoint.X + xDelta, movePoint.Y + yDelta);
+                        selectedRiver.RiverPoints[selectedIndex + 8].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex + 9 < selectedRiver.RiverPoints.Count - 1)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.2F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.2F;
+                        SKPoint newPoint = new(movePoint.X + xDelta, movePoint.Y + yDelta);
+                        selectedRiver.RiverPoints[selectedIndex + 9].RiverPoint = newPoint;
+                    }
+
+                    if (selectedIndex + 10 < selectedRiver.RiverPoints.Count - 1)
+                    {
+                        float xDelta = (movePoint.X - selectedRiver.RiverPoints[selectedIndex].RiverPoint.X) * 0.1F;
+                        float yDelta = (movePoint.Y - selectedRiver.RiverPoints[selectedIndex].RiverPoint.Y) * 0.1F;
+                        SKPoint newPoint = new(movePoint.X + xDelta, movePoint.Y + yDelta);
+                        selectedRiver.RiverPoints[selectedIndex + 10].RiverPoint = newPoint;
+                    }
+
+                }
+
+                ConstructRiverPaths(selectedRiver);
+                ConstructRiverPaintObjects(selectedRiver);
             }
         }
     }

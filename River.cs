@@ -48,6 +48,8 @@ namespace RealmStudio
 
         public bool RiverSourceFadeIn { get; set; } = false;
 
+        public bool RenderRiverTexture { get; set; } = true;
+
         public Color RiverShorelineColor { get; set; } = Color.FromArgb(161, 144, 118);
 
         public bool ShowRiverPoints { get; set; } = false;
@@ -145,12 +147,15 @@ namespace RealmStudio
         {
             List<MapRiverPoint> mapRiverPoints = [];
 
-            for (int i = 0; i < RiverPoints.Count - 10; i += 10)
+            // every 15th point is a control point
+            for (int i = 0; i < RiverPoints.Count - 15; i += 15)
             {
                 mapRiverPoints.Add(RiverPoints[i]);
+                RiverPoints[i].IsControlPoint = true;
             }
 
-            mapRiverPoints.Add(RiverPoints.Last());
+            mapRiverPoints.Add(RiverPoints[^1]);
+            RiverPoints[^1].IsControlPoint = true;
 
             return mapRiverPoints;
         }
@@ -203,6 +208,21 @@ namespace RealmStudio
             {
                 string? riverSourceFadeIn = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverSourceFadeIn").Value).FirstOrDefault();
                 RiverSourceFadeIn = bool.Parse(riverSourceFadeIn);
+            }
+            else
+            {
+                RiverSourceFadeIn = true;
+            }
+
+            IEnumerable<XElement?> renderRiverTextureElem = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RenderRiverTexture"));
+            if (renderRiverTextureElem.First() != null)
+            {
+                string? renderRiverTexture = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RenderRiverTexture").Value).FirstOrDefault();
+                RenderRiverTexture = bool.Parse(renderRiverTexture);
+            }
+            else
+            {
+                RenderRiverTexture = true;
             }
 
             IEnumerable<XElement?> riverShorelineColorElem = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverShorelineColor"));
@@ -268,6 +288,10 @@ namespace RealmStudio
 
             writer.WriteStartElement("RiverSourceFadeIn");
             writer.WriteValue(RiverSourceFadeIn.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("RenderRiverTexture");
+            writer.WriteValue(RenderRiverTexture.ToString());
             writer.WriteEndElement();
 
             XmlColor riverShorelineColor = new(RiverShorelineColor);

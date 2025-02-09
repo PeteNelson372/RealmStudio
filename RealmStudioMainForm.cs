@@ -67,6 +67,7 @@ namespace RealmStudio
         private static MapLabel? SELECTED_MAP_LABEL = null;
         private static MapScale? SELECTED_MAP_SCALE = null;
         private static IWaterFeature? SELECTED_WATERFEATURE = null;
+        private static MapRiverPoint? SELECTED_RIVERPOINT = null;
         private static ColorPaintBrush SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.SoftBrush;
         private static GeneratedLandformTypeEnum SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.NotSet;
         private static SKRect SELECTED_LANDFORM_AREA = SKRect.Empty;
@@ -1696,28 +1697,29 @@ namespace RealmStudio
             modeText += CURRENT_DRAWING_MODE switch
             {
                 DrawingModeEnum.None => "None",
-                DrawingModeEnum.LandPaint => "Landform Paint",
-                DrawingModeEnum.LandErase => "Landform Erase",
-                DrawingModeEnum.LandColorErase => "Landform Color Erase",
-                DrawingModeEnum.LandColor => "Landform Color",
-                DrawingModeEnum.OceanErase => "Ocean Erase",
-                DrawingModeEnum.OceanPaint => "Ocean Paint",
-                DrawingModeEnum.ColorSelect => "Color Select",
-                DrawingModeEnum.LandformSelect => "Landform Select",
-                DrawingModeEnum.WaterPaint => "Water Feature Paint",
-                DrawingModeEnum.WaterErase => "Water Feature Erase",
-                DrawingModeEnum.WaterColor => "Water Feature Color",
-                DrawingModeEnum.WaterColorErase => "Water Feature Color Erase",
-                DrawingModeEnum.LakePaint => "Lake Paint",
-                DrawingModeEnum.RiverPaint => "River Paint",
-                DrawingModeEnum.WaterFeatureSelect => "Water Feature Select",
+                DrawingModeEnum.LandPaint => "Paint Landform",
+                DrawingModeEnum.LandErase => "Erase Landform",
+                DrawingModeEnum.LandColorErase => "Erase Landform Color",
+                DrawingModeEnum.LandColor => "Color Landform",
+                DrawingModeEnum.OceanErase => "Erase Ocean",
+                DrawingModeEnum.OceanPaint => "Paint Ocean",
+                DrawingModeEnum.ColorSelect => "Select Color",
+                DrawingModeEnum.LandformSelect => "Select Landform",
+                DrawingModeEnum.WaterPaint => "Paint Water Feature",
+                DrawingModeEnum.WaterErase => "Erase Water Feature",
+                DrawingModeEnum.WaterColor => "Color Water Feature",
+                DrawingModeEnum.WaterColorErase => "Erase Water Feature Color",
+                DrawingModeEnum.LakePaint => "Paint Lake",
+                DrawingModeEnum.RiverPaint => "Paint River",
+                DrawingModeEnum.RiverEdit => "Edit River",
+                DrawingModeEnum.WaterFeatureSelect => "Select Water Feature",
                 DrawingModeEnum.PathPaint => "Draw Path",
                 DrawingModeEnum.PathSelect => "Select Path",
                 DrawingModeEnum.PathEdit => "Edit Path",
                 DrawingModeEnum.SymbolErase => "Erase Symbol",
                 DrawingModeEnum.SymbolPlace => "Place Symbol",
                 DrawingModeEnum.SymbolSelect => "Select Symbol",
-                DrawingModeEnum.SymbolColor => "Symbol Color",
+                DrawingModeEnum.SymbolColor => "Color Symbol",
                 DrawingModeEnum.DrawBezierLabelPath => "Draw Bezier Label Path",
                 DrawingModeEnum.DrawArcLabelPath => "Draw Arc Label Path",
                 DrawingModeEnum.DrawLabel => "Place Label",
@@ -2393,6 +2395,7 @@ namespace RealmStudio
                     else if (waterLayer.MapLayerComponents[i] is River river)
                     {
                         river.ParentMap = CURRENT_MAP;
+                        WaterFeatureMethods.ConstructRiverPaths(river);
                         WaterFeatureMethods.ConstructRiverPaintObjects(river);
                     }
                 }
@@ -3587,10 +3590,6 @@ namespace RealmStudio
 
         private void SKGLRenderControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
         {
-            //using SKCanvas renderCanvas = e.Surface.Canvas;
-
-            //RENDER_SURFACE = e.Surface;
-
             // handle zoom-in and zoom-out (TODO: zoom in and out from center of map - how?)
             e.Surface.Canvas.Scale(DrawingZoom);
 
@@ -3618,13 +3617,11 @@ namespace RealmStudio
             {
                 LeftButtonMouseDownHandler(e, SELECTED_BRUSH_SIZE);
             }
-
-            if (e.Button == MouseButtons.Middle)
+            else if (e.Button == MouseButtons.Middle)
             {
                 MiddleButtonMouseDownHandler(e);
             }
-
-            if (e.Button == MouseButtons.Right)
+            else if (e.Button == MouseButtons.Right)
             {
                 RightButtonMouseDownHandler(e);
             }
@@ -4044,7 +4041,10 @@ namespace RealmStudio
 
                         if (CURRENT_LAYER_PAINT_STROKE == null)
                         {
-                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.Transparent, ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.LANDDRAWINGLAYER, true) { RenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false, new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight)) };
+                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.Transparent, ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.LANDDRAWINGLAYER, true)
+                            {
+                                RenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false, new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight))
+                            };
 
                             Cmd_AddLandPaintStroke cmd = new(CURRENT_MAP, CURRENT_LAYER_PAINT_STROKE);
                             CommandManager.AddCommand(cmd);
@@ -4098,10 +4098,10 @@ namespace RealmStudio
                         {
                             CURRENT_WATERFEATURE.WaterFeaturePath = lakePath;
                             WaterFeatureMethods.CreateInnerAndOuterPaths(CURRENT_MAP, CURRENT_WATERFEATURE);
-                            WaterFeatureMethods.MergeWaterFeatures(CURRENT_MAP);
                             WaterFeatureMethods.ConstructWaterFeaturePaintObjects(CURRENT_WATERFEATURE);
-
                             MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER).MapLayerComponents.Add(CURRENT_WATERFEATURE);
+
+                            WaterFeatureMethods.MergeWaterFeatures(CURRENT_MAP);
                         }
                         else
                         {
@@ -4125,6 +4125,7 @@ namespace RealmStudio
                                 RiverShorelineColor = ShorelineColorSelectionButton.BackColor,
                                 RiverWidth = RiverWidthTrack.Value,
                                 RiverSourceFadeIn = RiverSourceFadeInSwitch.Checked,
+                                RenderRiverTexture = RiverTextureSwitch.Checked,
                             };
 
                             WaterFeatureMethods.ConstructRiverPaintObjects(CURRENT_RIVER);
@@ -4132,6 +4133,32 @@ namespace RealmStudio
 
                             SKGLRenderControl.Invalidate();
                         }
+                    }
+                    break;
+                case DrawingModeEnum.RiverEdit:
+                    {
+                        // if the ctrl key is pressed and the user clicks on a river, find
+                        // the nearest point on the river and make it a river control point
+                        // so it can be moved
+                        if (ModifierKeys == Keys.Control)
+                        {
+                            if (SELECTED_WATERFEATURE != null && SELECTED_WATERFEATURE is River river)
+                            {
+                                foreach (MapRiverPoint mp in river.RiverPoints)
+                                {
+                                    mp.IsSelected = false;
+                                }
+
+                                SELECTED_RIVERPOINT = WaterFeatureMethods.SelectRiverPointAtPoint(river, zoomedScrolledPoint, false);
+
+                                if (SELECTED_RIVERPOINT != null)
+                                {
+                                    SELECTED_RIVERPOINT.IsControlPoint = true;
+                                }
+                            }
+                        }
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.WaterColor:
@@ -4165,7 +4192,10 @@ namespace RealmStudio
 
                         if (CURRENT_LAYER_PAINT_STROKE == null)
                         {
-                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.Empty, ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.WATERDRAWINGLAYER, true) { RenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false, new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight)) };
+                            CURRENT_LAYER_PAINT_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.Empty, ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.WATERDRAWINGLAYER, true)
+                            {
+                                RenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false, new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight))
+                            };
 
                             Cmd_AddWaterPaintStroke cmd = new(CURRENT_MAP, CURRENT_LAYER_PAINT_STROKE);
                             CommandManager.AddCommand(cmd);
@@ -4229,6 +4259,7 @@ namespace RealmStudio
                             }
                         }
 
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.SymbolPlace:
@@ -4743,6 +4774,16 @@ namespace RealmStudio
                         SKGLRenderControl.Refresh();
                     }
                     break;
+                case DrawingModeEnum.RiverEdit:
+                    if (SELECTED_WATERFEATURE != null && SELECTED_WATERFEATURE is River river && SELECTED_RIVERPOINT != null)
+                    {
+                        // move the selected point on the path
+                        WaterFeatureMethods.MoveSelectedRiverPoint(river, SELECTED_RIVERPOINT, zoomedScrolledPoint);
+
+                        CURRENT_MAP.IsSaved = false;
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
                 case DrawingModeEnum.PathPaint:
                     {
                         Cursor = Cursors.Cross;
@@ -4857,6 +4898,7 @@ namespace RealmStudio
                         MapPathMethods.MoveSelectedMapPathPoint(SELECTED_PATH, SELECTED_PATHPOINT, zoomedScrolledPoint);
 
                         CURRENT_MAP.IsSaved = false;
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.SymbolPlace:
@@ -5183,6 +5225,21 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case DrawingModeEnum.RiverEdit:
+                    {
+                        if (SELECTED_WATERFEATURE != null && SELECTED_WATERFEATURE is River river)
+                        {
+                            foreach (MapRiverPoint mp in river.RiverPoints)
+                            {
+                                mp.IsSelected = false;
+                            }
+
+                            SELECTED_RIVERPOINT = WaterFeatureMethods.SelectRiverPointAtPoint(river, zoomedScrolledPoint);
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
                 case DrawingModeEnum.PathEdit:
                     {
                         if (SELECTED_PATH != null)
@@ -5194,6 +5251,8 @@ namespace RealmStudio
 
                             SELECTED_PATHPOINT = MapPathMethods.SelectMapPathPointAtPoint(SELECTED_PATH, zoomedScrolledPoint);
                         }
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case DrawingModeEnum.RegionPaint:
@@ -5520,6 +5579,11 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case DrawingModeEnum.RiverEdit:
+                    {
+                        SELECTED_RIVERPOINT = null;
+                    }
+                    break;
                 case DrawingModeEnum.WaterColor:
                     {
                         StopBrushTimer();
@@ -5789,32 +5853,32 @@ namespace RealmStudio
                 case DrawingModeEnum.ColorSelect:
                     {
                         // eyedropper color select function
-                        if (RENDER_SURFACE != null)
+                        using SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+                        s.Canvas.Clear();
+
+                        RenderMapForExport(s.Canvas);
+
+                        using Bitmap colorBitmap = s.Snapshot().ToBitmap();
+
+                        Color pixelColor = colorBitmap.GetPixel((int)zoomedScrolledPoint.X, (int)zoomedScrolledPoint.Y);
+
+                        switch (MainTab.SelectedIndex)
                         {
-                            SKImage mapImage = RENDER_SURFACE.Snapshot(new SKRectI(0, 0, CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
-
-                            Bitmap colorBitmap = mapImage.ToBitmap();
-
-                            Color pixelColor = colorBitmap.GetPixel((int)zoomedScrolledPoint.X, (int)zoomedScrolledPoint.Y);
-
-                            switch (MainTab.SelectedIndex)
-                            {
-                                case 1:
-                                    // ocean layer
-                                    OceanPaintColorSelectButton.BackColor = pixelColor;
-                                    OceanPaintColorSelectButton.Refresh();
-                                    break;
-                                case 2:
-                                    // land layer
-                                    LandColorSelectionButton.BackColor = pixelColor;
-                                    LandColorSelectionButton.Refresh();
-                                    break;
-                                case 3:
-                                    // water layer
-                                    WaterPaintColorSelectButton.BackColor = pixelColor;
-                                    WaterPaintColorSelectButton.Refresh();
-                                    break;
-                            }
+                            case 1:
+                                // ocean layer
+                                OceanPaintColorSelectButton.BackColor = pixelColor;
+                                OceanPaintColorSelectButton.Refresh();
+                                break;
+                            case 2:
+                                // land layer
+                                LandColorSelectionButton.BackColor = pixelColor;
+                                LandColorSelectionButton.Refresh();
+                                break;
+                            case 3:
+                                // water layer
+                                WaterPaintColorSelectButton.BackColor = pixelColor;
+                                WaterPaintColorSelectButton.Refresh();
+                                break;
                         }
                     }
                     break;
@@ -6005,11 +6069,28 @@ namespace RealmStudio
                             cmd.DoOperation();
 
                             SELECTED_WATERFEATURE = null;
+                            SELECTED_RIVERPOINT = null;
 
                             CURRENT_MAP.IsSaved = false;
                             SKGLRenderControl.Invalidate();
                         }
 
+                        break;
+                    case DrawingModeEnum.RiverEdit:
+                        {
+                            if (SELECTED_WATERFEATURE != null && SELECTED_WATERFEATURE is River river && SELECTED_RIVERPOINT != null)
+                            {
+                                Cmd_RemoveRiverPoint cmd = new(river, SELECTED_RIVERPOINT);
+                                CommandManager.AddCommand(cmd);
+                                cmd.DoOperation();
+
+                                SELECTED_RIVERPOINT = null;
+
+                                CURRENT_MAP.IsSaved = false;
+
+                                SKGLRenderControl.Invalidate();
+                            }
+                        }
                         break;
                     case DrawingModeEnum.PathSelect:
                         if (SELECTED_PATH != null)
@@ -7932,6 +8013,41 @@ namespace RealmStudio
             TOOLTIP.Show(RiverWidthTrack.Value.ToString(), RiverWidthTrack, new Point(RiverWidthTrack.Right - 42, RiverWidthTrack.Top - 58), 2000);
         }
 
+        private void RiverTextureSwitch_CheckedChanged()
+        {
+            if (SELECTED_WATERFEATURE != null && SELECTED_WATERFEATURE is River river)
+            {
+                river.RenderRiverTexture = RiverTextureSwitch.Checked;
+                WaterFeatureMethods.ConstructRiverPaintObjects(river);
+
+                SKGLRenderControl.Invalidate();
+            }
+        }
+
+        private void EditRiverPointsSwitch_CheckedChanged()
+        {
+            if (EditRiverPointsSwitch.Checked)
+            {
+                CURRENT_DRAWING_MODE = DrawingModeEnum.RiverEdit;
+                SetDrawingModeLabel();
+                SetSelectedBrushSize(0);
+
+                if (SELECTED_WATERFEATURE != null && SELECTED_WATERFEATURE is River river)
+                {
+                    river.ShowRiverPoints = true;
+                }
+            }
+            else
+            {
+                if (SELECTED_WATERFEATURE != null && SELECTED_WATERFEATURE is River river)
+                {
+                    river.ShowRiverPoints = false;
+                }
+            }
+
+            SKGLRenderControl.Invalidate();
+        }
+
         private void WaterEraseSizeTrack_ValueChanged(object sender, EventArgs e)
         {
             WaterFeatureMethods.WaterFeatureEraserSize = WaterEraserSizeTrack.Value;
@@ -8061,7 +8177,7 @@ namespace RealmStudio
 
         #region Water Tab Methods
 
-        internal static MapComponent? SelectWaterFeatureAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
+        internal MapComponent? SelectWaterFeatureAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
         {
             MapComponent? selectedWaterFeature = null;
 
@@ -8100,6 +8216,11 @@ namespace RealmStudio
                             if (river.IsSelected)
                             {
                                 selectedWaterFeature = river;
+                            }
+                            else
+                            {
+                                EditRiverPointsSwitch.Checked = false;
+                                river.ShowRiverPoints = false;
                             }
                             break;
                         }
@@ -11091,5 +11212,6 @@ namespace RealmStudio
         }
 
         #endregion
+
     }
 }

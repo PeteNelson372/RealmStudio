@@ -37,6 +37,9 @@ namespace RealmStudio
         [XmlIgnore]
         public bool IsSelected { get; set; } = false;
 
+        [XmlIgnore]
+        public bool IsControlPoint { get; set; } = false;
+
         public MapRiverPoint() { }
 
         public MapRiverPoint(SKPoint point)

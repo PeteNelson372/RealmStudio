@@ -38,6 +38,7 @@ namespace RealmStudio
         WaterColorErase,
         LakePaint,
         RiverPaint,
+        RiverEdit,
         ColorSelect,
         LandformSelect,
         LandformAreaSelect,
