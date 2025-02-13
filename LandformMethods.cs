@@ -101,12 +101,10 @@ namespace RealmStudio
             landform.OuterPath8 = DrawingMethods.GetInnerOrOuterPath(landform.ContourPoints, 8 * pathDistance, ParallelEnum.Above);
         }
 
-        internal static void EraseLandForm(RealmStudioMap map, Landform lf)
+        internal static void EraseLandForm(Landform lf)
         {
             if (LandformErasePath.PointCount > 0)
             {
-                MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
-
                 using SKPath diffPath = lf.DrawPath.Op(LandformErasePath, SKPathOp.Difference);
 
                 if (diffPath != null)
@@ -300,8 +298,37 @@ namespace RealmStudio
         {
             Bitmap b = (Bitmap)Bitmap.FromFile(fileName);
 
+            int bmpWidth = b.Width;
+            int bmpHeight = b.Height;
+
+            // find color surrounding image
+            Color topLeftColor = b.GetPixel(0, 0);
+            Color topRightColor = b.GetPixel(bmpWidth - 1, 0);
+            Color bottomLeftColor = b.GetPixel(0, bmpHeight - 1);
+            Color bottomRightColor = b.GetPixel(bmpWidth - 1, bmpHeight - 1);
+
+            Color surroundColor = Color.White;
+            bool surroundColorFound = false;
+
+            if (topLeftColor == topRightColor && bottomLeftColor == bottomRightColor && topLeftColor == bottomRightColor)
+            {
+                surroundColorFound = true;
+                surroundColor = topLeftColor;
+            }
+
+            // make sure the bitmap has a 3-pixel white border so that the Moore-neighborhood algorithm doesn't fail
+            // due to image pixels being right at the edges of the bitmap
+            using Graphics g = Graphics.FromImage(b);
+            using Pen p = new(Color.White, 3);
+
+            g.DrawLine(p, new Point(2, 2), new Point(b.Width - 2, 2));
+            g.DrawLine(p, new Point(2, b.Height - 2), new Point(b.Width - 2, b.Height - 2));
+            g.DrawLine(p, new Point(2, 2), new Point(2, b.Height - 2));
+            g.DrawLine(p, new Point(b.Width - 2, 2), new Point(b.Width - 2, b.Height - 2));
+
+
             // convert to monochrome
-            Bitmap gsb = DrawingMethods.MakeGrayscale(b, 0.0F, false);
+            Bitmap gsb = DrawingMethods.MakeGrayscale(b, 0.0F, true);
 
             if (gsb.PixelFormat != PixelFormat.Format8bppIndexed)
             {
@@ -309,6 +336,12 @@ namespace RealmStudio
                 Bitmap newB = Grayscale.CommonAlgorithms.BT709.Apply(gsb);
                 gsb = newB;
             }
+
+            //DrawingMethods.FlattenBitmapColors(ref gsb);
+
+            Median medianfilter = new();
+            // apply the filter
+            medianfilter.ApplyInPlace(gsb);
 
             // find edges
             // create filter
@@ -332,8 +365,8 @@ namespace RealmStudio
 
             // flatten colors again
             // convert to monochrome
-            //Bitmap gsbInverted = DrawingMethods.MakeGrayscale(invertedBitmap, 0.5F, true);
-            DrawingMethods.FlattenBitmapColors(ref invertedBitmap);
+            Bitmap gsbInverted = DrawingMethods.MakeGrayscale(invertedBitmap, 0.5F, true);
+            //DrawingMethods.FlattenBitmapColors(ref invertedBitmap);
 
             Mean meanFilter = new();
             meanFilter.ApplyInPlace(invertedBitmap);
@@ -363,6 +396,20 @@ namespace RealmStudio
                 }
             }
             */
+
+            // make sure the bitmap has a 3-pixel white border so that the Moore-neighborhood algorithm doesn't fail
+            // due to image pixels being right at the edges of the bitmap
+            //using Graphics g1 = Graphics.FromImage(invertedBitmap);
+            //using Pen p1 = new(Color.White, 3);
+
+            //g1.DrawLine(p1, new Point(2, 2), new Point(invertedBitmap.Width - 2, 2));
+            //g1.DrawLine(p1, new Point(2, invertedBitmap.Height - 2), new Point(invertedBitmap.Width - 2, invertedBitmap.Height - 2));
+            //g1.DrawLine(p1, new Point(2, 2), new Point(2, invertedBitmap.Height - 2));
+            //g1.DrawLine(p1, new Point(invertedBitmap.Width - 2, 2), new Point(invertedBitmap.Width - 2, invertedBitmap.Height - 2));
+
+            DrawingMethods.FlattenBitmapColors(ref invertedBitmap);
+
+            invertedBitmap.Save("C:\\Users\\Pete Nelson\\OneDrive\\Desktop\\inverted.bmp");
 
             // run Moore meighborhood algorithm to get the perimeter path
             List<SKPoint> contourPoints = DrawingMethods.GetBitmapContourPoints(invertedBitmap);

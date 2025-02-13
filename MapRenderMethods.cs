@@ -65,6 +65,7 @@ namespace RealmStudio
 
             boxLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
             boxLayer.Render(boxLayer.LayerSurface.Canvas);
+            renderCanvas.DrawSurface(boxLayer.LayerSurface, scrollPoint);
         }
 
         internal static void RenderBoxesForExport(RealmStudioMap map, SKCanvas renderCanvas)

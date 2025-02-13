@@ -9,12 +9,12 @@
     <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.40.1199</AssemblyVersion>
-    <FileVersion>1.2025.40.1199</FileVersion>
-    <Version>1.2025.0-alpha-246</Version>
+    <AssemblyVersion>1.2025.42.14051</AssemblyVersion>
+    <FileVersion>1.2025.42.14051</FileVersion>
+    <Version>1.2025.0-alpha-267</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
-    <Copyright>Copyright 2024. Peter R. Nelson</Copyright>
+    <Copyright>Copyright 2025. Peter R. Nelson</Copyright>
     <ApplicationIcon>realm_studio_icon_1024x1024_g3u_icon.ico</ApplicationIcon>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <PackageIcon>Realm Studio Icon 128x128.png</PackageIcon>
@@ -64,12 +64,12 @@
     <PackageReference Include="FontAwesome" Version="4.7.0" />
     <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
     <PackageReference Include="log4net" Version="3.0.3" />
-    <PackageReference Include="ReaLTaiizor" Version="3.7.9.1" />
+    <PackageReference Include="ReaLTaiizor" Version="3.8.1.1" />
     <PackageReference Include="SimplexNoise" Version="2.0.0" />
     <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.116.1" />
     <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.116.1" />
     <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.116.1" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.1" />
   </ItemGroup>
 
   <ItemGroup>

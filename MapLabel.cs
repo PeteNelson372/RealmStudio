@@ -203,13 +203,13 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement> labelColorElem = mapLabelDoc.Descendants(ns + "LabelColor");
-            if (labelColorElem != null && labelColorElem.Count() > 0 && labelColorElem.First() != null)
+            if (labelColorElem != null && labelColorElem.Any() && labelColorElem.First() != null)
             {
                 string? labelColor = mapLabelDoc.Descendants().Select(x => x.Element(ns + "LabelColor").Value).FirstOrDefault();
 
                 int argbValue = 0;
 
-                if (labelColor.StartsWith("#"))
+                if (labelColor.StartsWith('#'))
                 {
                     argbValue = ColorTranslator.FromHtml(labelColor).ToArgb();
                 }
@@ -234,13 +234,13 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement> labelOutlineColorElem = mapLabelDoc.Descendants(ns + "LabelOutlineColor");
-            if (labelOutlineColorElem != null && labelOutlineColorElem.Count() > 0 && labelOutlineColorElem.First() != null)
+            if (labelOutlineColorElem != null && labelOutlineColorElem.Any() && labelOutlineColorElem.First() != null)
             {
                 string? labelOutlineColor = mapLabelDoc.Descendants().Select(x => x.Element(ns + "LabelOutlineColor").Value).FirstOrDefault();
 
                 int argbValue = 0;
 
-                if (labelOutlineColor.StartsWith("#"))
+                if (labelOutlineColor.StartsWith('#'))
                 {
                     argbValue = ColorTranslator.FromHtml(labelOutlineColor).ToArgb();
                 }
@@ -272,13 +272,13 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement> labelGlowColorElem = mapLabelDoc.Descendants(ns + "LabelGlowColor");
-            if (labelGlowColorElem != null && labelGlowColorElem.Count() > 0 && labelGlowColorElem.First() != null)
+            if (labelGlowColorElem != null && labelGlowColorElem.Any() && labelGlowColorElem.First() != null)
             {
                 string? labelGlowColor = mapLabelDoc.Descendants().Select(x => x.Element(ns + "LabelGlowColor").Value).FirstOrDefault();
 
                 int argbValue = 0;
 
-                if (labelGlowColor.StartsWith("#"))
+                if (labelGlowColor.StartsWith('#'))
                 {
                     argbValue = ColorTranslator.FromHtml(labelGlowColor).ToArgb();
                 }
@@ -316,10 +316,7 @@ namespace RealmStudio
                 FontConverter cvt = new();
                 LabelFont = cvt.ConvertFromString(labelFont) as Font;
 
-                if (LabelFont == null)
-                {
-                    LabelFont = new Font("Tahoma", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-                }
+                LabelFont ??= new Font("Tahoma", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             }
 
             IEnumerable<XElement?> labelRotationDegreesElem = mapLabelDoc.Descendants().Select(x => x.Element(ns + "LabelRotationDegrees"));

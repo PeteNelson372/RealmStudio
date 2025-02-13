@@ -120,8 +120,6 @@ namespace RealmStudio
 
         private static string MapCommandLinePath = string.Empty;
 
-        private static readonly SKSurface? RENDER_SURFACE = null;
-
         private static float SELECTED_PATH_ANGLE = -1;
 
         #region Constructor
@@ -979,6 +977,26 @@ namespace RealmStudio
 
         private void CreateDetailMapMenuItem_Click(object sender, EventArgs e)
         {
+            if (!CURRENT_MAP.IsSaved)
+            {
+                DialogResult result =
+                    MessageBox.Show("The map has not been saved. Do you want to save the map?", "Save Map", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+                if (result == DialogResult.Yes)
+                {
+                    DialogResult saveResult = SaveMap();
+
+                    if (saveResult != DialogResult.OK)
+                    {
+                        return;
+                    }
+                }
+                else if (result == DialogResult.Cancel)
+                {
+                    return;
+                }
+            }
+
             RealmStudioMap? detailMap = RealmMapMethods.CreateDetailMap(this, CURRENT_MAP, SELECTED_LANDFORM_AREA);
 
             if (detailMap != null)
@@ -1050,7 +1068,8 @@ namespace RealmStudio
                                 }
                                 else
                                 {
-                                    landformPath.Transform(SKMatrix.CreateScale((float)CURRENT_MAP.MapWidth / b.Width, (float)CURRENT_MAP.MapHeight / b.Height));
+                                    // TODO: scale the landform path to fit the map, maintaining the aspect ratio of the original image
+                                    //landformPath.Transform(SKMatrix.CreateScale((float)CURRENT_MAP.MapWidth / b.Width, (float)CURRENT_MAP.MapHeight / b.Height));
                                 }
 
                                 Landform landform = new()
@@ -1058,6 +1077,10 @@ namespace RealmStudio
                                     ParentMap = CURRENT_MAP,
                                     IsModified = true,
                                     DrawPath = new(landformPath),
+                                    LandformRenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false,
+                                        new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight)),
+                                    CoastlineRenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false,
+                                        new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight))
                                 };
 
                                 if (SELECTED_LANDFORM_AREA != SKRect.Empty)
@@ -1081,6 +1104,10 @@ namespace RealmStudio
                                 SetLandformData(landform);
 
                                 landformLayer.MapLayerComponents.Add(landform);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Failed to trace map outline from " + ofd.FileName, "Map Trace Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                             }
                         }
                         catch (Exception ex)
@@ -3970,13 +3997,11 @@ namespace RealmStudio
                             Height = CURRENT_MAP.MapHeight,
                             IsModified = true,
 
-                            LandformRenderSurface =
-                            SKSurface.Create(SKGLRenderControl.GRContext, false,
-                            new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight)),
+                            LandformRenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false,
+                                new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight)),
 
-                            CoastlineRenderSurface =
-                            SKSurface.Create(SKGLRenderControl.GRContext, false,
-                            new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight))
+                            CoastlineRenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false,
+                                new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight))
                         };
 
                         SetLandformData(CURRENT_LANDFORM);
@@ -5488,7 +5513,7 @@ namespace RealmStudio
 
                         if (erasedLandform != null)
                         {
-                            LandformMethods.EraseLandForm(CURRENT_MAP, erasedLandform);
+                            LandformMethods.EraseLandForm(erasedLandform);
 
                             LandformMethods.MergeLandforms(CURRENT_MAP);
 
@@ -9664,14 +9689,13 @@ namespace RealmStudio
                         };
 
                         SKPaint paint = MapLabelMethods.CreateLabelPaint(labelFont, labelColor, LabelTextAlignEnum.AlignLeft);
-                        SKFont paintFont = paint.ToFont();
+                        SKFont paintFont = new(SKTypeface.FromFamilyName(labelFont.FontFamily.Name), labelFont.SizeInPoints, 1, 0);
 
                         label.LabelPaint = paint;
                         label.LabelSKFont.Dispose();
                         label.LabelSKFont = paintFont;
 
-                        SKRect bounds = new();
-                        paint.MeasureText(label.LabelText, ref bounds);
+                        label.LabelSKFont.MeasureText(label.LabelText, out SKRect bounds, label.LabelPaint);
 
                         SKPoint zoomedScrolledPoint = new((tb.Left / DrawingZoom) + DrawingPoint.X, (tb.Top / DrawingZoom) + DrawingPoint.Y);
 
