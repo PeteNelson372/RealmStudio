@@ -9,16 +9,17 @@
     <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.42.14051</AssemblyVersion>
-    <FileVersion>1.2025.42.14051</FileVersion>
-    <Version>1.2025.0-alpha-267</Version>
+    <AssemblyVersion>1.2025.45.16659</AssemblyVersion>
+    <FileVersion>1.2025.45.16659</FileVersion>
+    <Version>1.2025.0-alpha-323</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025. Peter R. Nelson</Copyright>
     <ApplicationIcon>realm_studio_icon_1024x1024_g3u_icon.ico</ApplicationIcon>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <PackageIcon>Realm Studio Icon 128x128.png</PackageIcon>
-    <SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>  
+    <SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>  
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -53,7 +54,40 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Aladin-Regular.ttf" />
+    <None Remove="Resources\Bilbo-Regular.ttf" />
+    <None Remove="Resources\CinzelDecorative-Regular.ttf" />
+    <None Remove="Resources\EastSeaDokdo-Regular.ttf" />
+    <None Remove="Resources\FrederickatheGreat-Regular.ttf" />
+    <None Remove="Resources\GentiumBookPlus-Bold.ttf" />
+    <None Remove="Resources\Katibeh-Regular.ttf" />
+    <None Remove="Resources\Lancelot-Regular.ttf" />
+    <None Remove="Resources\MarkoOne-Regular.ttf" />
+    <None Remove="Resources\Merriweather-Regular.ttf" />
+    <None Remove="Resources\Metamorphous-Regular.ttf" />
+    <None Remove="Resources\UncialAntiqua-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="realm_studio_icon_1024x1024_g3u_icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\FrederickatheGreat-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Aladin-Regular.ttf" />
+    <EmbeddedResource Include="Resources\Bilbo-Regular.ttf" />
+    <EmbeddedResource Include="Resources\CinzelDecorative-Regular.ttf" />
+    <EmbeddedResource Include="Resources\EastSeaDokdo-Regular.ttf" />
+    <EmbeddedResource Include="Resources\GentiumBookPlus-Bold.ttf" />
+    <EmbeddedResource Include="Resources\Katibeh-Regular.ttf" />
+    <EmbeddedResource Include="Resources\Lancelot-Regular.ttf" />
+    <EmbeddedResource Include="Resources\MarkoOne-Regular.ttf" />
+    <EmbeddedResource Include="Resources\Merriweather-Regular.ttf" />
+    <EmbeddedResource Include="Resources\Metamorphous-Regular.ttf" />
+    <EmbeddedResource Include="Resources\UncialAntiqua-Regular.ttf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -64,6 +98,7 @@
     <PackageReference Include="FontAwesome" Version="4.7.0" />
     <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
     <PackageReference Include="log4net" Version="3.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Services.Client" Version="19.225.1" />
     <PackageReference Include="ReaLTaiizor" Version="3.8.1.1" />
     <PackageReference Include="SimplexNoise" Version="2.0.0" />
     <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.116.1" />

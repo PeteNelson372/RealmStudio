@@ -72,8 +72,23 @@ namespace RealmStudio
             Label.LabelGlowStrength = GlowStrength;
             Label.LabelFont = SelectedFont;
 
-            SKPaint paint = MapLabelMethods.CreateLabelPaint(Label.LabelFont, LabelColor, LabelTextAlignEnum.AlignLeft);
+            SKFontStyle fs = SKFontStyle.Normal;
 
+            if (Label.LabelFont.Bold && Label.LabelFont.Italic)
+            {
+                fs = SKFontStyle.BoldItalic;
+            }
+            else if (Label.LabelFont.Bold)
+            {
+                fs = SKFontStyle.Bold;
+            }
+            else if (Label.LabelFont.Italic)
+            {
+                fs = SKFontStyle.Italic;
+            }
+
+            SKFont paintFont = new(SKTypeface.FromFamilyName(SelectedFont.FontFamily.Name, fs), Label.LabelFont.SizeInPoints, 1, 0);
+            SKPaint paint = MapLabelMethods.CreateLabelPaint(paintFont, Label.LabelFont, LabelColor, LabelTextAlignEnum.AlignLeft);
 
             Label.LabelPaint = paint;
             SKRect bounds = new();
@@ -90,7 +105,23 @@ namespace RealmStudio
             Label.LabelGlowStrength = StoredGlowStrength;
             Label.LabelFont = StoredSelectedFont;
 
-            SKPaint paint = MapLabelMethods.CreateLabelPaint(Label.LabelFont, LabelColor, LabelTextAlignEnum.AlignLeft);
+            SKFontStyle fs = SKFontStyle.Normal;
+
+            if (Label.LabelFont.Bold && Label.LabelFont.Italic)
+            {
+                fs = SKFontStyle.BoldItalic;
+            }
+            else if (Label.LabelFont.Bold)
+            {
+                fs = SKFontStyle.Bold;
+            }
+            else if (Label.LabelFont.Italic)
+            {
+                fs = SKFontStyle.Italic;
+            }
+
+            SKFont paintFont = new(SKTypeface.FromFamilyName(SelectedFont.FontFamily.Name, fs), Label.LabelFont.SizeInPoints, 1, 0);
+            SKPaint paint = MapLabelMethods.CreateLabelPaint(paintFont, Label.LabelFont, LabelColor, LabelTextAlignEnum.AlignLeft);
 
             Label.LabelPaint = paint;
             SKRect bounds = new();

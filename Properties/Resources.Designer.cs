@@ -61,6 +61,36 @@ namespace RealmStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Aladin_Regular {
+            get {
+                object obj = ResourceManager.GetObject("Aladin-Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] BarlowCondensed_Regular {
+            get {
+                object obj = ResourceManager.GetObject("BarlowCondensed-Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Bilbo_Regular {
+            get {
+                object obj = ResourceManager.GetObject("Bilbo-Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap brookmonte_group_logo {
@@ -71,12 +101,52 @@ namespace RealmStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] CinzelDecorative_Regular {
+            get {
+                object obj = ResourceManager.GetObject("CinzelDecorative-Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] EastSeaDokdo_Regular {
+            get {
+                object obj = ResourceManager.GetObject("EastSeaDokdo-Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon Eye_Dropper {
             get {
                 object obj = ResourceManager.GetObject("Eye Dropper", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] FrederickatheGreat_Regular {
+            get {
+                object obj = ResourceManager.GetObject("FrederickatheGreat-Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] GentiumBookPlus_Bold {
+            get {
+                object obj = ResourceManager.GetObject("GentiumBookPlus-Bold", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
@@ -103,9 +173,69 @@ namespace RealmStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] Katibeh_Regular {
+            get {
+                object obj = ResourceManager.GetObject("Katibeh-Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Lancelot_Regular {
+            get {
+                object obj = ResourceManager.GetObject("Lancelot-Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] MarkoOne_Regular {
+            get {
+                object obj = ResourceManager.GetObject("MarkoOne-Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Merriweather_Regular {
+            get {
+                object obj = ResourceManager.GetObject("Merriweather-Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Metamorphous_Regular {
+            get {
+                object obj = ResourceManager.GetObject("Metamorphous-Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] savesound2 {
             get {
                 object obj = ResourceManager.GetObject("savesound2", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] UncialAntiqua_Regular {
+            get {
+                object obj = ResourceManager.GetObject("UncialAntiqua-Regular", resourceCulture);
                 return ((byte[])(obj));
             }
         }

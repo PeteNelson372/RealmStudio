@@ -123,6 +123,8 @@
             label43 = new Label();
             WaterEraserSizeTrack = new TrackBar();
             groupBox7 = new GroupBox();
+            label85 = new Label();
+            EditRiverPointsSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label84 = new Label();
             RiverTextureSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label41 = new Label();
@@ -553,8 +555,6 @@
             SymbolTable = new TableLayoutPanel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
-            label85 = new Label();
-            EditRiverPointsSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -2103,6 +2103,57 @@
             groupBox7.TabIndex = 19;
             groupBox7.TabStop = false;
             groupBox7.Text = "River";
+            // 
+            // label85
+            // 
+            label85.AutoSize = true;
+            label85.BackColor = Color.Transparent;
+            label85.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label85.ForeColor = SystemColors.ControlDarkDark;
+            label85.Location = new Point(51, 126);
+            label85.Name = "label85";
+            label85.Size = new Size(92, 15);
+            label85.TabIndex = 26;
+            label85.Text = "Edit River Points";
+            // 
+            // EditRiverPointsSwitch
+            // 
+            EditRiverPointsSwitch.Alpha = 50;
+            EditRiverPointsSwitch.BackColor = Color.Transparent;
+            EditRiverPointsSwitch.Background = true;
+            EditRiverPointsSwitch.Background_WidthPen = 2F;
+            EditRiverPointsSwitch.BackgroundPen = false;
+            EditRiverPointsSwitch.Checked = false;
+            EditRiverPointsSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            EditRiverPointsSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            EditRiverPointsSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            EditRiverPointsSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            EditRiverPointsSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            EditRiverPointsSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            EditRiverPointsSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            EditRiverPointsSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            EditRiverPointsSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            EditRiverPointsSwitch.ColorValue = Color.ForestGreen;
+            EditRiverPointsSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            EditRiverPointsSwitch.Font = new Font("Arial", 11F);
+            EditRiverPointsSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            EditRiverPointsSwitch.Lighting = true;
+            EditRiverPointsSwitch.LinearGradient_Background = false;
+            EditRiverPointsSwitch.LinearGradient_Value = false;
+            EditRiverPointsSwitch.LinearGradientPen = false;
+            EditRiverPointsSwitch.Location = new Point(4, 121);
+            EditRiverPointsSwitch.Name = "EditRiverPointsSwitch";
+            EditRiverPointsSwitch.PenWidth = 10;
+            EditRiverPointsSwitch.RGB = false;
+            EditRiverPointsSwitch.Rounding = true;
+            EditRiverPointsSwitch.RoundingInt = 90;
+            EditRiverPointsSwitch.Size = new Size(41, 20);
+            EditRiverPointsSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            EditRiverPointsSwitch.TabIndex = 25;
+            EditRiverPointsSwitch.Tag = "Cyber";
+            EditRiverPointsSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            EditRiverPointsSwitch.Timer_RGB = 300;
+            EditRiverPointsSwitch.CheckedChanged += EditRiverPointsSwitch_CheckedChanged;
             // 
             // label84
             // 
@@ -5143,6 +5194,7 @@
             FontFamilyCombo.DrawMode = DrawMode.OwnerDrawFixed;
             FontFamilyCombo.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FontFamilyCombo.Location = new Point(6, 25);
+            FontFamilyCombo.MaxDropDownItems = 20;
             FontFamilyCombo.Name = "FontFamilyCombo";
             FontFamilyCombo.Size = new Size(231, 30);
             FontFamilyCombo.TabIndex = 41;
@@ -8346,57 +8398,6 @@
             materialCheckBox2.Text = "materialCheckBox2";
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
-            // 
-            // label85
-            // 
-            label85.AutoSize = true;
-            label85.BackColor = Color.Transparent;
-            label85.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label85.ForeColor = SystemColors.ControlDarkDark;
-            label85.Location = new Point(51, 126);
-            label85.Name = "label85";
-            label85.Size = new Size(92, 15);
-            label85.TabIndex = 26;
-            label85.Text = "Edit River Points";
-            // 
-            // EditRiverPointsSwitch
-            // 
-            EditRiverPointsSwitch.Alpha = 50;
-            EditRiverPointsSwitch.BackColor = Color.Transparent;
-            EditRiverPointsSwitch.Background = true;
-            EditRiverPointsSwitch.Background_WidthPen = 2F;
-            EditRiverPointsSwitch.BackgroundPen = false;
-            EditRiverPointsSwitch.Checked = false;
-            EditRiverPointsSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            EditRiverPointsSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            EditRiverPointsSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            EditRiverPointsSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            EditRiverPointsSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            EditRiverPointsSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            EditRiverPointsSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            EditRiverPointsSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            EditRiverPointsSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            EditRiverPointsSwitch.ColorValue = Color.ForestGreen;
-            EditRiverPointsSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            EditRiverPointsSwitch.Font = new Font("Arial", 11F);
-            EditRiverPointsSwitch.ForeColor = Color.FromArgb(245, 245, 245);
-            EditRiverPointsSwitch.Lighting = true;
-            EditRiverPointsSwitch.LinearGradient_Background = false;
-            EditRiverPointsSwitch.LinearGradient_Value = false;
-            EditRiverPointsSwitch.LinearGradientPen = false;
-            EditRiverPointsSwitch.Location = new Point(4, 121);
-            EditRiverPointsSwitch.Name = "EditRiverPointsSwitch";
-            EditRiverPointsSwitch.PenWidth = 10;
-            EditRiverPointsSwitch.RGB = false;
-            EditRiverPointsSwitch.Rounding = true;
-            EditRiverPointsSwitch.RoundingInt = 90;
-            EditRiverPointsSwitch.Size = new Size(41, 20);
-            EditRiverPointsSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            EditRiverPointsSwitch.TabIndex = 25;
-            EditRiverPointsSwitch.Tag = "Cyber";
-            EditRiverPointsSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            EditRiverPointsSwitch.Timer_RGB = 300;
-            EditRiverPointsSwitch.CheckedChanged += EditRiverPointsSwitch_CheckedChanged;
             // 
             // RealmStudioMainForm
             // 

@@ -136,4 +136,43 @@
   <data name="savesound2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\savesound2.wav;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="CinzelDecorative-Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CinzelDecorative-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Aladin-Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Aladin-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="BarlowCondensed-Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BarlowCondensed-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Bilbo-Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bilbo-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="EastSeaDokdo-Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EastSeaDokdo-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="FrederickatheGreat-Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FrederickatheGreat-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="GentiumBookPlus-Bold" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GentiumBookPlus-Bold.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Katibeh-Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Katibeh-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Lancelot-Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lancelot-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="MarkoOne-Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MarkoOne-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Merriweather-Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Merriweather-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Metamorphous-Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Metamorphous-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="UncialAntiqua-Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\UncialAntiqua-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

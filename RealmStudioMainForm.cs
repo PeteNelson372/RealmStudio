@@ -27,6 +27,7 @@ using SkiaSharp.Views.Desktop;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using System.Runtime.InteropServices;
 using System.Timers;
 using Control = System.Windows.Forms.Control;
 
@@ -71,6 +72,8 @@ namespace RealmStudio
         private static ColorPaintBrush SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.SoftBrush;
         private static GeneratedLandformTypeEnum SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.NotSet;
         private static SKRect SELECTED_LANDFORM_AREA = SKRect.Empty;
+
+        private static readonly PrivateFontCollection EMBEDDED_FONTS = new();
 
         private static Font SELECTED_LABEL_FONT = new("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
         private static Font SELECTED_MAP_SCALE_FONT = new("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -2744,9 +2747,103 @@ namespace RealmStudio
             }
         }
 
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool DeleteObject(IntPtr hObject);
+
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr SelectObject(IntPtr hdc, IntPtr hgdiObj);
+
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv, ref uint pcFonts);
+
+
+        [DllImport("gdi32", CharSet = CharSet.Ansi)]
+        private static extern int GetOutlineTextMetrics(
+            IntPtr hdc,            // handle to DC
+            int cbData,            // size in bytes for text metrics
+            IntPtr lpOtm         // pointer to buffer to receive outline text metrics structure
+        );
+
+        /// <summary>
+        /// Enumeration of Panose Font Family Types.  These can be used for
+        /// determining the similarity of two fonts or for detecting non-character
+        /// fonts like WingDings.
+        /// </summary>
+        public enum PanoseFontFamilyTypes : int
+        {
+            /// <summary>
+            ///  Any
+            /// </summary>
+            PAN_ANY = 0,
+            /// <summary>
+            /// No Fit
+            /// </summary>
+            PAN_NO_FIT = 1,
+            /// <summary>
+            /// Text and Display
+            /// </summary>
+            PAN_FAMILY_TEXT_DISPLAY = 2,
+            /// <summary>
+            /// Script
+            /// </summary>
+            PAN_FAMILY_SCRIPT = 3,
+            /// <summary>
+            /// Decorative
+            /// </summary>
+            PAN_FAMILY_DECORATIVE = 4,
+            /// <summary>
+            /// Pictorial                      
+            /// </summary>
+            PAN_FAMILY_PICTORIAL = 5
+        }
+
+        /// <summary>
+        /// Gets the <see cref="PanoseFontFamilyTypes"/> for the specified font.
+        /// </summary>
+        /// <param name="graphics">A graphics object to use when detecting the Panose
+        /// family.</param>
+        /// <param name="font">The font to check.</param>
+        /// <returns>The Panose font family type.</returns>
+        public static PanoseFontFamilyTypes PanoseFontFamilyType(
+            Graphics graphics, Font font)
+        {
+            byte bFamilyType = 0;
+
+            IntPtr hdc = graphics.GetHdc();
+            IntPtr hFontOld = SelectObject(hdc, font.ToHfont());
+
+            int bufSize = GetOutlineTextMetrics(hdc, 0, IntPtr.Zero);
+            IntPtr lpOtm = Marshal.AllocCoTaskMem(bufSize);
+            Marshal.WriteInt32(lpOtm, bufSize);
+            int success = GetOutlineTextMetrics(hdc, bufSize, lpOtm);
+            if (success != 0)
+            {
+                int offset = 61;
+                bFamilyType = Marshal.ReadByte(lpOtm, offset);
+            }
+
+            Marshal.FreeCoTaskMem(lpOtm);
+
+            SelectObject(hdc, hFontOld);
+            graphics.ReleaseHdc(hdc);
+
+            return (PanoseFontFamilyTypes)bFamilyType;
+        }
+
         #endregion
 
         #region Font Panel Methods
+
+        private static void AddEmbeddedResourceFont(byte[] fontData)
+        {
+            IntPtr fontPtr = Marshal.AllocCoTaskMem(fontData.Length);
+            Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
+            uint dummy = 0;
+
+            EMBEDDED_FONTS.AddMemoryFont(fontPtr, fontData.Length);
+            AddFontMemResourceEx(fontPtr, (uint)fontData.Length, IntPtr.Zero, ref dummy);
+            Marshal.FreeCoTaskMem(fontPtr);
+        }
 
         private void PopulateFontPanelUI()
         {
@@ -2755,10 +2852,58 @@ namespace RealmStudio
             FontFamilyCombo.DrawItem += FontFamilyCombo_DrawItem;
             FontFamilyCombo.DisplayMember = "Name";
 
+            // add embedded fonts
+            AddEmbeddedResourceFont(Properties.Resources.CinzelDecorative_Regular);
+            AddEmbeddedResourceFont(Properties.Resources.Aladin_Regular);
+            AddEmbeddedResourceFont(Properties.Resources.BarlowCondensed_Regular);
+            AddEmbeddedResourceFont(Properties.Resources.Bilbo_Regular);
+            AddEmbeddedResourceFont(Properties.Resources.EastSeaDokdo_Regular);
+            AddEmbeddedResourceFont(Properties.Resources.FrederickatheGreat_Regular);
+            AddEmbeddedResourceFont(Properties.Resources.GentiumBookPlus_Bold);
+            AddEmbeddedResourceFont(Properties.Resources.Katibeh_Regular);
+            AddEmbeddedResourceFont(Properties.Resources.Lancelot_Regular);
+            AddEmbeddedResourceFont(Properties.Resources.MarkoOne_Regular);
+            AddEmbeddedResourceFont(Properties.Resources.Merriweather_Regular);
+            AddEmbeddedResourceFont(Properties.Resources.Metamorphous_Regular);
+            AddEmbeddedResourceFont(Properties.Resources.UncialAntiqua_Regular);
+
+            Font cinzelDecorativeFont = new(EMBEDDED_FONTS.Families[0], 12.0F);
+            Font aladinFont = new(EMBEDDED_FONTS.Families[1], 12.0F);
+            Font barlowCondensedFont = new(EMBEDDED_FONTS.Families[2], 12.0F);
+            Font bilboFont = new(EMBEDDED_FONTS.Families[3], 12.0F);
+            Font eastSeaDokdoFont = new(EMBEDDED_FONTS.Families[4], 12.0F);
+            Font frederickaFont = new(EMBEDDED_FONTS.Families[5], 12.0F);
+            Font gentiumBookPlusFont = new(EMBEDDED_FONTS.Families[6], 12.0F);
+            Font katibehFont = new(EMBEDDED_FONTS.Families[7], 12.0F);
+            Font lancelotFont = new(EMBEDDED_FONTS.Families[8], 12.0F);
+            Font markoOneFont = new(EMBEDDED_FONTS.Families[9], 12.0F);
+            Font merriweatherFont = new(EMBEDDED_FONTS.Families[10], 12.0F);
+            Font metamorphousFont = new(EMBEDDED_FONTS.Families[11], 12.0F);
+            Font uncialAntiquaFont = new(EMBEDDED_FONTS.Families[12], 12.0F);
+
+            FontFamilyCombo.Items.Add(cinzelDecorativeFont);
+            FontFamilyCombo.Items.Add(aladinFont);
+            FontFamilyCombo.Items.Add(barlowCondensedFont);
+            FontFamilyCombo.Items.Add(bilboFont);
+            FontFamilyCombo.Items.Add(eastSeaDokdoFont);
+            FontFamilyCombo.Items.Add(frederickaFont);
+            FontFamilyCombo.Items.Add(gentiumBookPlusFont);
+            FontFamilyCombo.Items.Add(katibehFont);
+            FontFamilyCombo.Items.Add(lancelotFont);
+            FontFamilyCombo.Items.Add(markoOneFont);
+            FontFamilyCombo.Items.Add(merriweatherFont);
+            FontFamilyCombo.Items.Add(metamorphousFont);
+            FontFamilyCombo.Items.Add(uncialAntiquaFont);
+
             // Get the array of FontFamily objects.
-            foreach (var t in installedFontCollection.Families.Where(t => t.IsStyleAvailable(FontStyle.Regular)))
+            foreach (FontFamily t in installedFontCollection.Families.Where(t => t.IsStyleAvailable(FontStyle.Regular) && t.IsStyleAvailable(FontStyle.Underline) && t.IsStyleAvailable(FontStyle.Italic) && t.IsStyleAvailable(FontStyle.Bold)))
             {
-                FontFamilyCombo.Items.Add(new Font(t, 12));
+                bool allowedName = t.Name.All((c => Char.IsLetterOrDigit(c) || c == '_' || c == ' '));
+                if (allowedName && t.Name != "Sans Serif Collection")
+                {
+                    Font f = new(t, 12, FontStyle.Regular, GraphicsUnit.Point);
+                    FontFamilyCombo.Items.Add(f);
+                }
             }
 
             int fontIndex = 0;
@@ -2837,9 +2982,6 @@ namespace RealmStudio
             ExampleTextLabel.Text = "The quick brown fox";
         }
 
-        #endregion
-
-        #region Font Panel Event Handlers
 
         private void FontFamilyCombo_DrawItem(object? sender, DrawItemEventArgs e)
         {
@@ -2852,7 +2994,24 @@ namespace RealmStudio
                 if (font != null)
                 {
                     e.DrawBackground();
-                    e.Graphics.DrawString(font.Name, font, Brushes.Black, e.Bounds.X, e.Bounds.Y);
+
+                    PanoseFontFamilyTypes familyType = PanoseFontFamilyType(e.Graphics, font);
+
+                    //Debug.WriteLine("FAMILY TYPE: " + familyType);
+
+                    if (familyType == PanoseFontFamilyTypes.PAN_FAMILY_DECORATIVE
+                        || familyType == PanoseFontFamilyTypes.PAN_FAMILY_PICTORIAL
+                        || familyType == PanoseFontFamilyTypes.PAN_NO_FIT
+                        || font.Name == "Marlett")
+                    {
+                        Font f = new("Segoe UI", 12, FontStyle.Regular, GraphicsUnit.Point);
+                        e.Graphics.DrawString(font.Name, f, Brushes.Black, e.Bounds.X, e.Bounds.Y, StringFormat.GenericTypographic);
+
+                    }
+                    else
+                    {
+                        e.Graphics.DrawString(font.Name, font, Brushes.Black, e.Bounds.X, e.Bounds.Y, StringFormat.GenericTypographic);
+                    }
                 }
             }
         }
@@ -9190,7 +9349,7 @@ namespace RealmStudio
             }
 
 #pragma warning restore CS8604 // Possible null reference argument.
-            List<string> selectedTags = SymbolTagsListBox.CheckedItems.Cast<string>().ToList();
+            List<string> selectedTags = [.. SymbolTagsListBox.CheckedItems.Cast<string>()];
             List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SymbolMethods.SELECTED_SYMBOL_TYPE, checkedCollections, selectedTags);
             AddSymbolsToSymbolTable(filteredSymbols);
         }
@@ -9214,7 +9373,7 @@ namespace RealmStudio
             }
 
 #pragma warning restore CS8604 // Possible null reference argument.
-            List<string> selectedCollections = SymbolCollectionsListBox.CheckedItems.Cast<string>().ToList();
+            List<string> selectedCollections = [.. SymbolCollectionsListBox.CheckedItems.Cast<string>()];
             List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SymbolMethods.SELECTED_SYMBOL_TYPE, selectedCollections, checkedTags);
             AddSymbolsToSymbolTable(filteredSymbols);
         }
@@ -9225,16 +9384,16 @@ namespace RealmStudio
 
             if (SymbolSearchTextBox.Text.Length > 2)
             {
-                List<string> selectedCollections = SymbolCollectionsListBox.CheckedItems.Cast<string>().ToList();
-                List<string> selectedTags = SymbolTagsListBox.CheckedItems.Cast<string>().ToList();
+                List<string> selectedCollections = [.. SymbolCollectionsListBox.CheckedItems.Cast<string>()];
+                List<string> selectedTags = [.. SymbolTagsListBox.CheckedItems.Cast<string>()];
                 List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SymbolMethods.SELECTED_SYMBOL_TYPE, selectedCollections, selectedTags, SymbolSearchTextBox.Text);
 
                 AddSymbolsToSymbolTable(filteredSymbols);
             }
             else if (SymbolSearchTextBox.Text.Length == 0)
             {
-                List<string> selectedCollections = SymbolCollectionsListBox.CheckedItems.Cast<string>().ToList();
-                List<string> selectedTags = SymbolTagsListBox.CheckedItems.Cast<string>().ToList();
+                List<string> selectedCollections = [.. SymbolCollectionsListBox.CheckedItems.Cast<string>()];
+                List<string> selectedTags = [.. SymbolTagsListBox.CheckedItems.Cast<string>()];
                 List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SymbolMethods.SELECTED_SYMBOL_TYPE, selectedCollections, selectedTags);
 
                 AddSymbolsToSymbolTable(filteredSymbols);
@@ -9255,8 +9414,8 @@ namespace RealmStudio
         #region Symbol Tab Methods
         private List<MapSymbol> GetFilteredMapSymbols()
         {
-            List<string> selectedCollections = SymbolCollectionsListBox.CheckedItems.Cast<string>().ToList();
-            List<string> selectedTags = SymbolTagsListBox.CheckedItems.Cast<string>().ToList();
+            List<string> selectedCollections = [.. SymbolCollectionsListBox.CheckedItems.Cast<string>()];
+            List<string> selectedTags = [.. SymbolTagsListBox.CheckedItems.Cast<string>()];
             List<MapSymbol> filteredSymbols = SymbolMethods.GetFilteredSymbolList(SymbolMethods.SELECTED_SYMBOL_TYPE, selectedCollections, selectedTags);
 
             return filteredSymbols;
@@ -9688,8 +9847,23 @@ namespace RealmStudio
                             LabelRotationDegrees = labelRotationDegrees,
                         };
 
-                        SKPaint paint = MapLabelMethods.CreateLabelPaint(labelFont, labelColor, LabelTextAlignEnum.AlignLeft);
-                        SKFont paintFont = new(SKTypeface.FromFamilyName(labelFont.FontFamily.Name), labelFont.SizeInPoints, 1, 0);
+                        SKFontStyle fs = SKFontStyle.Normal;
+
+                        if (labelFont.Bold && labelFont.Italic)
+                        {
+                            fs = SKFontStyle.BoldItalic;
+                        }
+                        else if (labelFont.Bold)
+                        {
+                            fs = SKFontStyle.Bold;
+                        }
+                        else if (labelFont.Italic)
+                        {
+                            fs = SKFontStyle.Italic;
+                        }
+
+                        SKFont paintFont = new(SKTypeface.FromFamilyName(labelFont.FontFamily.Name, fs), labelFont.SizeInPoints, 1, 0);
+                        SKPaint paint = MapLabelMethods.CreateLabelPaint(paintFont, labelFont, labelColor, LabelTextAlignEnum.AlignLeft);
 
                         label.LabelPaint = paint;
                         label.LabelSKFont.Dispose();
@@ -9752,11 +9926,26 @@ namespace RealmStudio
                         tb.Text = tb.Text["...Label...".Length..];
                     }
 
-                    SKPaint paint = MapLabelMethods.CreateLabelPaint(labelFont, labelColor, LabelTextAlignEnum.AlignLeft);
-                    SKRect bounds = new();
+                    SKFontStyle fs = SKFontStyle.Normal;
 
-                    paint.MeasureText(tb.Text, ref bounds);
-                    int tbWidth = (int)Math.Max(bounds.Width, tb.Width);
+                    if (labelFont.Bold && labelFont.Italic)
+                    {
+                        fs = SKFontStyle.BoldItalic;
+                    }
+                    else if (labelFont.Bold)
+                    {
+                        fs = SKFontStyle.Bold;
+                    }
+                    else if (labelFont.Italic)
+                    {
+                        fs = SKFontStyle.Italic;
+                    }
+
+                    SKFont paintFont = new(SKTypeface.FromFamilyName(labelFont.Name, fs), labelFont.SizeInPoints, 1, 0);
+                    SKPaint labelPaint = MapLabelMethods.CreateLabelPaint(paintFont, labelFont, labelColor, LabelTextAlignEnum.AlignLeft);
+
+                    float lblWidth = paintFont.MeasureText(tb.Text, labelPaint);
+                    int tbWidth = (int)Math.Max(lblWidth, tb.Width);
                     tb.Width = tbWidth;
 
                     SKGLRenderControl.Refresh();

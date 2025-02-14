@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutRealmStudio));
             AboutRealmStudioOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            HelpFileLinkLabel = new LinkLabel();
             RealmStudioSupportLink = new LinkLabel();
             ReleaseNotesLink = new LinkLabel();
             GPL3LicensePictureBox = new PictureBox();
@@ -46,7 +47,6 @@
             AboutOkButton = new Button();
             pictureBox2 = new PictureBox();
             pictureBox1 = new PictureBox();
-            HelpFileLinkLabel = new LinkLabel();
             AboutRealmStudioOverlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)GPL3LicensePictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)GithubPictureBox).BeginInit();
@@ -94,6 +94,17 @@
             AboutRealmStudioOverlay.TabIndex = 0;
             AboutRealmStudioOverlay.Text = "About Realm Studio";
             AboutRealmStudioOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // HelpFileLinkLabel
+            // 
+            HelpFileLinkLabel.AutoSize = true;
+            HelpFileLinkLabel.Location = new Point(23, 476);
+            HelpFileLinkLabel.Name = "HelpFileLinkLabel";
+            HelpFileLinkLabel.Size = new Size(158, 15);
+            HelpFileLinkLabel.TabIndex = 17;
+            HelpFileLinkLabel.TabStop = true;
+            HelpFileLinkLabel.Text = "Open Realm Studio Help File";
+            HelpFileLinkLabel.LinkClicked += HelpFileLinkLabel_LinkClicked;
             // 
             // RealmStudioSupportLink
             // 
@@ -220,7 +231,7 @@
             label3.Name = "label3";
             label3.Size = new Size(402, 21);
             label3.TabIndex = 6;
-            label3.Text = "Copyright © 2024 Peter R. Nelson. All rights reserved.";
+            label3.Text = "Copyright © 2025 Peter R. Nelson. All rights reserved.";
             // 
             // RealmStudioVersionLabel
             // 
@@ -272,17 +283,6 @@
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
-            // 
-            // HelpFileLinkLabel
-            // 
-            HelpFileLinkLabel.AutoSize = true;
-            HelpFileLinkLabel.Location = new Point(23, 476);
-            HelpFileLinkLabel.Name = "HelpFileLinkLabel";
-            HelpFileLinkLabel.Size = new Size(158, 15);
-            HelpFileLinkLabel.TabIndex = 17;
-            HelpFileLinkLabel.TabStop = true;
-            HelpFileLinkLabel.Text = "Open Realm Studio Help File";
-            HelpFileLinkLabel.LinkClicked += HelpFileLinkLabel_LinkClicked;
             // 
             // AboutRealmStudio
             // 

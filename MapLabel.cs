@@ -333,10 +333,25 @@ namespace RealmStudio
                 LabelPath = SKPath.ParseSvgPathData(labelPath);
             }
 
-            SKPaint paint = MapLabelMethods.CreateLabelPaint(LabelFont, LabelColor, LabelTextAlignEnum.AlignLeft);
-            SKFont paintFont = paint.ToFont();
+            SKFontStyle fs = SKFontStyle.Normal;
 
-            LabelPaint = paint;
+            if (LabelFont.Bold && LabelFont.Italic)
+            {
+                fs = SKFontStyle.BoldItalic;
+            }
+            else if (LabelFont.Bold)
+            {
+                fs = SKFontStyle.Bold;
+            }
+            else if (LabelFont.Italic)
+            {
+                fs = SKFontStyle.Italic;
+            }
+
+            SKFont paintFont = new(SKTypeface.FromFamilyName(LabelFont.Name, fs), LabelFont.SizeInPoints, 1, 0);
+            SKPaint labelPaint = MapLabelMethods.CreateLabelPaint(paintFont, LabelFont, LabelColor, LabelTextAlignEnum.AlignLeft);
+
+            LabelPaint = labelPaint;
             LabelSKFont?.Dispose();
             LabelSKFont = paintFont;
 

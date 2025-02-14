@@ -28,7 +28,7 @@ namespace RealmStudio
 {
     internal class MapLabelMethods
     {
-        internal static SKPaint CreateLabelPaint(Font labelFont, Color labelColor, LabelTextAlignEnum labelAlignment)
+        internal static SKPaint CreateLabelPaint(SKFont skLabelFont, Font labelFont, Color labelColor, LabelTextAlignEnum labelAlignment)
         {
             SKPaint paint = new()
             {
@@ -49,22 +49,8 @@ namespace RealmStudio
                     break;
             }
 
-            SKFontStyle fs = SKFontStyle.Normal;
+            paint.Typeface = skLabelFont.Typeface;
 
-            if (labelFont.Bold && labelFont.Italic)
-            {
-                fs = SKFontStyle.BoldItalic;
-            }
-            else if (labelFont.Bold)
-            {
-                fs = SKFontStyle.Bold;
-            }
-            else if (labelFont.Italic)
-            {
-                fs = SKFontStyle.Italic;
-            }
-
-            paint.Typeface = SKFontManager.Default.MatchFamily(labelFont.Name, fs);
             paint.IsAntialias = true;
 
             return paint;

@@ -639,7 +639,24 @@ namespace RealmStudio
 
                     newLabel.LabelFont = labelFont;
 
-                    SKPaint labelPaint = MapLabelMethods.CreateLabelPaint(labelFont, newLabel.LabelColor, LabelTextAlignEnum.AlignLeft);
+                    SKFontStyle fs = SKFontStyle.Normal;
+
+                    if (newLabel.LabelFont.Bold && newLabel.LabelFont.Italic)
+                    {
+                        fs = SKFontStyle.BoldItalic;
+                    }
+                    else if (newLabel.LabelFont.Bold)
+                    {
+                        fs = SKFontStyle.Bold;
+                    }
+                    else if (newLabel.LabelFont.Italic)
+                    {
+                        fs = SKFontStyle.Italic;
+                    }
+
+                    SKFont paintFont = new(SKTypeface.FromFamilyName(labelFont.Name, fs), labelFont.SizeInPoints, 1, 0);
+                    SKPaint labelPaint = MapLabelMethods.CreateLabelPaint(paintFont, labelFont, ml.LabelColor, LabelTextAlignEnum.AlignLeft);
+
                     newLabel.LabelPaint = labelPaint;
 
                     if (ml.LabelPath != null)
