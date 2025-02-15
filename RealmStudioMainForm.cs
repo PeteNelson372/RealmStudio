@@ -27,6 +27,7 @@ using SkiaSharp.Views.Desktop;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Timers;
 using Control = System.Windows.Forms.Control;
@@ -2901,8 +2902,14 @@ namespace RealmStudio
                 bool allowedName = t.Name.All((c => Char.IsLetterOrDigit(c) || c == '_' || c == ' '));
                 if (allowedName && t.Name != "Sans Serif Collection")
                 {
-                    Font f = new(t, 12, FontStyle.Regular, GraphicsUnit.Point);
-                    FontFamilyCombo.Items.Add(f);
+                    // limit the list of fonts that can be used to those that Skia can render
+                    string fontTypefaceFamily = SKTypeface.FromFamilyName(t.Name).FamilyName;
+
+                    if (fontTypefaceFamily == t.Name)
+                    {
+                        Font f = new(t, 12, FontStyle.Regular, GraphicsUnit.Point);
+                        FontFamilyCombo.Items.Add(f);
+                    }
                 }
             }
 
@@ -9787,6 +9794,8 @@ namespace RealmStudio
 
         #region Label Tab Methods
 
+
+
         private void LabelTextBox_KeyPress(object? sender, EventArgs e)
         {
             if (sender != null)
@@ -9847,27 +9856,12 @@ namespace RealmStudio
                             LabelRotationDegrees = labelRotationDegrees,
                         };
 
-                        SKFontStyle fs = SKFontStyle.Normal;
-
-                        if (labelFont.Bold && labelFont.Italic)
-                        {
-                            fs = SKFontStyle.BoldItalic;
-                        }
-                        else if (labelFont.Bold)
-                        {
-                            fs = SKFontStyle.Bold;
-                        }
-                        else if (labelFont.Italic)
-                        {
-                            fs = SKFontStyle.Italic;
-                        }
-
-                        SKFont paintFont = new(SKTypeface.FromFamilyName(labelFont.FontFamily.Name, fs), labelFont.SizeInPoints, 1, 0);
-                        SKPaint paint = MapLabelMethods.CreateLabelPaint(paintFont, labelFont, labelColor, LabelTextAlignEnum.AlignLeft);
+                        SKFont skLabelFont = MapLabelMethods.GetSkLabelFont(labelFont);
+                        SKPaint paint = MapLabelMethods.CreateLabelPaint(skLabelFont, labelFont, labelColor, LabelTextAlignEnum.AlignLeft);
 
                         label.LabelPaint = paint;
                         label.LabelSKFont.Dispose();
-                        label.LabelSKFont = paintFont;
+                        label.LabelSKFont = skLabelFont;
 
                         label.LabelSKFont.MeasureText(label.LabelText, out SKRect bounds, label.LabelPaint);
 
@@ -9941,7 +9935,22 @@ namespace RealmStudio
                         fs = SKFontStyle.Italic;
                     }
 
-                    SKFont paintFont = new(SKTypeface.FromFamilyName(labelFont.Name, fs), labelFont.SizeInPoints, 1, 0);
+                    List<string> resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
+
+                    SKTypeface? fontTypeface = null;
+
+                    foreach (string resourceName in resourceNames)
+                    {
+                        if (resourceName.Contains(labelFont.FontFamily.Name))
+                        {
+                            fontTypeface = SKTypeface.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName));
+                            break;
+                        }
+                    }
+
+                    fontTypeface ??= SKTypeface.FromFamilyName(labelFont.FontFamily.Name, fs);
+
+                    SKFont paintFont = new(fontTypeface, labelFont.SizeInPoints, 1, 0);
                     SKPaint labelPaint = MapLabelMethods.CreateLabelPaint(paintFont, labelFont, labelColor, LabelTextAlignEnum.AlignLeft);
 
                     float lblWidth = paintFont.MeasureText(tb.Text, labelPaint);

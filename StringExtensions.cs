@@ -21,6 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using System.Text.RegularExpressions;
+
 namespace RealmStudio
 {
     public static class StringExtensions
@@ -45,6 +47,34 @@ namespace RealmStudio
             }
 
             return result;
+        }
+
+        public static string FindBestMatch(string stringToCompare, IEnumerable<string> strs)
+        {
+            HashSet<string> strCompareHash = [.. SplitCamelCase(stringToCompare).Split(' ')];
+
+            int maxIntersectCount = 0;
+            string bestMatch = string.Empty;
+
+            foreach (string str in strs)
+            {
+                HashSet<string> strHash = [.. SplitCamelCase(str).Split(" ")];
+
+                int intersectCount = strCompareHash.Intersect(strHash).Count();
+
+                if (intersectCount > maxIntersectCount)
+                {
+                    maxIntersectCount = intersectCount;
+                    bestMatch = str;
+                }
+            }
+
+            return bestMatch;
+        }
+
+        public static string SplitCamelCase(string str)
+        {
+            return Regex.Replace(Regex.Replace(str, @"(\P{Ll})(\P{Ll}\p{Ll})", "$1 $2"), @"(\p{Ll})(\P{Ll})", "$1 $2");
         }
     }
 }

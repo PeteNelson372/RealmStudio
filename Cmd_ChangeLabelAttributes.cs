@@ -72,27 +72,14 @@ namespace RealmStudio
             Label.LabelGlowStrength = GlowStrength;
             Label.LabelFont = SelectedFont;
 
-            SKFontStyle fs = SKFontStyle.Normal;
+            SKFont skLabelFont = MapLabelMethods.GetSkLabelFont(Label.LabelFont);
+            SKPaint paint = MapLabelMethods.CreateLabelPaint(skLabelFont, Label.LabelFont, Label.LabelColor, LabelTextAlignEnum.AlignLeft);
 
-            if (Label.LabelFont.Bold && Label.LabelFont.Italic)
-            {
-                fs = SKFontStyle.BoldItalic;
-            }
-            else if (Label.LabelFont.Bold)
-            {
-                fs = SKFontStyle.Bold;
-            }
-            else if (Label.LabelFont.Italic)
-            {
-                fs = SKFontStyle.Italic;
-            }
-
-            SKFont paintFont = new(SKTypeface.FromFamilyName(SelectedFont.FontFamily.Name, fs), Label.LabelFont.SizeInPoints, 1, 0);
-            SKPaint paint = MapLabelMethods.CreateLabelPaint(paintFont, Label.LabelFont, LabelColor, LabelTextAlignEnum.AlignLeft);
-
+            Label.LabelSKFont.Dispose();
+            Label.LabelSKFont = skLabelFont;
             Label.LabelPaint = paint;
-            SKRect bounds = new();
-            Label.Width = (int)paint.MeasureText(Label.LabelText, ref bounds);
+
+            Label.Width = (int)skLabelFont.MeasureText(Label.LabelText.AsSpan(), out SKRect bounds, paint);
             Label.Height = (int)bounds.Height;
         }
 
@@ -105,27 +92,14 @@ namespace RealmStudio
             Label.LabelGlowStrength = StoredGlowStrength;
             Label.LabelFont = StoredSelectedFont;
 
-            SKFontStyle fs = SKFontStyle.Normal;
+            SKFont skLabelFont = MapLabelMethods.GetSkLabelFont(Label.LabelFont);
+            SKPaint paint = MapLabelMethods.CreateLabelPaint(skLabelFont, Label.LabelFont, Label.LabelColor, LabelTextAlignEnum.AlignLeft);
 
-            if (Label.LabelFont.Bold && Label.LabelFont.Italic)
-            {
-                fs = SKFontStyle.BoldItalic;
-            }
-            else if (Label.LabelFont.Bold)
-            {
-                fs = SKFontStyle.Bold;
-            }
-            else if (Label.LabelFont.Italic)
-            {
-                fs = SKFontStyle.Italic;
-            }
-
-            SKFont paintFont = new(SKTypeface.FromFamilyName(SelectedFont.FontFamily.Name, fs), Label.LabelFont.SizeInPoints, 1, 0);
-            SKPaint paint = MapLabelMethods.CreateLabelPaint(paintFont, Label.LabelFont, LabelColor, LabelTextAlignEnum.AlignLeft);
-
+            Label.LabelSKFont.Dispose();
+            Label.LabelSKFont = skLabelFont;
             Label.LabelPaint = paint;
-            SKRect bounds = new();
-            Label.Width = (int)paint.MeasureText(Label.LabelText, ref bounds);
+
+            Label.Width = (int)skLabelFont.MeasureText(Label.LabelText.AsSpan(), out SKRect bounds, paint);
             Label.Height = (int)bounds.Height;
         }
     }

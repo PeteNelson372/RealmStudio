@@ -77,7 +77,7 @@ namespace RealmStudio
                             using SKPaint glowPaint = LabelPaint.Clone();
                             glowPaint.Color = LabelGlowColor.ToSKColor();
                             glowPaint.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Solid, LabelGlowStrength, true);
-                            canvas.DrawText(LabelText, point, glowPaint);
+                            canvas.DrawText(LabelText, point, SKTextAlign.Left, LabelSKFont, glowPaint);
                         }
 
                         if (LabelOutlineWidth > 0)
@@ -85,11 +85,11 @@ namespace RealmStudio
                             using SKPaint outlinePaint = LabelPaint.Clone();
                             outlinePaint.Color = LabelOutlineColor.ToSKColor();
                             outlinePaint.ImageFilter = SKImageFilter.CreateDilate(LabelOutlineWidth, LabelOutlineWidth);
-                            canvas.DrawText(LabelText, point, outlinePaint);
+                            canvas.DrawText(LabelText, point, SKTextAlign.Left, LabelSKFont, outlinePaint);
                         }
 
                         // draw the text
-                        canvas.DrawText(LabelText, point, LabelPaint);
+                        canvas.DrawText(LabelText, point, SKTextAlign.Left, LabelSKFont, LabelPaint);
 
                         if (IsSelected)
                         {
@@ -104,7 +104,7 @@ namespace RealmStudio
                     // auto restore, even on exceptions or errors
                     using (new SKAutoCanvasRestore(canvas))
                     {
-                        using SKTextBlob sKTextBlob = SKTextBlob.CreatePathPositioned(LabelText, LabelSKFont, LabelPath, LabelPaint.TextAlign, new SKPoint(0, 0));
+                        using SKTextBlob? sKTextBlob = SKTextBlob.CreatePathPositioned(LabelText, LabelSKFont, LabelPath, LabelPaint.TextAlign, new SKPoint(0, 0));
                         if (sKTextBlob != null)
                         {
                             SKRect boundsRect = sKTextBlob.Bounds;
@@ -117,14 +117,13 @@ namespace RealmStudio
                             // do any transformations
                             canvas.RotateDegrees(LabelRotationDegrees, X + Width / 2, Y + Height / 2);
 
-                            LabelPaint.TextAlign = SKTextAlign.Left;
-
                             if (LabelGlowStrength > 0)
                             {
                                 using SKPaint glowPaint = LabelPaint.Clone();
                                 glowPaint.Color = LabelGlowColor.ToSKColor();
                                 glowPaint.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Outer, LabelGlowStrength, true);
-                                canvas.DrawTextOnPath(LabelText, LabelPath, new SKPoint(0, 0), false, glowPaint);
+
+                                canvas.DrawTextOnPath(LabelText, LabelPath, new SKPoint(0, 0), false, SKTextAlign.Left, LabelSKFont, glowPaint);
                             }
 
                             if (LabelOutlineWidth > 0)
@@ -132,11 +131,12 @@ namespace RealmStudio
                                 using SKPaint outlinePaint = LabelPaint.Clone();
                                 outlinePaint.Color = LabelOutlineColor.ToSKColor();
                                 outlinePaint.ImageFilter = SKImageFilter.CreateDilate(LabelOutlineWidth, LabelOutlineWidth);
-                                canvas.DrawTextOnPath(LabelText, LabelPath, new SKPoint(0, 0), false, outlinePaint);
+
+                                canvas.DrawTextOnPath(LabelText, LabelPath, new SKPoint(0, 0), false, SKTextAlign.Left, LabelSKFont, outlinePaint);
                             }
 
                             // draw the text
-                            canvas.DrawTextOnPath(LabelText, LabelPath, new SKPoint(0, 0), false, LabelPaint);
+                            canvas.DrawTextOnPath(LabelText, LabelPath, new SKPoint(0, 0), false, SKTextAlign.Left, LabelSKFont, LabelPaint);
 
                             if (IsSelected)
                             {
@@ -333,27 +333,12 @@ namespace RealmStudio
                 LabelPath = SKPath.ParseSvgPathData(labelPath);
             }
 
-            SKFontStyle fs = SKFontStyle.Normal;
+            SKFont skLabelFont = MapLabelMethods.GetSkLabelFont(LabelFont);
+            SKPaint paint = MapLabelMethods.CreateLabelPaint(skLabelFont, LabelFont, LabelColor, LabelTextAlignEnum.AlignLeft);
 
-            if (LabelFont.Bold && LabelFont.Italic)
-            {
-                fs = SKFontStyle.BoldItalic;
-            }
-            else if (LabelFont.Bold)
-            {
-                fs = SKFontStyle.Bold;
-            }
-            else if (LabelFont.Italic)
-            {
-                fs = SKFontStyle.Italic;
-            }
-
-            SKFont paintFont = new(SKTypeface.FromFamilyName(LabelFont.Name, fs), LabelFont.SizeInPoints, 1, 0);
-            SKPaint labelPaint = MapLabelMethods.CreateLabelPaint(paintFont, LabelFont, LabelColor, LabelTextAlignEnum.AlignLeft);
-
-            LabelPaint = labelPaint;
-            LabelSKFont?.Dispose();
-            LabelSKFont = paintFont;
+            LabelPaint = paint;
+            LabelSKFont.Dispose();
+            LabelSKFont = skLabelFont;
 
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8604 // Possible null reference argument.

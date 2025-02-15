@@ -23,6 +23,7 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using System.Reflection;
 
 namespace RealmStudio
 {
@@ -33,7 +34,6 @@ namespace RealmStudio
             SKPaint paint = new()
             {
                 Color = Extensions.ToSKColor(labelColor),
-                TextSize = labelFont.Size * 1.33F,
             };
 
             switch (labelAlignment)
@@ -54,6 +54,51 @@ namespace RealmStudio
             paint.IsAntialias = true;
 
             return paint;
+        }
+
+        internal static SKFont GetSkLabelFont(Font labelFont)
+        {
+            List<string> resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
+
+            SKFontStyle fs = SKFontStyle.Normal;
+
+            if (labelFont.Bold && labelFont.Italic)
+            {
+                fs = SKFontStyle.BoldItalic;
+            }
+            else if (labelFont.Bold)
+            {
+                fs = SKFontStyle.Bold;
+            }
+            else if (labelFont.Italic)
+            {
+                fs = SKFontStyle.Italic;
+            }
+
+            SKTypeface? fontTypeface = null;
+
+            string fontName = StringExtensions.FindBestMatch(labelFont.FontFamily.Name, resourceNames);
+
+            if (!string.IsNullOrEmpty(fontName))
+            {
+                fontTypeface = SKTypeface.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(fontName));
+            }
+            else
+            {
+                fontTypeface = SKTypeface.FromFamilyName(labelFont.FontFamily.Name, fs);
+
+                if (fontTypeface == SKTypeface.Default)
+                {
+                    fontTypeface = SKTypeface.FromFamilyName(labelFont.FontFamily.Name);
+                }
+            }
+
+            SKFont skLabelFont = new(fontTypeface)
+            {
+                Size = labelFont.Size * 1.33F
+            };
+
+            return skLabelFont;
         }
     }
 }
