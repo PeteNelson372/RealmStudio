@@ -240,7 +240,7 @@ namespace RealmStudio
                 if (!Erase)
                 {
                     canvas.DrawSurface(RenderSurface, new SKPoint(0, 0));
-                    //Rendered = true;
+                    Rendered = true;
                 }
             }
         }

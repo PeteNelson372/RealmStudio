@@ -25,8 +25,10 @@ using RealmStudio.Properties;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using System.IO.Compression;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Timers;
@@ -687,6 +689,578 @@ namespace RealmStudio
 
         #endregion
 
+        #region Main Form Methods
+
+        private void ExportMapAsImage(MapExportFormatEnum exportFormat, bool upscale = false)
+        {
+            SaveFileDialog ofd = new()
+            {
+                Title = "Export Map",
+                DefaultExt = exportFormat.ToString().ToLower(),
+                RestoreDirectory = true,
+                ShowHelp = true,
+                Filter = "",
+                AddExtension = true,
+                CheckPathExists = true,
+                ShowHiddenFiles = false,
+                ValidateNames = true,
+            };
+
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+            string sep = string.Empty;
+            foreach (ImageCodecInfo c in codecs)
+            {
+                if (c.CodecName != null && c.FilenameExtension != null)
+                {
+                    string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
+                    ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLower());
+                    sep = "|";
+                }
+            }
+
+            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
+
+            int filterIndex = 0;
+
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
+            for (int i = 0; i < codecs.Length; i++)
+            {
+                if (codecs[i].FilenameExtension != null)
+                {
+                    if (codecs[i].FilenameExtension.Contains(exportFormat.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        filterIndex = i + 1;
+                        break;
+                    }
+                }
+            }
+
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+            ofd.FilterIndex = filterIndex;
+
+            DialogResult result = ofd.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string filename = ofd.FileName;
+                try
+                {
+                    StopAutosaveTimer();
+                    StopBrushTimer();
+                    StopLocationUpdateTimer();
+                    StopSymbolAreaBrushTimer();
+
+                    SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+                    s.Canvas.Clear();
+
+                    RenderMapForExport(s.Canvas);
+
+                    Bitmap bitmap = s.Snapshot().ToBitmap();
+
+                    if (upscale)
+                    {
+                        Bitmap upscaledBitmap = new(bitmap.Width * 2, bitmap.Height * 2);
+                        using (Graphics g = Graphics.FromImage(upscaledBitmap))
+                        {
+                            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                            g.DrawImage(bitmap, 0, 0, bitmap.Width * 2, bitmap.Height * 2);
+                        }
+                        bitmap = upscaledBitmap;
+                    }
+
+                    bitmap.Save(filename);
+
+                    StartAutosaveTimer();
+                    StartLocationUpdateTimer();
+                    MessageBox.Show("Map exported to " + ofd.FileName, "Map Exported", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+                catch (Exception ex)
+                {
+                    Program.LOGGER.Error(ex);
+                    MessageBox.Show("Failed to export map to " + ofd.FileName, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+            }
+        }
+
+        private void ExportMapAsLayers(MapExportFormatEnum exportFormat)
+        {
+            SaveFileDialog ofd = new()
+            {
+                Title = "Export Map",
+                DefaultExt = "zip",
+                RestoreDirectory = true,
+                ShowHelp = true,
+                Filter = "",
+                AddExtension = true,
+                CheckPathExists = true,
+                ShowHiddenFiles = false,
+                ValidateNames = true,
+            };
+
+            string sep = string.Empty;
+
+            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "Zip File", "zip");
+            sep = "|";
+            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
+
+            ofd.FilterIndex = 1;
+
+            // create a zip file and add each of the layer bitmaps to it
+            DialogResult result = ofd.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string filename = ofd.FileName;
+                try
+                {
+                    StopAutosaveTimer();
+                    StopBrushTimer();
+                    StopLocationUpdateTimer();
+                    StopSymbolAreaBrushTimer();
+
+                    using (FileStream fileStream = new(filename, FileMode.OpenOrCreate))
+                    {
+                        using var archive = new ZipArchive(fileStream, ZipArchiveMode.Update, true);
+
+                        ImageConverter converter = new();
+
+                        SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+                        s.Canvas.Clear();
+
+                        // background
+                        MapRenderMethods.RenderBackgroundForExport(CURRENT_MAP, s.Canvas);
+                        Bitmap bitmap = s.Snapshot().ToBitmap();
+
+                        byte[]? bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "background" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // ocean layers
+                        MapRenderMethods.RenderOceanForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "ocean" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // wind roses
+                        MapRenderMethods.RenderWindrosesForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "windroses" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // lower grid layer (above ocean)
+                        MapRenderMethods.RenderLowerGridForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "gridlower" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // landforms
+                        MapRenderMethods.RenderLandformsForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "landforms" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // water features
+                        MapRenderMethods.RenderWaterFeaturesForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "waterfeatures" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // upper grid layer (above water features)
+                        MapRenderMethods.RenderUpperGridForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "gridupper" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // lower path layer
+                        MapRenderMethods.RenderLowerMapPathsForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "pathslower" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // symbol layer
+                        MapRenderMethods.RenderSymbolsForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "symbols" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // upper path layer
+                        MapRenderMethods.RenderUpperMapPathsForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "pathsupper" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // region and region overlay layers
+                        MapRenderMethods.RenderRegionsForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "regions" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // default grid layer
+                        MapRenderMethods.RenderDefaultGridForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "griddefault" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // box layer
+                        MapRenderMethods.RenderBoxesForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "boxes" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // label layer
+                        MapRenderMethods.RenderLabelsForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "labels" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // overlay layer (map scale)
+                        MapRenderMethods.RenderOverlaysForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "overlay" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // render frame
+                        MapRenderMethods.RenderFrameForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "frame" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // measure layer
+                        MapRenderMethods.RenderMeasuresForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "measures" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+
+                        // TODO: drawing layer
+                        //MapRenderMethods.RenderDrawingForExport(CURRENT_MAP, s.Canvas);
+
+                        // vignette layer
+                        MapRenderMethods.RenderVignetteForExport(CURRENT_MAP, s.Canvas);
+                        bitmap = s.Snapshot().ToBitmap();
+                        bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+                        if (bitmapBytes != null)
+                        {
+                            var fileName = "vignette" + "." + exportFormat.ToString().ToLower();
+                            var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                            using var zipStream = zipArchiveEntry.Open();
+                            zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+                        }
+
+                        s.Canvas.Clear();
+                    }
+
+                    StartAutosaveTimer();
+                    StartLocationUpdateTimer();
+                    MessageBox.Show("Map layers exported to " + ofd.FileName, "Map Exported", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+                }
+                catch (Exception ex)
+                {
+                    Program.LOGGER.Error(ex);
+                    MessageBox.Show("Failed to export map layers to " + ofd.FileName, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+            }
+        }
+
+        private void ExportHeightMap(MapExportFormatEnum exportFormat)
+        {
+            SaveFileDialog ofd = new()
+            {
+                Title = "Export Map",
+                DefaultExt = exportFormat.ToString().ToLower(),
+                RestoreDirectory = true,
+                ShowHelp = true,
+                Filter = "",
+                AddExtension = true,
+                CheckPathExists = true,
+                ShowHiddenFiles = false,
+                ValidateNames = true,
+            };
+
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+            string sep = string.Empty;
+            foreach (ImageCodecInfo c in codecs)
+            {
+                if (c.CodecName != null && c.FilenameExtension != null)
+                {
+                    string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
+                    ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLower());
+                    sep = "|";
+                }
+            }
+
+            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
+
+            int filterIndex = 0;
+
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
+            for (int i = 0; i < codecs.Length; i++)
+            {
+                if (codecs[i].FilenameExtension != null)
+                {
+                    if (codecs[i].FilenameExtension.Contains(exportFormat.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        filterIndex = i + 1;
+                        break;
+                    }
+                }
+            }
+
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+            ofd.FilterIndex = filterIndex;
+
+            DialogResult result = ofd.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string filename = ofd.FileName;
+                try
+                {
+                    StopAutosaveTimer();
+                    StopBrushTimer();
+                    StopLocationUpdateTimer();
+                    StopSymbolAreaBrushTimer();
+
+                    SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+                    s.Canvas.Clear(SKColors.Black);
+
+                    // TODO: render the map as a height map
+                    RenderHeightMapToCanvas(s.Canvas, ScrollPoint);
+
+                    Bitmap bitmap = s.Snapshot().ToBitmap();
+
+                    bitmap.Save(filename);
+
+                    StartAutosaveTimer();
+                    StartLocationUpdateTimer();
+                    MessageBox.Show("Height map exported to " + ofd.FileName, "Height Map Exported", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+                catch (Exception ex)
+                {
+                    Program.LOGGER.Error(ex);
+                    MessageBox.Show("Failed to export height map to " + ofd.FileName, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+            }
+        }
+
+        private static void AddMapImagesToHeightMapLayer()
+        {
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+            MapLayer heightMapLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.HEIGHTMAPLAYER);
+
+            if (heightMapLayer.MapLayerComponents.Count == 2)
+            {
+                // heightmap images have already been created
+                return;
+            }
+
+            using SKBitmap b = new(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+            using SKCanvas canvas = new(b);
+
+            canvas.Clear(SKColors.Black);
+
+            for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
+            {
+                if (landformLayer.MapLayerComponents[i] is Landform l)
+                {
+                    l.RenderLandformForHeightMap(canvas);
+                }
+            }
+
+            heightMapLayer.MapLayerComponents.Clear();
+
+            MapImage landformImage = new()
+            {
+                MapImageBitmap = b.Copy()
+            };
+
+            heightMapLayer.MapLayerComponents.Add(landformImage);
+
+            using SKBitmap b2 = new(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+            b2.Erase(SKColors.Transparent);
+
+            MapImage heigtMapImage = new()
+            {
+                MapImageBitmap = b2.Copy()
+            };
+
+            heightMapLayer.MapLayerComponents.Add(heigtMapImage);
+        }
+
+        #endregion
+
         #region Main Menu Event Handlers
 
         private void NewToolStripMenuItem_Click(object sender, EventArgs e)
@@ -791,76 +1365,65 @@ namespace RealmStudio
 
         private void ExportMapMenuItem_Click(object sender, EventArgs e)
         {
+            RealmExportDialog exportDialog = new();
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            DialogResult exportresult = exportDialog.ShowDialog();
 
-            // export the map as a PNG, JPG, or other graphics format
+            RealmExportTypeEnum exportType = RealmExportTypeEnum.NotSet;
+            MapExportFormatEnum exportFormat = MapExportFormatEnum.NotSet;
 
-            string defaultExtension = Settings.Default.DefaultExportFormat;
-            if (!string.IsNullOrEmpty(defaultExtension))
+            if (exportresult == DialogResult.OK)
             {
-                defaultExtension = defaultExtension.ToLower();
-            }
-
-            SaveFileDialog ofd = new()
-            {
-                Title = "Export Map",
-                DefaultExt = defaultExtension,
-                RestoreDirectory = true,
-                ShowHelp = true,
-                Filter = "",
-                AddExtension = true,
-                CheckPathExists = true,
-                ShowHiddenFiles = false,
-                ValidateNames = true,
-            };
-
-            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
-            string sep = string.Empty;
-
-            foreach (var c in codecs)
-            {
-                string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
-
-                ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLower());
-                sep = "|";
-            }
-
-            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
-
-            DialogResult result = ofd.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                string filename = ofd.FileName;
-
-                try
+                if (exportDialog.ExportImageRadio.Checked)
                 {
-                    StopAutosaveTimer();
-                    StopBrushTimer();
-                    StopLocationUpdateTimer();
-                    StopSymbolAreaBrushTimer();
-
-                    SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
-                    s.Canvas.Clear();
-
-                    RenderMapForExport(s.Canvas);
-
-                    s.Snapshot().ToBitmap().Save(filename);
-
-                    StartAutosaveTimer();
-                    StartLocationUpdateTimer();
-
-                    MessageBox.Show("Map exported to " + ofd.FileName, "Map Exported", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    exportType = RealmExportTypeEnum.BitmapImage;
                 }
-                catch (Exception ex)
+                else if (exportDialog.UpscaledImageRadio.Checked)
                 {
-                    Program.LOGGER.Error(ex);
-                    MessageBox.Show("Failed to export map to " + ofd.FileName, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    exportType = RealmExportTypeEnum.UpscaledImage;
+                }
+                else if (exportDialog.MapLayersRadio.Checked)
+                {
+                    exportType = RealmExportTypeEnum.MapLayers;
+                }
+                else if (exportDialog.HeightmapRadio.Checked)
+                {
+                    exportType = RealmExportTypeEnum.Heightmap;
+                }
+
+                if (exportDialog.PNGRadio.Checked)
+                {
+                    exportFormat = MapExportFormatEnum.PNG;
+                }
+                else if (exportDialog.JPEGRadio.Checked)
+                {
+                    exportFormat = MapExportFormatEnum.JPG;
+                }
+                else if (exportDialog.BMPRadio.Checked)
+                {
+                    exportFormat = MapExportFormatEnum.BMP;
+                }
+                else if (exportDialog.GIFRadio.Checked)
+                {
+                    exportFormat = MapExportFormatEnum.GIF;
                 }
             }
 
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            switch (exportType)
+            {
+                case RealmExportTypeEnum.BitmapImage:
+                    ExportMapAsImage(exportFormat);
+                    break;
+                case RealmExportTypeEnum.UpscaledImage:
+                    ExportMapAsImage(exportFormat, true);
+                    break;
+                case RealmExportTypeEnum.MapLayers:
+                    ExportMapAsLayers(exportFormat);
+                    break;
+                case RealmExportTypeEnum.Heightmap:
+                    ExportHeightMap(exportFormat);
+                    break;
+            }
         }
 
         private void PrintToolStripMenuItem_Click(object sender, EventArgs e)
@@ -932,6 +1495,42 @@ namespace RealmStudio
         private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void RenderAsHeightMapMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (RenderAsHeightMapMenuItem.Checked)
+            {
+                CURRENT_DRAWING_MODE = DrawingModeEnum.HeightMapPaint;
+                SetDrawingModeLabel();
+                SetSelectedBrushSize(0);
+
+                // if needed, render landforms to height map layer as a map image
+                // and add a map image to the height map layer to hold the height map;
+                // as the user paints on the map, the height map image will be updated
+
+                AddMapImagesToHeightMapLayer();
+
+                // force maintab selected index change
+                MainTab.SelectedIndex = 2;  // select landform tab
+                MainTab.SelectedIndex = 0;
+                MainTab.SelectedIndex = 2;  // select landform tab
+                MainTab.Refresh();
+            }
+            else
+            {
+                CURRENT_DRAWING_MODE = DrawingModeEnum.None;
+                SetDrawingModeLabel();
+                SetSelectedBrushSize(0);
+
+                // force maintab selected index change
+                MainTab.SelectedIndex = 2;  // select landform tab
+                MainTab.SelectedIndex = 0;
+                MainTab.SelectedIndex = 2;  // select landform tab
+                MainTab.Refresh();
+            }
+
+            SKGLRenderControl.Invalidate();
         }
 
         private void ThemeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1471,6 +2070,7 @@ namespace RealmStudio
             return result;
         }
 
+
         private void MainTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             // clear the drawing mode (and uncheck all drawing, paint, and erase buttons) when switching tabs
@@ -1498,8 +2098,26 @@ namespace RealmStudio
                     BackgroundToolPanel.Visible = false;
                     break;
                 case 2:
-                    LandToolPanel.Visible = true;
                     BackgroundToolPanel.Visible = false;
+
+                    if (RenderAsHeightMapMenuItem.Checked)
+                    {
+                        CURRENT_DRAWING_MODE = DrawingModeEnum.HeightMapPaint;
+                        SetDrawingModeLabel();
+                        SetSelectedBrushSize(0);
+
+                        LandToolPanel.Visible = false;
+                        LandToolStrip.Visible = false;
+                        BackgroundToolPanel.Visible = true;
+                        HeightMapToolStrip.Visible = true;
+                    }
+                    else
+                    {
+                        LandToolPanel.Visible = true;
+                        LandToolStrip.Visible = true;
+                        BackgroundToolPanel.Visible = false;
+                        HeightMapToolStrip.Visible = false;
+                    }
                     break;
                 case 3:
                     WaterToolPanel.Visible = true;
@@ -1762,6 +2380,9 @@ namespace RealmStudio
                 DrawingModeEnum.RegionPaint => "Draw Region",
                 DrawingModeEnum.RegionSelect => "Select Region",
                 DrawingModeEnum.LandformAreaSelect => "Select Landform Area",
+                DrawingModeEnum.HeightMapPaint => "Paint Height Map",
+                DrawingModeEnum.MapHeightIncrease => "Increase Map Height",
+                DrawingModeEnum.MapHeightDecrease => "Decrease Map Height",
                 _ => "Undefined",
             };
 
@@ -2011,6 +2632,12 @@ namespace RealmStudio
 
             // vignette layer
             MapRenderMethods.RenderVignetteForExport(CURRENT_MAP, renderCanvas);
+        }
+
+        public static void RenderHeightMapToCanvas(SKCanvas renderCanvas, SKPoint scrollPoint)
+        {
+            renderCanvas.Clear(SKColors.Black);
+            MapRenderMethods.RenderHeightMap(CURRENT_MAP, renderCanvas, scrollPoint);
         }
 
         private void DrawCursor(SKCanvas canvas, SKPoint point, int brushSize)
@@ -3791,15 +4418,27 @@ namespace RealmStudio
 
             if (SKGLRenderControl.GRContext != null && CURRENT_MAP != null && CURRENT_MAP.MapLayers.Count == MapBuilder.MAP_LAYER_COUNT)
             {
-                RenderMapToCanvas(e.Surface.Canvas, ScrollPoint);
-
-                if (CURRENT_DRAWING_MODE != DrawingModeEnum.ColorSelect)
+                if (RenderAsHeightMapMenuItem.Checked)
                 {
-                    DrawCursor(e.Surface.Canvas, new SKPoint(CURSOR_POINT.X - ScrollPoint.X, CURSOR_POINT.Y - ScrollPoint.Y), SELECTED_BRUSH_SIZE);
-                }
+                    RenderHeightMapToCanvas(e.Surface.Canvas, ScrollPoint);
 
-                // work layer
-                MapRenderMethods.RenderWorkLayer(CURRENT_MAP, e.Surface.Canvas, ScrollPoint);
+                    if (CURRENT_DRAWING_MODE != DrawingModeEnum.ColorSelect)
+                    {
+                        DrawCursor(e.Surface.Canvas, new SKPoint(CURSOR_POINT.X - ScrollPoint.X, CURSOR_POINT.Y - ScrollPoint.Y), SELECTED_BRUSH_SIZE);
+                    }
+                }
+                else
+                {
+                    RenderMapToCanvas(e.Surface.Canvas, ScrollPoint);
+
+                    if (CURRENT_DRAWING_MODE != DrawingModeEnum.ColorSelect)
+                    {
+                        DrawCursor(e.Surface.Canvas, new SKPoint(CURSOR_POINT.X - ScrollPoint.X, CURSOR_POINT.Y - ScrollPoint.Y), SELECTED_BRUSH_SIZE);
+                    }
+
+                    // work layer
+                    MapRenderMethods.RenderWorkLayer(CURRENT_MAP, e.Surface.Canvas, ScrollPoint);
+                }
             }
         }
 
@@ -4002,6 +4641,26 @@ namespace RealmStudio
                 newValue = Math.Max(WaterColorEraserSizeTrack.Minimum, Math.Min(newValue, WaterColorEraserSizeTrack.Maximum));
 
                 WaterColorEraserSizeTrack.Value = newValue;
+                SELECTED_BRUSH_SIZE = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (ModifierKeys == Keys.None && CURRENT_DRAWING_MODE == DrawingModeEnum.MapHeightIncrease)
+            {
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                int newValue = LandBrushSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(LandBrushSizeTrack.Minimum, Math.Min(newValue, LandBrushSizeTrack.Maximum));
+
+                LandBrushSizeTrack.Value = newValue;
+                SELECTED_BRUSH_SIZE = newValue;
+                SKGLRenderControl.Invalidate();
+            }
+            else if (ModifierKeys == Keys.None && CURRENT_DRAWING_MODE == DrawingModeEnum.MapHeightDecrease)
+            {
+                int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
+                int newValue = LandBrushSizeTrack.Value + sizeDelta;
+                newValue = Math.Max(LandBrushSizeTrack.Minimum, Math.Min(newValue, LandBrushSizeTrack.Maximum));
+
+                LandBrushSizeTrack.Value = newValue;
                 SELECTED_BRUSH_SIZE = newValue;
                 SKGLRenderControl.Invalidate();
             }
@@ -5356,6 +6015,128 @@ namespace RealmStudio
 
                         MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawRect(SELECTED_LANDFORM_AREA, PaintObjects.LandformAreaSelectPaint);
                         SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case DrawingModeEnum.MapHeightIncrease:
+                    {
+                        MapLayer heightMapLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.HEIGHTMAPLAYER);
+
+                        if (heightMapLayer.MapLayerComponents.Count == 2)
+                        {
+                            MapImage heightMap = (MapImage)heightMapLayer.MapLayerComponents[1];
+
+                            SKBitmap? heightMapBitmap = heightMap.MapImageBitmap;
+
+                            if (heightMapBitmap != null)
+                            {
+                                // get all pixels within the brush area
+                                // for each pixel in the brush area, get its color and then lighten it by 1 up to a maximum of 255
+                                List<SKPoint> brushPoints = new List<SKPoint>();
+
+                                for (int x = (int)zoomedScrolledPoint.X - brushRadius; x < (int)zoomedScrolledPoint.X + brushRadius; x++)
+                                {
+                                    for (int y = (int)zoomedScrolledPoint.Y - brushRadius; y < (int)zoomedScrolledPoint.Y + brushRadius; y++)
+                                    {
+                                        if (x >= 0 && x < heightMapBitmap.Width && y >= 0 && y < heightMapBitmap.Height)
+                                        {
+                                            double dx = x - zoomedScrolledPoint.X;
+                                            double dy = y - zoomedScrolledPoint.Y;
+                                            double distanceSquared = dx * dx + dy * dy;
+
+                                            if (distanceSquared <= brushRadius * brushRadius)
+                                            {
+                                                brushPoints.Add(new SKPoint(x, y));
+                                            }
+                                        }
+                                    }
+                                }
+
+                                foreach (SKPoint index in brushPoints)
+                                {
+                                    SKColor pixelColor = heightMapBitmap.GetPixel((int)index.X, (int)index.Y);
+
+                                    if (pixelColor == SKColors.Black || pixelColor == SKColors.Transparent)
+                                    {
+                                        pixelColor = Color.FromArgb(255, 25, 25, 25).ToSKColor();
+                                    }
+
+                                    int r = pixelColor.Red + 1;
+                                    int g = pixelColor.Green + 1;
+                                    int b = pixelColor.Blue + 1;
+
+                                    r = Math.Min(255, r);
+                                    g = Math.Min(255, g);
+                                    b = Math.Min(255, b);
+
+                                    r = Math.Max(25, r);
+                                    g = Math.Max(25, g);
+                                    b = Math.Max(25, b);
+
+                                    heightMapBitmap.SetPixel((int)index.X, (int)index.Y, new SKColor((byte)r, (byte)g, (byte)b));
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case DrawingModeEnum.MapHeightDecrease:
+                    {
+                        MapLayer heightMapLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.HEIGHTMAPLAYER);
+
+                        if (heightMapLayer.MapLayerComponents.Count == 2)
+                        {
+                            MapImage heightMap = (MapImage)heightMapLayer.MapLayerComponents[1];
+
+                            SKBitmap? heightMapBitmap = heightMap.MapImageBitmap;
+
+                            if (heightMapBitmap != null)
+                            {
+                                // get all pixels within the brush area
+                                // for each pixel in the brush area, get its color and then darken it by 1 up to a minimum of 25
+                                List<SKPoint> brushPoints = new List<SKPoint>();
+
+                                for (int x = (int)zoomedScrolledPoint.X - brushRadius; x < (int)zoomedScrolledPoint.X + brushRadius; x++)
+                                {
+                                    for (int y = (int)zoomedScrolledPoint.Y - brushRadius; y < (int)zoomedScrolledPoint.Y + brushRadius; y++)
+                                    {
+                                        if (x >= 0 && x < heightMapBitmap.Width && y >= 0 && y < heightMapBitmap.Height)
+                                        {
+                                            double dx = x - zoomedScrolledPoint.X;
+                                            double dy = y - zoomedScrolledPoint.Y;
+                                            double distanceSquared = dx * dx + dy * dy;
+
+                                            if (distanceSquared <= brushRadius * brushRadius)
+                                            {
+                                                brushPoints.Add(new SKPoint(x, y));
+                                            }
+                                        }
+                                    }
+                                }
+
+                                foreach (SKPoint index in brushPoints)
+                                {
+                                    SKColor pixelColor = heightMapBitmap.GetPixel((int)index.X, (int)index.Y);
+
+                                    if (pixelColor == SKColors.Black || pixelColor == SKColors.Transparent)
+                                    {
+                                        pixelColor = Color.FromArgb(255, 25, 25, 25).ToSKColor();
+                                    }
+
+                                    int r = pixelColor.Red - 1;
+                                    int g = pixelColor.Green - 1;
+                                    int b = pixelColor.Blue - 1;
+
+                                    r = Math.Max(25, r);
+                                    g = Math.Max(25, g);
+                                    b = Math.Max(25, b);
+
+                                    r = Math.Min(255, r);
+                                    g = Math.Min(255, g);
+                                    b = Math.Min(255, b);
+
+                                    heightMapBitmap.SetPixel((int)index.X, (int)index.Y, new SKColor((byte)r, (byte)g, (byte)b));
+                                }
+                            }
+                        }
                     }
                     break;
             }
@@ -7389,6 +8170,20 @@ namespace RealmStudio
             LandformMethods.LandformColorEraserBrushSize = LandColorEraserSizeTrack.Value;
             TOOLTIP.Show(LandformMethods.LandformColorEraserBrushSize.ToString(), LandColorEraserSizeTrack, new Point(LandColorEraserSizeTrack.Right - 42, LandColorEraserSizeTrack.Top - 210), 2000);
             SetSelectedBrushSize(LandformMethods.LandformColorEraserBrushSize);
+        }
+
+        private void HeightUpButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.MapHeightIncrease;
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(LandformMethods.LandformBrushSize);
+        }
+
+        private void HeightDownButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = DrawingModeEnum.MapHeightDecrease;
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(LandformMethods.LandformBrushSize);
         }
 
         #region Landform Generation
@@ -9935,7 +10730,7 @@ namespace RealmStudio
                         fs = SKFontStyle.Italic;
                     }
 
-                    List<string> resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
+                    List<string> resourceNames = [.. Assembly.GetExecutingAssembly().GetManifestResourceNames()];
 
                     SKTypeface? fontTypeface = null;
 
@@ -11434,6 +12229,5 @@ namespace RealmStudio
         }
 
         #endregion
-
     }
 }

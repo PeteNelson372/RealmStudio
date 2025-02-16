@@ -153,6 +153,23 @@ namespace RealmStudio
             BlendMode = SKBlendMode.Src,
         };
 
+        public SKPaint LandformHeightMapFillPaint { get; set; } = new()
+        {
+            Style = SKPaintStyle.Fill,
+            IsAntialias = false,
+            BlendMode = SKBlendMode.Src,
+            Color = Color.FromArgb(255, 25, 25, 25).ToSKColor()
+        };
+
+        public SKPaint LandformHeightMapOutlinePaint { get; set; } = new()
+        {
+            Style = SKPaintStyle.Stroke,
+            StrokeWidth = 1,
+            IsAntialias = false,
+            BlendMode = SKBlendMode.Src,
+            Color = Color.FromArgb(255, 25, 25, 25).ToSKColor()
+        };
+
         public SKPaint CoastlinePaint { get; set; } = new()
         {
             Style = SKPaintStyle.Fill,
@@ -799,7 +816,19 @@ namespace RealmStudio
 
                 IsModified = false;
             }
+        }
 
+        public void RenderLandformForHeightMap(SKCanvas canvas)
+        {
+            canvas.ClipRect(new SKRect(0, 0, ParentMap.MapWidth, ParentMap.MapHeight));
+
+            canvas.Clear(SKColors.Transparent);
+
+            canvas.DrawPath(DrawPath, LandformHeightMapFillPaint);
+
+            canvas.DrawPath(ContourPath, LandformHeightMapOutlinePaint);
+
+            IsModified = true;
         }
 
         #endregion

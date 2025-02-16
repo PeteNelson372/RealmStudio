@@ -283,6 +283,41 @@ namespace RealmStudio
             renderCanvas.DrawBitmap(b2, new SKPoint(0, 0));
         }
 
+        internal static void RenderHeightMap(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
+        {
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
+            MapLayer heightMapLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.HEIGHTMAPLAYER);
+
+            if (landformLayer.LayerSurface == null || heightMapLayer.LayerSurface == null) return;
+
+            SKPath clipPath = new();
+            landformLayer.LayerSurface.Canvas.Clear(SKColors.Black);
+
+            for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
+            {
+                if (landformLayer.MapLayerComponents[i] is Landform l)
+                {
+                    l.RenderLandformForHeightMap(landformLayer.LayerSurface.Canvas);
+
+                    SKPath landformOutlinePath = l.ContourPath;
+                    clipPath.AddPath(landformOutlinePath);
+                }
+            }
+
+            renderCanvas.DrawSurface(landformLayer.LayerSurface, scrollPoint);
+
+            // render height map layer
+            heightMapLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+
+            if (clipPath.PointCount > 2)
+            {
+                heightMapLayer.LayerSurface.Canvas.ClipPath(clipPath);
+            }
+
+            heightMapLayer.Render(heightMapLayer.LayerSurface.Canvas);
+            renderCanvas.DrawSurface(heightMapLayer.LayerSurface, scrollPoint);
+        }
+
         internal static void RenderLowerMapPaths(RealmStudioMap map, MapPath? currentPath, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);

@@ -60,7 +60,10 @@ namespace RealmStudio
         SelectMapScale,
         DrawMapMeasure,
         RegionSelect,
-        RegionPaint
+        RegionPaint,
+        HeightMapPaint,
+        MapHeightIncrease,
+        MapHeightDecrease,
     }
 
     public enum GradientDirectionEnum
@@ -204,6 +207,16 @@ namespace RealmStudio
         NotSet,
         PNG,
         JPG,
-        BMP
+        BMP,
+        GIF,
+    }
+
+    public enum RealmExportTypeEnum
+    {
+        NotSet,
+        BitmapImage,
+        UpscaledImage,
+        MapLayers,
+        Heightmap,
     }
 }
