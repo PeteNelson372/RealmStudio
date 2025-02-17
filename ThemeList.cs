@@ -31,7 +31,7 @@ namespace RealmStudio
         private MapTheme[] mapThemes = [];
         private readonly ThemeFilter themeFilter = new();
 
-        public MapTheme? SettingsTheme { get; set; } = null;
+        public MapTheme? SettingsTheme { get; set; }
 
         public ThemeList()
         {

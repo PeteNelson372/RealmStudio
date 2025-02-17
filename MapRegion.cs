@@ -44,13 +44,13 @@ namespace RealmStudio
         public int RegionInnerOpacity { get; set; } = 64;
         public int RegionBorderSmoothing { get; set; } = 20;
         public PathTypeEnum RegionBorderType { get; set; } = PathTypeEnum.SolidLinePath;
-        public bool IsSelected { get; set; } = false;
+        public bool IsSelected { get; set; }
 
         public SKPaint RegionBorderPaint { get; set; } = new();
 
         public SKPaint RegionInnerPaint { get; set; } = new();
 
-        public SKPath? BoundaryPath { get; set; } = null;
+        public SKPath? BoundaryPath { get; set; }
 
         public MapRegion() { }
 
@@ -101,8 +101,6 @@ namespace RealmStudio
 
             if (IsSelected)
             {
-                MapLayer overlayLayer = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.REGIONOVERLAYLAYER);
-
                 if (BoundaryPath != null)
                 {
                     // draw an outline around the region to show that it is selected
@@ -283,21 +281,22 @@ namespace RealmStudio
             IEnumerable<XElement> regionPointElem = mapRegionDoc.Descendants(ns + "MapRegionPoint");
             if (regionPointElem.First() != null)
             {
-                var settings = new XmlReaderSettings();
-                settings.IgnoreWhitespace = true;
+                XmlReaderSettings settings = new()
+                {
+                    IgnoreWhitespace = true
+                };
 
                 foreach (XElement elem in regionPointElem)
                 {
                     string regionPointString = elem.ToString();
 
-                    using (XmlReader pointReader = XmlReader.Create(new StringReader(regionPointString), settings))
-                    {
-                        pointReader.Read();
-                        MapRegionPoint mrp = new();
-                        mrp.ReadXml(pointReader);
+                    using XmlReader pointReader = XmlReader.Create(new StringReader(regionPointString), settings);
+                    pointReader.Read();
 
-                        MapRegionPoints.Add(mrp);
-                    }
+                    MapRegionPoint mrp = new();
+                    mrp.ReadXml(pointReader);
+
+                    MapRegionPoints.Add(mrp);
                 }
             }
 

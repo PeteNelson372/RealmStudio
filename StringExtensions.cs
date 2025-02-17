@@ -38,7 +38,7 @@ namespace RealmStudio
             string? result;
             if (value.Length > maxLength)
             {
-                result = value.Substring(0, maxLength);
+                result = value[..maxLength];
                 if (addEllipsis) result += "...";
             }
             else

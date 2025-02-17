@@ -73,7 +73,7 @@ namespace RealmStudio
             Label.LabelFont = SelectedFont;
 
             SKFont skLabelFont = MapLabelMethods.GetSkLabelFont(Label.LabelFont);
-            SKPaint paint = MapLabelMethods.CreateLabelPaint(skLabelFont, Label.LabelFont, Label.LabelColor, LabelTextAlignEnum.AlignLeft);
+            SKPaint paint = MapLabelMethods.CreateLabelPaint(Label.LabelColor);
 
             Label.LabelSKFont.Dispose();
             Label.LabelSKFont = skLabelFont;
@@ -93,7 +93,7 @@ namespace RealmStudio
             Label.LabelFont = StoredSelectedFont;
 
             SKFont skLabelFont = MapLabelMethods.GetSkLabelFont(Label.LabelFont);
-            SKPaint paint = MapLabelMethods.CreateLabelPaint(skLabelFont, Label.LabelFont, Label.LabelColor, LabelTextAlignEnum.AlignLeft);
+            SKPaint paint = MapLabelMethods.CreateLabelPaint(Label.LabelColor);
 
             Label.LabelSKFont.Dispose();
             Label.LabelSKFont = skLabelFont;

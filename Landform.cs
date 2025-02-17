@@ -182,9 +182,9 @@ namespace RealmStudio
             IsAntialias = true,
         };
 
-        public SKShader? DashShader { get; set; } = null;
-        public SKShader? LineHatchBitmapShader { get; set; } = null;
-        public MapTexture? LandformTexture { get; set; } = null;
+        public SKShader? DashShader { get; set; }
+        public SKShader? LineHatchBitmapShader { get; set; }
+        public MapTexture? LandformTexture { get; set; }
         public Color LandformOutlineColor { get; set; } = Color.FromArgb(255, 62, 55, 40);
         public Color LandformFillColor { get; set; } = ColorTranslator.FromHtml("#AC964F");
         public int LandformOutlineWidth { get; set; } = 2;
@@ -193,16 +193,16 @@ namespace RealmStudio
         public int CoastlineEffectDistance { get; set; } = 16;
         public string CoastlineStyleName { get; set; } = "None";
         public string? CoastlineHatchPattern { get; set; } = string.Empty;
-        public int CoastlineHatchOpacity { get; set; } = 0;
-        public int CoastlineHatchScale { get; set; } = 0;
+        public int CoastlineHatchOpacity { get; set; }
+        public int CoastlineHatchScale { get; set; }
         public string? CoastlineHatchBlendMode { get; set; } = string.Empty;
         public bool PaintCoastlineGradient { get; set; } = true;
 
-        public bool IsSelected { get; set; } = false;
+        public bool IsSelected { get; set; }
         public bool IsModified { get; set; } = true;
 
-        public SKSurface? LandformRenderSurface { get; set; } = null;
-        public SKSurface? CoastlineRenderSurface { get; set; } = null;
+        public SKSurface? LandformRenderSurface { get; set; }
+        public SKSurface? CoastlineRenderSurface { get; set; }
 
         public Landform() { }
 

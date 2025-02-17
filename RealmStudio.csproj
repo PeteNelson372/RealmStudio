@@ -9,9 +9,9 @@
     <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.47.14704</AssemblyVersion>
-    <FileVersion>1.2025.47.14704</FileVersion>
-    <Version>1.2025.0-alpha-394</Version>
+    <AssemblyVersion>1.2025.48.7866</AssemblyVersion>
+    <FileVersion>1.2025.48.7866</FileVersion>
+    <Version>1.2025.0-alpha-399</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025. Peter R. Nelson</Copyright>
@@ -19,7 +19,9 @@
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <PackageIcon>Realm Studio Icon 128x128.png</PackageIcon>
     <SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>  
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>  
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -52,6 +54,10 @@
     <PackageVersionSettings>AssemblyVersion.NoneWithAutoReset.Alpha</PackageVersionSettings>
     <IsPublishable>False</IsPublishable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ConcaveHull.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Resources\Aladin-Regular.ttf" />

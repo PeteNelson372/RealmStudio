@@ -87,42 +87,41 @@ namespace RealmStudio
 
             if (!string.IsNullOrEmpty(ZipFilePath))
             {
-                using (ZipArchive archive = ZipFile.OpenRead(ZipFilePath))
+                using ZipArchive archive = ZipFile.OpenRead(ZipFilePath);
+
+                foreach (ZipArchiveEntry entry in archive.Entries)
                 {
-                    foreach (ZipArchiveEntry entry in archive.Entries)
+                    ZipFiles.Add(entry.FullName);
+
+                    string[] pathEntries = entry.FullName.Split(['/', Path.DirectorySeparatorChar]);
+
+                    TreeNodeCollection nodes = FilePreviewTree.Nodes;
+
+                    for (int i = 0; i < pathEntries.Length; i++)
                     {
-                        ZipFiles.Add(entry.FullName);
+                        string pathEntry = pathEntries[i];
 
-                        string[] pathEntries = entry.FullName.Split(['/', Path.DirectorySeparatorChar]);
-
-                        TreeNodeCollection nodes = FilePreviewTree.Nodes;
-
-                        for (int i = 0; i < pathEntries.Length; i++)
+                        if (!string.IsNullOrEmpty(pathEntry))
                         {
-                            string pathEntry = pathEntries[i];
-
-                            if (!string.IsNullOrEmpty(pathEntry))
+                            if (!nodes.ContainsKey(pathEntry))
                             {
-                                if (!nodes.ContainsKey(pathEntry))
+                                TreeNode t = new(pathEntry)
                                 {
-                                    TreeNode t = new(pathEntry)
-                                    {
-                                        Text = pathEntry,
-                                        Name = pathEntry,
-                                        Tag = entry.FullName,
-                                    };
+                                    Text = pathEntry,
+                                    Name = pathEntry,
+                                    Tag = entry.FullName,
+                                };
 
-                                    nodes.Add(t);
+                                nodes.Add(t);
+                                nodes = t.Nodes;
+                            }
+                            else
+                            {
+                                TreeNode? t = nodes[pathEntry];
+
+                                if (t != null)
+                                {
                                     nodes = t.Nodes;
-                                }
-                                else
-                                {
-                                    TreeNode? t = nodes[pathEntry];
-
-                                    if (t != null)
-                                    {
-                                        nodes = t.Nodes;
-                                    }
                                 }
                             }
                         }
@@ -621,9 +620,10 @@ namespace RealmStudio
                     {
                         foreach (KeyValuePair<string, JsonNode?> kvPair in jsonObject)
                         {
-                            MapFrame frame = new();
-
-                            frame.FrameName = kvPair.Key;
+                            MapFrame frame = new()
+                            {
+                                FrameName = kvPair.Key
+                            };
 
                             foreach (var kvp in kvPair.Value.AsObject().Where(kvp => kvp.Key == "margin"))
                             {
@@ -815,7 +815,7 @@ namespace RealmStudio
             foreach (string filename in landTextureFiles)
             {
                 string[] fileparts = filename.Split('/');
-                string textureFullPath = landTexturePath + fileparts[fileparts.Count() - 1];
+                string textureFullPath = landTexturePath + fileparts[^1];
 
                 ExtractAndSaveFile(filename, textureFullPath);
             }
@@ -839,7 +839,7 @@ namespace RealmStudio
             foreach (string filename in waterTextureFiles)
             {
                 string[] fileparts = filename.Split('/');
-                string textureFullPath = waterTexturePath + fileparts[fileparts.Count() - 1];
+                string textureFullPath = waterTexturePath + fileparts[^1];
 
                 ExtractAndSaveFile(filename, textureFullPath);
             }
@@ -849,24 +849,22 @@ namespace RealmStudio
 
         private void ExtractAndSaveFile(string zipPath, string fullPath)
         {
-            using (ZipArchive archive = ZipFile.OpenRead(ZipFilePath))
-            {
-                ZipArchiveEntry? entry = archive.GetEntry(zipPath);
+            using ZipArchive archive = ZipFile.OpenRead(ZipFilePath);
+            ZipArchiveEntry? entry = archive.GetEntry(zipPath);
 
-                if (entry != null)
+            if (entry != null)
+            {
+                try
                 {
-                    try
+                    if (!File.Exists(fullPath))
                     {
-                        if (!File.Exists(fullPath))
-                        {
-                            entry.ExtractToFile(fullPath, true);
-                        }
+                        entry.ExtractToFile(fullPath, true);
                     }
-                    catch (Exception ex)
-                    {
-                        Program.LOGGER.Error(ex);
-                        MessageBox.Show("Failed to copy " + zipPath + " to " + fullPath, "File Extraction Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    Program.LOGGER.Error(ex);
+                    MessageBox.Show("Failed to copy " + zipPath + " to " + fullPath, "File Extraction Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
             }
         }

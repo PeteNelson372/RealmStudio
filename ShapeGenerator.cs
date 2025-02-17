@@ -41,7 +41,7 @@ namespace RealmStudio
 
         public static SKPath GetConvexHullPath(List<IPoint> points)
         {
-            SKPath convexHullPath = new SKPath();
+            SKPath convexHullPath = new();
             List<IntPoint> intPoints = [];
 
             foreach (IPoint point in points)
@@ -49,7 +49,7 @@ namespace RealmStudio
                 intPoints.Add(new IntPoint((int)point.X, (int)point.Y));
             }
 
-            IConvexHullAlgorithm hullFinder = new GrahamConvexHull();
+            GrahamConvexHull hullFinder = new();
             List<IntPoint> hull = hullFinder.FindHull(intPoints);
 
             convexHullPath.MoveTo(new SKPoint(hull[0].X, hull[0].Y));
@@ -195,7 +195,7 @@ namespace RealmStudio
             return lakeBitmap;
         }
 
-        public static Bitmap? GetNoiseGeneratedIslandShape(int width, int height, float islandSize)
+        public static Bitmap? GetNoiseGeneratedIslandShape(int width, int height)
         {
             // ISLAND
 
@@ -228,7 +228,7 @@ namespace RealmStudio
 
                 if (selectedShapingFunction.ShapingBitmap != null)
                 {
-                    SKBitmap resizedShapingBitmap = selectedShapingFunction.ShapingBitmap.Copy().Resize(new SKSizeI(width, height), SKFilterQuality.High);
+                    SKBitmap resizedShapingBitmap = selectedShapingFunction.ShapingBitmap.Copy().Resize(new SKSizeI(width, height), SKSamplingOptions.Default);
 
                     selectedShapingFunction.ShapeArray = new float[width, height];
 

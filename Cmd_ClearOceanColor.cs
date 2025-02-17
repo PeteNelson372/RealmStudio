@@ -42,7 +42,7 @@ namespace RealmStudio
         {
             MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
 
-            if (oceanTextureOverlayLayer.MapLayerComponents.Count() < 1)
+            if (oceanTextureOverlayLayer.MapLayerComponents.Count < 1)
             {
                 oceanTextureOverlayLayer.MapLayerComponents.Add(LayerColor);
             }

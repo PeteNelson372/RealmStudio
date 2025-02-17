@@ -34,7 +34,7 @@ namespace RealmStudio
         private readonly Landform Landform;
         private readonly SKGLControl RenderControl;
 
-        private int SelectedLandTextureIndex = 0;
+        private int SelectedLandTextureIndex;
 
         public LandformInfo(RealmStudioMap map, Landform mapLandform, SKGLControl renderControl)
         {

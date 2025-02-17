@@ -37,11 +37,11 @@ namespace RealmStudio
 
         public Guid SymbolGuid { get; set; } = Guid.NewGuid();
 
-        public int SymbolWidth { get; set; } = 0;
+        public int SymbolWidth { get; set; }
 
-        public int SymbolHeight { get; set; } = 0;
+        public int SymbolHeight { get; set; }
 
-        public bool IsSelected { get; set; } = false;
+        public bool IsSelected { get; set; }
 
         public SymbolFormatEnum SymbolFormat { get; set; } = SymbolFormatEnum.NotSet;
 
@@ -57,19 +57,19 @@ namespace RealmStudio
 
         public string SymbolFilePath { get; set; } = string.Empty;
 
-        public bool IsGrayscale { get; set; } = false;
+        public bool IsGrayscale { get; set; }
 
-        public bool UseCustomColors { get; set; } = false;
+        public bool UseCustomColors { get; set; }
 
         public readonly SKColor[] CustomSymbolColors = new SKColor[3];
 
-        public SKPaint? SymbolPaint { get; set; } = null;
+        public SKPaint? SymbolPaint { get; set; }
 
-        public SKBitmap? SymbolBitmap { get; set; } = null;
+        public SKBitmap? SymbolBitmap { get; set; }
 
-        public SKBitmap? ColorMappedBitmap { get; set; } = null;
+        public SKBitmap? ColorMappedBitmap { get; set; }
 
-        public SKBitmap? PlacedBitmap { get; set; } = null;
+        public SKBitmap? PlacedBitmap { get; set; }
 
         public string SymbolSVG { get; set; } = string.Empty;
 
@@ -261,9 +261,9 @@ namespace RealmStudio
             UseCustomColors = bool.Parse(useCustomColors);
 
             IEnumerable<XElement> customColorElem = mapSymbolDoc.Descendants(ns + "CustomColors");
-            if (customColorElem != null && customColorElem.Count() > 0 && customColorElem.First() != null)
+            if (customColorElem != null && customColorElem.Any() && customColorElem.First() != null)
             {
-                List<XElement> elemList = customColorElem.Descendants().ToList();
+                List<XElement> elemList = [.. customColorElem.Descendants()];
 
                 if (elemList != null && elemList.Count == 3)
                 {

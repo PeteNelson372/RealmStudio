@@ -219,4 +219,37 @@ namespace RealmStudio
         MapLayers,
         Heightmap,
     }
+
+    /// <summary>
+    /// Enumeration of Panose Font Family Types.  These can be used for
+    /// determining the similarity of two fonts or for detecting non-character
+    /// fonts like WingDings.
+    /// </summary>
+    public enum PanoseFontFamilyTypes : int
+    {
+        /// <summary>
+        ///  Any
+        /// </summary>
+        PanAny = 0,
+        /// <summary>
+        /// No Fit
+        /// </summary>
+        PanNoFit = 1,
+        /// <summary>
+        /// Text and Display
+        /// </summary>
+        PanFamilyTextDisplay = 2,
+        /// <summary>
+        /// Script
+        /// </summary>
+        PanFamilyScript = 3,
+        /// <summary>
+        /// Decorative
+        /// </summary>
+        PanFamilyDecorative = 4,
+        /// <summary>
+        /// Pictorial                      
+        /// </summary>
+        PanFamilyPictorial = 5
+    }
 }

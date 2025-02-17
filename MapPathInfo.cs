@@ -33,7 +33,7 @@ namespace RealmStudio
         private readonly MapPath MapPath;
         private readonly SKGLControl RenderControl;
 
-        private int SelectedPathTextureIndex = 0;
+        private int SelectedPathTextureIndex;
 
         public MapPathInfo(RealmStudioMap map, MapPath mapPath, SKGLControl renderControl)
         {

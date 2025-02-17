@@ -25,15 +25,9 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    public class DrawEventArgs : EventArgs
+    public class DrawEventArgs(SKCanvas canvas, SKRect bounds) : EventArgs
     {
-        public SKRect Bounds { get; set; }
-        public SKCanvas Canvas { get; set; }
-
-        public DrawEventArgs(SKCanvas canvas, SKRect bounds)
-        {
-            Canvas = canvas;
-            Bounds = bounds;
-        }
+        public SKRect Bounds { get; set; } = bounds;
+        public SKCanvas Canvas { get; set; } = canvas;
     }
 }

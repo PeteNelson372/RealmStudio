@@ -409,7 +409,7 @@ namespace RealmStudio
             {
 
                 //create the grayscale ColorMatrix
-                ColorMatrix colorMatrix = new ColorMatrix(
+                ColorMatrix colorMatrix = new(
                     [
                         [0.299f, 0.299f, 0.299f, 0, 0],
                         [0.587f, 0.587f, 0.587f, 0, 0],
@@ -419,7 +419,7 @@ namespace RealmStudio
                     ]);
 
                 //create some image attributes
-                using ImageAttributes attributes = new ImageAttributes();
+                using ImageAttributes attributes = new();
 
                 if (makeMonochrome)
                 {
@@ -923,14 +923,13 @@ namespace RealmStudio
             }
 
             PathsD clipperPaths = [];
-            PathsD inflatedPaths = [];
 
             clipperPaths.Add(clipperPath);
 
             float d = (location == ParallelEnum.Below) ? -distance : distance;
 
             // offset polyline
-            inflatedPaths = Clipper.InflatePaths(clipperPaths, d, JoinType.Square, EndType.Polygon);
+            PathsD inflatedPaths = Clipper.InflatePaths(clipperPaths, d, JoinType.Square, EndType.Polygon);
 
             if (inflatedPaths.Count > 0)
             {
@@ -1196,7 +1195,7 @@ namespace RealmStudio
             {
                 if (contour.Last().X == startPoint.X && contour.Last().Y == startPoint.Y)
                 {
-                    if (contour[contour.Count - 2].X == entryPoint.X && contour[contour.Count - 2].Y == entryPoint.Y)
+                    if (contour[^2].X == entryPoint.X && contour[^2].Y == entryPoint.Y)
                     {
                         boundaryComplete = true;
                     }
@@ -1239,7 +1238,6 @@ namespace RealmStudio
 
         private static SKPoint CheckMooreNeighborhood(LockBitmap image, SKPoint p, int startIndex, out int foundIndex)
         {
-            foundIndex = 0;
             // move around the given point clockwise from the starting index, looking for a black pixel
             for (int i = 0; i < mooreNeighborhoodCheckTable.Length; i++)
             {

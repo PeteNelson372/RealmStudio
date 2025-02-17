@@ -30,8 +30,8 @@ namespace RealmStudio
     {
         public string ThemeName { get; set; } = string.Empty;
         public string? ThemePath { get; set; }
-        public bool IsDefaultTheme { get; set; } = false;
-        public bool IsSystemTheme { get; set; } = false;
+        public bool IsDefaultTheme { get; set; }
+        public bool IsSystemTheme { get; set; }
         public MapTexture? BackgroundTexture { get; set; }
         public MapTexture? OceanTexture { get; set; }
         public int? OceanTextureOpacity { get; set; }

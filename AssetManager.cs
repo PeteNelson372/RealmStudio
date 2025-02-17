@@ -62,12 +62,12 @@ namespace RealmStudio
         public static readonly List<string> TERRAIN_SYNONYMS = [];
         public static readonly List<string> VEGETATION_SYNONYMS = [];
 
-        public static MapTheme? CURRENT_THEME { get; set; } = null;
+        public static MapTheme? CURRENT_THEME { get; set; }
 
-        public static int SELECTED_LAND_TEXTURE_INDEX { get; set; } = 0;
-        public static int SELECTED_BACKGROUND_TEXTURE_INDEX { get; set; } = 0;
-        public static int SELECTED_OCEAN_TEXTURE_INDEX { get; set; } = 0;
-        public static int SELECTED_PATH_TEXTURE_INDEX { get; set; } = 0;
+        public static int SELECTED_LAND_TEXTURE_INDEX { get; set; }
+        public static int SELECTED_BACKGROUND_TEXTURE_INDEX { get; set; }
+        public static int SELECTED_OCEAN_TEXTURE_INDEX { get; set; }
+        public static int SELECTED_PATH_TEXTURE_INDEX { get; set; }
 
         public static List<LandformShapingFunction> LANDFORM_SHAPING_FUNCTIONS = [];
 
@@ -699,7 +699,7 @@ namespace RealmStudio
             {
                 if (!string.IsNullOrEmpty(synonym))
                 {
-                    string trimmedSynonym = synonym.Trim([' ', ',']).ToLower();
+                    string trimmedSynonym = synonym.Trim([' ', ',']).ToLowerInvariant();
 
                     if (!STRUCTURE_SYNONYMS.Contains(trimmedSynonym))
                     {
@@ -713,7 +713,7 @@ namespace RealmStudio
             {
                 if (!string.IsNullOrEmpty(synonym))
                 {
-                    string trimmedSynonym = synonym.Trim([' ', ',']).ToLower();
+                    string trimmedSynonym = synonym.Trim([' ', ',']).ToLowerInvariant();
 
                     if (!TERRAIN_SYNONYMS.Contains(trimmedSynonym))
                     {
@@ -727,7 +727,7 @@ namespace RealmStudio
             {
                 if (!string.IsNullOrEmpty(synonym))
                 {
-                    string trimmedSynonym = synonym.Trim([' ', ',']).ToLower();
+                    string trimmedSynonym = synonym.Trim([' ', ',']).ToLowerInvariant();
 
                     if (!VEGETATION_SYNONYMS.Contains(trimmedSynonym))
                     {
@@ -739,7 +739,7 @@ namespace RealmStudio
 
         public static void AddSymbolTag(string tag)
         {
-            tag = tag.Trim([' ', ',']).ToLower();
+            tag = tag.Trim([' ', ',']).ToLowerInvariant();
             if (SYMBOL_TAGS.Contains(tag)) return;
             SYMBOL_TAGS.Add(tag);
         }

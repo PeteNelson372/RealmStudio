@@ -74,7 +74,7 @@ namespace RealmStudio
 
             if (s != null)
             {
-                SoundPlayer player = new SoundPlayer(s);
+                SoundPlayer player = new(s);
                 player.Play();
             }
         }
@@ -96,7 +96,7 @@ namespace RealmStudio
             {
                 width = SKFontStyleWidth.Condensed;
             }
-            else if (font.Name.ToLower().Contains("expanded"))
+            else if (font.Name.ToLowerInvariant().Contains("expanded"))
             {
                 width = SKFontStyleWidth.Expanded;
             }

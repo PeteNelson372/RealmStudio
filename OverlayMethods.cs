@@ -97,14 +97,14 @@ namespace RealmStudio
                         + (mapFrame.Patch_B.Width * mapFrame.FrameScale * mapWidthScale)
                         + (mapFrame.Patch_C.Width * mapFrame.FrameScale * mapWidthScale) > mapFrame.Width)
                     {
-                        mapFrame.FrameScale = mapFrame.FrameScale - 0.1F;
+                        mapFrame.FrameScale -= 0.1F;
                     }
 
                     while ((mapFrame.Patch_A.Height * mapFrame.FrameScale * mapHeightScale)
                         + (mapFrame.Patch_D.Height * mapFrame.FrameScale * mapHeightScale)
                         + (mapFrame.Patch_G.Height * mapFrame.FrameScale * mapHeightScale) > mapFrame.Height)
                     {
-                        mapFrame.FrameScale = mapFrame.FrameScale - 0.1F;
+                        mapFrame.FrameScale -= 0.1F;
                     }
 
                     // scale the patches
@@ -118,15 +118,15 @@ namespace RealmStudio
                     using SKBitmap scaledH = new((int)Math.Round(mapFrame.Patch_H.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.Patch_H.Height * mapFrame.FrameScale * mapHeightScale));
                     using SKBitmap scaledI = new((int)Math.Round(mapFrame.Patch_I.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.Patch_I.Height * mapFrame.FrameScale * mapHeightScale));
 
-                    mapFrame.Patch_A.ScalePixels(scaledA, SKFilterQuality.High);
-                    mapFrame.Patch_B.ScalePixels(scaledB, SKFilterQuality.High);
-                    mapFrame.Patch_C.ScalePixels(scaledC, SKFilterQuality.High);
-                    mapFrame.Patch_D.ScalePixels(scaledD, SKFilterQuality.High);
-                    mapFrame.Patch_E.ScalePixels(scaledE, SKFilterQuality.High);
-                    mapFrame.Patch_F.ScalePixels(scaledF, SKFilterQuality.High);
-                    mapFrame.Patch_G.ScalePixels(scaledG, SKFilterQuality.High);
-                    mapFrame.Patch_H.ScalePixels(scaledH, SKFilterQuality.High);
-                    mapFrame.Patch_I.ScalePixels(scaledI, SKFilterQuality.High);
+                    mapFrame.Patch_A.ScalePixels(scaledA, SKSamplingOptions.Default);
+                    mapFrame.Patch_B.ScalePixels(scaledB, SKSamplingOptions.Default);
+                    mapFrame.Patch_C.ScalePixels(scaledC, SKSamplingOptions.Default);
+                    mapFrame.Patch_D.ScalePixels(scaledD, SKSamplingOptions.Default);
+                    mapFrame.Patch_E.ScalePixels(scaledE, SKSamplingOptions.Default);
+                    mapFrame.Patch_F.ScalePixels(scaledF, SKSamplingOptions.Default);
+                    mapFrame.Patch_G.ScalePixels(scaledG, SKSamplingOptions.Default);
+                    mapFrame.Patch_H.ScalePixels(scaledH, SKSamplingOptions.Default);
+                    mapFrame.Patch_I.ScalePixels(scaledI, SKSamplingOptions.Default);
 
                     mapFrame.Patch_A.Dispose();
                     mapFrame.Patch_B.Dispose();

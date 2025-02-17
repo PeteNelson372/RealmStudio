@@ -27,7 +27,7 @@ namespace RealmStudio
     {
         private readonly RealmStudioMap Map = map;
         private MapFrame? Frame = frame;
-        private MapFrame? StoredFrame = null;
+        private MapFrame? StoredFrame;
         private readonly Color FrameTint = frameTint;
         private readonly float FrameScale = frameScale;
 

@@ -30,7 +30,7 @@ namespace RealmStudio
     public partial class MapSymbolInfo : Form
     {
         private readonly RealmStudioMap Map;
-        private MapSymbol symbol;
+        private readonly MapSymbol symbol;
         private readonly MapSymbolCollection? collection;
         public readonly Color[] originalColors = new Color[3];
 
@@ -121,7 +121,7 @@ namespace RealmStudio
         {
             if (!string.IsNullOrEmpty(NewTagTextBox.Text) && !CheckedTagsListBox.Items.Contains(NewTagTextBox.Text))
             {
-                string newTag = new string(NewTagTextBox.Text.Where(char.IsLetter).ToArray()).ToLower();
+                string newTag = new string([.. NewTagTextBox.Text.Where(char.IsLetter)]).ToLowerInvariant();
 
                 if (!string.IsNullOrEmpty(newTag))
                 {
@@ -163,7 +163,7 @@ namespace RealmStudio
 
         private List<string> GetSelectedTags()
         {
-            List<string> checkedTags = CheckedTagsListBox.CheckedItems.Cast<string>().ToList();
+            List<string> checkedTags = [.. CheckedTagsListBox.CheckedItems.Cast<string>()];
             return checkedTags;
         }
 
@@ -178,7 +178,7 @@ namespace RealmStudio
 
         private void AddTagToTagList(string tag)
         {
-            tag = tag.Trim([' ', ',']).ToLower();
+            tag = tag.Trim([' ', ',']).ToLowerInvariant();
 
             if (!CheckedTagsListBox.Items.Contains(tag))
             {

@@ -30,8 +30,8 @@ namespace RealmStudio
     {
         public static int POINT_CIRCLE_RADIUS = 5;
 
-        public static bool EDITING_REGION = false;
-        public static MapRegionPoint? NEW_REGION_POINT = null;
+        public static bool EDITING_REGION;
+        public static MapRegionPoint? NEW_REGION_POINT;
         public static int PREVIOUS_REGION_POINT_INDEX = -1;
         public static int NEXT_REGION_POINT_INDEX = -1;
 

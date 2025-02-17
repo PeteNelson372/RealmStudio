@@ -23,6 +23,7 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -32,7 +33,7 @@ namespace RealmStudio
 {
     public class MapLabel : MapComponent, IXmlSerializable
     {
-        public bool IsSelected { get; set; } = false;
+        public bool IsSelected { get; set; }
 
         public Guid LabelGuid { get; set; } = Guid.NewGuid();
 
@@ -42,21 +43,21 @@ namespace RealmStudio
 
         public Color LabelOutlineColor { get; set; } = ColorTranslator.FromHtml("#A1D6CAAB");
 
-        public float LabelOutlineWidth { get; set; } = 0;
+        public float LabelOutlineWidth { get; set; }
 
         public Color LabelGlowColor { get; set; } = Color.White;
 
-        public int LabelGlowStrength { get; set; } = 0;
+        public int LabelGlowStrength { get; set; }
 
         public Font LabelFont { get; set; } = new Font("Segoe", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
 
-        public float LabelRotationDegrees { get; set; } = 0.0F;
+        public float LabelRotationDegrees { get; set; }
 
         public SKFont LabelSKFont { get; set; } = new SKFont(); // doesn't need to be serialized
 
-        public SKPath? LabelPath { get; set; } = null;
+        public SKPath? LabelPath { get; set; }
 
-        public SKPaint? LabelPaint { get; set; } = null;
+        public SKPaint? LabelPaint { get; set; }
 
         public override void Render(SKCanvas canvas)
         {
@@ -334,7 +335,7 @@ namespace RealmStudio
             }
 
             SKFont skLabelFont = MapLabelMethods.GetSkLabelFont(LabelFont);
-            SKPaint paint = MapLabelMethods.CreateLabelPaint(skLabelFont, LabelFont, LabelColor, LabelTextAlignEnum.AlignLeft);
+            SKPaint paint = MapLabelMethods.CreateLabelPaint(LabelColor);
 
             LabelPaint = paint;
             LabelSKFont.Dispose();
@@ -347,10 +348,10 @@ namespace RealmStudio
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("X", X.ToString());
-            writer.WriteAttributeString("Y", Y.ToString());
-            writer.WriteAttributeString("Width", Width.ToString());
-            writer.WriteAttributeString("Height", Height.ToString());
+            writer.WriteAttributeString("X", X.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("Y", Y.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("Width", Width.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("Height", Height.ToString(CultureInfo.InvariantCulture));
 
             writer.WriteStartElement("LabelGuid");
             writer.WriteString(LabelGuid.ToString());

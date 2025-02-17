@@ -29,11 +29,11 @@ namespace RealmStudio
 {
     public partial class SymbolCollectionForm : Form
     {
-        private int SYMBOL_NUMBER = 0;
-        private bool COLLECTION_SAVED = false;
-        private MapSymbolCollection? COLLECTION = null;
-        private MapSymbolCollection ORIGINAL_COLLECTION = new();
-        private MapSymbol? SELECTED_SYMBOL = null;
+        private int SYMBOL_NUMBER;
+        private bool COLLECTION_SAVED;
+        private MapSymbolCollection? COLLECTION;
+        private readonly MapSymbolCollection ORIGINAL_COLLECTION = new();
+        private MapSymbol? SELECTED_SYMBOL;
         private string SEARCH_STRING = string.Empty;
 
         private Font TagButtonFont { get; set; } = new Font("Segoe", 8.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -92,7 +92,7 @@ namespace RealmStudio
                                     symbol.CollectionPath = collectionFilePath;
                                 }
 
-                                if (!symbol.SymbolTags.Any())
+                                if (!(symbol.SymbolTags.Count > 0))
                                 {
                                     List<string> potentialTags = SymbolMethods.AutoTagSymbol(symbol);
 
@@ -142,10 +142,7 @@ namespace RealmStudio
                     if (result == DialogResult.Yes)
                     {
                         COLLECTION = new();
-
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
                         COLLECTION.SetCollectionPath(collectionFilePath);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
                         string[] pathParts = fbd.SelectedPath.Split(Path.DirectorySeparatorChar);
                         COLLECTION.SetCollectionName(pathParts[^1]);
@@ -736,9 +733,10 @@ namespace RealmStudio
                     {
                         foreach (KeyValuePair<string, JsonNode?> kvPair in jsonObject)
                         {
-                            WonderdraftSymbol ws = new();
-
-                            ws.name = kvPair.Key;
+                            WonderdraftSymbol ws = new()
+                            {
+                                name = kvPair.Key
+                            };
 
                             if (kvPair.Value != null)
                             {

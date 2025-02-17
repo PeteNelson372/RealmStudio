@@ -32,11 +32,11 @@ namespace RealmStudio
 {
     public class MapGrid : MapComponent, IXmlSerializable
     {
-        public RealmStudioMap? ParentMap { get; set; } = null;
+        public RealmStudioMap? ParentMap { get; set; }
 
         public Guid GridGuid { get; set; } = Guid.NewGuid();
 
-        public bool GridEnabled { get; set; } = false;
+        public bool GridEnabled { get; set; }
 
         public GridTypeEnum GridType { get; set; } = GridTypeEnum.Square;
 
@@ -48,7 +48,7 @@ namespace RealmStudio
 
         public int GridLineWidth { get; set; } = 2;
 
-        public SKPaint? GridPaint { get; set; } = null;
+        public SKPaint? GridPaint { get; set; }
 
         public bool ShowGridSize { get; set; } = true;
 
@@ -127,35 +127,27 @@ namespace RealmStudio
 
                     string gridScaleString = string.Format("One square is {0:N} by {1:N} {2}", horizontalGridDistance, verticalGridDistance, mapUnits);
 
+                    using SKTypeface gridFontTypeFace = SKTypeface.FromFamilyName(familyName: "Tahoma", weight: SKFontStyleWeight.Normal,
+                        width: SKFontStyleWidth.Normal, slant: SKFontStyleSlant.Upright);
+
+                    using SKFont gridLabelFont = new(gridFontTypeFace, 10);
 
                     using SKPaint glowPaint = new()
                     {
                         Color = SKColors.Yellow,
                         MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Outer, 10),
                         IsAntialias = true,
-                        TextSize = 10,
-                        Typeface = SKTypeface.FromFamilyName(
-                        familyName: "Tahoma",
-                        weight: SKFontStyleWeight.Normal,
-                        width: SKFontStyleWidth.Normal,
-                        slant: SKFontStyleSlant.Upright)
                     };
 
-                    canvas.DrawText(gridScaleString, 20, Height - 40, glowPaint);
+                    canvas.DrawText(gridScaleString, 20, Height - 40, gridLabelFont, glowPaint);
 
                     using SKPaint paint = new()
                     {
                         Color = SKColors.Black,
                         IsAntialias = true,
-                        TextSize = 10,
-                        Typeface = SKTypeface.FromFamilyName(
-                        familyName: "Tahoma",
-                        weight: SKFontStyleWeight.Normal,
-                        width: SKFontStyleWidth.Normal,
-                        slant: SKFontStyleSlant.Upright)
                     };
 
-                    canvas.DrawText(gridScaleString, 20, Height - 40, paint);
+                    canvas.DrawText(gridScaleString, 20, Height - 40, gridLabelFont, paint);
                 }
 
             }
@@ -226,34 +218,27 @@ namespace RealmStudio
 
                     string gridScaleString = string.Format("One hexagon is {0:N} by {1:N} {2}", horizontalGridDistance, verticalGridDistance, mapUnits);
 
+                    using SKTypeface gridFontTypeFace = SKTypeface.FromFamilyName(familyName: "Tahoma", weight: SKFontStyleWeight.Normal,
+                        width: SKFontStyleWidth.Normal, slant: SKFontStyleSlant.Upright);
+
+                    using SKFont gridLabelFont = new(gridFontTypeFace, 10);
+
                     using SKPaint glowPaint = new()
                     {
                         Color = SKColors.Yellow,
                         MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Outer, 10),
                         IsAntialias = true,
-                        TextSize = 10,
-                        Typeface = SKTypeface.FromFamilyName(
-                        familyName: "Tahoma",
-                        weight: SKFontStyleWeight.Normal,
-                        width: SKFontStyleWidth.Normal,
-                        slant: SKFontStyleSlant.Upright)
                     };
 
-                    canvas.DrawText(gridScaleString, 20, Height - 40, glowPaint);
+                    canvas.DrawText(gridScaleString, 20, Height - 40, gridLabelFont, glowPaint);
 
                     using SKPaint paint = new()
                     {
                         Color = SKColors.Black,
                         IsAntialias = true,
-                        TextSize = 10,
-                        Typeface = SKTypeface.FromFamilyName(
-                        familyName: "Tahoma",
-                        weight: SKFontStyleWeight.Normal,
-                        width: SKFontStyleWidth.Normal,
-                        slant: SKFontStyleSlant.Upright)
                     };
 
-                    canvas.DrawText(gridScaleString, 20, Height - 40, paint);
+                    canvas.DrawText(gridScaleString, 20, Height - 40, gridLabelFont, paint);
                 }
             }
         }
@@ -322,34 +307,27 @@ namespace RealmStudio
 
                     string gridScaleString = string.Format("One hexagon is {0:N} by {1:N} {2}", horizontalGridDistance, verticalGridDistance, mapUnits);
 
+                    using SKTypeface gridFontTypeFace = SKTypeface.FromFamilyName(familyName: "Tahoma", weight: SKFontStyleWeight.Normal,
+                        width: SKFontStyleWidth.Normal, slant: SKFontStyleSlant.Upright);
+
+                    using SKFont gridLabelFont = new(gridFontTypeFace, 10);
+
                     using SKPaint glowPaint = new()
                     {
                         Color = SKColors.Yellow,
                         MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Outer, 10),
                         IsAntialias = true,
-                        TextSize = 10,
-                        Typeface = SKTypeface.FromFamilyName(
-                        familyName: "Tahoma",
-                        weight: SKFontStyleWeight.Normal,
-                        width: SKFontStyleWidth.Normal,
-                        slant: SKFontStyleSlant.Upright)
                     };
 
-                    canvas.DrawText(gridScaleString, 20, Height - 40, glowPaint);
+                    canvas.DrawText(gridScaleString, 20, Height - 40, gridLabelFont, glowPaint);
 
                     using SKPaint paint = new()
                     {
                         Color = SKColors.Black,
                         IsAntialias = true,
-                        TextSize = 10,
-                        Typeface = SKTypeface.FromFamilyName(
-                        familyName: "Tahoma",
-                        weight: SKFontStyleWeight.Normal,
-                        width: SKFontStyleWidth.Normal,
-                        slant: SKFontStyleSlant.Upright)
                     };
 
-                    canvas.DrawText(gridScaleString, 20, Height - 40, paint);
+                    canvas.DrawText(gridScaleString, 20, Height - 40, gridLabelFont, paint);
                 }
 
             }
@@ -364,7 +342,6 @@ namespace RealmStudio
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8601 // Possible null reference assignment.
 
             XNamespace ns = "RealmStudio";
             string content = reader.ReadOuterXml();
@@ -409,13 +386,13 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement> gridColorElem = mapGridDoc.Descendants(ns + "GridColor");
-            if (gridColorElem != null && gridColorElem.Count() > 0 && gridColorElem.First() != null)
+            if (gridColorElem != null && gridColorElem.Any() && gridColorElem.First() != null)
             {
                 string? gridColor = mapGridDoc.Descendants().Select(x => x.Element(ns + "GridColor").Value).FirstOrDefault();
 
                 int argbValue = 0;
 
-                if (gridColor.StartsWith("#"))
+                if (gridColor.StartsWith('#'))
                 {
                     argbValue = ColorTranslator.FromHtml(gridColor).ToArgb();
                 }
@@ -462,7 +439,6 @@ namespace RealmStudio
 
             GridEnabled = true;
 
-#pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }

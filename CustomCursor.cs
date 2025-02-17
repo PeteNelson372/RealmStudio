@@ -48,7 +48,7 @@ namespace RealmStudio
         public static Cursor CreateCursor(Bitmap bmp, int xHotSpot, int yHotSpot)
         {
             IntPtr ptr = bmp.GetHicon();
-            IconInfo tmp = new IconInfo();
+            IconInfo tmp = new();
             GetIconInfo(ptr, ref tmp);
             tmp.xHotspot = xHotSpot;
             tmp.yHotspot = yHotSpot;

@@ -30,8 +30,8 @@ namespace RealmStudio
         public RealmStudioMap map = new();
         public float MapAspectRatio { get; set; } = 1.0F;
         public bool AspectRatioLocked = true;
-        private bool WidthChanging = false;
-        private bool HeightChanging = false;
+        private bool WidthChanging;
+        private bool HeightChanging;
 
         public RealmConfiguration()
         {
@@ -703,9 +703,7 @@ namespace RealmStudio
 
         private void SwapResolutionButton_Click(object sender, EventArgs e)
         {
-            var temp = WidthUpDown.Value;
-            WidthUpDown.Value = HeightUpDown.Value;
-            HeightUpDown.Value = temp;
+            (HeightUpDown.Value, WidthUpDown.Value) = (WidthUpDown.Value, HeightUpDown.Value);
         }
 
         private void WidthUpDown_ValueChanged(object sender, EventArgs e)

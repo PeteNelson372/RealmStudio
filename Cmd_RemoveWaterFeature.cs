@@ -26,7 +26,7 @@ namespace RealmStudio
     class Cmd_RemoveWaterFeature(RealmStudioMap map, IWaterFeature selectedWaterFeature) : IMapOperation
     {
         private readonly RealmStudioMap _map = map;
-        private IWaterFeature? storedWaterFeature = null;
+        private IWaterFeature? storedWaterFeature;
 
         public void DoOperation()
         {
@@ -44,8 +44,7 @@ namespace RealmStudio
                     }
                     else if (iwf is River r)
                     {
-                        River? sr = selectedWaterFeature as River;
-                        if (sr != null && r.MapRiverGuid.ToString() == sr.MapRiverGuid.ToString())
+                        if (selectedWaterFeature is River sr && r.MapRiverGuid.ToString() == sr.MapRiverGuid.ToString())
                         {
                             storedWaterFeature = r;
                             MapBuilder.GetMapLayerByIndex(_map, MapBuilder.WATERLAYER).MapLayerComponents.RemoveAt(i);

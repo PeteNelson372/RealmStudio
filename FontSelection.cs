@@ -26,8 +26,8 @@ namespace RealmStudio
     internal class FontSelection
     {
         public Font SelectedFont { get; set; } = new("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
-        public bool IsBold { get; set; } = false;
-        public bool IsItalic { get; set; } = false;
+        public bool IsBold { get; set; }
+        public bool IsItalic { get; set; }
         public float FontSize { get; set; } = 9.0F;
     }
 }

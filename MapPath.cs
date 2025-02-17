@@ -32,19 +32,19 @@ namespace RealmStudio
 {
     public class MapPath : MapComponent, IXmlSerializable
     {
-        public RealmStudioMap? ParentMap { get; set; } = null;
+        public RealmStudioMap? ParentMap { get; set; }
         public Guid MapPathGuid { get; set; } = Guid.NewGuid();
         public string MapPathName { get; set; } = "";
         public List<MapPathPoint> PathPoints { get; set; } = [];
         public PathTypeEnum PathType { get; set; } = PathTypeEnum.SolidLinePath;
         public Color PathColor { get; set; } = ColorTranslator.FromHtml("#4B311A");
         public float PathWidth { get; set; } = 4;
-        public MapTexture? PathTexture { get; set; } = null;
-        public bool DrawOverSymbols { get; set; } = false;
-        public bool ShowPathPoints { get; set; } = false;
-        public bool IsSelected { get; set; } = false;
+        public MapTexture? PathTexture { get; set; }
+        public bool DrawOverSymbols { get; set; }
+        public bool ShowPathPoints { get; set; }
+        public bool IsSelected { get; set; }
         public SKPaint? PathPaint { get; set; }
-        public SKPath? BoundaryPath { get; set; } = null;
+        public SKPath? BoundaryPath { get; set; }
 
         public override void Render(SKCanvas canvas)
         {
@@ -53,7 +53,7 @@ namespace RealmStudio
             // clip the path drawing to the outer path of landforms
             List<MapComponent> landformList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
 
-            List<MapPathPoint> distinctPathPoints = PathPoints.Distinct(new MapPathPointComparer()).ToList();
+            List<MapPathPoint> distinctPathPoints = [.. PathPoints.Distinct(new MapPathPointComparer())];
             using SKPath clipPath = new();
 
             for (int i = 0; i < landformList.Count; i++)

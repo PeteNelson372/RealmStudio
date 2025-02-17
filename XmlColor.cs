@@ -64,7 +64,7 @@ namespace RealmStudio
         [XmlText]
         public string Default
         {
-            get { return ColorTranslator.ToHtml(colorValue); }
+            readonly get { return ColorTranslator.ToHtml(colorValue); }
             set { colorValue = ColorTranslator.FromHtml(value); }
         }
     }

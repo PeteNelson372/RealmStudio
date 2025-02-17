@@ -34,7 +34,7 @@ namespace RealmStudio
         public Guid PointGuid { get; set; } = Guid.NewGuid();
         public SKPoint RegionPoint { get; set; }
 
-        public bool IsSelected { get; set; } = false;
+        public bool IsSelected { get; set; }
 
         public MapRegionPoint() { }
 

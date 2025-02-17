@@ -1,5 +1,6 @@
 ﻿using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using System.Globalization;
 
 namespace RealmStudio
 {
@@ -9,7 +10,7 @@ namespace RealmStudio
         private readonly RealmStudioMap currentMap;
         private SKRect selectedArea;
 
-        public RealmStudioMap? detailMap = null;
+        public RealmStudioMap? detailMap;
 
 
         public DetailMapForm(RealmStudioMainForm mainForm, RealmStudioMap currentMap, SKRect selectedArea)
@@ -25,8 +26,8 @@ namespace RealmStudio
             MapWidthUpDown.Value = (decimal)selectedArea.Width;
             MapHeightUpDown.Value = (decimal)selectedArea.Height;
 
-            DetailMapWidthLabel.Text = (MapWidthUpDown.Value * MapZoomUpDown.Value).ToString();
-            DetailMapHeightLabel.Text = (MapHeightUpDown.Value * MapZoomUpDown.Value).ToString();
+            DetailMapWidthLabel.Text = (MapWidthUpDown.Value * MapZoomUpDown.Value).ToString(CultureInfo.InvariantCulture);
+            DetailMapHeightLabel.Text = (MapHeightUpDown.Value * MapZoomUpDown.Value).ToString(CultureInfo.InvariantCulture);
         }
 
         private void CancelCreateDetailButton_Click(object sender, EventArgs e)
@@ -46,8 +47,8 @@ namespace RealmStudio
             int detailMapWidth = Math.Min((int)(MapWidthUpDown.Value * MapZoomUpDown.Value), 10000);
             int detailMapHeight = Math.Min((int)(MapHeightUpDown.Value * MapZoomUpDown.Value), 10000);
 
-            DetailMapWidthLabel.Text = detailMapWidth.ToString();
-            DetailMapHeightLabel.Text = detailMapHeight.ToString();
+            DetailMapWidthLabel.Text = detailMapWidth.ToString(CultureInfo.InvariantCulture);
+            DetailMapHeightLabel.Text = detailMapHeight.ToString(CultureInfo.InvariantCulture);
         }
 
         private void MapTopUpDown_ValueChanged(object sender, EventArgs e)
@@ -640,7 +641,7 @@ namespace RealmStudio
                     newLabel.LabelFont = labelFont;
 
                     SKFont skLabelFont = MapLabelMethods.GetSkLabelFont(labelFont);
-                    SKPaint paint = MapLabelMethods.CreateLabelPaint(skLabelFont, labelFont, newLabel.LabelColor, LabelTextAlignEnum.AlignLeft);
+                    SKPaint paint = MapLabelMethods.CreateLabelPaint(newLabel.LabelColor);
 
                     newLabel.LabelPaint = paint;
                     newLabel.LabelSKFont.Dispose();

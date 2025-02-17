@@ -131,7 +131,7 @@ namespace RealmStudio
 
         private static string GenerateName(NameGenerator nameGen, List<INameGenerator> selectedGenerators)
         {
-            string generatedName = string.Empty;
+            string generatedName;
 
             int column1Index = Random.Shared.Next(0, nameGen.Column1.Count);
             string column1Value = nameGen.Column1[column1Index];
@@ -272,11 +272,12 @@ namespace RealmStudio
 
                     if (lineParts.Length == 6)
                     {
-                        NameBaseLanguage language = new();
-
-                        language.Language = lineParts[0].Trim();
-                        language.MinNameLength = int.Parse(lineParts[1]);
-                        language.MaxNameLength = int.Parse(lineParts[2]);
+                        NameBaseLanguage language = new()
+                        {
+                            Language = lineParts[0].Trim(),
+                            MinNameLength = int.Parse(lineParts[1]),
+                            MaxNameLength = int.Parse(lineParts[2])
+                        };
 
                         foreach (char c in lineParts[3])
                         {
@@ -314,8 +315,10 @@ namespace RealmStudio
 
             if (lines.Any())
             {
-                NameGenerator generator = new();
-                generator.NameGeneratorName = Path.GetFileNameWithoutExtension(path);
+                NameGenerator generator = new()
+                {
+                    NameGeneratorName = Path.GetFileNameWithoutExtension(path)
+                };
 
                 foreach (var line in lines)
                 {

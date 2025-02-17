@@ -48,30 +48,28 @@ namespace RealmStudio
         private static RealmStudioMap CURRENT_MAP = new();
 
         // the objects currently being drawn, before being added to map layers
-        private static Landform? CURRENT_LANDFORM = null;
-        private static MapWindrose? CURRENT_WINDROSE = null;
-        private static WaterFeature? CURRENT_WATERFEATURE = null;
-        private static River? CURRENT_RIVER = null;
-        private static MapPath? CURRENT_MAP_PATH = null;
-        private static MapGrid? CURRENT_MAP_GRID = null;
-        private static MapMeasure? CURRENT_MAP_MEASURE = null;
-        private static MapRegion? CURRENT_MAP_REGION = null;
-        private static LayerPaintStroke? CURRENT_LAYER_PAINT_STROKE = null;
-
-        private static LayerPaintStroke? CURRENT_LAND_ERASE_STROKE = null;
-        //private static LayerPaintStroke? CURRENT_COAST_ERASE_STROKE = null;
+        private static Landform? CURRENT_LANDFORM;
+        private static MapWindrose? CURRENT_WINDROSE;
+        private static WaterFeature? CURRENT_WATERFEATURE;
+        private static River? CURRENT_RIVER;
+        private static MapPath? CURRENT_MAP_PATH;
+        private static MapGrid? CURRENT_MAP_GRID;
+        private static MapMeasure? CURRENT_MAP_MEASURE;
+        private static MapRegion? CURRENT_MAP_REGION;
+        private static LayerPaintStroke? CURRENT_LAYER_PAINT_STROKE;
+        private static LayerPaintStroke? CURRENT_LAND_ERASE_STROKE;
 
         // objects that are currently selected
-        private static Landform? SELECTED_LANDFORM = null;
-        private static MapPath? SELECTED_PATH = null;
-        private static MapPathPoint? SELECTED_PATHPOINT = null;
-        private static MapSymbol? SELECTED_MAP_SYMBOL = null;
-        private static MapBox? SELECTED_MAP_BOX = null;
-        private static PlacedMapBox? SELECTED_PLACED_MAP_BOX = null;
-        private static MapLabel? SELECTED_MAP_LABEL = null;
-        private static MapScale? SELECTED_MAP_SCALE = null;
-        private static IWaterFeature? SELECTED_WATERFEATURE = null;
-        private static MapRiverPoint? SELECTED_RIVERPOINT = null;
+        private static Landform? SELECTED_LANDFORM;
+        private static MapPath? SELECTED_PATH;
+        private static MapPathPoint? SELECTED_PATHPOINT;
+        private static MapSymbol? SELECTED_MAP_SYMBOL;
+        private static MapBox? SELECTED_MAP_BOX;
+        private static PlacedMapBox? SELECTED_PLACED_MAP_BOX;
+        private static MapLabel? SELECTED_MAP_LABEL;
+        private static MapScale? SELECTED_MAP_SCALE;
+        private static IWaterFeature? SELECTED_WATERFEATURE;
+        private static MapRiverPoint? SELECTED_RIVERPOINT;
         private static ColorPaintBrush SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.SoftBrush;
         private static GeneratedLandformTypeEnum SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.NotSet;
         private static SKRect SELECTED_LANDFORM_AREA = SKRect.Empty;
@@ -84,7 +82,7 @@ namespace RealmStudio
         private static readonly FontSelection FONT_PANEL_SELECTED_FONT = new();
         private static FontPanelOpenerEnum FONT_PANEL_OPENER = FontPanelOpenerEnum.NotSet;
 
-        private static int SELECTED_BRUSH_SIZE = 0;
+        private static int SELECTED_BRUSH_SIZE;
 
         private static float PLACEMENT_RATE = 1.0F;
         private static float PLACEMENT_DENSITY = 1.0F;
@@ -93,11 +91,11 @@ namespace RealmStudio
         private static readonly double BASE_MILLIS_PER_PAINT_EVENT = 10.0;
         private static double BRUSH_VELOCITY = 2.0;
 
-        private static System.Timers.Timer? BRUSH_TIMER = null;
-        private static System.Timers.Timer? AUTOSAVE_TIMER = null;
-        private static System.Timers.Timer? SYMBOL_AREA_BRUSH_TIMER = null;
+        private static System.Timers.Timer? BRUSH_TIMER;
+        private static System.Timers.Timer? AUTOSAVE_TIMER;
+        private static System.Timers.Timer? SYMBOL_AREA_BRUSH_TIMER;
 
-        private static System.Timers.Timer? LOCATION_UPDATE_TIMER = null;
+        private static System.Timers.Timer? LOCATION_UPDATE_TIMER;
 
         private static readonly int BACKUP_COUNT = 5;
 
@@ -119,8 +117,8 @@ namespace RealmStudio
 
         public static readonly NameGeneratorConfiguration NAME_GENERATOR_CONFIG = new();
 
-        private static bool SYMBOL_SCALE_LOCKED = false;
-        private static bool CREATING_LABEL = false;
+        private static bool SYMBOL_SCALE_LOCKED;
+        private static bool CREATING_LABEL;
 
         private readonly AppSplashScreen SPLASH_SCREEN;
 
@@ -696,7 +694,7 @@ namespace RealmStudio
             SaveFileDialog ofd = new()
             {
                 Title = "Export Map",
-                DefaultExt = exportFormat.ToString().ToLower(),
+                DefaultExt = exportFormat.ToString().ToLowerInvariant(),
                 RestoreDirectory = true,
                 ShowHelp = true,
                 Filter = "",
@@ -713,7 +711,7 @@ namespace RealmStudio
                 if (c.CodecName != null && c.FilenameExtension != null)
                 {
                     string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
-                    ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLower());
+                    ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLowerInvariant());
                     sep = "|";
                 }
             }
@@ -835,7 +833,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "background" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "background" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -851,7 +849,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "ocean" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "ocean" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -867,7 +865,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "windroses" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "windroses" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -883,7 +881,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "gridlower" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "gridlower" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -899,7 +897,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "landforms" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "landforms" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -915,7 +913,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "waterfeatures" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "waterfeatures" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -931,7 +929,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "gridupper" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "gridupper" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -947,7 +945,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "pathslower" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "pathslower" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -963,7 +961,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "symbols" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "symbols" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -979,7 +977,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "pathsupper" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "pathsupper" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -995,7 +993,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "regions" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "regions" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -1011,7 +1009,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "griddefault" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "griddefault" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -1027,7 +1025,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "boxes" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "boxes" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -1043,7 +1041,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "labels" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "labels" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -1059,7 +1057,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "overlay" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "overlay" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -1075,7 +1073,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "frame" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "frame" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -1091,7 +1089,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "measures" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "measures" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -1110,7 +1108,7 @@ namespace RealmStudio
 
                         if (bitmapBytes != null)
                         {
-                            var fileName = "vignette" + "." + exportFormat.ToString().ToLower();
+                            var fileName = "vignette" + "." + exportFormat.ToString().ToLowerInvariant();
                             var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
 
                             using var zipStream = zipArchiveEntry.Open();
@@ -1138,7 +1136,7 @@ namespace RealmStudio
             SaveFileDialog ofd = new()
             {
                 Title = "Export Map",
-                DefaultExt = exportFormat.ToString().ToLower(),
+                DefaultExt = exportFormat.ToString().ToLowerInvariant(),
                 RestoreDirectory = true,
                 ShowHelp = true,
                 Filter = "",
@@ -1155,7 +1153,7 @@ namespace RealmStudio
                 if (c.CodecName != null && c.FilenameExtension != null)
                 {
                     string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
-                    ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLower());
+                    ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLowerInvariant());
                     sep = "|";
                 }
             }
@@ -1644,7 +1642,7 @@ namespace RealmStudio
                     if (!string.IsNullOrEmpty(c.CodecName) && !string.IsNullOrEmpty(c.FilenameExtension))
                     {
                         string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
-                        ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLower());
+                        ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLowerInvariant());
                         sep = "|";
                     }
                 }
@@ -3375,6 +3373,7 @@ namespace RealmStudio
             }
         }
 
+#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
         [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool DeleteObject(IntPtr hObject);
 
@@ -3384,46 +3383,13 @@ namespace RealmStudio
         [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv, ref uint pcFonts);
 
-
         [DllImport("gdi32", CharSet = CharSet.Ansi)]
         private static extern int GetOutlineTextMetrics(
             IntPtr hdc,            // handle to DC
             int cbData,            // size in bytes for text metrics
             IntPtr lpOtm         // pointer to buffer to receive outline text metrics structure
         );
-
-        /// <summary>
-        /// Enumeration of Panose Font Family Types.  These can be used for
-        /// determining the similarity of two fonts or for detecting non-character
-        /// fonts like WingDings.
-        /// </summary>
-        public enum PanoseFontFamilyTypes : int
-        {
-            /// <summary>
-            ///  Any
-            /// </summary>
-            PAN_ANY = 0,
-            /// <summary>
-            /// No Fit
-            /// </summary>
-            PAN_NO_FIT = 1,
-            /// <summary>
-            /// Text and Display
-            /// </summary>
-            PAN_FAMILY_TEXT_DISPLAY = 2,
-            /// <summary>
-            /// Script
-            /// </summary>
-            PAN_FAMILY_SCRIPT = 3,
-            /// <summary>
-            /// Decorative
-            /// </summary>
-            PAN_FAMILY_DECORATIVE = 4,
-            /// <summary>
-            /// Pictorial                      
-            /// </summary>
-            PAN_FAMILY_PICTORIAL = 5
-        }
+#pragma warning restore SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
 
         /// <summary>
         /// Gets the <see cref="PanoseFontFamilyTypes"/> for the specified font.
@@ -3633,9 +3599,9 @@ namespace RealmStudio
 
                     //Debug.WriteLine("FAMILY TYPE: " + familyType);
 
-                    if (familyType == PanoseFontFamilyTypes.PAN_FAMILY_DECORATIVE
-                        || familyType == PanoseFontFamilyTypes.PAN_FAMILY_PICTORIAL
-                        || familyType == PanoseFontFamilyTypes.PAN_NO_FIT
+                    if (familyType == PanoseFontFamilyTypes.PanFamilyDecorative
+                        || familyType == PanoseFontFamilyTypes.PanFamilyPictorial
+                        || familyType == PanoseFontFamilyTypes.PanNoFit
                         || font.Name == "Marlett")
                     {
                         Font f = new("Segoe UI", 12, FontStyle.Regular, GraphicsUnit.Point);
@@ -6031,7 +5997,7 @@ namespace RealmStudio
                             {
                                 // get all pixels within the brush area
                                 // for each pixel in the brush area, get its color and then lighten it by 1 up to a maximum of 255
-                                List<SKPoint> brushPoints = new List<SKPoint>();
+                                List<SKPoint> brushPoints = [];
 
                                 for (int x = (int)zoomedScrolledPoint.X - brushRadius; x < (int)zoomedScrolledPoint.X + brushRadius; x++)
                                 {
@@ -6092,7 +6058,7 @@ namespace RealmStudio
                             {
                                 // get all pixels within the brush area
                                 // for each pixel in the brush area, get its color and then darken it by 1 up to a minimum of 25
-                                List<SKPoint> brushPoints = new List<SKPoint>();
+                                List<SKPoint> brushPoints = [];
 
                                 for (int x = (int)zoomedScrolledPoint.X - brushRadius; x < (int)zoomedScrolledPoint.X + brushRadius; x++)
                                 {
@@ -10652,7 +10618,7 @@ namespace RealmStudio
                         };
 
                         SKFont skLabelFont = MapLabelMethods.GetSkLabelFont(labelFont);
-                        SKPaint paint = MapLabelMethods.CreateLabelPaint(skLabelFont, labelFont, labelColor, LabelTextAlignEnum.AlignLeft);
+                        SKPaint paint = MapLabelMethods.CreateLabelPaint(labelColor);
 
                         label.LabelPaint = paint;
                         label.LabelSKFont.Dispose();
@@ -10746,7 +10712,7 @@ namespace RealmStudio
                     fontTypeface ??= SKTypeface.FromFamilyName(labelFont.FontFamily.Name, fs);
 
                     SKFont paintFont = new(fontTypeface, labelFont.SizeInPoints, 1, 0);
-                    SKPaint labelPaint = MapLabelMethods.CreateLabelPaint(paintFont, labelFont, labelColor, LabelTextAlignEnum.AlignLeft);
+                    SKPaint labelPaint = MapLabelMethods.CreateLabelPaint(labelColor);
 
                     float lblWidth = paintFont.MeasureText(tb.Text, labelPaint);
                     int tbWidth = (int)Math.Max(lblWidth, tb.Width);
@@ -11510,7 +11476,7 @@ namespace RealmStudio
 
                 PlacedMapFrame placedFrame = (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.FRAMELAYER).MapLayerComponents[0];
 
-                Cmd_ChangeFrameColor cmd = new(CURRENT_MAP, placedFrame, FrameTintColorSelectButton.BackColor);
+                Cmd_ChangeFrameColor cmd = new(placedFrame, FrameTintColorSelectButton.BackColor);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 

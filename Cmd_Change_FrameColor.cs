@@ -25,14 +25,12 @@ namespace RealmStudio
 {
     internal class Cmd_ChangeFrameColor : IMapOperation
     {
-        private RealmStudioMap Map;
-        private PlacedMapFrame SelectedFrame;
-        private Color FrameTint;
-        private Color PreviousFrameTint = Color.White;
+        private readonly PlacedMapFrame SelectedFrame;
+        private readonly Color FrameTint;
+        private readonly Color PreviousFrameTint = Color.White;
 
-        public Cmd_ChangeFrameColor(RealmStudioMap map, PlacedMapFrame selectedFrame, Color frameTint)
+        public Cmd_ChangeFrameColor(PlacedMapFrame selectedFrame, Color frameTint)
         {
-            Map = map;
             SelectedFrame = selectedFrame;
             PreviousFrameTint = SelectedFrame.FrameTint;
             FrameTint = frameTint;

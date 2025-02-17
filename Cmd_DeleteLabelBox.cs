@@ -26,7 +26,7 @@ namespace RealmStudio
     internal class Cmd_DeleteLabelBox(RealmStudioMap map, PlacedMapBox selectedBox) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
-        private PlacedMapBox SelectedBox = selectedBox;
+        private readonly PlacedMapBox SelectedBox = selectedBox;
 
         public void DoOperation()
         {

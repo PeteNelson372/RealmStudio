@@ -33,16 +33,16 @@ namespace RealmStudio
     public class PlacedMapFrame : MapComponent, IXmlSerializable
     {
         public Guid FrameGuid = Guid.NewGuid();
-        public SKBitmap? FrameBitmap { get; set; } = null;
-        public SKBitmap? Patch_A { get; set; } = null;  // top left corner
-        public SKBitmap? Patch_B { get; set; } = null; // top middle
-        public SKBitmap? Patch_C { get; set; } = null; // top right corner
-        public SKBitmap? Patch_D { get; set; } = null; // left side
-        public SKBitmap? Patch_E { get; set; } = null; // middle
-        public SKBitmap? Patch_F { get; set; } = null; // right side
-        public SKBitmap? Patch_G { get; set; } = null; // bottom left corner
-        public SKBitmap? Patch_H { get; set; } = null; // bottom middle
-        public SKBitmap? Patch_I { get; set; } = null; // bottom right corner
+        public SKBitmap? FrameBitmap { get; set; }
+        public SKBitmap? Patch_A { get; set; }   // top left corner
+        public SKBitmap? Patch_B { get; set; }  // top middle
+        public SKBitmap? Patch_C { get; set; }  // top right corner
+        public SKBitmap? Patch_D { get; set; }  // left side
+        public SKBitmap? Patch_E { get; set; }  // middle
+        public SKBitmap? Patch_F { get; set; }  // right side
+        public SKBitmap? Patch_G { get; set; }  // bottom left corner
+        public SKBitmap? Patch_H { get; set; }  // bottom middle
+        public SKBitmap? Patch_I { get; set; }  // bottom right corner
 
         public bool FrameEnabled { get; set; } = true;
 
@@ -50,12 +50,12 @@ namespace RealmStudio
 
         public float FrameScale { get; set; } = 1.0F;
 
-        public SKPaint? FramePaint { get; set; } = null;
+        public SKPaint? FramePaint { get; set; }
 
-        public float FrameCenterLeft { get; set; } = 0;
-        public float FrameCenterTop { get; set; } = 0;
-        public float FrameCenterRight { get; set; } = 0;
-        public float FrameCenterBottom { get; set; } = 0;
+        public float FrameCenterLeft { get; set; }
+        public float FrameCenterTop { get; set; }
+        public float FrameCenterRight { get; set; }
+        public float FrameCenterBottom { get; set; }
 
         public override void Render(SKCanvas canvas)
         {
@@ -211,7 +211,6 @@ namespace RealmStudio
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8601 // Possible null reference assignment.
 
             XNamespace ns = "RealmStudio";
             string content = reader.ReadOuterXml();
@@ -256,10 +255,8 @@ namespace RealmStudio
                 byte[] imageBytes = Convert.FromBase64String(base64String);
 
                 // Create an image from the byte array
-                using (MemoryStream ms = new(imageBytes))
-                {
-                    FrameBitmap = SKBitmap.Decode(ms);
-                }
+                using MemoryStream ms = new(imageBytes);
+                FrameBitmap = SKBitmap.Decode(ms);
             }
 
             IEnumerable<XElement> frameTintElem = mapFrameDoc.Descendants(ns + "FrameTint");

@@ -32,7 +32,7 @@ namespace RealmStudio
 {
     public class River : MapComponent, IWaterFeature, IXmlSerializable
     {
-        public RealmStudioMap? ParentMap { get; set; } = null;
+        public RealmStudioMap? ParentMap { get; set; }
 
         public Guid MapRiverGuid { get; set; } = Guid.NewGuid();
 
@@ -46,15 +46,15 @@ namespace RealmStudio
 
         public int ShorelineEffectDistance { get; set; } = 6;
 
-        public bool RiverSourceFadeIn { get; set; } = false;
+        public bool RiverSourceFadeIn { get; set; }
 
         public bool RenderRiverTexture { get; set; } = true;
 
         public Color RiverShorelineColor { get; set; } = Color.FromArgb(161, 144, 118);
 
-        public bool ShowRiverPoints { get; set; } = false;
+        public bool ShowRiverPoints { get; set; }
 
-        public bool IsSelected { get; set; } = false;
+        public bool IsSelected { get; set; }
 
         public SKPaint RiverFillPaint { get; set; } = new();
 
@@ -69,13 +69,13 @@ namespace RealmStudio
             Style = SKPaintStyle.Stroke,
         };
 
-        public SKPath? RiverPath { get; set; } = null;
-        public SKPath? RiverBoundaryPath { get; set; } = null;
-        public SKPath? ShorelinePath { get; set; } = null;
-        public SKPath? Gradient1Path { get; set; } = null;
+        public SKPath? RiverPath { get; set; }
+        public SKPath? RiverBoundaryPath { get; set; }
+        public SKPath? ShorelinePath { get; set; }
+        public SKPath? Gradient1Path { get; set; }
         //public SKPath? Gradient2Path { get; set; } = null;
         //public SKPath? Gradient3Path { get; set; } = null;
-        public SKPath? ShallowWaterPath { get; set; } = null;
+        public SKPath? ShallowWaterPath { get; set; }
 
         public override void Render(SKCanvas canvas)
         {

@@ -26,21 +26,16 @@ using System.Runtime.InteropServices;
 
 namespace RealmStudio
 {
-    public class LockBitmap
+    public class LockBitmap(Bitmap source)
     {
-        private readonly Bitmap? _source = null;
+        private readonly Bitmap _source = source;
         private IntPtr _iptr = IntPtr.Zero;
-        private BitmapData? _bitmapData = null;
+        private BitmapData? _bitmapData;
 
         public byte[]? Pixels { get; set; }
         public int Depth { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
-
-        public LockBitmap(Bitmap source)
-        {
-            this._source = source;
-        }
 
         /// <summary>
         /// Lock bitmap data
@@ -50,16 +45,14 @@ namespace RealmStudio
             try
             {
                 // Get width and height of bitmap
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 Width = _source.Width;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 Height = _source.Height;
 
                 // get total locked pixels count
                 int pixelCount = Width * Height;
 
                 // Create rectangle to lock
-                Rectangle rect = new Rectangle(0, 0, Width, Height);
+                Rectangle rect = new(0, 0, Width, Height);
 
                 // get source bitmap pixel format size
                 Depth = Image.GetPixelFormatSize(_source.PixelFormat);
@@ -71,8 +64,7 @@ namespace RealmStudio
                 }
 
                 // Lock bitmap and return bitmap data
-                _bitmapData = _source.LockBits(rect, ImageLockMode.ReadWrite,
-                                             _source.PixelFormat);
+                _bitmapData = _source.LockBits(rect, ImageLockMode.ReadWrite, _source.PixelFormat);
 
                 // create byte array to copy pixel values
                 int step = Depth / 8;

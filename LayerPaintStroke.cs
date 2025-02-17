@@ -34,19 +34,19 @@ namespace RealmStudio
 {
     public class LayerPaintStroke : MapComponent, IXmlSerializable
     {
-        public RealmStudioMap? ParentMap { get; set; } = null;
+        public RealmStudioMap? ParentMap { get; set; }
 
         public Guid StrokeId { get; set; } = Guid.NewGuid();
         public List<LayerPaintStrokePoint> PaintStrokePoints { get; set; } = [];
         public SKColor StrokeColor { get; set; } = SKColor.Empty;
-        public ColorPaintBrush PaintBrush { get; set; } = new ColorPaintBrush();
-        public int BrushRadius { get; set; } = 0;
+        public ColorPaintBrush PaintBrush { get; set; }
+        public int BrushRadius { get; set; }
 
         public SKShader StrokeShader = SKShader.CreateEmpty();
-        public int MapLayerIdentifier { get; set; } = 0;
-        public bool Erase { get; set; } = false;
+        public int MapLayerIdentifier { get; set; }
+        public bool Erase { get; set; }
 
-        public bool Rendered { get; set; } = false;
+        public bool Rendered { get; set; }
 
         public SKPaint ShaderPaint;
 

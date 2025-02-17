@@ -42,7 +42,7 @@ namespace RealmStudio
         {
             MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BASELAYER);
 
-            if (baseLayer.MapLayerComponents.Count() <= 1)
+            if (baseLayer.MapLayerComponents.Count <= 1)
             {
                 baseLayer.MapLayerComponents.Add(LayerTexture);
             }

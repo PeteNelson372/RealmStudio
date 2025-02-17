@@ -531,7 +531,7 @@ namespace RealmStudio
 
         internal static void ConstructRiverPaths(River river)
         {
-            List<MapRiverPoint> distinctRiverPoints = river.RiverPoints.Distinct(new RiverPointComparer()).ToList();
+            List<MapRiverPoint> distinctRiverPoints = [.. river.RiverPoints.Distinct(new RiverPointComparer())];
 
             if (distinctRiverPoints.Count < 3)
             {

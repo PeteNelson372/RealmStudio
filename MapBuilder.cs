@@ -31,7 +31,7 @@ namespace RealmStudio
         public static readonly ushort MAP_DEFAULT_WIDTH = 1920;
         public static readonly ushort MAP_DEFAULT_HEIGHT = 1080;
 
-        public static readonly int BASELAYER = 0;
+        public static readonly int BASELAYER;
         public static readonly int OCEANTEXTURELAYER = 1;
         public static readonly int OCEANTEXTUREOVERLAYLAYER = 2;
         public static readonly int OCEANDRAWINGLAYER = 3;

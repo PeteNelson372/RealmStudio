@@ -26,7 +26,7 @@ namespace RealmStudio
     internal class Cmd_RemoveMapPath(RealmStudioMap map, MapPath selectedMapPath) : IMapOperation
     {
         private readonly RealmStudioMap _map = map;
-        private MapPath? storedMapPath = null;
+        private MapPath? storedMapPath;
 
         public void DoOperation()
         {

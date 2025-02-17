@@ -35,7 +35,7 @@ namespace RealmStudio
         private static readonly List<Tuple<string, List<MapSymbol>>> TagSymbolAssociationList = [];
 
         // the symbol selected by the user from the SymbolTable control on the UI
-        public static MapSymbol? SelectedSymbolTableMapSymbol = null;
+        public static MapSymbol? SelectedSymbolTableMapSymbol;
 
         // additional symbols selected by the user from the SymbolTable control on the UI
         public static readonly List<MapSymbol> SecondarySelectedSymbols = [];
@@ -354,7 +354,7 @@ namespace RealmStudio
 
             foreach (string symbolNamePart in symbolNameParts)
             {
-                string potentialTag = new string(symbolNamePart.Where(char.IsLetter).ToArray()).ToLower();
+                string potentialTag = new string([.. symbolNamePart.Where(char.IsLetter)]).ToLowerInvariant();
 
                 if (!string.IsNullOrEmpty(potentialTag) && potentialTag.Length > minTagLength && !potentialTags.Contains(potentialTag))
                 {
@@ -364,7 +364,7 @@ namespace RealmStudio
 
             foreach (string collectionNamePart in collectionNameParts)
             {
-                string potentialTag = new string(collectionNamePart.Where(char.IsLetter).ToArray()).ToLower();
+                string potentialTag = new string([.. collectionNamePart.Where(char.IsLetter)]).ToLowerInvariant();
 
                 if (!string.IsNullOrEmpty(potentialTag) && potentialTag.Length > minTagLength && !potentialTags.Contains(potentialTag))
                 {

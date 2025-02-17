@@ -27,10 +27,10 @@ namespace RealmStudio
     {
         public bool IsLanguageSelected { get; set; } = true;
         public string Language { get; set; } = string.Empty;
-        public int MinNameLength { get; set; } = 0;
-        public int MaxNameLength { get; set; } = 0;
+        public int MinNameLength { get; set; }
+        public int MaxNameLength { get; set; }
         public List<char> RepeatableCharacters { get; set; } = [];
-        public float SingleWordTransformProportion { get; set; } = 0.0F;
+        public float SingleWordTransformProportion { get; set; }
         public List<string> NameStrings { get; set; } = [];
     }
 }

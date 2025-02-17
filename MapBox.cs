@@ -37,9 +37,9 @@ namespace RealmStudio
 
         public string? BoxXmlFilePath { get; set; }
 
-        public float BoxCenterLeft { get; set; } = 0;
-        public float BoxCenterTop { get; set; } = 0;
-        public float BoxCenterRight { get; set; } = 0;
-        public float BoxCenterBottom { get; set; } = 0;
+        public float BoxCenterLeft { get; set; }
+        public float BoxCenterTop { get; set; }
+        public float BoxCenterRight { get; set; }
+        public float BoxCenterBottom { get; set; }
     }
 }

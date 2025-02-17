@@ -22,6 +22,7 @@
 *
 ***************************************************************************************************************************/
 using RealmStudio.Properties;
+using System.Globalization;
 using System.Text.Json.Nodes;
 
 namespace RealmStudio
@@ -121,35 +122,35 @@ namespace RealmStudio
 
                         foreach (string file in collectionFiles)
                         {
-                            if (file.EndsWith("\\textures\\boxes\\.wonderdraft_9patch"))
+                            if (file.EndsWith("\\textures\\boxes\\.wonderdraft_9patch", StringComparison.InvariantCulture))
                             {
                                 boxFolders.Add(Path.GetFullPath(folder));
                                 break;
                             }
-                            else if (file.EndsWith("\\textures\\frames\\.wonderdraft_9patch"))
+                            else if (file.EndsWith("\\textures\\frames\\.wonderdraft_9patch", StringComparison.InvariantCulture))
                             {
                                 frameFolders.Add(Path.GetFullPath(folder));
                                 break;
                             }
-                            else if (file.Contains("\\textures\\ground\\"))
+                            else if (file.Contains("\\textures\\ground\\", StringComparison.InvariantCulture))
                             {
                                 groundTextureFolders.Add(Path.GetFullPath(folder));
                                 break;
                             }
-                            else if (file.Contains("\\textures\\water\\"))
+                            else if (file.Contains("\\textures\\water\\", StringComparison.InvariantCulture))
                             {
                                 waterTextureFolders.Add(Path.GetFullPath(folder));
                                 break;
                             }
-                            else if (file.Contains("\\sprites\\mountains\\") && file.EndsWith(".wonderdraft_symbols"))
+                            else if (file.Contains("\\sprites\\mountains\\", StringComparison.InvariantCulture) && file.EndsWith(".wonderdraft_symbols", StringComparison.InvariantCulture))
                             {
                                 symbolCollectionFolders.Add(Path.GetFullPath(folder));
                             }
-                            else if (file.Contains("\\sprites\\trees\\") && file.EndsWith(".wonderdraft_symbols"))
+                            else if (file.Contains("\\sprites\\trees\\", StringComparison.InvariantCulture) && file.EndsWith(".wonderdraft_symbols", StringComparison.InvariantCulture))
                             {
                                 symbolCollectionFolders.Add(Path.GetFullPath(folder));
                             }
-                            else if (file.Contains("\\sprites\\symbols\\") && file.EndsWith(".wonderdraft_symbols"))
+                            else if (file.Contains("\\sprites\\symbols\\", StringComparison.InvariantCulture) && file.EndsWith(".wonderdraft_symbols", StringComparison.InvariantCulture))
                             {
                                 symbolCollectionFolders.Add(Path.GetFullPath(folder));
                             }
@@ -233,8 +234,6 @@ namespace RealmStudio
         {
             string symbolAssetPath = AssetDirectory + Path.DirectorySeparatorChar + "Symbols" + Path.DirectorySeparatorChar;
 
-            List<string> symbolFiles = [];
-
             foreach (string folder in sCollectionFolders)
             {
                 string[] fileparts = folder.Split(Path.DirectorySeparatorChar);
@@ -254,12 +253,12 @@ namespace RealmStudio
 
                 foreach (string file in frameFiles)
                 {
-                    if (file.StartsWith(folder) && file.EndsWith(".png"))
+                    if (file.StartsWith(folder, StringComparison.InvariantCulture) && file.EndsWith(".png", StringComparison.InvariantCulture))
                     {
                         symbolTextures.Add(file);
                     }
 
-                    if (file.StartsWith(folder) && file.EndsWith(".wonderdraft_symbols"))
+                    if (file.StartsWith(folder, StringComparison.InvariantCulture) && file.EndsWith(".wonderdraft_symbols", StringComparison.InvariantCulture))
                     {
                         wdSymbolFile = file;
                     }
@@ -339,12 +338,12 @@ namespace RealmStudio
 
                 foreach (string file in frameFiles)
                 {
-                    if (file.StartsWith(folder) && file.Contains("\\textures\\frames\\") && file.EndsWith(".png"))
+                    if (file.StartsWith(folder, StringComparison.InvariantCulture) && file.Contains("\\textures\\frames\\", StringComparison.InvariantCulture) && file.EndsWith(".png", StringComparison.InvariantCulture))
                     {
                         frameTextureFiles.Add(file);
                     }
 
-                    if (file.StartsWith(folder) && file.Contains("\\textures\\frames\\") && file.EndsWith(".wonderdraft_9patch"))
+                    if (file.StartsWith(folder, StringComparison.InvariantCulture) && file.Contains("\\textures\\frames\\", StringComparison.InvariantCulture) && file.EndsWith(".wonderdraft_9patch", StringComparison.InvariantCulture))
                     {
                         wonderdraft9PatchFile = file;
                     }
@@ -382,9 +381,10 @@ namespace RealmStudio
                     {
                         foreach (KeyValuePair<string, JsonNode?> kvPair in jsonObject)
                         {
-                            MapFrame frame = new();
-
-                            frame.FrameName = kvPair.Key;
+                            MapFrame frame = new()
+                            {
+                                FrameName = kvPair.Key
+                            };
 
                             foreach (var kvp in kvPair.Value.AsObject().Where(kvp => kvp.Key == "margin"))
                             {
@@ -392,22 +392,22 @@ namespace RealmStudio
                                 {
                                     if (marginkvp.Key == "top")
                                     {
-                                        frame.FrameCenterTop = float.Parse(marginkvp.Value.ToString());
+                                        frame.FrameCenterTop = float.Parse(marginkvp.Value.ToString(), CultureInfo.InvariantCulture.NumberFormat);
                                     }
 
                                     if (marginkvp.Key == "bottom")
                                     {
-                                        frame.FrameCenterBottom = float.Parse(marginkvp.Value.ToString());
+                                        frame.FrameCenterBottom = float.Parse(marginkvp.Value.ToString(), CultureInfo.InvariantCulture.NumberFormat);
                                     }
 
                                     if (marginkvp.Key == "left")
                                     {
-                                        frame.FrameCenterLeft = float.Parse(marginkvp.Value.ToString());
+                                        frame.FrameCenterLeft = float.Parse(marginkvp.Value.ToString(), CultureInfo.InvariantCulture.NumberFormat);
                                     }
 
                                     if (marginkvp.Key == "right")
                                     {
-                                        frame.FrameCenterRight = float.Parse(marginkvp.Value.ToString());
+                                        frame.FrameCenterRight = float.Parse(marginkvp.Value.ToString(), CultureInfo.InvariantCulture.NumberFormat);
                                     }
                                 }
                             }
@@ -465,12 +465,12 @@ namespace RealmStudio
 
                 foreach (string file in boxFiles)
                 {
-                    if (file.StartsWith(folder) && file.Contains("\\textures\\boxes\\") && file.EndsWith(".png"))
+                    if (file.StartsWith(folder, StringComparison.InvariantCulture) && file.Contains("\\textures\\boxes\\", StringComparison.InvariantCulture) && file.EndsWith(".png", StringComparison.InvariantCulture))
                     {
                         boxTextureFiles.Add(file);
                     }
 
-                    if (file.StartsWith(folder) && file.Contains("\\textures\\boxes\\") && file.EndsWith(".wonderdraft_9patch"))
+                    if (file.StartsWith(folder, StringComparison.InvariantCulture) && file.Contains("\\textures\\boxes\\", StringComparison.InvariantCulture) && file.EndsWith(".wonderdraft_9patch", StringComparison.InvariantCulture))
                     {
                         wonderdraft9PatchFile = file;
                     }
@@ -508,9 +508,10 @@ namespace RealmStudio
                     {
                         foreach (KeyValuePair<string, JsonNode?> kvPair in jsonObject)
                         {
-                            MapBox box = new();
-
-                            box.BoxName = kvPair.Key;
+                            MapBox box = new()
+                            {
+                                BoxName = kvPair.Key
+                            };
 
                             foreach (var kvp in kvPair.Value.AsObject().Where(kvp => kvp.Key == "margin"))
                             {
@@ -518,22 +519,22 @@ namespace RealmStudio
                                 {
                                     if (marginkvp.Key == "top")
                                     {
-                                        box.BoxCenterTop = float.Parse(marginkvp.Value.ToString());
+                                        box.BoxCenterTop = float.Parse(marginkvp.Value.ToString(), CultureInfo.InvariantCulture.NumberFormat);
                                     }
 
                                     if (marginkvp.Key == "bottom")
                                     {
-                                        box.BoxCenterBottom = float.Parse(marginkvp.Value.ToString());
+                                        box.BoxCenterBottom = float.Parse(marginkvp.Value.ToString(), CultureInfo.InvariantCulture.NumberFormat);
                                     }
 
                                     if (marginkvp.Key == "left")
                                     {
-                                        box.BoxCenterLeft = float.Parse(marginkvp.Value.ToString());
+                                        box.BoxCenterLeft = float.Parse(marginkvp.Value.ToString(), CultureInfo.InvariantCulture.NumberFormat);
                                     }
 
                                     if (marginkvp.Key == "right")
                                     {
-                                        box.BoxCenterRight = float.Parse(marginkvp.Value.ToString());
+                                        box.BoxCenterRight = float.Parse(marginkvp.Value.ToString(), CultureInfo.InvariantCulture.NumberFormat);
                                     }
                                 }
                             }
@@ -583,7 +584,7 @@ namespace RealmStudio
                 string[] groundTextures = Directory.GetFiles(Path.GetFullPath(folder), "*", SearchOption.AllDirectories);
                 foreach (string file in groundTextures)
                 {
-                    if (file.StartsWith(folder) && file.Contains("\\textures\\ground\\") && file.EndsWith(".png"))
+                    if (file.StartsWith(folder, StringComparison.InvariantCulture) && file.Contains("\\textures\\ground\\", StringComparison.InvariantCulture) && file.EndsWith(".png", StringComparison.InvariantCulture))
                     {
                         groundTextureFiles.Add(file);
                     }
@@ -612,7 +613,7 @@ namespace RealmStudio
                 string[] waterTextures = Directory.GetFiles(Path.GetFullPath(folder), "*", SearchOption.AllDirectories);
                 foreach (string file in waterTextures)
                 {
-                    if (file.StartsWith(folder) && file.Contains("\\textures\\water\\") && file.EndsWith(".png"))
+                    if (file.StartsWith(folder, StringComparison.InvariantCulture) && file.Contains("\\textures\\water\\", StringComparison.InvariantCulture) && file.EndsWith(".png", StringComparison.InvariantCulture))
                     {
                         waterTextureFiles.Add(file);
                     }

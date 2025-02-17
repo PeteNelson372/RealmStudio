@@ -69,9 +69,9 @@ namespace RealmStudio
 
         public Font MeasureValueFont { get; set; } = new Font("Tahoma", 8.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
 
-        public bool UseMapUnits { get; set; } = false;
+        public bool UseMapUnits { get; set; }
 
-        public bool MeasureArea { get; set; } = false;
+        public bool MeasureArea { get; set; }
 
         public List<SKPoint> MeasurePoints { get; set; } = [];
 
@@ -83,9 +83,9 @@ namespace RealmStudio
 
         public SKPaint MeasureValueOutlinePaint { get; set; }
 
-        public float TotalMeasureLength { get; set; } = 0;
+        public float TotalMeasureLength { get; set; }
 
-        public bool RenderValue = false;
+        public bool RenderValue;
 
         public override void Render(SKCanvas canvas)
         {

@@ -35,18 +35,18 @@ namespace RealmStudio
     {
         public Guid BoxGuid = Guid.NewGuid();
 
-        public SKBitmap? BoxBitmap { get; set; } = null;
+        public SKBitmap? BoxBitmap { get; set; }
 
         public Color BoxTint { get; set; } = Color.White;
 
-        public SKPaint? BoxPaint { get; set; } = null;
+        public SKPaint? BoxPaint { get; set; }
 
-        public bool IsSelected { get; set; } = false;
+        public bool IsSelected { get; set; }
 
-        public float BoxCenterLeft { get; set; } = 0;
-        public float BoxCenterTop { get; set; } = 0;
-        public float BoxCenterRight { get; set; } = 0;
-        public float BoxCenterBottom { get; set; } = 0;
+        public float BoxCenterLeft { get; set; }
+        public float BoxCenterTop { get; set; }
+        public float BoxCenterRight { get; set; }
+        public float BoxCenterBottom { get; set; }
 
         public SKBitmap Patch_A { get; set; } = new();  // top left corner
         public SKBitmap Patch_B { get; set; } = new(); // top middle
@@ -255,7 +255,6 @@ namespace RealmStudio
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8601 // Possible null reference assignment.
 
             XNamespace ns = "RealmStudio";
             string content = reader.ReadOuterXml();
@@ -300,10 +299,8 @@ namespace RealmStudio
                 byte[] imageBytes = Convert.FromBase64String(boxBitmapBase64String);
 
                 // Create an image from the byte array
-                using (MemoryStream ms = new(imageBytes))
-                {
-                    BoxBitmap = SKBitmap.Decode(ms);
-                }
+                using MemoryStream ms = new(imageBytes);
+                BoxBitmap = SKBitmap.Decode(ms);
             }
 
             IEnumerable<XElement> boxTintElem = mapBoxDoc.Descendants(ns + "BoxTint");
@@ -338,7 +335,7 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> bclElem = mapBoxDoc.Descendants().Select(x => x.Element(ns + "BoxCenterLeft"));
-            if (bclElem != null && bclElem.Count() > 0 && bclElem.First() != null)
+            if (bclElem != null && bclElem.Any() && bclElem.First() != null)
             {
                 string? centerLeft = mapBoxDoc.Descendants().Select(x => x.Element(ns + "BoxCenterLeft").Value).FirstOrDefault();
 
@@ -357,7 +354,7 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> bctElem = mapBoxDoc.Descendants().Select(x => x.Element(ns + "BoxCenterTop"));
-            if (bctElem != null && bctElem.Count() > 0 && bctElem.First() != null)
+            if (bctElem != null && bctElem.Any() && bctElem.First() != null)
             {
                 string? centerTop = mapBoxDoc.Descendants().Select(x => x.Element(ns + "BoxCenterTop").Value).FirstOrDefault();
 
@@ -376,7 +373,7 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> bcrElem = mapBoxDoc.Descendants().Select(x => x.Element(ns + "BoxCenterRight"));
-            if (bcrElem != null && bcrElem.Count() > 0 && bctElem.First() != null)
+            if (bcrElem != null && bcrElem.Any() && bctElem.First() != null)
             {
                 string? centerRight = mapBoxDoc.Descendants().Select(x => x.Element(ns + "BoxCenterRight").Value).FirstOrDefault();
 
@@ -395,7 +392,7 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> bcbElem = mapBoxDoc.Descendants().Select(x => x.Element(ns + "BoxCenterBottom"));
-            if (bcbElem != null && bcbElem.Count() > 0 && bctElem.First() != null)
+            if (bcbElem != null && bcbElem.Any() && bctElem.First() != null)
             {
                 string? centerBottom = mapBoxDoc.Descendants().Select(x => x.Element(ns + "BoxCenterBottom").Value).FirstOrDefault();
 
@@ -421,7 +418,6 @@ namespace RealmStudio
                 GetBoxCenterFromMapBox();
             }
 
-#pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }

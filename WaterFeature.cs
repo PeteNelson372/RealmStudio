@@ -32,7 +32,7 @@ namespace RealmStudio
 {
     public class WaterFeature : MapComponent, IWaterFeature, IXmlSerializable
     {
-        public RealmStudioMap? ParentMap { get; set; } = null;
+        public RealmStudioMap? ParentMap { get; set; }
         public string WaterFeatureName { get; set; } = String.Empty;
         public Guid WaterFeatureGuid { get; set; } = Guid.NewGuid();
         public WaterFeatureTypeEnum WaterFeatureType { get; set; } = WaterFeatureTypeEnum.NotSet;
@@ -85,7 +85,7 @@ namespace RealmStudio
             FillType = SKPathFillType.Winding,
         };
 
-        public bool IsSelected { get; set; } = false;
+        public bool IsSelected { get; set; }
 
         public SKPaint WaterFeatureBackgroundPaint { get; set; } = new()
         {

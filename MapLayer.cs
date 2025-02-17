@@ -29,7 +29,7 @@ namespace RealmStudio
     [XmlType("MapLayer")]
     public class MapLayer : MapComponent
     {
-        private ushort mapLayerOrder = 0;
+        private ushort mapLayerOrder;
 
         [XmlAttribute]
         public Guid MapLayerGuid { get; set; } = Guid.NewGuid();

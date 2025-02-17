@@ -29,36 +29,20 @@ namespace RealmStudio
 {
     internal class MapLabelMethods
     {
-        internal static SKPaint CreateLabelPaint(SKFont skLabelFont, Font labelFont, Color labelColor, LabelTextAlignEnum labelAlignment)
+        internal static SKPaint CreateLabelPaint(Color labelColor)
         {
             SKPaint paint = new()
             {
                 Color = Extensions.ToSKColor(labelColor),
+                IsAntialias = true
             };
-
-            switch (labelAlignment)
-            {
-                case LabelTextAlignEnum.AlignLeft:
-                    paint.TextAlign = SKTextAlign.Left;
-                    break;
-                case LabelTextAlignEnum.AlignCenter:
-                    paint.TextAlign = SKTextAlign.Center;
-                    break;
-                case LabelTextAlignEnum.AlignRight:
-                    paint.TextAlign = SKTextAlign.Right;
-                    break;
-            }
-
-            paint.Typeface = skLabelFont.Typeface;
-
-            paint.IsAntialias = true;
 
             return paint;
         }
 
         internal static SKFont GetSkLabelFont(Font labelFont)
         {
-            List<string> resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
+            List<string> resourceNames = [.. Assembly.GetExecutingAssembly().GetManifestResourceNames()];
 
             SKFontStyle fs = SKFontStyle.Normal;
 
@@ -75,9 +59,9 @@ namespace RealmStudio
                 fs = SKFontStyle.Italic;
             }
 
-            SKTypeface? fontTypeface = null;
-
             string fontName = StringExtensions.FindBestMatch(labelFont.FontFamily.Name, resourceNames);
+
+            SKTypeface? fontTypeface;
 
             if (!string.IsNullOrEmpty(fontName))
             {

@@ -28,12 +28,12 @@ namespace RealmStudio
 {
     internal class Cmd_PaintSymbol(MapSymbol? symbol, SKColor paintColor, SKColor color1, SKColor color2, SKColor color3) : IMapOperation
     {
-        private MapSymbol? Symbol = symbol;
+        private readonly MapSymbol? Symbol = symbol;
         private readonly SKColor PaintColor = paintColor;
         private readonly SKColor SymbolColor1 = color1;
         private readonly SKColor SymbolColor2 = color2;
         private readonly SKColor SymbolColor3 = color3;
-        private SKBitmap? SavedPlacedBitmap = null;
+        private SKBitmap? SavedPlacedBitmap;
 
         public void DoOperation()
         {

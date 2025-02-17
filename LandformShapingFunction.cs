@@ -28,7 +28,7 @@ namespace RealmStudio
     internal class LandformShapingFunction
     {
         public GeneratedLandformTypeEnum LandformShapeType = GeneratedLandformTypeEnum.NotSet;
-        public SKBitmap? ShapingBitmap { get; set; } = null;
+        public SKBitmap? ShapingBitmap { get; set; }
         public float[,] ShapeArray { get; set; } = { };
     }
 }

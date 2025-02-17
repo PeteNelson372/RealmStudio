@@ -38,9 +38,9 @@ namespace RealmStudio
 
         public string? FrameXmlFilePath { get; set; }
 
-        public float FrameCenterLeft { get; set; } = 0;
-        public float FrameCenterTop { get; set; } = 0;
-        public float FrameCenterRight { get; set; } = 0;
-        public float FrameCenterBottom { get; set; } = 0;
+        public float FrameCenterLeft { get; set; }
+        public float FrameCenterTop { get; set; }
+        public float FrameCenterRight { get; set; }
+        public float FrameCenterBottom { get; set; }
     }
 }

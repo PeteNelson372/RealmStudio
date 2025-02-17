@@ -38,12 +38,12 @@ namespace RealmStudio
         public Color WindroseColor { get; set; } = ColorTranslator.FromHtml("#7F3D3728");
         public int DirectionCount { get; set; } = 16;
         public int LineWidth { get; set; } = 2;
-        public int InnerRadius { get; set; } = 0;
+        public int InnerRadius { get; set; }
         public int OuterRadius { get; set; } = 1000;
-        public int InnerCircles { get; set; } = 0;
-        public bool FadeOut { get; set; } = false;
+        public int InnerCircles { get; set; }
+        public bool FadeOut { get; set; }
 
-        public SKPaint? WindrosePaint { get; set; } = null;
+        public SKPaint? WindrosePaint { get; set; }
 
         public override void Render(SKCanvas canvas)
         {
@@ -111,7 +111,7 @@ namespace RealmStudio
             {
                 SKPoint[] linePoints = DrawingMethods.GetPoints(254, sp, ep);
                 int segmentOpacity = WindroseColor.A;
-                Color argbColor = WindroseColor;
+                Color argbColor;
 
                 SKPaint fadedLinePaint = WindrosePaint.Clone();
 
@@ -139,7 +139,6 @@ namespace RealmStudio
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8601 // Possible null reference assignment.
 
             XNamespace ns = "RealmStudio";
             string content = reader.ReadOuterXml();
@@ -177,7 +176,7 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement> windroseColorElem = mapRoseDoc.Descendants(ns + "WindroseColor");
-            if (windroseColorElem != null && windroseColorElem.Count() > 0 && windroseColorElem.First() != null)
+            if (windroseColorElem != null && windroseColorElem.Any() && windroseColorElem.First() != null)
             {
                 string? gridColor = mapRoseDoc.Descendants().Select(x => x.Element(ns + "WindroseColor").Value).FirstOrDefault();
 
@@ -243,7 +242,6 @@ namespace RealmStudio
                 FadeOut = bool.Parse(fadeOut);
             }
 
-#pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
