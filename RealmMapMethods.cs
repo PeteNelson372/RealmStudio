@@ -865,8 +865,8 @@ namespace RealmStudio
                         {
                             X = (int)((box.X * scaleX) + deltaX),
                             Y = (int)((box.Y * scaleY) + deltaY),
-                            Height = (int)(box.Height * scaleX),
-                            Width = (int)(box.Width * scaleY),
+                            Width = (int)(box.Width * scaleX),
+                            Height = (int)(box.Height * scaleY),
                             BoxBitmap = resizedBitmap.Copy(),
                             BoxTint = box.BoxTint,
                             BoxPaint = box.BoxPaint?.Clone(),
@@ -919,6 +919,132 @@ namespace RealmStudio
                 }
             }
 
+            if (includeScale)
+            {
+                // get scale
+                MapLayer scaleLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.OVERLAYLAYER);
+                MapLayer newRealmScaleLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.OVERLAYLAYER);
+
+                // there is only one map scale
+                MapScale? mapScale = scaleLayer.MapLayerComponents.Cast<MapScale>().FirstOrDefault();
+
+                if (mapScale != null)
+                {
+                    MapScale newScale = new()
+                    {
+                        Width = (int)(mapScale.Width * scaleX),
+                        Height = (int)(mapScale.Height * scaleY),
+                        ScaleSegmentCount = mapScale.ScaleSegmentCount,
+                        ScaleLineWidth = mapScale.ScaleLineWidth,
+                        ScaleColor1 = mapScale.ScaleColor1,
+                        ScaleColor2 = mapScale.ScaleColor2,
+                        ScaleColor3 = mapScale.ScaleColor3,
+                        ScaleDistance = mapScale.ScaleDistance,
+                        ScaleDistanceUnit = mapScale.ScaleDistanceUnit,
+                        ScaleFontColor = mapScale.ScaleFontColor,
+                        ScaleOutlineWidth = mapScale.ScaleOutlineWidth,
+                        ScaleOutlineColor = mapScale.ScaleOutlineColor,
+                        ScaleFont = mapScale.ScaleFont,
+                        ScaleNumbersDisplayType = mapScale.ScaleNumbersDisplayType,
+                    };
+
+                    // initial position of the scale is near the bottom-left corner of the map
+                    newScale.X = 100;
+                    newScale.Y = newRealmMap.MapHeight - 100;
+
+                    newRealmScaleLayer.MapLayerComponents.Add(newScale);
+                }
+            }
+
+            if (includeGrid)
+            {
+                // get grid
+                MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.DEFAULTGRIDLAYER);
+                MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.ABOVEOCEANGRIDLAYER);
+                MapLayer belowSymbolsGridLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.BELOWSYMBOLSGRIDLAYER);
+
+                MapLayer newRealmDefaultGridLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.DEFAULTGRIDLAYER);
+                MapLayer newRealmAboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.ABOVEOCEANGRIDLAYER);
+                MapLayer newRealmBelowSymbolsGridLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.BELOWSYMBOLSGRIDLAYER);
+
+                // there is only one map grid                                
+                MapGrid? mapGrid = defaultGridLayer.MapLayerComponents.Cast<MapGrid>().FirstOrDefault();
+
+                mapGrid ??= aboveOceanGridLayer.MapLayerComponents.Cast<MapGrid>().FirstOrDefault();
+
+                mapGrid ??= belowSymbolsGridLayer.MapLayerComponents.Cast<MapGrid>().FirstOrDefault();
+
+                if (mapGrid != null)
+                {
+                    MapGrid newGrid = new()
+                    {
+                        ParentMap = newRealmMap,
+                        GridEnabled = true,
+                        GridColor = mapGrid.GridColor,
+                        GridLineWidth = mapGrid.GridLineWidth,
+                        GridSize = mapGrid.GridSize,
+                        GridType = mapGrid.GridType,
+                        Width = newRealmMap.MapWidth,
+                        Height = newRealmMap.MapHeight,
+                        GridLayerIndex = mapGrid.GridLayerIndex,
+                    };
+
+                    newGrid.GridPaint = new()
+                    {
+                        Style = SKPaintStyle.Stroke,
+                        Color = newGrid.GridColor.ToSKColor(),
+                        StrokeWidth = newGrid.GridLineWidth,
+                        StrokeJoin = SKStrokeJoin.Bevel
+                    };
+
+                    MapBuilder.GetMapLayerByIndex(newRealmMap, newGrid.GridLayerIndex).MapLayerComponents.Add(newGrid);
+                }
+            }
+
+            if (includeRegions)
+            {
+                MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.REGIONLAYER);
+                MapLayer newRealmRegionLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.REGIONLAYER);
+
+                for (int i = 0; i < regionLayer.MapLayerComponents.Count; i++)
+                {
+                    if (regionLayer.MapLayerComponents[i] is MapRegion mr)
+                    {
+                        foreach (MapRegionPoint mrp in mr.MapRegionPoints)
+                        {
+                            if (selectedMapArea.Contains(mrp.RegionPoint))
+                            {
+                                MapRegion newRegion = new()
+                                {
+                                    ParentMap = newRealmMap,
+                                    RegionBorderColor = mr.RegionBorderColor,
+                                    RegionBorderSmoothing = mr.RegionBorderSmoothing,
+                                    RegionBorderType = mr.RegionBorderType,
+                                    RegionBorderWidth = mr.RegionBorderWidth,
+                                    RegionInnerOpacity = mr.RegionInnerOpacity,
+                                    RegionName = mr.RegionName,
+                                };
+
+                                foreach (MapRegionPoint point in mr.MapRegionPoints)
+                                {
+                                    MapRegionPoint newRegionPoint = new()
+                                    {
+                                        RegionPoint = new SKPoint((point.RegionPoint.X * scaleX) + deltaX, (point.RegionPoint.Y * scaleY) + deltaY),
+                                    };
+
+                                    newRegion.MapRegionPoints.Add(newRegionPoint);
+                                }
+
+                                SKPathEffect? regionBorderEffect = MapRegionMethods.ConstructRegionBorderEffect(newRegion);
+                                MapRegionMethods.ConstructRegionPaintObjects(newRegion, regionBorderEffect);
+
+                                newRealmRegionLayer.MapLayerComponents.Add(newRegion);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
 
             // vignette
             MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.VIGNETTELAYER);

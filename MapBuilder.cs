@@ -47,7 +47,7 @@ namespace RealmStudio
         public static readonly int SYMBOLLAYER = 13;
         public static readonly int PATHUPPERLAYER = 14;
         public static readonly int REGIONLAYER = 15;
-        public static readonly int REGIONOVERLAYLAYER = 16;
+        public static readonly int REGIONOVERLAYLAYER = 16;     // TODO: not used?
         public static readonly int DEFAULTGRIDLAYER = 17;
         public static readonly int BOXLAYER = 18;
         public static readonly int LABELLAYER = 19;
