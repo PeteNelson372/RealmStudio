@@ -102,6 +102,9 @@
             LandBrushSizeTrack = new TrackBar();
             ShowLandLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label4 = new Label();
+            HeightMapToolStrip = new ToolStrip();
+            HeightUpButton = new FontAwesome.Sharp.IconToolStripButton();
+            HeightDownButton = new FontAwesome.Sharp.IconToolStripButton();
             LandToolStrip = new ToolStrip();
             LandformSelectButton = new FontAwesome.Sharp.IconToolStripButton();
             LandformPaintButton = new FontAwesome.Sharp.IconToolStripButton();
@@ -117,9 +120,6 @@
             AtollMenuItem = new ToolStripMenuItem();
             WorldMenuItem = new ToolStripMenuItem();
             LandformAreaSelectButton = new FontAwesome.Sharp.IconToolStripButton();
-            HeightMapToolStrip = new ToolStrip();
-            HeightUpButton = new FontAwesome.Sharp.IconToolStripButton();
-            HeightDownButton = new FontAwesome.Sharp.IconToolStripButton();
             WaterTab = new TabPage();
             groupBox8 = new GroupBox();
             label42 = new Label();
@@ -588,8 +588,8 @@
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)LandformTexturePreviewPicture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LandBrushSizeTrack).BeginInit();
-            LandToolStrip.SuspendLayout();
             HeightMapToolStrip.SuspendLayout();
+            LandToolStrip.SuspendLayout();
             WaterTab.SuspendLayout();
             groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)WaterEraserSizeTrack).BeginInit();
@@ -1820,6 +1820,60 @@
             label4.TabIndex = 15;
             label4.Text = "Show";
             // 
+            // HeightMapToolStrip
+            // 
+            HeightMapToolStrip.AllowMerge = false;
+            HeightMapToolStrip.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            HeightMapToolStrip.AutoSize = false;
+            HeightMapToolStrip.BackColor = SystemColors.Control;
+            HeightMapToolStrip.Dock = DockStyle.None;
+            HeightMapToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            HeightMapToolStrip.GripStyle = ToolStripGripStyle.Hidden;
+            HeightMapToolStrip.Items.AddRange(new ToolStripItem[] { HeightUpButton, HeightDownButton });
+            HeightMapToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
+            HeightMapToolStrip.Location = new Point(158, 0);
+            HeightMapToolStrip.Name = "HeightMapToolStrip";
+            HeightMapToolStrip.Size = new Size(72, 878);
+            HeightMapToolStrip.TabIndex = 21;
+            HeightMapToolStrip.Text = "LandformTools";
+            // 
+            // HeightUpButton
+            // 
+            HeightUpButton.AutoSize = false;
+            HeightUpButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            HeightUpButton.ForeColor = SystemColors.ControlDarkDark;
+            HeightUpButton.IconChar = FontAwesome.Sharp.IconChar.ArrowUpShortWide;
+            HeightUpButton.IconColor = Color.Black;
+            HeightUpButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            HeightUpButton.IconSize = 24;
+            HeightUpButton.ImageScaling = ToolStripItemImageScaling.None;
+            HeightUpButton.ImageTransparentColor = Color.Magenta;
+            HeightUpButton.Margin = new Padding(0, 25, 0, 2);
+            HeightUpButton.Name = "HeightUpButton";
+            HeightUpButton.Size = new Size(60, 60);
+            HeightUpButton.Text = "Increase";
+            HeightUpButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            HeightUpButton.Click += HeightUpButton_Click;
+            // 
+            // HeightDownButton
+            // 
+            HeightDownButton.AutoSize = false;
+            HeightDownButton.Flip = FontAwesome.Sharp.FlipOrientation.Horizontal;
+            HeightDownButton.ForeColor = SystemColors.ControlDarkDark;
+            HeightDownButton.IconChar = FontAwesome.Sharp.IconChar.ArrowUpShortWide;
+            HeightDownButton.IconColor = Color.Black;
+            HeightDownButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            HeightDownButton.IconSize = 24;
+            HeightDownButton.ImageScaling = ToolStripItemImageScaling.None;
+            HeightDownButton.ImageTransparentColor = Color.Magenta;
+            HeightDownButton.Margin = new Padding(0, 25, 0, 2);
+            HeightDownButton.Name = "HeightDownButton";
+            HeightDownButton.Rotation = 180D;
+            HeightDownButton.Size = new Size(60, 60);
+            HeightDownButton.Text = "Decrease";
+            HeightDownButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            HeightDownButton.Click += HeightDownButton_Click;
+            // 
             // LandToolStrip
             // 
             LandToolStrip.AllowMerge = false;
@@ -2029,60 +2083,6 @@
             LandformAreaSelectButton.Text = "Area";
             LandformAreaSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
             LandformAreaSelectButton.Click += LandformAreaSelectButton_Click;
-            // 
-            // HeightMapToolStrip
-            // 
-            HeightMapToolStrip.AllowMerge = false;
-            HeightMapToolStrip.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            HeightMapToolStrip.AutoSize = false;
-            HeightMapToolStrip.BackColor = SystemColors.Control;
-            HeightMapToolStrip.Dock = DockStyle.None;
-            HeightMapToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            HeightMapToolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            HeightMapToolStrip.Items.AddRange(new ToolStripItem[] { HeightUpButton, HeightDownButton });
-            HeightMapToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
-            HeightMapToolStrip.Location = new Point(158, 0);
-            HeightMapToolStrip.Name = "HeightMapToolStrip";
-            HeightMapToolStrip.Size = new Size(72, 878);
-            HeightMapToolStrip.TabIndex = 21;
-            HeightMapToolStrip.Text = "LandformTools";
-            // 
-            // HeightUpButton
-            // 
-            HeightUpButton.AutoSize = false;
-            HeightUpButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            HeightUpButton.ForeColor = SystemColors.ControlDarkDark;
-            HeightUpButton.IconChar = FontAwesome.Sharp.IconChar.ArrowUpShortWide;
-            HeightUpButton.IconColor = Color.Black;
-            HeightUpButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            HeightUpButton.IconSize = 24;
-            HeightUpButton.ImageScaling = ToolStripItemImageScaling.None;
-            HeightUpButton.ImageTransparentColor = Color.Magenta;
-            HeightUpButton.Margin = new Padding(0, 25, 0, 2);
-            HeightUpButton.Name = "HeightUpButton";
-            HeightUpButton.Size = new Size(60, 60);
-            HeightUpButton.Text = "Increase";
-            HeightUpButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            HeightUpButton.Click += HeightUpButton_Click;
-            // 
-            // HeightDownButton
-            // 
-            HeightDownButton.AutoSize = false;
-            HeightDownButton.Flip = FontAwesome.Sharp.FlipOrientation.Horizontal;
-            HeightDownButton.ForeColor = SystemColors.ControlDarkDark;
-            HeightDownButton.IconChar = FontAwesome.Sharp.IconChar.ArrowUpShortWide;
-            HeightDownButton.IconColor = Color.Black;
-            HeightDownButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            HeightDownButton.IconSize = 24;
-            HeightDownButton.ImageScaling = ToolStripItemImageScaling.None;
-            HeightDownButton.ImageTransparentColor = Color.Magenta;
-            HeightDownButton.Margin = new Padding(0, 25, 0, 2);
-            HeightDownButton.Name = "HeightDownButton";
-            HeightDownButton.Rotation = 180D;
-            HeightDownButton.Size = new Size(60, 60);
-            HeightDownButton.Text = "Decrease";
-            HeightDownButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            HeightDownButton.Click += HeightDownButton_Click;
             // 
             // WaterTab
             // 
@@ -6145,7 +6145,7 @@
             RealmStudioMainMenuStrip.Items.AddRange(new ToolStripItem[] { FileToolStripMenuItem, EditToolStripMenuItem, RealmToolStripMenuItem, AssetsToolStripMenuItem, ThemeToolStripMenuItem, OptionsToolStripMenuItem, HelpToolStripMenuItem });
             RealmStudioMainMenuStrip.Location = new Point(20, 56);
             RealmStudioMainMenuStrip.Name = "RealmStudioMainMenuStrip";
-            RealmStudioMainMenuStrip.Size = new Size(349, 24);
+            RealmStudioMainMenuStrip.Size = new Size(469, 24);
             RealmStudioMainMenuStrip.TabIndex = 1;
             RealmStudioMainMenuStrip.Text = "menuStrip1";
             // 
@@ -6317,42 +6317,42 @@
             // MapPropertiesMenuItem
             // 
             MapPropertiesMenuItem.Name = "MapPropertiesMenuItem";
-            MapPropertiesMenuItem.Size = new Size(178, 22);
+            MapPropertiesMenuItem.Size = new Size(180, 22);
             MapPropertiesMenuItem.Text = "&Properties...";
             MapPropertiesMenuItem.Click += MapPropertiesMenuItem_Click;
             // 
             // ChangeMapSizeMenuItem
             // 
             ChangeMapSizeMenuItem.Name = "ChangeMapSizeMenuItem";
-            ChangeMapSizeMenuItem.Size = new Size(178, 22);
-            ChangeMapSizeMenuItem.Text = "&Change Map Size";
+            ChangeMapSizeMenuItem.Size = new Size(180, 22);
+            ChangeMapSizeMenuItem.Text = "Change Map &Size...";
             ChangeMapSizeMenuItem.Click += ChangeMapSizeMenuItem_Click;
             // 
             // CreateDetailMapMenuItem
             // 
             CreateDetailMapMenuItem.Name = "CreateDetailMapMenuItem";
-            CreateDetailMapMenuItem.Size = new Size(178, 22);
+            CreateDetailMapMenuItem.Size = new Size(180, 22);
             CreateDetailMapMenuItem.Text = "Create &Detail Map...";
             CreateDetailMapMenuItem.Click += CreateDetailMapMenuItem_Click;
             // 
             // TraceToolStripMenuItem
             // 
             TraceToolStripMenuItem.Name = "TraceToolStripMenuItem";
-            TraceToolStripMenuItem.Size = new Size(178, 22);
+            TraceToolStripMenuItem.Size = new Size(180, 22);
             TraceToolStripMenuItem.Text = "&Trace Outline";
             TraceToolStripMenuItem.Click += TraceToolStripMenuItem_Click;
             // 
             // toolStripSeparator7
             // 
             toolStripSeparator7.Name = "toolStripSeparator7";
-            toolStripSeparator7.Size = new Size(175, 6);
+            toolStripSeparator7.Size = new Size(177, 6);
             // 
             // RenderAsHeightMapMenuItem
             // 
             RenderAsHeightMapMenuItem.CheckOnClick = true;
             RenderAsHeightMapMenuItem.Name = "RenderAsHeightMapMenuItem";
-            RenderAsHeightMapMenuItem.Size = new Size(178, 22);
-            RenderAsHeightMapMenuItem.Text = "Display Height Map";
+            RenderAsHeightMapMenuItem.Size = new Size(180, 22);
+            RenderAsHeightMapMenuItem.Text = "Display &Height Map";
             RenderAsHeightMapMenuItem.CheckedChanged += RenderAsHeightMapMenuItem_CheckedChanged;
             // 
             // AssetsToolStripMenuItem
@@ -8533,10 +8533,10 @@
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)LandformTexturePreviewPicture).EndInit();
             ((System.ComponentModel.ISupportInitialize)LandBrushSizeTrack).EndInit();
-            LandToolStrip.ResumeLayout(false);
-            LandToolStrip.PerformLayout();
             HeightMapToolStrip.ResumeLayout(false);
             HeightMapToolStrip.PerformLayout();
+            LandToolStrip.ResumeLayout(false);
+            LandToolStrip.PerformLayout();
             WaterTab.ResumeLayout(false);
             WaterTab.PerformLayout();
             groupBox8.ResumeLayout(false);

@@ -252,4 +252,19 @@ namespace RealmStudio
         /// </summary>
         PanFamilyPictorial = 5
     }
+
+    public enum ResizeMapAnchorPoint
+    {
+        TopLeft,
+        TopCenter,
+        TopRight,
+        Center,
+        CenterLeft,
+        CenterRight,
+        CenterZoomed,
+        BottomLeft,
+        BottomCenter,
+        BottomRight,
+        DetailMap
+    }
 }

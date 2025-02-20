@@ -33,7 +33,7 @@ namespace RealmStudio
 {
     public class PlacedMapBox : MapComponent, IXmlSerializable
     {
-        public Guid BoxGuid = Guid.NewGuid();
+        public Guid BoxGuid { get; set; } = Guid.NewGuid();
 
         public SKBitmap? BoxBitmap { get; set; }
 
@@ -48,15 +48,15 @@ namespace RealmStudio
         public float BoxCenterRight { get; set; }
         public float BoxCenterBottom { get; set; }
 
-        public SKBitmap Patch_A { get; set; } = new();  // top left corner
-        public SKBitmap Patch_B { get; set; } = new(); // top middle
-        public SKBitmap Patch_C { get; set; } = new(); // top right corner
-        public SKBitmap Patch_D { get; set; } = new(); // left side
-        public SKBitmap Patch_E { get; set; } = new(); // middle
-        public SKBitmap Patch_F { get; set; } = new(); // right side
-        public SKBitmap Patch_G { get; set; } = new(); // bottom left corner
-        public SKBitmap Patch_H { get; set; } = new(); // bottom middle
-        public SKBitmap Patch_I { get; set; } = new(); // bottom right corner
+        public SKBitmap PatchA { get; set; } = new();  // top left corner
+        public SKBitmap PatchB { get; set; } = new(); // top middle
+        public SKBitmap PatchC { get; set; } = new(); // top right corner
+        public SKBitmap PatchD { get; set; } = new(); // left side
+        public SKBitmap PatchE { get; set; } = new(); // middle
+        public SKBitmap PatchF { get; set; } = new(); // right side
+        public SKBitmap PatchG { get; set; } = new(); // bottom left corner
+        public SKBitmap PatchH { get; set; } = new(); // bottom middle
+        public SKBitmap PatchI { get; set; } = new(); // bottom right corner
 
         public void SetBoxBitmap(SKBitmap b)
         {
@@ -66,38 +66,38 @@ namespace RealmStudio
         public override void Render(SKCanvas canvas)
         {
             if (BoxBitmap != null
-                && (!Patch_A.IsNull && Patch_A.Width > 0 && Patch_A.Height > 0)
-                && (!Patch_B.IsNull && Patch_B.Width > 0 && Patch_B.Height > 0)
-                && (!Patch_C.IsNull && Patch_C.Width > 0 && Patch_C.Height > 0)
-                && (!Patch_D.IsNull && Patch_D.Width > 0 && Patch_D.Height > 0)
-                && (!Patch_E.IsNull && Patch_E.Width > 0 && Patch_E.Height > 0)
-                && (!Patch_F.IsNull && Patch_F.Width > 0 && Patch_F.Height > 0)
-                && (!Patch_G.IsNull && Patch_G.Width > 0 && Patch_G.Height > 0)
-                && (!Patch_H.IsNull && Patch_H.Width > 0 && Patch_H.Height > 0)
-                && (!Patch_I.IsNull && Patch_I.Width > 0 && Patch_I.Height > 0))
+                && (!PatchA.IsNull && PatchA.Width > 0 && PatchA.Height > 0)
+                && (!PatchB.IsNull && PatchB.Width > 0 && PatchB.Height > 0)
+                && (!PatchC.IsNull && PatchC.Width > 0 && PatchC.Height > 0)
+                && (!PatchD.IsNull && PatchD.Width > 0 && PatchD.Height > 0)
+                && (!PatchE.IsNull && PatchE.Width > 0 && PatchE.Height > 0)
+                && (!PatchF.IsNull && PatchF.Width > 0 && PatchF.Height > 0)
+                && (!PatchG.IsNull && PatchG.Width > 0 && PatchG.Height > 0)
+                && (!PatchH.IsNull && PatchH.Width > 0 && PatchH.Height > 0)
+                && (!PatchI.IsNull && PatchI.Width > 0 && PatchI.Height > 0))
             {
                 // frame top
-                canvas.DrawBitmap(Patch_A, X, Y, BoxPaint);
+                canvas.DrawBitmap(PatchA, X, Y, BoxPaint);
 
                 // tile Patch_B - has to be an integral number of tiles;
-                float patch_b_tile_length = Width - Patch_A.Width - Patch_C.Width;
+                float patch_b_tile_length = Width - PatchA.Width - PatchC.Width;
 
-                int num_patch_b_tiles = Math.Max((int)Math.Floor(patch_b_tile_length / Patch_B.Width), 1);
+                int num_patch_b_tiles = Math.Max((int)Math.Floor(patch_b_tile_length / PatchB.Width), 1);
 
                 int newWidth = (int)Math.Ceiling(patch_b_tile_length / num_patch_b_tiles);
 
                 num_patch_b_tiles = (int)Math.Round((float)patch_b_tile_length / newWidth);
 
-                while ((newWidth * num_patch_b_tiles) + Patch_A.Width + Patch_C.Width < Width)
+                while ((newWidth * num_patch_b_tiles) + PatchA.Width + PatchC.Width < Width)
                 {
                     newWidth++;
                 }
 
                 // scale Patch_B so that it tiles an integral number of times
-                using SKBitmap scaled_B = new(newWidth, Patch_B.Height);
-                Patch_B.ScalePixels(scaled_B, SKSamplingOptions.Default);
+                using SKBitmap scaled_B = new(newWidth, PatchB.Height);
+                PatchB.ScalePixels(scaled_B, SKSamplingOptions.Default);
 
-                int left = X + Patch_A.Width;
+                int left = X + PatchA.Width;
 
                 for (int i = 0; i < num_patch_b_tiles; i++)
                 {
@@ -105,28 +105,28 @@ namespace RealmStudio
                     left += scaled_B.Width;
                 }
 
-                canvas.DrawBitmap(Patch_C, X + Width - Patch_C.Width, Y, BoxPaint);
+                canvas.DrawBitmap(PatchC, X + Width - PatchC.Width, Y, BoxPaint);
 
                 // tile Patch_D - has to be an integral number of tiles;
-                float patch_d_tile_height = Height - Patch_A.Height - Patch_G.Height;
+                float patch_d_tile_height = Height - PatchA.Height - PatchG.Height;
 
-                int num_patch_d_tiles = Math.Max((int)(patch_d_tile_height / Patch_D.Height), 1);
+                int num_patch_d_tiles = Math.Max((int)(patch_d_tile_height / PatchD.Height), 1);
 
                 int newHeight = (int)Math.Ceiling(patch_d_tile_height / num_patch_d_tiles);
 
                 num_patch_d_tiles = (int)Math.Round((float)patch_d_tile_height / newHeight);
 
-                while ((newHeight * num_patch_d_tiles) + Patch_A.Height + Patch_G.Height < Height)
+                while ((newHeight * num_patch_d_tiles) + PatchA.Height + PatchG.Height < Height)
                 {
                     newHeight++;
                 }
 
                 // scale Patch_D so that it tiles an integral number of times
                 // scaled D patch has same width and new height
-                using SKBitmap scaled_D = new(Patch_D.Width, newHeight);
-                Patch_D.ScalePixels(scaled_D, SKSamplingOptions.Default);
+                using SKBitmap scaled_D = new(PatchD.Width, newHeight);
+                PatchD.ScalePixels(scaled_D, SKSamplingOptions.Default);
 
-                int top = Y + Patch_A.Height;
+                int top = Y + PatchA.Height;
 
                 for (int i = 0; i < num_patch_d_tiles; i++)
                 {
@@ -134,24 +134,24 @@ namespace RealmStudio
                     top += scaled_D.Height;
                 }
 
-                float patch_f_tile_height = Height - Patch_C.Height - Patch_I.Height;
+                float patch_f_tile_height = Height - PatchC.Height - PatchI.Height;
 
-                int num_patch_f_tiles = Math.Max((int)(patch_f_tile_height / Patch_F.Height), 1);
+                int num_patch_f_tiles = Math.Max((int)(patch_f_tile_height / PatchF.Height), 1);
 
                 int newFHeight = (int)Math.Ceiling(patch_f_tile_height / num_patch_f_tiles);
 
                 num_patch_f_tiles = (int)Math.Round((float)patch_f_tile_height / newHeight);
 
-                while ((newFHeight * num_patch_f_tiles) + Patch_C.Height + Patch_I.Height < Height)
+                while ((newFHeight * num_patch_f_tiles) + PatchC.Height + PatchI.Height < Height)
                 {
                     newFHeight++;
                 }
 
                 // scale Patch_F so that it tiles an integral number of times
-                using SKBitmap scaled_F = new(Patch_F.Width, newFHeight);
-                Patch_F.ScalePixels(scaled_F, SKSamplingOptions.Default);
+                using SKBitmap scaled_F = new(PatchF.Width, newFHeight);
+                PatchF.ScalePixels(scaled_F, SKSamplingOptions.Default);
 
-                top = Y + Patch_C.Height;
+                top = Y + PatchC.Height;
 
                 for (int i = 0; i < num_patch_f_tiles; i++)
                 {
@@ -160,38 +160,38 @@ namespace RealmStudio
                 }
 
                 // frame bottom
-                canvas.DrawBitmap(Patch_G, X, Y + Height - Patch_G.Height, BoxPaint);
+                canvas.DrawBitmap(PatchG, X, Y + Height - PatchG.Height, BoxPaint);
 
                 // scale Patch_H so that it tiles an integral number of times
-                float patch_h_tile_length = Width - Patch_G.Width - Patch_I.Width;
+                float patch_h_tile_length = Width - PatchG.Width - PatchI.Width;
 
-                int num_patch_h_tiles = Math.Max((int)Math.Floor(patch_h_tile_length / Patch_H.Width), 1);
+                int num_patch_h_tiles = Math.Max((int)Math.Floor(patch_h_tile_length / PatchH.Width), 1);
 
                 int newHWidth = (int)Math.Ceiling(patch_h_tile_length / num_patch_h_tiles);
 
                 num_patch_h_tiles = (int)Math.Round((float)patch_h_tile_length / newWidth);
 
-                while ((newHWidth * num_patch_h_tiles) + Patch_G.Width + Patch_I.Width < Width)
+                while ((newHWidth * num_patch_h_tiles) + PatchG.Width + PatchI.Width < Width)
                 {
                     newHWidth++;
                 }
 
-                using SKBitmap scaled_H = new(newHWidth, Patch_H.Height);
-                Patch_H.ScalePixels(scaled_H, SKSamplingOptions.Default);
+                using SKBitmap scaled_H = new(newHWidth, PatchH.Height);
+                PatchH.ScalePixels(scaled_H, SKSamplingOptions.Default);
 
-                left = X + Patch_G.Width;
+                left = X + PatchG.Width;
 
                 // patch H is tiled the same number of times as patch B
                 for (int i = 0; i < num_patch_h_tiles; i++)
                 {
-                    canvas.DrawBitmap(scaled_H, left, Y + Height - Patch_H.Height, BoxPaint);
+                    canvas.DrawBitmap(scaled_H, left, Y + Height - PatchH.Height, BoxPaint);
                     left += scaled_H.Width;
                 }
 
-                canvas.DrawBitmap(Patch_I, X + Width - Patch_I.Width, Y + Height - Patch_I.Height, BoxPaint);
+                canvas.DrawBitmap(PatchI, X + Width - PatchI.Width, Y + Height - PatchI.Height, BoxPaint);
 
                 // box center
-                canvas.DrawBitmap(Patch_E, X + Patch_D.Width, Y + Patch_B.Height, BoxPaint);
+                canvas.DrawBitmap(PatchE, X + PatchD.Width, Y + PatchB.Height, BoxPaint);
 
                 if (IsSelected)
                 {

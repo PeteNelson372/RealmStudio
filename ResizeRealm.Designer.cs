@@ -1,6 +1,6 @@
 ﻿namespace RealmStudio
 {
-    partial class RealmConfiguration
+    partial class ResizeRealm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,18 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            RealmConfigDialog = new ReaLTaiizor.Forms.DungeonForm();
-            CancelConfigButton = new Button();
+            ResizeRealmOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            CancelCreateDetailButton = new Button();
             OKButton = new Button();
-            groupBox5 = new GroupBox();
-            MapThemeList = new ListBox();
-            groupBox4 = new GroupBox();
-            MapAreaHeightLabel = new Label();
-            label5 = new Label();
-            MapAreaUnitCombo = new ComboBox();
+            groupBox1 = new GroupBox();
+            BottomRightAnchorButton = new FontAwesome.Sharp.IconButton();
+            BottomLeftAnchorButton = new FontAwesome.Sharp.IconButton();
+            TopRightAnchorButton = new FontAwesome.Sharp.IconButton();
+            TopLeftAnchorButton = new FontAwesome.Sharp.IconButton();
+            ResizeAnchorLabel = new Label();
             label4 = new Label();
-            label7 = new Label();
-            MapAreaWidthUpDown = new NumericUpDown();
+            BottomCenterAnchorButton = new FontAwesome.Sharp.IconButton();
+            CenterRightAnchorButton = new FontAwesome.Sharp.IconButton();
+            CenterLeftAnchorButton = new FontAwesome.Sharp.IconButton();
+            CenterAnchorButton = new FontAwesome.Sharp.IconButton();
+            TopCenterAnchorButton = new FontAwesome.Sharp.IconButton();
+            ScaleMapCheck = new CheckBox();
             groupBox3 = new GroupBox();
             AspectRatioLabel = new Label();
             label3 = new Label();
@@ -66,178 +70,258 @@
             WH1600x1200Radio = new RadioButton();
             WH1280x1024Radio = new RadioButton();
             WH1024x768Radio = new RadioButton();
-            groupBox1 = new GroupBox();
-            OtherRadioButton = new RadioButton();
-            ShipRadioButton = new RadioButton();
-            SolarSystemRadioButton = new RadioButton();
-            DungeonRadioButton = new RadioButton();
-            InteriorRadioButton = new RadioButton();
-            CityRadioButton = new RadioButton();
-            RegionRadioButton = new RadioButton();
-            WorldRadioButton = new RadioButton();
-            RealmNameTextBox = new ReaLTaiizor.Controls.PoisonTextBox();
-            RealmConfigDialog.SuspendLayout();
-            groupBox5.SuspendLayout();
-            groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)MapAreaWidthUpDown).BeginInit();
+            ResizeRealmOverlay.SuspendLayout();
+            groupBox1.SuspendLayout();
             groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)WidthUpDown).BeginInit();
             ((System.ComponentModel.ISupportInitialize)HeightUpDown).BeginInit();
             groupBox2.SuspendLayout();
-            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
-            // RealmConfigDialog
+            // ResizeRealmOverlay
             // 
-            RealmConfigDialog.BackColor = Color.FromArgb(244, 241, 243);
-            RealmConfigDialog.BorderColor = Color.FromArgb(38, 38, 38);
-            RealmConfigDialog.Controls.Add(CancelConfigButton);
-            RealmConfigDialog.Controls.Add(OKButton);
-            RealmConfigDialog.Controls.Add(groupBox5);
-            RealmConfigDialog.Controls.Add(groupBox4);
-            RealmConfigDialog.Controls.Add(groupBox3);
-            RealmConfigDialog.Controls.Add(groupBox2);
-            RealmConfigDialog.Controls.Add(groupBox1);
-            RealmConfigDialog.Controls.Add(RealmNameTextBox);
-            RealmConfigDialog.Dock = DockStyle.Fill;
-            RealmConfigDialog.FillEdgeColorA = Color.FromArgb(69, 68, 63);
-            RealmConfigDialog.FillEdgeColorB = Color.FromArgb(69, 68, 63);
-            RealmConfigDialog.Font = new Font("Segoe UI", 9F);
-            RealmConfigDialog.FooterEdgeColor = Color.FromArgb(69, 68, 63);
-            RealmConfigDialog.ForeColor = Color.FromArgb(223, 219, 210);
-            RealmConfigDialog.HeaderEdgeColorA = Color.FromArgb(87, 85, 77);
-            RealmConfigDialog.HeaderEdgeColorB = Color.FromArgb(69, 68, 63);
-            RealmConfigDialog.Location = new Point(0, 0);
-            RealmConfigDialog.Name = "RealmConfigDialog";
-            RealmConfigDialog.Padding = new Padding(20, 56, 20, 16);
-            RealmConfigDialog.RoundCorners = true;
-            RealmConfigDialog.Sizable = true;
-            RealmConfigDialog.Size = new Size(601, 557);
-            RealmConfigDialog.SmartBounds = true;
-            RealmConfigDialog.StartPosition = FormStartPosition.CenterParent;
-            RealmConfigDialog.TabIndex = 0;
-            RealmConfigDialog.Text = "Realm Configuration";
-            RealmConfigDialog.TitleColor = Color.FromArgb(223, 219, 210);
+            ResizeRealmOverlay.BackColor = Color.FromArgb(244, 241, 243);
+            ResizeRealmOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            ResizeRealmOverlay.Controls.Add(CancelCreateDetailButton);
+            ResizeRealmOverlay.Controls.Add(OKButton);
+            ResizeRealmOverlay.Controls.Add(groupBox1);
+            ResizeRealmOverlay.Controls.Add(groupBox3);
+            ResizeRealmOverlay.Controls.Add(groupBox2);
+            ResizeRealmOverlay.Dock = DockStyle.Fill;
+            ResizeRealmOverlay.FillEdgeColorA = Color.FromArgb(69, 68, 63);
+            ResizeRealmOverlay.FillEdgeColorB = Color.FromArgb(69, 68, 63);
+            ResizeRealmOverlay.Font = new Font("Segoe UI", 9F);
+            ResizeRealmOverlay.FooterEdgeColor = Color.FromArgb(69, 68, 63);
+            ResizeRealmOverlay.ForeColor = Color.FromArgb(223, 219, 210);
+            ResizeRealmOverlay.HeaderEdgeColorA = Color.FromArgb(87, 85, 77);
+            ResizeRealmOverlay.HeaderEdgeColorB = Color.FromArgb(69, 68, 63);
+            ResizeRealmOverlay.Location = new Point(0, 0);
+            ResizeRealmOverlay.Name = "ResizeRealmOverlay";
+            ResizeRealmOverlay.Padding = new Padding(20, 56, 20, 16);
+            ResizeRealmOverlay.RoundCorners = true;
+            ResizeRealmOverlay.Sizable = true;
+            ResizeRealmOverlay.Size = new Size(442, 516);
+            ResizeRealmOverlay.SmartBounds = true;
+            ResizeRealmOverlay.StartPosition = FormStartPosition.WindowsDefaultLocation;
+            ResizeRealmOverlay.TabIndex = 0;
+            ResizeRealmOverlay.Text = "Resize Realm";
+            ResizeRealmOverlay.TitleColor = Color.FromArgb(223, 219, 210);
             // 
-            // CancelConfigButton
+            // CancelCreateDetailButton
             // 
-            CancelConfigButton.DialogResult = DialogResult.Cancel;
-            CancelConfigButton.ForeColor = SystemColors.ControlDarkDark;
-            CancelConfigButton.Location = new Point(516, 466);
-            CancelConfigButton.Name = "CancelConfigButton";
-            CancelConfigButton.Size = new Size(60, 60);
-            CancelConfigButton.TabIndex = 24;
-            CancelConfigButton.Text = "&Cancel";
-            CancelConfigButton.UseVisualStyleBackColor = true;
+            CancelCreateDetailButton.DialogResult = DialogResult.Cancel;
+            CancelCreateDetailButton.ForeColor = SystemColors.ControlDarkDark;
+            CancelCreateDetailButton.Location = new Point(356, 436);
+            CancelCreateDetailButton.Name = "CancelCreateDetailButton";
+            CancelCreateDetailButton.Size = new Size(60, 60);
+            CancelCreateDetailButton.TabIndex = 28;
+            CancelCreateDetailButton.Text = "&Cancel";
+            CancelCreateDetailButton.UseVisualStyleBackColor = true;
+            CancelCreateDetailButton.Click += CancelCreateDetailButton_Click;
             // 
             // OKButton
             // 
             OKButton.DialogResult = DialogResult.OK;
             OKButton.ForeColor = SystemColors.ControlDarkDark;
-            OKButton.Location = new Point(450, 466);
+            OKButton.Location = new Point(290, 436);
             OKButton.Name = "OKButton";
             OKButton.Size = new Size(60, 60);
-            OKButton.TabIndex = 23;
+            OKButton.TabIndex = 27;
             OKButton.Text = "O&K";
             OKButton.UseVisualStyleBackColor = true;
-            OKButton.Click += OkayButton_Click;
+            OKButton.Click += OKButton_Click;
             // 
-            // groupBox5
+            // groupBox1
             // 
-            groupBox5.Controls.Add(MapThemeList);
-            groupBox5.Location = new Point(371, 339);
-            groupBox5.Name = "groupBox5";
-            groupBox5.Size = new Size(205, 116);
-            groupBox5.TabIndex = 20;
-            groupBox5.TabStop = false;
-            groupBox5.Text = "Realm Map Theme";
+            groupBox1.Controls.Add(BottomRightAnchorButton);
+            groupBox1.Controls.Add(BottomLeftAnchorButton);
+            groupBox1.Controls.Add(TopRightAnchorButton);
+            groupBox1.Controls.Add(TopLeftAnchorButton);
+            groupBox1.Controls.Add(ResizeAnchorLabel);
+            groupBox1.Controls.Add(label4);
+            groupBox1.Controls.Add(BottomCenterAnchorButton);
+            groupBox1.Controls.Add(CenterRightAnchorButton);
+            groupBox1.Controls.Add(CenterLeftAnchorButton);
+            groupBox1.Controls.Add(CenterAnchorButton);
+            groupBox1.Controls.Add(TopCenterAnchorButton);
+            groupBox1.Controls.Add(ScaleMapCheck);
+            groupBox1.Location = new Point(234, 181);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(182, 244);
+            groupBox1.TabIndex = 21;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Anchor and Scale";
             // 
-            // MapThemeList
+            // BottomRightAnchorButton
             // 
-            MapThemeList.FormattingEnabled = true;
-            MapThemeList.ItemHeight = 15;
-            MapThemeList.Location = new Point(6, 22);
-            MapThemeList.Name = "MapThemeList";
-            MapThemeList.Size = new Size(193, 79);
-            MapThemeList.TabIndex = 0;
-            MapThemeList.SelectedIndexChanged += MapThemes_SelectedIndexChanged;
+            BottomRightAnchorButton.Flip = FontAwesome.Sharp.FlipOrientation.Horizontal;
+            BottomRightAnchorButton.IconChar = FontAwesome.Sharp.IconChar.ArrowDown;
+            BottomRightAnchorButton.IconColor = Color.Black;
+            BottomRightAnchorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            BottomRightAnchorButton.IconSize = 22;
+            BottomRightAnchorButton.Location = new Point(108, 146);
+            BottomRightAnchorButton.Margin = new Padding(0);
+            BottomRightAnchorButton.Name = "BottomRightAnchorButton";
+            BottomRightAnchorButton.Rotation = 45D;
+            BottomRightAnchorButton.Size = new Size(40, 40);
+            BottomRightAnchorButton.TabIndex = 32;
+            BottomRightAnchorButton.UseVisualStyleBackColor = true;
+            BottomRightAnchorButton.Click += BottomRightAnchorButton_Click;
             // 
-            // groupBox4
+            // BottomLeftAnchorButton
             // 
-            groupBox4.Controls.Add(MapAreaHeightLabel);
-            groupBox4.Controls.Add(label5);
-            groupBox4.Controls.Add(MapAreaUnitCombo);
-            groupBox4.Controls.Add(label4);
-            groupBox4.Controls.Add(label7);
-            groupBox4.Controls.Add(MapAreaWidthUpDown);
-            groupBox4.Location = new Point(371, 214);
-            groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(205, 116);
-            groupBox4.TabIndex = 19;
-            groupBox4.TabStop = false;
-            groupBox4.Text = "Realm Map Area";
+            BottomLeftAnchorButton.Flip = FontAwesome.Sharp.FlipOrientation.Horizontal;
+            BottomLeftAnchorButton.IconChar = FontAwesome.Sharp.IconChar.ArrowDown;
+            BottomLeftAnchorButton.IconColor = Color.Black;
+            BottomLeftAnchorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            BottomLeftAnchorButton.IconSize = 22;
+            BottomLeftAnchorButton.Location = new Point(28, 146);
+            BottomLeftAnchorButton.Margin = new Padding(0);
+            BottomLeftAnchorButton.Name = "BottomLeftAnchorButton";
+            BottomLeftAnchorButton.Rotation = -45D;
+            BottomLeftAnchorButton.Size = new Size(40, 40);
+            BottomLeftAnchorButton.TabIndex = 31;
+            BottomLeftAnchorButton.UseVisualStyleBackColor = true;
+            BottomLeftAnchorButton.Click += BottomLeftAnchorButton_Click;
             // 
-            // MapAreaHeightLabel
+            // TopRightAnchorButton
             // 
-            MapAreaHeightLabel.ForeColor = SystemColors.ControlDarkDark;
-            MapAreaHeightLabel.Location = new Point(114, 81);
-            MapAreaHeightLabel.Name = "MapAreaHeightLabel";
-            MapAreaHeightLabel.Size = new Size(85, 15);
-            MapAreaHeightLabel.TabIndex = 6;
-            MapAreaHeightLabel.Text = "75";
-            MapAreaHeightLabel.TextAlign = ContentAlignment.MiddleCenter;
+            TopRightAnchorButton.Flip = FontAwesome.Sharp.FlipOrientation.Horizontal;
+            TopRightAnchorButton.IconChar = FontAwesome.Sharp.IconChar.ArrowUp;
+            TopRightAnchorButton.IconColor = Color.Black;
+            TopRightAnchorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            TopRightAnchorButton.IconSize = 22;
+            TopRightAnchorButton.Location = new Point(108, 67);
+            TopRightAnchorButton.Margin = new Padding(0);
+            TopRightAnchorButton.Name = "TopRightAnchorButton";
+            TopRightAnchorButton.Rotation = -45D;
+            TopRightAnchorButton.Size = new Size(40, 40);
+            TopRightAnchorButton.TabIndex = 30;
+            TopRightAnchorButton.UseVisualStyleBackColor = true;
+            TopRightAnchorButton.Click += TopRightAnchorButton_Click;
             // 
-            // label5
+            // TopLeftAnchorButton
             // 
-            label5.AutoSize = true;
-            label5.ForeColor = SystemColors.ControlDarkDark;
-            label5.Location = new Point(15, 81);
-            label5.Name = "label5";
-            label5.Size = new Size(97, 15);
-            label5.TabIndex = 5;
-            label5.Text = "Map Area Height";
+            TopLeftAnchorButton.Flip = FontAwesome.Sharp.FlipOrientation.Horizontal;
+            TopLeftAnchorButton.IconChar = FontAwesome.Sharp.IconChar.ArrowUp;
+            TopLeftAnchorButton.IconColor = Color.Black;
+            TopLeftAnchorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            TopLeftAnchorButton.IconSize = 22;
+            TopLeftAnchorButton.Location = new Point(28, 66);
+            TopLeftAnchorButton.Margin = new Padding(0);
+            TopLeftAnchorButton.Name = "TopLeftAnchorButton";
+            TopLeftAnchorButton.Rotation = 45D;
+            TopLeftAnchorButton.Size = new Size(40, 40);
+            TopLeftAnchorButton.TabIndex = 29;
+            TopLeftAnchorButton.UseVisualStyleBackColor = true;
+            TopLeftAnchorButton.Click += TopLeftAnchorButton_Click;
             // 
-            // MapAreaUnitCombo
+            // ResizeAnchorLabel
             // 
-            MapAreaUnitCombo.DropDownWidth = 120;
-            MapAreaUnitCombo.FormattingEnabled = true;
-            MapAreaUnitCombo.Items.AddRange(new object[] { "Centimeters", "Inches", "Feet", "Yards", "Meters", "Kilometers", "Miles", "Astronomical Units (AU)", "Light Years", "Parsecs" });
-            MapAreaUnitCombo.Location = new Point(114, 26);
-            MapAreaUnitCombo.Name = "MapAreaUnitCombo";
-            MapAreaUnitCombo.Size = new Size(85, 23);
-            MapAreaUnitCombo.TabIndex = 4;
+            ResizeAnchorLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ResizeAnchorLabel.ForeColor = SystemColors.ControlDarkDark;
+            ResizeAnchorLabel.Location = new Point(6, 34);
+            ResizeAnchorLabel.Name = "ResizeAnchorLabel";
+            ResizeAnchorLabel.Size = new Size(137, 15);
+            ResizeAnchorLabel.TabIndex = 28;
+            ResizeAnchorLabel.Text = "Center Zoomed";
             // 
             // label4
             // 
             label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label4.ForeColor = SystemColors.ControlDarkDark;
-            label4.Location = new Point(20, 26);
+            label4.Location = new Point(6, 19);
             label4.Name = "label4";
-            label4.Size = new Size(88, 15);
-            label4.TabIndex = 3;
-            label4.Text = "Map Area Units";
+            label4.Size = new Size(95, 15);
+            label4.TabIndex = 27;
+            label4.Text = "Resize map from";
             // 
-            // label7
+            // BottomCenterAnchorButton
             // 
-            label7.AutoSize = true;
-            label7.ForeColor = SystemColors.ControlDarkDark;
-            label7.Location = new Point(15, 57);
-            label7.Name = "label7";
-            label7.Size = new Size(93, 15);
-            label7.TabIndex = 2;
-            label7.Text = "Map Area Width";
+            BottomCenterAnchorButton.Flip = FontAwesome.Sharp.FlipOrientation.Horizontal;
+            BottomCenterAnchorButton.IconChar = FontAwesome.Sharp.IconChar.ArrowDown;
+            BottomCenterAnchorButton.IconColor = Color.Black;
+            BottomCenterAnchorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            BottomCenterAnchorButton.IconSize = 22;
+            BottomCenterAnchorButton.Location = new Point(68, 146);
+            BottomCenterAnchorButton.Margin = new Padding(0);
+            BottomCenterAnchorButton.Name = "BottomCenterAnchorButton";
+            BottomCenterAnchorButton.Size = new Size(40, 40);
+            BottomCenterAnchorButton.TabIndex = 26;
+            BottomCenterAnchorButton.UseVisualStyleBackColor = true;
+            BottomCenterAnchorButton.Click += BottomCenterAnchorButton_Click;
             // 
-            // MapAreaWidthUpDown
+            // CenterRightAnchorButton
             // 
-            MapAreaWidthUpDown.Location = new Point(114, 55);
-            MapAreaWidthUpDown.Maximum = new decimal(new int[] { 1000000000, 0, 0, 0 });
-            MapAreaWidthUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            MapAreaWidthUpDown.Name = "MapAreaWidthUpDown";
-            MapAreaWidthUpDown.Size = new Size(85, 23);
-            MapAreaWidthUpDown.TabIndex = 1;
-            MapAreaWidthUpDown.TextAlign = HorizontalAlignment.Center;
-            MapAreaWidthUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
-            MapAreaWidthUpDown.ValueChanged += MapAreaWidthUpDown_ValueChanged;
+            CenterRightAnchorButton.IconChar = FontAwesome.Sharp.IconChar.ArrowRight;
+            CenterRightAnchorButton.IconColor = Color.Black;
+            CenterRightAnchorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            CenterRightAnchorButton.IconSize = 22;
+            CenterRightAnchorButton.Location = new Point(108, 108);
+            CenterRightAnchorButton.Margin = new Padding(0);
+            CenterRightAnchorButton.Name = "CenterRightAnchorButton";
+            CenterRightAnchorButton.Size = new Size(40, 40);
+            CenterRightAnchorButton.TabIndex = 25;
+            CenterRightAnchorButton.UseVisualStyleBackColor = true;
+            CenterRightAnchorButton.Click += CenterRightAnchorButton_Click;
+            // 
+            // CenterLeftAnchorButton
+            // 
+            CenterLeftAnchorButton.IconChar = FontAwesome.Sharp.IconChar.ArrowLeft;
+            CenterLeftAnchorButton.IconColor = Color.Black;
+            CenterLeftAnchorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            CenterLeftAnchorButton.IconSize = 22;
+            CenterLeftAnchorButton.Location = new Point(28, 106);
+            CenterLeftAnchorButton.Margin = new Padding(0);
+            CenterLeftAnchorButton.Name = "CenterLeftAnchorButton";
+            CenterLeftAnchorButton.Size = new Size(40, 40);
+            CenterLeftAnchorButton.TabIndex = 24;
+            CenterLeftAnchorButton.UseVisualStyleBackColor = true;
+            CenterLeftAnchorButton.Click += CenterLeftAnchorButton_Click;
+            // 
+            // CenterAnchorButton
+            // 
+            CenterAnchorButton.IconChar = FontAwesome.Sharp.IconChar.SquareFull;
+            CenterAnchorButton.IconColor = Color.Black;
+            CenterAnchorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            CenterAnchorButton.IconSize = 26;
+            CenterAnchorButton.Location = new Point(68, 106);
+            CenterAnchorButton.Margin = new Padding(0);
+            CenterAnchorButton.Name = "CenterAnchorButton";
+            CenterAnchorButton.Padding = new Padding(2, 6, 0, 0);
+            CenterAnchorButton.Size = new Size(40, 40);
+            CenterAnchorButton.TabIndex = 23;
+            CenterAnchorButton.UseVisualStyleBackColor = true;
+            CenterAnchorButton.Click += CenterAnchorButton_Click;
+            // 
+            // TopCenterAnchorButton
+            // 
+            TopCenterAnchorButton.Flip = FontAwesome.Sharp.FlipOrientation.Horizontal;
+            TopCenterAnchorButton.IconChar = FontAwesome.Sharp.IconChar.ArrowUp;
+            TopCenterAnchorButton.IconColor = Color.Black;
+            TopCenterAnchorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            TopCenterAnchorButton.IconSize = 22;
+            TopCenterAnchorButton.Location = new Point(68, 67);
+            TopCenterAnchorButton.Margin = new Padding(0);
+            TopCenterAnchorButton.Name = "TopCenterAnchorButton";
+            TopCenterAnchorButton.Size = new Size(40, 40);
+            TopCenterAnchorButton.TabIndex = 22;
+            TopCenterAnchorButton.UseVisualStyleBackColor = true;
+            TopCenterAnchorButton.Click += TopCenterAnchorButton_Click;
+            // 
+            // ScaleMapCheck
+            // 
+            ScaleMapCheck.AutoSize = true;
+            ScaleMapCheck.Checked = true;
+            ScaleMapCheck.CheckState = CheckState.Checked;
+            ScaleMapCheck.ForeColor = SystemColors.ControlDarkDark;
+            ScaleMapCheck.Location = new Point(11, 201);
+            ScaleMapCheck.Name = "ScaleMapCheck";
+            ScaleMapCheck.Size = new Size(146, 19);
+            ScaleMapCheck.TabIndex = 21;
+            ScaleMapCheck.Text = "Scale Map To New Size";
+            ScaleMapCheck.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
@@ -249,19 +333,19 @@
             groupBox3.Controls.Add(label1);
             groupBox3.Controls.Add(WidthUpDown);
             groupBox3.Controls.Add(HeightUpDown);
-            groupBox3.Location = new Point(371, 89);
+            groupBox3.Location = new Point(234, 59);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(205, 116);
-            groupBox3.TabIndex = 18;
+            groupBox3.Size = new Size(182, 116);
+            groupBox3.TabIndex = 19;
             groupBox3.TabStop = false;
-            groupBox3.Text = "Realm Map Size";
+            groupBox3.Text = "Resized Realm Map Size";
             // 
             // AspectRatioLabel
             // 
             AspectRatioLabel.ForeColor = SystemColors.ControlDarkDark;
             AspectRatioLabel.Location = new Point(90, 87);
             AspectRatioLabel.Name = "AspectRatioLabel";
-            AspectRatioLabel.Size = new Size(100, 15);
+            AspectRatioLabel.Size = new Size(86, 15);
             AspectRatioLabel.TabIndex = 7;
             AspectRatioLabel.Text = "1.78";
             // 
@@ -366,10 +450,10 @@
             groupBox2.Controls.Add(WH1600x1200Radio);
             groupBox2.Controls.Add(WH1280x1024Radio);
             groupBox2.Controls.Add(WH1024x768Radio);
-            groupBox2.Location = new Point(147, 89);
+            groupBox2.Location = new Point(23, 59);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(205, 437);
-            groupBox2.TabIndex = 10;
+            groupBox2.TabIndex = 11;
             groupBox2.TabStop = false;
             groupBox2.Text = "Realm Map Size Presets";
             // 
@@ -567,196 +651,41 @@
             WH1024x768Radio.UseVisualStyleBackColor = true;
             WH1024x768Radio.Click += WH1024x768Radio_Click;
             // 
-            // groupBox1
-            // 
-            groupBox1.Controls.Add(OtherRadioButton);
-            groupBox1.Controls.Add(ShipRadioButton);
-            groupBox1.Controls.Add(SolarSystemRadioButton);
-            groupBox1.Controls.Add(DungeonRadioButton);
-            groupBox1.Controls.Add(InteriorRadioButton);
-            groupBox1.Controls.Add(CityRadioButton);
-            groupBox1.Controls.Add(RegionRadioButton);
-            groupBox1.Controls.Add(WorldRadioButton);
-            groupBox1.Location = new Point(23, 89);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(107, 437);
-            groupBox1.TabIndex = 2;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Realm Type";
-            // 
-            // OtherRadioButton
-            // 
-            OtherRadioButton.AutoSize = true;
-            OtherRadioButton.ForeColor = SystemColors.ControlDarkDark;
-            OtherRadioButton.Location = new Point(6, 197);
-            OtherRadioButton.Name = "OtherRadioButton";
-            OtherRadioButton.Size = new Size(55, 19);
-            OtherRadioButton.TabIndex = 9;
-            OtherRadioButton.Text = "Other";
-            OtherRadioButton.UseVisualStyleBackColor = true;
-            OtherRadioButton.Click += OtherRadioButton_Click;
-            // 
-            // ShipRadioButton
-            // 
-            ShipRadioButton.AutoSize = true;
-            ShipRadioButton.ForeColor = SystemColors.ControlDarkDark;
-            ShipRadioButton.Location = new Point(6, 172);
-            ShipRadioButton.Name = "ShipRadioButton";
-            ShipRadioButton.Size = new Size(48, 19);
-            ShipRadioButton.TabIndex = 8;
-            ShipRadioButton.Text = "Ship";
-            ShipRadioButton.UseVisualStyleBackColor = true;
-            ShipRadioButton.Click += ShipRadioButton_Click;
-            // 
-            // SolarSystemRadioButton
-            // 
-            SolarSystemRadioButton.AutoSize = true;
-            SolarSystemRadioButton.ForeColor = SystemColors.ControlDarkDark;
-            SolarSystemRadioButton.Location = new Point(6, 147);
-            SolarSystemRadioButton.Name = "SolarSystemRadioButton";
-            SolarSystemRadioButton.Size = new Size(92, 19);
-            SolarSystemRadioButton.TabIndex = 7;
-            SolarSystemRadioButton.Text = "Solar System";
-            SolarSystemRadioButton.UseVisualStyleBackColor = true;
-            SolarSystemRadioButton.Click += SolarSystemRadioButton_Click;
-            // 
-            // DungeonRadioButton
-            // 
-            DungeonRadioButton.AutoSize = true;
-            DungeonRadioButton.ForeColor = SystemColors.ControlDarkDark;
-            DungeonRadioButton.Location = new Point(6, 122);
-            DungeonRadioButton.Name = "DungeonRadioButton";
-            DungeonRadioButton.Size = new Size(74, 19);
-            DungeonRadioButton.TabIndex = 6;
-            DungeonRadioButton.Text = "Dungeon";
-            DungeonRadioButton.UseVisualStyleBackColor = true;
-            DungeonRadioButton.Click += DungeonRadioButton_Click;
-            // 
-            // InteriorRadioButton
-            // 
-            InteriorRadioButton.AutoSize = true;
-            InteriorRadioButton.ForeColor = SystemColors.ControlDarkDark;
-            InteriorRadioButton.Location = new Point(6, 97);
-            InteriorRadioButton.Name = "InteriorRadioButton";
-            InteriorRadioButton.Size = new Size(63, 19);
-            InteriorRadioButton.TabIndex = 5;
-            InteriorRadioButton.Text = "Interior";
-            InteriorRadioButton.UseVisualStyleBackColor = true;
-            InteriorRadioButton.Click += InteriorRadioButton_Click;
-            // 
-            // CityRadioButton
-            // 
-            CityRadioButton.AutoSize = true;
-            CityRadioButton.ForeColor = SystemColors.ControlDarkDark;
-            CityRadioButton.Location = new Point(6, 72);
-            CityRadioButton.Name = "CityRadioButton";
-            CityRadioButton.Size = new Size(46, 19);
-            CityRadioButton.TabIndex = 4;
-            CityRadioButton.Text = "City";
-            CityRadioButton.UseVisualStyleBackColor = true;
-            CityRadioButton.Click += CityRadioButton_Click;
-            // 
-            // RegionRadioButton
-            // 
-            RegionRadioButton.AutoSize = true;
-            RegionRadioButton.ForeColor = SystemColors.ControlDarkDark;
-            RegionRadioButton.Location = new Point(6, 47);
-            RegionRadioButton.Name = "RegionRadioButton";
-            RegionRadioButton.Size = new Size(62, 19);
-            RegionRadioButton.TabIndex = 3;
-            RegionRadioButton.Text = "Region";
-            RegionRadioButton.UseVisualStyleBackColor = true;
-            RegionRadioButton.Click += RegionRadioButton_Click;
-            // 
-            // WorldRadioButton
-            // 
-            WorldRadioButton.AutoSize = true;
-            WorldRadioButton.Checked = true;
-            WorldRadioButton.ForeColor = SystemColors.ControlDarkDark;
-            WorldRadioButton.Location = new Point(6, 22);
-            WorldRadioButton.Name = "WorldRadioButton";
-            WorldRadioButton.Size = new Size(57, 19);
-            WorldRadioButton.TabIndex = 2;
-            WorldRadioButton.TabStop = true;
-            WorldRadioButton.Text = "World";
-            WorldRadioButton.UseVisualStyleBackColor = true;
-            WorldRadioButton.Click += WorldRadioButton_Click;
-            // 
-            // RealmNameTextBox
-            // 
-            // 
-            // 
-            // 
-            RealmNameTextBox.CustomButton.Image = null;
-            RealmNameTextBox.CustomButton.Location = new Point(531, 2);
-            RealmNameTextBox.CustomButton.Name = "";
-            RealmNameTextBox.CustomButton.Size = new Size(19, 19);
-            RealmNameTextBox.CustomButton.Style = ReaLTaiizor.Enum.Poison.ColorStyle.Blue;
-            RealmNameTextBox.CustomButton.TabIndex = 1;
-            RealmNameTextBox.CustomButton.Theme = ReaLTaiizor.Enum.Poison.ThemeStyle.Light;
-            RealmNameTextBox.CustomButton.UseSelectable = true;
-            RealmNameTextBox.CustomButton.Visible = false;
-            RealmNameTextBox.Location = new Point(23, 59);
-            RealmNameTextBox.MaxLength = 32767;
-            RealmNameTextBox.Name = "RealmNameTextBox";
-            RealmNameTextBox.PasswordChar = '\0';
-            RealmNameTextBox.PromptText = "Enter Realm Name";
-            RealmNameTextBox.ScrollBars = ScrollBars.None;
-            RealmNameTextBox.SelectedText = "";
-            RealmNameTextBox.SelectionLength = 0;
-            RealmNameTextBox.SelectionStart = 0;
-            RealmNameTextBox.ShortcutsEnabled = true;
-            RealmNameTextBox.Size = new Size(553, 24);
-            RealmNameTextBox.TabIndex = 0;
-            RealmNameTextBox.UseSelectable = true;
-            RealmNameTextBox.WaterMark = "Enter Realm Name";
-            RealmNameTextBox.WaterMarkColor = Color.FromArgb(109, 109, 109);
-            RealmNameTextBox.WaterMarkFont = new Font("Segoe UI", 12F, FontStyle.Italic, GraphicsUnit.Pixel);
-            // 
-            // RealmConfiguration
+            // ResizeRealm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(601, 557);
-            ControlBox = false;
-            Controls.Add(RealmConfigDialog);
+            ClientSize = new Size(442, 516);
+            Controls.Add(ResizeRealmOverlay);
             FormBorderStyle = FormBorderStyle.None;
             MinimumSize = new Size(261, 65);
-            Name = "RealmConfiguration";
-            SizeGripStyle = SizeGripStyle.Hide;
-            StartPosition = FormStartPosition.CenterParent;
-            Text = "Realm Configuration";
-            TopMost = true;
+            Name = "ResizeRealm";
+            Text = "Resize Realm";
             TransparencyKey = Color.Fuchsia;
-            RealmConfigDialog.ResumeLayout(false);
-            groupBox5.ResumeLayout(false);
-            groupBox4.ResumeLayout(false);
-            groupBox4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)MapAreaWidthUpDown).EndInit();
+            ResizeRealmOverlay.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)WidthUpDown).EndInit();
             ((System.ComponentModel.ISupportInitialize)HeightUpDown).EndInit();
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private ReaLTaiizor.Forms.DungeonForm RealmConfigDialog;
-        private ReaLTaiizor.Controls.PoisonTextBox RealmNameTextBox;
-        private GroupBox groupBox1;
-        private RadioButton WorldRadioButton;
-        private RadioButton ShipRadioButton;
-        private RadioButton SolarSystemRadioButton;
-        private RadioButton DungeonRadioButton;
-        private RadioButton InteriorRadioButton;
-        private RadioButton CityRadioButton;
-        private RadioButton RegionRadioButton;
+        private ReaLTaiizor.Forms.DungeonForm ResizeRealmOverlay;
         private GroupBox groupBox2;
+        private RadioButton WH7680x4320Radio;
+        private RadioButton WH7016x4960Radio;
+        private RadioButton WH4960x3508Radio;
+        private RadioButton WH3508x2480Radio;
+        private RadioButton WH2480x1754Radio;
+        private RadioButton WH1754x1240Radio;
+        private RadioButton WH3300x2250Radio;
+        private RadioButton WH1280x720Radio;
         private RadioButton WH4096x2048Radio;
         private RadioButton WH3840x2160Radio;
         private RadioButton WH2048x1024Radio;
@@ -765,34 +694,29 @@
         private RadioButton WH1600x1200Radio;
         private RadioButton WH1280x1024Radio;
         private RadioButton WH1024x768Radio;
-        private RadioButton OtherRadioButton;
-        private RadioButton WH1280x720Radio;
-        private RadioButton WH2480x1754Radio;
-        private RadioButton WH1754x1240Radio;
-        private RadioButton WH3300x2250Radio;
-        private RadioButton WH7680x4320Radio;
-        private RadioButton WH7016x4960Radio;
-        private RadioButton WH4960x3508Radio;
-        private RadioButton WH3508x2480Radio;
         private GroupBox groupBox3;
-        private NumericUpDown WidthUpDown;
-        private NumericUpDown HeightUpDown;
-        private Label label1;
-        private Label label2;
-        private FontAwesome.Sharp.IconButton SwapResolutionButton;
-        private FontAwesome.Sharp.IconButton LockAspectRatioButton;
-        private GroupBox groupBox4;
-        private Label label7;
-        private NumericUpDown MapAreaWidthUpDown;
         private Label AspectRatioLabel;
         private Label label3;
+        private FontAwesome.Sharp.IconButton SwapResolutionButton;
+        private FontAwesome.Sharp.IconButton LockAspectRatioButton;
+        private Label label2;
+        private Label label1;
+        private NumericUpDown WidthUpDown;
+        private NumericUpDown HeightUpDown;
+        private GroupBox groupBox1;
+        private FontAwesome.Sharp.IconButton CenterAnchorButton;
+        private FontAwesome.Sharp.IconButton TopCenterAnchorButton;
+        private CheckBox ScaleMapCheck;
+        private FontAwesome.Sharp.IconButton BottomCenterAnchorButton;
+        private FontAwesome.Sharp.IconButton CenterRightAnchorButton;
+        private FontAwesome.Sharp.IconButton CenterLeftAnchorButton;
         private Label label4;
-        private Label MapAreaHeightLabel;
-        private Label label5;
-        private ComboBox MapAreaUnitCombo;
-        private GroupBox groupBox5;
-        private ListBox MapThemeList;
+        private Button CancelCreateDetailButton;
         private Button OKButton;
-        private Button CancelConfigButton;
+        private Label ResizeAnchorLabel;
+        private FontAwesome.Sharp.IconButton TopLeftAnchorButton;
+        private FontAwesome.Sharp.IconButton BottomRightAnchorButton;
+        private FontAwesome.Sharp.IconButton BottomLeftAnchorButton;
+        private FontAwesome.Sharp.IconButton TopRightAnchorButton;
     }
 }

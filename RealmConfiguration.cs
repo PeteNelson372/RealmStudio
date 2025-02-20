@@ -27,9 +27,10 @@ namespace RealmStudio
 {
     public partial class RealmConfiguration : Form
     {
-        public RealmStudioMap map = new();
+        public RealmStudioMap Map { get; set; } = new();
         public float MapAspectRatio { get; set; } = 1.0F;
-        public bool AspectRatioLocked = true;
+        public bool AspectRatioLocked { get; set; } = true;
+
         private bool WidthChanging;
         private bool HeightChanging;
 
@@ -49,12 +50,12 @@ namespace RealmStudio
             HeightUpDown.Value = defaultMapSize.Height;
             HeightUpDown.Refresh();
 
-            map.MapWidth = (int)WidthUpDown.Value;
-            map.MapHeight = (int)HeightUpDown.Value;
+            Map.MapWidth = (int)WidthUpDown.Value;
+            Map.MapHeight = (int)HeightUpDown.Value;
 
             CalculateAspectRatio();
 
-            map.RealmType = RealmTypeEnum.World;
+            Map.RealmType = RealmTypeEnum.World;
 
 
             string measurementUnits = Settings.Default.MeasurementUnits.Trim();
@@ -64,12 +65,12 @@ namespace RealmStudio
                 if (measurementUnits == "US Customary")
                 {
                     MapAreaUnitCombo.SelectedIndex = 6;  // miles
-                    map.MapAreaUnits = "Miles";
+                    Map.MapAreaUnits = "Miles";
                 }
                 else if (measurementUnits == "Metric")
                 {
                     MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
-                    map.MapAreaUnits = "Kilometers";
+                    Map.MapAreaUnits = "Kilometers";
                 }
             }
 
@@ -188,8 +189,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 1024;
                 HeightUpDown.Value = 768;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -207,8 +208,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 1280;
                 HeightUpDown.Value = 720;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -226,8 +227,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 1280;
                 HeightUpDown.Value = 1024;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -245,8 +246,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 1600;
                 HeightUpDown.Value = 1200;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -264,8 +265,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 1920;
                 HeightUpDown.Value = 1080;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -283,8 +284,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 2560;
                 HeightUpDown.Value = 1080;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -302,8 +303,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 2048;
                 HeightUpDown.Value = 1024;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -321,8 +322,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 3840;
                 HeightUpDown.Value = 2160;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -340,8 +341,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 4096;
                 HeightUpDown.Value = 2048;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -359,8 +360,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 3300;
                 HeightUpDown.Value = 2250;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -378,8 +379,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 1754;
                 HeightUpDown.Value = 1240;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -397,8 +398,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 2840;
                 HeightUpDown.Value = 1754;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -416,8 +417,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 3508;
                 HeightUpDown.Value = 2480;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -435,8 +436,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 4960;
                 HeightUpDown.Value = 3508;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -454,8 +455,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 7016;
                 HeightUpDown.Value = 4960;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -473,8 +474,8 @@ namespace RealmStudio
                 WidthUpDown.Value = 7680;
                 HeightUpDown.Value = 4320;
 
-                map.MapWidth = (int)WidthUpDown.Value;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
 
@@ -490,12 +491,12 @@ namespace RealmStudio
             MapAreaHeightLabel.Text = ((float)MapAreaWidthUpDown.Value / MapAspectRatio).ToString("F2");
 
             // MapAreaWidth and MapAreaHeight are the size of the map in MapAreaUnits (e.g. 1000 miles x 500 miles)
-            map.MapAreaWidth = (float)MapAreaWidthUpDown.Value;
-            map.MapAreaHeight = float.Parse(MapAreaHeightLabel.Text);
+            Map.MapAreaWidth = (float)MapAreaWidthUpDown.Value;
+            Map.MapAreaHeight = float.Parse(MapAreaHeightLabel.Text);
 
             // MapPixelWidth and MapPixelHeight are the size of one pixel in MapAreaUnits
-            map.MapPixelWidth = map.MapAreaWidth / map.MapWidth;
-            map.MapPixelHeight = map.MapAreaHeight / map.MapHeight;
+            Map.MapPixelWidth = Map.MapAreaWidth / Map.MapWidth;
+            Map.MapPixelHeight = Map.MapAreaHeight / Map.MapHeight;
         }
 
         private void MapAreaWidthUpDown_ValueChanged(object sender, EventArgs e)
@@ -507,7 +508,7 @@ namespace RealmStudio
         {
             if (WorldRadioButton.Checked)
             {
-                map.RealmType = RealmTypeEnum.World;
+                Map.RealmType = RealmTypeEnum.World;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -515,12 +516,12 @@ namespace RealmStudio
                     if (measurementUnits == "US Customary")
                     {
                         MapAreaUnitCombo.SelectedIndex = 6;  // miles
-                        map.MapAreaUnits = "Miles";
+                        Map.MapAreaUnits = "Miles";
                     }
                     else if (measurementUnits == "Metric")
                     {
                         MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
-                        map.MapAreaUnits = "Kilometers";
+                        Map.MapAreaUnits = "Kilometers";
                     }
                 }
             }
@@ -530,7 +531,7 @@ namespace RealmStudio
         {
             if (RegionRadioButton.Checked)
             {
-                map.RealmType = RealmTypeEnum.Region;
+                Map.RealmType = RealmTypeEnum.Region;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -538,12 +539,12 @@ namespace RealmStudio
                     if (measurementUnits == "US Customary")
                     {
                         MapAreaUnitCombo.SelectedIndex = 6;  // miles
-                        map.MapAreaUnits = "Miles";
+                        Map.MapAreaUnits = "Miles";
                     }
                     else if (measurementUnits == "Metric")
                     {
                         MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
-                        map.MapAreaUnits = "Kilometers";
+                        Map.MapAreaUnits = "Kilometers";
                     }
                 }
             }
@@ -553,7 +554,7 @@ namespace RealmStudio
         {
             if (CityRadioButton.Checked)
             {
-                map.RealmType = RealmTypeEnum.City;
+                Map.RealmType = RealmTypeEnum.City;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -561,12 +562,12 @@ namespace RealmStudio
                     if (measurementUnits == "US Customary")
                     {
                         MapAreaUnitCombo.SelectedIndex = 6;  // miles
-                        map.MapAreaUnits = "Miles";
+                        Map.MapAreaUnits = "Miles";
                     }
                     else if (measurementUnits == "Metric")
                     {
                         MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
-                        map.MapAreaUnits = "Kilometers";
+                        Map.MapAreaUnits = "Kilometers";
                     }
                 }
             }
@@ -576,7 +577,7 @@ namespace RealmStudio
         {
             if (InteriorRadioButton.Checked)
             {
-                map.RealmType = RealmTypeEnum.Interior;
+                Map.RealmType = RealmTypeEnum.Interior;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -584,12 +585,12 @@ namespace RealmStudio
                     if (measurementUnits == "US Customary")
                     {
                         MapAreaUnitCombo.SelectedIndex = 2;  // feet
-                        map.MapAreaUnits = "Feet";
+                        Map.MapAreaUnits = "Feet";
                     }
                     else if (measurementUnits == "Metric")
                     {
                         MapAreaUnitCombo.SelectedIndex = 4;  // Meters
-                        map.MapAreaUnits = "Meters";
+                        Map.MapAreaUnits = "Meters";
                     }
                 }
             }
@@ -599,7 +600,7 @@ namespace RealmStudio
         {
             if (DungeonRadioButton.Checked)
             {
-                map.RealmType = RealmTypeEnum.Dungeon;
+                Map.RealmType = RealmTypeEnum.Dungeon;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -607,12 +608,12 @@ namespace RealmStudio
                     if (measurementUnits == "US Customary")
                     {
                         MapAreaUnitCombo.SelectedIndex = 2;  // feet
-                        map.MapAreaUnits = "Feet";
+                        Map.MapAreaUnits = "Feet";
                     }
                     else if (measurementUnits == "Metric")
                     {
                         MapAreaUnitCombo.SelectedIndex = 4;  // Meters
-                        map.MapAreaUnits = "Meters";
+                        Map.MapAreaUnits = "Meters";
                     }
                 }
             }
@@ -622,7 +623,7 @@ namespace RealmStudio
         {
             if (SolarSystemRadioButton.Checked)
             {
-                map.RealmType = RealmTypeEnum.SolarSystem;
+                Map.RealmType = RealmTypeEnum.SolarSystem;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -630,12 +631,12 @@ namespace RealmStudio
                     if (measurementUnits == "US Customary")
                     {
                         MapAreaUnitCombo.SelectedIndex = 6;  // miles
-                        map.MapAreaUnits = "Miles";
+                        Map.MapAreaUnits = "Miles";
                     }
                     else if (measurementUnits == "Metric")
                     {
                         MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
-                        map.MapAreaUnits = "Kilometers";
+                        Map.MapAreaUnits = "Kilometers";
                     }
                 }
             }
@@ -645,7 +646,7 @@ namespace RealmStudio
         {
             if (ShipRadioButton.Checked)
             {
-                map.RealmType = RealmTypeEnum.Ship;
+                Map.RealmType = RealmTypeEnum.Ship;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -653,12 +654,12 @@ namespace RealmStudio
                     if (measurementUnits == "US Customary")
                     {
                         MapAreaUnitCombo.SelectedIndex = 2;  // feet
-                        map.MapAreaUnits = "Feet";
+                        Map.MapAreaUnits = "Feet";
                     }
                     else if (measurementUnits == "Metric")
                     {
                         MapAreaUnitCombo.SelectedIndex = 4;  // Meters
-                        map.MapAreaUnits = "Meters";
+                        Map.MapAreaUnits = "Meters";
                     }
                 }
             }
@@ -668,7 +669,7 @@ namespace RealmStudio
         {
             if (OtherRadioButton.Checked)
             {
-                map.RealmType = RealmTypeEnum.Other;
+                Map.RealmType = RealmTypeEnum.Other;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -676,12 +677,12 @@ namespace RealmStudio
                     if (measurementUnits == "US Customary")
                     {
                         MapAreaUnitCombo.SelectedIndex = 6;  // miles
-                        map.MapAreaUnits = "Miles";
+                        Map.MapAreaUnits = "Miles";
                     }
                     else if (measurementUnits == "Metric")
                     {
                         MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
-                        map.MapAreaUnits = "Kilometers";
+                        Map.MapAreaUnits = "Kilometers";
                     }
                 }
             }
@@ -711,14 +712,14 @@ namespace RealmStudio
             if (!HeightChanging)
             {
                 WidthChanging = true;
-                map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
 
                 if (AspectRatioLocked)
                 {
-                    HeightUpDown.Value = (decimal)(map.MapWidth / MapAspectRatio);
+                    HeightUpDown.Value = (decimal)(Map.MapWidth / MapAspectRatio);
                 }
 
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 CalculateAspectRatio();
                 WidthChanging = false;
@@ -730,14 +731,14 @@ namespace RealmStudio
             if (!WidthChanging)
             {
                 HeightChanging = true;
-                map.MapHeight = (int)HeightUpDown.Value;
+                Map.MapHeight = (int)HeightUpDown.Value;
 
                 if (AspectRatioLocked)
                 {
-                    WidthUpDown.Value = (decimal)(map.MapHeight * MapAspectRatio);
+                    WidthUpDown.Value = (decimal)(Map.MapHeight * MapAspectRatio);
                 }
 
-                map.MapWidth = (int)WidthUpDown.Value;
+                Map.MapWidth = (int)WidthUpDown.Value;
 
                 CalculateAspectRatio();
                 HeightChanging = false;
@@ -746,7 +747,7 @@ namespace RealmStudio
 
         private void OkayButton_Click(object sender, EventArgs e)
         {
-            map.MapName = RealmNameTextBox.Text;
+            Map.MapName = RealmNameTextBox.Text;
             Close();
         }
 

@@ -1,5 +1,5 @@
 /**************************************************************************************************************************
-* Copyright 2024, Peter R. Nelson
+* Copyright 2025, Peter R. Nelson
 *
 * This file is part of the RealmStudio application. The RealmStudio application is intended
 * for creating fantasy maps for gaming and world building.
@@ -1573,7 +1573,46 @@ namespace RealmStudio
 
         private void ChangeMapSizeMenuItem_Click(object sender, EventArgs e)
         {
+            if (!CURRENT_MAP.IsSaved)
+            {
+                DialogResult result =
+                    MessageBox.Show("The map has not been saved. Do you want to save the map?", "Save Map", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
+                if (result == DialogResult.Yes)
+                {
+                    DialogResult saveResult = SaveMap();
+
+                    if (saveResult != DialogResult.OK)
+                    {
+                        return;
+                    }
+                }
+                else if (result == DialogResult.Cancel)
+                {
+                    return;
+                }
+            }
+
+            RealmStudioMap? resizedMap = RealmMapMethods.CreateResizedMap(this, CURRENT_MAP);
+
+            if (resizedMap != null)
+            {
+                MapBuilder.DisposeMap(CURRENT_MAP);
+                CURRENT_MAP = resizedMap;
+
+                MAP_WIDTH = CURRENT_MAP.MapWidth;
+                MAP_HEIGHT = CURRENT_MAP.MapHeight;
+
+                MapRenderHScroll.Maximum = MAP_WIDTH;
+                MapRenderVScroll.Maximum = MAP_HEIGHT;
+
+                MapRenderHScroll.Value = 0;
+                MapRenderVScroll.Value = 0;
+
+                UpdateMapNameAndSize();
+
+                SKGLRenderControl.Invalidate();
+            }
         }
 
         private void CreateDetailMapMenuItem_Click(object sender, EventArgs e)
@@ -2030,7 +2069,7 @@ namespace RealmStudio
             if (result == DialogResult.OK)
             {
                 // create the map from the settings on the dialog
-                CURRENT_MAP = MapBuilder.CreateMap(rcd.map, SKGLRenderControl.GRContext);
+                CURRENT_MAP = MapBuilder.CreateMap(rcd.Map, SKGLRenderControl.GRContext);
 
                 MAP_WIDTH = CURRENT_MAP.MapWidth;
                 MAP_HEIGHT = CURRENT_MAP.MapHeight;
@@ -3299,15 +3338,15 @@ namespace RealmStudio
 
                         SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(box.BoxBitmap, center);
 
-                        box.Patch_A = bitmapSlices[0].Copy();   // top-left corner
-                        box.Patch_B = bitmapSlices[1].Copy();   // top
-                        box.Patch_C = bitmapSlices[2].Copy();   // top-right corner
-                        box.Patch_D = bitmapSlices[3].Copy();   // left size
-                        box.Patch_E = bitmapSlices[4].Copy();   // middle
-                        box.Patch_F = bitmapSlices[5].Copy();   // right side
-                        box.Patch_G = bitmapSlices[6].Copy();   // bottom-left corner
-                        box.Patch_H = bitmapSlices[7].Copy();   // bottom
-                        box.Patch_I = bitmapSlices[8].Copy();   // bottom-right corner
+                        box.PatchA = bitmapSlices[0].Copy();   // top-left corner
+                        box.PatchB = bitmapSlices[1].Copy();   // top
+                        box.PatchC = bitmapSlices[2].Copy();   // top-right corner
+                        box.PatchD = bitmapSlices[3].Copy();   // left size
+                        box.PatchE = bitmapSlices[4].Copy();   // middle
+                        box.PatchF = bitmapSlices[5].Copy();   // right side
+                        box.PatchG = bitmapSlices[6].Copy();   // bottom-left corner
+                        box.PatchH = bitmapSlices[7].Copy();   // bottom
+                        box.PatchI = bitmapSlices[8].Copy();   // bottom-right corner
                     }
                 }
 
@@ -3373,7 +3412,7 @@ namespace RealmStudio
             }
         }
 
-#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
+#pragma warning disable SYSLIB1054
         [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool DeleteObject(IntPtr hObject);
 
@@ -3389,7 +3428,7 @@ namespace RealmStudio
             int cbData,            // size in bytes for text metrics
             IntPtr lpOtm         // pointer to buffer to receive outline text metrics structure
         );
-#pragma warning restore SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
+#pragma warning restore SYSLIB1054
 
         /// <summary>
         /// Gets the <see cref="PanoseFontFamilyTypes"/> for the specified font.
@@ -6724,15 +6763,15 @@ namespace RealmStudio
 
                         SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(SELECTED_PLACED_MAP_BOX.BoxBitmap, center);
 
-                        SELECTED_PLACED_MAP_BOX.Patch_A = bitmapSlices[0].Copy();   // top-left corner
-                        SELECTED_PLACED_MAP_BOX.Patch_B = bitmapSlices[1].Copy();   // top
-                        SELECTED_PLACED_MAP_BOX.Patch_C = bitmapSlices[2].Copy();   // top-right corner
-                        SELECTED_PLACED_MAP_BOX.Patch_D = bitmapSlices[3].Copy();   // left size
-                        SELECTED_PLACED_MAP_BOX.Patch_E = bitmapSlices[4].Copy();   // middle
-                        SELECTED_PLACED_MAP_BOX.Patch_F = bitmapSlices[5].Copy();   // right side
-                        SELECTED_PLACED_MAP_BOX.Patch_G = bitmapSlices[6].Copy();   // bottom-left corner
-                        SELECTED_PLACED_MAP_BOX.Patch_H = bitmapSlices[7].Copy();   // bottom
-                        SELECTED_PLACED_MAP_BOX.Patch_I = bitmapSlices[8].Copy();   // bottom-right corner
+                        SELECTED_PLACED_MAP_BOX.PatchA = bitmapSlices[0].Copy();   // top-left corner
+                        SELECTED_PLACED_MAP_BOX.PatchB = bitmapSlices[1].Copy();   // top
+                        SELECTED_PLACED_MAP_BOX.PatchC = bitmapSlices[2].Copy();   // top-right corner
+                        SELECTED_PLACED_MAP_BOX.PatchD = bitmapSlices[3].Copy();   // left size
+                        SELECTED_PLACED_MAP_BOX.PatchE = bitmapSlices[4].Copy();   // middle
+                        SELECTED_PLACED_MAP_BOX.PatchF = bitmapSlices[5].Copy();   // right side
+                        SELECTED_PLACED_MAP_BOX.PatchG = bitmapSlices[6].Copy();   // bottom-left corner
+                        SELECTED_PLACED_MAP_BOX.PatchH = bitmapSlices[7].Copy();   // bottom
+                        SELECTED_PLACED_MAP_BOX.PatchI = bitmapSlices[8].Copy();   // bottom-right corner
 
                         Cmd_AddLabelBox cmd = new(CURRENT_MAP, SELECTED_PLACED_MAP_BOX);
                         CommandManager.AddCommand(cmd);
