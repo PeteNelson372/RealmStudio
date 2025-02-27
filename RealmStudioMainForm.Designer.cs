@@ -382,7 +382,6 @@
             ExportMapMenuItem = new FontAwesome.Sharp.IconMenuItem();
             toolStripSeparator6 = new ToolStripSeparator();
             PrintToolStripMenuItem = new ToolStripMenuItem();
-            PrintPreviewToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             ExitToolStripMenuItem = new ToolStripMenuItem();
             EditToolStripMenuItem = new ToolStripMenuItem();
@@ -6151,7 +6150,7 @@
             // 
             // FileToolStripMenuItem
             // 
-            FileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { NewToolStripMenuItem, OpenToolStripMenuItem, toolStripSeparator, SaveToolStripMenuItem, SaveAsToolStripMenuItem, toolStripSeparator1, ExportMapMenuItem, toolStripSeparator6, PrintToolStripMenuItem, PrintPreviewToolStripMenuItem, toolStripSeparator2, ExitToolStripMenuItem });
+            FileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { NewToolStripMenuItem, OpenToolStripMenuItem, toolStripSeparator, SaveToolStripMenuItem, SaveAsToolStripMenuItem, toolStripSeparator1, ExportMapMenuItem, toolStripSeparator6, PrintToolStripMenuItem, toolStripSeparator2, ExitToolStripMenuItem });
             FileToolStripMenuItem.Name = "FileToolStripMenuItem";
             FileToolStripMenuItem.Size = new Size(37, 20);
             FileToolStripMenuItem.Text = "&File";
@@ -6162,7 +6161,7 @@
             NewToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             NewToolStripMenuItem.Name = "NewToolStripMenuItem";
             NewToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            NewToolStripMenuItem.Size = new Size(146, 22);
+            NewToolStripMenuItem.Size = new Size(180, 22);
             NewToolStripMenuItem.Text = "&New";
             NewToolStripMenuItem.Click += NewToolStripMenuItem_Click;
             // 
@@ -6172,14 +6171,14 @@
             OpenToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             OpenToolStripMenuItem.Name = "OpenToolStripMenuItem";
             OpenToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
-            OpenToolStripMenuItem.Size = new Size(146, 22);
+            OpenToolStripMenuItem.Size = new Size(180, 22);
             OpenToolStripMenuItem.Text = "&Open";
             OpenToolStripMenuItem.Click += OpenToolStripMenuItem_Click;
             // 
             // toolStripSeparator
             // 
             toolStripSeparator.Name = "toolStripSeparator";
-            toolStripSeparator.Size = new Size(143, 6);
+            toolStripSeparator.Size = new Size(177, 6);
             // 
             // SaveToolStripMenuItem
             // 
@@ -6187,21 +6186,21 @@
             SaveToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
             SaveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            SaveToolStripMenuItem.Size = new Size(146, 22);
+            SaveToolStripMenuItem.Size = new Size(180, 22);
             SaveToolStripMenuItem.Text = "&Save";
             SaveToolStripMenuItem.Click += SaveToolStripMenuItem_Click;
             // 
             // SaveAsToolStripMenuItem
             // 
             SaveAsToolStripMenuItem.Name = "SaveAsToolStripMenuItem";
-            SaveAsToolStripMenuItem.Size = new Size(146, 22);
+            SaveAsToolStripMenuItem.Size = new Size(180, 22);
             SaveAsToolStripMenuItem.Text = "Save &As";
             SaveAsToolStripMenuItem.Click += SaveAsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(143, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // ExportMapMenuItem
             // 
@@ -6209,14 +6208,14 @@
             ExportMapMenuItem.IconColor = Color.Black;
             ExportMapMenuItem.IconFont = FontAwesome.Sharp.IconFont.Auto;
             ExportMapMenuItem.Name = "ExportMapMenuItem";
-            ExportMapMenuItem.Size = new Size(146, 22);
+            ExportMapMenuItem.Size = new Size(180, 22);
             ExportMapMenuItem.Text = "&Export...";
             ExportMapMenuItem.Click += ExportMapMenuItem_Click;
             // 
             // toolStripSeparator6
             // 
             toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new Size(143, 6);
+            toolStripSeparator6.Size = new Size(177, 6);
             // 
             // PrintToolStripMenuItem
             // 
@@ -6224,28 +6223,19 @@
             PrintToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             PrintToolStripMenuItem.Name = "PrintToolStripMenuItem";
             PrintToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.P;
-            PrintToolStripMenuItem.Size = new Size(146, 22);
+            PrintToolStripMenuItem.Size = new Size(180, 22);
             PrintToolStripMenuItem.Text = "&Print";
             PrintToolStripMenuItem.Click += PrintToolStripMenuItem_Click;
-            // 
-            // PrintPreviewToolStripMenuItem
-            // 
-            PrintPreviewToolStripMenuItem.Image = (Image)resources.GetObject("PrintPreviewToolStripMenuItem.Image");
-            PrintPreviewToolStripMenuItem.ImageTransparentColor = Color.Magenta;
-            PrintPreviewToolStripMenuItem.Name = "PrintPreviewToolStripMenuItem";
-            PrintPreviewToolStripMenuItem.Size = new Size(146, 22);
-            PrintPreviewToolStripMenuItem.Text = "Print Pre&view";
-            PrintPreviewToolStripMenuItem.Click += PrintPreviewToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(143, 6);
+            toolStripSeparator2.Size = new Size(177, 6);
             // 
             // ExitToolStripMenuItem
             // 
             ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-            ExitToolStripMenuItem.Size = new Size(146, 22);
+            ExitToolStripMenuItem.Size = new Size(180, 22);
             ExitToolStripMenuItem.Text = "E&xit";
             ExitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
             // 
@@ -6317,41 +6307,41 @@
             // MapPropertiesMenuItem
             // 
             MapPropertiesMenuItem.Name = "MapPropertiesMenuItem";
-            MapPropertiesMenuItem.Size = new Size(180, 22);
+            MapPropertiesMenuItem.Size = new Size(178, 22);
             MapPropertiesMenuItem.Text = "&Properties...";
             MapPropertiesMenuItem.Click += MapPropertiesMenuItem_Click;
             // 
             // ChangeMapSizeMenuItem
             // 
             ChangeMapSizeMenuItem.Name = "ChangeMapSizeMenuItem";
-            ChangeMapSizeMenuItem.Size = new Size(180, 22);
+            ChangeMapSizeMenuItem.Size = new Size(178, 22);
             ChangeMapSizeMenuItem.Text = "Change Map &Size...";
             ChangeMapSizeMenuItem.Click += ChangeMapSizeMenuItem_Click;
             // 
             // CreateDetailMapMenuItem
             // 
             CreateDetailMapMenuItem.Name = "CreateDetailMapMenuItem";
-            CreateDetailMapMenuItem.Size = new Size(180, 22);
+            CreateDetailMapMenuItem.Size = new Size(178, 22);
             CreateDetailMapMenuItem.Text = "Create &Detail Map...";
             CreateDetailMapMenuItem.Click += CreateDetailMapMenuItem_Click;
             // 
             // TraceToolStripMenuItem
             // 
             TraceToolStripMenuItem.Name = "TraceToolStripMenuItem";
-            TraceToolStripMenuItem.Size = new Size(180, 22);
+            TraceToolStripMenuItem.Size = new Size(178, 22);
             TraceToolStripMenuItem.Text = "&Trace Outline";
             TraceToolStripMenuItem.Click += TraceToolStripMenuItem_Click;
             // 
             // toolStripSeparator7
             // 
             toolStripSeparator7.Name = "toolStripSeparator7";
-            toolStripSeparator7.Size = new Size(177, 6);
+            toolStripSeparator7.Size = new Size(175, 6);
             // 
             // RenderAsHeightMapMenuItem
             // 
             RenderAsHeightMapMenuItem.CheckOnClick = true;
             RenderAsHeightMapMenuItem.Name = "RenderAsHeightMapMenuItem";
-            RenderAsHeightMapMenuItem.Size = new Size(180, 22);
+            RenderAsHeightMapMenuItem.Size = new Size(178, 22);
             RenderAsHeightMapMenuItem.Text = "Display &Height Map";
             RenderAsHeightMapMenuItem.CheckedChanged += RenderAsHeightMapMenuItem_CheckedChanged;
             // 
@@ -8716,7 +8706,6 @@
         private ToolStripMenuItem SaveAsToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem PrintToolStripMenuItem;
-        private ToolStripMenuItem PrintPreviewToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem ExitToolStripMenuItem;
         private ToolStripMenuItem EditToolStripMenuItem;

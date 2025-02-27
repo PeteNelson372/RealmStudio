@@ -752,7 +752,7 @@ namespace RealmStudio
                     SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
                     s.Canvas.Clear();
 
-                    RenderMapForExport(s.Canvas);
+                    MapRenderMethods.RenderMapForExport(CURRENT_MAP, s.Canvas);
 
                     Bitmap bitmap = s.Snapshot().ToBitmap();
 
@@ -1426,12 +1426,8 @@ namespace RealmStudio
 
         private void PrintToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void PrintPreviewToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
+            PrintPreview printPreview = new(CURRENT_MAP);
+            printPreview.ShowDialog();
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2609,66 +2605,6 @@ namespace RealmStudio
 
             // vignette layer
             MapRenderMethods.RenderVignette(CURRENT_MAP, renderCanvas, scrollPoint);
-        }
-
-        public static void RenderMapForExport(SKCanvas renderCanvas)
-        {
-            // background
-            MapRenderMethods.RenderBackgroundForExport(CURRENT_MAP, renderCanvas);
-
-            // ocean layers
-            MapRenderMethods.RenderOceanForExport(CURRENT_MAP, renderCanvas);
-
-            // wind roses
-            MapRenderMethods.RenderWindrosesForExport(CURRENT_MAP, renderCanvas);
-
-            // lower grid layer (above ocean)
-            MapRenderMethods.RenderLowerGridForExport(CURRENT_MAP, renderCanvas);
-
-            // landforms
-            MapRenderMethods.RenderLandformsForExport(CURRENT_MAP, renderCanvas);
-
-            // water features
-            MapRenderMethods.RenderWaterFeaturesForExport(CURRENT_MAP, renderCanvas);
-
-            // upper grid layer (above water features)
-            MapRenderMethods.RenderUpperGridForExport(CURRENT_MAP, renderCanvas);
-
-            // lower path layer
-            MapRenderMethods.RenderLowerMapPathsForExport(CURRENT_MAP, renderCanvas);
-
-            // symbol layer
-            MapRenderMethods.RenderSymbolsForExport(CURRENT_MAP, renderCanvas);
-
-            // upper path layer
-            MapRenderMethods.RenderUpperMapPathsForExport(CURRENT_MAP, renderCanvas);
-
-            // region and region overlay layers
-            MapRenderMethods.RenderRegionsForExport(CURRENT_MAP, renderCanvas);
-
-            // default grid layer
-            MapRenderMethods.RenderDefaultGridForExport(CURRENT_MAP, renderCanvas);
-
-            // box layer
-            MapRenderMethods.RenderBoxesForExport(CURRENT_MAP, renderCanvas);
-
-            // label layer
-            MapRenderMethods.RenderLabelsForExport(CURRENT_MAP, renderCanvas);
-
-            // overlay layer (map scale)
-            MapRenderMethods.RenderOverlaysForExport(CURRENT_MAP, renderCanvas);
-
-            // render frame
-            MapRenderMethods.RenderFrameForExport(CURRENT_MAP, renderCanvas);
-
-            // measure layer
-            MapRenderMethods.RenderMeasuresForExport(CURRENT_MAP, renderCanvas);
-
-            // TODO: drawing layer
-            //MapRenderMethods.RenderDrawingForExport(CURRENT_MAP, renderCanvas);
-
-            // vignette layer
-            MapRenderMethods.RenderVignetteForExport(CURRENT_MAP, renderCanvas);
         }
 
         public static void RenderHeightMapToCanvas(SKCanvas renderCanvas, SKPoint scrollPoint)
@@ -6833,7 +6769,7 @@ namespace RealmStudio
                         using SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
                         s.Canvas.Clear();
 
-                        RenderMapForExport(s.Canvas);
+                        MapRenderMethods.RenderMapForExport(CURRENT_MAP, s.Canvas);
 
                         using Bitmap colorBitmap = s.Snapshot().ToBitmap();
 

@@ -27,6 +27,66 @@ namespace RealmStudio
 {
     internal class MapRenderMethods
     {
+        public static void RenderMapForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            // background
+            RenderBackgroundForExport(map, renderCanvas);
+
+            // ocean layers
+            RenderOceanForExport(map, renderCanvas);
+
+            // wind roses
+            RenderWindrosesForExport(map, renderCanvas);
+
+            // lower grid layer (above ocean)
+            RenderLowerGridForExport(map, renderCanvas);
+
+            // landforms
+            RenderLandformsForExport(map, renderCanvas);
+
+            // water features
+            RenderWaterFeaturesForExport(map, renderCanvas);
+
+            // upper grid layer (above water features)
+            RenderUpperGridForExport(map, renderCanvas);
+
+            // lower path layer
+            RenderLowerMapPathsForExport(map, renderCanvas);
+
+            // symbol layer
+            RenderSymbolsForExport(map, renderCanvas);
+
+            // upper path layer
+            RenderUpperMapPathsForExport(map, renderCanvas);
+
+            // region and region overlay layers
+            RenderRegionsForExport(map, renderCanvas);
+
+            // default grid layer
+            RenderDefaultGridForExport(map, renderCanvas);
+
+            // box layer
+            RenderBoxesForExport(map, renderCanvas);
+
+            // label layer
+            RenderLabelsForExport(map, renderCanvas);
+
+            // overlay layer (map scale)
+            RenderOverlaysForExport(map, renderCanvas);
+
+            // render frame
+            RenderFrameForExport(map, renderCanvas);
+
+            // measure layer
+            RenderMeasuresForExport(map, renderCanvas);
+
+            // TODO: drawing layer
+            //MapRenderMethods.RenderDrawingForExport(CURRENT_MAP, renderCanvas);
+
+            // vignette layer
+            RenderVignetteForExport(map, renderCanvas);
+        }
+
         internal static void ClearSelectionLayer(RealmStudioMap map)
         {
             MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);

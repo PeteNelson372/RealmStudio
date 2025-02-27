@@ -946,11 +946,10 @@ namespace RealmStudio
                         ScaleOutlineColor = mapScale.ScaleOutlineColor,
                         ScaleFont = mapScale.ScaleFont,
                         ScaleNumbersDisplayType = mapScale.ScaleNumbersDisplayType,
+                        // initial position of the scale is near the bottom-left corner of the map
+                        X = 100,
+                        Y = newRealmMap.MapHeight - 100
                     };
-
-                    // initial position of the scale is near the bottom-left corner of the map
-                    newScale.X = 100;
-                    newScale.Y = newRealmMap.MapHeight - 100;
 
                     newRealmScaleLayer.MapLayerComponents.Add(newScale);
                 }
@@ -962,10 +961,6 @@ namespace RealmStudio
                 MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.DEFAULTGRIDLAYER);
                 MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.ABOVEOCEANGRIDLAYER);
                 MapLayer belowSymbolsGridLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.BELOWSYMBOLSGRIDLAYER);
-
-                MapLayer newRealmDefaultGridLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.DEFAULTGRIDLAYER);
-                MapLayer newRealmAboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.ABOVEOCEANGRIDLAYER);
-                MapLayer newRealmBelowSymbolsGridLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.BELOWSYMBOLSGRIDLAYER);
 
                 // there is only one map grid                                
                 MapGrid? mapGrid = defaultGridLayer.MapLayerComponents.Cast<MapGrid>().FirstOrDefault();

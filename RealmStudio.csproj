@@ -9,9 +9,9 @@
     <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.51.15464</AssemblyVersion>
-    <FileVersion>1.2025.51.15464</FileVersion>
-    <Version>1.2025.0-alpha-429</Version>
+    <AssemblyVersion>1.2025.58.9925</AssemblyVersion>
+    <FileVersion>1.2025.58.9925</FileVersion>
+    <Version>1.2025.0-alpha-607</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025. Peter R. Nelson</Copyright>
@@ -100,17 +100,16 @@
     <PackageReference Include="AForge.Imaging" Version="2.2.5" />
     <PackageReference Include="Clipper2" Version="1.4.0" />
     <PackageReference Include="Cyotek.Windows.Forms.ColorPicker" Version="2.0.0-beta.7" />
-    <PackageReference Include="Delaunator" Version="1.0.10" />
+    <PackageReference Include="Delaunator" Version="1.0.11" />
     <PackageReference Include="FontAwesome" Version="4.7.0" />
     <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
-    <PackageReference Include="log4net" Version="3.0.3" />
-    <PackageReference Include="Microsoft.VisualStudio.Services.Client" Version="19.225.1" />
+    <PackageReference Include="log4net" Version="3.0.4" />
     <PackageReference Include="ReaLTaiizor" Version="3.8.1.1" />
     <PackageReference Include="SimplexNoise" Version="2.0.0" />
     <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.116.1" />
     <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.116.1" />
     <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.116.1" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.1" />
+    <PackageReference Include="System.Management" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>
