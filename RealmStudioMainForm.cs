@@ -72,7 +72,7 @@ namespace RealmStudio
         private static MapRiverPoint? SELECTED_RIVERPOINT;
         private static ColorPaintBrush SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.SoftBrush;
         private static GeneratedLandformTypeEnum SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.NotSet;
-        private static SKRect SELECTED_LANDFORM_AREA = SKRect.Empty;
+        private static SKRect SELECTED_REALM_AREA = SKRect.Empty;
 
         private static readonly PrivateFontCollection EMBEDDED_FONTS = new();
 
@@ -478,6 +478,11 @@ namespace RealmStudio
         private void MainTab_KeyDown(object sender, KeyEventArgs e)
         {
             e.SuppressKeyPress = true;
+        }
+
+        private void AreaSelectButton_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void AddPresetColorButton_Click(object sender, EventArgs e)
@@ -1478,17 +1483,37 @@ namespace RealmStudio
 
         private void CutToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (SELECTED_REALM_AREA != SKRect.Empty)
+            {
+                // get all objects within the selected area and cut them
+                // create a command class for this so it can be undone
 
+                // does it make sense for this to work for anything other than symbols?
+                // labels? boxes? water features? landforms? paths? regions?
+
+                // the object that is cut/copied must lie completely within the selected area
+                // if it is now a "point" object (e.g. a symbol)
+            }
         }
 
         private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            if (SELECTED_REALM_AREA != SKRect.Empty)
+            {
+                // get all objects within the selected area and copy them
+                // create a command class for this so it can be undone
+            }
         }
 
         private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // if the list of copied items is not empty
+            // then paste them in the selected area, updating their position
 
+            if (SELECTED_REALM_AREA != SKRect.Empty)
+            {
+
+            }
         }
 
         private void RenderAsHeightMapMenuItem_CheckedChanged(object sender, EventArgs e)
@@ -1633,7 +1658,7 @@ namespace RealmStudio
                 }
             }
 
-            RealmStudioMap? detailMap = RealmMapMethods.CreateDetailMap(this, CURRENT_MAP, SELECTED_LANDFORM_AREA);
+            RealmStudioMap? detailMap = RealmMapMethods.CreateDetailMap(this, CURRENT_MAP, SELECTED_REALM_AREA);
 
             if (detailMap != null)
             {
@@ -1698,9 +1723,9 @@ namespace RealmStudio
                             {
                                 MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
 
-                                if (SELECTED_LANDFORM_AREA != SKRect.Empty)
+                                if (SELECTED_REALM_AREA != SKRect.Empty)
                                 {
-                                    landformPath.Transform(SKMatrix.CreateScale(SELECTED_LANDFORM_AREA.Width / b.Width, SELECTED_LANDFORM_AREA.Height / b.Height));
+                                    landformPath.Transform(SKMatrix.CreateScale(SELECTED_REALM_AREA.Width / b.Width, SELECTED_REALM_AREA.Height / b.Height));
                                 }
                                 else
                                 {
@@ -1719,10 +1744,10 @@ namespace RealmStudio
                                         new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight))
                                 };
 
-                                if (SELECTED_LANDFORM_AREA != SKRect.Empty)
+                                if (SELECTED_REALM_AREA != SKRect.Empty)
                                 {
-                                    landform.X = (int)SELECTED_LANDFORM_AREA.Left;
-                                    landform.Y = (int)SELECTED_LANDFORM_AREA.Top;
+                                    landform.X = (int)SELECTED_REALM_AREA.Left;
+                                    landform.Y = (int)SELECTED_REALM_AREA.Top;
                                 }
                                 else
                                 {
@@ -2412,7 +2437,7 @@ namespace RealmStudio
                 DrawingModeEnum.DrawMapMeasure => "Draw Map Measure",
                 DrawingModeEnum.RegionPaint => "Draw Region",
                 DrawingModeEnum.RegionSelect => "Select Region",
-                DrawingModeEnum.LandformAreaSelect => "Select Landform Area",
+                DrawingModeEnum.RealmAreaSelect => "Select Area",
                 DrawingModeEnum.HeightMapPaint => "Paint Height Map",
                 DrawingModeEnum.MapHeightIncrease => "Increase Map Height",
                 DrawingModeEnum.MapHeightDecrease => "Decrease Map Height",
@@ -5323,7 +5348,7 @@ namespace RealmStudio
                         PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
                     }
                     break;
-                case DrawingModeEnum.LandformAreaSelect:
+                case DrawingModeEnum.RealmAreaSelect:
                     Cursor = Cursors.Cross;
                     PREVIOUS_CURSOR_POINT = zoomedScrolledPoint;
                     break;
@@ -5947,14 +5972,14 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
-                case DrawingModeEnum.LandformAreaSelect:
+                case DrawingModeEnum.RealmAreaSelect:
                     {
-                        SELECTED_LANDFORM_AREA = new(PREVIOUS_CURSOR_POINT.X, PREVIOUS_CURSOR_POINT.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
+                        SELECTED_REALM_AREA = new(PREVIOUS_CURSOR_POINT.X, PREVIOUS_CURSOR_POINT.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
 
                         MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
                         MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawRect(SELECTED_LANDFORM_AREA, PaintObjects.LandformAreaSelectPaint);
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawRect(SELECTED_REALM_AREA, PaintObjects.LandformAreaSelectPaint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -6807,14 +6832,14 @@ namespace RealmStudio
                         CURRENT_MAP.IsSaved = false;
                     }
                     break;
-                case DrawingModeEnum.LandformAreaSelect:
+                case DrawingModeEnum.RealmAreaSelect:
                     {
-                        SELECTED_LANDFORM_AREA = new(PREVIOUS_CURSOR_POINT.X, PREVIOUS_CURSOR_POINT.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
+                        SELECTED_REALM_AREA = new(PREVIOUS_CURSOR_POINT.X, PREVIOUS_CURSOR_POINT.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
 
                         MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
                         MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawRect((SKRect)SELECTED_LANDFORM_AREA, PaintObjects.LandformAreaSelectPaint);
+                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawRect((SKRect)SELECTED_REALM_AREA, PaintObjects.LandformAreaSelectPaint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -8143,9 +8168,9 @@ namespace RealmStudio
 
             MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-            GenerateRandomLandform(CURRENT_MAP, SELECTED_LANDFORM_AREA, SELECTED_LANDFORM_TYPE);
+            GenerateRandomLandform(CURRENT_MAP, SELECTED_REALM_AREA, SELECTED_LANDFORM_TYPE);
 
-            SELECTED_LANDFORM_AREA = SKRect.Empty;
+            SELECTED_REALM_AREA = SKRect.Empty;
 
             CURRENT_MAP.IsSaved = false;
             Cursor = Cursors.Default;
@@ -8193,13 +8218,6 @@ namespace RealmStudio
             UncheckAllLandformTypeMenuItems();
             WorldMenuItem.Checked = true;
             SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.World;
-        }
-
-        private void LandformAreaSelectButton_Click(object sender, EventArgs e)
-        {
-            CURRENT_DRAWING_MODE = DrawingModeEnum.LandformAreaSelect;
-            SetSelectedBrushSize(0);
-            SetDrawingModeLabel();
         }
 
         #endregion
@@ -12170,5 +12188,7 @@ namespace RealmStudio
         }
 
         #endregion
+
+
     }
 }
