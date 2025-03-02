@@ -47,7 +47,7 @@ namespace RealmStudio
 
         public SymbolTypeEnum SymbolType { get; set; } = SymbolTypeEnum.NotSet;
 
-        public readonly List<string> SymbolTags = [];
+        public List<string> SymbolTags { get; set; } = [];
 
         public string SymbolName { get; set; } = string.Empty;
 
@@ -61,7 +61,7 @@ namespace RealmStudio
 
         public bool UseCustomColors { get; set; }
 
-        public readonly SKColor[] CustomSymbolColors = new SKColor[3];
+        public SKColor[] CustomSymbolColors { get; set; } = new SKColor[3];
 
         public SKPaint? SymbolPaint { get; set; }
 
@@ -142,6 +142,11 @@ namespace RealmStudio
                 else
                 {
                     canvas.DrawBitmap(PlacedBitmap, point, null);
+                }
+
+                if (IsSelected)
+                {
+                    canvas.DrawRect(new SKRect(Math.Max(0, X - 1), Math.Max(0, Y - 1), X + Width + 1, Y + Height + 1), PaintObjects.MapSymbolSelectPaint);
                 }
             }
         }

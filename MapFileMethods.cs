@@ -22,18 +22,19 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp.Views.Desktop;
+using System.Xml;
 using System.Xml.Serialization;
 namespace RealmStudio
 {
     [XmlInclude(typeof(MapLayer))]
     internal class MapFileMethods
     {
-        protected static void serializer_UnknownNode(object sender, XmlNodeEventArgs e)
+        protected static void Serializer_UnknownNode(object sender, XmlNodeEventArgs e)
         {
             Program.LOGGER.Error("Exception on Load. Unknown Node: " + e.Name + "\t" + e.Text);
         }
 
-        protected static void serializer_UnknownAttribute(object sender, XmlAttributeEventArgs e)
+        protected static void Serializer_UnknownAttribute(object sender, XmlAttributeEventArgs e)
         {
             System.Xml.XmlAttribute attr = e.Attr;
             Program.LOGGER.Error("Exception on Load. Unknown Attribute: " + attr.Name + "\t" + attr.Value);
@@ -47,12 +48,13 @@ namespace RealmStudio
             // nodes or attributes, handle them with the
             // UnknownNode and UnknownAttribute events.
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            serializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
-            serializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
+            serializer.UnknownNode += new XmlNodeEventHandler(Serializer_UnknownNode);
+            serializer.UnknownAttribute += new XmlAttributeEventHandler(Serializer_UnknownAttribute);
 #pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
 
             // A FileStream is needed to read the XML document.            
             FileStream fs = new(mapPath, FileMode.Open);
+            using XmlReader reader = XmlReader.Create(fs);
 
             // Declares an object variable of the type to be deserialized.
             RealmStudioMap? map;
@@ -61,7 +63,7 @@ namespace RealmStudio
             {
                 // Uses the Deserialize method to restore the object's state
                 // with data from the XML document. */
-                map = serializer.Deserialize(fs) as RealmStudioMap;
+                map = serializer.Deserialize(reader) as RealmStudioMap;
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                 map.IsSaved = false;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -107,12 +109,13 @@ namespace RealmStudio
             // nodes or attributes, handle them with the
             // UnknownNode and UnknownAttribute events.
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            serializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
-            serializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
+            serializer.UnknownNode += new XmlNodeEventHandler(Serializer_UnknownNode);
+            serializer.UnknownAttribute += new XmlAttributeEventHandler(Serializer_UnknownAttribute);
 #pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
 
             // A FileStream is needed to read the XML document.            
             using FileStream fs = new(path, FileMode.Open);
+            using XmlReader reader = XmlReader.Create(fs);
 
             // Declares an object variable of the type to be deserialized.            
             MapTheme? theme;
@@ -121,7 +124,7 @@ namespace RealmStudio
             {
                 // Uses the Deserialize method to restore the object's state
                 // with data from the XML document. */
-                theme = serializer.Deserialize(fs) as MapTheme;
+                theme = serializer.Deserialize(reader) as MapTheme;
                 return theme;
             }
             catch (Exception ex)
@@ -166,18 +169,19 @@ namespace RealmStudio
 
         internal static MapSymbolCollection? ReadCollectionFromXml(string path)
         {
-            XmlSerializer? serializer = new XmlSerializer(typeof(MapSymbolCollection));
+            XmlSerializer? serializer = new(typeof(MapSymbolCollection));
 
             // If the XML document has been altered with unknown
             // nodes or attributes, handle them with the
             // UnknownNode and UnknownAttribute events.
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            serializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
-            serializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
+            serializer.UnknownNode += new XmlNodeEventHandler(Serializer_UnknownNode);
+            serializer.UnknownAttribute += new XmlAttributeEventHandler(Serializer_UnknownAttribute);
 #pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
 
             // A FileStream is needed to read the XML document.            
             FileStream fs = new(path, FileMode.Open);
+            using XmlReader reader = XmlReader.Create(fs);
 
             // Declares an object variable of the type to be deserialized.            
             MapSymbolCollection? symbolCollection;
@@ -186,7 +190,7 @@ namespace RealmStudio
             {
                 // Uses the Deserialize method to restore the object's state
                 // with data from the XML document. */
-                symbolCollection = serializer.Deserialize(fs) as MapSymbolCollection;
+                symbolCollection = serializer.Deserialize(reader) as MapSymbolCollection;
                 return symbolCollection;
             }
             catch (Exception ex)
@@ -302,8 +306,8 @@ namespace RealmStudio
             // nodes or attributes, handle them with the
             // UnknownNode and UnknownAttribute events.
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            serializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
-            serializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
+            serializer.UnknownNode += new XmlNodeEventHandler(Serializer_UnknownNode);
+            serializer.UnknownAttribute += new XmlAttributeEventHandler(Serializer_UnknownAttribute);
 #pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
 
             // A FileStream is needed to read the XML document.            
@@ -365,8 +369,8 @@ namespace RealmStudio
             // nodes or attributes, handle them with the
             // UnknownNode and UnknownAttribute events.
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            serializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
-            serializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
+            serializer.UnknownNode += new XmlNodeEventHandler(Serializer_UnknownNode);
+            serializer.UnknownAttribute += new XmlAttributeEventHandler(Serializer_UnknownAttribute);
 #pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
 
             // A FileStream is needed to read the XML document.            
@@ -452,8 +456,8 @@ namespace RealmStudio
             // nodes or attributes, handle them with the
             // UnknownNode and UnknownAttribute events.
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            serializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
-            serializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
+            serializer.UnknownNode += new XmlNodeEventHandler(Serializer_UnknownNode);
+            serializer.UnknownAttribute += new XmlAttributeEventHandler(Serializer_UnknownAttribute);
 #pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
 
             // A FileStream is needed to read the XML document.            

@@ -391,6 +391,7 @@
             CutToolStripMenuItem = new ToolStripMenuItem();
             CopyToolStripMenuItem = new ToolStripMenuItem();
             PasteToolStripMenuItem = new ToolStripMenuItem();
+            ClearSelectionToolStripMenuItem = new ToolStripMenuItem();
             RealmToolStripMenuItem = new ToolStripMenuItem();
             MapPropertiesMenuItem = new ToolStripMenuItem();
             ChangeMapSizeMenuItem = new ToolStripMenuItem();
@@ -5127,10 +5128,10 @@
             AreaSelectButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             AreaSelectButton.FlatStyle = FlatStyle.Flat;
             AreaSelectButton.IconChar = FontAwesome.Sharp.IconChar.ObjectGroup;
-            AreaSelectButton.IconColor = Color.Black;
+            AreaSelectButton.IconColor = SystemColors.MenuHighlight;
             AreaSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             AreaSelectButton.IconSize = 32;
-            AreaSelectButton.Location = new Point(1367, 56);
+            AreaSelectButton.Location = new Point(1473, 56);
             AreaSelectButton.Name = "AreaSelectButton";
             AreaSelectButton.Size = new Size(32, 32);
             AreaSelectButton.TabIndex = 40;
@@ -6240,7 +6241,7 @@
             // 
             // EditToolStripMenuItem
             // 
-            EditToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { UndoToolStripMenuItem, RedoToolStripMenuItem, toolStripSeparator3, CutToolStripMenuItem, CopyToolStripMenuItem, PasteToolStripMenuItem });
+            EditToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { UndoToolStripMenuItem, RedoToolStripMenuItem, toolStripSeparator3, CutToolStripMenuItem, CopyToolStripMenuItem, PasteToolStripMenuItem, ClearSelectionToolStripMenuItem });
             EditToolStripMenuItem.Name = "EditToolStripMenuItem";
             EditToolStripMenuItem.Size = new Size(39, 20);
             EditToolStripMenuItem.Text = "&Edit";
@@ -6249,7 +6250,7 @@
             // 
             UndoToolStripMenuItem.Name = "UndoToolStripMenuItem";
             UndoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Z;
-            UndoToolStripMenuItem.Size = new Size(144, 22);
+            UndoToolStripMenuItem.Size = new Size(193, 22);
             UndoToolStripMenuItem.Text = "&Undo";
             UndoToolStripMenuItem.Click += UndoToolStripMenuItem_Click;
             // 
@@ -6257,14 +6258,14 @@
             // 
             RedoToolStripMenuItem.Name = "RedoToolStripMenuItem";
             RedoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Y;
-            RedoToolStripMenuItem.Size = new Size(144, 22);
+            RedoToolStripMenuItem.Size = new Size(193, 22);
             RedoToolStripMenuItem.Text = "&Redo";
             RedoToolStripMenuItem.Click += RedoToolStripMenuItem_Click;
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(141, 6);
+            toolStripSeparator3.Size = new Size(190, 6);
             // 
             // CutToolStripMenuItem
             // 
@@ -6272,7 +6273,7 @@
             CutToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             CutToolStripMenuItem.Name = "CutToolStripMenuItem";
             CutToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.X;
-            CutToolStripMenuItem.Size = new Size(144, 22);
+            CutToolStripMenuItem.Size = new Size(193, 22);
             CutToolStripMenuItem.Text = "Cu&t";
             CutToolStripMenuItem.Click += CutToolStripMenuItem_Click;
             // 
@@ -6282,7 +6283,7 @@
             CopyToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             CopyToolStripMenuItem.Name = "CopyToolStripMenuItem";
             CopyToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.C;
-            CopyToolStripMenuItem.Size = new Size(144, 22);
+            CopyToolStripMenuItem.Size = new Size(193, 22);
             CopyToolStripMenuItem.Text = "&Copy";
             CopyToolStripMenuItem.Click += CopyToolStripMenuItem_Click;
             // 
@@ -6292,9 +6293,17 @@
             PasteToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             PasteToolStripMenuItem.Name = "PasteToolStripMenuItem";
             PasteToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.V;
-            PasteToolStripMenuItem.Size = new Size(144, 22);
+            PasteToolStripMenuItem.Size = new Size(193, 22);
             PasteToolStripMenuItem.Text = "&Paste";
             PasteToolStripMenuItem.Click += PasteToolStripMenuItem_Click;
+            // 
+            // ClearSelectionToolStripMenuItem
+            // 
+            ClearSelectionToolStripMenuItem.Name = "ClearSelectionToolStripMenuItem";
+            ClearSelectionToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.R;
+            ClearSelectionToolStripMenuItem.Size = new Size(193, 22);
+            ClearSelectionToolStripMenuItem.Text = "Clea&r Selection";
+            ClearSelectionToolStripMenuItem.Click += ClearSelectionToolStripMenuItem_Click;
             // 
             // RealmToolStripMenuItem
             // 
@@ -9223,5 +9232,6 @@
         private FontAwesome.Sharp.IconToolStripButton HeightUpButton;
         private FontAwesome.Sharp.IconToolStripButton HeightDownButton;
         private FontAwesome.Sharp.IconButton AreaSelectButton;
+        private ToolStripMenuItem ClearSelectionToolStripMenuItem;
     }
 }

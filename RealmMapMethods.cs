@@ -32,7 +32,7 @@ namespace RealmStudio
         {
             if (selectedArea.IsEmpty)
             {
-                MessageBox.Show("Please use the Area button on the Land tab to select an area for the detail map.", "Select a Map Area");
+                MessageBox.Show("Please use the Area button on the Menu Bar to select an area for the detail map.", "Select a Map Area");
             }
             else
             {

@@ -44,7 +44,7 @@ namespace RealmStudio
         public bool ShowPathPoints { get; set; }
         public bool IsSelected { get; set; }
         public SKPaint? PathPaint { get; set; }
-        public SKPath? BoundaryPath { get; set; }
+        public SKPath BoundaryPath { get; set; } = new();
 
         public override void Render(SKCanvas canvas)
         {

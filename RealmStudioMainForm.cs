@@ -73,6 +73,9 @@ namespace RealmStudio
         private static ColorPaintBrush SELECTED_COLOR_PAINT_BRUSH = ColorPaintBrush.SoftBrush;
         private static GeneratedLandformTypeEnum SELECTED_LANDFORM_TYPE = GeneratedLandformTypeEnum.NotSet;
         private static SKRect SELECTED_REALM_AREA = SKRect.Empty;
+        private static SKRect PREVIOUS_SELECTED_AREA = SKRect.Empty;
+
+        private static readonly List<MapComponent> SELECTED_MAP_COMPONENTS = [];
 
         private static readonly PrivateFontCollection EMBEDDED_FONTS = new();
 
@@ -482,7 +485,9 @@ namespace RealmStudio
 
         private void AreaSelectButton_Click(object sender, EventArgs e)
         {
-
+            CURRENT_DRAWING_MODE = DrawingModeEnum.RealmAreaSelect;
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(0);
         }
 
         private void AddPresetColorButton_Click(object sender, EventArgs e)
@@ -1262,6 +1267,83 @@ namespace RealmStudio
             heightMapLayer.MapLayerComponents.Add(heigtMapImage);
         }
 
+        private static void SelectMapComponentsInArea(RealmStudioMap map, SKRect selectedArea)
+        {
+            SELECTED_MAP_COMPONENTS.Clear();
+
+            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER);
+            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
+            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER);
+            MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER);
+
+            for (int i = symbolLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (symbolLayer.MapLayerComponents[i] is MapSymbol ms)
+                {
+                    if (selectedArea.Contains(ms.X, ms.Y))
+                    {
+                        SELECTED_MAP_COMPONENTS.Add(ms);
+                    }
+                }
+            }
+
+            for (int i = pathLowerLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (pathLowerLayer.MapLayerComponents[i] is MapPath mp)
+                {
+                    mp.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(mp.PathPoints);
+                    SKRect pathBounds = mp.BoundaryPath.ComputeTightBounds();
+
+                    if (selectedArea.Contains(pathBounds))
+                    {
+                        SELECTED_MAP_COMPONENTS.Add(mp);
+                    }
+                }
+            }
+
+            for (int i = pathUpperLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (pathUpperLayer.MapLayerComponents[i] is MapPath mp)
+                {
+                    mp.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(mp.PathPoints);
+                    SKRect pathBounds = mp.BoundaryPath.ComputeTightBounds();
+
+                    if (selectedArea.Contains(pathBounds))
+                    {
+                        SELECTED_MAP_COMPONENTS.Add(mp);
+                    }
+                }
+            }
+
+            for (int i = waterLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (waterLayer.MapLayerComponents[i] is IWaterFeature iwf)
+                {
+                    if (iwf is WaterFeature wf)
+                    {
+                        SKRect pathBounds = wf.ContourPath.ComputeTightBounds();
+
+                        if (selectedArea.Contains(pathBounds))
+                        {
+                            SELECTED_MAP_COMPONENTS.Add(wf);
+                        }
+                    }
+                    else if (iwf is River mr)
+                    {
+                        if (mr.RiverBoundaryPath != null && mr.RiverBoundaryPath.PointCount > 0)
+                        {
+                            SKRect pathBounds = mr.RiverBoundaryPath.ComputeTightBounds();
+
+                            if (selectedArea.Contains(pathBounds))
+                            {
+                                SELECTED_MAP_COMPONENTS.Add(mr);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region Main Menu Event Handlers
@@ -1492,7 +1574,18 @@ namespace RealmStudio
                 // labels? boxes? water features? landforms? paths? regions?
 
                 // the object that is cut/copied must lie completely within the selected area
-                // if it is now a "point" object (e.g. a symbol)
+                // if it is not a "point" object (e.g. a symbol)
+
+                SelectMapComponentsInArea(CURRENT_MAP, SELECTED_REALM_AREA);
+
+                Cmd_CutOrCopyFromArea cmd = new(CURRENT_MAP, SELECTED_MAP_COMPONENTS, SELECTED_REALM_AREA, true);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                PREVIOUS_SELECTED_AREA = SELECTED_REALM_AREA;
+                SELECTED_REALM_AREA = SKRect.Empty;
+                MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                SKGLRenderControl.Invalidate();
             }
         }
 
@@ -1502,18 +1595,44 @@ namespace RealmStudio
             {
                 // get all objects within the selected area and copy them
                 // create a command class for this so it can be undone
+                SelectMapComponentsInArea(CURRENT_MAP, SELECTED_REALM_AREA);
+
+                // do not cut the selected objects from their layer
+                Cmd_CutOrCopyFromArea cmd = new(CURRENT_MAP, SELECTED_MAP_COMPONENTS, SELECTED_REALM_AREA, false);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                PREVIOUS_SELECTED_AREA = SELECTED_REALM_AREA;
+                SELECTED_REALM_AREA = SKRect.Empty;
+                MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                SKGLRenderControl.Invalidate();
             }
         }
 
         private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // if the list of copied items is not empty
-            // then paste them in the selected area, updating their position
+            // then paste them at the cursor point, updating their position
 
-            if (SELECTED_REALM_AREA != SKRect.Empty)
+            if (SELECTED_MAP_COMPONENTS.Count > 0)
             {
+                Point cursorPosition = SKGLRenderControl.PointToClient(Cursor.Position);
 
+                SKPoint zoomedScrolledPoint = new((cursorPosition.X / DrawingZoom) + DrawingPoint.X, (cursorPosition.Y / DrawingZoom) + DrawingPoint.Y);
+                Cmd_PasteSelectedComponents cmd = new(CURRENT_MAP, SELECTED_MAP_COMPONENTS, PREVIOUS_SELECTED_AREA, zoomedScrolledPoint);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                SKGLRenderControl.Invalidate();
             }
+        }
+
+        private void ClearSelectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SELECTED_MAP_COMPONENTS.Clear();
+            PREVIOUS_SELECTED_AREA = SKRect.Empty;
+            SELECTED_REALM_AREA = SKRect.Empty;
+            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
         }
 
         private void RenderAsHeightMapMenuItem_CheckedChanged(object sender, EventArgs e)
@@ -3398,8 +3517,7 @@ namespace RealmStudio
         /// family.</param>
         /// <param name="font">The font to check.</param>
         /// <returns>The Panose font family type.</returns>
-        public static PanoseFontFamilyTypes PanoseFontFamilyType(
-            Graphics graphics, Font font)
+        public static PanoseFontFamilyTypes PanoseFontFamilyType(Graphics graphics, Font font)
         {
             byte bFamilyType = 0;
 
@@ -5685,6 +5803,9 @@ namespace RealmStudio
                     {
                         if (SELECTED_PATH != null)
                         {
+                            SELECTED_PATH.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(SELECTED_PATH.PathPoints);
+                            SELECTED_PATH.BoundaryPath.GetTightBounds(out SKRect boundsRect);
+
                             // move the entire selected path with the mouse
                             SizeF delta = new()
                             {
@@ -5695,8 +5816,8 @@ namespace RealmStudio
                             foreach (MapPathPoint point in SELECTED_PATH.PathPoints)
                             {
                                 SKPoint p = point.MapPoint;
-                                p.X += delta.Width;
-                                p.Y += delta.Height;
+                                p.X = p.X + delta.Width - (int)(boundsRect.MidX - PREVIOUS_CURSOR_POINT.X);
+                                p.Y = p.Y + delta.Height - (int)(boundsRect.MidY - PREVIOUS_CURSOR_POINT.Y);
                                 point.MapPoint = p;
                             }
 
@@ -6976,6 +7097,12 @@ namespace RealmStudio
                     SKGLRenderControl.Controls.Remove(LABEL_TEXT_BOX);
                     LABEL_TEXT_BOX.Dispose();
                 }
+
+                // clear all selections
+                SELECTED_MAP_COMPONENTS.Clear();
+                PREVIOUS_SELECTED_AREA = SKRect.Empty;
+                SELECTED_REALM_AREA = SKRect.Empty;
+                MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                 // re-render everything
                 SKGLRenderControl.Invalidate();
@@ -8692,7 +8819,7 @@ namespace RealmStudio
                 {
                     SKPath boundaryPath = mapLandform.DrawPath;
 
-                    if (boundaryPath != null && boundaryPath.PointCount > 0)
+                    if (boundaryPath.PointCount > 0)
                     {
                         if (boundaryPath.Contains(mapClickPoint.X, mapClickPoint.Y))
                         {
@@ -9667,7 +9794,7 @@ namespace RealmStudio
                 {
                     SKPath? boundaryPath = mapPath.BoundaryPath;
 
-                    if (boundaryPath != null && boundaryPath.PointCount > 0)
+                    if (boundaryPath.PointCount > 0)
                     {
                         boundaryPath.GetBounds(out SKRect boundRect);
 
@@ -9696,7 +9823,7 @@ namespace RealmStudio
                 {
                     SKPath? boundaryPath = mapPath.BoundaryPath;
 
-                    if (boundaryPath != null && boundaryPath.PointCount > 0)
+                    if (boundaryPath.PointCount > 0)
                     {
                         boundaryPath.GetBounds(out SKRect boundRect);
 
@@ -12188,7 +12315,6 @@ namespace RealmStudio
         }
 
         #endregion
-
 
     }
 }
