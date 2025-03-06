@@ -102,6 +102,25 @@ namespace RealmStudio
             Color = ColorTranslator.FromHtml("#658CBFC5").ToSKColor(),
         };
 
+        public WaterFeature() { }
+
+        public WaterFeature(WaterFeature original)
+        {
+            X = original.X;
+            Y = original.Y;
+            Width = original.Width;
+            Height = original.Height;
+            ShallowWaterPaint = original.ShallowWaterPaint.Clone();
+            WaterFeatureBackgroundPaint = original.WaterFeatureBackgroundPaint.Clone();
+            ShorelineEffectDistance = original.ShorelineEffectDistance;
+            WaterFeatureColor = original.WaterFeatureColor;
+            WaterFeatureName = original.WaterFeatureName;
+            WaterFeatureType = original.WaterFeatureType;
+            WaterFeatureShorelineColor = original.WaterFeatureShorelineColor;
+            WaterFeatureShorelinePaint = original.WaterFeatureShorelinePaint.Clone();
+            ParentMap = original.ParentMap;
+        }
+
         public override void Render(SKCanvas canvas)
         {
             if (ParentMap == null) return;

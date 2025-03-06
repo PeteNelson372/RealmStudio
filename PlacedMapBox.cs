@@ -58,6 +58,23 @@ namespace RealmStudio
         public SKBitmap PatchH { get; set; } = new(); // bottom middle
         public SKBitmap PatchI { get; set; } = new(); // bottom right corner
 
+        public PlacedMapBox() { }
+
+        public PlacedMapBox(PlacedMapBox box)
+        {
+            X = box.X;
+            Y = box.Y;
+            Width = box.Width;
+            Height = box.Height;
+            BoxBitmap = box.BoxBitmap?.Copy();
+            BoxTint = box.BoxTint;
+            BoxPaint = box.BoxPaint?.Clone();
+            BoxCenterLeft = box.BoxCenterLeft;
+            BoxCenterTop = box.BoxCenterTop;
+            BoxCenterRight = box.BoxCenterRight;
+            BoxCenterBottom = box.BoxCenterBottom;
+        }
+
         public void SetBoxBitmap(SKBitmap b)
         {
             BoxBitmap = b;

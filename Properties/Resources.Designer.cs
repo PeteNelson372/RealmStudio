@@ -173,6 +173,26 @@ namespace RealmStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] IMFellDWPica_Regular {
+            get {
+                object obj = ResourceManager.GetObject("IMFellDWPica-Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] IMFellEnglish_Italic {
+            get {
+                object obj = ResourceManager.GetObject("IMFellEnglish-Italic", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] Katibeh_Regular {
             get {
                 object obj = ResourceManager.GetObject("Katibeh-Regular", resourceCulture);

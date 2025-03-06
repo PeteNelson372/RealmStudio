@@ -50,7 +50,6 @@ namespace RealmStudio
         public Color ScaleFontColor { get; set; } = Color.White;
         public int ScaleOutlineWidth { get; set; } = 2;
         public Color ScaleOutlineColor { get; set; } = Color.Black;
-
         public bool IsSelected { get; set; }
 
         private SKPaint SegmentOutlinePaint = new();
@@ -60,6 +59,26 @@ namespace RealmStudio
         private SKPaint OutlinePaint = new();
 
         public MapScale() { }
+
+        public MapScale(MapScale mapScale)
+        {
+            X = mapScale.X;
+            Y = mapScale.Y;
+            Width = mapScale.Width;
+            Height = mapScale.Height;
+            ScaleSegmentCount = mapScale.ScaleSegmentCount;
+            ScaleLineWidth = mapScale.ScaleLineWidth;
+            ScaleColor1 = mapScale.ScaleColor1;
+            ScaleColor2 = mapScale.ScaleColor2;
+            ScaleColor3 = mapScale.ScaleColor3;
+            ScaleDistance = mapScale.ScaleDistance;
+            ScaleDistanceUnit = mapScale.ScaleDistanceUnit;
+            ScaleFontColor = mapScale.ScaleFontColor;
+            ScaleOutlineWidth = mapScale.ScaleOutlineWidth;
+            ScaleOutlineColor = mapScale.ScaleOutlineColor;
+            ScaleFont = (Font)mapScale.ScaleFont.Clone();
+            ScaleNumbersDisplayType = mapScale.ScaleNumbersDisplayType;
+        }
 
         private void ConstructPaintObjects()
         {

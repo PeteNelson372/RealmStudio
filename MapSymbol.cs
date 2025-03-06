@@ -100,6 +100,10 @@ namespace RealmStudio
             Height = original.Height;
             X = original.X;
             Y = original.Y;
+
+            SymbolWidth = original.SymbolWidth;
+            SymbolHeight = original.SymbolHeight;
+            SymbolPaint = original.SymbolPaint?.Clone();
         }
 
         public void ClearSymbolTags()

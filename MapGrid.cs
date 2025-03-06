@@ -52,6 +52,21 @@ namespace RealmStudio
 
         public bool ShowGridSize { get; set; } = true;
 
+        public MapGrid() { }
+
+        public MapGrid(MapGrid mapGrid)
+        {
+            ParentMap = mapGrid.ParentMap;
+            GridEnabled = mapGrid.GridEnabled;
+            GridColor = mapGrid.GridColor;
+            GridLineWidth = mapGrid.GridLineWidth;
+            GridSize = mapGrid.GridSize;
+            GridType = mapGrid.GridType;
+            Width = mapGrid.Width;
+            Height = mapGrid.Height;
+            GridLayerIndex = mapGrid.GridLayerIndex;
+        }
+
         public override void Render(SKCanvas canvas)
         {
             if (GridEnabled)

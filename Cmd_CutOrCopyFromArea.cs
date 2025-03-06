@@ -58,9 +58,6 @@ namespace RealmStudio
                                 SymbolGuid = ms.SymbolGuid,
                                 X = (int)(ms.X - SelectedMapArea.Left),
                                 Y = (int)(ms.Y - SelectedMapArea.Top),
-                                SymbolWidth = ms.SymbolWidth,
-                                SymbolHeight = ms.SymbolHeight,
-                                SymbolPaint = ms.SymbolPaint,
                             };
 
                             Bitmap newPlacedBitmap = new(ms.PlacedBitmap.ToBitmap(), newSymbol.SymbolWidth, newSymbol.SymbolHeight);
@@ -89,20 +86,11 @@ namespace RealmStudio
                             // this is done so if/when the selected component (symbol) is pasted, it can be pasted
                             // relative to the cursor position
 
-                            MapPath newMapPath = new()
+                            MapPath newMapPath = new(mp)
                             {
                                 MapPathGuid = mp.MapPathGuid,
                                 X = (int)(mp.X - SelectedMapArea.Left),
                                 Y = (int)(mp.Y - SelectedMapArea.Top),
-                                DrawOverSymbols = mp.DrawOverSymbols,
-                                Height = mp.Height,
-                                MapPathName = mp.MapPathName,
-                                ParentMap = mp.ParentMap,
-                                PathColor = mp.PathColor,
-                                PathTexture = mp.PathTexture,
-                                PathType = mp.PathType,
-                                PathWidth = mp.PathWidth,
-                                ShowPathPoints = false,
                             };
 
                             newMapPath.PathPoints.Clear();
@@ -138,20 +126,11 @@ namespace RealmStudio
                             // this is done so if/when the selected component (symbol) is pasted, it can be pasted
                             // relative to the cursor position
 
-                            MapPath newMapPath = new()
+                            MapPath newMapPath = new(mp)
                             {
                                 MapPathGuid = mp.MapPathGuid,
                                 X = (int)(mp.X - SelectedMapArea.Left),
                                 Y = (int)(mp.Y - SelectedMapArea.Top),
-                                DrawOverSymbols = mp.DrawOverSymbols,
-                                Height = mp.Height,
-                                MapPathName = mp.MapPathName,
-                                ParentMap = mp.ParentMap,
-                                PathColor = mp.PathColor,
-                                PathTexture = mp.PathTexture,
-                                PathType = mp.PathType,
-                                PathWidth = mp.PathWidth,
-                                ShowPathPoints = false,
                             };
 
                             newMapPath.PathPoints.Clear();
@@ -189,22 +168,11 @@ namespace RealmStudio
                             if (waterLayer.MapLayerComponents[j] is WaterFeature wf2
                                 && wf.WaterFeatureGuid.ToString() == wf2.WaterFeatureGuid.ToString())
                             {
-                                WaterFeature newWf = new()
+                                WaterFeature newWf = new(wf)
                                 {
                                     X = (int)(wf.X - SelectedMapArea.Left),
                                     Y = (int)(wf.Y - SelectedMapArea.Top),
-                                    Width = wf.Width,
-                                    Height = wf.Height,
                                     WaterFeatureGuid = wf.WaterFeatureGuid,
-                                    ShallowWaterPaint = wf.ShallowWaterPaint,
-                                    WaterFeatureBackgroundPaint = wf.WaterFeatureBackgroundPaint,
-                                    ShorelineEffectDistance = wf.ShorelineEffectDistance,
-                                    WaterFeatureColor = wf.WaterFeatureColor,
-                                    WaterFeatureName = wf.WaterFeatureName,
-                                    WaterFeatureType = wf.WaterFeatureType,
-                                    WaterFeatureShorelineColor = wf.WaterFeatureShorelineColor,
-                                    WaterFeatureShorelinePaint = wf.WaterFeatureShorelinePaint,
-                                    ParentMap = wf.ParentMap,
                                 };
 
                                 SKPath wfPath = new(wf.WaterFeaturePath);
@@ -234,20 +202,7 @@ namespace RealmStudio
                             {
                                 X = (int)(mr.X - SelectedMapArea.Left),
                                 Y = (int)(mr.Y - SelectedMapArea.Top),
-                                Width = mr.Width,
-                                Height = mr.Height,
                                 MapRiverGuid = mr.MapRiverGuid,
-                                MapRiverName = mr.MapRiverName,
-                                ParentMap = mr.ParentMap,
-                                RenderRiverTexture = mr.RenderRiverTexture,
-                                RiverColor = mr.RiverColor,
-                                RiverFillPaint = mr.RiverFillPaint,
-                                RiverShallowWaterPaint = mr.RiverShallowWaterPaint,
-                                RiverShorelineColor = mr.RiverShorelineColor,
-                                RiverShorelinePaint = mr.RiverShorelinePaint,
-                                RiverSourceFadeIn = mr.RiverSourceFadeIn,
-                                RiverWidth = mr.RiverWidth,
-                                ShorelineEffectDistance = mr.ShorelineEffectDistance,
                             };
 
                             newRiver.RiverPoints.Clear();

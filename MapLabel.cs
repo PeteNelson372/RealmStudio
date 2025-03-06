@@ -59,6 +59,28 @@ namespace RealmStudio
 
         public SKPaint? LabelPaint { get; set; }
 
+        public MapLabel() { }
+
+        public MapLabel(MapLabel original)
+        {
+            X = original.X;
+            Y = original.Y;
+            Height = original.Height;
+            Width = original.Width;
+            LabelColor = original.LabelColor;
+            LabelFont = (Font)original.LabelFont.Clone();
+            LabelGlowColor = original.LabelGlowColor;
+            LabelGlowStrength = original.LabelGlowStrength;
+            LabelOutlineColor = original.LabelOutlineColor;
+            LabelOutlineWidth = original.LabelOutlineWidth;
+            LabelPaint = original.LabelPaint?.Clone();
+            LabelPath = original.LabelPath;
+            LabelRotationDegrees = original.LabelRotationDegrees;
+            LabelSKFont = new(original.LabelSKFont.Typeface, original.LabelSKFont.Size);
+            LabelText = original.LabelText;
+            RenderComponent = original.RenderComponent;
+        }
+
         public override void Render(SKCanvas canvas)
         {
             if (!string.IsNullOrEmpty(LabelText) && LabelPaint != null)

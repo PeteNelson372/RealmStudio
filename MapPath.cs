@@ -46,6 +46,29 @@ namespace RealmStudio
         public SKPaint? PathPaint { get; set; }
         public SKPath BoundaryPath { get; set; } = new();
 
+        public MapPath() { }
+
+        public MapPath(MapPath original)
+        {
+            X = original.X;
+            Y = original.Y;
+            DrawOverSymbols = original.DrawOverSymbols;
+            Height = original.Height;
+            MapPathName = original.MapPathName;
+            ParentMap = original.ParentMap;
+            PathColor = original.PathColor;
+
+            if (original.PathTexture != null)
+            {
+                PathTexture = new MapTexture(original.PathTexture.TextureName, original.PathTexture.TexturePath);
+            }
+
+            PathType = original.PathType;
+            PathWidth = original.PathWidth;
+            ShowPathPoints = original.ShowPathPoints;
+        }
+
+
         public override void Render(SKCanvas canvas)
         {
             if (ParentMap == null) return;

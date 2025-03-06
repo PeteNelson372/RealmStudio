@@ -1,5 +1,5 @@
 ﻿/**************************************************************************************************************************
-* Copyright 2024, Peter R. Nelson
+* Copyright 2025, Peter R. Nelson
 *
 * This file is part of the RealmStudio application. The RealmStudio application is intended
 * for creating fantasy maps for gaming and world building.
@@ -50,6 +50,7 @@ namespace RealmStudio
             ApplyFreshwaterColorPaletteSettingsCheck.Checked = CheckAllCheck.Checked;
             ApplyPathSettingsCheck.Checked = CheckAllCheck.Checked;
             ApplySymbolSettingsCheck.Checked = CheckAllCheck.Checked;
+            ApplyLabelSettingsCheck.Checked = CheckAllCheck.Checked;
             ApplyLabelPresetSettingsCheck.Checked = CheckAllCheck.Checked;
         }
 
@@ -84,6 +85,7 @@ namespace RealmStudio
             themeFilter.ApplyFreshwaterColorPaletteSettings = ApplyFreshwaterColorPaletteSettingsCheck.Checked;
             themeFilter.ApplyPathSetSettings = ApplyPathSettingsCheck.Checked;
             themeFilter.ApplySymbolSettings = ApplySymbolSettingsCheck.Checked;
+            themeFilter.ApplyLabelSettings = ApplyLabelSettingsCheck.Checked;
             themeFilter.ApplyLabelPresetSettings = ApplyLabelPresetSettingsCheck.Checked;
 
             return themeFilter;
@@ -98,6 +100,8 @@ namespace RealmStudio
             if (SettingsTheme != null)
             {
                 ThemeNameEntry nameEntryDlg = new();
+                nameEntryDlg.ThemeNameTextBox.Text = selectedTheme.ThemeName;
+
                 DialogResult result = nameEntryDlg.ShowDialog();
 
                 if (result == DialogResult.OK)

@@ -32,29 +32,39 @@ namespace RealmStudio
         public string? ThemePath { get; set; }
         public bool IsDefaultTheme { get; set; }
         public bool IsSystemTheme { get; set; }
-        public MapTexture? BackgroundTexture { get; set; }
-        public MapTexture? OceanTexture { get; set; }
-        public int? OceanTextureOpacity { get; set; }
-        public XmlColor? OceanColor { get; set; } = Color.Empty;
-        public List<XmlColor> OceanColorPalette { get; set; } = [];
-        public XmlColor? LandformOutlineColor { get; set; } = Color.Empty;
-        public int? LandformOutlineWidth { get; set; }
-        public MapTexture? LandformTexture { get; set; }
-        public string? LandShorelineStyle { get; set; }
-        public XmlColor? LandformCoastlineColor { get; set; } = Color.Empty;
-        public string? LandformCoastlineStyle { get; set; }
-        public int? LandformCoastlineEffectDistance { get; set; }
-        public List<XmlColor> LandformColorPalette { get; set; } = [];
-        public XmlColor? FreshwaterColor { get; set; } = Color.Empty;
-        public XmlColor? FreshwaterShorelineColor { get; set; } = Color.Empty;
-        public int? RiverWidth { get; set; }
-        public bool? RiverSourceFadeIn { get; set; }
-        public List<XmlColor> FreshwaterColorPalette { get; set; } = [];
-        public XmlColor? PathColor { get; set; } = Color.Empty;
-        public int? PathWidth { get; set; }
-        public string? PathStyle { get; set; }
-        public XmlColor? VignetteColor { get; set; } = ColorTranslator.FromHtml("#C9977B");
-        public int? VignetteStrength { get; set; }
-        public XmlColor[] SymbolCustomColors { get; set; } = [Color.Empty, Color.Empty, Color.Empty, Color.Empty];
+        [XmlElement(IsNullable = true)] public MapTexture? BackgroundTexture { get; set; }
+        [XmlElement(IsNullable = true)] public MapTexture? OceanTexture { get; set; }
+        [XmlElement(IsNullable = true)] public int? OceanTextureOpacity { get; set; } = 255;
+        [XmlElement(IsNullable = true)] public int? OceanColor { get; set; } = Color.LightGray.ToArgb();
+        [XmlArray(IsNullable = true)] public List<int?>? OceanColorPalette { get; set; } = [];
+        [XmlElement(IsNullable = true)] public int? LandformOutlineColor { get; set; } = Color.FromArgb(255, 62, 55, 40).ToArgb();
+        [XmlElement(IsNullable = true)] public int? LandformBackgroundColor { get; set; } = Color.White.ToArgb();
+        [XmlElement(IsNullable = true)] public int? LandformOutlineWidth { get; set; } = 2;
+        [XmlElement(IsNullable = true)] public MapTexture? LandformTexture { get; set; }
+        [XmlElement(IsNullable = true)] public bool? FillLandformWithTexture { get; set; } = true;
+        [XmlElement(IsNullable = true)] public string? LandShorelineStyle { get; set; } = string.Empty;
+        [XmlElement(IsNullable = true)] public int? LandformCoastlineColor { get; set; } = ColorTranslator.FromHtml("#BB9CC3B7").ToArgb();
+        [XmlElement(IsNullable = true)] public string? LandformCoastlineStyle { get; set; } = string.Empty;
+        [XmlElement(IsNullable = true)] public int? LandformCoastlineEffectDistance { get; set; } = 12;
+        [XmlArray(IsNullable = true)] public List<int?>? LandformColorPalette { get; set; } = [];
+        [XmlElement(IsNullable = true)] public int? FreshwaterColor { get; set; } = Color.FromArgb(101, 140, 191, 197).ToArgb();
+        [XmlElement(IsNullable = true)] public int? FreshwaterShorelineColor { get; set; } = Color.Empty.ToArgb();
+        [XmlElement(IsNullable = true)] public int? RiverWidth { get; set; } = 4;
+        [XmlElement(IsNullable = true)] public bool? RiverSourceFadeIn { get; set; } = true;
+        [XmlArray(IsNullable = true)] public List<int?>? FreshwaterColorPalette { get; set; } = [];
+        [XmlElement(IsNullable = true)] public int? PathColor { get; set; } = Color.Empty.ToArgb();
+        [XmlElement(IsNullable = true)] public int? PathWidth { get; set; } = 8;
+        [XmlElement(IsNullable = true)] public PathTypeEnum? PathStyle { get; set; } = PathTypeEnum.SolidLinePath;
+        [XmlElement(IsNullable = true)] public string? LabelFont { get; set; } = string.Empty;
+        [XmlElement(IsNullable = true)] public int? LabelColor { get; set; } = ColorTranslator.FromHtml("#3D351E").ToArgb();
+        [XmlElement(IsNullable = true)] public int? LabelOutlineColor { get; set; } = ColorTranslator.FromHtml("#A1D6CAAB").ToArgb();
+        [XmlElement(IsNullable = true)] public float? LabelOutlineWidth { get; set; }
+        [XmlElement(IsNullable = true)] public int? LabelGlowColor { get; set; } = Color.White.ToArgb();
+        [XmlElement(IsNullable = true)] public int? LabelGlowStrength { get; set; }
+        [XmlElement(IsNullable = true)] public int? VignetteColor { get; set; } = ColorTranslator.FromHtml("#C9977B").ToArgb();
+        [XmlElement(IsNullable = true)] public int? VignetteStrength { get; set; } = 148;
+        [XmlElement(IsNullable = true)] public bool? RectangleVignette { get; set; } = false;
+        [XmlArray(IsNullable = true)] public int?[]? SymbolCustomColors { get; set; } = [Color.Empty.ToArgb(), Color.Empty.ToArgb(), Color.Empty.ToArgb(), Color.Empty.ToArgb()];
+
     }
 }

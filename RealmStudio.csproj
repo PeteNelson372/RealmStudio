@@ -9,9 +9,9 @@
     <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.60.36842</AssemblyVersion>
-    <FileVersion>1.2025.60.36842</FileVersion>
-    <Version>1.2025.0-alpha-668</Version>
+    <AssemblyVersion>1.2025.65.13980</AssemblyVersion>
+    <FileVersion>1.2025.65.13980</FileVersion>
+    <Version>1.2025.0-alpha-745</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025. Peter R. Nelson</Copyright>
@@ -66,6 +66,8 @@
     <None Remove="Resources\EastSeaDokdo-Regular.ttf" />
     <None Remove="Resources\FrederickatheGreat-Regular.ttf" />
     <None Remove="Resources\GentiumBookPlus-Bold.ttf" />
+    <None Remove="Resources\IMFellDWPica-Regular.ttf" />
+    <None Remove="Resources\IMFellEnglish-Italic.ttf" />
     <None Remove="Resources\Katibeh-Regular.ttf" />
     <None Remove="Resources\Lancelot-Regular.ttf" />
     <None Remove="Resources\MarkoOne-Regular.ttf" />
@@ -88,6 +90,8 @@
     <EmbeddedResource Include="Resources\CinzelDecorative-Regular.ttf" />
     <EmbeddedResource Include="Resources\EastSeaDokdo-Regular.ttf" />
     <EmbeddedResource Include="Resources\GentiumBookPlus-Bold.ttf" />
+    <EmbeddedResource Include="Resources\IMFellDWPica-Regular.ttf" />
+    <EmbeddedResource Include="Resources\IMFellEnglish-Italic.ttf" />
     <EmbeddedResource Include="Resources\Katibeh-Regular.ttf" />
     <EmbeddedResource Include="Resources\Lancelot-Regular.ttf" />
     <EmbeddedResource Include="Resources\MarkoOne-Regular.ttf" />

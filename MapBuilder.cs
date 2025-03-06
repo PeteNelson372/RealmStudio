@@ -124,6 +124,19 @@ namespace RealmStudio
                 throw new Exception("Error constructing map. Map layer count error");
             }
 
+            // create map images for color painting and add them to
+            // ocean drawing, land drawing, and water drawing layers
+            MapImage oceanDrawingImage = new()
+            {
+                X = 0,
+                Y = 0,
+                Width = map.MapWidth,
+                Height = map.MapHeight,
+                MapImageBitmap = new SKBitmap(map.MapWidth, map.MapHeight, false),
+            };
+
+            GetMapLayerByIndex(map, OCEANDRAWINGLAYER).MapLayerComponents.Add(oceanDrawingImage);
+
             return map;
         }
 
@@ -150,6 +163,20 @@ namespace RealmStudio
             {
                 throw new Exception("Error constructing map. Map layer count error");
             }
+
+            // create map images for color painting and add them to
+            // ocean drawing, land drawing, and water drawing layers
+            MapImage oceanDrawingImage = new()
+            {
+                X = 0,
+                Y = 0,
+                Width = map.MapWidth,
+                Height = map.MapHeight,
+                MapImageBitmap = new SKBitmap(map.MapWidth, map.MapHeight, false),
+            };
+
+            GetMapLayerByIndex(map, OCEANDRAWINGLAYER).MapLayerComponents.Add(oceanDrawingImage);
+
             return map;
         }
 

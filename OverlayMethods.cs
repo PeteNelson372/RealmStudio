@@ -61,15 +61,15 @@ namespace RealmStudio
 
                 SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(mapFrame.FrameBitmap, center);
 
-                mapFrame.Patch_A = bitmapSlices[0].Copy();
-                mapFrame.Patch_B = bitmapSlices[1].Copy();
-                mapFrame.Patch_C = bitmapSlices[2].Copy();
-                mapFrame.Patch_D = bitmapSlices[3].Copy();
-                mapFrame.Patch_E = bitmapSlices[4].Copy();
-                mapFrame.Patch_F = bitmapSlices[5].Copy();
-                mapFrame.Patch_G = bitmapSlices[6].Copy();
-                mapFrame.Patch_H = bitmapSlices[7].Copy();
-                mapFrame.Patch_I = bitmapSlices[8].Copy();
+                mapFrame.PatchA = bitmapSlices[0].Copy();
+                mapFrame.PatchB = bitmapSlices[1].Copy();
+                mapFrame.PatchC = bitmapSlices[2].Copy();
+                mapFrame.PatchD = bitmapSlices[3].Copy();
+                mapFrame.PatchE = bitmapSlices[4].Copy();
+                mapFrame.PatchF = bitmapSlices[5].Copy();
+                mapFrame.PatchG = bitmapSlices[6].Copy();
+                mapFrame.PatchH = bitmapSlices[7].Copy();
+                mapFrame.PatchI = bitmapSlices[8].Copy();
 
                 bitmapSlices[0].Dispose();
                 bitmapSlices[1].Dispose();
@@ -82,71 +82,71 @@ namespace RealmStudio
                 bitmapSlices[8].Dispose();
 
                 if (mapFrame.FrameBitmap != null
-                    && mapFrame.Patch_A != null
-                    && mapFrame.Patch_B != null
-                    && mapFrame.Patch_C != null
-                    && mapFrame.Patch_D != null
-                    && mapFrame.Patch_E != null
-                    && mapFrame.Patch_F != null
-                    && mapFrame.Patch_G != null
-                    && mapFrame.Patch_H != null
-                    && mapFrame.Patch_I != null)
+                    && mapFrame.PatchA != null
+                    && mapFrame.PatchB != null
+                    && mapFrame.PatchC != null
+                    && mapFrame.PatchD != null
+                    && mapFrame.PatchE != null
+                    && mapFrame.PatchF != null
+                    && mapFrame.PatchG != null
+                    && mapFrame.PatchH != null
+                    && mapFrame.PatchI != null)
                 {
                     // have to account for the total width and height of the map
-                    while ((mapFrame.Patch_A.Width * mapFrame.FrameScale * mapWidthScale)
-                        + (mapFrame.Patch_B.Width * mapFrame.FrameScale * mapWidthScale)
-                        + (mapFrame.Patch_C.Width * mapFrame.FrameScale * mapWidthScale) > mapFrame.Width)
+                    while ((mapFrame.PatchA.Width * mapFrame.FrameScale * mapWidthScale)
+                        + (mapFrame.PatchB.Width * mapFrame.FrameScale * mapWidthScale)
+                        + (mapFrame.PatchC.Width * mapFrame.FrameScale * mapWidthScale) > mapFrame.Width)
                     {
                         mapFrame.FrameScale -= 0.1F;
                     }
 
-                    while ((mapFrame.Patch_A.Height * mapFrame.FrameScale * mapHeightScale)
-                        + (mapFrame.Patch_D.Height * mapFrame.FrameScale * mapHeightScale)
-                        + (mapFrame.Patch_G.Height * mapFrame.FrameScale * mapHeightScale) > mapFrame.Height)
+                    while ((mapFrame.PatchA.Height * mapFrame.FrameScale * mapHeightScale)
+                        + (mapFrame.PatchD.Height * mapFrame.FrameScale * mapHeightScale)
+                        + (mapFrame.PatchG.Height * mapFrame.FrameScale * mapHeightScale) > mapFrame.Height)
                     {
                         mapFrame.FrameScale -= 0.1F;
                     }
 
                     // scale the patches
-                    using SKBitmap scaledA = new((int)Math.Round(mapFrame.Patch_A.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.Patch_A.Height * mapFrame.FrameScale * mapHeightScale));
-                    using SKBitmap scaledB = new((int)Math.Round(mapFrame.Patch_B.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.Patch_B.Height * mapFrame.FrameScale * mapHeightScale));
-                    using SKBitmap scaledC = new((int)Math.Round(mapFrame.Patch_C.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.Patch_C.Height * mapFrame.FrameScale * mapHeightScale));
-                    using SKBitmap scaledD = new((int)Math.Round(mapFrame.Patch_D.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.Patch_D.Height * mapFrame.FrameScale * mapHeightScale));
-                    using SKBitmap scaledE = new((int)Math.Round(mapFrame.Patch_E.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.Patch_E.Height * mapFrame.FrameScale * mapHeightScale));
-                    using SKBitmap scaledF = new((int)Math.Round(mapFrame.Patch_F.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.Patch_F.Height * mapFrame.FrameScale * mapHeightScale));
-                    using SKBitmap scaledG = new((int)Math.Round(mapFrame.Patch_G.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.Patch_G.Height * mapFrame.FrameScale * mapHeightScale));
-                    using SKBitmap scaledH = new((int)Math.Round(mapFrame.Patch_H.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.Patch_H.Height * mapFrame.FrameScale * mapHeightScale));
-                    using SKBitmap scaledI = new((int)Math.Round(mapFrame.Patch_I.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.Patch_I.Height * mapFrame.FrameScale * mapHeightScale));
+                    using SKBitmap scaledA = new((int)Math.Round(mapFrame.PatchA.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.PatchA.Height * mapFrame.FrameScale * mapHeightScale));
+                    using SKBitmap scaledB = new((int)Math.Round(mapFrame.PatchB.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.PatchB.Height * mapFrame.FrameScale * mapHeightScale));
+                    using SKBitmap scaledC = new((int)Math.Round(mapFrame.PatchC.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.PatchC.Height * mapFrame.FrameScale * mapHeightScale));
+                    using SKBitmap scaledD = new((int)Math.Round(mapFrame.PatchD.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.PatchD.Height * mapFrame.FrameScale * mapHeightScale));
+                    using SKBitmap scaledE = new((int)Math.Round(mapFrame.PatchE.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.PatchE.Height * mapFrame.FrameScale * mapHeightScale));
+                    using SKBitmap scaledF = new((int)Math.Round(mapFrame.PatchF.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.PatchF.Height * mapFrame.FrameScale * mapHeightScale));
+                    using SKBitmap scaledG = new((int)Math.Round(mapFrame.PatchG.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.PatchG.Height * mapFrame.FrameScale * mapHeightScale));
+                    using SKBitmap scaledH = new((int)Math.Round(mapFrame.PatchH.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.PatchH.Height * mapFrame.FrameScale * mapHeightScale));
+                    using SKBitmap scaledI = new((int)Math.Round(mapFrame.PatchI.Width * mapFrame.FrameScale * mapWidthScale), (int)Math.Round(mapFrame.PatchI.Height * mapFrame.FrameScale * mapHeightScale));
 
-                    mapFrame.Patch_A.ScalePixels(scaledA, SKSamplingOptions.Default);
-                    mapFrame.Patch_B.ScalePixels(scaledB, SKSamplingOptions.Default);
-                    mapFrame.Patch_C.ScalePixels(scaledC, SKSamplingOptions.Default);
-                    mapFrame.Patch_D.ScalePixels(scaledD, SKSamplingOptions.Default);
-                    mapFrame.Patch_E.ScalePixels(scaledE, SKSamplingOptions.Default);
-                    mapFrame.Patch_F.ScalePixels(scaledF, SKSamplingOptions.Default);
-                    mapFrame.Patch_G.ScalePixels(scaledG, SKSamplingOptions.Default);
-                    mapFrame.Patch_H.ScalePixels(scaledH, SKSamplingOptions.Default);
-                    mapFrame.Patch_I.ScalePixels(scaledI, SKSamplingOptions.Default);
+                    mapFrame.PatchA.ScalePixels(scaledA, SKSamplingOptions.Default);
+                    mapFrame.PatchB.ScalePixels(scaledB, SKSamplingOptions.Default);
+                    mapFrame.PatchC.ScalePixels(scaledC, SKSamplingOptions.Default);
+                    mapFrame.PatchD.ScalePixels(scaledD, SKSamplingOptions.Default);
+                    mapFrame.PatchE.ScalePixels(scaledE, SKSamplingOptions.Default);
+                    mapFrame.PatchF.ScalePixels(scaledF, SKSamplingOptions.Default);
+                    mapFrame.PatchG.ScalePixels(scaledG, SKSamplingOptions.Default);
+                    mapFrame.PatchH.ScalePixels(scaledH, SKSamplingOptions.Default);
+                    mapFrame.PatchI.ScalePixels(scaledI, SKSamplingOptions.Default);
 
-                    mapFrame.Patch_A.Dispose();
-                    mapFrame.Patch_B.Dispose();
-                    mapFrame.Patch_C.Dispose();
-                    mapFrame.Patch_D.Dispose();
-                    mapFrame.Patch_E.Dispose();
-                    mapFrame.Patch_F.Dispose();
-                    mapFrame.Patch_G.Dispose();
-                    mapFrame.Patch_H.Dispose();
-                    mapFrame.Patch_I.Dispose();
+                    mapFrame.PatchA.Dispose();
+                    mapFrame.PatchB.Dispose();
+                    mapFrame.PatchC.Dispose();
+                    mapFrame.PatchD.Dispose();
+                    mapFrame.PatchE.Dispose();
+                    mapFrame.PatchF.Dispose();
+                    mapFrame.PatchG.Dispose();
+                    mapFrame.PatchH.Dispose();
+                    mapFrame.PatchI.Dispose();
 
-                    mapFrame.Patch_A = scaledA.Copy();
-                    mapFrame.Patch_B = scaledB.Copy();
-                    mapFrame.Patch_C = scaledC.Copy();
-                    mapFrame.Patch_D = scaledD.Copy();
-                    mapFrame.Patch_E = scaledE.Copy();
-                    mapFrame.Patch_F = scaledF.Copy();
-                    mapFrame.Patch_G = scaledG.Copy();
-                    mapFrame.Patch_H = scaledH.Copy();
-                    mapFrame.Patch_I = scaledI.Copy();
+                    mapFrame.PatchA = scaledA.Copy();
+                    mapFrame.PatchB = scaledB.Copy();
+                    mapFrame.PatchC = scaledC.Copy();
+                    mapFrame.PatchD = scaledD.Copy();
+                    mapFrame.PatchE = scaledE.Copy();
+                    mapFrame.PatchF = scaledF.Copy();
+                    mapFrame.PatchG = scaledG.Copy();
+                    mapFrame.PatchH = scaledH.Copy();
+                    mapFrame.PatchI = scaledI.Copy();
 
                 }
 
@@ -194,14 +194,9 @@ namespace RealmStudio
             CompletePlacedFrame(mapFrame);
 
             // there can only be one frame on the map, so remove any existing frame
-            RemoveAllFrames(map);
+            MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents.Clear();
 
             MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents.Add(mapFrame);
-        }
-
-        internal static void RemoveAllFrames(RealmStudioMap map)
-        {
-            MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents.Clear();
         }
     }
 }

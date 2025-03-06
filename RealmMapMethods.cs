@@ -60,8 +60,7 @@ namespace RealmStudio
             return null;
         }
 
-        // TODO: add values indicating whether to include frames, boxes, grid, regions, windroses, map scale, etc.
-        // regions that are attached to a landform contour might be tricky to figure out; hopefully, scale and translation of path will work
+
         internal static RealmStudioMap CreateNewMapFromMap(RealmStudioMap currentMap,
             string newMapName,
             SKRect selectedMapArea,
@@ -324,29 +323,10 @@ namespace RealmStudio
                                 SKPath transformedPath = new(lfContour);
                                 transformedPath.Transform(SKMatrix.CreateScaleTranslation(scaleX, scaleY, deltaX, deltaY));
 
-                                Landform newLandform = new()
+                                Landform newLandform = new(lf)
                                 {
                                     ParentMap = newRealmMap,
                                     DrawPath = transformedPath,
-                                    CoastlineColor = lf.CoastlineColor,
-                                    CoastlineEffectDistance = lf.CoastlineEffectDistance,
-                                    CoastlineFillPaint = lf.CoastlineFillPaint,
-                                    CoastlineHatchBlendMode = lf.CoastlineHatchBlendMode,
-                                    CoastlineHatchOpacity = lf.CoastlineHatchOpacity,
-                                    CoastlineHatchScale = lf.CoastlineHatchScale,
-                                    CoastlinePaint = lf.CoastlinePaint,
-                                    CoastlineStyleName = lf.CoastlineStyleName,
-                                    DashShader = lf.DashShader,
-                                    LandformFillColor = lf.LandformFillColor,
-                                    LandformFillPaint = lf.LandformFillPaint,
-                                    LandformGradientPaint = lf.LandformGradientPaint,
-                                    LandformName = lf.LandformName,
-                                    LandformOutlineColor = lf.LandformOutlineColor,
-                                    LandformOutlineWidth = lf.LandformOutlineWidth,
-                                    LandformTexture = lf.LandformTexture,
-                                    LineHatchBitmapShader = lf.LineHatchBitmapShader,
-                                    PaintCoastlineGradient = lf.PaintCoastlineGradient,
-                                    ShorelineStyle = lf.ShorelineStyle,
                                 };
 
                                 SKImageInfo lfImageInfo = new(newRealmMap.MapWidth, newRealmMap.MapHeight);
@@ -520,16 +500,10 @@ namespace RealmStudio
                                 SKPath transformedWfPath = new(wfPath);
                                 transformedWfPath.Transform(SKMatrix.CreateScaleTranslation(scaleX, scaleY, deltaX, deltaY));
 
-                                WaterFeature newRealmWf = new()
+                                WaterFeature newRealmWf = new(wf)
                                 {
                                     WaterFeaturePath = transformedWfPath,
-                                    ShallowWaterPaint = wf.ShallowWaterPaint,
-                                    ShorelineEffectDistance = wf.ShorelineEffectDistance,
-                                    WaterFeatureName = wf.WaterFeatureName,
                                     ParentMap = newRealmMap,
-                                    WaterFeatureColor = wf.WaterFeatureColor,
-                                    WaterFeatureShorelineColor = wf.WaterFeatureShorelineColor,
-                                    WaterFeatureType = wf.WaterFeatureType,
                                 };
 
                                 SKImageInfo lfImageInfo = new(newRealmMap.MapWidth, newRealmMap.MapHeight);
@@ -550,17 +524,9 @@ namespace RealmStudio
                     {
                         if (selectedMapArea.Contains(mrp.RiverPoint) && r.RiverPath?.PointCount > 2)
                         {
-                            River newRealmRiver = new()
+                            River newRealmRiver = new(r)
                             {
-                                MapRiverName = r.MapRiverName,
                                 ParentMap = newRealmMap,
-                                RiverColor = r.RiverColor,
-                                RiverShorelineColor = r.RiverShorelineColor,
-                                RiverSourceFadeIn = r.RiverSourceFadeIn,
-                                RiverWidth = r.RiverWidth * scaleX,      // scale up?
-                                ShorelineEffectDistance = r.ShorelineEffectDistance,
-                                RiverBoundaryPath = r.RiverBoundaryPath,
-                                RiverPath = r.RiverPath,
                             };
 
                             SKPath transformedRiverPath = new(newRealmRiver.RiverPath);
@@ -666,7 +632,6 @@ namespace RealmStudio
                     Y = (int)((ms.Y * scaleY) + deltaY),
                     SymbolWidth = (int)(ms.SymbolWidth * scaleX),
                     SymbolHeight = (int)(ms.SymbolHeight * scaleY),
-                    SymbolPaint = ms.SymbolPaint,
                 };
 
                 Bitmap resizedPlacedBitmap = new(ms.PlacedBitmap.ToBitmap(), newSymbol.SymbolWidth, newSymbol.SymbolHeight);
@@ -722,17 +687,12 @@ namespace RealmStudio
                 {
                     if (mp.PathPoints.Count > 0)
                     {
-                        MapPath newPath = new()
+                        MapPath newPath = new(mp)
                         {
-                            DrawOverSymbols = mp.DrawOverSymbols,
-                            IsSelected = false,
-                            MapPathName = mp.MapPathName,
                             ParentMap = newRealmMap,
-                            PathColor = mp.PathColor,
                             PathWidth = mp.PathWidth * scaleX,
                             X = (int)((mp.X * scaleX) + deltaX),
                             Y = (int)((mp.Y * scaleY) + deltaY),
-                            PathType = mp.PathType,
                         };
 
                         foreach (MapPathPoint point in mp.PathPoints)
@@ -791,24 +751,13 @@ namespace RealmStudio
 
                 foreach (MapLabel ml in gatheredLabels)
                 {
-                    MapLabel newLabel = new()
+                    MapLabel newLabel = new(ml)
                     {
                         X = (int)((ml.X * scaleX) + deltaX),
                         Y = (int)((ml.Y * scaleY) + deltaY),
                         Height = (int)(ml.Height * scaleX),
                         Width = (int)(ml.Width * scaleY),
-                        LabelColor = ml.LabelColor,
-                        LabelFont = ml.LabelFont,
-                        LabelGlowColor = ml.LabelGlowColor,
-                        LabelGlowStrength = ml.LabelGlowStrength,
-                        LabelOutlineColor = ml.LabelOutlineColor,
                         LabelOutlineWidth = ml.LabelOutlineWidth * scaleX,  // scale
-                        LabelPaint = ml.LabelPaint?.Clone(),
-                        LabelPath = ml.LabelPath,
-                        LabelRotationDegrees = ml.LabelRotationDegrees,
-                        LabelSKFont = ml.LabelSKFont,
-                        LabelText = ml.LabelText,
-                        RenderComponent = ml.RenderComponent,
                     };
 
                     Font labelFont = new(newLabel.LabelFont.FontFamily, newLabel.LabelFont.Size * scaleY,
@@ -861,15 +810,13 @@ namespace RealmStudio
                     {
                         SKBitmap resizedBitmap = DrawingMethods.ResizeBitmap(box.BoxBitmap, new SKSizeI((int)(box.Width * scaleX), (int)(box.Height * scaleY)));
 
-                        PlacedMapBox newBox = new()
+                        PlacedMapBox newBox = new(box)
                         {
                             X = (int)((box.X * scaleX) + deltaX),
                             Y = (int)((box.Y * scaleY) + deltaY),
                             Width = (int)(box.Width * scaleX),
                             Height = (int)(box.Height * scaleY),
                             BoxBitmap = resizedBitmap.Copy(),
-                            BoxTint = box.BoxTint,
-                            BoxPaint = box.BoxPaint?.Clone(),
                             BoxCenterLeft = box.BoxCenterLeft * scaleX,
                             BoxCenterTop = box.BoxCenterTop * scaleY,
                             BoxCenterRight = box.BoxCenterRight * scaleX,
@@ -930,25 +877,13 @@ namespace RealmStudio
 
                 if (mapScale != null)
                 {
-                    MapScale newScale = new()
+                    MapScale newScale = new(mapScale)
                     {
-                        Width = (int)(mapScale.Width * scaleX),
-                        Height = (int)(mapScale.Height * scaleY),
-                        ScaleSegmentCount = mapScale.ScaleSegmentCount,
-                        ScaleLineWidth = mapScale.ScaleLineWidth,
-                        ScaleColor1 = mapScale.ScaleColor1,
-                        ScaleColor2 = mapScale.ScaleColor2,
-                        ScaleColor3 = mapScale.ScaleColor3,
-                        ScaleDistance = mapScale.ScaleDistance,
-                        ScaleDistanceUnit = mapScale.ScaleDistanceUnit,
-                        ScaleFontColor = mapScale.ScaleFontColor,
-                        ScaleOutlineWidth = mapScale.ScaleOutlineWidth,
-                        ScaleOutlineColor = mapScale.ScaleOutlineColor,
-                        ScaleFont = mapScale.ScaleFont,
-                        ScaleNumbersDisplayType = mapScale.ScaleNumbersDisplayType,
                         // initial position of the scale is near the bottom-left corner of the map
                         X = 100,
-                        Y = newRealmMap.MapHeight - 100
+                        Y = newRealmMap.MapHeight - 100,
+                        Width = (int)(mapScale.Width * scaleX),
+                        Height = (int)(mapScale.Height * scaleY),
                     };
 
                     newRealmScaleLayer.MapLayerComponents.Add(newScale);
@@ -971,17 +906,10 @@ namespace RealmStudio
 
                 if (mapGrid != null)
                 {
-                    MapGrid newGrid = new()
+                    MapGrid newGrid = new(mapGrid)
                     {
                         ParentMap = newRealmMap,
                         GridEnabled = true,
-                        GridColor = mapGrid.GridColor,
-                        GridLineWidth = mapGrid.GridLineWidth,
-                        GridSize = mapGrid.GridSize,
-                        GridType = mapGrid.GridType,
-                        Width = newRealmMap.MapWidth,
-                        Height = newRealmMap.MapHeight,
-                        GridLayerIndex = mapGrid.GridLayerIndex,
                     };
 
                     newGrid.GridPaint = new()
@@ -1009,15 +937,9 @@ namespace RealmStudio
                         {
                             if (selectedMapArea.Contains(mrp.RegionPoint))
                             {
-                                MapRegion newRegion = new()
+                                MapRegion newRegion = new(mr)
                                 {
                                     ParentMap = newRealmMap,
-                                    RegionBorderColor = mr.RegionBorderColor,
-                                    RegionBorderSmoothing = mr.RegionBorderSmoothing,
-                                    RegionBorderType = mr.RegionBorderType,
-                                    RegionBorderWidth = mr.RegionBorderWidth,
-                                    RegionInnerOpacity = mr.RegionInnerOpacity,
-                                    RegionName = mr.RegionName,
                                 };
 
                                 foreach (MapRegionPoint point in mr.MapRegionPoints)

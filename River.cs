@@ -73,9 +73,28 @@ namespace RealmStudio
         public SKPath? RiverBoundaryPath { get; set; }
         public SKPath? ShorelinePath { get; set; }
         public SKPath? Gradient1Path { get; set; }
-        //public SKPath? Gradient2Path { get; set; } = null;
-        //public SKPath? Gradient3Path { get; set; } = null;
         public SKPath? ShallowWaterPath { get; set; }
+
+        public River() { }
+
+        public River(River original)
+        {
+            X = original.X;
+            Y = original.Y;
+            Width = original.Width;
+            Height = original.Height;
+            MapRiverName = original.MapRiverName;
+            ParentMap = original.ParentMap;
+            RenderRiverTexture = original.RenderRiverTexture;
+            RiverColor = original.RiverColor;
+            RiverFillPaint = original.RiverFillPaint.Clone();
+            RiverShallowWaterPaint = original.RiverShallowWaterPaint.Clone();
+            RiverShorelineColor = original.RiverShorelineColor;
+            RiverShorelinePaint = original.RiverShorelinePaint.Clone();
+            RiverSourceFadeIn = original.RiverSourceFadeIn;
+            RiverWidth = original.RiverWidth;
+            ShorelineEffectDistance = original.ShorelineEffectDistance;
+        }
 
         public override void Render(SKCanvas canvas)
         {

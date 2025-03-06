@@ -47,7 +47,7 @@ namespace RealmStudio
             }
             else
             {
-                OverlayMethods.RemoveAllFrames(Map);
+                MapBuilder.GetMapLayerByIndex(Map, MapBuilder.FRAMELAYER).MapLayerComponents.Clear();
             }
         }
     }

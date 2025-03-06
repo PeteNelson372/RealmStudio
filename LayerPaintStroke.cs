@@ -41,14 +41,13 @@ namespace RealmStudio
         public SKColor StrokeColor { get; set; } = SKColor.Empty;
         public ColorPaintBrush PaintBrush { get; set; }
         public int BrushRadius { get; set; }
-
-        public SKShader StrokeShader = SKShader.CreateEmpty();
+        public SKShader StrokeShader { get; set; } = SKShader.CreateEmpty();
         public int MapLayerIdentifier { get; set; }
         public bool Erase { get; set; }
 
         public bool Rendered { get; set; }
 
-        public SKPaint ShaderPaint;
+        public SKPaint ShaderPaint { get; set; }
 
         public SKSurface? RenderSurface { get; set; }
 

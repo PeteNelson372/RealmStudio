@@ -175,4 +175,10 @@
   <data name="UncialAntiqua-Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\UncialAntiqua-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="IMFellDWPica-Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IMFellDWPica-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="IMFellEnglish-Italic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IMFellEnglish-Italic.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

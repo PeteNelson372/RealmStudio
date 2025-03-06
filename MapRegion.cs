@@ -54,6 +54,17 @@ namespace RealmStudio
 
         public MapRegion() { }
 
+        public MapRegion(MapRegion original)
+        {
+            ParentMap = original.ParentMap;
+            RegionBorderColor = original.RegionBorderColor;
+            RegionBorderSmoothing = original.RegionBorderSmoothing;
+            RegionBorderType = original.RegionBorderType;
+            RegionBorderWidth = original.RegionBorderWidth;
+            RegionInnerOpacity = original.RegionInnerOpacity;
+            RegionName = original.RegionName;
+        }
+
         public override void Render(SKCanvas? canvas)
         {
             if (ParentMap == null || canvas == null) return;

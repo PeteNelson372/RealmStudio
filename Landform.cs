@@ -186,6 +186,7 @@ namespace RealmStudio
         public SKShader? LineHatchBitmapShader { get; set; }
         public MapTexture? LandformTexture { get; set; }
         public Color LandformOutlineColor { get; set; } = Color.FromArgb(255, 62, 55, 40);
+        public Color LandformBackgroundColor { get; set; } = Color.White;
         public Color LandformFillColor { get; set; } = ColorTranslator.FromHtml("#AC964F");
         public int LandformOutlineWidth { get; set; } = 2;
         public GradientDirectionEnum ShorelineStyle { get; set; } = GradientDirectionEnum.None;
@@ -197,7 +198,7 @@ namespace RealmStudio
         public int CoastlineHatchScale { get; set; }
         public string? CoastlineHatchBlendMode { get; set; } = string.Empty;
         public bool PaintCoastlineGradient { get; set; } = true;
-
+        public bool FillWithTexture { get; set; } = true;
         public bool IsSelected { get; set; }
         public bool IsModified { get; set; } = true;
 
@@ -205,6 +206,38 @@ namespace RealmStudio
         public SKSurface? CoastlineRenderSurface { get; set; }
 
         public Landform() { }
+
+        public Landform(Landform original)
+        {
+            ParentMap = original.ParentMap;
+            DrawPath = new(original.DrawPath);
+            CoastlineColor = original.CoastlineColor;
+            CoastlineEffectDistance = original.CoastlineEffectDistance;
+            CoastlineFillPaint = original.CoastlineFillPaint.Clone();
+            CoastlineHatchBlendMode = original.CoastlineHatchBlendMode;
+            CoastlineHatchOpacity = original.CoastlineHatchOpacity;
+            CoastlineHatchScale = original.CoastlineHatchScale;
+            CoastlinePaint = original.CoastlinePaint.Clone();
+            CoastlineStyleName = original.CoastlineStyleName;
+            DashShader = original.DashShader;
+            LandformFillColor = original.LandformFillColor;
+            LandformFillPaint = original.LandformFillPaint.Clone();
+            LandformGradientPaint = original.LandformGradientPaint.Clone();
+            LandformName = original.LandformName;
+            LandformOutlineColor = original.LandformOutlineColor;
+            LandformOutlineWidth = original.LandformOutlineWidth;
+            FillWithTexture = original.FillWithTexture;
+
+            if (original.LandformTexture != null)
+            {
+                LandformTexture = new(original.LandformTexture.TextureName, original.LandformTexture.TexturePath);
+                LandformTexture.TextureBitmap = (Bitmap?)Bitmap.FromFile(LandformTexture.TexturePath);
+            }
+
+            LineHatchBitmapShader = original.LineHatchBitmapShader;
+            PaintCoastlineGradient = original.PaintCoastlineGradient;
+            ShorelineStyle = original.ShorelineStyle;
+        }
 
         #region NO-OP RENDER METHOD
         public override void Render(SKCanvas canvas)
@@ -874,6 +907,25 @@ namespace RealmStudio
                 LandformGuid = Guid.NewGuid();
             }
 
+            IEnumerable<XElement?> fillWithTextureElem = mapLandformDoc.Descendants().Select(x => x.Element(ns + "FillWithTexture"));
+            if (fillWithTextureElem != null && fillWithTextureElem.Any() && fillWithTextureElem.First() != null)
+            {
+                string? fillWithTexture = mapLandformDoc.Descendants().Select(x => x.Element(ns + "FillWithTexture").Value).FirstOrDefault();
+
+                if (bool.TryParse(fillWithTexture, out bool boolFill))
+                {
+                    FillWithTexture = boolFill;
+                }
+                else
+                {
+                    FillWithTexture = true;
+                }
+            }
+            else
+            {
+                FillWithTexture = true;
+            }
+
             string txName = string.Empty;
             string txPath = string.Empty;
 
@@ -930,16 +982,25 @@ namespace RealmStudio
                 }
             }
 
+            if (!FillWithTexture || LandformTexture == null || LandformTexture.TextureBitmap == null)
+            {
+                LandformFillPaint.Shader?.Dispose();
+                LandformFillPaint.Shader = null;
+
+                SKShader flpShader = SKShader.CreateColor(LandformBackgroundColor.ToSKColor());
+                LandformFillPaint.Shader = flpShader;
+            }
+
             IEnumerable<XElement> colorElem = mapLandformDoc.Descendants(ns + "LandformOutlineColor");
             if (colorElem != null && colorElem.Any() && colorElem.First() != null)
             {
                 string? color = mapLandformDoc.Descendants().Select(x => x.Element(ns + "LandformOutlineColor").Value).FirstOrDefault();
 
-                try
+                if (int.TryParse(color, out int colorArgb))
                 {
-                    LandformOutlineColor = ColorTranslator.FromHtml(color);
+                    LandformOutlineColor = Color.FromArgb(colorArgb);
                 }
-                catch
+                else
                 {
                     LandformOutlineColor = Color.FromArgb(255, 62, 55, 40);
                 }
@@ -970,6 +1031,27 @@ namespace RealmStudio
                 LandformOutlineWidth = 2;
             }
 
+            IEnumerable<XElement> backgroundColorElem = mapLandformDoc.Descendants(ns + "LandformBackgroundColor");
+            if (backgroundColorElem != null && backgroundColorElem.Any() && backgroundColorElem.First() != null)
+            {
+                string? color = mapLandformDoc.Descendants().Select(x => x.Element(ns + "LandformBackgroundColor").Value).FirstOrDefault();
+
+                if (int.TryParse(color, out int colorArgb))
+                {
+                    LandformBackgroundColor = Color.FromArgb(colorArgb);
+                }
+                else
+                {
+                    LandformBackgroundColor = Color.White;
+                }
+            }
+            else
+            {
+                LandformBackgroundColor = Color.White;
+            }
+
+            LandformFillColor = Color.FromArgb(LandformOutlineColor.A / 4, LandformOutlineColor);
+
             // shoreline style is not used now
             IEnumerable<XElement?> styleEnum = mapLandformDoc.Descendants().Select(x => x.Element(ns + "ShorelineStyle"));
             if (styleEnum != null && styleEnum.Any() && styleEnum.First() != null)
@@ -996,11 +1078,11 @@ namespace RealmStudio
             {
                 string? color = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineColor").Value).FirstOrDefault();
 
-                try
+                if (int.TryParse(color, out int colorArgb))
                 {
-                    CoastlineColor = ColorTranslator.FromHtml(color);
+                    CoastlineColor = Color.FromArgb(colorArgb);
                 }
-                catch
+                else
                 {
                     CoastlineColor = ColorTranslator.FromHtml("#BB9CC3B7");
                 }
@@ -1145,10 +1227,21 @@ namespace RealmStudio
                 writer.WriteEndElement();
             }
 
+            // fill with texture
+            writer.WriteStartElement("FillWithTexture");
+            writer.WriteValue(FillWithTexture);
+            writer.WriteEndElement();
+
             // landform outline color
-            XmlColor outlinecolor = new(LandformOutlineColor);
+            int outlinecolor = LandformOutlineColor.ToArgb();
             writer.WriteStartElement("LandformOutlineColor");
-            outlinecolor.WriteXml(writer);
+            writer.WriteValue(outlinecolor);
+            writer.WriteEndElement();
+
+            // landform background color
+            int backgroundcolor = LandformBackgroundColor.ToArgb();
+            writer.WriteStartElement("LandformBackgroundColor");
+            writer.WriteValue(backgroundcolor);
             writer.WriteEndElement();
 
             // landform outline width
@@ -1162,9 +1255,9 @@ namespace RealmStudio
             writer.WriteEndElement();
 
             // coastline color
-            XmlColor coastcolor = new(CoastlineColor);
+            int coastcolor = CoastlineColor.ToArgb();
             writer.WriteStartElement("CoastlineColor");
-            coastcolor.WriteXml(writer);
+            writer.WriteValue(coastcolor);
             writer.WriteEndElement();
 
             // coastline effect distance
