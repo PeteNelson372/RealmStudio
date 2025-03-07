@@ -325,23 +325,15 @@ namespace RealmStudio
             {
                 string? boxTint = mapBoxDoc.Descendants().Select(x => x.Element(ns + "BoxTint").Value).FirstOrDefault();
 
-                int argbValue = 0;
+                int argbValue = Color.White.ToArgb();
 
                 if (boxTint.StartsWith('#'))
                 {
                     argbValue = ColorTranslator.FromHtml(boxTint).ToArgb();
                 }
-
-                if (int.TryParse(boxTint, out int n))
+                else if (int.TryParse(boxTint, out int n))
                 {
-                    //if (n > 0)
-                    {
-                        argbValue = n;
-                    }
-                    //else
-                    //{
-                    //    argbValue = Color.FromArgb(126, 0, 0, 0).ToArgb();
-                    //}
+                    argbValue = n;
                 }
 
                 BoxTint = Color.FromArgb(argbValue);

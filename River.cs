@@ -209,10 +209,29 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> riverColorElem = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverColor"));
-            if (riverColorElem.First() != null)
+            if (riverColorElem != null && riverColorElem.Any() && riverColorElem.First() != null)
             {
-                string? riverColor = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverColor").Value).FirstOrDefault();
-                RiverColor = ColorTranslator.FromHtml(riverColor);
+                string? color = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverColor").Value).FirstOrDefault();
+
+                if (color.StartsWith('#'))
+                {
+                    RiverColor = ColorTranslator.FromHtml(color);
+                }
+                else
+                {
+                    if (int.TryParse(color, out int colorArgb))
+                    {
+                        RiverColor = Color.FromArgb(colorArgb);
+                    }
+                    else
+                    {
+                        RiverColor = ColorTranslator.FromHtml("#839690");
+                    }
+                }
+            }
+            else
+            {
+                RiverColor = ColorTranslator.FromHtml("#839690");
             }
 
             IEnumerable<XElement?> riverWidthElem = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverWidth"));
@@ -221,6 +240,7 @@ namespace RealmStudio
                 string? riverWidth = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverWidth").Value).FirstOrDefault();
                 RiverWidth = int.Parse(riverWidth);
             }
+
 
             IEnumerable<XElement?> riverSourceFadeInElem = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverSourceFadeIn"));
             if (riverSourceFadeInElem.First() != null)
@@ -245,10 +265,29 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> riverShorelineColorElem = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverShorelineColor"));
-            if (riverShorelineColorElem.First() != null)
+            if (riverShorelineColorElem != null && riverShorelineColorElem.Any() && riverShorelineColorElem.First() != null)
             {
-                string? riverShorelineColor = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverShorelineColor").Value).FirstOrDefault();
-                RiverShorelineColor = ColorTranslator.FromHtml(riverShorelineColor);
+                string? color = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverShorelineColor").Value).FirstOrDefault();
+
+                if (color.StartsWith('#'))
+                {
+                    RiverShorelineColor = ColorTranslator.FromHtml(color);
+                }
+                else
+                {
+                    if (int.TryParse(color, out int colorArgb))
+                    {
+                        RiverShorelineColor = Color.FromArgb(colorArgb);
+                    }
+                    else
+                    {
+                        RiverShorelineColor = Color.FromArgb(161, 144, 118);
+                    }
+                }
+            }
+            else
+            {
+                RiverShorelineColor = Color.FromArgb(161, 144, 118);
             }
 
             IEnumerable<XElement?> mapPointsElem = mapRiverDoc.Descendants().Select(x => x.Element(ns + "MapRiverPoints"));
@@ -296,9 +335,8 @@ namespace RealmStudio
             writer.WriteEndElement();
 
             // water feature color
-            XmlColor riverColor = new(RiverColor);
             writer.WriteStartElement("RiverColor");
-            riverColor.WriteXml(writer);
+            writer.WriteValue(RiverColor.ToArgb());
             writer.WriteEndElement();
 
             writer.WriteStartElement("RiverWidth");
@@ -313,9 +351,8 @@ namespace RealmStudio
             writer.WriteValue(RenderRiverTexture.ToString());
             writer.WriteEndElement();
 
-            XmlColor riverShorelineColor = new(RiverShorelineColor);
             writer.WriteStartElement("RiverShorelineColor");
-            riverShorelineColor.WriteXml(writer);
+            writer.WriteValue(RiverShorelineColor.ToArgb());
             writer.WriteEndElement();
 
             writer.WriteStartElement("MapRiverPoints");

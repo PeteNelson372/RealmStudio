@@ -298,24 +298,102 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement> scaleColor1Elem = mapScaleDoc.Descendants(ns + "ScaleColor1");
-            if (scaleColor1Elem.First() != null)
+            if (scaleColor1Elem != null && scaleColor1Elem.Any() && scaleColor1Elem.First() != null)
             {
                 string? scaleColor1 = mapScaleDoc.Descendants().Select(x => x.Element(ns + "ScaleColor1").Value).FirstOrDefault();
-                ScaleColor1 = ColorTranslator.FromHtml(scaleColor1);
+
+                int argbValue = 0;
+
+                if (!string.IsNullOrEmpty(scaleColor1))
+                {
+                    if (scaleColor1.StartsWith('#'))
+                    {
+                        argbValue = ColorTranslator.FromHtml(scaleColor1).ToArgb();
+                    }
+                    else if (int.TryParse(scaleColor1, out int n))
+                    {
+                        if (n > 0)
+                        {
+                            argbValue = n;
+                        }
+                        else
+                        {
+                            argbValue = Color.Black.ToArgb();
+                        }
+                    }
+
+                    ScaleColor1 = Color.FromArgb(argbValue);
+                }
+                else
+                {
+                    ScaleColor1 = Color.Black;
+                }
             }
 
             IEnumerable<XElement> scaleColor2Elem = mapScaleDoc.Descendants(ns + "ScaleColor2");
-            if (scaleColor2Elem.First() != null)
+            if (scaleColor2Elem != null && scaleColor2Elem.Any() && scaleColor2Elem.First() != null)
             {
                 string? scaleColor2 = mapScaleDoc.Descendants().Select(x => x.Element(ns + "ScaleColor2").Value).FirstOrDefault();
-                ScaleColor2 = ColorTranslator.FromHtml(scaleColor2);
+
+                int argbValue = 0;
+
+                if (!string.IsNullOrEmpty(scaleColor2))
+                {
+                    if (scaleColor2.StartsWith('#'))
+                    {
+                        argbValue = ColorTranslator.FromHtml(scaleColor2).ToArgb();
+                    }
+                    else if (int.TryParse(scaleColor2, out int n))
+                    {
+                        if (n > 0)
+                        {
+                            argbValue = n;
+                        }
+                        else
+                        {
+                            argbValue = Color.White.ToArgb();
+                        }
+                    }
+
+                    ScaleColor2 = Color.FromArgb(argbValue);
+                }
+                else
+                {
+                    ScaleColor2 = Color.White;
+                }
             }
 
             IEnumerable<XElement> scaleColor3Elem = mapScaleDoc.Descendants(ns + "ScaleColor3");
-            if (scaleColor3Elem.First() != null)
+            if (scaleColor3Elem != null && scaleColor3Elem.Any() && scaleColor3Elem.First() != null)
             {
                 string? scaleColor3 = mapScaleDoc.Descendants().Select(x => x.Element(ns + "ScaleColor3").Value).FirstOrDefault();
-                ScaleColor3 = ColorTranslator.FromHtml(scaleColor3);
+
+                int argbValue = 0;
+
+                if (!string.IsNullOrEmpty(scaleColor3))
+                {
+                    if (scaleColor3.StartsWith('#'))
+                    {
+                        argbValue = ColorTranslator.FromHtml(scaleColor3).ToArgb();
+                    }
+                    else if (int.TryParse(scaleColor3, out int n))
+                    {
+                        if (n > 0)
+                        {
+                            argbValue = n;
+                        }
+                        else
+                        {
+                            argbValue = Color.Black.ToArgb();
+                        }
+                    }
+
+                    ScaleColor3 = Color.FromArgb(argbValue);
+                }
+                else
+                {
+                    ScaleColor3 = Color.Black;
+                }
             }
 
             IEnumerable<XElement?> scaleDistanceElem = mapScaleDoc.Descendants().Select(x => x.Element(ns + "ScaleDistance"));
@@ -339,24 +417,91 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement> scaleFontColorElem = mapScaleDoc.Descendants(ns + "ScaleFontColor");
-            if (scaleFontColorElem.First() != null)
+            if (scaleFontColorElem != null && scaleFontColorElem.Any() && scaleFontColorElem.First() != null)
             {
                 string? scaleFontColor = mapScaleDoc.Descendants().Select(x => x.Element(ns + "ScaleFontColor").Value).FirstOrDefault();
-                ScaleFontColor = ColorTranslator.FromHtml(scaleFontColor);
+
+                int argbValue = 0;
+
+                if (!string.IsNullOrEmpty(scaleFontColor))
+                {
+                    if (scaleFontColor.StartsWith('#'))
+                    {
+                        argbValue = ColorTranslator.FromHtml(scaleFontColor).ToArgb();
+                    }
+                    else if (int.TryParse(scaleFontColor, out int n))
+                    {
+                        if (n > 0)
+                        {
+                            argbValue = n;
+                        }
+                        else
+                        {
+                            argbValue = Color.White.ToArgb();
+                        }
+                    }
+
+                    ScaleFontColor = Color.FromArgb(argbValue);
+                }
+                else
+                {
+                    ScaleFontColor = Color.White;
+                }
             }
 
             IEnumerable<XElement?> scaleOutlineWidthElem = mapScaleDoc.Descendants().Select(x => x.Element(ns + "ScaleOutlineWidth"));
-            if (scaleOutlineWidthElem.First() != null)
+            if (scaleOutlineWidthElem != null && scaleOutlineWidthElem.Any() && scaleOutlineWidthElem.First() != null)
             {
                 string? scaleOutlineWidth = mapScaleDoc.Descendants().Select(x => x.Element(ns + "ScaleOutlineWidth").Value).FirstOrDefault();
-                ScaleOutlineWidth = int.Parse(scaleOutlineWidth);
+
+                if (int.TryParse(scaleOutlineWidth, out int n))
+                {
+                    if (n > 0)
+                    {
+                        ScaleOutlineWidth = n;
+                    }
+                    else
+                    {
+                        ScaleOutlineWidth = 2;
+                    }
+                }
+                else
+                {
+                    ScaleOutlineWidth = 2;
+                }
             }
 
             IEnumerable<XElement> scaleOutlineColorElem = mapScaleDoc.Descendants(ns + "ScaleOutlineColor");
-            if (scaleOutlineColorElem.First() != null)
+            if (scaleOutlineColorElem != null && scaleOutlineColorElem.Any() && scaleOutlineColorElem.First() != null)
             {
                 string? scaleOutlineColor = mapScaleDoc.Descendants().Select(x => x.Element(ns + "ScaleOutlineColor").Value).FirstOrDefault();
-                ScaleOutlineColor = ColorTranslator.FromHtml(scaleOutlineColor);
+
+                int argbValue = 0;
+
+                if (!string.IsNullOrEmpty(scaleOutlineColor))
+                {
+                    if (scaleOutlineColor.StartsWith('#'))
+                    {
+                        argbValue = ColorTranslator.FromHtml(scaleOutlineColor).ToArgb();
+                    }
+                    else if (int.TryParse(scaleOutlineColor, out int n))
+                    {
+                        if (n > 0)
+                        {
+                            argbValue = n;
+                        }
+                        else
+                        {
+                            argbValue = Color.Black.ToArgb();
+                        }
+                    }
+
+                    ScaleOutlineColor = Color.FromArgb(argbValue);
+                }
+                else
+                {
+                    ScaleOutlineColor = Color.Black;
+                }
             }
 
 #pragma warning restore CS8601 // Possible null reference assignment.
@@ -383,19 +528,16 @@ namespace RealmStudio
             writer.WriteValue(ScaleLineWidth);
             writer.WriteEndElement();
 
-            XmlColor scaleColor1 = new(ScaleColor1);
             writer.WriteStartElement("ScaleColor1");
-            scaleColor1.WriteXml(writer);
+            writer.WriteValue(ScaleColor1.ToArgb());
             writer.WriteEndElement();
 
-            XmlColor scaleColor2 = new(ScaleColor2);
             writer.WriteStartElement("ScaleColor2");
-            scaleColor2.WriteXml(writer);
+            writer.WriteValue(ScaleColor2.ToArgb());
             writer.WriteEndElement();
 
-            XmlColor scaleColor3 = new(ScaleColor3);
             writer.WriteStartElement("ScaleColor3");
-            scaleColor3.WriteXml(writer);
+            writer.WriteValue(ScaleColor3.ToArgb());
             writer.WriteEndElement();
 
             writer.WriteStartElement("ScaleDistance");
@@ -422,18 +564,16 @@ namespace RealmStudio
             }
             writer.WriteEndElement();
 
-            XmlColor scaleFontColor = new(ScaleFontColor);
             writer.WriteStartElement("ScaleFontColor");
-            scaleFontColor.WriteXml(writer);
+            writer.WriteValue(ScaleFontColor.ToArgb());
             writer.WriteEndElement();
 
             writer.WriteStartElement("ScaleOutlineWidth");
             writer.WriteValue(ScaleOutlineWidth);
             writer.WriteEndElement();
 
-            XmlColor scaleOutlineColor = new(ScaleOutlineColor);
             writer.WriteStartElement("ScaleOutlineColor");
-            scaleOutlineColor.WriteXml(writer);
+            writer.WriteValue(ScaleOutlineColor.ToArgb());
             writer.WriteEndElement();
         }
     }

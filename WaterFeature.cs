@@ -259,17 +259,55 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> colorElemEnum = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureColor"));
-            if (colorElemEnum.First() != null)
+            if (colorElemEnum != null && colorElemEnum.Any() && colorElemEnum.First() != null)
             {
-                string? waterFeatureColor = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureColor").Value).FirstOrDefault();
-                WaterFeatureColor = ColorTranslator.FromHtml(waterFeatureColor);
+                string? color = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureColor").Value).FirstOrDefault();
+
+                if (color.StartsWith('#'))
+                {
+                    WaterFeatureColor = ColorTranslator.FromHtml(color);
+                }
+                else
+                {
+                    if (int.TryParse(color, out int colorArgb))
+                    {
+                        WaterFeatureColor = Color.FromArgb(colorArgb);
+                    }
+                    else
+                    {
+                        WaterFeatureColor = ColorTranslator.FromHtml("#658CBFC5");
+                    }
+                }
+            }
+            else
+            {
+                WaterFeatureColor = ColorTranslator.FromHtml("#658CBFC5");
             }
 
             IEnumerable<XElement?> shoreColorElemEnum = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureShorelineColor"));
-            if (shoreColorElemEnum.First() != null)
+            if (shoreColorElemEnum != null && shoreColorElemEnum.Any() && shoreColorElemEnum.First() != null)
             {
-                string? waterFeatureShorelineColor = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureShorelineColor").Value).FirstOrDefault();
-                WaterFeatureShorelineColor = ColorTranslator.FromHtml(waterFeatureShorelineColor);
+                string? color = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureShorelineColor").Value).FirstOrDefault();
+
+                if (color.StartsWith('#'))
+                {
+                    WaterFeatureShorelineColor = ColorTranslator.FromHtml(color);
+                }
+                else
+                {
+                    if (int.TryParse(color, out int colorArgb))
+                    {
+                        WaterFeatureShorelineColor = Color.FromArgb(colorArgb);
+                    }
+                    else
+                    {
+                        WaterFeatureShorelineColor = ColorTranslator.FromHtml("#A19076");
+                    }
+                }
+            }
+            else
+            {
+                WaterFeatureShorelineColor = ColorTranslator.FromHtml("#A19076");
             }
 
             IEnumerable<XElement?> pathElemEnum = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeaturePath"));
@@ -310,15 +348,13 @@ namespace RealmStudio
             writer.WriteEndElement();
 
             // water feature color
-            XmlColor waterfeaturecolor = new(WaterFeatureColor);
             writer.WriteStartElement("WaterFeatureColor");
-            waterfeaturecolor.WriteXml(writer);
+            writer.WriteValue(WaterFeatureColor.ToArgb());
             writer.WriteEndElement();
 
             // water feature shoreline color
-            XmlColor waterFeatureShorelineColor = new(WaterFeatureShorelineColor);
             writer.WriteStartElement("WaterFeatureShorelineColor");
-            waterfeaturecolor.WriteXml(writer);
+            writer.WriteValue(WaterFeatureShorelineColor.ToArgb());
             writer.WriteEndElement();
 
             // water feature path

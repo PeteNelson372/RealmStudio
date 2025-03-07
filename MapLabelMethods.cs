@@ -79,7 +79,7 @@ namespace RealmStudio
 
             SKFont skLabelFont = new(fontTypeface)
             {
-                Size = labelFont.Size * 1.33F
+                Size = labelFont.SizeInPoints * 1.333F
             };
 
             return skLabelFont;

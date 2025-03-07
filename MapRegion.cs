@@ -315,7 +315,34 @@ namespace RealmStudio
             if (regionBorderColorElem.First() != null)
             {
                 string? regionBorderColor = mapRegionDoc.Descendants().Select(x => x.Element(ns + "RegionBorderColor").Value).FirstOrDefault();
-                RegionBorderColor = Color.FromArgb(int.Parse(regionBorderColor));
+
+                int argbValue = 0;
+
+                if (!string.IsNullOrEmpty(regionBorderColor))
+                {
+                    if (regionBorderColor.StartsWith('#'))
+                    {
+                        argbValue = ColorTranslator.FromHtml(regionBorderColor).ToArgb();
+                    }
+
+                    if (int.TryParse(regionBorderColor, out int n))
+                    {
+                        if (n > 0)
+                        {
+                            argbValue = n;
+                        }
+                        else
+                        {
+                            argbValue = ColorTranslator.FromHtml("#A1D6CAAB").ToArgb();
+                        }
+                    }
+
+                    RegionBorderColor = Color.FromArgb(argbValue);
+                }
+                else
+                {
+                    RegionBorderColor = Color.Blue;
+                }
             }
 
             IEnumerable<XElement?> regionBorderWidthElem = mapRegionDoc.Descendants().Select(x => x.Element(ns + "RegionBorderWidth"));

@@ -121,7 +121,7 @@ namespace RealmStudio
 
         public override void Render(SKCanvas canvas)
         {
-            if (ParentMap == null || RenderSurface == null) return;
+            if (ParentMap == null || RenderSurface == null || !RenderComponent) return;
 
             if (Rendered && !Erase)
             {
@@ -264,9 +264,23 @@ namespace RealmStudio
             XAttribute? colorAttr = paintStrokeDoc.Root?.Attribute("StrokeColor");
             if (colorAttr != null)
             {
-                int argbColor = int.Parse(colorAttr.Value);
-                Color strokeColor = Color.FromArgb(argbColor);
-                StrokeColor = strokeColor.ToSKColor();
+                if (colorAttr.Value.StartsWith('#'))
+                {
+                    Color strokeColor = ColorTranslator.FromHtml(colorAttr.Value);
+                    StrokeColor = strokeColor.ToSKColor();
+                }
+                else
+                {
+                    if (int.TryParse(colorAttr.Value, out int colorArgb))
+                    {
+                        Color strokeColor = Color.FromArgb(colorArgb);
+                        StrokeColor = strokeColor.ToSKColor();
+                    }
+                    else
+                    {
+                        StrokeColor = SKColor.Empty;
+                    }
+                }
             }
 
             XAttribute? radiusAttr = paintStrokeDoc.Root?.Attribute("BrushRadius");

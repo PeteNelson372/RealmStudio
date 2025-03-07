@@ -996,13 +996,20 @@ namespace RealmStudio
             {
                 string? color = mapLandformDoc.Descendants().Select(x => x.Element(ns + "LandformOutlineColor").Value).FirstOrDefault();
 
-                if (int.TryParse(color, out int colorArgb))
+                if (color.StartsWith('#'))
                 {
-                    LandformOutlineColor = Color.FromArgb(colorArgb);
+                    LandformOutlineColor = ColorTranslator.FromHtml(color);
                 }
                 else
                 {
-                    LandformOutlineColor = Color.FromArgb(255, 62, 55, 40);
+                    if (int.TryParse(color, out int colorArgb))
+                    {
+                        LandformOutlineColor = Color.FromArgb(colorArgb);
+                    }
+                    else
+                    {
+                        LandformOutlineColor = Color.FromArgb(255, 62, 55, 40);
+                    }
                 }
             }
             else
@@ -1036,7 +1043,11 @@ namespace RealmStudio
             {
                 string? color = mapLandformDoc.Descendants().Select(x => x.Element(ns + "LandformBackgroundColor").Value).FirstOrDefault();
 
-                if (int.TryParse(color, out int colorArgb))
+                if (color.StartsWith('#'))
+                {
+                    LandformBackgroundColor = ColorTranslator.FromHtml(color);
+                }
+                else if (int.TryParse(color, out int colorArgb))
                 {
                     LandformBackgroundColor = Color.FromArgb(colorArgb);
                 }
@@ -1078,7 +1089,11 @@ namespace RealmStudio
             {
                 string? color = mapLandformDoc.Descendants().Select(x => x.Element(ns + "CoastlineColor").Value).FirstOrDefault();
 
-                if (int.TryParse(color, out int colorArgb))
+                if (color.StartsWith('#'))
+                {
+                    CoastlineColor = ColorTranslator.FromHtml(color);
+                }
+                else if (int.TryParse(color, out int colorArgb))
                 {
                     CoastlineColor = Color.FromArgb(colorArgb);
                 }

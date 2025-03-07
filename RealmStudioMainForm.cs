@@ -308,8 +308,6 @@ namespace RealmStudio
 
         private void AutosaveTimerEventHandler(object? sender, ElapsedEventArgs e)
         {
-            string currentmapFileName = CURRENT_MAP.MapPath;
-
             try
             {
                 if (AutosaveSwitch.Checked)
@@ -323,48 +321,80 @@ namespace RealmStudio
                             MapFileMethods.SaveMap(CURRENT_MAP);
                         }
 
-                        // realm autosave folder (location where map backups are saved during autosave)
-                        string autosaveDirectory = Settings.Default.AutosaveDirectory;
-
-                        if (string.IsNullOrEmpty(autosaveDirectory))
-                        {
-                            autosaveDirectory = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
-                        }
-
-                        string autosaveFilename = CURRENT_MAP.MapGuid.ToString();
-
-                        string saveTime = DateTime.Now.ToFileTimeUtc().ToString();
-
-                        autosaveFilename += "_" + saveTime + ".rsmapx";
-
-                        string autosaveFullPath = autosaveDirectory + Path.DirectorySeparatorChar + autosaveFilename;
-
-                        CURRENT_MAP.MapPath = autosaveFullPath;
-
-                        MapFileMethods.SaveMap(CURRENT_MAP);
-
-                        if (Settings.Default.PlaySoundOnSave)
-                        {
-                            UtilityMethods.PlaySaveSound();
-                            SetStatusText("A backup of the realm has been saved.");
-                        }
+                        SaveRealmBackup(CURRENT_MAP, false);
                     }
-
                 }
             }
             catch (Exception ex)
             {
-                if (ex.Message != "Prune backup failed")
+                Program.LOGGER.Error(ex);
+            }
+        }
+
+        private static void SaveRealmFileBackup(string filepath)
+        {
+            string autosaveDirectory = Settings.Default.AutosaveDirectory;
+
+            if (string.IsNullOrEmpty(autosaveDirectory))
+            {
+                autosaveDirectory = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
+            }
+
+            string fileNameNoExtension = Path.GetFileNameWithoutExtension(filepath);
+            string saveTime = DateTime.Now.ToFileTimeUtc().ToString();
+
+            string saveFilename = fileNameNoExtension + "_" + saveTime + ".rsmapx";
+            string autosaveFullPath = autosaveDirectory + Path.DirectorySeparatorChar + saveFilename;
+
+            File.Copy(filepath, autosaveFullPath, true);
+        }
+
+        private void SaveRealmBackup(RealmStudioMap map, bool useMapNameForBackup = false)
+        {
+            string currentmapFileName = map.MapPath;
+
+            try
+            {
+                // realm autosave folder (location where map backups are saved during autosave)
+                string autosaveDirectory = Settings.Default.AutosaveDirectory;
+
+                if (string.IsNullOrEmpty(autosaveDirectory))
                 {
-                    Program.LOGGER.Error(ex);
-                    MessageBox.Show("An error has occurred while saving a backup copy of the map.", "Map Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    autosaveDirectory = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
                 }
+
+                string autosaveFilename = map.MapGuid.ToString();
+
+                if (useMapNameForBackup)
+                {
+                    autosaveFilename = map.MapName;
+                }
+
+                string saveTime = DateTime.Now.ToFileTimeUtc().ToString();
+
+                autosaveFilename += "_" + saveTime + ".rsmapx";
+
+                string autosaveFullPath = autosaveDirectory + Path.DirectorySeparatorChar + autosaveFilename;
+
+                map.MapPath = autosaveFullPath;
+
+                MapFileMethods.SaveMap(map);
+
+                if (Settings.Default.PlaySoundOnSave)
+                {
+                    UtilityMethods.PlaySaveSound();
+                    SetStatusText("A backup of the realm has been saved.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.LOGGER.Error(ex);
+                MessageBox.Show("An error has occurred while saving a backup copy of the map.", "Map Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
             finally
             {
-                CURRENT_MAP.MapPath = currentmapFileName;
+                map.MapPath = currentmapFileName;
             }
-
         }
 
         private void RealmStudioMainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -3012,21 +3042,30 @@ namespace RealmStudio
 
                 try
                 {
-                    foreach (MapLayer ml in CURRENT_MAP.MapLayers)
-                    {
-                        ml.LayerSurface?.Dispose();
-                    }
+                    MapBuilder.DisposeMap(CURRENT_MAP);
+
+                    // make a backup of the map to be opened in case it fails on open
+                    SaveRealmFileBackup(mapFilePath);
 
                     CURRENT_MAP = MapFileMethods.OpenMap(mapFilePath);
                     SKImageInfo imageInfo = new(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight);
+
+                    if (CURRENT_MAP.MapLayers.Count < MapBuilder.MAP_LAYER_COUNT)
+                    {
+                        if (CURRENT_MAP.MapLayers.Count < MapBuilder.MAP_LAYER_COUNT)
+                        {
+                            MapBuilder.ConstructMissingLayersForMap(CURRENT_MAP, SKGLRenderControl.GRContext);
+                        }
+                    }
 
                     foreach (MapLayer ml in CURRENT_MAP.MapLayers)
                     {
                         ml.LayerSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, false, imageInfo);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Program.LOGGER.Error(ex);
                     throw;
                 }
 
@@ -3476,6 +3515,9 @@ namespace RealmStudio
                     if (vignetteLayer.MapLayerComponents[i] is MapVignette vignette)
                     {
                         vignette.ParentMap = CURRENT_MAP;
+                        vignette.Width = CURRENT_MAP.MapWidth;
+                        vignette.Height = CURRENT_MAP.MapHeight;
+                        vignette.VignetteRenderSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, false, lfImageInfo);
                     }
                 }
 
@@ -3980,7 +4022,7 @@ namespace RealmStudio
             // label
             FontConverter cvt = new();
             string? fontString = cvt.ConvertToString(SELECTED_LABEL_FONT);
-            theme.LabelFont = (fontString != null) ? fontString : string.Empty;
+            theme.LabelFont = fontString ?? string.Empty;
             theme.LabelColor = FontColorSelectButton.BackColor.ToArgb();
             theme.LabelOutlineColor = OutlineColorSelectButton.BackColor.ToArgb();
             theme.LabelOutlineWidth = OutlineWidthTrack.Value;
@@ -5982,11 +6024,22 @@ namespace RealmStudio
                     break;
                 case DrawingModeEnum.DrawArcLabelPath:
                     {
-                        SKRect r = new(PREVIOUS_CURSOR_POINT.X, PREVIOUS_CURSOR_POINT.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
+
                         CURRENT_MAP_LABEL_PATH.Dispose();
                         CURRENT_MAP_LABEL_PATH = new();
 
-                        CURRENT_MAP_LABEL_PATH.AddArc(r, 180, 180);
+                        if (zoomedScrolledPoint.Y > PREVIOUS_CURSOR_POINT.Y)
+                        {
+                            // start on the left and drag right and down to draw an arc downward (open part of the arc facing down)
+                            SKRect r = new(PREVIOUS_CURSOR_POINT.X, PREVIOUS_CURSOR_POINT.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
+                            CURRENT_MAP_LABEL_PATH.AddArc(r, 180, 180);
+                        }
+                        else
+                        {
+                            // start on the right and drag left and up to draw an arc upward (open part of the arc facing up)
+                            SKRect r = new(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, PREVIOUS_CURSOR_POINT.X, PREVIOUS_CURSOR_POINT.Y);
+                            CURRENT_MAP_LABEL_PATH.AddArc(r, 180, -180);
+                        }
 
                         MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
                         MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
@@ -10916,7 +10969,14 @@ namespace RealmStudio
 
                         label.LabelSKFont.MeasureText(label.LabelText, out SKRect bounds, label.LabelPaint);
 
-                        SKPoint zoomedScrolledPoint = new((tb.Left / DrawingZoom) + DrawingPoint.X, (tb.Top / DrawingZoom) + DrawingPoint.Y);
+                        float descent = labelFont.FontFamily.GetCellDescent(labelFont.Style);
+                        float descentPixel =
+                            labelFont.Size * descent / labelFont.FontFamily.GetEmHeight(FontStyle.Regular);
+
+                        float xDiff = (tb.Width - bounds.Width) / 2;
+                        float yDiff = ((tb.Height - bounds.Height) / 2) + descentPixel / 2;
+
+                        SKPoint zoomedScrolledPoint = new(((tb.Left + xDiff) / DrawingZoom) + DrawingPoint.X, ((tb.Top + yDiff) / DrawingZoom) + DrawingPoint.Y);
 
                         label.X = (int)zoomedScrolledPoint.X;
                         label.Y = (int)zoomedScrolledPoint.Y;

@@ -42,6 +42,9 @@ namespace RealmStudio
             {
                 if (landDrawingLayer.MapLayerComponents[i] is LayerPaintStroke l && l.StrokeId.ToString() == PaintStroke.StrokeId.ToString())
                 {
+                    l.RenderComponent = false;
+                    l.RenderSurface?.Dispose();
+                    l.RenderSurface = null;
                     landDrawingLayer.MapLayerComponents.RemoveAt(i);
                 }
             }

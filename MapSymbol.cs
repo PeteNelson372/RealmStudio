@@ -276,17 +276,64 @@ namespace RealmStudio
 
                 if (elemList != null && elemList.Count == 3)
                 {
-                    XElement colorELem = elemList[0];
-                    string colorString = colorELem.Value;
+                    XElement colorElem = elemList[0];
+                    string colorString = colorElem.Value;
+
+                    if (colorString.StartsWith('#'))
+                    {
+                        CustomSymbolColors[0] = ColorTranslator.FromHtml(colorString).ToSKColor();
+                    }
+                    else
+                    {
+                        if (int.TryParse(colorString, out int colorArgb))
+                        {
+                            CustomSymbolColors[0] = Color.FromArgb(colorArgb).ToSKColor();
+                        }
+                        else
+                        {
+                            CustomSymbolColors[0] = Color.FromArgb(255, 85, 44, 36).ToSKColor();
+                        }
+                    }
+
                     CustomSymbolColors[0] = Extensions.ToSKColor(ColorTranslator.FromHtml(colorString));
 
-                    colorELem = elemList[1];
-                    colorString = colorELem.Value;
-                    CustomSymbolColors[1] = Extensions.ToSKColor(ColorTranslator.FromHtml(colorString));
+                    colorElem = elemList[1];
+                    colorString = colorElem.Value;
 
-                    colorELem = elemList[2];
-                    colorString = colorELem.Value;
-                    CustomSymbolColors[2] = Extensions.ToSKColor(ColorTranslator.FromHtml(colorString));
+                    if (colorString.StartsWith('#'))
+                    {
+                        CustomSymbolColors[1] = ColorTranslator.FromHtml(colorString).ToSKColor();
+                    }
+                    else
+                    {
+                        if (int.TryParse(colorString, out int colorArgb))
+                        {
+                            CustomSymbolColors[1] = Color.FromArgb(colorArgb).ToSKColor();
+                        }
+                        else
+                        {
+                            CustomSymbolColors[1] = Color.FromArgb(255, 53, 45, 32).ToSKColor();
+                        }
+                    }
+
+                    colorElem = elemList[2];
+                    colorString = colorElem.Value;
+
+                    if (colorString.StartsWith('#'))
+                    {
+                        CustomSymbolColors[2] = ColorTranslator.FromHtml(colorString).ToSKColor();
+                    }
+                    else
+                    {
+                        if (int.TryParse(colorString, out int colorArgb))
+                        {
+                            CustomSymbolColors[2] = Color.FromArgb(colorArgb).ToSKColor();
+                        }
+                        else
+                        {
+                            CustomSymbolColors[2] = Color.FromArgb(161, 214, 202, 171).ToSKColor();
+                        }
+                    }
                 }
                 else
                 {
@@ -420,9 +467,8 @@ namespace RealmStudio
             writer.WriteStartElement("CustomColors");
             for (int i = 0; i < CustomSymbolColors.Length; i++)
             {
-                XmlColor color = new(Extensions.ToDrawingColor(CustomSymbolColors[i]));
                 writer.WriteStartElement("CustomColor" + i.ToString());
-                color.WriteXml(writer);
+                writer.WriteValue(CustomSymbolColors[i].ToDrawingColor().ToArgb());
                 writer.WriteEndElement();
             }
             writer.WriteEndElement();

@@ -206,6 +206,7 @@ namespace RealmStudio
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8601 // Possible null reference assignment
 
             XNamespace ns = "RealmStudio";
             string content = reader.ReadOuterXml();
@@ -255,10 +256,26 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement> frameTintElem = mapFrameDoc.Descendants(ns + "FrameTint");
-            if (frameTintElem.First() != null)
+            if (frameTintElem != null && frameTintElem.Any() && frameTintElem.First() != null)
             {
                 string? frameTint = mapFrameDoc.Descendants().Select(x => x.Element(ns + "FrameTint").Value).FirstOrDefault();
-                FrameTint = ColorTranslator.FromHtml(frameTint);
+
+                int argbValue = Color.White.ToArgb();
+
+                if (frameTint.StartsWith('#'))
+                {
+                    argbValue = ColorTranslator.FromHtml(frameTint).ToArgb();
+                }
+                else if (int.TryParse(frameTint, out int n))
+                {
+                    argbValue = n;
+                }
+
+                FrameTint = Color.FromArgb(argbValue);
+            }
+            else
+            {
+                FrameTint = Color.White;
             }
 
             IEnumerable<XElement?> frameScaleElem = mapFrameDoc.Descendants().Select(x => x.Element(ns + "FrameScale"));
@@ -297,6 +314,10 @@ namespace RealmStudio
             }
 
             OverlayMethods.CompletePlacedFrame(this);
+
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         public void WriteXml(XmlWriter writer)
@@ -319,9 +340,8 @@ namespace RealmStudio
             writer.WriteBase64(bitmapData, 0, bitmapData.Length);
             writer.WriteEndElement();
 
-            XmlColor frametint = new(FrameTint);
             writer.WriteStartElement("FrameTint");
-            frametint.WriteXml(writer);
+            writer.WriteValue(FrameTint.ToArgb());
             writer.WriteEndElement();
 
             writer.WriteStartElement("FrameScale");

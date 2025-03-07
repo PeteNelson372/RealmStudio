@@ -24,11 +24,14 @@
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Drawing2D;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    public class MapVignette : MapComponent
+    public class MapVignette : MapComponent, IXmlSerializable
     {
         [XmlIgnore]
         public RealmStudioMap ParentMap { get; set; } = new();
@@ -178,6 +181,76 @@ namespace RealmStudio
             canvas.DrawSurface(VignetteRenderSurface, new SKPoint(0, 0));
 
             IsModified = false;
+        }
+
+        public XmlSchema? GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8601 // Possible null reference assignment
+
+            XNamespace ns = "RealmStudio";
+            string content = reader.ReadOuterXml();
+            XDocument mapVignetteDoc = XDocument.Parse(content);
+
+            XAttribute? vignetteStrengthAttr = mapVignetteDoc.Root.Attribute("VignetteStrength");
+            if (vignetteStrengthAttr != null)
+            {
+                VignetteStrength = int.Parse(vignetteStrengthAttr.Value);
+            }
+            else
+            {
+                VignetteStrength = 148;
+            }
+
+            XAttribute? vignetteColorAttr = mapVignetteDoc.Root.Attribute("VignetteColor");
+            if (vignetteColorAttr != null)
+            {
+                string? vignetteColor = vignetteColorAttr.Value;
+
+                int argbValue = ColorTranslator.FromHtml("#C9977B").ToArgb();
+
+                if (vignetteColor.StartsWith('#'))
+                {
+                    argbValue = ColorTranslator.FromHtml(vignetteColor).ToArgb();
+                }
+                else if (int.TryParse(vignetteColor, out int n))
+                {
+                    argbValue = n;
+                }
+
+                VignetteColor = argbValue;
+            }
+            else
+            {
+                VignetteColor = ColorTranslator.FromHtml("#C9977B").ToArgb();
+            }
+
+            XAttribute? rectangleVignetteAttr = mapVignetteDoc.Root.Attribute("RectangleVignette");
+            if (rectangleVignetteAttr != null)
+            {
+                RectangleVignette = bool.Parse(rectangleVignetteAttr.Value);
+            }
+            else
+            {
+                RectangleVignette = false;
+            }
+
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttributeString("VignetteStrength", VignetteStrength.ToString());
+            writer.WriteAttributeString("VignetteColor", VignetteColor.ToString());
+            writer.WriteAttributeString("RectangleVignette", RectangleVignette.ToString());
         }
     }
 }
