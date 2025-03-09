@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoadingStatusForm));
             LoadingStatusFormOverlay = new ReaLTaiizor.Forms.DungeonForm();
             LoadingProgressBar = new ProgressBar();
             LoadingStatusFormOverlay.SuspendLayout();
@@ -53,7 +54,7 @@
             LoadingStatusFormOverlay.Sizable = false;
             LoadingStatusFormOverlay.Size = new Size(519, 95);
             LoadingStatusFormOverlay.SmartBounds = true;
-            LoadingStatusFormOverlay.StartPosition = FormStartPosition.CenterParent;
+            LoadingStatusFormOverlay.StartPosition = FormStartPosition.Manual;
             LoadingStatusFormOverlay.TabIndex = 0;
             LoadingStatusFormOverlay.Text = "Loading...";
             LoadingStatusFormOverlay.TitleColor = Color.FromArgb(223, 219, 210);
@@ -75,14 +76,13 @@
             ControlBox = false;
             Controls.Add(LoadingStatusFormOverlay);
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
             MinimumSize = new Size(261, 65);
             Name = "LoadingStatusForm";
-            ShowIcon = false;
-            ShowInTaskbar = false;
             SizeGripStyle = SizeGripStyle.Hide;
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.Manual;
             Text = "Loading...";
             TopMost = true;
             TransparencyKey = Color.Fuchsia;

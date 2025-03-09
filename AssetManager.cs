@@ -45,7 +45,7 @@ namespace RealmStudio
         public static List<MapTexture> PATH_TEXTURE_LIST { get; set; } = [];
         public static List<MapVector> PATH_VECTOR_LIST { get; set; } = [];
 
-        public static readonly List<ApplicationIcon> APPLICATION_ICON_LIST = [];
+        public static readonly List<RealmStudioApplicationIcon> APPLICATION_ICON_LIST = [];
 
         public static readonly List<MapBrush> BRUSH_LIST = [];
         public static readonly List<MapTheme> THEME_LIST = [];
@@ -71,6 +71,8 @@ namespace RealmStudio
 
         public static List<LandformShapingFunction> LANDFORM_SHAPING_FUNCTIONS = [];
 
+        public static string ASSET_DIRECTORY = string.Empty;
+
         public static string DefaultSymbolDirectory = Settings.Default.MapAssetDirectory + Path.DirectorySeparatorChar + "Symbols";
 
         private static string SymbolTagsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
@@ -85,19 +87,21 @@ namespace RealmStudio
 
         public static LoadingStatusForm LOADING_STATUS_FORM = new();
 
+        internal static void InitializeAssetDirectory()
+        {
+            ASSET_DIRECTORY = Settings.Default.MapAssetDirectory;
+
+            if (string.IsNullOrEmpty(ASSET_DIRECTORY))
+            {
+                ASSET_DIRECTORY = UtilityMethods.DEFAULT_ASSETS_FOLDER;
+            }
+        }
+
         internal static int LoadAllAssets()
         {
             int LoadPercentage = 0;
 
-            string assetDirectory = Settings.Default.MapAssetDirectory;
-
-            if (string.IsNullOrEmpty(assetDirectory))
-            {
-                assetDirectory = UtilityMethods.DEFAULT_ASSETS_FOLDER;
-            }
-
-
-            DefaultSymbolDirectory = assetDirectory + Path.DirectorySeparatorChar + "Symbols";
+            DefaultSymbolDirectory = ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols";
 
             SymbolTagsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
 
@@ -144,7 +148,7 @@ namespace RealmStudio
             // load assets
             int numAssets = 0;
 
-            var files = from file in Directory.EnumerateFiles(assetDirectory, "*.*", SearchOption.AllDirectories).Order()
+            var files = from file in Directory.EnumerateFiles(ASSET_DIRECTORY, "*.*", SearchOption.AllDirectories).Order()
                         where file.Contains(".png")
                             || file.Contains(".jpg")
                             || file.Contains(".ico")
@@ -245,7 +249,7 @@ namespace RealmStudio
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("\\Icons"))
                 {
-                    ApplicationIcon icon = new()
+                    RealmStudioApplicationIcon icon = new()
                     {
                         IconName = assetName,
                         IconPath = path,
@@ -548,7 +552,7 @@ namespace RealmStudio
         {
             MAP_FRAME_TEXTURES.Clear();
 
-            string frameAssetDirectory = Settings.Default.MapAssetDirectory + Path.DirectorySeparatorChar + "Frames" + Path.DirectorySeparatorChar;
+            string frameAssetDirectory = ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Frames" + Path.DirectorySeparatorChar;
 
             int numFrames = 0;
             var files = from file in Directory.EnumerateFiles(frameAssetDirectory, "*.*", SearchOption.AllDirectories).Order()
@@ -589,7 +593,8 @@ namespace RealmStudio
                             using (Stream stream = new FileStream(mapFrame.FrameBitmapPath, FileMode.Open))
                             {
                                 mapFrame.FrameBitmap = SKBitmap.Decode(stream);
-                            };
+                            }
+                            ;
 
                             if (rewriteFrameFile)
                             {
@@ -611,7 +616,7 @@ namespace RealmStudio
         {
             MAP_BOX_LIST.Clear();
 
-            string boxAssetDirectory = Settings.Default.MapAssetDirectory + Path.DirectorySeparatorChar + "Boxes" + Path.DirectorySeparatorChar;
+            string boxAssetDirectory = ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Boxes" + Path.DirectorySeparatorChar;
 
             int numBoxes = 0;
             var files = from file in Directory.EnumerateFiles(boxAssetDirectory, "*.*", SearchOption.AllDirectories).Order()

@@ -21,8 +21,6 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
-
 namespace RealmStudio
 {
     internal class MapToolMethods
@@ -214,10 +212,10 @@ namespace RealmStudio
 
         public static void LoadNameGeneratorFiles()
         {
-            string assetDirectory = Settings.Default.MapAssetDirectory;
-            string nameGeneratorsDirectory = assetDirectory + Path.DirectorySeparatorChar + "NameGenerators";
+            //string assetDirectory = Settings.Default.MapAssetDirectory;
+            string nameGeneratorsDirectory = AssetManager.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "NameGenerators";
 
-            var files = from file in Directory.EnumerateFiles(assetDirectory, "*.*", SearchOption.AllDirectories).Order()
+            var files = from file in Directory.EnumerateFiles(AssetManager.ASSET_DIRECTORY, "*.*", SearchOption.AllDirectories).Order()
                         where file.Contains(".txt")
                             || file.Contains(".csv")
                         select new
@@ -344,10 +342,10 @@ namespace RealmStudio
 
         internal static void LoadShapingFunctions()
         {
-            string assetDirectory = Settings.Default.MapAssetDirectory;
-            string nameGeneratorsDirectory = assetDirectory + Path.DirectorySeparatorChar + "ShapingFunctions";
+            //string assetDirectory = Settings.Default.MapAssetDirectory;
+            string nameGeneratorsDirectory = AssetManager.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "ShapingFunctions";
 
-            var files = from file in Directory.EnumerateFiles(assetDirectory, "*.*", SearchOption.AllDirectories).Order()
+            var files = from file in Directory.EnumerateFiles(AssetManager.ASSET_DIRECTORY, "*.*", SearchOption.AllDirectories).Order()
                         where file.Contains(".bmp")
                         select new
                         {

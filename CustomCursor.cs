@@ -29,30 +29,32 @@ namespace RealmStudio
 
     public struct IconInfo
     {
-        public bool fIcon;
-        public int xHotspot;
-        public int yHotspot;
-        public IntPtr hbmMask;
-        public IntPtr hbmColor;
+        public bool FIcon { get; set; }
+        public int XHotspot { get; set; }
+        public int YHotspot { get; set; }
+        public IntPtr HbmMask { get; set; }
+        public IntPtr HbmColor { get; set; }
     }
 
     internal class CustomCursor
     {
+#pragma warning disable SYSLIB1054
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetIconInfo(IntPtr hIcon, ref IconInfo pIconInfo);
 
         [DllImport("user32.dll")]
         public static extern IntPtr CreateIconIndirect(ref IconInfo icon);
+#pragma warning restore SYSLIB1054
 
         public static Cursor CreateCursor(Bitmap bmp, int xHotSpot, int yHotSpot)
         {
             IntPtr ptr = bmp.GetHicon();
             IconInfo tmp = new();
             GetIconInfo(ptr, ref tmp);
-            tmp.xHotspot = xHotSpot;
-            tmp.yHotspot = yHotSpot;
-            tmp.fIcon = false;
+            tmp.XHotspot = xHotSpot;
+            tmp.YHotspot = yHotSpot;
+            tmp.FIcon = false;
             ptr = CreateIconIndirect(ref tmp);
             return new Cursor(ptr);
         }

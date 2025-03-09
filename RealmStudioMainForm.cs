@@ -123,7 +123,7 @@ namespace RealmStudio
         private static bool SYMBOL_SCALE_LOCKED;
         private static bool CREATING_LABEL;
 
-        private readonly AppSplashScreen SPLASH_SCREEN;
+        private readonly AppSplashScreen SPLASH_SCREEN = new();
 
         private static string MapCommandLinePath = string.Empty;
 
@@ -135,6 +135,8 @@ namespace RealmStudio
         *******************************************************************************************************/
         public RealmStudioMainForm(string[] args)
         {
+            AssetManager.InitializeAssetDirectory();
+
             InitializeComponent();
 
             if (args.Length > 0)
@@ -150,13 +152,11 @@ namespace RealmStudio
             SKGLRenderControl.Hide();
             SKGLRenderControl.MouseWheel += SKGLRenderControl_MouseWheel;
 
-            // show and hide the loading status form;
-            // without this the loading status form is not displayed
-            // in the center of the application form
-            AssetManager.LOADING_STATUS_FORM.Show(this);
-            AssetManager.LOADING_STATUS_FORM.Hide();
+            // make sure the loading status form displays at the center of the main window
+            AssetManager.LOADING_STATUS_FORM.Top = Top + (Height / 2) - (AssetManager.LOADING_STATUS_FORM.Height / 2);
+            AssetManager.LOADING_STATUS_FORM.Left = Left + (Width / 2) - (AssetManager.LOADING_STATUS_FORM.Width / 2);
 
-            string assetDirectory = Settings.Default.MapAssetDirectory;
+            string assetDirectory = AssetManager.ASSET_DIRECTORY;
 
             if (string.IsNullOrEmpty(assetDirectory))
             {
@@ -165,24 +165,6 @@ namespace RealmStudio
 
             Settings.Default.Save();
 
-            SPLASH_SCREEN = new AppSplashScreen();
-
-            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-
-            if (version != null)
-            {
-                SPLASH_SCREEN.VersionLabel.Text = string.Concat(RELEASE_STATE + " Version ", version);
-            }
-            else
-            {
-                SPLASH_SCREEN.VersionLabel.Text = RELEASE_STATE + " Version Unknown";
-            }
-
-            SPLASH_SCREEN.Show(this);
-            SPLASH_SCREEN.Refresh();
-
-            // display the splash screen for 6 seconds
-            Thread.Sleep(6000);
         }
 
         #endregion
@@ -203,13 +185,25 @@ namespace RealmStudio
             OverlayToolPanel.Visible = false;
             RegionToolPanel.Visible = false;
             DrawingToolPanel.Visible = false;
+
+            LogoPictureBox.Hide();
+
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+
+            if (version != null)
+            {
+                SPLASH_SCREEN.VersionLabel.Text = string.Concat(RELEASE_STATE + " Version ", version);
+            }
+            else
+            {
+                SPLASH_SCREEN.VersionLabel.Text = RELEASE_STATE + " Version Unknown";
+            }
+
+            SPLASH_SCREEN.ShowDialog(this);
         }
 
         private void RealmStudioMainForm_Shown(object sender, EventArgs e)
         {
-            // hide and dispose the splash screen
-            SPLASH_SCREEN.Hide();
-            SPLASH_SCREEN.Dispose();
 
             MapBuilder.DisposeMap(CURRENT_MAP);
 
@@ -217,93 +211,58 @@ namespace RealmStudio
             SKGLRenderControl.Show();
             SKGLRenderControl.Select();
 
+            Cursor = Cursors.WaitCursor;
+
+            LogoPictureBox.Show();
+
+            Refresh();
+
+            SPLASH_SCREEN.Close();
+
+            AssetManager.LOADING_STATUS_FORM.Show(this);
+
+            int assetCount = AssetManager.LoadAllAssets();
+
+            AssetManager.LOADING_STATUS_FORM.Hide();
+
+            LogoPictureBox.Hide();
+
             if (!string.IsNullOrEmpty(MapCommandLinePath))
             {
-                Cursor = Cursors.WaitCursor;
-
-                Refresh();
-
-                AssetManager.LOADING_STATUS_FORM.Show(this);
-
-                int assetCount = AssetManager.LoadAllAssets();
-
-                AssetManager.LOADING_STATUS_FORM.Hide();
-
-                LogoPictureBox.Hide();
-
-                try
-                {
-                    OpenMap(MapCommandLinePath);
-
-                    SetDrawingModeLabel();
-
-                    PopulateControlsWithAssets(assetCount);
-                    PopulateFontPanelUI();
-                    LoadNameGeneratorConfigurationDialog();
-
-                    if (AssetManager.CURRENT_THEME != null)
-                    {
-                        ThemeFilter themeFilter = new();
-                        ApplyTheme(AssetManager.CURRENT_THEME, themeFilter);
-                    }
-
-                    UpdateMapNameAndSize();
-
-                    StartAutosaveTimer();
-                    StartLocationUpdateTimer();
-                }
-                catch (Exception ex)
-                {
-                    Program.LOGGER.Error(ex);
-                    MessageBox.Show("An error has occurred while opening the map.", "Map Open Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-
-                }
+                OpenMap(MapCommandLinePath);
             }
             else
             {
-                Refresh();
-
-                AssetManager.LOADING_STATUS_FORM.Show(this);
-
-                int assetCount = AssetManager.LoadAllAssets();
-
-                AssetManager.LOADING_STATUS_FORM.Hide();
-
-                LogoPictureBox.Hide();
-
                 // this creates the CURRENT_MAP
                 DialogResult result = OpenRealmConfigurationDialog();
 
-                if (result == DialogResult.OK)
-                {
-                    Cursor = Cursors.WaitCursor;
-
-                    SetDrawingModeLabel();
-                    PopulateControlsWithAssets(assetCount);
-                    PopulateFontPanelUI();
-                    LoadNameGeneratorConfigurationDialog();
-
-                    if (AssetManager.CURRENT_THEME != null)
-                    {
-                        ThemeFilter themeFilter = new();
-                        ApplyTheme(AssetManager.CURRENT_THEME, themeFilter);
-                    }
-
-                    Activate();
-
-                    StartAutosaveTimer();
-
-                    StartLocationUpdateTimer();
-                }
-                else
+                if (result != DialogResult.OK)
                 {
                     Application.Exit();
                 }
             }
 
+            SetDrawingModeLabel();
+            PopulateControlsWithAssets(assetCount);
+            PopulateFontPanelUI();
+            LoadNameGeneratorConfigurationDialog();
+
+            if (AssetManager.CURRENT_THEME != null)
+            {
+                ThemeFilter themeFilter = new();
+                ApplyTheme(AssetManager.CURRENT_THEME, themeFilter);
+            }
+
+            Activate();
+
+            StartAutosaveTimer();
+
+            StartLocationUpdateTimer();
+
             SKGLRenderControl.Invalidate();
 
             Cursor = Cursors.Default;
+
         }
 
         private void AutosaveTimerEventHandler(object? sender, ElapsedEventArgs e)
@@ -510,7 +469,10 @@ namespace RealmStudio
 
         private void MainTab_KeyDown(object sender, KeyEventArgs e)
         {
-            e.SuppressKeyPress = true;
+            // why was this set to true?
+            // setting e.SuppressKeyPress prevents controls (like trackbars)
+            // from responding to key presses
+            //e.SuppressKeyPress = true;
         }
 
         private void AreaSelectButton_Click(object sender, EventArgs e)
@@ -2249,6 +2211,10 @@ namespace RealmStudio
         private DialogResult OpenRealmConfigurationDialog()
         {
             RealmConfiguration rcd = new();
+
+            rcd.Top = Top + (Height / 2) - (rcd.Height / 2);
+            rcd.Left = Left + (Width / 2) - (rcd.Width / 2);
+
             DialogResult result = rcd.ShowDialog();
 
             if (result == DialogResult.OK)
@@ -3701,20 +3667,21 @@ namespace RealmStudio
                 }
             }
 
+
             int fontIndex = 0;
 
             fontIndex = FontFamilyCombo.Items.IndexOf(FONT_PANEL_SELECTED_FONT.SelectedFont);
 
             if (FontFamilyCombo.Items != null && fontIndex < 0)
             {
-                // find by name
+                // find by family name
                 for (int i = 0; i < FontFamilyCombo.Items?.Count; i++)
                 {
                     Font? f = FontFamilyCombo.Items[i] as Font;
 
-                    string? fontName = f?.Name;
+                    string? fontFamilyName = f?.FontFamily.Name;
 
-                    if (!string.IsNullOrEmpty(fontName) && fontName == FONT_PANEL_SELECTED_FONT.SelectedFont.Name)
+                    if (!string.IsNullOrEmpty(fontFamilyName) && fontFamilyName == FONT_PANEL_SELECTED_FONT.SelectedFont.FontFamily.Name)
                     {
                         fontIndex = i;
                         break;
@@ -3794,6 +3761,7 @@ namespace RealmStudio
 
                     //Debug.WriteLine("FAMILY TYPE: " + familyType);
 
+                    // Marlett is a special case of a font family that does not render as text, but its PanoseFontFamily indicates it does
                     if (familyType == PanoseFontFamilyTypes.PanFamilyDecorative
                         || familyType == PanoseFontFamilyTypes.PanFamilyPictorial
                         || familyType == PanoseFontFamilyTypes.PanNoFit
@@ -3912,7 +3880,7 @@ namespace RealmStudio
 
                             Color labelColor = FontColorSelectButton.BackColor;
                             Color outlineColor = OutlineColorSelectButton.BackColor;
-                            float outlineWidth = OutlineWidthTrack.Value / 100F;
+                            float outlineWidth = OutlineWidthTrack.Value / 10F;
                             Color glowColor = GlowColorSelectButton.BackColor;
                             int glowStrength = GlowStrengthTrack.Value;
 
@@ -4277,7 +4245,6 @@ namespace RealmStudio
                     CoastlineEffectDistanceTrack.Value = theme.LandformCoastlineEffectDistance ?? 16;
                     CoastlineEffectDistanceTrack.Refresh();
 
-
                     if (theme.LandformCoastlineStyle != null)
                     {
                         for (int i = 0; i < CoastlineStyleList.Items.Count; i++)
@@ -4553,10 +4520,59 @@ namespace RealmStudio
 
                 if (themeFilter.ApplyLabelSettings)
                 {
+
                     if (!string.IsNullOrEmpty(theme.LabelFont))
                     {
+                        Font? themeFont = new("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
+
                         FontConverter cvt = new();
-                        Font? themeFont = (Font?)cvt.ConvertFromString(theme.LabelFont);
+                        themeFont = (Font?)cvt.ConvertFromString(theme.LabelFont);
+
+                        if (themeFont != null && !theme.LabelFont.Contains(themeFont.FontFamily.Name))
+                        {
+                            themeFont = null;
+                        }
+
+                        if (themeFont == null)
+                        {
+                            string[] fontParts = theme.LabelFont.Split(',');
+
+                            if (fontParts.Length == 2)
+                            {
+                                string ff = fontParts[0];
+                                string fs = fontParts[1];
+
+                                // remove any non-numeric characters from the font size string (but allow . and -)
+                                fs = string.Join(",", new string(
+                                    [.. fs.Where(c => char.IsBetween(c, '0', '9') || c == '.' || c == '-' || char.IsWhiteSpace(c))]).Split((char[]?)null,
+                                    StringSplitOptions.RemoveEmptyEntries));
+
+                                bool success = float.TryParse(fs, out float fontsize);
+
+                                if (!success)
+                                {
+                                    fontsize = 12.0F;
+                                }
+
+                                try
+                                {
+                                    FontFamily family = new(ff);
+                                    themeFont = new Font(family, fontsize, FontStyle.Regular, GraphicsUnit.Point);
+                                }
+                                catch
+                                {
+                                    // couldn't create the font, so try to find it in the list of embedded fonts
+                                    for (int i = 0; i < EMBEDDED_FONTS.Families.Length; i++)
+                                    {
+                                        if (EMBEDDED_FONTS.Families[i].Name == ff)
+                                        {
+                                            themeFont = new Font(EMBEDDED_FONTS.Families[i], fontsize, FontStyle.Regular, GraphicsUnit.Point);
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
 
                         if (themeFont != null)
                         {
@@ -10911,7 +10927,7 @@ namespace RealmStudio
                 Font labelFont = tb.Font;
                 Color labelColor = FontColorSelectButton.BackColor;
                 Color outlineColor = OutlineColorSelectButton.BackColor;
-                float outlineWidth = OutlineWidthTrack.Value / 100F;
+                float outlineWidth = OutlineWidthTrack.Value / 10F;
 
                 Color glowColor = GlowColorSelectButton.BackColor;
                 int glowStrength = GlowStrengthTrack.Value;
@@ -10973,6 +10989,7 @@ namespace RealmStudio
                         float descentPixel =
                             labelFont.Size * descent / labelFont.FontFamily.GetEmHeight(FontStyle.Regular);
 
+                        // TODO: drawing zoom has to be taken into account?
                         float xDiff = (tb.Width - bounds.Width) / 2;
                         float yDiff = ((tb.Height - bounds.Height) / 2) + descentPixel / 2;
 
@@ -11114,7 +11131,7 @@ namespace RealmStudio
             {
                 Color labelColor = FontColorSelectButton.BackColor;
                 Color outlineColor = OutlineColorSelectButton.BackColor;
-                float outlineWidth = OutlineWidthTrack.Value / 100F;
+                float outlineWidth = OutlineWidthTrack.Value / 10F;
                 Color glowColor = GlowColorSelectButton.BackColor;
                 int glowStrength = GlowStrengthTrack.Value;
 
@@ -11204,7 +11221,7 @@ namespace RealmStudio
             OutlineColorSelectButton.BackColor = Color.FromArgb(preset.LabelOutlineColor);
             OutlineColorSelectButton.Refresh();
 
-            OutlineWidthTrack.Value = (int)(preset.LabelOutlineWidth * 100F);
+            OutlineWidthTrack.Value = (int)(preset.LabelOutlineWidth * 10F);
             OutlineWidthTrack.Refresh();
 
             GlowColorSelectButton.BackColor = Color.FromArgb(preset.LabelGlowColor);
@@ -11334,7 +11351,10 @@ namespace RealmStudio
                     LabelPreset preset = new();
 
                     FontConverter cvt = new();
-                    string? fontString = cvt.ConvertToString(SELECTED_LABEL_FONT);
+
+                    Font f = new(SELECTED_LABEL_FONT.FontFamily, SELECTED_LABEL_FONT.Size * 0.75F, SELECTED_LABEL_FONT.Style, GraphicsUnit.Point);
+
+                    string? fontString = cvt.ConvertToString(f);
 
                     if (!string.IsNullOrEmpty(fontString))
                     {
@@ -11351,7 +11371,7 @@ namespace RealmStudio
                         preset.LabelFontString = fontString;
                         preset.LabelColor = FontColorSelectButton.BackColor.ToArgb();
                         preset.LabelOutlineColor = OutlineColorSelectButton.BackColor.ToArgb();
-                        preset.LabelOutlineWidth = OutlineWidthTrack.Value / 100F;
+                        preset.LabelOutlineWidth = OutlineWidthTrack.Value / 10F;
                         preset.LabelGlowColor = GlowColorSelectButton.BackColor.ToArgb();
                         preset.LabelGlowStrength = GlowStrengthTrack.Value;
 
@@ -11463,6 +11483,8 @@ namespace RealmStudio
 
         private void OutlineWidthTrack_ValueChanged(object sender, EventArgs e)
         {
+            TOOLTIP.Show((OutlineWidthTrack.Value / 10.0F).ToString(), LabelOutlineGroup, new Point(OutlineWidthTrack.Right - 30, OutlineWidthTrack.Top - 20), 2000);
+
             UpdateSelectedLabelOnUIChange();
         }
 
@@ -11481,6 +11503,8 @@ namespace RealmStudio
 
         private void GlowWidthTrack_ValueChanged(object sender, EventArgs e)
         {
+            TOOLTIP.Show(GlowStrengthTrack.Value.ToString(), LabelGlowGroup, new Point(GlowStrengthTrack.Right - 30, GlowStrengthTrack.Top - 20), 2000);
+
             UpdateSelectedLabelOnUIChange();
         }
 
@@ -12545,7 +12569,6 @@ namespace RealmStudio
         }
 
         #endregion
-
 
     }
 }

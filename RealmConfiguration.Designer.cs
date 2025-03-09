@@ -114,7 +114,7 @@
             RealmConfigDialog.Sizable = true;
             RealmConfigDialog.Size = new Size(601, 557);
             RealmConfigDialog.SmartBounds = true;
-            RealmConfigDialog.StartPosition = FormStartPosition.CenterParent;
+            RealmConfigDialog.StartPosition = FormStartPosition.Manual;
             RealmConfigDialog.TabIndex = 0;
             RealmConfigDialog.Text = "Realm Configuration";
             RealmConfigDialog.TitleColor = Color.FromArgb(223, 219, 210);
@@ -718,13 +718,13 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(601, 557);
-            ControlBox = false;
             Controls.Add(RealmConfigDialog);
             FormBorderStyle = FormBorderStyle.None;
             MinimumSize = new Size(261, 65);
             Name = "RealmConfiguration";
+            ShowInTaskbar = false;
             SizeGripStyle = SizeGripStyle.Hide;
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.Manual;
             Text = "Realm Configuration";
             TopMost = true;
             TransparencyKey = Color.Fuchsia;

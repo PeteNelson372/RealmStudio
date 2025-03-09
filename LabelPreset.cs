@@ -47,6 +47,6 @@ namespace RealmStudio
         [XmlElement]
         public int LabelGlowStrength { get; set; } = 0;
         [XmlElement]
-        public string LabelFontString = string.Empty;
+        public string LabelFontString { get; set; } = string.Empty;
     }
 }

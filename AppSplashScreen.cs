@@ -21,14 +21,45 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using System.Timers;
+
 namespace RealmStudio
 {
     public partial class AppSplashScreen : Form
     {
+        private static System.Timers.Timer? SplashTimer;
+
         public AppSplashScreen()
         {
             InitializeComponent();
             VersionLabel.BringToFront();
+
+            SplashTimer = new System.Timers.Timer();
+
+            int splashMillis = 6000;
+
+            // start the autosave timer
+            SplashTimer = new System.Timers.Timer
+            {
+                Interval = splashMillis,
+                AutoReset = true,
+                SynchronizingObject = this,
+            };
+
+            SplashTimer.Elapsed += new ElapsedEventHandler(SplashTimerEventHandler);
+            SplashTimer.Start();
+        }
+
+        private void SplashTimerEventHandler(object? sender, ElapsedEventArgs e)
+        {
+            SplashTimer?.Stop();
+            Hide();
+        }
+
+        private void AppSplashScreen_Click(object sender, EventArgs e)
+        {
+            SplashTimer?.Stop();
+            Hide();
         }
     }
 }

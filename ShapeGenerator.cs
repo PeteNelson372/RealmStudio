@@ -336,7 +336,7 @@ namespace RealmStudio
 
                 if (selectedShapingFunction.ShapingBitmap != null)
                 {
-                    SKBitmap resizedShapingBitmap = selectedShapingFunction.ShapingBitmap.Copy().Resize(new SKSizeI(width, height), SKFilterQuality.High);
+                    SKBitmap resizedShapingBitmap = selectedShapingFunction.ShapingBitmap.Copy().Resize(new SKSizeI(width, height), SKSamplingOptions.Default);
 
                     if (flipVertical)
                     {

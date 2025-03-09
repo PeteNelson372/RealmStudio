@@ -6,22 +6,28 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>
+    <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.66.16747</AssemblyVersion>
-    <FileVersion>1.2025.66.16747</FileVersion>
-    <Version>1.2025.0-alpha-806</Version>
+    <AssemblyVersion>1.2025.68.8169</AssemblyVersion>
+    <FileVersion>1.2025.68.8169</FileVersion>
+    <Version>1.2025.0-alpha-41</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
-    <Copyright>Copyright 2025. Peter R. Nelson</Copyright>
-    <ApplicationIcon>realm_studio_icon_1024x1024_g3u_icon.ico</ApplicationIcon>
+    <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <PackageIcon>Realm Studio Icon 128x128.png</PackageIcon>
     <SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <AnalysisLevel>latest-recommended</AnalysisLevel>  
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+    <PackageId />
+    <Authors />
+    <Company />
+    <Product />
+    <PackageOutputPath />
+    <Title>Realm Studio</Title>
+    <PackageIcon>Realm Studio Icon 128x128.png</PackageIcon> 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -56,39 +62,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ConcaveHull.cs" />
+    <EmbeddedResource Include="Resources\realm_studio_icon_1024x1024_g3u_icon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Resources\Aladin-Regular.ttf" />
-    <None Remove="Resources\Bilbo-Regular.ttf" />
-    <None Remove="Resources\CinzelDecorative-Regular.ttf" />
-    <None Remove="Resources\EastSeaDokdo-Regular.ttf" />
-    <None Remove="Resources\FrederickatheGreat-Regular.ttf" />
-    <None Remove="Resources\GentiumBookPlus-Bold.ttf" />
-    <None Remove="Resources\IMFellDWPica-Regular.ttf" />
-    <None Remove="Resources\IMFellEnglish-Italic.ttf" />
-    <None Remove="Resources\Katibeh-Regular.ttf" />
-    <None Remove="Resources\Lancelot-Regular.ttf" />
-    <None Remove="Resources\MarkoOne-Regular.ttf" />
-    <None Remove="Resources\Merriweather-Regular.ttf" />
-    <None Remove="Resources\Metamorphous-Regular.ttf" />
-    <None Remove="Resources\UncialAntiqua-Regular.ttf" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="realm_studio_icon_1024x1024_g3u_icon.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\FrederickatheGreat-Regular.ttf" />
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\Aladin-Regular.ttf" />
     <EmbeddedResource Include="Resources\Bilbo-Regular.ttf" />
     <EmbeddedResource Include="Resources\CinzelDecorative-Regular.ttf" />
     <EmbeddedResource Include="Resources\EastSeaDokdo-Regular.ttf" />
+    <EmbeddedResource Include="Resources\FrederickatheGreat-Regular.ttf" />    
     <EmbeddedResource Include="Resources\GentiumBookPlus-Bold.ttf" />
     <EmbeddedResource Include="Resources\IMFellDWPica-Regular.ttf" />
     <EmbeddedResource Include="Resources\IMFellEnglish-Italic.ttf" />

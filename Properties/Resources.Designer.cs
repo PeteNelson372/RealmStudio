@@ -243,6 +243,16 @@ namespace RealmStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] realm_studio_icon_1024x1024_g3u_icon {
+            get {
+                object obj = ResourceManager.GetObject("realm_studio_icon_1024x1024_g3u_icon", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] savesound2 {
             get {
                 object obj = ResourceManager.GetObject("savesound2", resourceCulture);

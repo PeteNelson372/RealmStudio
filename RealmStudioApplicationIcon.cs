@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class ApplicationIcon
+    internal sealed class RealmStudioApplicationIcon
     {
         public required string IconName { get; set; }
 

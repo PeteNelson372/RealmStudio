@@ -70,12 +70,13 @@
             Controls.Add(pictureBox1);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
-            MaximizeBox = false;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "AppSplashScreen";
+            SizeGripStyle = SizeGripStyle.Hide;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "AppSplashScreen";
-            TopMost = true;
+            Text = "Realm Studio";
             TransparencyKey = Color.FromArgb(239, 136, 190);
+            Click += AppSplashScreen_Click;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }

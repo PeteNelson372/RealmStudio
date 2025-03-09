@@ -50,16 +50,12 @@ namespace RealmStudio
             MeasureValuePaint = new()
             {
                 Color = SKColors.White,
-                TextSize = (MeasureValueFont.Size * 4.0F) / 3.0F,
-                TextAlign = SKTextAlign.Center,
                 IsAntialias = true
             };
 
             MeasureValueOutlinePaint = new()
             {
                 Color = SKColors.Black,
-                TextSize = (MeasureValueFont.Size * 4.0F) / 3.0F,
-                TextAlign = SKTextAlign.Center,
                 IsAntialias = true,
                 ImageFilter = SKImageFilter.CreateDilate(1, 1)
             };
@@ -134,31 +130,41 @@ namespace RealmStudio
 
         public void RenderDistanceLabel(SKCanvas? canvas, SKPoint labelPoint, float distance)
         {
+            SKFont measureValueSkFont = new(SKTypeface.FromFamilyName(MeasureValueFont.FontFamily.Name), (MeasureValueFont.Size * 4.0F) / 3.0F);
+
             if (UseMapUnits && !string.IsNullOrEmpty(Map.MapAreaUnits))
             {
-                canvas?.DrawText(string.Format("{0} {1}", (int)(distance * Map.MapPixelWidth), Map.MapAreaUnits), labelPoint, MeasureValueOutlinePaint);
-                canvas?.DrawText(string.Format("{0} {1}", (int)(distance * Map.MapPixelWidth), Map.MapAreaUnits), labelPoint, MeasureValuePaint);
+                string lblText = string.Format("{0} {1}", (int)(distance * Map.MapPixelWidth), Map.MapAreaUnits);
+
+                canvas?.DrawText(lblText, labelPoint, SKTextAlign.Center, measureValueSkFont, MeasureValueOutlinePaint);
+                canvas?.DrawText(lblText, labelPoint, SKTextAlign.Center, measureValueSkFont, MeasureValuePaint);
             }
             else
             {
-                canvas?.DrawText(string.Format("{0} {1}", (int)distance, "pixels"), labelPoint, MeasureValueOutlinePaint);
-                canvas?.DrawText(string.Format("{0} {1}", (int)distance, "pixels"), labelPoint, MeasureValuePaint);
+                string lblText = string.Format("{0} {1}", (int)distance, "pixels");
+
+                canvas?.DrawText(lblText, labelPoint, SKTextAlign.Center, measureValueSkFont, MeasureValueOutlinePaint);
+                canvas?.DrawText(lblText, labelPoint, SKTextAlign.Center, measureValueSkFont, MeasureValuePaint);
             }
         }
 
         public void RenderAreaLabel(SKCanvas? canvas, SKPoint labelPoint, float measuredArea)
         {
+            SKFont measureValueSkFont = new(SKTypeface.FromFamilyName(MeasureValueFont.FontFamily.Name), (MeasureValueFont.Size * 4.0F) / 3.0F);
+
             if (UseMapUnits && !string.IsNullOrEmpty(Map.MapAreaUnits))
             {
                 string labelString = string.Format("{0} {1}", (int)(measuredArea * (Map.MapPixelWidth * Map.MapPixelWidth)), Map.MapAreaUnits + "\xB2");
 
-                canvas?.DrawText(labelString, labelPoint, MeasureValueOutlinePaint);
-                canvas?.DrawText(labelString, labelPoint, MeasureValuePaint);
+                canvas?.DrawText(labelString, labelPoint, SKTextAlign.Center, measureValueSkFont, MeasureValueOutlinePaint);
+                canvas?.DrawText(labelString, labelPoint, SKTextAlign.Center, measureValueSkFont, MeasureValuePaint);
             }
             else
             {
-                canvas?.DrawText(string.Format("{0} {1}", (int)measuredArea, "pixels\xB2"), labelPoint, MeasureValueOutlinePaint);
-                canvas?.DrawText(string.Format("{0} {1}", (int)measuredArea, "pixels\xB2"), labelPoint, MeasureValuePaint);
+                string labelString = string.Format("{0} {1}", (int)measuredArea, "pixels\xB2");
+
+                canvas?.DrawText(labelString, labelPoint, SKTextAlign.Center, measureValueSkFont, MeasureValueOutlinePaint);
+                canvas?.DrawText(labelString, labelPoint, SKTextAlign.Center, measureValueSkFont, MeasureValuePaint);
             }
         }
     }
