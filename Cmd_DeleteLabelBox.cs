@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_DeleteLabelBox(RealmStudioMap map, PlacedMapBox selectedBox) : IMapOperation
+    internal sealed class Cmd_DeleteLabelBox(RealmStudioMap map, PlacedMapBox selectedBox) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly PlacedMapBox SelectedBox = selectedBox;

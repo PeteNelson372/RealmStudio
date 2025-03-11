@@ -27,7 +27,7 @@ using System.Media;
 
 namespace RealmStudio
 {
-    internal class UtilityMethods
+    internal sealed class UtilityMethods
     {
         public static readonly string DEFAULT_REALM_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             + Path.DirectorySeparatorChar
@@ -96,7 +96,7 @@ namespace RealmStudio
             {
                 width = SKFontStyleWidth.Condensed;
             }
-            else if (font.Name.ToLowerInvariant().Contains("expanded"))
+            else if (font.Name.Contains("expanded", StringComparison.InvariantCultureIgnoreCase))
             {
                 width = SKFontStyleWidth.Expanded;
             }

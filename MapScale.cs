@@ -31,7 +31,7 @@ using Extensions = SkiaSharp.Views.Desktop.Extensions;
 
 namespace RealmStudio
 {
-    public class MapScale : MapComponent, IXmlSerializable
+    public class MapScale : MapComponent, IXmlSerializable, IDisposable
     {
         public Guid ScaleGuid { get; set; } = Guid.NewGuid();
 
@@ -45,7 +45,7 @@ namespace RealmStudio
         public Color ScaleColor3 { get; set; } = Color.Black;  // line color of scale outline
         public float ScaleDistance { get; set; } = 100.0F;  // distance of each segment
         public string ScaleDistanceUnit { get; set; } = string.Empty;  // feet, meters, miles, kilometers, etc.
-        public ScaleNumbersDisplayEnum ScaleNumbersDisplayType { get; set; } = ScaleNumbersDisplayEnum.All;  // where to display the segment labels
+        public ScaleNumbersDisplayLocation ScaleNumbersDisplayType { get; set; } = ScaleNumbersDisplayLocation.All;  // where to display the segment labels
         public Font ScaleFont { get; set; } = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0); // scale segment label font, color, outline
         public Color ScaleFontColor { get; set; } = Color.White;
         public int ScaleOutlineWidth { get; set; } = 2;
@@ -57,6 +57,7 @@ namespace RealmStudio
         private SKPaint OddSegmentPaint = new();
         private SKPaint ScaleLabelPaint = new();
         private SKPaint OutlinePaint = new();
+        private bool disposedValue;
 
         public MapScale() { }
 
@@ -192,7 +193,7 @@ namespace RealmStudio
 
                 switch (ScaleNumbersDisplayType)
                 {
-                    case ScaleNumbersDisplayEnum.Ends:
+                    case ScaleNumbersDisplayLocation.Ends:
                         {
                             if (i == 0 || i == ScaleSegmentCount)
                             {
@@ -201,7 +202,7 @@ namespace RealmStudio
                             }
                         }
                         break;
-                    case ScaleNumbersDisplayEnum.EveryOther:
+                    case ScaleNumbersDisplayLocation.EveryOther:
                         {
                             if (int.IsEvenInteger(i))
                             {
@@ -210,7 +211,7 @@ namespace RealmStudio
                             }
                         }
                         break;
-                    case ScaleNumbersDisplayEnum.All:
+                    case ScaleNumbersDisplayLocation.All:
                         {
                             canvas.DrawText(distanceText, labelPoint, skScaleFont, OutlinePaint);
                             canvas.DrawText(distanceText, labelPoint, skScaleFont, ScaleLabelPaint);
@@ -413,7 +414,7 @@ namespace RealmStudio
             if (typeElemEnum.First() != null)
             {
                 string? scaleNumbersDisplayType = mapScaleDoc.Descendants().Select(x => x.Element(ns + "ScaleNumbersDisplayType").Value).FirstOrDefault();
-                ScaleNumbersDisplayType = Enum.Parse<ScaleNumbersDisplayEnum>(scaleNumbersDisplayType);
+                ScaleNumbersDisplayType = Enum.Parse<ScaleNumbersDisplayLocation>(scaleNumbersDisplayType);
             }
 
             IEnumerable<XElement> scaleFontColorElem = mapScaleDoc.Descendants(ns + "ScaleFontColor");
@@ -575,6 +576,29 @@ namespace RealmStudio
             writer.WriteStartElement("ScaleOutlineColor");
             writer.WriteValue(ScaleOutlineColor.ToArgb());
             writer.WriteEndElement();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    SegmentOutlinePaint.Dispose();
+                    EvenSegmentPaint.Dispose();
+                    OddSegmentPaint.Dispose();
+                    ScaleLabelPaint.Dispose();
+                    OutlinePaint.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

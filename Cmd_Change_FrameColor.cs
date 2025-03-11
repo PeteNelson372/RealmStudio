@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_ChangeFrameColor : IMapOperation
+    internal sealed class Cmd_ChangeFrameColor : IMapOperation
     {
         private readonly PlacedMapFrame SelectedFrame;
         private readonly Color FrameTint;

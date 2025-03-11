@@ -26,7 +26,7 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class MapMeasure : MapComponent
+    internal sealed class MapMeasure : MapComponent
     {
         private readonly RealmStudioMap Map;
 

@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_DeleteMapRegionPoint(RealmStudioMap map, MapRegion mapRegion, MapRegionPoint regionPoint) : IMapOperation
+    internal sealed class Cmd_DeleteMapRegionPoint(RealmStudioMap map, MapRegion mapRegion, MapRegionPoint regionPoint) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly MapRegion SelectedMapRegion = mapRegion;

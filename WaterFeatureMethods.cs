@@ -26,7 +26,7 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class WaterFeatureMethods
+    internal sealed class WaterFeatureMethods
     {
         public static SKPath WaterFeaturErasePath { get; set; } = new();
 
@@ -69,9 +69,9 @@ namespace RealmStudio
                             waterFeature_i.WaterFeatureColor = waterFeature_j.WaterFeatureColor;
                             waterFeature_i.WaterFeatureShorelineColor = waterFeature_j.WaterFeatureShorelineColor;
 
-                            if (waterFeature_i.WaterFeatureType == WaterFeatureTypeEnum.Lake || waterFeature_j.WaterFeatureType == WaterFeatureTypeEnum.Lake)
+                            if (waterFeature_i.WaterFeatureType == WaterFeatureType.Lake || waterFeature_j.WaterFeatureType == WaterFeatureType.Lake)
                             {
-                                waterFeature_i.WaterFeatureType = WaterFeatureTypeEnum.Lake;
+                                waterFeature_i.WaterFeatureType = WaterFeatureType.Lake;
                             }
 
                             ConstructWaterFeaturePaintObjects(waterFeature_i);
@@ -140,22 +140,22 @@ namespace RealmStudio
 
             int pathDistance = waterFeature.ShorelineEffectDistance / 3;
 
-            waterFeature.InnerPath1 = DrawingMethods.GetInnerOrOuterPath(contourPoints, pathDistance, ParallelEnum.Below);
+            waterFeature.InnerPath1 = DrawingMethods.GetInnerOrOuterPath(contourPoints, pathDistance, ParallelDirection.Below);
             waterFeature.InnerPath1.Close();
 
-            waterFeature.InnerPath2 = DrawingMethods.GetInnerOrOuterPath(contourPoints, 2 * pathDistance, ParallelEnum.Below);
+            waterFeature.InnerPath2 = DrawingMethods.GetInnerOrOuterPath(contourPoints, 2 * pathDistance, ParallelDirection.Below);
             waterFeature.InnerPath2.Close();
 
-            waterFeature.InnerPath3 = DrawingMethods.GetInnerOrOuterPath(contourPoints, 3 * pathDistance, ParallelEnum.Below);
+            waterFeature.InnerPath3 = DrawingMethods.GetInnerOrOuterPath(contourPoints, 3 * pathDistance, ParallelDirection.Below);
             waterFeature.InnerPath3.Close();
 
-            waterFeature.OuterPath1 = DrawingMethods.GetInnerOrOuterPath(contourPoints, pathDistance, ParallelEnum.Above);
+            waterFeature.OuterPath1 = DrawingMethods.GetInnerOrOuterPath(contourPoints, pathDistance, ParallelDirection.Above);
             waterFeature.OuterPath1.Close();
 
-            waterFeature.OuterPath2 = DrawingMethods.GetInnerOrOuterPath(contourPoints, 2 * pathDistance, ParallelEnum.Above);
+            waterFeature.OuterPath2 = DrawingMethods.GetInnerOrOuterPath(contourPoints, 2 * pathDistance, ParallelDirection.Above);
             waterFeature.OuterPath2.Close();
 
-            waterFeature.OuterPath3 = DrawingMethods.GetInnerOrOuterPath(contourPoints, 3 * pathDistance, ParallelEnum.Above);
+            waterFeature.OuterPath3 = DrawingMethods.GetInnerOrOuterPath(contourPoints, 3 * pathDistance, ParallelDirection.Above);
             waterFeature.OuterPath3.Close();
 
         }
@@ -200,7 +200,7 @@ namespace RealmStudio
                 IsAntialias = true
             };
 
-            if (waterFeature.WaterFeatureType == WaterFeatureTypeEnum.Lake)
+            if (waterFeature.WaterFeatureType == WaterFeatureType.Lake)
             {
                 waterFeature.WaterFeatureShorelinePaint.PathEffect = SKPathEffect.CreateCorner(100);
                 waterFeature.ShallowWaterPaint.PathEffect = SKPathEffect.CreateCorner(100);
@@ -262,11 +262,11 @@ namespace RealmStudio
             return lakePath;
         }
 
-        internal static List<MapRiverPoint> GetParallelRiverPoints(List<MapRiverPoint> points, float distance, ParallelEnum location, bool fromStartingPoint)
+        internal static List<MapRiverPoint> GetParallelRiverPoints(List<MapRiverPoint> points, float distance, ParallelDirection location, bool fromStartingPoint)
         {
             List<MapRiverPoint> parallelPoints = [];
 
-            float offsetAngle = (location == ParallelEnum.Above) ? 90 : -90;
+            float offsetAngle = (location == ParallelDirection.Above) ? 90 : -90;
 
             SKPoint maxXPoint = new(-1.0F, 0);
             SKPoint maxYPoint = new(0, -1.0F);
@@ -556,8 +556,8 @@ namespace RealmStudio
             river.RiverPath?.Dispose();
             river.RiverPath = new(riverPath);
 
-            List<MapRiverPoint> abovePoints = GetParallelRiverPoints(distinctRiverPoints, river.RiverWidth / 2.0F, ParallelEnum.Above, river.RiverSourceFadeIn);
-            List<MapRiverPoint> belowPoints = GetParallelRiverPoints(distinctRiverPoints, river.RiverWidth / 2.0F, ParallelEnum.Below, river.RiverSourceFadeIn);
+            List<MapRiverPoint> abovePoints = GetParallelRiverPoints(distinctRiverPoints, river.RiverWidth / 2.0F, ParallelDirection.Above, river.RiverSourceFadeIn);
+            List<MapRiverPoint> belowPoints = GetParallelRiverPoints(distinctRiverPoints, river.RiverWidth / 2.0F, ParallelDirection.Below, river.RiverSourceFadeIn);
 
             using SKPath riverBoundaryPath = new();
 
@@ -597,8 +597,8 @@ namespace RealmStudio
 
             int pathDistance = (int)(river.RiverWidth / 2);
 
-            List<MapRiverPoint> shorelineAbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance / 2, ParallelEnum.Above, river.RiverSourceFadeIn);
-            List<MapRiverPoint> shorelineBelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance / 2, ParallelEnum.Below, river.RiverSourceFadeIn);
+            List<MapRiverPoint> shorelineAbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance / 2, ParallelDirection.Above, river.RiverSourceFadeIn);
+            List<MapRiverPoint> shorelineBelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance / 2, ParallelDirection.Below, river.RiverSourceFadeIn);
             using SKPath shorelinePath = new();
 
             if (shorelineAbovePoints.Count > 2)
@@ -630,8 +630,8 @@ namespace RealmStudio
                 river.ShorelinePath = new(shorelinePath);
             }
 
-            List<MapRiverPoint> gradient1AbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance, ParallelEnum.Above, river.RiverSourceFadeIn);
-            List<MapRiverPoint> gradient1BelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance, ParallelEnum.Below, river.RiverSourceFadeIn);
+            List<MapRiverPoint> gradient1AbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance, ParallelDirection.Above, river.RiverSourceFadeIn);
+            List<MapRiverPoint> gradient1BelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance, ParallelDirection.Below, river.RiverSourceFadeIn);
             using SKPath gradient1Path = new();
 
             if (gradient1AbovePoints.Count > 2)
@@ -666,8 +666,8 @@ namespace RealmStudio
             /*
              * gradient2 and gradient3 are not being used now
              * 
-            List<MapRiverPoint> gradient2AbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 2, ParallelEnum.Above, river.RiverSourceFadeIn);
-            List<MapRiverPoint> gradient2BelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 2, ParallelEnum.Below, river.RiverSourceFadeIn);
+            List<MapRiverPoint> gradient2AbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 2, ParallelDirection.Above, river.RiverSourceFadeIn);
+            List<MapRiverPoint> gradient2BelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 2, ParallelDirection.Below, river.RiverSourceFadeIn);
             using SKPath gradient2Path = new();
 
             if (gradient2AbovePoints.Count > 2)
@@ -699,8 +699,8 @@ namespace RealmStudio
                 river.Gradient2Path = new(gradient2Path);
             }
 
-            List<MapRiverPoint> gradient3AbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 3, ParallelEnum.Above, river.RiverSourceFadeIn);
-            List<MapRiverPoint> gradient3BelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 3, ParallelEnum.Below, river.RiverSourceFadeIn);
+            List<MapRiverPoint> gradient3AbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 3, ParallelDirection.Above, river.RiverSourceFadeIn);
+            List<MapRiverPoint> gradient3BelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 3, ParallelDirection.Below, river.RiverSourceFadeIn);
             using SKPath gradient3Path = new();
 
             if (gradient3AbovePoints.Count > 2)
@@ -733,8 +733,8 @@ namespace RealmStudio
             }
             */
 
-            List<MapRiverPoint> shallowWaterAbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 0.8F, ParallelEnum.Above, river.RiverSourceFadeIn);
-            List<MapRiverPoint> shallowWaterBelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 0.8F, ParallelEnum.Below, river.RiverSourceFadeIn);
+            List<MapRiverPoint> shallowWaterAbovePoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 0.8F, ParallelDirection.Above, river.RiverSourceFadeIn);
+            List<MapRiverPoint> shallowWaterBelowPoints = GetParallelRiverPoints(distinctRiverPoints, pathDistance * 0.8F, ParallelDirection.Below, river.RiverSourceFadeIn);
             using SKPath shallowWaterPath = new();
 
             if (shallowWaterAbovePoints.Count > 2)

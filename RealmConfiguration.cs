@@ -55,7 +55,7 @@ namespace RealmStudio
 
             CalculateAspectRatio();
 
-            Map.RealmType = RealmTypeEnum.World;
+            Map.RealmType = RealmMapType.World;
 
 
             string measurementUnits = Settings.Default.MeasurementUnits.Trim();
@@ -508,7 +508,7 @@ namespace RealmStudio
         {
             if (WorldRadioButton.Checked)
             {
-                Map.RealmType = RealmTypeEnum.World;
+                Map.RealmType = RealmMapType.World;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -531,7 +531,7 @@ namespace RealmStudio
         {
             if (RegionRadioButton.Checked)
             {
-                Map.RealmType = RealmTypeEnum.Region;
+                Map.RealmType = RealmMapType.Region;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -554,7 +554,7 @@ namespace RealmStudio
         {
             if (CityRadioButton.Checked)
             {
-                Map.RealmType = RealmTypeEnum.City;
+                Map.RealmType = RealmMapType.City;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -577,7 +577,7 @@ namespace RealmStudio
         {
             if (InteriorRadioButton.Checked)
             {
-                Map.RealmType = RealmTypeEnum.Interior;
+                Map.RealmType = RealmMapType.Interior;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -600,7 +600,7 @@ namespace RealmStudio
         {
             if (DungeonRadioButton.Checked)
             {
-                Map.RealmType = RealmTypeEnum.Dungeon;
+                Map.RealmType = RealmMapType.Dungeon;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -623,7 +623,7 @@ namespace RealmStudio
         {
             if (SolarSystemRadioButton.Checked)
             {
-                Map.RealmType = RealmTypeEnum.SolarSystem;
+                Map.RealmType = RealmMapType.SolarSystem;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -646,7 +646,7 @@ namespace RealmStudio
         {
             if (ShipRadioButton.Checked)
             {
-                Map.RealmType = RealmTypeEnum.Ship;
+                Map.RealmType = RealmMapType.Ship;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))
@@ -669,7 +669,7 @@ namespace RealmStudio
         {
             if (OtherRadioButton.Checked)
             {
-                Map.RealmType = RealmTypeEnum.Other;
+                Map.RealmType = RealmMapType.Other;
 
                 string measurementUnits = Settings.Default.MeasurementUnits.Trim();
                 if (!string.IsNullOrEmpty(measurementUnits))

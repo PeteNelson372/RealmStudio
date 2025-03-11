@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_RemoveLandform(RealmStudioMap map, Landform selectedLandform) : IMapOperation
+    internal sealed class Cmd_RemoveLandform(RealmStudioMap map, Landform selectedLandform) : IMapOperation
     {
         private readonly RealmStudioMap _map = map;
         private Landform? storedLandform;

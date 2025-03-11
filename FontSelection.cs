@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class FontSelection
+    internal sealed class FontSelection
     {
         public Font SelectedFont { get; set; } = new("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
         public bool IsBold { get; set; }

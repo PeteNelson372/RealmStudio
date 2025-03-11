@@ -38,7 +38,7 @@ namespace RealmStudio
 
         public bool GridEnabled { get; set; }
 
-        public GridTypeEnum GridType { get; set; } = GridTypeEnum.Square;
+        public MapGridType GridType { get; set; } = MapGridType.Square;
 
         public Color GridColor { get; set; } = Color.FromArgb(126, 0, 0, 0);
 
@@ -81,15 +81,15 @@ namespace RealmStudio
 
                 switch (GridType)
                 {
-                    case GridTypeEnum.Square:
+                    case MapGridType.Square:
                         RenderSquareGrid(canvas);
                         break;
 
-                    case GridTypeEnum.PointedHex:
+                    case MapGridType.PointedHex:
                         RenderPointedHexGrid(canvas);
                         break;
 
-                    case GridTypeEnum.FlatHex:
+                    case MapGridType.FlatHex:
                         RenderFlatHexGrid(canvas);
                         break;
                 }
@@ -397,7 +397,7 @@ namespace RealmStudio
             if (typeElemEnum.First() != null)
             {
                 string? gridType = mapGridDoc.Descendants().Select(x => x.Element(ns + "GridType").Value).FirstOrDefault();
-                GridType = Enum.Parse<GridTypeEnum>(gridType);
+                GridType = Enum.Parse<MapGridType>(gridType);
             }
 
             IEnumerable<XElement> gridColorElem = mapGridDoc.Descendants(ns + "GridColor");

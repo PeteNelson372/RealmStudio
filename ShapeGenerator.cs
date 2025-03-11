@@ -31,7 +31,7 @@ using System.Diagnostics;
 
 namespace RealmStudio
 {
-    internal class ShapeGenerator
+    internal sealed class ShapeGenerator
     {
         public static List<SKPoint> GenerateRandomPointSet(int x, int y, int width, int height, int gridSize)
         {
@@ -218,7 +218,7 @@ namespace RealmStudio
             }
 
             // get island shaping functions
-            List<LandformShapingFunction> islandShapingFunctions = AssetManager.LANDFORM_SHAPING_FUNCTIONS.FindAll(x => x.LandformShapeType == GeneratedLandformTypeEnum.Island);
+            List<LandformShapingFunction> islandShapingFunctions = AssetManager.LANDFORM_SHAPING_FUNCTIONS.FindAll(x => x.LandformShapeType == GeneratedLandformType.Island);
 
             if (islandShapingFunctions.Count > 0)
             {
@@ -304,7 +304,7 @@ namespace RealmStudio
             return b;
         }
 
-        internal static Bitmap? GetNoiseGeneratedLandformShape(int width, int height, GeneratedLandformTypeEnum selectedLandformType, bool flipVertical = false)
+        internal static Bitmap? GetNoiseGeneratedLandformShape(int width, int height, GeneratedLandformType selectedLandformType, bool flipVertical = false)
         {
             Debug.Assert(width > 0 && height > 0 && width < int.MaxValue && height < int.MaxValue);
 
@@ -383,31 +383,31 @@ namespace RealmStudio
 
                     switch (selectedLandformType)
                     {
-                        case GeneratedLandformTypeEnum.Archipelago:
+                        case GeneratedLandformType.Archipelago:
                             {
                                 interpolationWeight = 0.5F;
                                 waterLevel = 0.45F;
                             }
                             break;
-                        case GeneratedLandformTypeEnum.Atoll:
+                        case GeneratedLandformType.Atoll:
                             {
                                 interpolationWeight = 0.6F;
                                 waterLevel = 0.45F;
                             }
                             break;
-                        case GeneratedLandformTypeEnum.Island:
+                        case GeneratedLandformType.Island:
                             {
                                 interpolationWeight = 0.5F;
                                 waterLevel = 0.40F;
                             }
                             break;
-                        case GeneratedLandformTypeEnum.Icecap:
+                        case GeneratedLandformType.Icecap:
                             {
                                 interpolationWeight = 0.6F;
                                 waterLevel = 0.40F;
                             }
                             break;
-                        case GeneratedLandformTypeEnum.Region:
+                        case GeneratedLandformType.Region:
                             {
                                 interpolationWeight = 0.35F;
                                 waterLevel = 0.4F;

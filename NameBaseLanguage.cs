@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class NameBaseLanguage : INameGenerator
+    internal sealed class NameBaseLanguage : INameGenerator
     {
         public bool IsLanguageSelected { get; set; } = true;
         public string Language { get; set; } = string.Empty;

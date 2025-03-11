@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddWindrose(RealmStudioMap map, MapWindrose windrose) : IMapOperation
+    internal sealed class Cmd_AddWindrose(RealmStudioMap map, MapWindrose windrose) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly MapWindrose Windrose = windrose;

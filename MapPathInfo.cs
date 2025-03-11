@@ -166,52 +166,52 @@ namespace RealmStudio
             RenderControl.Invalidate();
         }
 
-        private PathTypeEnum GetSelectedPathType()
+        private PathType GetSelectedPathType()
         {
-            if (SolidLineRadio.Checked) return PathTypeEnum.SolidLinePath;
-            if (DottedLineRadio.Checked) return PathTypeEnum.DottedLinePath;
-            if (DashedLineRadio.Checked) return PathTypeEnum.DashedLinePath;
-            if (DashDotLineRadio.Checked) return PathTypeEnum.DashDotLinePath;
-            if (DashDotDotLineRadio.Checked) return PathTypeEnum.DashDotDotLinePath;
-            if (ChevronLineRadio.Checked) return PathTypeEnum.ChevronLinePath;
-            if (LineAndDashesRadio.Checked) return PathTypeEnum.LineAndDashesPath;
-            if (SmallDashesRadio.Checked) return PathTypeEnum.ShortIrregularDashPath;
-            if (ThickLineRadio.Checked) return PathTypeEnum.ThickSolidLinePath;
-            if (BlackBorderPathRadio.Checked) return PathTypeEnum.SolidBlackBorderPath;
-            if (BorderedGradientRadio.Checked) return PathTypeEnum.BorderedGradientPath;
-            if (BorderedLightSolidRadio.Checked) return PathTypeEnum.BorderedLightSolidPath;
-            if (DoubleSolidBorderRadio.Checked) return PathTypeEnum.DoubleSolidBorderPath;
-            if (BearTracksRadio.Checked) return PathTypeEnum.BearTracksPath;
-            if (BirdTracksRadio.Checked) return PathTypeEnum.BirdTracksPath;
-            if (FootPrintsRadio.Checked) return PathTypeEnum.FootprintsPath;
-            if (RailroadTracksRadio.Checked) return PathTypeEnum.RailroadTracksPath;
-            if (TexturePathRadio.Checked) return PathTypeEnum.TexturedPath;
-            if (BorderTexturePathRadio.Checked) return PathTypeEnum.BorderAndTexturePath;
+            if (SolidLineRadio.Checked) return PathType.SolidLinePath;
+            if (DottedLineRadio.Checked) return PathType.DottedLinePath;
+            if (DashedLineRadio.Checked) return PathType.DashedLinePath;
+            if (DashDotLineRadio.Checked) return PathType.DashDotLinePath;
+            if (DashDotDotLineRadio.Checked) return PathType.DashDotDotLinePath;
+            if (ChevronLineRadio.Checked) return PathType.ChevronLinePath;
+            if (LineAndDashesRadio.Checked) return PathType.LineAndDashesPath;
+            if (SmallDashesRadio.Checked) return PathType.ShortIrregularDashPath;
+            if (ThickLineRadio.Checked) return PathType.ThickSolidLinePath;
+            if (BlackBorderPathRadio.Checked) return PathType.SolidBlackBorderPath;
+            if (BorderedGradientRadio.Checked) return PathType.BorderedGradientPath;
+            if (BorderedLightSolidRadio.Checked) return PathType.BorderedLightSolidPath;
+            if (DoubleSolidBorderRadio.Checked) return PathType.DoubleSolidBorderPath;
+            if (BearTracksRadio.Checked) return PathType.BearTracksPath;
+            if (BirdTracksRadio.Checked) return PathType.BirdTracksPath;
+            if (FootPrintsRadio.Checked) return PathType.FootprintsPath;
+            if (RailroadTracksRadio.Checked) return PathType.RailroadTracksPath;
+            if (TexturePathRadio.Checked) return PathType.TexturedPath;
+            if (BorderTexturePathRadio.Checked) return PathType.BorderAndTexturePath;
 
-            return PathTypeEnum.SolidLinePath;
+            return PathType.SolidLinePath;
         }
 
-        private void SetSelectedPathType(PathTypeEnum pathType)
+        private void SetSelectedPathType(PathType pathType)
         {
-            if (pathType == PathTypeEnum.SolidLinePath) { SolidLineRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.DottedLinePath) { DottedLineRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.DashedLinePath) { DashedLineRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.DashDotLinePath) { DashDotLineRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.DashDotDotLinePath) { DashDotDotLineRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.ChevronLinePath) { ChevronLineRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.LineAndDashesPath) { LineAndDashesRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.ShortIrregularDashPath) { SmallDashesRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.ThickSolidLinePath) { ThickLineRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.SolidBlackBorderPath) { BlackBorderPathRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.BorderedGradientPath) { BorderedGradientRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.BorderedLightSolidPath) { BorderedLightSolidRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.DoubleSolidBorderPath) { DoubleSolidBorderRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.BearTracksPath) { BearTracksRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.BirdTracksPath) { BirdTracksRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.FootprintsPath) { FootPrintsRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.RailroadTracksPath) { RailroadTracksRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.TexturedPath) { TexturePathRadio.Checked = true; return; }
-            if (pathType == PathTypeEnum.BorderAndTexturePath) { BorderTexturePathRadio.Checked = true; return; }
+            if (pathType == PathType.SolidLinePath) { SolidLineRadio.Checked = true; return; }
+            if (pathType == PathType.DottedLinePath) { DottedLineRadio.Checked = true; return; }
+            if (pathType == PathType.DashedLinePath) { DashedLineRadio.Checked = true; return; }
+            if (pathType == PathType.DashDotLinePath) { DashDotLineRadio.Checked = true; return; }
+            if (pathType == PathType.DashDotDotLinePath) { DashDotDotLineRadio.Checked = true; return; }
+            if (pathType == PathType.ChevronLinePath) { ChevronLineRadio.Checked = true; return; }
+            if (pathType == PathType.LineAndDashesPath) { LineAndDashesRadio.Checked = true; return; }
+            if (pathType == PathType.ShortIrregularDashPath) { SmallDashesRadio.Checked = true; return; }
+            if (pathType == PathType.ThickSolidLinePath) { ThickLineRadio.Checked = true; return; }
+            if (pathType == PathType.SolidBlackBorderPath) { BlackBorderPathRadio.Checked = true; return; }
+            if (pathType == PathType.BorderedGradientPath) { BorderedGradientRadio.Checked = true; return; }
+            if (pathType == PathType.BorderedLightSolidPath) { BorderedLightSolidRadio.Checked = true; return; }
+            if (pathType == PathType.DoubleSolidBorderPath) { DoubleSolidBorderRadio.Checked = true; return; }
+            if (pathType == PathType.BearTracksPath) { BearTracksRadio.Checked = true; return; }
+            if (pathType == PathType.BirdTracksPath) { BirdTracksRadio.Checked = true; return; }
+            if (pathType == PathType.FootprintsPath) { FootPrintsRadio.Checked = true; return; }
+            if (pathType == PathType.RailroadTracksPath) { RailroadTracksRadio.Checked = true; return; }
+            if (pathType == PathType.TexturedPath) { TexturePathRadio.Checked = true; return; }
+            if (pathType == PathType.BorderAndTexturePath) { BorderTexturePathRadio.Checked = true; return; }
         }
 
         private void SolidLinePictureBox_Click(object sender, EventArgs e)

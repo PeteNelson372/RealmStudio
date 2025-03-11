@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddLabelBox(RealmStudioMap map, PlacedMapBox mapBox) : IMapOperation
+    internal sealed class Cmd_AddLabelBox(RealmStudioMap map, PlacedMapBox mapBox) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly PlacedMapBox MapBox = mapBox;

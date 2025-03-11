@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_ChangeLabelRotation(MapLabel label, float rotationValue) : IMapOperation
+    internal sealed class Cmd_ChangeLabelRotation(MapLabel label, float rotationValue) : IMapOperation
     {
         private readonly MapLabel Label = label;
         private readonly float RotationValue = rotationValue;

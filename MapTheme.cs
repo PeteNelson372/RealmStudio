@@ -33,9 +33,13 @@ namespace RealmStudio
         public bool IsDefaultTheme { get; set; }
         public bool IsSystemTheme { get; set; }
         [XmlElement(IsNullable = true)] public MapTexture? BackgroundTexture { get; set; }
+        [XmlElement(IsNullable = true)] public float? BackgroundTextureScale { get; set; } = 1.0F;
+        [XmlElement(IsNullable = true)] public bool? MirrorBackgroundTexture { get; set; } = false;
         [XmlElement(IsNullable = true)] public MapTexture? OceanTexture { get; set; }
         [XmlElement(IsNullable = true)] public int? OceanTextureOpacity { get; set; } = 255;
-        [XmlElement(IsNullable = true)] public int? OceanColor { get; set; } = Color.LightGray.ToArgb();
+        [XmlElement(IsNullable = true)] public float? OceanTextureScale { get; set; } = 1.0F;
+        [XmlElement(IsNullable = true)] public bool? MirrorOceanTexture { get; set; } = false;
+        [XmlElement(IsNullable = true)] public int? OceanColor { get; set; } = Color.White.ToArgb();
         [XmlArray(IsNullable = true)] public List<int?>? OceanColorPalette { get; set; } = [];
         [XmlElement(IsNullable = true)] public int? LandformOutlineColor { get; set; } = Color.FromArgb(255, 62, 55, 40).ToArgb();
         [XmlElement(IsNullable = true)] public int? LandformBackgroundColor { get; set; } = Color.White.ToArgb();
@@ -54,7 +58,7 @@ namespace RealmStudio
         [XmlArray(IsNullable = true)] public List<int?>? FreshwaterColorPalette { get; set; } = [];
         [XmlElement(IsNullable = true)] public int? PathColor { get; set; } = Color.Empty.ToArgb();
         [XmlElement(IsNullable = true)] public int? PathWidth { get; set; } = 8;
-        [XmlElement(IsNullable = true)] public PathTypeEnum? PathStyle { get; set; } = PathTypeEnum.SolidLinePath;
+        [XmlElement(IsNullable = true)] public PathType? PathStyle { get; set; } = PathType.SolidLinePath;
         [XmlElement(IsNullable = true)] public string? LabelFont { get; set; } = string.Empty;
         [XmlElement(IsNullable = true)] public int? LabelColor { get; set; } = ColorTranslator.FromHtml("#3D351E").ToArgb();
         [XmlElement(IsNullable = true)] public int? LabelOutlineColor { get; set; } = ColorTranslator.FromHtml("#A1D6CAAB").ToArgb();

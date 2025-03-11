@@ -99,30 +99,30 @@ namespace RealmStudio
 
         private void SetSelectedRegionBorderType(MapRegion region)
         {
-            if (region.RegionBorderType == PathTypeEnum.SolidLinePath) { RegionSolidBorderRadio.Checked = true; return; }
-            if (region.RegionBorderType == PathTypeEnum.DottedLinePath) { RegionDottedBorderRadio.Checked = true; return; }
-            if (region.RegionBorderType == PathTypeEnum.DashedLinePath) { RegionDashBorderRadio.Checked = true; return; }
-            if (region.RegionBorderType == PathTypeEnum.DashDotLinePath) { RegionDashDotBorderRadio.Checked = true; return; }
-            if (region.RegionBorderType == PathTypeEnum.DashDotDotLinePath) { RegionDashDotDotBorderRadio.Checked = true; return; }
-            if (region.RegionBorderType == PathTypeEnum.DoubleSolidBorderPath) { RegionDoubleSolidBorderRadio.Checked = true; return; }
-            if (region.RegionBorderType == PathTypeEnum.LineAndDashesPath) { RegionSolidAndDashesBorderRadio.Checked = true; return; }
-            if (region.RegionBorderType == PathTypeEnum.BorderedGradientPath) { RegionBorderedGradientRadio.Checked = true; return; }
-            if (region.RegionBorderType == PathTypeEnum.BorderedLightSolidPath) { RegionBorderedLightSolidRadio.Checked = true; return; }
+            if (region.RegionBorderType == PathType.SolidLinePath) { RegionSolidBorderRadio.Checked = true; return; }
+            if (region.RegionBorderType == PathType.DottedLinePath) { RegionDottedBorderRadio.Checked = true; return; }
+            if (region.RegionBorderType == PathType.DashedLinePath) { RegionDashBorderRadio.Checked = true; return; }
+            if (region.RegionBorderType == PathType.DashDotLinePath) { RegionDashDotBorderRadio.Checked = true; return; }
+            if (region.RegionBorderType == PathType.DashDotDotLinePath) { RegionDashDotDotBorderRadio.Checked = true; return; }
+            if (region.RegionBorderType == PathType.DoubleSolidBorderPath) { RegionDoubleSolidBorderRadio.Checked = true; return; }
+            if (region.RegionBorderType == PathType.LineAndDashesPath) { RegionSolidAndDashesBorderRadio.Checked = true; return; }
+            if (region.RegionBorderType == PathType.BorderedGradientPath) { RegionBorderedGradientRadio.Checked = true; return; }
+            if (region.RegionBorderType == PathType.BorderedLightSolidPath) { RegionBorderedLightSolidRadio.Checked = true; return; }
         }
 
-        private PathTypeEnum GetSelectedRegionBorderType()
+        private PathType GetSelectedRegionBorderType()
         {
-            if (RegionSolidBorderRadio.Checked) return PathTypeEnum.SolidLinePath;
-            if (RegionDottedBorderRadio.Checked) return PathTypeEnum.DottedLinePath;
-            if (RegionDashBorderRadio.Checked) return PathTypeEnum.DashedLinePath;
-            if (RegionDashDotBorderRadio.Checked) return PathTypeEnum.DashDotLinePath;
-            if (RegionDashDotDotBorderRadio.Checked) return PathTypeEnum.DashDotDotLinePath;
-            if (RegionSolidAndDashesBorderRadio.Checked) return PathTypeEnum.LineAndDashesPath;
-            if (RegionBorderedGradientRadio.Checked) return PathTypeEnum.BorderedGradientPath;
-            if (RegionBorderedLightSolidRadio.Checked) return PathTypeEnum.BorderedLightSolidPath;
-            if (RegionDoubleSolidBorderRadio.Checked) return PathTypeEnum.DoubleSolidBorderPath;
+            if (RegionSolidBorderRadio.Checked) return PathType.SolidLinePath;
+            if (RegionDottedBorderRadio.Checked) return PathType.DottedLinePath;
+            if (RegionDashBorderRadio.Checked) return PathType.DashedLinePath;
+            if (RegionDashDotBorderRadio.Checked) return PathType.DashDotLinePath;
+            if (RegionDashDotDotBorderRadio.Checked) return PathType.DashDotDotLinePath;
+            if (RegionSolidAndDashesBorderRadio.Checked) return PathType.LineAndDashesPath;
+            if (RegionBorderedGradientRadio.Checked) return PathType.BorderedGradientPath;
+            if (RegionBorderedLightSolidRadio.Checked) return PathType.BorderedLightSolidPath;
+            if (RegionDoubleSolidBorderRadio.Checked) return PathType.DoubleSolidBorderPath;
 
-            return PathTypeEnum.SolidLinePath;
+            return PathType.SolidLinePath;
         }
 
         private void SolidRegionBorderPicture_Click(object sender, EventArgs e)

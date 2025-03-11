@@ -25,7 +25,7 @@ using RealmStudio.Properties;
 
 namespace RealmStudio
 {
-    internal class ThemeMethods
+    internal sealed class ThemeMethods
     {
         public static void SaveTheme(MapTheme theme)
         {

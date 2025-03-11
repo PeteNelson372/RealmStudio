@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class Cmd_FillMapWithLandform(RealmStudioMap map, Landform filledLandform) : IMapOperation
+    internal sealed class Cmd_FillMapWithLandform(RealmStudioMap map, Landform filledLandform) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly Landform FilledLandform = filledLandform;

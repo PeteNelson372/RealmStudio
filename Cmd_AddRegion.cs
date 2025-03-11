@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddMapRegion(RealmStudioMap map, MapRegion mapRegion) : IMapOperation
+    internal sealed class Cmd_AddMapRegion(RealmStudioMap map, MapRegion mapRegion) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly MapRegion NewMapRegion = mapRegion;

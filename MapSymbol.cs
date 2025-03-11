@@ -43,9 +43,9 @@ namespace RealmStudio
 
         public bool IsSelected { get; set; }
 
-        public SymbolFormatEnum SymbolFormat { get; set; } = SymbolFormatEnum.NotSet;
+        public SymbolFileFormat SymbolFormat { get; set; } = SymbolFileFormat.NotSet;
 
-        public SymbolTypeEnum SymbolType { get; set; } = SymbolTypeEnum.NotSet;
+        public MapSymbolType SymbolType { get; set; } = MapSymbolType.NotSet;
 
         public List<string> SymbolTags { get; set; } = [];
 
@@ -220,14 +220,14 @@ namespace RealmStudio
 
             if (!string.IsNullOrEmpty(symbolFormat))
             {
-                SymbolFormat = Enum.Parse<SymbolFormatEnum>(symbolFormat);
+                SymbolFormat = Enum.Parse<SymbolFileFormat>(symbolFormat);
             }
 
             string? symbolType = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "SymbolType").Value).FirstOrDefault();
 
             if (!string.IsNullOrEmpty(symbolFormat))
             {
-                SymbolType = Enum.Parse<SymbolTypeEnum>(symbolType);
+                SymbolType = Enum.Parse<MapSymbolType>(symbolType);
             }
 
             IEnumerable<XElement> tagElem = mapSymbolDoc.Descendants(ns + "Tag");

@@ -21,11 +21,40 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+
+using SkiaSharp.Views.Desktop;
+
 namespace RealmStudio
 {
-    class OceanMethods
+    internal sealed class OceanMethods
     {
         public static int OceanPaintBrushSize { get; set; } = 64;
         public static int OceanPaintEraserSize { get; set; } = 64;
+
+        internal static void ApplyOceanTexture(RealmStudioMap map, Bitmap? textureBitmap, float scale, bool mirrorBackground)
+        {
+            if (textureBitmap != null && scale > 0.0F)
+            {
+                if (scale != 1.0F)
+                {
+                    // resize the bitmap, but maintain aspect ratio
+                    Bitmap resizedBitmap = DrawingMethods.ScaleBitmap(textureBitmap,
+                        (int)(map.MapWidth * scale), (int)(map.MapHeight * scale));
+
+                    Cmd_SetOceanTexture cmd = new(map, Extensions.ToSKBitmap(resizedBitmap), mirrorBackground);
+                    CommandManager.AddCommand(cmd);
+                    cmd.DoOperation();
+                }
+                else
+                {
+
+                    Bitmap resizedBitmap = new(textureBitmap, map.MapWidth, map.MapHeight);
+
+                    Cmd_SetOceanTexture cmd = new(map, Extensions.ToSKBitmap(resizedBitmap), mirrorBackground);
+                    CommandManager.AddCommand(cmd);
+                    cmd.DoOperation();
+                }
+            }
+        }
     }
 }

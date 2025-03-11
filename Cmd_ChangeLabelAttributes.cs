@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class Cmd_ChangeLabelAttributes : IMapOperation
+    internal sealed class Cmd_ChangeLabelAttributes : IMapOperation
     {
         private readonly RealmStudioMap Map;
         private readonly MapLabel Label;

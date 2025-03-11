@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class MapBuilder
+    internal sealed class MapBuilder
     {
         public static readonly Color DEFAULT_BACKGROUND_COLOR = Color.Transparent;
         public static readonly ushort MAP_DEFAULT_WIDTH = 1920;

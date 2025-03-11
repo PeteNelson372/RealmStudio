@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_ClearOceanColor(RealmStudioMap map, MapImage colorBitmap) : IMapOperation
+    internal sealed class Cmd_ClearOceanColor(RealmStudioMap map, MapImage colorBitmap) : IMapOperation
     {
         public RealmStudioMap Map { get; set; } = map;
         MapImage LayerColor { get; set; } = colorBitmap;

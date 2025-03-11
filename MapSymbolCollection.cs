@@ -26,28 +26,29 @@ using System.Xml.Serialization;
 namespace RealmStudio
 {
     [XmlRoot("MapSymbolCollection", Namespace = "RealmStudio", IsNullable = false)]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "The class implements a collection of map symbols, not a c# collection type.")]
     public class MapSymbolCollection
     {
         [XmlIgnore]
         public bool IsModified { get; set; } = false;
 
         [XmlElement]
-        public string CollectionFileVersion = "0.1";
+        public string CollectionFileVersion { get; set; } = "0.1";
 
         [XmlElement]
-        public string CollectionName = "";
+        public string CollectionName { get; set; } = "";
 
         [XmlElement]
-        public Guid CollectionGuid = Guid.NewGuid();
+        public Guid CollectionGuid { get; set; } = Guid.NewGuid();
 
         [XmlElement]
-        public string CollectionLicense = "";
+        public string CollectionLicense { get; set; } = "";
 
         [XmlElement]
-        public string CollectionPath = "";
+        public string CollectionPath { get; set; } = "";
 
         [XmlArray]
-        public List<MapSymbol> CollectionMapSymbols = [];
+        public List<MapSymbol> CollectionMapSymbols { get; set; } = [];
 
         public string GetCollectionName()
         {

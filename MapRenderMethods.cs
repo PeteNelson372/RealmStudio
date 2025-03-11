@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class MapRenderMethods
+    internal sealed class MapRenderMethods
     {
         public static void RenderMapForExport(RealmStudioMap map, SKCanvas renderCanvas)
         {

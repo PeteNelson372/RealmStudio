@@ -26,7 +26,7 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class MapRegionMethods
+    internal sealed class MapRegionMethods
     {
         public static int POINT_CIRCLE_RADIUS = 5;
 
@@ -58,23 +58,23 @@ namespace RealmStudio
             SKPathEffect? pathEffect = null;
             switch (region.RegionBorderType)
             {
-                case PathTypeEnum.DottedLinePath:
+                case PathType.DottedLinePath:
                     float[] intervals = [0, region.RegionBorderWidth * 2];
                     pathEffect = SKPathEffect.CreateDash(intervals, 0);
                     break;
-                case PathTypeEnum.DashedLinePath:
+                case PathType.DashedLinePath:
                     intervals = [region.RegionBorderWidth, region.RegionBorderWidth * 2];
                     pathEffect = SKPathEffect.CreateDash(intervals, 0);
                     break;
-                case PathTypeEnum.DashDotLinePath:
+                case PathType.DashDotLinePath:
                     intervals = [region.RegionBorderWidth, region.RegionBorderWidth * 2, 0, region.RegionBorderWidth * 2];
                     pathEffect = SKPathEffect.CreateDash(intervals, 0);
                     break;
-                case PathTypeEnum.DashDotDotLinePath:
+                case PathType.DashDotDotLinePath:
                     intervals = [region.RegionBorderWidth, region.RegionBorderWidth * 2, 0, region.RegionBorderWidth * 2, 0, region.RegionBorderWidth * 2];
                     pathEffect = SKPathEffect.CreateDash(intervals, 0);
                     break;
-                case PathTypeEnum.LineAndDashesPath:
+                case PathType.LineAndDashesPath:
                     float ldWidth = Math.Max(1, region.RegionBorderWidth / 2.0F);
 
                     string svgPath = "M 0 0"
@@ -122,7 +122,7 @@ namespace RealmStudio
             }
         }
 
-        internal static void MoveSelectedRegionInRenderOrder(RealmStudioMap map, MapRegion? currentRegion, ComponentMoveDirectionEnum direction)
+        internal static void MoveSelectedRegionInRenderOrder(RealmStudioMap map, MapRegion? currentRegion, ComponentMoveDirection direction)
         {
             if (currentRegion != null)
             {
@@ -145,7 +145,7 @@ namespace RealmStudio
                     }
                 }
 
-                if (direction == ComponentMoveDirectionEnum.Up)
+                if (direction == ComponentMoveDirection.Up)
                 {
                     // moving a region up in render order means increasing its index
                     if (selectedRegion != null && selectedRegionIndex < regionComponents.Count - 1)
@@ -154,7 +154,7 @@ namespace RealmStudio
                         regionComponents[selectedRegionIndex + 1] = selectedRegion;
                     }
                 }
-                else if (direction == ComponentMoveDirectionEnum.Down)
+                else if (direction == ComponentMoveDirection.Down)
                 {
                     // moving a region down in render order means decreasing its index
                     if (selectedRegion != null && selectedRegionIndex > 0)

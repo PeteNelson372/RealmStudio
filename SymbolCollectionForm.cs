@@ -78,9 +78,9 @@ namespace RealmStudio
                             {
                                 if (!string.IsNullOrEmpty(symbol.SymbolFilePath))
                                 {
-                                    if (symbol.SymbolFormat == SymbolFormatEnum.PNG
-                                        || symbol.SymbolFormat == SymbolFormatEnum.JPG
-                                        || symbol.SymbolFormat == SymbolFormatEnum.BMP)
+                                    if (symbol.SymbolFormat == SymbolFileFormat.PNG
+                                        || symbol.SymbolFormat == SymbolFileFormat.JPG
+                                        || symbol.SymbolFormat == SymbolFileFormat.BMP)
                                     {
                                         symbol.SetSymbolBitmapFromPath(symbol.SymbolFilePath);
                                         SymbolMethods.AnalyzeSymbolBitmapColors(symbol);
@@ -103,7 +103,7 @@ namespace RealmStudio
                                     }
                                 }
 
-                                if (symbol.SymbolType == SymbolTypeEnum.NotSet)
+                                if (symbol.SymbolType == MapSymbolType.NotSet)
                                 {
                                     SymbolMethods.GuessSymbolTypeFromTags(symbol);
                                 }
@@ -232,7 +232,7 @@ namespace RealmStudio
 
                 foreach (MapSymbol symbol in COLLECTION.GetCollectionMapSymbols())
                 {
-                    if (symbol.SymbolType == SymbolTypeEnum.NotSet)
+                    if (symbol.SymbolType == MapSymbolType.NotSet)
                     {
                         allSymbolTypesAssigned = false;
                         break;
@@ -297,23 +297,23 @@ namespace RealmStudio
                 {
                     if (StructureRadioButton.Checked)
                     {
-                        SELECTED_SYMBOL.SymbolType = SymbolTypeEnum.Structure;
+                        SELECTED_SYMBOL.SymbolType = MapSymbolType.Structure;
                     }
                     else if (VegetationRadioButton.Checked)
                     {
-                        SELECTED_SYMBOL.SymbolType = SymbolTypeEnum.Vegetation;
+                        SELECTED_SYMBOL.SymbolType = MapSymbolType.Vegetation;
                     }
                     else if (TerrainRadioButton.Checked)
                     {
-                        SELECTED_SYMBOL.SymbolType = SymbolTypeEnum.Terrain;
+                        SELECTED_SYMBOL.SymbolType = MapSymbolType.Terrain;
                     }
                     else if (OtherRadioButton.Checked)
                     {
-                        SELECTED_SYMBOL.SymbolType = SymbolTypeEnum.Other;
+                        SELECTED_SYMBOL.SymbolType = MapSymbolType.Other;
                     }
                     else
                     {
-                        SELECTED_SYMBOL.SymbolType = SymbolTypeEnum.NotSet;
+                        SELECTED_SYMBOL.SymbolType = MapSymbolType.NotSet;
                     }
 
                     if (!string.IsNullOrEmpty(SymbolNameTextBox.Text))
@@ -593,16 +593,16 @@ namespace RealmStudio
         {
             switch (symbol.SymbolType)
             {
-                case SymbolTypeEnum.Terrain:
+                case MapSymbolType.Terrain:
                     TerrainRadioButton.Checked = true;
                     break;
-                case SymbolTypeEnum.Structure:
+                case MapSymbolType.Structure:
                     StructureRadioButton.Checked = true;
                     break;
-                case SymbolTypeEnum.Vegetation:
+                case MapSymbolType.Vegetation:
                     VegetationRadioButton.Checked = true;
                     break;
-                case SymbolTypeEnum.Other:
+                case MapSymbolType.Other:
                     OtherRadioButton.Checked = true;
                     break;
                 default:
@@ -644,7 +644,7 @@ namespace RealmStudio
         {
             if (COLLECTION != null && SELECTED_SYMBOL != null)
             {
-                if (SELECTED_SYMBOL.SymbolType != SymbolTypeEnum.NotSet)
+                if (SELECTED_SYMBOL.SymbolType != MapSymbolType.NotSet)
                 {
                     SYMBOL_NUMBER++;
                     SYMBOL_NUMBER = Math.Min(SYMBOL_NUMBER, COLLECTION.GetCollectionMapSymbols().Count - 1);

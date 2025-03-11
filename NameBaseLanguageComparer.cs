@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class NameBaseLanguageComparer : Comparer<NameBaseLanguage>
+    internal sealed class NameBaseLanguageComparer : Comparer<NameBaseLanguage>
     {
         public override int Compare(NameBaseLanguage? lang1, NameBaseLanguage? lang2)
         {

@@ -32,7 +32,7 @@ using Blob = AForge.Imaging.Blob;
 
 namespace RealmStudio
 {
-    internal class DrawingMethods
+    internal sealed class DrawingMethods
     {
         private const float PI_OVER_180 = (float)Math.PI / 180F;
         private const float D180_OVER_PI = (float)((float)180.0F / Math.PI);
@@ -571,7 +571,32 @@ namespace RealmStudio
 
         }
 
-        internal static SKBitmap ResizeBitmap(SKBitmap bitmap, SKSizeI newsize)
+        internal static Bitmap SetBitmapOpacity(Bitmap b, float opacity)
+        {
+            Bitmap newB = new(b.Width, b.Height, PixelFormat.Format32bppArgb);
+
+            using Graphics g = Graphics.FromImage(newB);
+
+            //create a color matrix object  
+            ColorMatrix matrix = new()
+            {
+                //set the opacity  
+                Matrix33 = opacity
+            };
+
+            //create image attributes  
+            ImageAttributes attributes = new();
+
+            //set the color(opacity) of the image  
+            attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+
+            //now draw the image
+            g.DrawImage(b, new Rectangle(0, 0, b.Width, b.Height), 0, 0, b.Width, b.Height, GraphicsUnit.Pixel, attributes);
+
+            return newB;
+        }
+
+        internal static SKBitmap ResizeSKBitmap(SKBitmap bitmap, SKSizeI newsize)
         {
             SKBitmap resizedSKBitmap = new(newsize.Width, newsize.Height);
             bitmap.ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
@@ -579,7 +604,24 @@ namespace RealmStudio
             return resizedSKBitmap;
         }
 
-        internal static SKBitmap ScaleBitmap(SKBitmap bitmap, float scale)
+        internal static Bitmap ScaleBitmap(Bitmap bmp, int maxWidth, int maxHeight)
+        {
+            var ratioX = (double)maxWidth / bmp.Width;
+            var ratioY = (double)maxHeight / bmp.Height;
+            var ratio = Math.Min(ratioX, ratioY);
+
+            var newWidth = (int)(bmp.Width * ratio);
+            var newHeight = (int)(bmp.Height * ratio);
+
+            var newImage = new Bitmap(newWidth, newHeight);
+
+            using (var graphics = Graphics.FromImage(newImage))
+                graphics.DrawImage(bmp, 0, 0, newWidth, newHeight);
+
+            return newImage;
+        }
+
+        internal static SKBitmap ScaleSKBitmap(SKBitmap bitmap, float scale)
         {
             int bitmapWidth = (int)Math.Round(bitmap.Width * scale);
             int bitmapHeight = (int)Math.Round(bitmap.Height * scale);
@@ -590,7 +632,7 @@ namespace RealmStudio
             return resizedSKBitmap;
         }
 
-        internal static SKBitmap RotateBitmap(SKBitmap bmp, float angle, bool flipX)
+        internal static SKBitmap RotateSKBitmap(SKBitmap bmp, float angle, bool flipX)
         {
             Bitmap bitmap = Extensions.ToBitmap(bmp);
             double radianAngle = angle / 180.0 * Math.PI;
@@ -840,7 +882,7 @@ namespace RealmStudio
             return slicedBitmaps;
         }
 
-        internal static SKPath GetInnerOrOuterPath(List<SKPoint> pathPoints, float distance, ParallelEnum location)
+        internal static SKPath GetInnerOrOuterPath(List<SKPoint> pathPoints, float distance, ParallelDirection location)
         {
             List<SKPoint> newPoints = GetParallelPoints(pathPoints, distance, location);
             SKPath newPath = new();
@@ -881,7 +923,7 @@ namespace RealmStudio
             return path;
         }
 
-        internal static List<SKPoint> GetParallelPoints(List<SKPoint> points, double distance, ParallelEnum location)
+        internal static List<SKPoint> GetParallelPoints(List<SKPoint> points, double distance, ParallelDirection location)
         {
             if (points.Count == 0) return points;
 
@@ -910,7 +952,7 @@ namespace RealmStudio
 
             //double d = distance;
 
-            if (location == ParallelEnum.Below)
+            if (location == ParallelDirection.Below)
             {
                 distance = -distance;
             }
@@ -947,7 +989,7 @@ namespace RealmStudio
             }
         }
 
-        internal static List<MapRegionPoint> GetParallelRegionPoints(List<MapRegionPoint> points, float distance, ParallelEnum location)
+        internal static List<MapRegionPoint> GetParallelRegionPoints(List<MapRegionPoint> points, float distance, ParallelDirection location)
         {
             PathD clipperPath = [];
 
@@ -960,7 +1002,7 @@ namespace RealmStudio
 
             clipperPaths.Add(clipperPath);
 
-            float d = (location == ParallelEnum.Below) ? -distance : distance;
+            float d = (location == ParallelDirection.Below) ? -distance : distance;
 
             // offset polyline
             PathsD inflatedPaths = Clipper.InflatePaths(clipperPaths, d, JoinType.Square, EndType.Polygon);

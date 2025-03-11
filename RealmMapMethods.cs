@@ -26,7 +26,7 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class RealmMapMethods
+    internal sealed class RealmMapMethods
     {
         internal static RealmStudioMap? CreateDetailMap(RealmStudioMainForm mainForm, RealmStudioMap currentMap, SKRect selectedArea)
         {
@@ -605,17 +605,17 @@ namespace RealmStudio
                 {
                     if (selectedMapArea.Contains(ms.X, ms.Y))
                     {
-                        if (includeTerrainSymbols && ms.SymbolType == SymbolTypeEnum.Terrain)
+                        if (includeTerrainSymbols && ms.SymbolType == MapSymbolType.Terrain)
                         {
                             gatheredSymbols.Add(ms);
                         }
 
-                        if (includeVegetationSymbols && ms.SymbolType == SymbolTypeEnum.Vegetation)
+                        if (includeVegetationSymbols && ms.SymbolType == MapSymbolType.Vegetation)
                         {
                             gatheredSymbols.Add(ms);
                         }
 
-                        if (includeStructureSymbols && ms.SymbolType == SymbolTypeEnum.Structure)
+                        if (includeStructureSymbols && ms.SymbolType == MapSymbolType.Structure)
                         {
                             gatheredSymbols.Add(ms);
                         }
@@ -808,7 +808,7 @@ namespace RealmStudio
                 {
                     if (box.BoxBitmap != null)
                     {
-                        SKBitmap resizedBitmap = DrawingMethods.ResizeBitmap(box.BoxBitmap, new SKSizeI((int)(box.Width * scaleX), (int)(box.Height * scaleY)));
+                        SKBitmap resizedBitmap = DrawingMethods.ResizeSKBitmap(box.BoxBitmap, new SKSizeI((int)(box.Width * scaleX), (int)(box.Height * scaleY)));
 
                         PlacedMapBox newBox = new(box)
                         {

@@ -27,7 +27,7 @@ namespace RealmStudio
 {
     // custom cursor code adapted from https://csharpindeep.wordpress.com/2013/10/25/c-tutorial-how-to-use-custom-cursors-intermediate/
 
-    public struct IconInfo
+    internal struct IconInfo
     {
         public bool FIcon { get; set; }
         public int XHotspot { get; set; }
@@ -36,7 +36,7 @@ namespace RealmStudio
         public IntPtr HbmColor { get; set; }
     }
 
-    internal class CustomCursor
+    internal sealed class CustomCursor
     {
 #pragma warning disable SYSLIB1054
         [DllImport("user32.dll")]

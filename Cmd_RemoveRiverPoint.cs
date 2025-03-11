@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_RemoveRiverPoint(River selectedRiver, MapRiverPoint selectedRiverPoint) : IMapOperation
+    internal sealed class Cmd_RemoveRiverPoint(River selectedRiver, MapRiverPoint selectedRiverPoint) : IMapOperation
     {
         private readonly River _river = selectedRiver;
         private MapRiverPoint riverPoint = selectedRiverPoint;

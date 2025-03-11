@@ -26,7 +26,7 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class Cmd_ChangeBoxColor : IMapOperation
+    internal sealed class Cmd_ChangeBoxColor : IMapOperation
     {
         private readonly PlacedMapBox SelectedBox;
         private readonly Color BoxColor;

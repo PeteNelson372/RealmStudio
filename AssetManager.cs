@@ -27,7 +27,7 @@ using System.Xml.Linq;
 
 namespace RealmStudio
 {
-    internal class AssetManager
+    internal sealed class AssetManager
     {
         public static Cursor? EYEDROPPER_CURSOR { get; set; }
 
@@ -490,9 +490,9 @@ namespace RealmStudio
 
                             if (!string.IsNullOrEmpty(symbol.SymbolFilePath))
                             {
-                                if (symbol.SymbolFormat == SymbolFormatEnum.PNG
-                                    || symbol.SymbolFormat == SymbolFormatEnum.JPG
-                                    || symbol.SymbolFormat == SymbolFormatEnum.BMP)
+                                if (symbol.SymbolFormat == SymbolFileFormat.PNG
+                                    || symbol.SymbolFormat == SymbolFileFormat.JPG
+                                    || symbol.SymbolFormat == SymbolFileFormat.BMP)
                                 {
                                     if (!string.IsNullOrEmpty(symbol.SymbolFilePath))
                                     {

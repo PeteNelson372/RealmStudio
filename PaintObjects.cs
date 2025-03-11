@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class PaintObjects
+    internal sealed class PaintObjects
     {
         public static readonly SKPaint LandformSelectPaint = new()
         {

@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class MapToolMethods
+    internal sealed class MapToolMethods
     {
         public static List<NameGenerator> NameGenerators { get; set; } = [];
         public static List<NameBase> NameBases { get; set; } = [];

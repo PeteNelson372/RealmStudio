@@ -26,10 +26,8 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class MapPathMethods
+    internal sealed class MapPathMethods
     {
-        //private static SKShader? PathTextureShader { get; set; } = null;
-
         public static void ConstructPathPaint(MapPath mapPath)
         {
             if (mapPath.PathPaint != null) return;
@@ -38,7 +36,7 @@ namespace RealmStudio
 
             switch (mapPath.PathType)
             {
-                case PathTypeEnum.ThickSolidLinePath:
+                case PathType.ThickSolidLinePath:
                     strokeWidth = mapPath.PathWidth * 1.5F;
                     break;
             }
@@ -63,12 +61,12 @@ namespace RealmStudio
 
             switch (mapPath.PathType)
             {
-                case PathTypeEnum.LineAndDashesPath:
-                case PathTypeEnum.BorderedGradientPath:
-                case PathTypeEnum.BorderedLightSolidPath:
+                case PathType.LineAndDashesPath:
+                case PathType.BorderedGradientPath:
+                case PathType.BorderedLightSolidPath:
                     pathPaint.StrokeCap = SKStrokeCap.Butt;
                     break;
-                case PathTypeEnum.TexturedPath:
+                case PathType.TexturedPath:
                     if (mapPath.PathTexture != null)
                     {
                         // construct a shader from the selected path texture
@@ -77,7 +75,7 @@ namespace RealmStudio
 
                     pathPaint.Style = SKPaintStyle.Stroke;
                     break;
-                case PathTypeEnum.BorderAndTexturePath:
+                case PathType.BorderAndTexturePath:
                     pathPaint.StrokeCap = SKStrokeCap.Round;
 
                     if (mapPath.PathTexture != null)
@@ -92,29 +90,29 @@ namespace RealmStudio
             mapPath.PathPaint = pathPaint;
         }
 
-        private static SKPathEffect? ConstructPathLineEffect(PathTypeEnum pathType, float pathWidth)
+        private static SKPathEffect? ConstructPathLineEffect(PathType pathType, float pathWidth)
         {
             SKPathEffect? pathLineEffect = null;
 
             switch (pathType)
             {
-                case PathTypeEnum.DottedLinePath:
+                case PathType.DottedLinePath:
                     float[] intervals = [0, pathWidth];
                     pathLineEffect = SKPathEffect.CreateDash(intervals, 0);
                     break;
-                case PathTypeEnum.DashedLinePath:
+                case PathType.DashedLinePath:
                     intervals = [pathWidth, pathWidth];
                     pathLineEffect = SKPathEffect.CreateDash(intervals, 0);
                     break;
-                case PathTypeEnum.DashDotLinePath:
+                case PathType.DashDotLinePath:
                     intervals = [pathWidth, pathWidth, 0, pathWidth];
                     pathLineEffect = SKPathEffect.CreateDash(intervals, 0);
                     break;
-                case PathTypeEnum.DashDotDotLinePath:
+                case PathType.DashDotDotLinePath:
                     intervals = [pathWidth, pathWidth, 0, pathWidth, 0, pathWidth];
                     pathLineEffect = SKPathEffect.CreateDash(intervals, 0);
                     break;
-                case PathTypeEnum.ChevronLinePath:
+                case PathType.ChevronLinePath:
                     string svgPath = "M 0 0"
                         + " L" + pathWidth.ToString() + " 0"
                         + " L" + (pathWidth * 1.5F).ToString() + " " + (pathWidth / 2.0F).ToString()
@@ -129,7 +127,7 @@ namespace RealmStudio
 
                     pathLineEffect = SKPathEffect.Create1DPath(chevronPath, pathWidth, 0, SKPath1DPathEffectStyle.Rotate);
                     break;
-                case PathTypeEnum.BearTracksPath:
+                case PathType.BearTracksPath:
                     SKPath? bearTrackPath = GetPathFromSvg("Bear Tracks", pathWidth);
 
                     if (bearTrackPath != null)
@@ -139,7 +137,7 @@ namespace RealmStudio
                     }
 
                     break;
-                case PathTypeEnum.BirdTracksPath:
+                case PathType.BirdTracksPath:
                     SKPath? birdTrackPath = GetPathFromSvg("Bird Tracks", pathWidth);
 
                     if (birdTrackPath != null)
@@ -148,7 +146,7 @@ namespace RealmStudio
                             pathWidth, 0, SKPath1DPathEffectStyle.Rotate);
                     }
                     break;
-                case PathTypeEnum.FootprintsPath:
+                case PathType.FootprintsPath:
                     SKPath? footprintsPath = GetPathFromSvg("Foot Prints", pathWidth);
 
                     if (footprintsPath != null)
@@ -157,25 +155,6 @@ namespace RealmStudio
                             pathWidth, 0, SKPath1DPathEffectStyle.Rotate);
                     }
                     break;
-                    /*
-                    case PathTypeEnum.RailroadTracksPath:
-                        // TODO: the railroad tracks path doesn't look great; improve it
-                        svgPath = "M0,0"
-                            + " h " + pathWidth.ToString()
-                            + " v" + (pathWidth * 0.2F).ToString()
-                            + " h " + (-pathWidth).ToString()
-                            + " M" + (pathWidth / 3.33F).ToString() + ", " + (pathWidth * 0.2F).ToString()
-                            + " v " + pathWidth.ToString()
-                            + " h" + (pathWidth * 0.2F).ToString()
-                            + " v " + (-pathWidth).ToString()
-                            + " M0," + (pathWidth * 1.2F).ToString()
-                            + " h " + pathWidth.ToString()
-                            + " v" + (-pathWidth * 0.2F).ToString()
-                            + " h " + (-pathWidth).ToString();
-
-                        pathLineEffect = SKPathEffect.Create1DPath(SKPath.ParseSvgPathData(svgPath), pathWidth, 0, SKPath1DPathEffectStyle.Morph);
-                        break;
-                    */
             }
 
             return pathLineEffect;
@@ -231,12 +210,12 @@ namespace RealmStudio
             return null;
         }
 
-        internal static List<MapPathPoint> GetParallelPathPoints(List<MapPathPoint> points, float distance, ParallelEnum location)
+        internal static List<MapPathPoint> GetParallelPathPoints(List<MapPathPoint> points, float distance, ParallelDirection location)
         {
             List<MapPathPoint> parallelPoints = [];
 
-            //float d = (location == ParallelEnum.Below) ? distance : -distance;
-            float offsetAngle = (location == ParallelEnum.Above) ? 90 : -90;
+            //float d = (location == ParallelDirection.Below) ? distance : -distance;
+            float offsetAngle = (location == ParallelDirection.Above) ? 90 : -90;
 
             SKPoint maxXPoint = new(-1.0F, 0);
             SKPoint maxYPoint = new(0, -1.0F);
@@ -398,7 +377,7 @@ namespace RealmStudio
             }
 
             // remove points that cause loops in the parallel path when
-            // the path has a sharp turn in it; his is done by finding the
+            // the path has a sharp turn in it; this is done by finding the
             // point where the lines in the path intersect, then removing
             // the points that are outside the lines (X value is greater
             // than the intersection point X value and Y value is less than

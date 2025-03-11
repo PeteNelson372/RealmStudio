@@ -52,13 +52,13 @@ namespace RealmStudio
 
             switch (this.symbol.SymbolType)
             {
-                case SymbolTypeEnum.Terrain:
+                case MapSymbolType.Terrain:
                     TerrainRadioButton.Checked = true;
                     break;
-                case SymbolTypeEnum.Structure:
+                case MapSymbolType.Structure:
                     StructureRadioButton.Checked = true;
                     break;
-                case SymbolTypeEnum.Vegetation:
+                case MapSymbolType.Vegetation:
                     VegetationRadioButton.Checked = true;
                     break;
             }

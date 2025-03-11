@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class Cmd_RemovePathPoint(MapPath selectedMapPath, MapPathPoint selectedPathPoint) : IMapOperation
+    internal sealed class Cmd_RemovePathPoint(MapPath selectedMapPath, MapPathPoint selectedPathPoint) : IMapOperation
     {
         private readonly MapPath _mapPath = selectedMapPath;
         private MapPathPoint pathPoint = selectedPathPoint;

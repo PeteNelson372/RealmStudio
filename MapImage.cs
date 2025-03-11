@@ -32,6 +32,7 @@ namespace RealmStudio
     public class MapImage : MapComponent, IXmlSerializable
     {
         public SKBitmap? MapImageBitmap { get; set; }
+        public bool MirrorImage { get; set; }
 
         public MapImage() { }
 
@@ -39,7 +40,25 @@ namespace RealmStudio
         {
             if (MapImageBitmap != null)
             {
-                canvas.DrawBitmap(MapImageBitmap, X, Y);
+                using SKPaint ImageFillPaint = new()
+                {
+                    Style = SKPaintStyle.Fill,
+                    IsAntialias = true,
+                    BlendMode = SKBlendMode.Src,
+                };
+
+                if (MirrorImage)
+                {
+                    SKShader imgShader = SKShader.CreateBitmap(MapImageBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                    ImageFillPaint.Shader = imgShader;
+                }
+                else
+                {
+                    SKShader imgShader = SKShader.CreateBitmap(MapImageBitmap, SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                    ImageFillPaint.Shader = imgShader;
+                }
+
+                canvas.DrawRect(X, Y, Width, Height, ImageFillPaint);
             }
         }
 
@@ -71,6 +90,25 @@ namespace RealmStudio
                 Height = MapImageBitmap.Height;
             }
 
+            IEnumerable<XElement?> mirrorImageElem = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "MirrorImage"));
+            if (mirrorImageElem != null && mirrorImageElem.Any() && mirrorImageElem.First() != null)
+            {
+                string? mirrorImage = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "MirrorImage").Value).FirstOrDefault();
+
+                if (bool.TryParse(mirrorImage, out bool boolMirror))
+                {
+                    MirrorImage = boolMirror;
+                }
+                else
+                {
+                    MirrorImage = false;
+                }
+            }
+            else
+            {
+                MirrorImage = false;
+            }
+
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
@@ -80,10 +118,15 @@ namespace RealmStudio
             {
                 using MemoryStream ms = new();
                 using SKManagedWStream wstream = new(ms);
+
                 MapImageBitmap.Encode(wstream, SKEncodedImageFormat.Png, 100);
                 byte[] bitmapData = ms.ToArray();
                 writer.WriteStartElement("Bitmap");
                 writer.WriteBase64(bitmapData, 0, bitmapData.Length);
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("MirrorImage");
+                writer.WriteValue(MirrorImage);
                 writer.WriteEndElement();
             }
         }

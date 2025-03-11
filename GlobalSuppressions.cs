@@ -6,6 +6,6 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>", Scope = "member", Target = "~F:RealmStudio.RealmStudioMainForm.NAME_GENERATOR_CONFIG")]
-[assembly: SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>", Scope = "member", Target = "~M:RealmStudio.RealmStudioMainForm.ExportMapAsImage(RealmStudio.MapExportFormatEnum,System.Boolean)")]
-[assembly: SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>", Scope = "member", Target = "~M:RealmStudio.RealmStudioMainForm.ExportMapAsLayers(RealmStudio.MapExportFormatEnum)")]
-[assembly: SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>", Scope = "member", Target = "~M:RealmStudio.RealmStudioMainForm.ExportHeightMap(RealmStudio.MapExportFormatEnum)")]
+[assembly: SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>", Scope = "member", Target = "~M:RealmStudio.RealmStudioMainForm.ExportMapAsImage(RealmStudio.RealmMapExportFormat,System.Boolean)")]
+[assembly: SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>", Scope = "member", Target = "~M:RealmStudio.RealmStudioMainForm.ExportMapAsLayers(RealmStudio.RealmMapExportFormat)")]
+[assembly: SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>", Scope = "member", Target = "~M:RealmStudio.RealmStudioMainForm.ExportHeightMap(RealmStudio.RealmMapExportFormat)")]

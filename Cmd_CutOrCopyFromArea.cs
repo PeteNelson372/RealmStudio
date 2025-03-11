@@ -26,7 +26,7 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    class Cmd_CutOrCopyFromArea(RealmStudioMap map, List<MapComponent> selectedMapComponents, SKRect selectedMapArea, bool cutFromArea = true) : IMapOperation
+    internal sealed class Cmd_CutOrCopyFromArea(RealmStudioMap map, List<MapComponent> selectedMapComponents, SKRect selectedMapArea, bool cutFromArea = true) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly List<MapComponent> StoredComponents = [];

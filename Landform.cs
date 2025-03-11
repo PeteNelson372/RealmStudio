@@ -189,7 +189,7 @@ namespace RealmStudio
         public Color LandformBackgroundColor { get; set; } = Color.White;
         public Color LandformFillColor { get; set; } = ColorTranslator.FromHtml("#AC964F");
         public int LandformOutlineWidth { get; set; } = 2;
-        public GradientDirectionEnum ShorelineStyle { get; set; } = GradientDirectionEnum.None;
+        public LandGradientDirection ShorelineStyle { get; set; } = LandGradientDirection.None;
         public Color CoastlineColor { get; set; } = ColorTranslator.FromHtml("#BB9CC3B7");
         public int CoastlineEffectDistance { get; set; } = 16;
         public string CoastlineStyleName { get; set; } = "None";
@@ -402,7 +402,7 @@ namespace RealmStudio
         #region DASH PATTERN COASTLINE
         private void DrawDashPatternCoastlineEffect(SKCanvas canvas)
         {
-            double colorAlphaStep = 1.0 / (256.0 / 8.0);
+            double colorAlphaStep = 0.03125F;
             CoastlineFillPaint.StrokeWidth = CoastlineEffectDistance / 8.0F;
 
             // outer path 1
@@ -414,7 +414,7 @@ namespace RealmStudio
             canvas.DrawPath(OuterPath1, CoastlineFillPaint);
 
             // outer path 2
-            Color gradientColor = Color.FromArgb((int)(CoastlineColor.A * (8 * colorAlphaStep)), CoastlineColor);
+            Color gradientColor = Color.FromArgb((int)(CoastlineColor.A * (14 * colorAlphaStep)), CoastlineColor);
 
             CoastlineFillPaint.Shader?.Dispose();
             CoastlineFillPaint.Shader = SKShader.CreateCompose(
@@ -425,7 +425,7 @@ namespace RealmStudio
             canvas.DrawPath(OuterPath2, CoastlineFillPaint);
 
             // outer path 3
-            gradientColor = Color.FromArgb((int)(CoastlineColor.A * (7 * colorAlphaStep)), CoastlineColor);
+            gradientColor = Color.FromArgb((int)(CoastlineColor.A * (12 * colorAlphaStep)), CoastlineColor);
 
             CoastlineFillPaint.Shader?.Dispose();
             CoastlineFillPaint.Shader = SKShader.CreateCompose(
@@ -436,7 +436,7 @@ namespace RealmStudio
             canvas.DrawPath(OuterPath3, CoastlineFillPaint);
 
             // outer path 4
-            gradientColor = Color.FromArgb((int)(CoastlineColor.A * (6 * colorAlphaStep)), CoastlineColor);
+            gradientColor = Color.FromArgb((int)(CoastlineColor.A * (10 * colorAlphaStep)), CoastlineColor);
 
             CoastlineFillPaint.Shader?.Dispose();
             CoastlineFillPaint.Shader = SKShader.CreateCompose(
@@ -447,7 +447,7 @@ namespace RealmStudio
             canvas.DrawPath(OuterPath4, CoastlineFillPaint);
 
             // outer path 5
-            gradientColor = Color.FromArgb((int)(CoastlineColor.A * (5 * colorAlphaStep)), CoastlineColor);
+            gradientColor = Color.FromArgb((int)(CoastlineColor.A * (8 * colorAlphaStep)), CoastlineColor);
 
             CoastlineFillPaint.Shader?.Dispose();
             CoastlineFillPaint.Shader = SKShader.CreateCompose(
@@ -458,7 +458,7 @@ namespace RealmStudio
             canvas.DrawPath(OuterPath5, CoastlineFillPaint);
 
             // outer path 6
-            gradientColor = Color.FromArgb((int)(CoastlineColor.A * (4 * colorAlphaStep)), CoastlineColor);
+            gradientColor = Color.FromArgb((int)(CoastlineColor.A * (6 * colorAlphaStep)), CoastlineColor);
 
             CoastlineFillPaint.Shader?.Dispose();
             CoastlineFillPaint.Shader = SKShader.CreateCompose(
@@ -469,7 +469,7 @@ namespace RealmStudio
             canvas.DrawPath(OuterPath6, CoastlineFillPaint);
 
             // outer path 7
-            gradientColor = Color.FromArgb((int)(CoastlineColor.A * (3 * colorAlphaStep)), CoastlineColor);
+            gradientColor = Color.FromArgb((int)(CoastlineColor.A * (4 * colorAlphaStep)), CoastlineColor);
 
             CoastlineFillPaint.Shader?.Dispose();
             CoastlineFillPaint.Shader = SKShader.CreateCompose(
@@ -705,37 +705,37 @@ namespace RealmStudio
         #region UNIFORM BLEND COASTLINE
         private void DrawUniformBlendCoastlineEffect(SKCanvas canvas)
         {
-            double colorAlphaStep = 1.0 / (256.0 / 8.0);
+            double colorAlphaStep = 0.03125F;
 
-            Color coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (1 * colorAlphaStep)), CoastlineColor);
+            Color coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (2 * colorAlphaStep)), CoastlineColor);
             CoastlinePaint.Color = coastRenderColor.ToSKColor();
             canvas.DrawPath(OuterPath8, CoastlinePaint);
 
-            coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (2 * colorAlphaStep)), CoastlineColor);
+            coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (4 * colorAlphaStep)), CoastlineColor);
             CoastlinePaint.Color = coastRenderColor.ToSKColor();
             canvas.DrawPath(OuterPath7, CoastlinePaint);
 
-            coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (3 * colorAlphaStep)), CoastlineColor);
+            coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (6 * colorAlphaStep)), CoastlineColor);
             CoastlinePaint.Color = coastRenderColor.ToSKColor();
             canvas.DrawPath(OuterPath6, CoastlinePaint);
 
-            coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (4 * colorAlphaStep)), CoastlineColor);
+            coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (8 * colorAlphaStep)), CoastlineColor);
             CoastlinePaint.Color = coastRenderColor.ToSKColor();
             canvas.DrawPath(OuterPath5, CoastlinePaint);
 
-            coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (5 * colorAlphaStep)), CoastlineColor);
+            coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (10 * colorAlphaStep)), CoastlineColor);
             CoastlinePaint.Color = coastRenderColor.ToSKColor();
             canvas.DrawPath(OuterPath4, CoastlinePaint);
 
-            coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (6 * colorAlphaStep)), CoastlineColor);
+            coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (12 * colorAlphaStep)), CoastlineColor);
             CoastlinePaint.Color = coastRenderColor.ToSKColor();
             canvas.DrawPath(OuterPath3, CoastlinePaint);
 
-            coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (7 * colorAlphaStep)), CoastlineColor);
+            coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (14 * colorAlphaStep)), CoastlineColor);
             CoastlinePaint.Color = coastRenderColor.ToSKColor();
             canvas.DrawPath(OuterPath2, CoastlinePaint);
 
-            coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (32 * colorAlphaStep)), CoastlineColor);
+            coastRenderColor = Color.FromArgb((int)(CoastlineColor.A * (16 * colorAlphaStep)), CoastlineColor);
             CoastlinePaint.Color = coastRenderColor.ToSKColor();
             canvas.DrawPath(OuterPath1, CoastlinePaint);
         }
@@ -804,7 +804,7 @@ namespace RealmStudio
 
                 landformCanvas.DrawPath(DrawPath, LandformFillPaint);
 
-                double colorAlphaStep = 1.0 / (256.0 / 8.0);
+                double colorAlphaStep = 0.03125F;  //1.0 / (256.0 / 8.0);
 
                 Color landformColor = Color.FromArgb((int)(LandformFillColor.A * (4 * colorAlphaStep)), LandformFillColor);
 
@@ -814,34 +814,35 @@ namespace RealmStudio
 
                 landformCanvas.DrawPath(InnerPath8, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (8 * colorAlphaStep)), LandformFillColor);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (12 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 landformCanvas.DrawPath(InnerPath7, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (12 * colorAlphaStep)), LandformFillColor);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (16 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 landformCanvas.DrawPath(InnerPath6, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (16 * colorAlphaStep)), LandformFillColor);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (20 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 landformCanvas.DrawPath(InnerPath5, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (20 * colorAlphaStep)), LandformFillColor);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (24 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 landformCanvas.DrawPath(InnerPath4, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (24 * colorAlphaStep)), LandformFillColor);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (28 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 landformCanvas.DrawPath(InnerPath3, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (28 * colorAlphaStep)), LandformFillColor);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (32 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 landformCanvas.DrawPath(InnerPath2, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (32 * colorAlphaStep)), LandformFillColor);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (36 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 landformCanvas.DrawPath(InnerPath1, LandformGradientPaint);
 
+                LandformOutlinePaint.StrokeWidth = LandformOutlineWidth;
                 LandformOutlinePaint.Color = LandformOutlineColor.ToSKColor();
                 landformCanvas.DrawPath(ContourPath, LandformOutlinePaint);
 
@@ -1069,19 +1070,19 @@ namespace RealmStudio
             {
                 string? styleName = mapLandformDoc.Descendants().Select(x => x.Element(ns + "ShorelineStyle").Value).FirstOrDefault();
 
-                GradientDirectionEnum shorelineStyleEnum = GradientDirectionEnum.LightToDark;
-                if (Enum.TryParse<GradientDirectionEnum>(styleName, out shorelineStyleEnum))
+                LandGradientDirection shorelineStyleEnum = LandGradientDirection.LightToDark;
+                if (Enum.TryParse<LandGradientDirection>(styleName, out shorelineStyleEnum))
                 {
                     ShorelineStyle = shorelineStyleEnum;
                 }
                 else
                 {
-                    ShorelineStyle = GradientDirectionEnum.LightToDark;
+                    ShorelineStyle = LandGradientDirection.LightToDark;
                 }
             }
             else
             {
-                ShorelineStyle = GradientDirectionEnum.LightToDark;
+                ShorelineStyle = LandGradientDirection.LightToDark;
             }
 
             colorElem = mapLandformDoc.Descendants(ns + "CoastlineColor");

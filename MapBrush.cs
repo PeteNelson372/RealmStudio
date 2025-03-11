@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class MapBrush
+    internal sealed class MapBrush
     {
         public required string BrushName { get; set; }
 

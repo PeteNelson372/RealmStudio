@@ -27,30 +27,28 @@ using System.Xml.Serialization;
 namespace RealmStudio
 {
     [XmlInclude(typeof(MapLayer))]
-    internal class MapFileMethods
+    internal sealed class MapFileMethods
     {
-        protected static void Serializer_UnknownNode(object sender, XmlNodeEventArgs e)
+        private static void Serializer_UnknownNode(object? sender, XmlNodeEventArgs e)
         {
             Program.LOGGER.Error("Exception on Load. Unknown Node: " + e.Name + "\t" + e.Text);
         }
 
-        protected static void Serializer_UnknownAttribute(object sender, XmlAttributeEventArgs e)
+        private static void Serializer_UnknownAttribute(object? sender, XmlAttributeEventArgs e)
         {
             System.Xml.XmlAttribute attr = e.Attr;
             Program.LOGGER.Error("Exception on Load. Unknown Attribute: " + attr.Name + "\t" + attr.Value);
         }
 
-        internal static RealmStudioMap OpenMap(string mapPath)
+        internal static RealmStudioMap? OpenMap(string mapPath)
         {
             XmlSerializer? serializer = new(typeof(RealmStudioMap));
 
             // If the XML document has been altered with unknown
             // nodes or attributes, handle them with the
             // UnknownNode and UnknownAttribute events.
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             serializer.UnknownNode += new XmlNodeEventHandler(Serializer_UnknownNode);
             serializer.UnknownAttribute += new XmlAttributeEventHandler(Serializer_UnknownAttribute);
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
 
             // A FileStream is needed to read the XML document.            
             FileStream fs = new(mapPath, FileMode.Open);
@@ -64,9 +62,11 @@ namespace RealmStudio
                 // Uses the Deserialize method to restore the object's state
                 // with data from the XML document. */
                 map = serializer.Deserialize(reader) as RealmStudioMap;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                map.IsSaved = false;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+                if (map != null)
+                {
+                    map.IsSaved = false;
+                }
             }
             catch (Exception ex)
             {
@@ -251,26 +251,26 @@ namespace RealmStudio
 
                 if (Path.GetExtension(f.File) == ".png")
                 {
-                    symbol.SymbolFormat = SymbolFormatEnum.PNG;
+                    symbol.SymbolFormat = SymbolFileFormat.PNG;
                 }
                 else if (Path.GetExtension(f.File) == ".jpg")
                 {
-                    symbol.SymbolFormat = SymbolFormatEnum.JPG;
+                    symbol.SymbolFormat = SymbolFileFormat.JPG;
                 }
                 else if (Path.GetExtension(f.File) == ".bmp")
                 {
-                    symbol.SymbolFormat = SymbolFormatEnum.BMP;
+                    symbol.SymbolFormat = SymbolFileFormat.BMP;
                 }
                 else if (Path.GetExtension(f.File) == ".svg")
                 {
-                    symbol.SymbolFormat = SymbolFormatEnum.Vector;
+                    symbol.SymbolFormat = SymbolFileFormat.Vector;
                 }
 
                 symbol.SymbolFilePath = f.File;
 
-                if (symbol.SymbolFormat == SymbolFormatEnum.PNG
-                    || symbol.SymbolFormat == SymbolFormatEnum.JPG
-                    || symbol.SymbolFormat == SymbolFormatEnum.BMP)
+                if (symbol.SymbolFormat == SymbolFileFormat.PNG
+                    || symbol.SymbolFormat == SymbolFileFormat.JPG
+                    || symbol.SymbolFormat == SymbolFileFormat.BMP)
                 {
                     // create the symbol SKBitmap from the bitmap at the path
                     try
@@ -281,7 +281,7 @@ namespace RealmStudio
                     catch { }
 
                 }
-                else if (symbol.SymbolFormat == SymbolFormatEnum.Vector)
+                else if (symbol.SymbolFormat == SymbolFileFormat.Vector)
                 {
                     try
                     {
@@ -305,10 +305,8 @@ namespace RealmStudio
             // If the XML document has been altered with unknown
             // nodes or attributes, handle them with the
             // UnknownNode and UnknownAttribute events.
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             serializer.UnknownNode += new XmlNodeEventHandler(Serializer_UnknownNode);
             serializer.UnknownAttribute += new XmlAttributeEventHandler(Serializer_UnknownAttribute);
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
 
             // A FileStream is needed to read the XML document.            
             using FileStream fs = new(path, FileMode.Open);
@@ -318,9 +316,11 @@ namespace RealmStudio
 
             try
             {
+                using XmlReader reader = XmlReader.Create(fs);
+
                 // Uses the Deserialize method to restore the object's state
-                // with data from the XML document. */
-                frame = serializer.Deserialize(fs) as MapFrame;
+                // with data from the XML document.
+                frame = serializer.Deserialize(reader) as MapFrame;
                 return frame;
             }
             catch (Exception ex)
@@ -368,10 +368,8 @@ namespace RealmStudio
             // If the XML document has been altered with unknown
             // nodes or attributes, handle them with the
             // UnknownNode and UnknownAttribute events.
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             serializer.UnknownNode += new XmlNodeEventHandler(Serializer_UnknownNode);
             serializer.UnknownAttribute += new XmlAttributeEventHandler(Serializer_UnknownAttribute);
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
 
             // A FileStream is needed to read the XML document.            
             using FileStream fs = new(path, FileMode.Open);
@@ -381,9 +379,11 @@ namespace RealmStudio
 
             try
             {
+                using XmlReader reader = XmlReader.Create(fs);
+
                 // Uses the Deserialize method to restore the object's state
-                // with data from the XML document. */
-                box = serializer.Deserialize(fs) as MapBox;
+                // with data from the XML document.
+                box = serializer.Deserialize(reader) as MapBox;
                 return box;
             }
             catch (Exception ex)
@@ -438,7 +438,6 @@ namespace RealmStudio
                 catch (Exception ex)
                 {
                     Program.LOGGER.Error("Error saving label preset: " + ex.Message);
-
                     MessageBox.Show("Error saving label preset: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
                 finally
@@ -455,10 +454,8 @@ namespace RealmStudio
             // If the XML document has been altered with unknown
             // nodes or attributes, handle them with the
             // UnknownNode and UnknownAttribute events.
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             serializer.UnknownNode += new XmlNodeEventHandler(Serializer_UnknownNode);
             serializer.UnknownAttribute += new XmlAttributeEventHandler(Serializer_UnknownAttribute);
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
 
             // A FileStream is needed to read the XML document.            
             using FileStream fs = new(path, FileMode.Open);
@@ -468,9 +465,11 @@ namespace RealmStudio
 
             try
             {
+                using XmlReader reader = XmlReader.Create(fs);
+
                 // Uses the Deserialize method to restore the object's state
-                // with data from the XML document. */
-                labelPreset = serializer.Deserialize(fs) as LabelPreset;
+                // with data from the XML document.
+                labelPreset = serializer.Deserialize(reader) as LabelPreset;
                 return labelPreset;
             }
             catch (Exception ex)
@@ -496,31 +495,31 @@ namespace RealmStudio
 
                 if (Path.GetFileNameWithoutExtension(path).Contains("Region"))
                 {
-                    lsf.LandformShapeType = GeneratedLandformTypeEnum.Region;
+                    lsf.LandformShapeType = GeneratedLandformType.Region;
                 }
                 else if (Path.GetFileNameWithoutExtension(path).Contains("Continent"))
                 {
-                    lsf.LandformShapeType = GeneratedLandformTypeEnum.Continent;
+                    lsf.LandformShapeType = GeneratedLandformType.Continent;
                 }
                 else if (Path.GetFileNameWithoutExtension(path).Contains("Island"))
                 {
-                    lsf.LandformShapeType = GeneratedLandformTypeEnum.Island;
+                    lsf.LandformShapeType = GeneratedLandformType.Island;
                 }
                 else if (Path.GetFileNameWithoutExtension(path).Contains("Archipelago"))
                 {
-                    lsf.LandformShapeType = GeneratedLandformTypeEnum.Archipelago;
+                    lsf.LandformShapeType = GeneratedLandformType.Archipelago;
                 }
                 else if (Path.GetFileNameWithoutExtension(path).Contains("Atoll"))
                 {
-                    lsf.LandformShapeType = GeneratedLandformTypeEnum.Atoll;
+                    lsf.LandformShapeType = GeneratedLandformType.Atoll;
                 }
                 else if (Path.GetFileNameWithoutExtension(path).Contains("World"))
                 {
-                    lsf.LandformShapeType = GeneratedLandformTypeEnum.World;
+                    lsf.LandformShapeType = GeneratedLandformType.World;
                 }
                 else if (Path.GetFileNameWithoutExtension(path).Contains("Icecap"))
                 {
-                    lsf.LandformShapeType = GeneratedLandformTypeEnum.Icecap;
+                    lsf.LandformShapeType = GeneratedLandformType.Icecap;
                 }
             }
             catch { }

@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class MapPathPointComparer : IEqualityComparer<MapPathPoint>
+    internal sealed class MapPathPointComparer : IEqualityComparer<MapPathPoint>
     {
         public bool Equals(MapPathPoint? p1, MapPathPoint? p2)
         {

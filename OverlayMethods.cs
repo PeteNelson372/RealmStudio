@@ -26,7 +26,7 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class OverlayMethods
+    internal sealed class OverlayMethods
     {
         internal static void CompletePlacedFrame(PlacedMapFrame mapFrame)
         {

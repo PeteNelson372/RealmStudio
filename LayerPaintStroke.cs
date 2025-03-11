@@ -35,7 +35,6 @@ namespace RealmStudio
     public class LayerPaintStroke : MapComponent, IXmlSerializable
     {
         public RealmStudioMap? ParentMap { get; set; }
-
         public Guid StrokeId { get; set; } = Guid.NewGuid();
         public List<LayerPaintStrokePoint> PaintStrokePoints { get; set; } = [];
         public SKColor StrokeColor { get; set; } = SKColor.Empty;

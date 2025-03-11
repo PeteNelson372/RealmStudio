@@ -25,11 +25,12 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class Cmd_SetOceanTexture(RealmStudioMap map, SKBitmap textureBitmap) : IMapOperation
+    internal sealed class Cmd_SetOceanTexture(RealmStudioMap map, SKBitmap textureBitmap, bool mirrorBackground = false) : IMapOperation
     {
         public RealmStudioMap Map { get; set; } = map;
-        private SKBitmap LayerTexture { get; set; } = textureBitmap;
+        private SKBitmap LayerBitmap { get; set; } = textureBitmap;
         private MapImage? OceanTexture { get; set; }
+        private bool MirrorBackground { get; set; } = mirrorBackground;
 
         public void DoOperation()
         {
@@ -39,9 +40,12 @@ namespace RealmStudio
             {
                 OceanTexture = new()
                 {
-                    Width = LayerTexture.Width,
-                    Height = LayerTexture.Height,
-                    MapImageBitmap = LayerTexture.Copy()
+                    X = 0,
+                    Y = 0,
+                    Width = Map.MapWidth,
+                    Height = Map.MapHeight,
+                    MirrorImage = MirrorBackground,
+                    MapImageBitmap = LayerBitmap.Copy()
                 };
 
                 oceanTextureLayer.MapLayerComponents.Add(OceanTexture);

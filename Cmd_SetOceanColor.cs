@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class Cmd_SetOceanColor(RealmStudioMap map, SKBitmap colorBitmap) : IMapOperation
+    internal sealed class Cmd_SetOceanColor(RealmStudioMap map, SKBitmap colorBitmap) : IMapOperation
     {
         public RealmStudioMap Map { get; set; } = map;
         private SKBitmap LayerColorBitmap { get; set; } = colorBitmap;

@@ -24,7 +24,7 @@
 
 namespace RealmStudio
 {
-    class Printer
+    internal sealed class Printer
     {
         public string Name { get; set; } = string.Empty;
         public bool IsDefault { get; set; }

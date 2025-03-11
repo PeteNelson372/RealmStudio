@@ -27,7 +27,7 @@ using System.Reflection;
 
 namespace RealmStudio
 {
-    internal class MapLabelMethods
+    internal sealed class MapLabelMethods
     {
         internal static SKPaint CreateLabelPaint(Color labelColor)
         {

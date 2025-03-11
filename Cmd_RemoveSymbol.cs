@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_RemoveSymbol(RealmStudioMap map, MapSymbol placedSymbol) : IMapOperation
+    internal sealed class Cmd_RemoveSymbol(RealmStudioMap map, MapSymbol placedSymbol) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly MapSymbol PlacedSymbol = placedSymbol;

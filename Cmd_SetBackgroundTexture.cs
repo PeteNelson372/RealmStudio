@@ -25,11 +25,12 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class Cmd_SetBackgroundTexture(RealmStudioMap map, SKBitmap textureBitmap) : IMapOperation
+    internal sealed class Cmd_SetBackgroundTexture(RealmStudioMap map, SKBitmap textureBitmap, bool mirrorBackground = false) : IMapOperation
     {
         public RealmStudioMap Map { get; set; } = map;
         private SKBitmap LayerBitmap { get; set; } = textureBitmap;
         private MapImage? BackgroundTexture { get; set; }
+        private bool MirrorBackground { get; set; } = mirrorBackground;
 
         public void DoOperation()
         {
@@ -39,8 +40,11 @@ namespace RealmStudio
             {
                 BackgroundTexture = new()
                 {
-                    Width = LayerBitmap.Width,
-                    Height = LayerBitmap.Height,
+                    X = 0,
+                    Y = 0,
+                    Width = Map.MapWidth,
+                    Height = Map.MapHeight,
+                    MirrorImage = MirrorBackground,
                     MapImageBitmap = LayerBitmap.Copy()
                 };
                 baseLayer.MapLayerComponents.Add(BackgroundTexture);

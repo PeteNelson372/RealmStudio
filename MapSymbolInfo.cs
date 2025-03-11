@@ -27,12 +27,12 @@ using System.Data;
 
 namespace RealmStudio
 {
-    public partial class MapSymbolInfo : Form
+    public sealed partial class MapSymbolInfo : Form
     {
         private readonly RealmStudioMap Map;
         private readonly MapSymbol symbol;
         private readonly MapSymbolCollection? collection;
-        public readonly Color[] originalColors = new Color[3];
+        private readonly Color[] originalColors = new Color[3];
 
         public MapSymbolInfo(RealmStudioMap map, MapSymbol symbol)
         {
@@ -57,13 +57,13 @@ namespace RealmStudio
 
             switch (this.symbol.SymbolType)
             {
-                case SymbolTypeEnum.Terrain:
+                case MapSymbolType.Terrain:
                     TerrainRadioButton.Checked = true;
                     break;
-                case SymbolTypeEnum.Structure:
+                case MapSymbolType.Structure:
                     StructureRadioButton.Checked = true;
                     break;
-                case SymbolTypeEnum.Vegetation:
+                case MapSymbolType.Vegetation:
                     VegetationRadioButton.Checked = true;
                     break;
             }

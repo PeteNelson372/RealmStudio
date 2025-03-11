@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    class Cmd_RemoveWaterFeature(RealmStudioMap map, IWaterFeature selectedWaterFeature) : IMapOperation
+    internal sealed class Cmd_RemoveWaterFeature(RealmStudioMap map, IWaterFeature selectedWaterFeature) : IMapOperation
     {
         private readonly RealmStudioMap _map = map;
         private IWaterFeature? storedWaterFeature;

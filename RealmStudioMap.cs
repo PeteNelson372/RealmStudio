@@ -74,10 +74,10 @@ namespace RealmStudio
         public string MapAreaUnits { get; set; } = string.Empty;
 
         [XmlAttribute]
-        public RealmTypeEnum RealmType { get; set; } = RealmTypeEnum.World;
+        public RealmMapType RealmType { get; set; } = RealmMapType.World;
 
         [XmlArray("MapLayers")]
-        public List<MapLayer> MapLayers = new(MapBuilder.MAP_LAYER_COUNT);
+        public List<MapLayer> MapLayers { get; set; } = new(MapBuilder.MAP_LAYER_COUNT);
 
         [XmlIgnore]
         public bool IsSaved { get => isSaved; set => isSaved = value; }

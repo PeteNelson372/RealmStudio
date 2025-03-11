@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddWaterPaintStroke(RealmStudioMap map, LayerPaintStroke paintStroke) : IMapOperation
+    internal sealed class Cmd_AddWaterPaintStroke(RealmStudioMap map, LayerPaintStroke paintStroke) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly LayerPaintStroke PaintStroke = paintStroke;

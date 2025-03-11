@@ -25,9 +25,9 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class LandformShapingFunction
+    internal sealed class LandformShapingFunction
     {
-        public GeneratedLandformTypeEnum LandformShapeType = GeneratedLandformTypeEnum.NotSet;
+        public GeneratedLandformType LandformShapeType = GeneratedLandformType.NotSet;
         public SKBitmap? ShapingBitmap { get; set; }
         public float[,] ShapeArray { get; set; } = { };
     }

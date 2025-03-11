@@ -26,7 +26,7 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class Cmd_PasteSelectedComponents(RealmStudioMap map, List<MapComponent> selectedMapComponents, SKRect selectedArea, SKPoint pastePoint) : IMapOperation
+    internal sealed class Cmd_PasteSelectedComponents(RealmStudioMap map, List<MapComponent> selectedMapComponents, SKRect selectedArea, SKPoint pastePoint) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly List<MapComponent> StoredComponents = [];

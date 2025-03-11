@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_CreateMapFrame(RealmStudioMap map, MapFrame? frame, Color frameTint, float frameScale) : IMapOperation
+    internal sealed class Cmd_CreateMapFrame(RealmStudioMap map, MapFrame? frame, Color frameTint, float frameScale) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private MapFrame? Frame = frame;

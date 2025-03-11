@@ -26,9 +26,9 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class SymbolMethods
+    internal sealed class SymbolMethods
     {
-        public static SymbolTypeEnum SELECTED_SYMBOL_TYPE { get; set; } = SymbolTypeEnum.NotSet;
+        public static MapSymbolType SELECTED_SYMBOL_TYPE { get; set; } = MapSymbolType.NotSet;
 
         private static readonly string SymbolTagsFilePath = AssetManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
 
@@ -98,7 +98,7 @@ namespace RealmStudio
 
         public static void AddTagSymbolAssocation(string tag, MapSymbol mapSymbol)
         {
-            Tuple<string, List<MapSymbol>>? tagSymbols = TagSymbolAssociationList.Find(x => x.Item1.Equals(tag));
+            Tuple<string, List<MapSymbol>>? tagSymbols = TagSymbolAssociationList.Find(x => x.Item1.Equals(tag, StringComparison.Ordinal));
 
             if (tagSymbols != null)
             {
@@ -175,7 +175,7 @@ namespace RealmStudio
             lockedBitmap.UnlockBits();
         }
 
-        internal static List<MapSymbol> GetFilteredSymbolList(SymbolTypeEnum selectedSymbolType, List<string> selectedCollections, List<string> selectedTags, string filterText = "")
+        internal static List<MapSymbol> GetFilteredSymbolList(MapSymbolType selectedSymbolType, List<string> selectedCollections, List<string> selectedTags, string filterText = "")
         {
             List<MapSymbol> filteredSymbols = GetMapSymbolsWithType(selectedSymbolType);
 
@@ -237,7 +237,7 @@ namespace RealmStudio
             return filteredSymbols;
         }
 
-        internal static List<MapSymbol> GetMapSymbolsWithType(SymbolTypeEnum symbolType)
+        internal static List<MapSymbol> GetMapSymbolsWithType(MapSymbolType symbolType)
         {
             List<MapSymbol> typeSymbols = AssetManager.MAP_SYMBOL_LIST.FindAll(x => x.SymbolType == symbolType);
             return typeSymbols;
@@ -404,19 +404,19 @@ namespace RealmStudio
                 {
                     if (AssetManager.STRUCTURE_SYNONYMS.Contains(tag))
                     {
-                        mapSymbol.SymbolType = SymbolTypeEnum.Structure;
+                        mapSymbol.SymbolType = MapSymbolType.Structure;
                         return;
                     }
 
                     if (AssetManager.TERRAIN_SYNONYMS.Contains(tag))
                     {
-                        mapSymbol.SymbolType = SymbolTypeEnum.Terrain;
+                        mapSymbol.SymbolType = MapSymbolType.Terrain;
                         return;
                     }
 
                     if (AssetManager.VEGETATION_SYNONYMS.Contains(tag))
                     {
-                        mapSymbol.SymbolType = SymbolTypeEnum.Vegetation;
+                        mapSymbol.SymbolType = MapSymbolType.Vegetation;
                         return;
                     }
                 }

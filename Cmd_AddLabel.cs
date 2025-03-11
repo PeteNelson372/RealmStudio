@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddLabel(RealmStudioMap map, MapLabel label) : IMapOperation
+    internal sealed class Cmd_AddLabel(RealmStudioMap map, MapLabel label) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly MapLabel Label = label;

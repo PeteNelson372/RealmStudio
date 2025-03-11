@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class NameBase : INameGenerator
+    internal sealed class NameBase : INameGenerator
     {
         public Guid NameBaseGuid { get; set; } = Guid.NewGuid();
         public string NameBaseName { get; set; } = string.Empty;

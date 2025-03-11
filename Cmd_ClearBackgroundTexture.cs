@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_ClearBackgroundTexture(RealmStudioMap map, MapImage textureBitmap) : IMapOperation
+    internal sealed class Cmd_ClearBackgroundTexture(RealmStudioMap map, MapImage textureBitmap) : IMapOperation
     {
         public RealmStudioMap Map { get; set; } = map;
         MapImage LayerTexture { get; set; } = textureBitmap;

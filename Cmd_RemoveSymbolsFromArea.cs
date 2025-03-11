@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class Cmd_RemoveSymbolsFromArea(RealmStudioMap map, float eraserRadius, SKPoint eraserPoint) : IMapOperation
+    internal sealed class Cmd_RemoveSymbolsFromArea(RealmStudioMap map, float eraserRadius, SKPoint eraserPoint) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly float EraserCircleRadius = eraserRadius;

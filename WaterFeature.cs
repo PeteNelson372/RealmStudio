@@ -35,7 +35,7 @@ namespace RealmStudio
         public RealmStudioMap? ParentMap { get; set; }
         public string WaterFeatureName { get; set; } = String.Empty;
         public Guid WaterFeatureGuid { get; set; } = Guid.NewGuid();
-        public WaterFeatureTypeEnum WaterFeatureType { get; set; } = WaterFeatureTypeEnum.NotSet;
+        public WaterFeatureType WaterFeatureType { get; set; } = WaterFeatureType.NotSet;
         public Color WaterFeatureColor { get; set; } = ColorTranslator.FromHtml("#658CBFC5");
         public Color WaterFeatureShorelineColor { get; set; } = ColorTranslator.FromHtml("#A19076");
 
@@ -248,7 +248,7 @@ namespace RealmStudio
             if (typeElemEnum.First() != null)
             {
                 string? waterFeatureType = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureType").Value).FirstOrDefault();
-                WaterFeatureType = Enum.Parse<WaterFeatureTypeEnum>(waterFeatureType);
+                WaterFeatureType = Enum.Parse<WaterFeatureType>(waterFeatureType);
             }
 
             IEnumerable<XElement?> shorelineEffectDistanceEnum = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "ShorelineEffectDistance"));

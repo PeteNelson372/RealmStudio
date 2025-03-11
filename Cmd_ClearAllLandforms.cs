@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_ClearAllLandforms(RealmStudioMap map) : IMapOperation
+    internal sealed class Cmd_ClearAllLandforms(RealmStudioMap map) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly List<Landform> StoredLandforms = [];

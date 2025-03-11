@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    public enum DrawingModeEnum
+    public enum MapDrawingMode
     {
         None,
         OceanPaint,
@@ -66,7 +66,7 @@ namespace RealmStudio
         MapHeightDecrease,
     }
 
-    public enum GradientDirectionEnum
+    public enum LandGradientDirection
     {
         None,
         DarkToLight,
@@ -80,7 +80,7 @@ namespace RealmStudio
         HardBrush
     }
 
-    public enum WaterFeatureTypeEnum
+    public enum WaterFeatureType
     {
         NotSet,
         Lake,
@@ -89,7 +89,7 @@ namespace RealmStudio
         // could define other types, like swamp, canal, inland sea, etc.
     }
 
-    public enum PathTypeEnum
+    public enum PathType
     {
         SolidLinePath,
         DottedLinePath,
@@ -112,13 +112,13 @@ namespace RealmStudio
         BorderAndTexturePath
     }
 
-    public enum ParallelEnum
+    public enum ParallelDirection
     {
         Above,
         Below
     }
 
-    public enum SymbolFormatEnum
+    public enum SymbolFileFormat
     {
         NotSet,
         PNG,
@@ -127,7 +127,7 @@ namespace RealmStudio
         Vector
     }
 
-    public enum SymbolTypeEnum
+    public enum MapSymbolType
     {
         NotSet,
         Structure,
@@ -136,19 +136,19 @@ namespace RealmStudio
         Other
     }
 
-    public enum ComponentMoveDirectionEnum
+    public enum ComponentMoveDirection
     {
         Up, Down
     }
 
-    public enum LabelTextAlignEnum
+    public enum LabelTextAlignment
     {
         AlignLeft,
         AlignCenter,
         AlignRight
     }
 
-    public enum GridTypeEnum
+    public enum MapGridType
     {
         NotSet,
         Square,
@@ -156,7 +156,7 @@ namespace RealmStudio
         PointedHex
     }
 
-    public enum ScaleNumbersDisplayEnum
+    public enum ScaleNumbersDisplayLocation
     {
         None,
         Ends,
@@ -164,7 +164,7 @@ namespace RealmStudio
         All
     }
 
-    public enum GeneratedLandformTypeEnum
+    public enum GeneratedLandformType
     {
         NotSet,
         Region,
@@ -176,7 +176,7 @@ namespace RealmStudio
         Icecap
     }
 
-    public enum RealmTypeEnum
+    public enum RealmMapType
     {
         World,
         Region,
@@ -188,21 +188,21 @@ namespace RealmStudio
         Other
     }
 
-    public enum FontPanelOpenerEnum
+    public enum FontPanelOpener
     {
         NotSet,
         LabelFontButton,
         ScaleFontButton
     }
 
-    public enum MeasurementUnitsEnum
+    public enum RealmMeasurementUnits
     {
         NotSet,
         Metric,
         USCustomary
     }
 
-    public enum MapExportFormatEnum
+    public enum RealmMapExportFormat
     {
         NotSet,
         PNG,
@@ -211,7 +211,7 @@ namespace RealmStudio
         GIF,
     }
 
-    public enum RealmExportTypeEnum
+    public enum RealmExportType
     {
         NotSet,
         BitmapImage,
