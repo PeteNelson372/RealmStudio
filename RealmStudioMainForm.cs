@@ -163,6 +163,11 @@ namespace RealmStudio
             if (string.IsNullOrEmpty(assetDirectory))
             {
                 Settings.Default.MapAssetDirectory = UtilityMethods.DEFAULT_ASSETS_FOLDER;
+                AssetManager.ASSET_DIRECTORY = UtilityMethods.DEFAULT_ASSETS_FOLDER;
+            }
+            else
+            {
+                Settings.Default.MapAssetDirectory = assetDirectory;
             }
 
             Settings.Default.Save();
@@ -4734,7 +4739,7 @@ namespace RealmStudio
                 {
                     RenderMapToCanvas(e.Surface.Canvas, ScrollPoint);
 
-                    if (CURRENT_DRAWING_MODE != MapDrawingMode.ColorSelect)
+                    if (CURRENT_DRAWING_MODE != MapDrawingMode.ColorSelect && CURRENT_DRAWING_MODE != MapDrawingMode.None)
                     {
                         DrawCursor(e.Surface.Canvas, new SKPoint(CURSOR_POINT.X - ScrollPoint.X, CURSOR_POINT.Y - ScrollPoint.Y), SELECTED_BRUSH_SIZE);
                     }
@@ -7975,20 +7980,20 @@ namespace RealmStudio
         private void OceanBrushSizeTrack_ValueChanged(object sender, EventArgs e)
         {
             OceanMethods.OceanPaintBrushSize = OceanBrushSizeTrack.Value;
-            TOOLTIP.Show(OceanMethods.OceanPaintBrushSize.ToString(), OceanBrushSizeTrack, new Point(OceanBrushSizeTrack.Right - 42, OceanBrushSizeTrack.Top - 135), 2000);
+            TOOLTIP.Show(OceanMethods.OceanPaintBrushSize.ToString(), OceanToolPanel, new Point(OceanBrushSizeTrack.Right - 30, OceanBrushSizeTrack.Top - 20), 2000);
             SetSelectedBrushSize(OceanMethods.OceanPaintBrushSize);
         }
 
         private void OceanEraserSizeTrack_ValueChanged(object sender, EventArgs e)
         {
             OceanMethods.OceanPaintEraserSize = OceanEraserSizeTrack.Value;
-            TOOLTIP.Show(OceanMethods.OceanPaintEraserSize.ToString(), OceanEraserSizeTrack, new Point(OceanEraserSizeTrack.Right - 42, OceanEraserSizeTrack.Top - 210), 2000);
+            TOOLTIP.Show(OceanMethods.OceanPaintEraserSize.ToString(), OceanToolPanel, new Point(OceanEraserSizeTrack.Right - 30, OceanEraserSizeTrack.Top - 20), 2000);
             SetSelectedBrushSize(OceanMethods.OceanPaintEraserSize);
         }
 
         private void OceanBrushVelocityTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show((OceanBrushVelocityTrack.Value / 100.0F).ToString(), OceanBrushVelocityTrack, new Point(OceanBrushVelocityTrack.Right - 42, OceanBrushVelocityTrack.Top - 170), 2000);
+            TOOLTIP.Show((OceanBrushVelocityTrack.Value / 100.0F).ToString(), OceanToolPanel, new Point(OceanBrushVelocityTrack.Right - 30, OceanBrushVelocityTrack.Top - 20), 2000);
             BRUSH_VELOCITY = Math.Max(1, BASE_MILLIS_PER_PAINT_EVENT / (OceanBrushVelocityTrack.Value / 100.0));
         }
 
@@ -8250,7 +8255,7 @@ namespace RealmStudio
 
         private void CoastlineEffectDistanceTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(CoastlineEffectDistanceTrack.Value.ToString(), CoastlineEffectDistanceTrack, new Point(CoastlineEffectDistanceTrack.Right - 42, CoastlineEffectDistanceTrack.Top - 58), 2000);
+            TOOLTIP.Show(CoastlineEffectDistanceTrack.Value.ToString(), CoastlineValuesGroup, new Point(CoastlineEffectDistanceTrack.Right - 30, CoastlineEffectDistanceTrack.Top - 20), 2000);
         }
 
         private void CoastlineColorSelectionButton_Click(object sender, EventArgs e)
@@ -8267,7 +8272,7 @@ namespace RealmStudio
         private void LandEraserSizeTrack_ValueChanged(object sender, EventArgs e)
         {
             LandformMethods.LandformEraserSize = LandEraserSizeTrack.Value;
-            TOOLTIP.Show(LandEraserSizeTrack.Value.ToString(), LandEraserSizeTrack, new Point(LandEraserSizeTrack.Right - 42, LandEraserSizeTrack.Top - 58), 2000);
+            TOOLTIP.Show(LandEraserSizeTrack.Value.ToString(), LandEraserGroup, new Point(LandEraserSizeTrack.Right - 30, LandEraserSizeTrack.Top - 20), 2000);
             SetSelectedBrushSize(LandformMethods.LandformEraserSize);
 
         }
@@ -8477,20 +8482,20 @@ namespace RealmStudio
         private void LandColorBrushSizeTrack_ValueChanged(object sender, EventArgs e)
         {
             LandformMethods.LandformColorBrushSize = LandColorBrushSizeTrack.Value;
-            TOOLTIP.Show(LandformMethods.LandformColorBrushSize.ToString(), LandColorBrushSizeTrack, new Point(LandColorBrushSizeTrack.Right - 42, LandColorBrushSizeTrack.Top - 135), 2000);
+            TOOLTIP.Show(LandformMethods.LandformColorBrushSize.ToString(), LandToolPanel, new Point(LandColorBrushSizeTrack.Right - 30, LandColorBrushSizeTrack.Top - 20), 2000);
             SetSelectedBrushSize(LandformMethods.LandformColorBrushSize);
         }
 
         private void LandBrushVelocityTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show((LandBrushVelocityTrack.Value / 100.0F).ToString(), LandBrushVelocityTrack, new Point(LandBrushVelocityTrack.Right - 42, LandBrushVelocityTrack.Top - 175), 2000);
+            TOOLTIP.Show((LandBrushVelocityTrack.Value / 100.0F).ToString(), LandToolPanel, new Point(LandBrushVelocityTrack.Right - 30, LandBrushVelocityTrack.Top - 20), 2000);
             BRUSH_VELOCITY = Math.Max(1, BASE_MILLIS_PER_PAINT_EVENT / (LandBrushVelocityTrack.Value / 100.0));
         }
 
         private void LandColorEraserSizeTrack_ValueChanged(object sender, EventArgs e)
         {
             LandformMethods.LandformColorEraserBrushSize = LandColorEraserSizeTrack.Value;
-            TOOLTIP.Show(LandformMethods.LandformColorEraserBrushSize.ToString(), LandColorEraserSizeTrack, new Point(LandColorEraserSizeTrack.Right - 42, LandColorEraserSizeTrack.Top - 210), 2000);
+            TOOLTIP.Show(LandformMethods.LandformColorEraserBrushSize.ToString(), LandToolPanel, new Point(LandColorEraserSizeTrack.Right - 20, LandColorEraserSizeTrack.Top - 20), 2000);
             SetSelectedBrushSize(LandformMethods.LandformColorEraserBrushSize);
         }
 
@@ -9293,7 +9298,7 @@ namespace RealmStudio
         private void WaterBrushSizeTrack_ValueChanged(object sender, EventArgs e)
         {
             WaterFeatureMethods.WaterFeatureBrushSize = WaterBrushSizeTrack.Value;
-            TOOLTIP.Show(WaterFeatureMethods.WaterFeatureBrushSize.ToString(), WaterBrushSizeTrack, new Point(WaterBrushSizeTrack.Right - 42, WaterBrushSizeTrack.Top - 58), 2000);
+            TOOLTIP.Show(WaterFeatureMethods.WaterFeatureBrushSize.ToString(), WaterValuesGroup, new Point(WaterBrushSizeTrack.Right - 30, WaterBrushSizeTrack.Top - 20), 2000);
             SetSelectedBrushSize(WaterFeatureMethods.WaterFeatureBrushSize);
         }
 
@@ -9321,7 +9326,7 @@ namespace RealmStudio
 
         private void RiverWidthTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(RiverWidthTrack.Value.ToString(), RiverWidthTrack, new Point(RiverWidthTrack.Right - 42, RiverWidthTrack.Top - 58), 2000);
+            TOOLTIP.Show(RiverWidthTrack.Value.ToString(), RiverValuesGroup, new Point(RiverWidthTrack.Right - 30, RiverWidthTrack.Top - 20), 2000);
         }
 
         private void RiverTextureSwitch_CheckedChanged()
@@ -9362,7 +9367,7 @@ namespace RealmStudio
         private void WaterEraseSizeTrack_ValueChanged(object sender, EventArgs e)
         {
             WaterFeatureMethods.WaterFeatureEraserSize = WaterEraserSizeTrack.Value;
-            TOOLTIP.Show(WaterFeatureMethods.WaterFeatureEraserSize.ToString(), WaterEraserSizeTrack, new Point(WaterEraserSizeTrack.Right - 42, WaterEraserSizeTrack.Top - 58), 2000);
+            TOOLTIP.Show(WaterFeatureMethods.WaterFeatureEraserSize.ToString(), WaterEraserGroup, new Point(WaterEraserSizeTrack.Right - 30, WaterEraserSizeTrack.Top - 20), 2000);
             SetSelectedBrushSize(WaterFeatureMethods.WaterFeatureEraserSize);
         }
 
@@ -9379,20 +9384,20 @@ namespace RealmStudio
         private void WaterColorBrushSizeTrack_ValueChanged(object sender, EventArgs e)
         {
             WaterFeatureMethods.WaterColorBrushSize = WaterColorBrushSizeTrack.Value;
-            TOOLTIP.Show(WaterFeatureMethods.WaterColorBrushSize.ToString(), WaterColorBrushSizeTrack, new Point(WaterColorBrushSizeTrack.Right - 42, WaterColorBrushSizeTrack.Top - 58), 2000);
+            TOOLTIP.Show(WaterFeatureMethods.WaterColorBrushSize.ToString(), WaterToolPanel, new Point(WaterColorBrushSizeTrack.Right - 30, WaterColorBrushSizeTrack.Top - 20), 2000);
             SetSelectedBrushSize(WaterFeatureMethods.WaterColorBrushSize);
         }
 
         private void WaterBrushVelocityTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show((WaterBrushVelocityTrack.Value / 100.0F).ToString(), WaterBrushVelocityTrack, new Point(WaterBrushVelocityTrack.Right - 42, WaterBrushVelocityTrack.Top - 175), 2000);
+            TOOLTIP.Show((WaterBrushVelocityTrack.Value / 100.0F).ToString(), WaterToolPanel, new Point(WaterBrushVelocityTrack.Right - 30, WaterBrushVelocityTrack.Top - 20), 2000);
             BRUSH_VELOCITY = Math.Max(1, BASE_MILLIS_PER_PAINT_EVENT / (WaterBrushVelocityTrack.Value / 100.0));
         }
 
         private void WaterColorEraserSizeTrack_ValueChanged(object sender, EventArgs e)
         {
             WaterFeatureMethods.WaterColorEraserSize = WaterColorEraserSizeTrack.Value;
-            TOOLTIP.Show(WaterFeatureMethods.WaterColorEraserSize.ToString(), WaterColorEraserSizeTrack, new Point(WaterColorEraserSizeTrack.Right - 42, WaterColorEraserSizeTrack.Top - 58), 2000);
+            TOOLTIP.Show(WaterFeatureMethods.WaterColorEraserSize.ToString(), WaterToolPanel, new Point(WaterColorEraserSizeTrack.Right - 30, WaterColorEraserSizeTrack.Top - 20), 2000);
             SetSelectedBrushSize(WaterFeatureMethods.WaterColorEraserSize);
         }
 
@@ -9738,7 +9743,7 @@ namespace RealmStudio
 
         private void PathWidthTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(PathWidthTrack.Value.ToString(), PathWidthTrack, new Point(PathWidthTrack.Right - 42, PathWidthTrack.Top - 58), 2000);
+            TOOLTIP.Show(PathWidthTrack.Value.ToString(), MapPathValuesGroup, new Point(PathWidthTrack.Right - 30, PathWidthTrack.Top - 20), 2000);
         }
 
         private void PathColorSelectButton_Click(object sender, EventArgs e)
@@ -11638,7 +11643,7 @@ namespace RealmStudio
 
         private void LabelRotationTrack_Scroll(object sender, EventArgs e)
         {
-            TOOLTIP.Show(LabelRotationTrack.Value.ToString(), LabelRotationTrack, new Point(LabelRotationTrack.Right - 38, LabelRotationTrack.Top - 40), 2000);
+            TOOLTIP.Show(LabelRotationTrack.Value.ToString(), LabelRotationGroup, new Point(LabelRotationTrack.Right - 30, LabelRotationTrack.Top - 20), 2000);
 
             LabelRotationUpDown.Value = LabelRotationTrack.Value;
 
@@ -11940,7 +11945,7 @@ namespace RealmStudio
 
         private void FrameScaleTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show((FrameScaleTrack.Value / 100F).ToString(), FrameScaleTrack, new Point(FrameScaleTrack.Right - 78, FrameScaleTrack.Top - 150), 2000);
+            TOOLTIP.Show((FrameScaleTrack.Value / 100F).ToString(), FrameValuesGroup, new Point(FrameScaleTrack.Right - 30, FrameScaleTrack.Top - 20), 2000);
 
             if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.FRAMELAYER).MapLayerComponents.Count > 0)
             {
@@ -12243,7 +12248,7 @@ namespace RealmStudio
 
         private void GridSizeTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(GridSizeTrack.Value.ToString(), GridSizeTrack, new Point(GridSizeTrack.Right - 38, GridSizeTrack.Top - 255), 2000);
+            TOOLTIP.Show(GridSizeTrack.Value.ToString(), GridValuesGroup, new Point(GridSizeTrack.Right - 30, GridSizeTrack.Top - 20), 2000);
 
             if (CURRENT_MAP_GRID != null)
             {
@@ -12254,7 +12259,7 @@ namespace RealmStudio
 
         private void GridLineWidthTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(GridLineWidthTrack.Value.ToString(), GridLineWidthTrack, new Point(GridLineWidthTrack.Right - 38, GridLineWidthTrack.Top - 300), 2000);
+            TOOLTIP.Show(GridLineWidthTrack.Value.ToString(), GridValuesGroup, new Point(GridLineWidthTrack.Right - 30, GridLineWidthTrack.Top - 20), 2000);
 
             if (CURRENT_MAP_GRID != null)
             {
@@ -12525,7 +12530,7 @@ namespace RealmStudio
 
         private void RegionBorderWidthTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(RegionBorderWidthTrack.Value.ToString(), RegionBorderWidthTrack, new Point(RegionBorderWidthTrack.Right - 38, RegionBorderWidthTrack.Top - 135), 2000);
+            TOOLTIP.Show(RegionBorderWidthTrack.Value.ToString(), RegionValuesGroup, new Point(RegionBorderWidthTrack.Right - 30, RegionBorderWidthTrack.Top - 20), 2000);
 
             if (CURRENT_MAP_REGION != null)
             {
@@ -12536,7 +12541,7 @@ namespace RealmStudio
 
         private void RegionBorderSmoothingTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(RegionBorderSmoothingTrack.Value.ToString(), RegionBorderSmoothingTrack, new Point(RegionBorderSmoothingTrack.Right - 45, RegionBorderSmoothingTrack.Top - 176), 2000);
+            TOOLTIP.Show(RegionBorderSmoothingTrack.Value.ToString(), RegionValuesGroup, new Point(RegionBorderSmoothingTrack.Right - 30, RegionBorderSmoothingTrack.Top - 20), 2000);
 
             if (CURRENT_MAP_REGION != null)
             {
@@ -12547,7 +12552,7 @@ namespace RealmStudio
 
         private void RegionOpacityTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(RegionOpacityTrack.Value.ToString(), RegionOpacityTrack, new Point(RegionOpacityTrack.Right - 38, RegionOpacityTrack.Top - 222), 2000);
+            TOOLTIP.Show(RegionOpacityTrack.Value.ToString(), RegionValuesGroup, new Point(RegionOpacityTrack.Right - 30, RegionOpacityTrack.Top - 20), 2000);
 
             if (CURRENT_MAP_REGION != null)
             {

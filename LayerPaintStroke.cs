@@ -134,58 +134,30 @@ namespace RealmStudio
 
                 // clip rendering to landforms or water features, depending on what map layer
                 // the brush stroke is on; painting on the ocean layer is not clipped
+                SKPath clipPath = new();
 
                 if (MapLayerIdentifier == MapBuilder.LANDDRAWINGLAYER)
                 {
                     if (Settings.Default.ClipLandformColoring)
                     {
                         // clip drawing to the outer path of landforms
-
                         List<MapComponent> landformList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
-                        SKPath clipPath = new();
 
-                        // get the landform at the stroke location; when it is found, set the clip path to the landform outline path
-
-                        bool foundLandform = false;
+                        // add contour path of landforms to clip path
                         for (int i = 0; i < landformList.Count; i++)
                         {
                             if (landformList[i] is Landform lf)
                             {
-                                SKPath landformOutlinePath = lf.ContourPath;
-
-                                if (landformOutlinePath != null && landformOutlinePath.PointCount > 0)
-                                {
-                                    foreach (LayerPaintStrokePoint point in PaintStrokePoints)
-                                    {
-                                        if (landformOutlinePath.Contains(point.StrokeLocation.X, point.StrokeLocation.Y))
-                                        {
-                                            clipPath.AddPath(landformOutlinePath);
-                                            foundLandform = true;
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                if (foundLandform)
-                                {
-                                    break;
-                                }
+                                clipPath.AddPath(lf.ContourPath);
                             }
-
-                        }
-
-                        if (clipPath.PointCount > 2)
-                        {
-                            RenderSurface?.Canvas.ClipPath(clipPath);
                         }
                     }
                 }
                 else if (MapLayerIdentifier == MapBuilder.WATERDRAWINGLAYER)
                 {
                     // clip drawing to the outer path of water features and rivers
-
                     List<MapComponent> waterFeatureList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.WATERLAYER).MapLayerComponents;
-                    SKPath clipPath = new();
+
                     for (int i = 0; i < waterFeatureList.Count; i++)
                     {
                         if (waterFeatureList[i] is WaterFeature feature)
@@ -207,7 +179,10 @@ namespace RealmStudio
                             }
                         }
                     }
+                }
 
+                if (clipPath.PointCount > 2)
+                {
                     RenderSurface?.Canvas.ClipPath(clipPath);
                 }
 

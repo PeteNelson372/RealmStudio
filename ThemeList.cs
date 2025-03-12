@@ -21,8 +21,6 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
-
 namespace RealmStudio
 {
     public partial class ThemeList : Form
@@ -108,7 +106,7 @@ namespace RealmStudio
                     string themeName = nameEntryDlg.ThemeNameTextBox.Text;
                     SettingsTheme.ThemeName = themeName;
 
-                    string assetDirectory = Settings.Default.MapAssetDirectory;
+                    string assetDirectory = AssetManager.ASSET_DIRECTORY;
                     string themePath = assetDirectory + Path.DirectorySeparatorChar + "Themes" + Path.DirectorySeparatorChar + themeName + ".rstheme";
                     SettingsTheme.ThemePath = themePath;
 

@@ -453,6 +453,9 @@ namespace RealmStudio
 
         internal static int LoadSymbolCollections()
         {
+            MAP_SYMBOL_COLLECTIONS.Clear();
+            MAP_SYMBOL_LIST.Clear();
+
             int StartingLoadPercentage = LOADING_STATUS_FORM.GetStatusPercentage();
             int LoadPercentage = LOADING_STATUS_FORM.GetStatusPercentage();
 
@@ -531,7 +534,6 @@ namespace RealmStudio
                         {
                             MapFileMethods.SerializeSymbolCollection(collection);
                         }
-
 
                         LoadPercentage += statusIncrement;
                         LOADING_STATUS_FORM.SetStatusPercentage(LoadPercentage);
