@@ -1682,7 +1682,7 @@ namespace RealmStudio
 
         private void ThemeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // show the theme dialog
+            // show the theme list dialog
             ThemeList themeList = new();
 
             // get the current state of the UI as a theme
@@ -1698,11 +1698,11 @@ namespace RealmStudio
             {
                 // on OK result, apply the selected theme
                 MapTheme selectedTheme = themeList.GetSelectedTheme();
-                ThemeFilter themeFilter = new();
 
                 if (!string.IsNullOrEmpty(selectedTheme.ThemeName))
                 {
                     AssetManager.CURRENT_THEME = selectedTheme;
+                    ThemeFilter themeFilter = themeList.GetThemeFilter();
                     ApplyTheme(selectedTheme, themeFilter);
                 }
             }
@@ -3932,7 +3932,7 @@ namespace RealmStudio
                 // and loaded when the theme is loaded/selected; they are not stored with the theme
 
                 // background
-                BackgroundTexture = AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX],
+                BackgroundTexture = BackgroundMethods.GetSelectedMapTexture(),
                 BackgroundTextureScale = BackgroundTextureScaleTrack.Value,
                 MirrorBackgroundTexture = MirrorBackgroundSwitch.Checked,
 
@@ -4041,11 +4041,6 @@ namespace RealmStudio
                 {
                     if (theme.BackgroundTexture != null)
                     {
-                        if (AssetManager.BACKGROUND_TEXTURE_LIST.First().TextureBitmap == null)
-                        {
-                            AssetManager.BACKGROUND_TEXTURE_LIST.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.BACKGROUND_TEXTURE_LIST.First().TexturePath);
-                        }
-
                         for (int i = 0; i < AssetManager.BACKGROUND_TEXTURE_LIST.Count; i++)
                         {
                             if (AssetManager.BACKGROUND_TEXTURE_LIST[i].TextureName == theme.BackgroundTexture.TextureName)
@@ -4061,9 +4056,8 @@ namespace RealmStudio
                                 = (Bitmap?)Bitmap.FromFile(AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TexturePath);
                         }
 
-                        // background texture
-                        BackgroundTextureBox.Image = BackgroundMethods.GetSelectedBackgroundImage();
-                        BackgroundTextureNameLabel.Text = BackgroundMethods.GetCurrentImageName();
+                        MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.BASELAYER);
+                        baseLayer.MapLayerComponents.Clear();
 
                         float scale = BackgroundTextureScaleTrack.Value / 100F;
                         bool mirrorBackground = MirrorBackgroundSwitch.Checked;
@@ -4075,8 +4069,12 @@ namespace RealmStudio
                             BackgroundMethods.ApplyBackgroundTexture(CURRENT_MAP, BackgroundMethods.GetSelectedBackgroundImage(), scale, mirrorBackground);
                         }
 
-                        BackgroundTextureBox.Image = AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TextureBitmap;
-                        BackgroundTextureNameLabel.Text = AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TextureName;
+                        // background texture
+                        BackgroundTextureBox.Image = BackgroundMethods.GetSelectedBackgroundImage();
+                        BackgroundTextureNameLabel.Text = BackgroundMethods.GetCurrentImageName();
+
+                        BackgroundTextureBox.Refresh();
+                        BackgroundTextureNameLabel.Refresh();
                     }
 
                     BackgroundTextureScaleTrack.Value = (int)((theme.BackgroundTextureScale != null) ? theme.BackgroundTextureScale : 100);
@@ -4127,6 +4125,12 @@ namespace RealmStudio
 
                     OceanColorSelectButton.BackColor = Color.FromArgb(theme.OceanColor ?? Color.FromKnownColor(KnownColor.ControlLight).ToArgb());
                     OceanColorSelectButton.Refresh();
+
+                    MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANTEXTURELAYER);
+                    oceanTextureLayer.MapLayerComponents.Clear();
+
+                    MapLayer oceanTextureOverLayLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
+                    oceanTextureOverLayLayer.MapLayerComponents.Clear();
 
                     if (theme.OceanTexture != null)
                     {
@@ -7211,7 +7215,7 @@ namespace RealmStudio
 
                     if (SELECTED_LANDFORM != null)
                     {
-                        LandformInfo landformInfo = new(CURRENT_MAP, SELECTED_LANDFORM, SKGLRenderControl);
+                        LandformInfo landformInfo = new(CURRENT_MAP, SELECTED_LANDFORM, AssetManager.CURRENT_THEME, SKGLRenderControl);
                         landformInfo.ShowDialog(this);
                     }
                     break;

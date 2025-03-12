@@ -33,21 +33,26 @@ namespace RealmStudio
         private readonly RealmStudioMap Map;
         private readonly Landform Landform;
         private readonly SKGLControl RenderControl;
+        private readonly MapTheme? CurrentTheme;
 
         private int SelectedLandTextureIndex;
 
-        public LandformInfo(RealmStudioMap map, Landform mapLandform, SKGLControl renderControl)
+        public LandformInfo(RealmStudioMap map, Landform mapLandform, MapTheme? currentTheme, SKGLControl renderControl)
         {
             InitializeComponent();
 
             Map = map;
             Landform = mapLandform;
             RenderControl = renderControl;
+            CurrentTheme = currentTheme;
 
             GuidLabel.Text = Landform.LandformGuid.ToString();
             NameTextbox.Text = Landform.LandformName;
 
             LandformOutlineColorSelectButton.BackColor = Landform.LandformOutlineColor;
+            LandformOutlineWidthTrack.Value = Landform.LandformOutlineWidth;
+            LandformBackgroundColorSelectButton.BackColor = Landform.LandformBackgroundColor;
+            UseTextureForBackgroundCheck.Checked = Landform.FillWithTexture;
 
             if (Landform.LandformTexture != null)
             {
@@ -80,6 +85,8 @@ namespace RealmStudio
                     break;
                 }
             }
+
+            Refresh();
         }
 
         private void PreviousTextureButton_Click(object sender, EventArgs e)
@@ -125,17 +132,31 @@ namespace RealmStudio
             Landform.LandformOutlineColor = LandformOutlineColorSelectButton.BackColor;
             Landform.LandformFillColor = Color.FromArgb(Landform.LandformOutlineColor.A / 4, Landform.LandformOutlineColor);
             Landform.LandformTexture = AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex];
+            Landform.LandformOutlineWidth = LandformOutlineWidthTrack.Value;
+            Landform.FillWithTexture = UseTextureForBackgroundCheck.Checked;
+            Landform.LandformBackgroundColor = LandformBackgroundColorSelectButton.BackColor;
 
-            if (Landform.LandformTexture.TextureBitmap != null)
+            if (!Landform.FillWithTexture || Landform.LandformTexture == null || Landform.LandformTexture.TextureBitmap == null)
             {
+                // fill with background color
+                Landform.LandformFillPaint.Shader?.Dispose();
+                Landform.LandformFillPaint.Shader = null;
+
+                SKShader flpShader = SKShader.CreateColor(Landform.LandformBackgroundColor.ToSKColor());
+                Landform.LandformFillPaint.Shader = flpShader;
+            }
+            else
+            {
+                // fill with texture
                 Bitmap resizedBitmap = new(Landform.LandformTexture.TextureBitmap, Map.MapWidth, Map.MapHeight);
 
-                // create and set a shader from the selected texture
+                // create and set a shader from the texture
                 SKShader flpShader = SKShader.CreateBitmap(Extensions.ToSKBitmap(resizedBitmap),
                     SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
 
                 Landform.LandformFillPaint.Shader = flpShader;
             }
+
 
             MapTexture? dashTexture = AssetManager.HATCH_TEXTURE_LIST.Find(x => x.TextureName == "Watercolor Dashes");
 
@@ -192,6 +213,17 @@ namespace RealmStudio
             }
         }
 
+        private void LandformBackgroundColorSelectButton_Click(object sender, EventArgs e)
+        {
+            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, LandformOutlineColorSelectButton.BackColor);
+
+            if (selectedColor != Color.Empty)
+            {
+                LandformBackgroundColorSelectButton.BackColor = selectedColor;
+                LandformBackgroundColorSelectButton.Refresh();
+            }
+        }
+
         private void CoastlineColorSelectionButton_Click(object sender, EventArgs e)
         {
             Color selectedColor = UtilityMethods.SelectColorFromDialog(this, CoastlineColorSelectionButton.BackColor);
@@ -205,7 +237,67 @@ namespace RealmStudio
 
         private void CoastlineEffectDistanceTrack_Scroll(object sender, EventArgs e)
         {
-            TOOLTIP.Show(CoastlineEffectDistanceTrack.Value.ToString(), CoastlineEffectDistanceTrack, new Point(CoastlineEffectDistanceTrack.Right - 42, CoastlineEffectDistanceTrack.Top - 62), 2000);
+            TOOLTIP.Show(CoastlineEffectDistanceTrack.Value.ToString(), CoastlineGroup, new Point(CoastlineEffectDistanceTrack.Right - 30, CoastlineEffectDistanceTrack.Top - 20), 2000);
+        }
+
+        private void ApplyThemeSettingsButton_Click(object sender, EventArgs e)
+        {
+            if (CurrentTheme != null)
+            {
+                LandformOutlineColorSelectButton.BackColor = (CurrentTheme.LandformOutlineColor != null) ?
+                    Color.FromArgb((int)CurrentTheme.LandformOutlineColor) : Landform.LandformOutlineColor;
+
+                LandformOutlineWidthTrack.Value = (int)((CurrentTheme.LandformOutlineWidth != null) ?
+                    CurrentTheme.LandformOutlineWidth : Landform.LandformOutlineWidth);
+
+                LandformBackgroundColorSelectButton.BackColor = (CurrentTheme.LandformBackgroundColor != null) ?
+                    Color.FromArgb((int)CurrentTheme.LandformBackgroundColor) : Landform.LandformBackgroundColor;
+
+                UseTextureForBackgroundCheck.Checked = (bool)((CurrentTheme.FillLandformWithTexture != null) ?
+                    CurrentTheme.FillLandformWithTexture : Landform.FillWithTexture);
+
+                if (CurrentTheme.LandformTexture != null)
+                {
+                    if (CurrentTheme.LandformTexture.TextureBitmap == null)
+                    {
+                        CurrentTheme.LandformTexture.TextureBitmap = (Bitmap?)Bitmap.FromFile(CurrentTheme.LandformTexture.TexturePath);
+                    }
+
+                    LandformTexturePreviewPicture.Image = CurrentTheme.LandformTexture.TextureBitmap;
+                    LandTextureNameLabel.Text = CurrentTheme.LandformTexture.TextureName;
+
+                    for (int i = 0; i < AssetManager.LAND_TEXTURE_LIST.Count; i++)
+                    {
+                        if (AssetManager.LAND_TEXTURE_LIST[i].TexturePath == CurrentTheme.LandformTexture.TexturePath)
+                        {
+                            SelectedLandTextureIndex = i;
+                            break;
+                        }
+                    }
+                }
+
+                CoastlineEffectDistanceTrack.Value = (CurrentTheme.LandformCoastlineEffectDistance != null) ?
+                    CurrentTheme.LandformCoastlineEffectDistance.Value : Landform.CoastlineEffectDistance;
+
+                CoastlineColorSelectionButton.BackColor = (CurrentTheme.LandformCoastlineColor != null) ?
+                    Color.FromArgb((int)CurrentTheme.LandformCoastlineColor) : Landform.CoastlineColor;
+
+                if (!string.IsNullOrEmpty(CurrentTheme.LandformCoastlineStyle))
+                {
+                    Landform.CoastlineStyleName = CurrentTheme.LandformCoastlineStyle;
+                }
+
+                for (int i = 0; i < CoastlineStyleList.Items.Count; i++)
+                {
+                    if (CoastlineStyleList.Items[i].ToString() == Landform.CoastlineStyleName)
+                    {
+                        CoastlineStyleList.SetSelected(i, true);
+                        break;
+                    }
+                }
+
+                Landform.IsModified = true;
+            }
         }
     }
 }

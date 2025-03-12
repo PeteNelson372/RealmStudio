@@ -56,6 +56,7 @@ namespace RealmStudio
 
         public void SetThemes(MapTheme[] themes)
         {
+            ThemeListComboBox.Items.Clear();
             mapThemes = themes;
 
             for (int i = 0; i < themes.Length; i++)
@@ -95,8 +96,6 @@ namespace RealmStudio
 
         private void SaveThemeButton_Click(object sender, EventArgs e)
         {
-            // TODO: apply changes made in UI to theme
-
             if (SettingsTheme != null)
             {
                 ThemeNameEntry nameEntryDlg = new();

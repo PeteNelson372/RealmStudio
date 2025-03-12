@@ -267,6 +267,9 @@ namespace RealmStudio
 
                 coastlineCanvas.Clear(SKColors.Transparent);
 
+                CoastlineFillPaint.Shader?.Dispose();
+                CoastlineFillPaint.Shader = null;
+
                 if (!string.IsNullOrEmpty(CoastlineStyleName))
                 {
                     switch (CoastlineStyleName)

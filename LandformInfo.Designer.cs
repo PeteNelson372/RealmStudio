@@ -32,16 +32,20 @@
             CloseLandformDataButton = new Button();
             ApplyChangesButton = new Button();
             StatusMessageLabel = new Label();
-            groupBox2 = new GroupBox();
+            CoastlineGroup = new GroupBox();
             label16 = new Label();
             label15 = new Label();
             CoastlineStyleList = new ListBox();
             CoastlineColorSelectionButton = new FontAwesome.Sharp.IconButton();
             label14 = new Label();
             CoastlineEffectDistanceTrack = new TrackBar();
-            groupBox1 = new GroupBox();
-            LandTextureNameLabel = new Label();
+            LandformGroup = new GroupBox();
             label13 = new Label();
+            LandformOutlineWidthTrack = new TrackBar();
+            label88 = new Label();
+            LandformBackgroundColorSelectButton = new FontAwesome.Sharp.IconButton();
+            UseTextureForBackgroundCheck = new CheckBox();
+            LandTextureNameLabel = new Label();
             PreviousLandTextureButton = new FontAwesome.Sharp.IconButton();
             NextLandTextureButton = new FontAwesome.Sharp.IconButton();
             LandformTexturePreviewPicture = new PictureBox();
@@ -50,10 +54,13 @@
             NameTextbox = new TextBox();
             GuidLabel = new Label();
             label1 = new Label();
+            ApplyThemeSettingsButton = new FontAwesome.Sharp.IconButton();
+            label3 = new Label();
             LandformDataPanel.SuspendLayout();
-            groupBox2.SuspendLayout();
+            CoastlineGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)CoastlineEffectDistanceTrack).BeginInit();
-            groupBox1.SuspendLayout();
+            LandformGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)LandformOutlineWidthTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LandformTexturePreviewPicture).BeginInit();
             SuspendLayout();
             // 
@@ -61,11 +68,13 @@
             // 
             LandformDataPanel.BackColor = Color.FromArgb(244, 241, 243);
             LandformDataPanel.BorderColor = Color.FromArgb(38, 38, 38);
+            LandformDataPanel.Controls.Add(label3);
+            LandformDataPanel.Controls.Add(ApplyThemeSettingsButton);
             LandformDataPanel.Controls.Add(CloseLandformDataButton);
             LandformDataPanel.Controls.Add(ApplyChangesButton);
             LandformDataPanel.Controls.Add(StatusMessageLabel);
-            LandformDataPanel.Controls.Add(groupBox2);
-            LandformDataPanel.Controls.Add(groupBox1);
+            LandformDataPanel.Controls.Add(CoastlineGroup);
+            LandformDataPanel.Controls.Add(LandformGroup);
             LandformDataPanel.Controls.Add(label2);
             LandformDataPanel.Controls.Add(NameTextbox);
             LandformDataPanel.Controls.Add(GuidLabel);
@@ -83,7 +92,7 @@
             LandformDataPanel.Padding = new Padding(20, 56, 20, 16);
             LandformDataPanel.RoundCorners = true;
             LandformDataPanel.Sizable = true;
-            LandformDataPanel.Size = new Size(392, 495);
+            LandformDataPanel.Size = new Size(359, 592);
             LandformDataPanel.SmartBounds = true;
             LandformDataPanel.StartPosition = FormStartPosition.CenterParent;
             LandformDataPanel.TabIndex = 0;
@@ -93,7 +102,7 @@
             // CloseLandformDataButton
             // 
             CloseLandformDataButton.ForeColor = SystemColors.ControlDarkDark;
-            CloseLandformDataButton.Location = new Point(303, 409);
+            CloseLandformDataButton.Location = new Point(274, 513);
             CloseLandformDataButton.Name = "CloseLandformDataButton";
             CloseLandformDataButton.Size = new Size(60, 60);
             CloseLandformDataButton.TabIndex = 92;
@@ -104,7 +113,7 @@
             // ApplyChangesButton
             // 
             ApplyChangesButton.ForeColor = SystemColors.ControlDarkDark;
-            ApplyChangesButton.Location = new Point(221, 409);
+            ApplyChangesButton.Location = new Point(208, 513);
             ApplyChangesButton.Name = "ApplyChangesButton";
             ApplyChangesButton.Size = new Size(60, 60);
             ApplyChangesButton.TabIndex = 91;
@@ -114,26 +123,26 @@
             // 
             // StatusMessageLabel
             // 
-            StatusMessageLabel.Location = new Point(34, 448);
+            StatusMessageLabel.Location = new Point(23, 551);
             StatusMessageLabel.Name = "StatusMessageLabel";
-            StatusMessageLabel.Size = new Size(64, 22);
+            StatusMessageLabel.Size = new Size(148, 22);
             StatusMessageLabel.TabIndex = 90;
             // 
-            // groupBox2
+            // CoastlineGroup
             // 
-            groupBox2.Controls.Add(label16);
-            groupBox2.Controls.Add(label15);
-            groupBox2.Controls.Add(CoastlineStyleList);
-            groupBox2.Controls.Add(CoastlineColorSelectionButton);
-            groupBox2.Controls.Add(label14);
-            groupBox2.Controls.Add(CoastlineEffectDistanceTrack);
-            groupBox2.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox2.Location = new Point(221, 101);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(148, 302);
-            groupBox2.TabIndex = 19;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Coastline";
+            CoastlineGroup.Controls.Add(label16);
+            CoastlineGroup.Controls.Add(label15);
+            CoastlineGroup.Controls.Add(CoastlineStyleList);
+            CoastlineGroup.Controls.Add(CoastlineColorSelectionButton);
+            CoastlineGroup.Controls.Add(label14);
+            CoastlineGroup.Controls.Add(CoastlineEffectDistanceTrack);
+            CoastlineGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            CoastlineGroup.Location = new Point(186, 101);
+            CoastlineGroup.Name = "CoastlineGroup";
+            CoastlineGroup.Size = new Size(148, 302);
+            CoastlineGroup.TabIndex = 19;
+            CoastlineGroup.TabStop = false;
+            CoastlineGroup.Text = "Coastline";
             // 
             // label16
             // 
@@ -208,33 +217,27 @@
             CoastlineEffectDistanceTrack.Value = 16;
             CoastlineEffectDistanceTrack.Scroll += CoastlineEffectDistanceTrack_Scroll;
             // 
-            // groupBox1
+            // LandformGroup
             // 
-            groupBox1.BackColor = Color.Transparent;
-            groupBox1.Controls.Add(LandTextureNameLabel);
-            groupBox1.Controls.Add(label13);
-            groupBox1.Controls.Add(PreviousLandTextureButton);
-            groupBox1.Controls.Add(NextLandTextureButton);
-            groupBox1.Controls.Add(LandformTexturePreviewPicture);
-            groupBox1.Controls.Add(LandformOutlineColorSelectButton);
-            groupBox1.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox1.ForeColor = SystemColors.ControlText;
-            groupBox1.Location = new Point(23, 101);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(148, 302);
-            groupBox1.TabIndex = 18;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Landform";
-            // 
-            // LandTextureNameLabel
-            // 
-            LandTextureNameLabel.AutoEllipsis = true;
-            LandTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandTextureNameLabel.Location = new Point(6, 266);
-            LandTextureNameLabel.Name = "LandTextureNameLabel";
-            LandTextureNameLabel.Size = new Size(136, 21);
-            LandTextureNameLabel.TabIndex = 24;
-            LandTextureNameLabel.TextAlign = ContentAlignment.MiddleCenter;
+            LandformGroup.BackColor = Color.Transparent;
+            LandformGroup.Controls.Add(label13);
+            LandformGroup.Controls.Add(LandformOutlineWidthTrack);
+            LandformGroup.Controls.Add(label88);
+            LandformGroup.Controls.Add(LandformBackgroundColorSelectButton);
+            LandformGroup.Controls.Add(UseTextureForBackgroundCheck);
+            LandformGroup.Controls.Add(LandTextureNameLabel);
+            LandformGroup.Controls.Add(PreviousLandTextureButton);
+            LandformGroup.Controls.Add(NextLandTextureButton);
+            LandformGroup.Controls.Add(LandformTexturePreviewPicture);
+            LandformGroup.Controls.Add(LandformOutlineColorSelectButton);
+            LandformGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LandformGroup.ForeColor = SystemColors.ControlText;
+            LandformGroup.Location = new Point(23, 101);
+            LandformGroup.Name = "LandformGroup";
+            LandformGroup.Size = new Size(148, 435);
+            LandformGroup.TabIndex = 18;
+            LandformGroup.TabStop = false;
+            LandformGroup.Text = "Landform";
             // 
             // label13
             // 
@@ -242,11 +245,76 @@
             label13.BackColor = Color.Transparent;
             label13.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label13.ForeColor = SystemColors.ControlDarkDark;
-            label13.Location = new Point(6, 109);
+            label13.Location = new Point(6, 101);
             label13.Name = "label13";
-            label13.Size = new Size(45, 15);
-            label13.TabIndex = 23;
-            label13.Text = "Texture";
+            label13.Size = new Size(81, 15);
+            label13.TabIndex = 34;
+            label13.Text = "Outline Width";
+            // 
+            // LandformOutlineWidthTrack
+            // 
+            LandformOutlineWidthTrack.AutoSize = false;
+            LandformOutlineWidthTrack.BackColor = Color.FromArgb(244, 241, 243);
+            LandformOutlineWidthTrack.Location = new Point(6, 119);
+            LandformOutlineWidthTrack.Maximum = 16;
+            LandformOutlineWidthTrack.Minimum = 1;
+            LandformOutlineWidthTrack.Name = "LandformOutlineWidthTrack";
+            LandformOutlineWidthTrack.Size = new Size(136, 20);
+            LandformOutlineWidthTrack.TabIndex = 33;
+            LandformOutlineWidthTrack.TickStyle = TickStyle.None;
+            LandformOutlineWidthTrack.Value = 2;
+            // 
+            // label88
+            // 
+            label88.AutoSize = true;
+            label88.BackColor = Color.Transparent;
+            label88.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label88.ForeColor = SystemColors.ControlDarkDark;
+            label88.Location = new Point(6, 145);
+            label88.Name = "label88";
+            label88.Size = new Size(103, 15);
+            label88.TabIndex = 32;
+            label88.Text = "Background Color";
+            // 
+            // LandformBackgroundColorSelectButton
+            // 
+            LandformBackgroundColorSelectButton.BackColor = Color.White;
+            LandformBackgroundColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandformBackgroundColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            LandformBackgroundColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            LandformBackgroundColorSelectButton.IconColor = Color.Tan;
+            LandformBackgroundColorSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LandformBackgroundColorSelectButton.Location = new Point(6, 163);
+            LandformBackgroundColorSelectButton.Name = "LandformBackgroundColorSelectButton";
+            LandformBackgroundColorSelectButton.Size = new Size(136, 60);
+            LandformBackgroundColorSelectButton.TabIndex = 31;
+            LandformBackgroundColorSelectButton.Text = "Click to Select";
+            LandformBackgroundColorSelectButton.UseVisualStyleBackColor = false;
+            LandformBackgroundColorSelectButton.Click += LandformBackgroundColorSelectButton_Click;
+            // 
+            // UseTextureForBackgroundCheck
+            // 
+            UseTextureForBackgroundCheck.AutoSize = true;
+            UseTextureForBackgroundCheck.Checked = true;
+            UseTextureForBackgroundCheck.CheckState = CheckState.Checked;
+            UseTextureForBackgroundCheck.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            UseTextureForBackgroundCheck.ForeColor = SystemColors.ControlDarkDark;
+            UseTextureForBackgroundCheck.Location = new Point(6, 239);
+            UseTextureForBackgroundCheck.Name = "UseTextureForBackgroundCheck";
+            UseTextureForBackgroundCheck.Size = new Size(82, 19);
+            UseTextureForBackgroundCheck.TabIndex = 29;
+            UseTextureForBackgroundCheck.Text = "Texture Fill";
+            UseTextureForBackgroundCheck.UseVisualStyleBackColor = true;
+            // 
+            // LandTextureNameLabel
+            // 
+            LandTextureNameLabel.AutoEllipsis = true;
+            LandTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandTextureNameLabel.Location = new Point(6, 403);
+            LandTextureNameLabel.Name = "LandTextureNameLabel";
+            LandTextureNameLabel.Size = new Size(136, 21);
+            LandTextureNameLabel.TabIndex = 24;
+            LandTextureNameLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // PreviousLandTextureButton
             // 
@@ -256,7 +324,7 @@
             PreviousLandTextureButton.IconColor = Color.Black;
             PreviousLandTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             PreviousLandTextureButton.IconSize = 24;
-            PreviousLandTextureButton.Location = new Point(6, 239);
+            PreviousLandTextureButton.Location = new Point(6, 376);
             PreviousLandTextureButton.Name = "PreviousLandTextureButton";
             PreviousLandTextureButton.Size = new Size(24, 24);
             PreviousLandTextureButton.TabIndex = 22;
@@ -272,7 +340,7 @@
             NextLandTextureButton.IconColor = Color.Black;
             NextLandTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             NextLandTextureButton.IconSize = 24;
-            NextLandTextureButton.Location = new Point(118, 239);
+            NextLandTextureButton.Location = new Point(118, 376);
             NextLandTextureButton.Name = "NextLandTextureButton";
             NextLandTextureButton.Size = new Size(24, 24);
             NextLandTextureButton.TabIndex = 21;
@@ -282,7 +350,7 @@
             // 
             // LandformTexturePreviewPicture
             // 
-            LandformTexturePreviewPicture.Location = new Point(6, 127);
+            LandformTexturePreviewPicture.Location = new Point(6, 264);
             LandformTexturePreviewPicture.Name = "LandformTexturePreviewPicture";
             LandformTexturePreviewPicture.Size = new Size(136, 136);
             LandformTexturePreviewPicture.TabIndex = 20;
@@ -319,7 +387,7 @@
             // 
             NameTextbox.Location = new Point(83, 72);
             NameTextbox.Name = "NameTextbox";
-            NameTextbox.Size = new Size(286, 23);
+            NameTextbox.Size = new Size(251, 23);
             NameTextbox.TabIndex = 2;
             // 
             // GuidLabel
@@ -328,7 +396,7 @@
             GuidLabel.ForeColor = SystemColors.ControlDarkDark;
             GuidLabel.Location = new Point(83, 56);
             GuidLabel.Name = "GuidLabel";
-            GuidLabel.Size = new Size(286, 13);
+            GuidLabel.Size = new Size(253, 13);
             GuidLabel.TabIndex = 1;
             // 
             // label1
@@ -343,11 +411,34 @@
             label1.Text = "Identifier";
             label1.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // ApplyThemeSettingsButton
+            // 
+            ApplyThemeSettingsButton.IconChar = FontAwesome.Sharp.IconChar.ListSquares;
+            ApplyThemeSettingsButton.IconColor = Color.Black;
+            ApplyThemeSettingsButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ApplyThemeSettingsButton.IconSize = 20;
+            ApplyThemeSettingsButton.Location = new Point(186, 409);
+            ApplyThemeSettingsButton.Name = "ApplyThemeSettingsButton";
+            ApplyThemeSettingsButton.Size = new Size(30, 30);
+            ApplyThemeSettingsButton.TabIndex = 93;
+            ApplyThemeSettingsButton.UseVisualStyleBackColor = true;
+            ApplyThemeSettingsButton.Click += ApplyThemeSettingsButton_Click;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.ForeColor = SystemColors.ControlDarkDark;
+            label3.Location = new Point(222, 417);
+            label3.Name = "label3";
+            label3.Size = new Size(78, 15);
+            label3.TabIndex = 94;
+            label3.Text = "Apply Theme";
+            // 
             // LandformInfo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(392, 495);
+            ClientSize = new Size(359, 592);
             Controls.Add(LandformDataPanel);
             FormBorderStyle = FormBorderStyle.None;
             MinimumSize = new Size(261, 65);
@@ -358,11 +449,12 @@
             TransparencyKey = Color.Fuchsia;
             LandformDataPanel.ResumeLayout(false);
             LandformDataPanel.PerformLayout();
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
+            CoastlineGroup.ResumeLayout(false);
+            CoastlineGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)CoastlineEffectDistanceTrack).EndInit();
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
+            LandformGroup.ResumeLayout(false);
+            LandformGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)LandformOutlineWidthTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LandformTexturePreviewPicture).EndInit();
             ResumeLayout(false);
         }
@@ -374,14 +466,13 @@
         private Label label1;
         private Label label2;
         private TextBox NameTextbox;
-        private GroupBox groupBox1;
+        private GroupBox LandformGroup;
         private Label LandTextureNameLabel;
-        private Label label13;
         private FontAwesome.Sharp.IconButton PreviousLandTextureButton;
         private FontAwesome.Sharp.IconButton NextLandTextureButton;
         private PictureBox LandformTexturePreviewPicture;
         private FontAwesome.Sharp.IconButton LandformOutlineColorSelectButton;
-        private GroupBox groupBox2;
+        private GroupBox CoastlineGroup;
         private Label label16;
         private Label label15;
         private ListBox CoastlineStyleList;
@@ -391,5 +482,12 @@
         private Label StatusMessageLabel;
         private Button ApplyChangesButton;
         private Button CloseLandformDataButton;
+        private CheckBox UseTextureForBackgroundCheck;
+        private Label label13;
+        private TrackBar LandformOutlineWidthTrack;
+        private Label label88;
+        private FontAwesome.Sharp.IconButton LandformBackgroundColorSelectButton;
+        private FontAwesome.Sharp.IconButton ApplyThemeSettingsButton;
+        private Label label3;
     }
 }

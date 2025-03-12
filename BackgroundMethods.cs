@@ -69,6 +69,11 @@ namespace RealmStudio
             }
         }
 
+        internal static MapTexture GetSelectedMapTexture()
+        {
+            return AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX];
+        }
+
         internal static Bitmap? GetSelectedBackgroundImage()
         {
             return AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TextureBitmap;
