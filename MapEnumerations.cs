@@ -133,6 +133,7 @@ namespace RealmStudio
         Structure,
         Vegetation,
         Terrain,
+        Marker,
         Other
     }
 

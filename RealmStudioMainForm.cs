@@ -10182,92 +10182,27 @@ namespace RealmStudio
 
         private void StructuresSymbolButton_Click(object sender, EventArgs e)
         {
-            CURRENT_DRAWING_MODE = MapDrawingMode.SymbolPlace;
-            SetDrawingModeLabel();
-            SetSelectedBrushSize(0);
-
-            if (SymbolMethods.SELECTED_SYMBOL_TYPE != MapSymbolType.Structure)
-            {
-                SymbolMethods.SELECTED_SYMBOL_TYPE = MapSymbolType.Structure;
-                List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
-
-                AddSymbolsToSymbolTable(selectedSymbols);
-                AreaBrushSwitch.Checked = false;
-                AreaBrushSwitch.Enabled = false;
-            }
-
-            if (SymbolMethods.SelectedSymbolTableMapSymbol == null || SymbolMethods.SelectedSymbolTableMapSymbol.SymbolType != MapSymbolType.Structure)
-            {
-                PictureBox pb = (PictureBox)SymbolTable.Controls[0];
-                SelectPrimarySymbolInSymbolTable(pb);
-            }
+            SelectSymbolsOfType(MapSymbolType.Structure);
         }
 
         private void VegetationSymbolsButton_Click(object sender, EventArgs e)
         {
-            CURRENT_DRAWING_MODE = MapDrawingMode.SymbolPlace;
-            SetDrawingModeLabel();
-            SetSelectedBrushSize(0);
-
-            if (SymbolMethods.SELECTED_SYMBOL_TYPE != MapSymbolType.Vegetation)
-            {
-                SymbolMethods.SELECTED_SYMBOL_TYPE = MapSymbolType.Vegetation;
-                List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
-
-                AddSymbolsToSymbolTable(selectedSymbols);
-                AreaBrushSwitch.Enabled = true;
-            }
-
-            if (SymbolMethods.SelectedSymbolTableMapSymbol == null || SymbolMethods.SelectedSymbolTableMapSymbol.SymbolType != MapSymbolType.Vegetation)
-            {
-                PictureBox pb = (PictureBox)SymbolTable.Controls[0];
-                SelectPrimarySymbolInSymbolTable(pb);
-            }
+            SelectSymbolsOfType(MapSymbolType.Vegetation);
         }
 
         private void TerrainSymbolsButton_Click(object sender, EventArgs e)
         {
-            CURRENT_DRAWING_MODE = MapDrawingMode.SymbolPlace;
-            SetDrawingModeLabel();
-            SetSelectedBrushSize(0);
+            SelectSymbolsOfType(MapSymbolType.Terrain);
+        }
 
-            if (SymbolMethods.SELECTED_SYMBOL_TYPE != MapSymbolType.Terrain)
-            {
-                SymbolMethods.SELECTED_SYMBOL_TYPE = MapSymbolType.Terrain;
-                List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
-
-                AddSymbolsToSymbolTable(selectedSymbols);
-                AreaBrushSwitch.Enabled = true;
-            }
-
-            if (SymbolMethods.SelectedSymbolTableMapSymbol == null || SymbolMethods.SelectedSymbolTableMapSymbol.SymbolType != MapSymbolType.Terrain)
-            {
-                PictureBox pb = (PictureBox)SymbolTable.Controls[0];
-                SelectPrimarySymbolInSymbolTable(pb);
-            }
+        private void MarkerSymbolsButton_Click(object sender, EventArgs e)
+        {
+            SelectSymbolsOfType(MapSymbolType.Marker);
         }
 
         private void OtherSymbolsButton_Click(object sender, EventArgs e)
         {
-            CURRENT_DRAWING_MODE = MapDrawingMode.SymbolPlace;
-            SetDrawingModeLabel();
-            SetSelectedBrushSize(0);
-
-            if (SymbolMethods.SELECTED_SYMBOL_TYPE != MapSymbolType.Other)
-            {
-                SymbolMethods.SELECTED_SYMBOL_TYPE = MapSymbolType.Other;
-                List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
-
-                AddSymbolsToSymbolTable(selectedSymbols);
-                AreaBrushSwitch.Checked = false;
-                AreaBrushSwitch.Enabled = false;
-            }
-
-            if (SymbolMethods.SelectedSymbolTableMapSymbol == null || SymbolMethods.SelectedSymbolTableMapSymbol.SymbolType != MapSymbolType.Other)
-            {
-                PictureBox pb = (PictureBox)SymbolTable.Controls[0];
-                SelectPrimarySymbolInSymbolTable(pb);
-            }
+            SelectSymbolsOfType(MapSymbolType.Other);
         }
 
         private void SymbolScaleTrack_Scroll(object sender, EventArgs e)
@@ -10567,6 +10502,33 @@ namespace RealmStudio
         #endregion
 
         #region Symbol Tab Methods
+
+        private void SelectSymbolsOfType(MapSymbolType symbolType)
+        {
+            CURRENT_DRAWING_MODE = MapDrawingMode.SymbolPlace;
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(0);
+
+            if (SymbolMethods.SELECTED_SYMBOL_TYPE != symbolType)
+            {
+                SymbolMethods.SELECTED_SYMBOL_TYPE = symbolType;
+                List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+
+                AddSymbolsToSymbolTable(selectedSymbols);
+                AreaBrushSwitch.Checked = false;
+                AreaBrushSwitch.Enabled = false;
+            }
+
+            if (SymbolTable.Controls.Count > 0)
+            {
+                if (SymbolMethods.SelectedSymbolTableMapSymbol == null || SymbolMethods.SelectedSymbolTableMapSymbol.SymbolType != symbolType)
+                {
+                    PictureBox pb = (PictureBox)SymbolTable.Controls[0];
+                    SelectPrimarySymbolInSymbolTable(pb);
+                }
+            }
+        }
+
         private List<MapSymbol> GetFilteredMapSymbols()
         {
             List<string> selectedCollections = [.. SymbolCollectionsListBox.CheckedItems.Cast<string>()];
@@ -10578,53 +10540,110 @@ namespace RealmStudio
 
         private void AddSymbolsToSymbolTable(List<MapSymbol> symbols)
         {
+            const int PBWIDTH = 120;
+            const int PBHEIGHT = 45;
+            int PBBASEHEIGHT = 680;
+
+            SymbolTable.AutoScroll = false;
+            SymbolTable.VerticalScroll.Enabled = true;
             SymbolTable.Hide();
+            SymbolToolPanel.Refresh();
             SymbolTable.Controls.Clear();
+            SymbolTable.RowCount = 0;
             SymbolTable.Refresh();
 
-            foreach (MapSymbol symbol in symbols)
+            for (int i = 0; i < symbols.Count; i++)
             {
+                MapSymbol symbol = symbols[i];
                 symbol.ColorMappedBitmap = symbol.SymbolBitmap?.Copy();
 
                 Bitmap colorMappedBitmap = (Bitmap)Extensions.ToBitmap(symbol.ColorMappedBitmap).Clone();
+
+                if (colorMappedBitmap.PixelFormat != PixelFormat.Format32bppArgb)
+                {
+                    Bitmap clone = new(colorMappedBitmap.Width, colorMappedBitmap.Height, PixelFormat.Format32bppPArgb);
+
+                    using Graphics gr = Graphics.FromImage(clone);
+                    gr.DrawImage(colorMappedBitmap, new Rectangle(0, 0, clone.Width, clone.Height));
+                    colorMappedBitmap = new(clone);
+                    clone.Dispose();
+                }
 
                 if (symbol.UseCustomColors)
                 {
                     SymbolMethods.MapCustomColorsToColorableBitmap(ref colorMappedBitmap, SymbolColor1Button.BackColor, SymbolColor2Button.BackColor, SymbolColor3Button.BackColor);
                 }
+                else if (symbol.IsGrayscale)
+                {
+                    // color the grayscale with custom color (using SymbolColor1Button background color)?
+                }
 
                 symbol.ColorMappedBitmap = Extensions.ToSKBitmap((Bitmap)colorMappedBitmap.Clone());
 
+                Bitmap pbm = DrawingMethods.ScaleBitmap(colorMappedBitmap, PBWIDTH - 2, PBHEIGHT - 8);
+
                 PictureBox pb = new()
                 {
+                    Width = PBWIDTH,
+                    Height = PBHEIGHT,
                     Tag = symbol,
-                    SizeMode = PictureBoxSizeMode.Zoom,
-                    Image = colorMappedBitmap,
+                    SizeMode = PictureBoxSizeMode.CenterImage,
+                    Image = pbm,
+                    Margin = new Padding(0, 0, 0, 0),
+                    Padding = new Padding(0, 4, 0, 4),
+                    BorderStyle = BorderStyle.None,
                 };
 
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
                 pb.MouseHover += SymbolPictureBox_MouseHover;
                 pb.MouseClick += SymbolPictureBox_MouseClick;
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+                pb.Paint += SymbolPictureBox_Paint;
+
+                colorMappedBitmap.Dispose();
 
                 SymbolTable.Controls.Add(pb);
+                SymbolTable.RowStyles.Add(new RowStyle(SizeType.Absolute, PBHEIGHT));
             }
+
+            SymbolTable.RowCount = symbols.Count;
+            SymbolTable.Width = 130;
+
+            SymbolTable.Height = Math.Min(PBBASEHEIGHT, (symbols.Count * PBHEIGHT));
+            SymbolTable.VerticalScroll.Maximum = (symbols.Count * PBHEIGHT) + (symbols.Count * 2);
+            SymbolTable.HorizontalScroll.Maximum = 0;
+            SymbolTable.HorizontalScroll.Enabled = false;
+            SymbolTable.HorizontalScroll.Visible = false;
+            SymbolTable.AutoScroll = true;
+
             SymbolTable.Show();
+
             SymbolTable.Refresh();
+            SymbolToolPanel.Refresh();
         }
 
-        private void SymbolPictureBox_MouseHover(object sender, EventArgs e)
+        private void SymbolPictureBox_Paint(object? sender, PaintEventArgs e)
         {
-            PictureBox pb = (PictureBox)sender;
+            PictureBox? pb = (PictureBox?)sender;
+            if (pb != null)
+            {
+                ControlPaint.DrawBorder(e.Graphics, pb.ClientRectangle, Color.LightGray, ButtonBorderStyle.Dashed);
+            }
+        }
 
-            if (pb.Tag is MapSymbol s)
+        private void SymbolPictureBox_MouseHover(object? sender, EventArgs e)
+        {
+            PictureBox? pb = (PictureBox?)sender;
+
+            if (pb != null && pb.Tag is MapSymbol s)
             {
                 TOOLTIP.Show(s.SymbolName, pb);
             }
         }
 
-        private void SymbolPictureBox_MouseClick(object sender, EventArgs e)
+        private void SymbolPictureBox_MouseClick(object? sender, EventArgs e)
         {
+            PictureBox? pb = (PictureBox?)sender;
+            if (pb == null) return;
+
             if (((MouseEventArgs)e).Button == MouseButtons.Left)
             {
                 if (ModifierKeys == Keys.Shift)
@@ -10632,7 +10651,7 @@ namespace RealmStudio
                     // secondary symbol selection - for additional symbols to be used when painting symbols to the map (forests, etc.)
                     if (CURRENT_DRAWING_MODE == MapDrawingMode.SymbolPlace)
                     {
-                        PictureBox pb = (PictureBox)sender;
+
 
                         if (pb.BackColor == Color.AliceBlue)
                         {
@@ -10663,8 +10682,6 @@ namespace RealmStudio
                     SetSelectedBrushSize(0);
 
                     // primary symbol selection                    
-                    PictureBox pb = (PictureBox)sender;
-
                     if (pb.Tag is MapSymbol)
                     {
                         SelectPrimarySymbolInSymbolTable(pb);
@@ -10673,7 +10690,6 @@ namespace RealmStudio
             }
             else if (((MouseEventArgs)e).Button == MouseButtons.Right)
             {
-                PictureBox pb = (PictureBox)sender;
                 if (pb.Tag is MapSymbol s)
                 {
                     SymbolInfo si = new(s);
@@ -12688,5 +12704,7 @@ namespace RealmStudio
         }
 
         #endregion
+
+
     }
 }

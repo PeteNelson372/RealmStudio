@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             SymbolCollectionFormOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            CloseCollectionFormButton = new Button();
+            SaveButton = new Button();
+            OpenCollectionDirectoryButton = new Button();
             AddTagButton = new FontAwesome.Sharp.IconButton();
             ResetTagsButton = new FontAwesome.Sharp.IconButton();
             NewTagTextBox = new TextBox();
@@ -48,6 +51,7 @@
             SymbolNameTextBox = new TextBox();
             label2 = new Label();
             SymbolTypeGroup = new GroupBox();
+            MarkerRadioButton = new RadioButton();
             OtherRadioButton = new RadioButton();
             TerrainRadioButton = new RadioButton();
             VegetationRadioButton = new RadioButton();
@@ -60,9 +64,7 @@
             CollectionNameTextBox = new TextBox();
             label1 = new Label();
             CollectionPathLabel = new Label();
-            OpenCollectionDirectoryButton = new Button();
-            SaveButton = new Button();
-            CloseCollectionFormButton = new Button();
+            ExcludeSymbolButton = new FontAwesome.Sharp.IconButton();
             SymbolCollectionFormOverlay.SuspendLayout();
             groupBox3.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -75,6 +77,7 @@
             // 
             SymbolCollectionFormOverlay.BackColor = Color.FromArgb(244, 241, 243);
             SymbolCollectionFormOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            SymbolCollectionFormOverlay.Controls.Add(ExcludeSymbolButton);
             SymbolCollectionFormOverlay.Controls.Add(CloseCollectionFormButton);
             SymbolCollectionFormOverlay.Controls.Add(SaveButton);
             SymbolCollectionFormOverlay.Controls.Add(OpenCollectionDirectoryButton);
@@ -118,6 +121,39 @@
             SymbolCollectionFormOverlay.TabIndex = 0;
             SymbolCollectionFormOverlay.Text = "Add/Update Symbol Collection";
             SymbolCollectionFormOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // CloseCollectionFormButton
+            // 
+            CloseCollectionFormButton.ForeColor = SystemColors.ControlDarkDark;
+            CloseCollectionFormButton.Location = new Point(654, 481);
+            CloseCollectionFormButton.Name = "CloseCollectionFormButton";
+            CloseCollectionFormButton.Size = new Size(60, 60);
+            CloseCollectionFormButton.TabIndex = 114;
+            CloseCollectionFormButton.Text = "&Close";
+            CloseCollectionFormButton.UseVisualStyleBackColor = true;
+            CloseCollectionFormButton.Click += CloseCollectionFormButton_Click;
+            // 
+            // SaveButton
+            // 
+            SaveButton.ForeColor = SystemColors.ControlDarkDark;
+            SaveButton.Location = new Point(588, 481);
+            SaveButton.Name = "SaveButton";
+            SaveButton.Size = new Size(60, 60);
+            SaveButton.TabIndex = 113;
+            SaveButton.Text = "&Save";
+            SaveButton.UseVisualStyleBackColor = true;
+            SaveButton.Click += SaveButton_Click;
+            // 
+            // OpenCollectionDirectoryButton
+            // 
+            OpenCollectionDirectoryButton.ForeColor = SystemColors.ControlDarkDark;
+            OpenCollectionDirectoryButton.Location = new Point(23, 59);
+            OpenCollectionDirectoryButton.Name = "OpenCollectionDirectoryButton";
+            OpenCollectionDirectoryButton.Size = new Size(60, 60);
+            OpenCollectionDirectoryButton.TabIndex = 112;
+            OpenCollectionDirectoryButton.Text = "&Open";
+            OpenCollectionDirectoryButton.UseVisualStyleBackColor = true;
+            OpenCollectionDirectoryButton.Click += OpenCollectionDirectoryButton_Click;
             // 
             // AddTagButton
             // 
@@ -276,9 +312,9 @@
             groupBox1.Controls.Add(CustomColorSymbolRadio);
             groupBox1.Controls.Add(GrayScaleSymbolRadio);
             groupBox1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox1.Location = new Point(215, 328);
+            groupBox1.Location = new Point(215, 356);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(133, 73);
+            groupBox1.Size = new Size(133, 75);
             groupBox1.TabIndex = 104;
             groupBox1.TabStop = false;
             groupBox1.Text = "Symbol Painting";
@@ -326,6 +362,7 @@
             // 
             // SymbolTypeGroup
             // 
+            SymbolTypeGroup.Controls.Add(MarkerRadioButton);
             SymbolTypeGroup.Controls.Add(OtherRadioButton);
             SymbolTypeGroup.Controls.Add(TerrainRadioButton);
             SymbolTypeGroup.Controls.Add(VegetationRadioButton);
@@ -333,17 +370,30 @@
             SymbolTypeGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             SymbolTypeGroup.Location = new Point(215, 191);
             SymbolTypeGroup.Name = "SymbolTypeGroup";
-            SymbolTypeGroup.Size = new Size(133, 131);
+            SymbolTypeGroup.Size = new Size(133, 159);
             SymbolTypeGroup.TabIndex = 101;
             SymbolTypeGroup.TabStop = false;
             SymbolTypeGroup.Text = "Symbol Type";
+            // 
+            // MarkerRadioButton
+            // 
+            MarkerRadioButton.AutoSize = true;
+            MarkerRadioButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            MarkerRadioButton.ForeColor = SystemColors.ControlDarkDark;
+            MarkerRadioButton.Location = new Point(6, 101);
+            MarkerRadioButton.Name = "MarkerRadioButton";
+            MarkerRadioButton.Size = new Size(62, 19);
+            MarkerRadioButton.TabIndex = 4;
+            MarkerRadioButton.TabStop = true;
+            MarkerRadioButton.Text = "Marker";
+            MarkerRadioButton.UseVisualStyleBackColor = true;
             // 
             // OtherRadioButton
             // 
             OtherRadioButton.AutoSize = true;
             OtherRadioButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             OtherRadioButton.ForeColor = SystemColors.ControlDarkDark;
-            OtherRadioButton.Location = new Point(6, 101);
+            OtherRadioButton.Location = new Point(6, 126);
             OtherRadioButton.Name = "OtherRadioButton";
             OtherRadioButton.Size = new Size(55, 19);
             OtherRadioButton.TabIndex = 3;
@@ -358,7 +408,7 @@
             TerrainRadioButton.ForeColor = SystemColors.ControlDarkDark;
             TerrainRadioButton.Location = new Point(6, 76);
             TerrainRadioButton.Name = "TerrainRadioButton";
-            TerrainRadioButton.Size = new Size(60, 19);
+            TerrainRadioButton.Size = new Size(61, 19);
             TerrainRadioButton.TabIndex = 2;
             TerrainRadioButton.TabStop = true;
             TerrainRadioButton.Text = "Terrain";
@@ -478,38 +528,22 @@
             CollectionPathLabel.Size = new Size(625, 23);
             CollectionPathLabel.TabIndex = 93;
             // 
-            // OpenCollectionDirectoryButton
+            // ExcludeSymbolButton
             // 
-            OpenCollectionDirectoryButton.ForeColor = SystemColors.ControlDarkDark;
-            OpenCollectionDirectoryButton.Location = new Point(23, 59);
-            OpenCollectionDirectoryButton.Name = "OpenCollectionDirectoryButton";
-            OpenCollectionDirectoryButton.Size = new Size(60, 60);
-            OpenCollectionDirectoryButton.TabIndex = 112;
-            OpenCollectionDirectoryButton.Text = "&Open";
-            OpenCollectionDirectoryButton.UseVisualStyleBackColor = true;
-            OpenCollectionDirectoryButton.Click += OpenCollectionDirectoryButton_Click;
-            // 
-            // SaveButton
-            // 
-            SaveButton.ForeColor = SystemColors.ControlDarkDark;
-            SaveButton.Location = new Point(588, 481);
-            SaveButton.Name = "SaveButton";
-            SaveButton.Size = new Size(60, 60);
-            SaveButton.TabIndex = 113;
-            SaveButton.Text = "&Save";
-            SaveButton.UseVisualStyleBackColor = true;
-            SaveButton.Click += SaveButton_Click;
-            // 
-            // CloseCollectionFormButton
-            // 
-            CloseCollectionFormButton.ForeColor = SystemColors.ControlDarkDark;
-            CloseCollectionFormButton.Location = new Point(654, 481);
-            CloseCollectionFormButton.Name = "CloseCollectionFormButton";
-            CloseCollectionFormButton.Size = new Size(60, 60);
-            CloseCollectionFormButton.TabIndex = 114;
-            CloseCollectionFormButton.Text = "&Close";
-            CloseCollectionFormButton.UseVisualStyleBackColor = true;
-            CloseCollectionFormButton.Click += CloseCollectionFormButton_Click;
+            ExcludeSymbolButton.ForeColor = SystemColors.ControlDarkDark;
+            ExcludeSymbolButton.IconChar = FontAwesome.Sharp.IconChar.TrashAlt;
+            ExcludeSymbolButton.IconColor = Color.Black;
+            ExcludeSymbolButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ExcludeSymbolButton.IconSize = 18;
+            ExcludeSymbolButton.Location = new Point(89, 399);
+            ExcludeSymbolButton.Name = "ExcludeSymbolButton";
+            ExcludeSymbolButton.Size = new Size(120, 32);
+            ExcludeSymbolButton.TabIndex = 115;
+            ExcludeSymbolButton.Text = "Remove Symbol";
+            ExcludeSymbolButton.TextAlign = ContentAlignment.MiddleRight;
+            ExcludeSymbolButton.TextImageRelation = TextImageRelation.ImageBeforeText;
+            ExcludeSymbolButton.UseVisualStyleBackColor = true;
+            ExcludeSymbolButton.Click += ExcludeSymbolButton_Click;
             // 
             // SymbolCollectionForm
             // 
@@ -573,5 +607,7 @@
         private Button OpenCollectionDirectoryButton;
         private Button SaveButton;
         private Button CloseCollectionFormButton;
+        private RadioButton MarkerRadioButton;
+        private FontAwesome.Sharp.IconButton ExcludeSymbolButton;
     }
 }

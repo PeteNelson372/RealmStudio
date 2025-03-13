@@ -211,7 +211,7 @@ namespace RealmStudio
         {
             if (collection.GetCollectionName().Length > 0 && collection.GetCollectionPath().Length > 0)
             {
-                TextWriter? writer = new StreamWriter(collection.GetCollectionPath());
+                TextWriter? writer = new StreamWriter(collection.GetCollectionPath(), false);
                 XmlSerializer? serializer = new(typeof(MapSymbolCollection));
 
                 try

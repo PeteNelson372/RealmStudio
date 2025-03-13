@@ -87,10 +87,8 @@ namespace RealmStudio
                                     }
                                 }
 
-                                if (string.IsNullOrEmpty(symbol.CollectionPath))
-                                {
-                                    symbol.CollectionPath = collectionFilePath;
-                                }
+                                COLLECTION.SetCollectionPath(collectionFilePath);
+                                symbol.CollectionPath = collectionFilePath;
 
                                 if (!(symbol.SymbolTags.Count > 0))
                                 {
@@ -289,6 +287,29 @@ namespace RealmStudio
             }
         }
 
+        private void ExcludeSymbolButton_Click(object sender, EventArgs e)
+        {
+            if (COLLECTION != null && COLLECTION.CollectionMapSymbols.Count > 0 && SELECTED_SYMBOL != null)
+            {
+                // remove the current symbol from the symbol collection and reset UI
+                for (int i = COLLECTION.CollectionMapSymbols.Count - 1; i >= 0; i--)
+                {
+                    if (COLLECTION.CollectionMapSymbols[i].SymbolGuid.ToString() == SELECTED_SYMBOL.SymbolGuid.ToString())
+                    {
+                        COLLECTION.CollectionMapSymbols.RemoveAt(i);
+                        break;
+                    }
+                }
+
+                SYMBOL_NUMBER--;
+
+                SYMBOL_NUMBER = Math.Min(SYMBOL_NUMBER, COLLECTION.GetCollectionMapSymbols().Count - 1);
+                SetUIFromSymbol(SYMBOL_NUMBER);
+
+                AdvanceToNextSymbol();
+            }
+        }
+
         private void ApplyButton_Click(object sender, EventArgs e)
         {
             if (COLLECTION != null)
@@ -306,6 +327,10 @@ namespace RealmStudio
                     else if (TerrainRadioButton.Checked)
                     {
                         SELECTED_SYMBOL.SymbolType = MapSymbolType.Terrain;
+                    }
+                    else if (MarkerRadioButton.Checked)
+                    {
+                        SELECTED_SYMBOL.SymbolType = MapSymbolType.Marker;
                     }
                     else if (OtherRadioButton.Checked)
                     {
@@ -527,7 +552,10 @@ namespace RealmStudio
                 symbolNumber = Math.Max(symbolNumber, 0);
                 SELECTED_SYMBOL = COLLECTION.GetCollectionMapSymbols()[symbolNumber];
 
-                SetSymbolTypeRadio(SELECTED_SYMBOL);
+                if (SELECTED_SYMBOL.SymbolType != MapSymbolType.NotSet)
+                {
+                    SetSymbolTypeRadio(SELECTED_SYMBOL);
+                }
 
                 SymbolNameTextBox.Text = GetSymbolName(SELECTED_SYMBOL);
                 GrayScaleSymbolRadio.Checked = SELECTED_SYMBOL.IsGrayscale;
@@ -602,6 +630,9 @@ namespace RealmStudio
                 case MapSymbolType.Vegetation:
                     VegetationRadioButton.Checked = true;
                     break;
+                case MapSymbolType.Marker:
+                    MarkerRadioButton.Checked = true;
+                    break;
                 case MapSymbolType.Other:
                     OtherRadioButton.Checked = true;
                     break;
@@ -609,6 +640,7 @@ namespace RealmStudio
                     TerrainRadioButton.Checked = false;
                     StructureRadioButton.Checked = false;
                     VegetationRadioButton.Checked = false;
+                    MarkerRadioButton.Checked = false;
                     OtherRadioButton.Checked = false;
                     break;
             }
@@ -652,7 +684,7 @@ namespace RealmStudio
                 }
                 else
                 {
-                    MessageBox.Show("Please select a symbol type (Structure, Vegetation, Terrain, Other) before advancing to the next symbol.", "Symbol type not set", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    MessageBox.Show("Please select a symbol type (Structure, Vegetation, Terrain, Marker, Other) before advancing to the next symbol.", "Symbol type not set", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
             }
         }
