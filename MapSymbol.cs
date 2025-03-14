@@ -126,6 +126,14 @@ namespace RealmStudio
             }
         }
 
+        public void SetSymbolVectorFromPath(string path)
+        {
+            if (File.Exists(path))
+            {
+                SymbolSVG = File.ReadAllText(path);
+            }
+        }
+
         public void SetPlacedBitmap(SKBitmap placedBitmap)
         {
             PlacedBitmap = placedBitmap;

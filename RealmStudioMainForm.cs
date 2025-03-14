@@ -24,6 +24,7 @@
 using RealmStudio.Properties;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using Svg.Skia;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -31,8 +32,13 @@ using System.Drawing.Text;
 using System.IO.Compression;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Timers;
+using Button = System.Windows.Forms.Button;
+using ComboBox = System.Windows.Forms.ComboBox;
 using Control = System.Windows.Forms.Control;
+using Image = System.Drawing.Image;
+using TextBox = System.Windows.Forms.TextBox;
 
 namespace RealmStudio
 {
@@ -116,9 +122,9 @@ namespace RealmStudio
         private static SKPoint CURSOR_POINT = new(0, 0);
         private static SKPoint PREVIOUS_CURSOR_POINT = new(0, 0);
 
-        private static readonly ToolTip TOOLTIP = new();
+        private static readonly System.Windows.Forms.ToolTip TOOLTIP = new();
 
-        private TextBox? LABEL_TEXT_BOX;
+        private System.Windows.Forms.TextBox? LABEL_TEXT_BOX;
 
         public static readonly NameGeneratorConfiguration NAME_GENERATOR_CONFIG = new();
 
@@ -2786,19 +2792,49 @@ namespace RealmStudio
                     {
                         if (SymbolMethods.SelectedSymbolTableMapSymbol != null && !AreaBrushSwitch.Checked)
                         {
-                            SKBitmap? symbolBitmap = SymbolMethods.SelectedSymbolTableMapSymbol.ColorMappedBitmap;
-                            if (symbolBitmap != null)
+                            float symbolScale = (float)(SymbolScaleTrack.Value / 100.0F);
+                            float symbolRotation = SymbolRotationTrack.Value;
+
+                            if (SymbolMethods.SelectedSymbolTableMapSymbol.SymbolFormat != SymbolFileFormat.Vector)
                             {
-                                float symbolScale = (float)(SymbolScaleTrack.Value / 100.0F);
-                                float symbolRotation = SymbolRotationTrack.Value;
-                                SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleSKBitmap(symbolBitmap, symbolScale);
-
-                                SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateSKBitmap(scaledSymbolBitmap, symbolRotation, MirrorSymbolSwitch.Checked);
-
-                                if (rotatedAndScaledBitmap != null)
+                                SKBitmap? symbolBitmap = SymbolMethods.SelectedSymbolTableMapSymbol.ColorMappedBitmap;
+                                if (symbolBitmap != null)
                                 {
+                                    // TODO: use matrix for scaling and rotation
+                                    SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleSKBitmap(symbolBitmap, symbolScale);
+                                    SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateSKBitmap(scaledSymbolBitmap, symbolRotation, MirrorSymbolSwitch.Checked);
+
                                     canvas.DrawBitmap(rotatedAndScaledBitmap,
                                         new SKPoint(point.X - (rotatedAndScaledBitmap.Width / 2), point.Y - (rotatedAndScaledBitmap.Height / 2)), null);
+
+                                    scaledSymbolBitmap.Dispose();
+                                    rotatedAndScaledBitmap.Dispose();
+                                }
+                            }
+                            else
+                            {
+                                // display the SVG as the cursor
+                                using MemoryStream ms = new(Encoding.ASCII.GetBytes(SymbolMethods.SelectedSymbolTableMapSymbol.SymbolSVG));
+                                using var skSvg = new SKSvg();
+                                skSvg.Load(ms);
+
+                                if (skSvg.Picture != null)
+                                {
+                                    SKBitmap b = new(new SKImageInfo((int)((int)skSvg.Picture.CullRect.Width * symbolScale),
+                                        (int)((int)skSvg.Picture.CullRect.Height * symbolScale)));
+
+                                    SKCanvas c = new(b);
+
+                                    SKMatrix matrix = SKMatrix.CreateScale(symbolScale, symbolScale);
+
+                                    c.RotateDegrees(symbolRotation, b.Width / 2, b.Height / 2);
+                                    c.DrawPicture(skSvg.Picture, in matrix);
+
+                                    SKPoint pt = new(point.X - (b.Width / 2), point.Y - (b.Height / 2));
+
+                                    canvas.DrawBitmap(b, pt);
+                                    c.Dispose();
+                                    b.Dispose();
                                 }
                             }
                         }
@@ -10552,35 +10588,74 @@ namespace RealmStudio
             SymbolTable.RowCount = 0;
             SymbolTable.Refresh();
 
+            Bitmap pbm = new(PBWIDTH - 2, PBHEIGHT - 8);
+
             for (int i = 0; i < symbols.Count; i++)
             {
                 MapSymbol symbol = symbols[i];
-                symbol.ColorMappedBitmap = symbol.SymbolBitmap?.Copy();
 
-                Bitmap colorMappedBitmap = (Bitmap)Extensions.ToBitmap(symbol.ColorMappedBitmap).Clone();
-
-                if (colorMappedBitmap.PixelFormat != PixelFormat.Format32bppArgb)
+                if (symbol.SymbolFormat != SymbolFileFormat.Vector)
                 {
-                    Bitmap clone = new(colorMappedBitmap.Width, colorMappedBitmap.Height, PixelFormat.Format32bppPArgb);
+                    symbol.ColorMappedBitmap = symbol.SymbolBitmap?.Copy();
 
-                    using Graphics gr = Graphics.FromImage(clone);
-                    gr.DrawImage(colorMappedBitmap, new Rectangle(0, 0, clone.Width, clone.Height));
-                    colorMappedBitmap = new(clone);
-                    clone.Dispose();
+                    Bitmap colorMappedBitmap = (Bitmap)Extensions.ToBitmap(symbol.ColorMappedBitmap).Clone();
+
+                    if (colorMappedBitmap.PixelFormat != PixelFormat.Format32bppArgb)
+                    {
+                        Bitmap clone = new(colorMappedBitmap.Width, colorMappedBitmap.Height, PixelFormat.Format32bppPArgb);
+
+                        using Graphics gr = Graphics.FromImage(clone);
+                        gr.DrawImage(colorMappedBitmap, new Rectangle(0, 0, clone.Width, clone.Height));
+                        colorMappedBitmap = new(clone);
+                        clone.Dispose();
+                    }
+
+                    if (symbol.UseCustomColors)
+                    {
+                        SymbolMethods.MapCustomColorsToColorableBitmap(ref colorMappedBitmap, SymbolColor1Button.BackColor, SymbolColor2Button.BackColor, SymbolColor3Button.BackColor);
+                    }
+                    else if (symbol.IsGrayscale)
+                    {
+                        // TODO: color the grayscale with custom color (using SymbolColor1Button background color)?
+                    }
+
+                    symbol.ColorMappedBitmap = Extensions.ToSKBitmap((Bitmap)colorMappedBitmap.Clone());
+
+                    pbm = DrawingMethods.ScaleBitmap(colorMappedBitmap, PBWIDTH - 2, PBHEIGHT - 8);
+                    colorMappedBitmap.Dispose();
                 }
-
-                if (symbol.UseCustomColors)
+                else
                 {
-                    SymbolMethods.MapCustomColorsToColorableBitmap(ref colorMappedBitmap, SymbolColor1Button.BackColor, SymbolColor2Button.BackColor, SymbolColor3Button.BackColor);
-                }
-                else if (symbol.IsGrayscale)
-                {
-                    // color the grayscale with custom color (using SymbolColor1Button background color)?
-                }
+                    // display the SVG
+                    using MemoryStream ms = new(Encoding.ASCII.GetBytes(symbol.SymbolSVG));
+                    var skSvg = new SKSvg();
+                    skSvg.Load(ms);
 
-                symbol.ColorMappedBitmap = Extensions.ToSKBitmap((Bitmap)colorMappedBitmap.Clone());
+                    using SKBitmap b = new(new SKImageInfo(PBHEIGHT - 8, PBHEIGHT - 8));
+                    using SKCanvas c = new(b);
 
-                Bitmap pbm = DrawingMethods.ScaleBitmap(colorMappedBitmap, PBWIDTH - 2, PBHEIGHT - 8);
+                    /*
+                    using (var paint = new SKPaint())
+                    {
+                        paint.IsAntialias = true;
+                        
+
+                        //could also tint the svg:
+                        //paint.ColorFilter = SKColorFilter.CreateBlendMode(TintColor.ToSKColor(), SKBlendMode.SrcIn);
+
+                    }
+                    */
+
+                    if (skSvg.Picture != null)
+                    {
+                        SKMatrix matrix = SKMatrix.CreateScale((PBHEIGHT - 8) / skSvg.Picture.CullRect.Width,
+                            (PBHEIGHT - 8) / skSvg.Picture.CullRect.Height);
+
+                        c.DrawPicture(skSvg.Picture, in matrix);
+
+                        pbm = Extensions.ToBitmap(b.Copy());
+                    }
+                }
 
                 PictureBox pb = new()
                 {
@@ -10597,8 +10672,6 @@ namespace RealmStudio
                 pb.MouseHover += SymbolPictureBox_MouseHover;
                 pb.MouseClick += SymbolPictureBox_MouseClick;
                 pb.Paint += SymbolPictureBox_Paint;
-
-                colorMappedBitmap.Dispose();
 
                 SymbolTable.Controls.Add(pb);
                 SymbolTable.RowStyles.Add(new RowStyle(SizeType.Absolute, PBHEIGHT));
@@ -10644,15 +10717,16 @@ namespace RealmStudio
             PictureBox? pb = (PictureBox?)sender;
             if (pb == null) return;
 
+            MapSymbol? clickedSymbol = pb.Tag as MapSymbol;
+
             if (((MouseEventArgs)e).Button == MouseButtons.Left)
             {
-                if (ModifierKeys == Keys.Shift)
+                // can't select more than one marker symbol
+                if (ModifierKeys == Keys.Shift && clickedSymbol?.SymbolType != MapSymbolType.Marker)
                 {
                     // secondary symbol selection - for additional symbols to be used when painting symbols to the map (forests, etc.)
                     if (CURRENT_DRAWING_MODE == MapDrawingMode.SymbolPlace)
                     {
-
-
                         if (pb.BackColor == Color.AliceBlue)
                         {
                             pb.BackColor = SystemColors.Control;
@@ -10742,16 +10816,67 @@ namespace RealmStudio
         {
             if (SymbolMethods.SelectedSymbolTableMapSymbol != null)
             {
-                SKBitmap? symbolBitmap = SymbolMethods.SelectedSymbolTableMapSymbol.SymbolBitmap;
-                if (symbolBitmap != null)
+                float symbolScale = SymbolScaleTrack.Value / 100.0F;
+                float symbolRotation = SymbolRotationTrack.Value;
+
+                if (SymbolMethods.SelectedSymbolTableMapSymbol.SymbolFormat != SymbolFileFormat.Vector)
                 {
-                    float symbolScale = SymbolScaleTrack.Value / 100.0F;
-                    float symbolRotation = SymbolRotationTrack.Value;
+                    SKBitmap? symbolBitmap = SymbolMethods.SelectedSymbolTableMapSymbol.SymbolBitmap;
+                    if (symbolBitmap != null)
+                    {
+                        SKBitmap rotatedAndScaledBitmap = RotateAndScaleSymbolBitmap(symbolBitmap, symbolScale, symbolRotation);
+                        SKPoint cursorPoint = new(mouseCursorPoint.X - (rotatedAndScaledBitmap.Width / 2), mouseCursorPoint.Y - (rotatedAndScaledBitmap.Height / 2));
 
-                    SKBitmap rotatedAndScaledBitmap = RotateAndScaleSymbolBitmap(symbolBitmap, symbolScale, symbolRotation);
-                    SKPoint cursorPoint = new(mouseCursorPoint.X - (rotatedAndScaledBitmap.Width / 2), mouseCursorPoint.Y - (rotatedAndScaledBitmap.Height / 2));
+                        PlaceSelectedMapSymbolAtPoint(cursorPoint, symbolScale, symbolRotation);
+                    }
+                }
+                else
+                {
+                    PlaceVectorSymbolAtPoint(mouseCursorPoint, symbolScale, symbolRotation);
+                }
+            }
+        }
 
-                    PlaceSelectedMapSymbolAtPoint(cursorPoint, symbolScale, symbolRotation);
+        private void PlaceVectorSymbolAtPoint(SKPoint mouseCursorPoint, float symbolScale, float symbolRotation)
+        {
+            MapSymbol? symbolToPlace = SymbolMethods.SelectedSymbolTableMapSymbol;
+
+            if (symbolToPlace != null)
+            {
+                using MemoryStream ms = new(Encoding.ASCII.GetBytes(symbolToPlace.SymbolSVG));
+                using var skSvg = new SKSvg();
+                skSvg.Load(ms);
+
+                if (skSvg.Picture != null)
+                {
+                    using SKBitmap b = new(new SKImageInfo((int)((int)skSvg.Picture.CullRect.Width * symbolScale),
+                        (int)((int)skSvg.Picture.CullRect.Height * symbolScale)));
+
+                    using SKCanvas c = new(b);
+
+                    SKMatrix matrix = SKMatrix.CreateScale(symbolScale, symbolScale);
+
+                    c.RotateDegrees(symbolRotation, b.Width / 2, b.Height / 2);
+                    c.DrawPicture(skSvg.Picture, in matrix);
+
+                    float bitmapRadius = b.Width / 2;
+                    float placementDensityRadius = bitmapRadius / PLACEMENT_DENSITY;
+
+                    SKPoint cursorPoint = new(mouseCursorPoint.X - (b.Width / 2), mouseCursorPoint.Y - (b.Height / 2));
+
+                    bool canPlaceSymbol = SymbolMethods.CanPlaceSymbol(CURRENT_MAP, cursorPoint, placementDensityRadius);
+
+                    if (canPlaceSymbol)
+                    {
+                        symbolToPlace.CustomSymbolColors[0] = SymbolColor1Button.BackColor.ToSKColor();
+                        symbolToPlace.CustomSymbolColors[1] = SymbolColor2Button.BackColor.ToSKColor();
+                        symbolToPlace.CustomSymbolColors[2] = SymbolColor3Button.BackColor.ToSKColor();
+
+                        symbolToPlace.Width = b.Width;
+                        symbolToPlace.Height = b.Height;
+
+                        SymbolMethods.PlaceVectorSymbolOnMap(CURRENT_MAP, SymbolMethods.SelectedSymbolTableMapSymbol, b, cursorPoint);
+                    }
                 }
             }
         }

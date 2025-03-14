@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            dungeonForm1 = new ReaLTaiizor.Forms.DungeonForm();
+            SymbolInfoOverlay = new ReaLTaiizor.Forms.DungeonForm();
             CloseFormButton = new Button();
             OceanTextureGroup = new GroupBox();
             SymbolFormatLabel = new Label();
@@ -54,43 +54,44 @@
             NewTagTextBox = new TextBox();
             AddTagButton = new FontAwesome.Sharp.IconButton();
             CheckedTagsListBox = new CheckedListBox();
-            dungeonForm1.SuspendLayout();
+            MarkerRadioButton = new RadioButton();
+            SymbolInfoOverlay.SuspendLayout();
             OceanTextureGroup.SuspendLayout();
             panel1.SuspendLayout();
             groupBox14.SuspendLayout();
             SuspendLayout();
             // 
-            // dungeonForm1
+            // SymbolInfoOverlay
             // 
-            dungeonForm1.BackColor = Color.FromArgb(244, 241, 243);
-            dungeonForm1.BorderColor = Color.FromArgb(38, 38, 38);
-            dungeonForm1.Controls.Add(CloseFormButton);
-            dungeonForm1.Controls.Add(OceanTextureGroup);
-            dungeonForm1.Controls.Add(groupBox14);
-            dungeonForm1.Dock = DockStyle.Fill;
-            dungeonForm1.FillEdgeColorA = Color.FromArgb(69, 68, 63);
-            dungeonForm1.FillEdgeColorB = Color.FromArgb(69, 68, 63);
-            dungeonForm1.Font = new Font("Segoe UI", 9F);
-            dungeonForm1.FooterEdgeColor = Color.FromArgb(69, 68, 63);
-            dungeonForm1.ForeColor = Color.FromArgb(223, 219, 210);
-            dungeonForm1.HeaderEdgeColorA = Color.FromArgb(87, 85, 77);
-            dungeonForm1.HeaderEdgeColorB = Color.FromArgb(69, 68, 63);
-            dungeonForm1.Location = new Point(0, 0);
-            dungeonForm1.Name = "dungeonForm1";
-            dungeonForm1.Padding = new Padding(20, 56, 20, 16);
-            dungeonForm1.RoundCorners = true;
-            dungeonForm1.Sizable = true;
-            dungeonForm1.Size = new Size(511, 375);
-            dungeonForm1.SmartBounds = true;
-            dungeonForm1.StartPosition = FormStartPosition.CenterParent;
-            dungeonForm1.TabIndex = 0;
-            dungeonForm1.Text = "Symbol Info";
-            dungeonForm1.TitleColor = Color.FromArgb(223, 219, 210);
+            SymbolInfoOverlay.BackColor = Color.FromArgb(244, 241, 243);
+            SymbolInfoOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            SymbolInfoOverlay.Controls.Add(CloseFormButton);
+            SymbolInfoOverlay.Controls.Add(OceanTextureGroup);
+            SymbolInfoOverlay.Controls.Add(groupBox14);
+            SymbolInfoOverlay.Dock = DockStyle.Fill;
+            SymbolInfoOverlay.FillEdgeColorA = Color.FromArgb(69, 68, 63);
+            SymbolInfoOverlay.FillEdgeColorB = Color.FromArgb(69, 68, 63);
+            SymbolInfoOverlay.Font = new Font("Segoe UI", 9F);
+            SymbolInfoOverlay.FooterEdgeColor = Color.FromArgb(69, 68, 63);
+            SymbolInfoOverlay.ForeColor = Color.FromArgb(223, 219, 210);
+            SymbolInfoOverlay.HeaderEdgeColorA = Color.FromArgb(87, 85, 77);
+            SymbolInfoOverlay.HeaderEdgeColorB = Color.FromArgb(69, 68, 63);
+            SymbolInfoOverlay.Location = new Point(0, 0);
+            SymbolInfoOverlay.Name = "SymbolInfoOverlay";
+            SymbolInfoOverlay.Padding = new Padding(20, 56, 20, 16);
+            SymbolInfoOverlay.RoundCorners = true;
+            SymbolInfoOverlay.Sizable = true;
+            SymbolInfoOverlay.Size = new Size(511, 392);
+            SymbolInfoOverlay.SmartBounds = true;
+            SymbolInfoOverlay.StartPosition = FormStartPosition.CenterParent;
+            SymbolInfoOverlay.TabIndex = 0;
+            SymbolInfoOverlay.Text = "Symbol Info";
+            SymbolInfoOverlay.TitleColor = Color.FromArgb(223, 219, 210);
             // 
             // CloseFormButton
             // 
             CloseFormButton.ForeColor = SystemColors.ControlDarkDark;
-            CloseFormButton.Location = new Point(421, 293);
+            CloseFormButton.Location = new Point(421, 307);
             CloseFormButton.Name = "CloseFormButton";
             CloseFormButton.Size = new Size(60, 60);
             CloseFormButton.TabIndex = 35;
@@ -100,6 +101,7 @@
             // OceanTextureGroup
             // 
             OceanTextureGroup.BackColor = Color.Transparent;
+            OceanTextureGroup.Controls.Add(MarkerRadioButton);
             OceanTextureGroup.Controls.Add(SymbolFormatLabel);
             OceanTextureGroup.Controls.Add(SymbolGuidLabel);
             OceanTextureGroup.Controls.Add(SymbolPathLabel);
@@ -120,7 +122,7 @@
             OceanTextureGroup.ForeColor = SystemColors.ControlText;
             OceanTextureGroup.Location = new Point(23, 59);
             OceanTextureGroup.Name = "OceanTextureGroup";
-            OceanTextureGroup.Size = new Size(304, 228);
+            OceanTextureGroup.Size = new Size(304, 308);
             OceanTextureGroup.TabIndex = 34;
             OceanTextureGroup.TabStop = false;
             OceanTextureGroup.Text = "Symbol Data";
@@ -173,7 +175,7 @@
             panel1.Controls.Add(UseCustomColorsRadio);
             panel1.Controls.Add(GrayScaleSymbolRadio);
             panel1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            panel1.Location = new Point(0, 179);
+            panel1.Location = new Point(0, 243);
             panel1.Name = "panel1";
             panel1.Size = new Size(304, 33);
             panel1.TabIndex = 50;
@@ -209,7 +211,7 @@
             OtherRadioButton.AutoSize = true;
             OtherRadioButton.Font = new Font("Segoe UI", 9F);
             OtherRadioButton.ForeColor = SystemColors.ControlDarkDark;
-            OtherRadioButton.Location = new Point(238, 156);
+            OtherRadioButton.Location = new Point(159, 181);
             OtherRadioButton.Name = "OtherRadioButton";
             OtherRadioButton.Size = new Size(55, 19);
             OtherRadioButton.TabIndex = 49;
@@ -221,9 +223,9 @@
             TerrainRadioButton.AutoSize = true;
             TerrainRadioButton.Font = new Font("Segoe UI", 9F);
             TerrainRadioButton.ForeColor = SystemColors.ControlDarkDark;
-            TerrainRadioButton.Location = new Point(172, 156);
+            TerrainRadioButton.Location = new Point(43, 206);
             TerrainRadioButton.Name = "TerrainRadioButton";
-            TerrainRadioButton.Size = new Size(60, 19);
+            TerrainRadioButton.Size = new Size(61, 19);
             TerrainRadioButton.TabIndex = 48;
             TerrainRadioButton.Text = "Terrain";
             TerrainRadioButton.UseVisualStyleBackColor = true;
@@ -233,7 +235,7 @@
             VegetationRadioButton.AutoSize = true;
             VegetationRadioButton.Font = new Font("Segoe UI", 9F);
             VegetationRadioButton.ForeColor = SystemColors.ControlDarkDark;
-            VegetationRadioButton.Location = new Point(85, 156);
+            VegetationRadioButton.Location = new Point(43, 181);
             VegetationRadioButton.Name = "VegetationRadioButton";
             VegetationRadioButton.Size = new Size(81, 19);
             VegetationRadioButton.TabIndex = 47;
@@ -245,7 +247,7 @@
             StructureRadioButton.AutoSize = true;
             StructureRadioButton.Font = new Font("Segoe UI", 9F);
             StructureRadioButton.ForeColor = SystemColors.ControlDarkDark;
-            StructureRadioButton.Location = new Point(6, 156);
+            StructureRadioButton.Location = new Point(42, 156);
             StructureRadioButton.Name = "StructureRadioButton";
             StructureRadioButton.Size = new Size(73, 19);
             StructureRadioButton.TabIndex = 46;
@@ -261,7 +263,7 @@
             label5.Location = new Point(6, 133);
             label5.Margin = new Padding(3);
             label5.Name = "label5";
-            label5.Size = new Size(31, 15);
+            label5.Size = new Size(32, 15);
             label5.TabIndex = 24;
             label5.Text = "Type";
             // 
@@ -394,14 +396,26 @@
             CheckedTagsListBox.Size = new Size(135, 130);
             CheckedTagsListBox.TabIndex = 0;
             // 
+            // MarkerRadioButton
+            // 
+            MarkerRadioButton.AutoSize = true;
+            MarkerRadioButton.Font = new Font("Segoe UI", 9F);
+            MarkerRadioButton.ForeColor = SystemColors.ControlDarkDark;
+            MarkerRadioButton.Location = new Point(159, 156);
+            MarkerRadioButton.Name = "MarkerRadioButton";
+            MarkerRadioButton.Size = new Size(62, 19);
+            MarkerRadioButton.TabIndex = 56;
+            MarkerRadioButton.Text = "Marker";
+            MarkerRadioButton.UseVisualStyleBackColor = true;
+            // 
             // SymbolInfo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = CloseFormButton;
-            ClientSize = new Size(511, 375);
+            ClientSize = new Size(511, 392);
             ControlBox = false;
-            Controls.Add(dungeonForm1);
+            Controls.Add(SymbolInfoOverlay);
             FormBorderStyle = FormBorderStyle.None;
             MaximumSize = new Size(1920, 1200);
             MinimumSize = new Size(261, 65);
@@ -411,7 +425,7 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "Symbol Info";
             TransparencyKey = Color.Fuchsia;
-            dungeonForm1.ResumeLayout(false);
+            SymbolInfoOverlay.ResumeLayout(false);
             OceanTextureGroup.ResumeLayout(false);
             OceanTextureGroup.PerformLayout();
             panel1.ResumeLayout(false);
@@ -423,7 +437,7 @@
 
         #endregion
 
-        private ReaLTaiizor.Forms.DungeonForm dungeonForm1;
+        private ReaLTaiizor.Forms.DungeonForm SymbolInfoOverlay;
         private GroupBox groupBox14;
         private CheckedListBox CheckedTagsListBox;
         private GroupBox OceanTextureGroup;
@@ -449,5 +463,6 @@
         private Label CollectionNameLabel;
         private Label SymbolNameLabel;
         private Button CloseFormButton;
+        private RadioButton MarkerRadioButton;
     }
 }

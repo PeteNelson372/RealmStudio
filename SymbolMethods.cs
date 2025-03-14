@@ -64,6 +64,41 @@ namespace RealmStudio
             }
         }
 
+        internal static void PlaceVectorSymbolOnMap(RealmStudioMap map, MapSymbol? mapSymbol, SKBitmap vectorBitmap, SKPoint cursorPoint)
+        {
+            if (mapSymbol != null)
+            {
+                map.IsSaved = false;
+                MapSymbol placedSymbol = new(mapSymbol)
+                {
+                    X = (int)cursorPoint.X,
+                    Y = (int)cursorPoint.Y,
+                    Width = vectorBitmap.Width,
+                    SymbolWidth = vectorBitmap.Width,
+                    Height = vectorBitmap.Height,
+                    SymbolHeight = vectorBitmap.Height,
+                };
+
+                // TODO: color the vectorBitmap with the custom colors?
+
+                placedSymbol.SetPlacedBitmap(vectorBitmap.Copy());
+
+                SKPaint vectorPaint = new()
+                {
+                    IsAntialias = true,
+                    ColorFilter = SKColorFilter.CreateBlendMode(
+                        placedSymbol.CustomSymbolColors[0],
+                        SKBlendMode.Modulate) // combine the selected color with the bitmap colors
+                };
+
+                placedSymbol.SymbolPaint = vectorPaint;
+
+                Cmd_PlaceSymbol cmd = new(map, placedSymbol);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+            }
+        }
+
         internal static void RemovePlacedSymbolsFromArea(RealmStudioMap map, SKPoint centerPoint, float eraserCircleRadius)
         {
             Cmd_RemoveSymbolsFromArea cmd = new(map, eraserCircleRadius, centerPoint);
@@ -349,8 +384,8 @@ namespace RealmStudio
                 symbol.SymbolName = symbolFileName;
             }
 
-            string[] symbolNameParts = symbol.SymbolName.Split([' ', '_']);
-            string[] collectionNameParts = symbol.CollectionName.Split([' ', '_']);
+            string[] symbolNameParts = symbol.SymbolName.Split([' ', '_', '-']);
+            string[] collectionNameParts = symbol.CollectionName.Split([' ', '_', '-']);
 
             foreach (string symbolNamePart in symbolNameParts)
             {

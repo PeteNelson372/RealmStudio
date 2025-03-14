@@ -22,7 +22,10 @@
 *
 ***************************************************************************************************************************/
 using FontAwesome.Sharp;
+using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using Svg.Skia;
+using System.Text;
 using System.Text.Json.Nodes;
 
 namespace RealmStudio
@@ -109,6 +112,67 @@ namespace RealmStudio
                                 ORIGINAL_COLLECTION.AddCollectionMapSymbol(new MapSymbol(symbol));
                             }
 
+                            // add any new symbols in the folder to the collection so they can be tagged
+                            List<MapSymbol> symbolList = MapFileMethods.ReadMapSymbolAssets(fbd.SelectedPath);
+
+                            string wonderdraftSymbolsFilePath = fbd.SelectedPath + Path.DirectorySeparatorChar + AssetManager.WonderdraftSymbolsFileName;
+                            List<WonderdraftSymbol> wdSymbols = ReadWonderdraftSymbolsFile(wonderdraftSymbolsFilePath);
+
+                            foreach (var mapSymbol in symbolList)
+                            {
+                                bool collectionContainsSymbol = false;
+
+                                foreach (var symbol in ORIGINAL_COLLECTION.CollectionMapSymbols)
+                                {
+                                    if (symbol.SymbolFilePath == mapSymbol.SymbolFilePath)
+                                    {
+                                        collectionContainsSymbol = true;
+                                    }
+                                }
+
+                                if (!collectionContainsSymbol)
+                                {
+                                    mapSymbol.CollectionName = COLLECTION.GetCollectionName();
+
+                                    string symbolName = mapSymbol.SymbolName;
+
+                                    List<string> potentialTags = SymbolMethods.AutoTagSymbol(mapSymbol);
+
+                                    foreach (string tag in potentialTags)
+                                    {
+                                        // add the potential tags to the symbol
+                                        mapSymbol.AddSymbolTag(tag);
+                                    }
+
+                                    SymbolMethods.GuessSymbolTypeFromTags(mapSymbol);
+
+                                    foreach (WonderdraftSymbol s in wdSymbols)
+                                    {
+                                        if (!string.IsNullOrEmpty(s.name) && s.name.Trim() == symbolName)
+                                        {
+                                            if (s.draw_mode == "custom_colors")
+                                            {
+                                                mapSymbol.UseCustomColors = true;
+                                            }
+                                        }
+                                    }
+
+                                    if (string.IsNullOrEmpty(mapSymbol.CollectionPath))
+                                    {
+                                        mapSymbol.CollectionPath = collectionFilePath;
+                                    }
+
+                                    COLLECTION.AddCollectionMapSymbol(mapSymbol);
+                                }
+                            }
+
+                            ORIGINAL_COLLECTION.CollectionMapSymbols.Clear();
+
+                            foreach (MapSymbol s in COLLECTION.CollectionMapSymbols)
+                            {
+                                ORIGINAL_COLLECTION.CollectionMapSymbols.Add(s);
+                            }
+
                             SELECTED_SYMBOL = COLLECTION.GetCollectionMapSymbols().First();
 
                             if (SELECTED_SYMBOL != null)
@@ -129,6 +193,8 @@ namespace RealmStudio
                                 SetUIFromSymbol(SYMBOL_NUMBER);
                             }
                         }
+
+
 
                     }
                     catch { }
@@ -596,7 +662,37 @@ namespace RealmStudio
                 GrayScaleSymbolRadio.Checked = SELECTED_SYMBOL.IsGrayscale;
                 CustomColorSymbolRadio.Checked = SELECTED_SYMBOL.UseCustomColors;
 
-                SymbolPictureBox.Image = Extensions.ToBitmap(SELECTED_SYMBOL.SymbolBitmap);
+                if (SELECTED_SYMBOL.SymbolFormat != SymbolFileFormat.Vector)
+                {
+                    SymbolPictureBox.Image = Extensions.ToBitmap(SELECTED_SYMBOL.SymbolBitmap);
+                }
+                else
+                {
+                    if (File.Exists(SELECTED_SYMBOL.SymbolFilePath))
+                    {
+                        SELECTED_SYMBOL.SetSymbolVectorFromPath(SELECTED_SYMBOL.SymbolFilePath);
+                    }
+
+                    // display the SVG
+                    using MemoryStream ms = new(Encoding.ASCII.GetBytes(SELECTED_SYMBOL.SymbolSVG));
+                    var skSvg = new SKSvg();
+                    skSvg.Load(ms);
+
+                    if (skSvg.Picture != null)
+                    {
+                        float symbolScaleWidth = SymbolPictureBox.Width / skSvg.Picture.CullRect.Width;
+                        float symbolScaleHeight = SymbolPictureBox.Height / skSvg.Picture.CullRect.Height;
+
+                        using SKBitmap b = new(new SKImageInfo(SymbolPictureBox.Width, SymbolPictureBox.Height));
+
+                        using SKCanvas c = new(b);
+
+                        SKMatrix matrix = SKMatrix.CreateScale(symbolScaleWidth, symbolScaleHeight);
+                        c.DrawPicture(skSvg.Picture, in matrix);
+
+                        SymbolPictureBox.Image = Extensions.ToBitmap(b.Copy());
+                    }
+                }
             }
         }
 

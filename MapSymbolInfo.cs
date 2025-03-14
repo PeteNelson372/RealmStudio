@@ -66,6 +66,12 @@ namespace RealmStudio
                 case MapSymbolType.Vegetation:
                     VegetationRadioButton.Checked = true;
                     break;
+                case MapSymbolType.Marker:
+                    MarkerRadioButton.Checked = true;
+                    break;
+                case MapSymbolType.Other:
+                    OtherRadioButton.Checked = true;
+                    break;
             }
 
             if (this.symbol.IsGrayscale)

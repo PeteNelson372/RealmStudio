@@ -515,6 +515,23 @@ namespace RealmStudio
                                         }
                                     }
                                 }
+                                else if (symbol.SymbolFormat == SymbolFileFormat.Vector)
+                                {
+                                    if (!File.Exists(symbol.SymbolFilePath))
+                                    {
+                                        rewriteCollectionFile = true;
+
+                                        string fileName = Path.GetFileName(symbol.SymbolFilePath);
+                                        string bitmapPath = Path.GetDirectoryName(collection.CollectionPath) + Path.DirectorySeparatorChar + fileName;
+
+                                        symbol.SymbolFilePath = bitmapPath;
+                                    }
+
+                                    if (File.Exists(symbol.SymbolFilePath))
+                                    {
+                                        symbol.SetSymbolVectorFromPath(symbol.SymbolFilePath);
+                                    }
+                                }
 
                                 MAP_SYMBOL_LIST.Add(symbol);
 
