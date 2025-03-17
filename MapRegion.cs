@@ -23,6 +23,7 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;

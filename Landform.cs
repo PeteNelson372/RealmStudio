@@ -23,6 +23,7 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -158,7 +159,7 @@ namespace RealmStudio
             Style = SKPaintStyle.Fill,
             IsAntialias = false,
             BlendMode = SKBlendMode.Src,
-            Color = Color.FromArgb(255, 25, 25, 25).ToSKColor()
+            Color = Color.FromArgb(255, 35, 35, 35).ToSKColor()
         };
 
         public SKPaint LandformHeightMapOutlinePaint { get; set; } = new()
@@ -167,7 +168,7 @@ namespace RealmStudio
             StrokeWidth = 1,
             IsAntialias = false,
             BlendMode = SKBlendMode.Src,
-            Color = Color.FromArgb(255, 25, 25, 25).ToSKColor()
+            Color = Color.FromArgb(255, 35, 35, 35).ToSKColor()
         };
 
         public SKPaint CoastlinePaint { get; set; } = new()

@@ -29,6 +29,7 @@ using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using System.IO;
 using System.IO.Compression;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -122,9 +123,9 @@ namespace RealmStudio
         private static SKPoint CURSOR_POINT = new(0, 0);
         private static SKPoint PREVIOUS_CURSOR_POINT = new(0, 0);
 
-        private static readonly System.Windows.Forms.ToolTip TOOLTIP = new();
+        private static readonly ToolTip TOOLTIP = new();
 
-        private System.Windows.Forms.TextBox? LABEL_TEXT_BOX;
+        private TextBox? LABEL_TEXT_BOX;
 
         public static readonly NameGeneratorConfiguration NAME_GENERATOR_CONFIG = new();
 
@@ -1281,7 +1282,8 @@ namespace RealmStudio
 
             MapImage heightMapImage = new()
             {
-                MapImageBitmap = b2.Copy()
+                MapImageBitmap = b2.Copy(),
+                UseShader = false,
             };
 
             heightMapLayer.MapLayerComponents.Add(heightMapImage);
@@ -2814,27 +2816,13 @@ namespace RealmStudio
                             else
                             {
                                 // display the SVG as the cursor
-                                using MemoryStream ms = new(Encoding.ASCII.GetBytes(SymbolMethods.SelectedSymbolTableMapSymbol.SymbolSVG));
-                                using var skSvg = new SKSvg();
-                                skSvg.Load(ms);
+                                SKBitmap? symbolBitmap = SymbolMethods.GetBitmapForVectorSymbol(SymbolMethods.SelectedSymbolTableMapSymbol,
+                                    0, 0, symbolRotation, symbolScale);
 
-                                if (skSvg.Picture != null)
+                                if (symbolBitmap != null)
                                 {
-                                    SKBitmap b = new(new SKImageInfo((int)((int)skSvg.Picture.CullRect.Width * symbolScale),
-                                        (int)((int)skSvg.Picture.CullRect.Height * symbolScale)));
-
-                                    SKCanvas c = new(b);
-
-                                    SKMatrix matrix = SKMatrix.CreateScale(symbolScale, symbolScale);
-
-                                    c.RotateDegrees(symbolRotation, b.Width / 2, b.Height / 2);
-                                    c.DrawPicture(skSvg.Picture, in matrix);
-
-                                    SKPoint pt = new(point.X - (b.Width / 2), point.Y - (b.Height / 2));
-
-                                    canvas.DrawBitmap(b, pt);
-                                    c.Dispose();
-                                    b.Dispose();
+                                    SKPoint pt = new(point.X - (symbolBitmap.Width / 2), point.Y - (symbolBitmap.Height / 2));
+                                    canvas.DrawBitmap(symbolBitmap, pt);
                                 }
                             }
                         }
@@ -5010,12 +4998,25 @@ namespace RealmStudio
             }
             else if (ModifierKeys != Keys.Control && CURRENT_DRAWING_MODE == MapDrawingMode.SymbolPlace)
             {
-                // TODO: should area brush size be changed when AreaBrushSwitch is checked?
                 int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
-                int newValue = (int)Math.Max(SymbolScaleUpDown.Minimum, SymbolScaleUpDown.Value + sizeDelta);
-                newValue = (int)Math.Min(SymbolScaleUpDown.Maximum, newValue);
 
-                SymbolScaleUpDown.Value = newValue;
+                if (AreaBrushSwitch.Enabled && AreaBrushSwitch.Checked)
+                {
+                    // area brush size is changed when AreaBrushSwitch is enabled and checked
+                    int newValue = AreaBrushSizeTrack.Value + sizeDelta;
+                    newValue = Math.Max(AreaBrushSizeTrack.Minimum, Math.Min(newValue, AreaBrushSizeTrack.Maximum));
+
+                    AreaBrushSizeTrack.Value = newValue;
+                    SELECTED_BRUSH_SIZE = newValue;
+                }
+                else
+                {
+                    int newValue = (int)Math.Max(SymbolScaleUpDown.Minimum, SymbolScaleUpDown.Value + sizeDelta);
+                    newValue = (int)Math.Min(SymbolScaleUpDown.Maximum, newValue);
+
+                    SymbolScaleUpDown.Value = newValue;
+                }
+
                 SKGLRenderControl.Invalidate();
             }
             else if (ModifierKeys != Keys.Control && CURRENT_DRAWING_MODE == MapDrawingMode.LabelSelect)
@@ -6383,6 +6384,7 @@ namespace RealmStudio
                         if (heightMapLayer.MapLayerComponents.Count == 2)
                         {
                             MapImage heightMap = (MapImage)heightMapLayer.MapLayerComponents[1];
+                            heightMap.UseShader = false;
 
                             SKBitmap? heightMapBitmap = heightMap.MapImageBitmap;
 
@@ -6414,9 +6416,9 @@ namespace RealmStudio
                                 {
                                     SKColor pixelColor = heightMapBitmap.GetPixel((int)index.X, (int)index.Y);
 
-                                    if (pixelColor == SKColors.Black || pixelColor == SKColors.Transparent)
+                                    if (pixelColor == SKColors.Black || pixelColor == SKColors.Transparent || pixelColor == SKColors.Empty)
                                     {
-                                        pixelColor = Color.FromArgb(255, 25, 25, 25).ToSKColor();
+                                        pixelColor = Color.FromArgb(255, 35, 35, 35).ToSKColor();
                                     }
 
                                     int r = pixelColor.Red + 1;
@@ -6427,14 +6429,16 @@ namespace RealmStudio
                                     g = Math.Min(255, g);
                                     b = Math.Min(255, b);
 
-                                    r = Math.Max(25, r);
-                                    g = Math.Max(25, g);
-                                    b = Math.Max(25, b);
+                                    r = Math.Max(35, r);
+                                    g = Math.Max(35, g);
+                                    b = Math.Max(35, b);
 
                                     heightMapBitmap.SetPixel((int)index.X, (int)index.Y, new SKColor((byte)r, (byte)g, (byte)b));
                                 }
                             }
                         }
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case MapDrawingMode.MapHeightDecrease:
@@ -6444,13 +6448,14 @@ namespace RealmStudio
                         if (heightMapLayer.MapLayerComponents.Count == 2)
                         {
                             MapImage heightMap = (MapImage)heightMapLayer.MapLayerComponents[1];
+                            heightMap.UseShader = false;
 
                             SKBitmap? heightMapBitmap = heightMap.MapImageBitmap;
 
                             if (heightMapBitmap != null)
                             {
                                 // get all pixels within the brush area
-                                // for each pixel in the brush area, get its color and then darken it by 1 up to a minimum of 25
+                                // for each pixel in the brush area, get its color and then darken it by 1 up to a minimum of 35
                                 List<SKPoint> brushPoints = [];
 
                                 for (int x = (int)zoomedScrolledPoint.X - brushRadius; x < (int)zoomedScrolledPoint.X + brushRadius; x++)
@@ -6477,16 +6482,16 @@ namespace RealmStudio
 
                                     if (pixelColor == SKColors.Black || pixelColor == SKColors.Transparent)
                                     {
-                                        pixelColor = Color.FromArgb(255, 25, 25, 25).ToSKColor();
+                                        pixelColor = Color.FromArgb(255, 35, 35, 35).ToSKColor();
                                     }
 
                                     int r = pixelColor.Red - 1;
                                     int g = pixelColor.Green - 1;
                                     int b = pixelColor.Blue - 1;
 
-                                    r = Math.Max(25, r);
-                                    g = Math.Max(25, g);
-                                    b = Math.Max(25, b);
+                                    r = Math.Max(35, r);
+                                    g = Math.Max(35, g);
+                                    b = Math.Max(35, b);
 
                                     r = Math.Min(255, r);
                                     g = Math.Min(255, g);
@@ -6496,6 +6501,8 @@ namespace RealmStudio
                                 }
                             }
                         }
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
             }
@@ -8177,7 +8184,6 @@ namespace RealmStudio
         /******************************************************************************************************* 
         * LAND TAB EVENT HANDLERS
         *******************************************************************************************************/
-
         private void ShowLandLayerSwitch_CheckedChanged()
         {
             MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDCOASTLINELAYER);
@@ -8535,19 +8541,6 @@ namespace RealmStudio
             SetSelectedBrushSize(LandformMethods.LandformColorEraserBrushSize);
         }
 
-        private void HeightUpButton_Click(object sender, EventArgs e)
-        {
-            CURRENT_DRAWING_MODE = MapDrawingMode.MapHeightIncrease;
-            SetDrawingModeLabel();
-            SetSelectedBrushSize(LandformMethods.LandformBrushSize);
-        }
-
-        private void HeightDownButton_Click(object sender, EventArgs e)
-        {
-            CURRENT_DRAWING_MODE = MapDrawingMode.MapHeightDecrease;
-            SetDrawingModeLabel();
-            SetSelectedBrushSize(LandformMethods.LandformBrushSize);
-        }
 
         #region Landform Generation
 
@@ -8615,6 +8608,29 @@ namespace RealmStudio
             UncheckAllLandformTypeMenuItems();
             WorldMenuItem.Checked = true;
             SELECTED_LANDFORM_TYPE = GeneratedLandformType.World;
+        }
+
+        #endregion
+
+        #region Landform HeightMap
+        private void HeightUpButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = MapDrawingMode.MapHeightIncrease;
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(LandformMethods.LandformBrushSize);
+        }
+
+        private void HeightDownButton_Click(object sender, EventArgs e)
+        {
+            CURRENT_DRAWING_MODE = MapDrawingMode.MapHeightDecrease;
+            SetDrawingModeLabel();
+            SetSelectedBrushSize(LandformMethods.LandformBrushSize);
+        }
+
+        private void Show3DViewButton_Click(object sender, EventArgs e)
+        {
+            ThreeDView td = new("Height Map 3D View");
+            td.Show();
         }
 
         #endregion
@@ -10555,6 +10571,11 @@ namespace RealmStudio
                 AreaBrushSwitch.Enabled = false;
             }
 
+            if (SymbolMethods.SELECTED_SYMBOL_TYPE == MapSymbolType.Vegetation || SymbolMethods.SELECTED_SYMBOL_TYPE == MapSymbolType.Terrain)
+            {
+                AreaBrushSwitch.Enabled = true;
+            }
+
             if (SymbolTable.Controls.Count > 0)
             {
                 if (SymbolMethods.SelectedSymbolTableMapSymbol == null || SymbolMethods.SelectedSymbolTableMapSymbol.SymbolType != symbolType)
@@ -10843,22 +10864,11 @@ namespace RealmStudio
 
             if (symbolToPlace != null)
             {
-                using MemoryStream ms = new(Encoding.ASCII.GetBytes(symbolToPlace.SymbolSVG));
-                using var skSvg = new SKSvg();
-                skSvg.Load(ms);
+                SKBitmap? b = SymbolMethods.GetBitmapForVectorSymbol(symbolToPlace,
+                    0, 0, symbolRotation, symbolScale);
 
-                if (skSvg.Picture != null)
+                if (b != null)
                 {
-                    using SKBitmap b = new(new SKImageInfo((int)((int)skSvg.Picture.CullRect.Width * symbolScale),
-                        (int)((int)skSvg.Picture.CullRect.Height * symbolScale)));
-
-                    using SKCanvas c = new(b);
-
-                    SKMatrix matrix = SKMatrix.CreateScale(symbolScale, symbolScale);
-
-                    c.RotateDegrees(symbolRotation, b.Width / 2, b.Height / 2);
-                    c.DrawPicture(skSvg.Picture, in matrix);
-
                     float bitmapRadius = b.Width / 2;
                     float placementDensityRadius = bitmapRadius / PLACEMENT_DENSITY;
 
@@ -12829,7 +12839,6 @@ namespace RealmStudio
         }
 
         #endregion
-
 
     }
 }

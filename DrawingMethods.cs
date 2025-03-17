@@ -27,6 +27,7 @@ using Clipper2Lib;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Runtime.InteropServices;
 using Blob = AForge.Imaging.Blob;
 

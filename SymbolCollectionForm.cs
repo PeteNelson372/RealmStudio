@@ -24,8 +24,7 @@
 using FontAwesome.Sharp;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
-using Svg.Skia;
-using System.Text;
+using System.IO;
 using System.Text.Json.Nodes;
 
 namespace RealmStudio
@@ -193,9 +192,6 @@ namespace RealmStudio
                                 SetUIFromSymbol(SYMBOL_NUMBER);
                             }
                         }
-
-
-
                     }
                     catch { }
                 }
@@ -673,24 +669,12 @@ namespace RealmStudio
                         SELECTED_SYMBOL.SetSymbolVectorFromPath(SELECTED_SYMBOL.SymbolFilePath);
                     }
 
+                    SKBitmap? symbolBitmap = SymbolMethods.GetBitmapForVectorSymbol(SELECTED_SYMBOL, SymbolPictureBox.Width, SymbolPictureBox.Height, 0);
+
                     // display the SVG
-                    using MemoryStream ms = new(Encoding.ASCII.GetBytes(SELECTED_SYMBOL.SymbolSVG));
-                    var skSvg = new SKSvg();
-                    skSvg.Load(ms);
-
-                    if (skSvg.Picture != null)
+                    if (symbolBitmap != null)
                     {
-                        float symbolScaleWidth = SymbolPictureBox.Width / skSvg.Picture.CullRect.Width;
-                        float symbolScaleHeight = SymbolPictureBox.Height / skSvg.Picture.CullRect.Height;
-
-                        using SKBitmap b = new(new SKImageInfo(SymbolPictureBox.Width, SymbolPictureBox.Height));
-
-                        using SKCanvas c = new(b);
-
-                        SKMatrix matrix = SKMatrix.CreateScale(symbolScaleWidth, symbolScaleHeight);
-                        c.DrawPicture(skSvg.Picture, in matrix);
-
-                        SymbolPictureBox.Image = Extensions.ToBitmap(b.Copy());
+                        SymbolPictureBox.Image = Extensions.ToBitmap(symbolBitmap.Copy());
                     }
                 }
             }

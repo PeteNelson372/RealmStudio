@@ -23,6 +23,7 @@
 ***************************************************************************************************************************/
 using RealmStudio.Properties;
 using SkiaSharp;
+using System.IO;
 using System.Media;
 
 namespace RealmStudio

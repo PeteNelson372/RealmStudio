@@ -21,6 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using System.IO;
+
 namespace RealmStudio
 {
     internal sealed class MapToolMethods

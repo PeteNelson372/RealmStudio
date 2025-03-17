@@ -22,6 +22,7 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
+using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -33,6 +34,7 @@ namespace RealmStudio
     {
         public SKBitmap? MapImageBitmap { get; set; }
         public bool MirrorImage { get; set; }
+        public bool UseShader { get; set; } = true;
 
         public MapImage() { }
 
@@ -40,25 +42,32 @@ namespace RealmStudio
         {
             if (MapImageBitmap != null)
             {
-                using SKPaint ImageFillPaint = new()
+                if (UseShader)
                 {
-                    Style = SKPaintStyle.Fill,
-                    IsAntialias = true,
-                    BlendMode = SKBlendMode.Src,
-                };
+                    using SKPaint ImageFillPaint = new()
+                    {
+                        Style = SKPaintStyle.Fill,
+                        IsAntialias = true,
+                        BlendMode = SKBlendMode.Src,
+                    };
 
-                if (MirrorImage)
-                {
-                    SKShader imgShader = SKShader.CreateBitmap(MapImageBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
-                    ImageFillPaint.Shader = imgShader;
+                    if (MirrorImage)
+                    {
+                        SKShader imgShader = SKShader.CreateBitmap(MapImageBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                        ImageFillPaint.Shader = imgShader;
+                    }
+                    else
+                    {
+                        SKShader imgShader = SKShader.CreateBitmap(MapImageBitmap, SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                        ImageFillPaint.Shader = imgShader;
+                    }
+
+                    canvas.DrawRect(X, Y, Width, Height, ImageFillPaint);
                 }
                 else
                 {
-                    SKShader imgShader = SKShader.CreateBitmap(MapImageBitmap, SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
-                    ImageFillPaint.Shader = imgShader;
+                    canvas.DrawBitmap(MapImageBitmap, X, Y);
                 }
-
-                canvas.DrawRect(X, Y, Width, Height, ImageFillPaint);
             }
         }
 
@@ -109,6 +118,25 @@ namespace RealmStudio
                 MirrorImage = false;
             }
 
+            IEnumerable<XElement?> useShaderElem = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "UseShader"));
+            if (useShaderElem != null && useShaderElem.Any() && useShaderElem.First() != null)
+            {
+                string? useShader = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "UseShader").Value).FirstOrDefault();
+
+                if (bool.TryParse(useShader, out bool boolUseShader))
+                {
+                    UseShader = boolUseShader;
+                }
+                else
+                {
+                    UseShader = true;
+                }
+            }
+            else
+            {
+                UseShader = true;
+            }
+
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
@@ -127,6 +155,10 @@ namespace RealmStudio
 
                 writer.WriteStartElement("MirrorImage");
                 writer.WriteValue(MirrorImage);
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("UseShader");
+                writer.WriteValue(UseShader);
                 writer.WriteEndElement();
             }
         }

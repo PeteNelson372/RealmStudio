@@ -22,6 +22,7 @@
 *
 ***************************************************************************************************************************/
 using RealmStudio.Properties;
+using System.IO;
 using System.IO.Compression;
 using System.Text.Json.Nodes;
 

@@ -23,6 +23,9 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using Svg.Skia;
+using System.IO;
+using System.Text;
 
 namespace RealmStudio
 {
@@ -455,6 +458,58 @@ namespace RealmStudio
                         return;
                     }
                 }
+            }
+        }
+
+        internal static SKBitmap? GetBitmapForVectorSymbol(MapSymbol symbol, float width, float height, float rotation, float scale = 1.0F)
+        {
+            if (symbol.SymbolFormat == SymbolFileFormat.Vector && !string.IsNullOrEmpty(symbol.SymbolSVG))
+            {
+                try
+                {
+                    using MemoryStream ms = new(Encoding.ASCII.GetBytes(symbol.SymbolSVG));
+                    using var skSvg = new SKSvg();
+                    skSvg.Load(ms);
+
+                    if (skSvg.Picture != null)
+                    {
+                        float symbolWidthScale = width / skSvg.Picture.CullRect.Width;
+                        float symbolHeightScale = height / skSvg.Picture.CullRect.Height;
+
+                        if (width == 0 || height == 0)
+                        {
+                            symbolWidthScale = scale;
+                            symbolHeightScale = scale;
+                        }
+
+                        width = skSvg.Picture.CullRect.Width * symbolWidthScale;
+                        height = skSvg.Picture.CullRect.Height * symbolHeightScale;
+
+                        SKBitmap b = new(new SKImageInfo((int)width, (int)height));
+
+                        using SKCanvas c = new(b);
+
+                        SKMatrix matrix = SKMatrix.CreateScale(symbolWidthScale, symbolHeightScale);
+
+                        c.RotateDegrees(rotation, b.Width / 2, b.Height / 2);
+                        c.DrawPicture(skSvg.Picture, in matrix);
+
+                        return b;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Program.LOGGER.Error(ex);
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
             }
         }
     }
