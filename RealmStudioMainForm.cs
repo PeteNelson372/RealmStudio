@@ -122,7 +122,7 @@ namespace RealmStudio
         private static SKPoint CURSOR_POINT = new(0, 0);
         private static SKPoint PREVIOUS_CURSOR_POINT = new(0, 0);
 
-        private static readonly ToolTip TOOLTIP = new();
+        private static readonly System.Windows.Forms.ToolTip TOOLTIP = new();
 
         private TextBox? LABEL_TEXT_BOX;
 
@@ -136,6 +136,8 @@ namespace RealmStudio
         private static string MapCommandLinePath = string.Empty;
 
         private static float SELECTED_PATH_ANGLE = -1;
+
+        public ThreeDView? CurrentHeightMapView { get; set; }
 
         #region Constructor
         /******************************************************************************************************* 
@@ -486,6 +488,12 @@ namespace RealmStudio
             // setting e.SuppressKeyPress prevents controls (like trackbars)
             // from responding to key presses
             //e.SuppressKeyPress = true;
+        }
+
+        private void Open3DViewButton_Click(object sender, EventArgs e)
+        {
+            ThreeDView tdv = new("3D Model Viewer");
+            tdv.Show();
         }
 
         private void AreaSelectButton_Click(object sender, EventArgs e)
@@ -6903,6 +6911,66 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case MapDrawingMode.MapHeightIncrease:
+                    {
+                        // update the 3D view if it is open and updates are enabled
+                        if (CurrentHeightMapView != null && Update3DViewSwitch.Checked)
+                        {
+                            Cursor.Current = Cursors.WaitCursor;
+
+                            try
+                            {
+                                SKBitmap? heightMapBitmap = GetBitmapForThreeDView();
+                                if (heightMapBitmap != null)
+                                {
+                                    // generate the 3D model from the height information in the selected area
+                                    List<string> objModelStringList = HeightMapTo3DModel.GenerateOBJ(heightMapBitmap, Byte.MaxValue / 2.0F);
+
+                                    heightMapBitmap.Dispose();
+
+                                    // convert the list of strings to a single string
+                                    string objModelString = string.Join(Environment.NewLine, objModelStringList);
+
+                                    CurrentHeightMapView.LoadModelFromString(objModelString);
+                                }
+                            }
+                            finally
+                            {
+                                Cursor.Current = Cursors.Default;
+                            }
+                        }
+                    }
+                    break;
+                case MapDrawingMode.MapHeightDecrease:
+                    {
+                        // update the 3D view if it is open and updates are enabled
+                        if (CurrentHeightMapView != null && Update3DViewSwitch.Checked)
+                        {
+                            Cursor.Current = Cursors.WaitCursor;
+
+                            try
+                            {
+                                SKBitmap? heightMapBitmap = GetBitmapForThreeDView();
+                                if (heightMapBitmap != null)
+                                {
+                                    // generate the 3D model from the height information in the selected area
+                                    List<string> objModelStringList = HeightMapTo3DModel.GenerateOBJ(heightMapBitmap, Byte.MaxValue / 2.0F);
+
+                                    heightMapBitmap.Dispose();
+
+                                    // convert the list of strings to a single string
+                                    string objModelString = string.Join(Environment.NewLine, objModelStringList);
+
+                                    CurrentHeightMapView.LoadModelFromString(objModelString);
+                                }
+                            }
+                            finally
+                            {
+                                Cursor.Current = Cursors.Default;
+                            }
+                        }
+                        break;
+                    }
             }
 
         }
@@ -8289,30 +8357,90 @@ namespace RealmStudio
 
         private void Show3DViewButton_Click(object sender, EventArgs e)
         {
-            if (SELECTED_REALM_AREA != SKRect.Empty)
+            SKBitmap? heightMapBitmap = GetBitmapForThreeDView();
+            if (heightMapBitmap != null)
             {
-
-            }
-            else if (SELECTED_LANDFORM != null)
-            {
-                // extract a heightmap bitmap using the area of the selected landform bounds
-                // then create a 3D model from the bitmap and display it in the ThreeDView
-
-                SELECTED_LANDFORM.ContourPath.GetTightBounds(out SKRect landformBounds);
-
-
                 // generate the 3D model from the height information in the selected area
+                List<string> objModelStringList = HeightMapTo3DModel.GenerateOBJ(heightMapBitmap, Byte.MaxValue / 2.0F);
 
-                // send the 3D model to the model viwer
+                heightMapBitmap.Dispose();
+
+                // convert the list of strings to a single string
+                string objModelString = string.Join(Environment.NewLine, objModelStringList);
+
+                ThreeDView td = new("Height Map 3D View");
+                CurrentHeightMapView = td;
+                td.Show();
+                td.LoadModelFromString(objModelString);
             }
-            else
+        }
+
+        private static SKBitmap? GetBitmapForThreeDView()
+        {
+            SKBitmap? heightMapBitmap = null;
+
+            try
             {
-                // generate the 3D model from the entire map
+                if (SELECTED_REALM_AREA != SKRect.Empty)
+                {
+                    SKBitmap extractedBitmap = ExtractRectFromHeightMap(SELECTED_REALM_AREA);
+                    heightMapBitmap = extractedBitmap.Copy();
+                }
+                else if (SELECTED_LANDFORM != null)
+                {
+                    // extract a heightmap bitmap using the area of the selected landform bounds
+                    // then create a 3D model from the bitmap and display it in the ThreeDView
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    SELECTED_LANDFORM.ContourPath.GetTightBounds(out SKRect landformBounds);
+
+                    // inflate the bounds by 20 pixels to give the height map some border
+                    landformBounds.Inflate(20, 20);
+                    landformBounds.Left = Math.Max(0, landformBounds.Left - 10);
+                    landformBounds.Top = Math.Max(0, landformBounds.Top - 10);
+
+                    SKBitmap extractedBitmap = ExtractRectFromHeightMap(landformBounds);
+
+                    heightMapBitmap = extractedBitmap.Copy();
+                }
+                else
+                {
+                    // generate the 3D model from the entire map
+                    using SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+                    s.Canvas.Clear(SKColors.Black);
+
+                    RealmMapMethods.RenderHeightMapToCanvas(CURRENT_MAP, s.Canvas, new SKPoint(0, 0));
+
+                    heightMapBitmap = SKBitmap.FromImage(s.Snapshot()).Copy();
+                }
+            }
+            catch { }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
             }
 
+            return heightMapBitmap;
+        }
 
-            ThreeDView td = new("Height Map 3D View");
-            td.Show();
+        private static SKBitmap ExtractRectFromHeightMap(SKRect extractRect)
+        {
+            using SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+            s.Canvas.Clear(SKColors.Black);
+
+            RealmMapMethods.RenderHeightMapToCanvas(CURRENT_MAP, s.Canvas, new SKPoint(0, 0));
+
+            SKBitmap heightMap = SKBitmap.FromImage(s.Snapshot());
+
+            // extract the section of the heightmap within the bounding box from the heightmap
+            SKBitmap extractedBitmap = new((int)extractRect.Width, (int)extractRect.Height);
+            using SKCanvas canvas = new SKCanvas(extractedBitmap);
+
+            canvas.Clear(SKColors.Black);
+
+            canvas.DrawBitmap(heightMap, extractRect, new SKRect(0, 0, extractRect.Width, extractRect.Height));
+
+            return extractedBitmap;
         }
 
         #endregion

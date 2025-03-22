@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             ThreeDViewOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            label1 = new Label();
+            ModelStatisticsLabel = new Label();
             ThreeDViewControlBox = new ReaLTaiizor.Controls.ThunderControlBox();
             CameraGroup = new GroupBox();
             ChangeAxesButton = new FontAwesome.Sharp.IconButton();
@@ -39,8 +41,6 @@
             LoadModelButton = new FontAwesome.Sharp.IconButton();
             CloseFormButton = new Button();
             TDContainerPanel = new Panel();
-            ModelStatisticsLabel = new Label();
-            label1 = new Label();
             ThreeDViewOverlay.SuspendLayout();
             CameraGroup.SuspendLayout();
             ModelGroup.SuspendLayout();
@@ -78,6 +78,25 @@
             ThreeDViewOverlay.Text = "Model View";
             ThreeDViewOverlay.TitleColor = Color.FromArgb(223, 219, 210);
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label1.ForeColor = SystemColors.ControlDarkDark;
+            label1.Location = new Point(286, 710);
+            label1.Name = "label1";
+            label1.Size = new Size(827, 13);
+            label1.TabIndex = 59;
+            label1.Text = "Click+drag left mouse button to move. Click+drag right mouse button to rotate. Turn Mouse Wheel to zoom. CLick Change Axis button to change rotation axis.";
+            // 
+            // ModelStatisticsLabel
+            // 
+            ModelStatisticsLabel.ForeColor = Color.LightSlateGray;
+            ModelStatisticsLabel.Location = new Point(115, 665);
+            ModelStatisticsLabel.Name = "ModelStatisticsLabel";
+            ModelStatisticsLabel.Size = new Size(260, 23);
+            ModelStatisticsLabel.TabIndex = 58;
+            // 
             // ThreeDViewControlBox
             // 
             ThreeDViewControlBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -97,7 +116,7 @@
             CameraGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             CameraGroup.Location = new Point(23, 230);
             CameraGroup.Name = "CameraGroup";
-            CameraGroup.Size = new Size(86, 180);
+            CameraGroup.Size = new Size(86, 168);
             CameraGroup.TabIndex = 56;
             CameraGroup.TabStop = false;
             CameraGroup.Text = "Camera";
@@ -138,7 +157,7 @@
             ShowGridlinesCheck.Checked = true;
             ShowGridlinesCheck.CheckState = CheckState.Checked;
             ShowGridlinesCheck.ForeColor = SystemColors.ControlDarkDark;
-            ShowGridlinesCheck.Location = new Point(23, 416);
+            ShowGridlinesCheck.Location = new Point(23, 404);
             ShowGridlinesCheck.Name = "ShowGridlinesCheck";
             ShowGridlinesCheck.Size = new Size(80, 19);
             ShowGridlinesCheck.TabIndex = 50;
@@ -207,25 +226,6 @@
             TDContainerPanel.Name = "TDContainerPanel";
             TDContainerPanel.Size = new Size(1102, 600);
             TDContainerPanel.TabIndex = 0;
-            // 
-            // ModelStatisticsLabel
-            // 
-            ModelStatisticsLabel.ForeColor = Color.LightSlateGray;
-            ModelStatisticsLabel.Location = new Point(115, 665);
-            ModelStatisticsLabel.Name = "ModelStatisticsLabel";
-            ModelStatisticsLabel.Size = new Size(260, 23);
-            ModelStatisticsLabel.TabIndex = 58;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label1.ForeColor = SystemColors.ControlDarkDark;
-            label1.Location = new Point(286, 710);
-            label1.Name = "label1";
-            label1.Size = new Size(827, 13);
-            label1.TabIndex = 59;
-            label1.Text = "Click+drag left mouse button to move. Click+drag right mouse button to rotate. Turn Mouse Wheel to zoom. CLick Change Axis button to change rotation axis.";
             // 
             // ThreeDView
             // 

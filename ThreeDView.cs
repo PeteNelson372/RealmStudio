@@ -23,6 +23,7 @@
 ***************************************************************************************************************************/
 using HelixToolkit.Wpf;
 using System.IO;
+using System.Text;
 using System.Windows.Forms.Integration;
 using System.Windows.Media.Media3D;
 
@@ -34,6 +35,7 @@ namespace RealmStudio
     public partial class ThreeDView : Form
     {
         private readonly ThreeDViewerControl ThreeDViewer;
+        private string? OBJModelString;
 
         private readonly ModelVisual3D GridlinesModel = new();
         private readonly GridLinesVisual3D GridLines = new()
@@ -91,6 +93,41 @@ namespace RealmStudio
             ThreeDViewer.HelixTKViewport.ZoomSensitivity = 1.0;
 
             ThreeDViewer.HelixTKViewport.InfiniteSpin = true;
+
+            if (!string.IsNullOrEmpty(OBJModelString))
+            {
+                LoadModelFromString(OBJModelString);
+            }
+        }
+
+        internal void LoadModelFromString(string objModelString)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(objModelString))
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    OBJModelString = objModelString;
+                    Model3DGroup? modelGroup = null;
+
+                    ObjReader objReader = new();
+
+                    using MemoryStream ms = new(Encoding.ASCII.GetBytes(OBJModelString));
+                    modelGroup = objReader.Read(ms);
+
+                    LoadModelGroupIntoViewer(modelGroup);
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.LOGGER.Error(ex);
+                MessageBox.Show("Error loading model: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+
         }
 
         private void ThreeDView_FormClosing(object sender, FormClosingEventArgs e)
@@ -100,30 +137,16 @@ namespace RealmStudio
 
         private void CloseFormButton_Click(object sender, EventArgs e)
         {
+            if (ParentForm != null && ((RealmStudioMainForm)ParentForm).CurrentHeightMapView == this)
+            {
+                ((RealmStudioMainForm)ParentForm).CurrentHeightMapView = null;
+            }
+
             Close();
         }
 
         private void LoadModelButton_Click(object sender, EventArgs e)
         {
-            // create a directional light matching the default one in the ThreeDViewerControl
-            DirectionalLight light = new()
-            {
-                Color = System.Windows.Media.Colors.White,
-                Direction = new Vector3D(3, -4, 5)
-            };
-
-            GeometryModel3D materialModel = new()
-            {
-                Material = new DiffuseMaterial()
-                {
-                    Brush = new System.Windows.Media.SolidColorBrush()
-                    {
-                        Color = System.Windows.Media.Colors.Red,
-                        Opacity = 1
-                    },
-                },
-            };
-
             try
             {
                 OpenFileDialog ofd = new()
@@ -142,6 +165,7 @@ namespace RealmStudio
                     if (ofd.FileName != "")
                     {
                         Cursor.Current = Cursors.WaitCursor;
+                        OBJModelString = string.Empty;
 
                         Model3DGroup? modelGroup = null;
 
@@ -181,35 +205,7 @@ namespace RealmStudio
                             throw;
                         }
 
-                        int vertexCount = 0;
-                        int faceCount = 0;
-
-                        if (modelGroup != null)
-                        {
-                            for (int i = 0; i < modelGroup.Children.Count; i++)
-                            {
-                                if (modelGroup.Children[i] is GeometryModel3D gm3d)
-                                {
-                                    MeshGeometry3D mg3d = (MeshGeometry3D)gm3d.Geometry;
-                                    vertexCount = mg3d.Positions.Count;
-                                    faceCount = mg3d.TriangleIndices.Count / 3;
-                                    break;
-                                }
-                            }
-
-                            ModelStatisticsLabel.Text = "Loaded " + vertexCount + " vertices; " + faceCount + " faces.";
-
-                            modelGroup.SetName("DisplayedModel");
-                            modelGroup.Children.Add(materialModel);
-
-                            ThreeDViewer.ModelGroup.Children.Clear();
-                            ThreeDViewer.ModelGroup.Children.Add(modelGroup);
-                            ThreeDViewer.ModelGroup.Children.Add(light);
-                            ThreeDViewer.ModelGroup.Children.Add(materialModel);
-
-                            ThreeDViewer.HelixTKViewport.ResetCamera();
-                            ThreeDViewer.HelixTKViewport.FitView(new Vector3D(0, 0, 1), new Vector3D(0, 1, 0));
-                        }
+                        LoadModelGroupIntoViewer(modelGroup);
                     }
                 }
             }
@@ -223,6 +219,58 @@ namespace RealmStudio
                 Cursor.Current = Cursors.Default;
             }
 
+        }
+
+        private void LoadModelGroupIntoViewer(Model3DGroup modelGroup)
+        {
+            int vertexCount = 0;
+            int faceCount = 0;
+
+            // create a directional light matching the default one in the ThreeDViewerControl
+            DirectionalLight light = new()
+            {
+                Color = System.Windows.Media.Colors.White,
+                Direction = new Vector3D(3, -4, 5)
+            };
+
+            GeometryModel3D materialModel = new()
+            {
+                Material = new DiffuseMaterial()
+                {
+                    Brush = new System.Windows.Media.SolidColorBrush()
+                    {
+                        Color = System.Windows.Media.Colors.Red,
+                        Opacity = 1
+                    },
+                },
+            };
+
+            if (modelGroup != null)
+            {
+                for (int i = 0; i < modelGroup.Children.Count; i++)
+                {
+                    if (modelGroup.Children[i] is GeometryModel3D gm3d)
+                    {
+                        MeshGeometry3D mg3d = (MeshGeometry3D)gm3d.Geometry;
+                        vertexCount = mg3d.Positions.Count;
+                        faceCount = mg3d.TriangleIndices.Count / 3;
+                        break;
+                    }
+                }
+
+                ModelStatisticsLabel.Text = "Loaded " + vertexCount + " vertices; " + faceCount + " faces.";
+
+                modelGroup.SetName("DisplayedModel");
+                modelGroup.Children.Add(materialModel);
+
+                ThreeDViewer.ModelGroup.Children.Clear();
+                ThreeDViewer.ModelGroup.Children.Add(modelGroup);
+                ThreeDViewer.ModelGroup.Children.Add(light);
+                ThreeDViewer.ModelGroup.Children.Add(materialModel);
+
+                ThreeDViewer.HelixTKViewport.ResetCamera();
+                ThreeDViewer.HelixTKViewport.FitView(new Vector3D(0, 0, 1), new Vector3D(0, 1, 0));
+            }
         }
 
         private void ModelGroup_Changed(object? sender, EventArgs e)

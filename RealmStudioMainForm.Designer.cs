@@ -118,7 +118,7 @@
             ShowLandLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label4 = new Label();
             HeightMapToolsPanel = new Panel();
-            iconButton2 = new FontAwesome.Sharp.IconButton();
+            ShowHeightMap3DView = new FontAwesome.Sharp.IconButton();
             BrushStrengthUpDown = new NumericUpDown();
             label95 = new Label();
             label94 = new Label();
@@ -316,6 +316,7 @@
             ShowDrawingLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label11 = new Label();
             RealmStudioForm = new ReaLTaiizor.Forms.DungeonForm();
+            Open3DViewButton = new FontAwesome.Sharp.IconButton();
             AreaSelectButton = new FontAwesome.Sharp.IconButton();
             FontSelectionPanel = new Panel();
             groupBox5 = new GroupBox();
@@ -579,6 +580,9 @@
             LabelBoxStyleTable = new TableLayoutPanel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
+            Update3DViewSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label96 = new Label();
+            label97 = new Label();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -2113,7 +2117,10 @@
             // HeightMapToolsPanel
             // 
             HeightMapToolsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            HeightMapToolsPanel.Controls.Add(iconButton2);
+            HeightMapToolsPanel.Controls.Add(label96);
+            HeightMapToolsPanel.Controls.Add(label97);
+            HeightMapToolsPanel.Controls.Add(Update3DViewSwitch);
+            HeightMapToolsPanel.Controls.Add(ShowHeightMap3DView);
             HeightMapToolsPanel.Controls.Add(BrushStrengthUpDown);
             HeightMapToolsPanel.Controls.Add(label95);
             HeightMapToolsPanel.Controls.Add(label94);
@@ -2124,25 +2131,25 @@
             HeightMapToolsPanel.Size = new Size(80, 882);
             HeightMapToolsPanel.TabIndex = 21;
             // 
-            // iconButton2
+            // ShowHeightMap3DView
             // 
-            iconButton2.FlatAppearance.BorderColor = SystemColors.Control;
-            iconButton2.FlatAppearance.BorderSize = 0;
-            iconButton2.FlatStyle = FlatStyle.Flat;
-            iconButton2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconButton2.ForeColor = SystemColors.ControlDarkDark;
-            iconButton2.IconChar = FontAwesome.Sharp.IconChar.Cubes;
-            iconButton2.IconColor = Color.Black;
-            iconButton2.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton2.IconSize = 32;
-            iconButton2.Location = new Point(0, 307);
-            iconButton2.Name = "iconButton2";
-            iconButton2.Size = new Size(76, 60);
-            iconButton2.TabIndex = 5;
-            iconButton2.Text = "3D View";
-            iconButton2.TextImageRelation = TextImageRelation.TextAboveImage;
-            iconButton2.UseVisualStyleBackColor = true;
-            iconButton2.Click += Show3DViewButton_Click;
+            ShowHeightMap3DView.FlatAppearance.BorderColor = SystemColors.Control;
+            ShowHeightMap3DView.FlatAppearance.BorderSize = 0;
+            ShowHeightMap3DView.FlatStyle = FlatStyle.Flat;
+            ShowHeightMap3DView.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ShowHeightMap3DView.ForeColor = SystemColors.ControlDarkDark;
+            ShowHeightMap3DView.IconChar = FontAwesome.Sharp.IconChar.Cubes;
+            ShowHeightMap3DView.IconColor = Color.Black;
+            ShowHeightMap3DView.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ShowHeightMap3DView.IconSize = 32;
+            ShowHeightMap3DView.Location = new Point(0, 307);
+            ShowHeightMap3DView.Name = "ShowHeightMap3DView";
+            ShowHeightMap3DView.Size = new Size(76, 60);
+            ShowHeightMap3DView.TabIndex = 5;
+            ShowHeightMap3DView.Text = "3D View";
+            ShowHeightMap3DView.TextImageRelation = TextImageRelation.TextAboveImage;
+            ShowHeightMap3DView.UseVisualStyleBackColor = true;
+            ShowHeightMap3DView.Click += Show3DViewButton_Click;
             // 
             // BrushStrengthUpDown
             // 
@@ -5418,6 +5425,7 @@
             RealmStudioForm.BackColor = Color.FromArgb(223, 219, 210);
             RealmStudioForm.BorderColor = Color.FromArgb(38, 38, 38);
             RealmStudioForm.CausesValidation = false;
+            RealmStudioForm.Controls.Add(Open3DViewButton);
             RealmStudioForm.Controls.Add(AreaSelectButton);
             RealmStudioForm.Controls.Add(FontSelectionPanel);
             RealmStudioForm.Controls.Add(MapScaleCreatorPanel);
@@ -5474,6 +5482,23 @@
             RealmStudioForm.TabStop = false;
             RealmStudioForm.Text = "Realm Studio";
             RealmStudioForm.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // Open3DViewButton
+            // 
+            Open3DViewButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            Open3DViewButton.FlatStyle = FlatStyle.Flat;
+            Open3DViewButton.ForeColor = Color.FromArgb(223, 219, 210);
+            Open3DViewButton.IconChar = FontAwesome.Sharp.IconChar.Cubes;
+            Open3DViewButton.IconColor = SystemColors.ControlDarkDark;
+            Open3DViewButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            Open3DViewButton.IconSize = 32;
+            Open3DViewButton.Location = new Point(1422, 56);
+            Open3DViewButton.Name = "Open3DViewButton";
+            Open3DViewButton.Size = new Size(32, 32);
+            Open3DViewButton.TabIndex = 41;
+            Open3DViewButton.Text = "iconButton1";
+            Open3DViewButton.UseVisualStyleBackColor = true;
+            Open3DViewButton.Click += Open3DViewButton_Click;
             // 
             // AreaSelectButton
             // 
@@ -6532,7 +6557,7 @@
             NewToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             NewToolStripMenuItem.Name = "NewToolStripMenuItem";
             NewToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            NewToolStripMenuItem.Size = new Size(180, 22);
+            NewToolStripMenuItem.Size = new Size(146, 22);
             NewToolStripMenuItem.Text = "&New";
             NewToolStripMenuItem.Click += NewToolStripMenuItem_Click;
             // 
@@ -6542,14 +6567,14 @@
             OpenToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             OpenToolStripMenuItem.Name = "OpenToolStripMenuItem";
             OpenToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
-            OpenToolStripMenuItem.Size = new Size(180, 22);
+            OpenToolStripMenuItem.Size = new Size(146, 22);
             OpenToolStripMenuItem.Text = "&Open";
             OpenToolStripMenuItem.Click += OpenToolStripMenuItem_Click;
             // 
             // toolStripSeparator
             // 
             toolStripSeparator.Name = "toolStripSeparator";
-            toolStripSeparator.Size = new Size(177, 6);
+            toolStripSeparator.Size = new Size(143, 6);
             // 
             // SaveToolStripMenuItem
             // 
@@ -6557,21 +6582,21 @@
             SaveToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
             SaveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            SaveToolStripMenuItem.Size = new Size(180, 22);
+            SaveToolStripMenuItem.Size = new Size(146, 22);
             SaveToolStripMenuItem.Text = "&Save";
             SaveToolStripMenuItem.Click += SaveToolStripMenuItem_Click;
             // 
             // SaveAsToolStripMenuItem
             // 
             SaveAsToolStripMenuItem.Name = "SaveAsToolStripMenuItem";
-            SaveAsToolStripMenuItem.Size = new Size(180, 22);
+            SaveAsToolStripMenuItem.Size = new Size(146, 22);
             SaveAsToolStripMenuItem.Text = "Save &As";
             SaveAsToolStripMenuItem.Click += SaveAsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(143, 6);
             // 
             // ExportMapMenuItem
             // 
@@ -6579,14 +6604,14 @@
             ExportMapMenuItem.IconColor = Color.Black;
             ExportMapMenuItem.IconFont = FontAwesome.Sharp.IconFont.Auto;
             ExportMapMenuItem.Name = "ExportMapMenuItem";
-            ExportMapMenuItem.Size = new Size(180, 22);
+            ExportMapMenuItem.Size = new Size(146, 22);
             ExportMapMenuItem.Text = "&Export...";
             ExportMapMenuItem.Click += ExportMapMenuItem_Click;
             // 
             // toolStripSeparator6
             // 
             toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new Size(177, 6);
+            toolStripSeparator6.Size = new Size(143, 6);
             // 
             // PrintToolStripMenuItem
             // 
@@ -6594,19 +6619,19 @@
             PrintToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             PrintToolStripMenuItem.Name = "PrintToolStripMenuItem";
             PrintToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.P;
-            PrintToolStripMenuItem.Size = new Size(180, 22);
+            PrintToolStripMenuItem.Size = new Size(146, 22);
             PrintToolStripMenuItem.Text = "&Print";
             PrintToolStripMenuItem.Click += PrintToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(177, 6);
+            toolStripSeparator2.Size = new Size(143, 6);
             // 
             // ExitToolStripMenuItem
             // 
             ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-            ExitToolStripMenuItem.Size = new Size(180, 22);
+            ExitToolStripMenuItem.Size = new Size(146, 22);
             ExitToolStripMenuItem.Text = "E&xit";
             ExitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
             // 
@@ -8842,6 +8867,66 @@
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
             // 
+            // Update3DViewSwitch
+            // 
+            Update3DViewSwitch.Alpha = 50;
+            Update3DViewSwitch.BackColor = Color.Transparent;
+            Update3DViewSwitch.Background = true;
+            Update3DViewSwitch.Background_WidthPen = 2F;
+            Update3DViewSwitch.BackgroundPen = false;
+            Update3DViewSwitch.Checked = true;
+            Update3DViewSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            Update3DViewSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            Update3DViewSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            Update3DViewSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            Update3DViewSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            Update3DViewSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            Update3DViewSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            Update3DViewSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            Update3DViewSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            Update3DViewSwitch.ColorValue = Color.ForestGreen;
+            Update3DViewSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            Update3DViewSwitch.Font = new Font("Arial", 11F);
+            Update3DViewSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            Update3DViewSwitch.Lighting = true;
+            Update3DViewSwitch.LinearGradient_Background = false;
+            Update3DViewSwitch.LinearGradient_Value = false;
+            Update3DViewSwitch.LinearGradientPen = false;
+            Update3DViewSwitch.Location = new Point(15, 431);
+            Update3DViewSwitch.Name = "Update3DViewSwitch";
+            Update3DViewSwitch.PenWidth = 10;
+            Update3DViewSwitch.RGB = false;
+            Update3DViewSwitch.Rounding = true;
+            Update3DViewSwitch.RoundingInt = 90;
+            Update3DViewSwitch.Size = new Size(41, 20);
+            Update3DViewSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            Update3DViewSwitch.TabIndex = 22;
+            Update3DViewSwitch.Tag = "Cyber";
+            Update3DViewSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            Update3DViewSwitch.Timer_RGB = 300;
+            // 
+            // label96
+            // 
+            label96.AutoSize = true;
+            label96.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label96.ForeColor = SystemColors.ControlDarkDark;
+            label96.Location = new Point(12, 413);
+            label96.Name = "label96";
+            label96.Size = new Size(49, 15);
+            label96.TabIndex = 24;
+            label96.Text = "3D View";
+            // 
+            // label97
+            // 
+            label97.AutoSize = true;
+            label97.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label97.ForeColor = SystemColors.ControlDarkDark;
+            label97.Location = new Point(14, 397);
+            label97.Name = "label97";
+            label97.Size = new Size(45, 15);
+            label97.TabIndex = 23;
+            label97.Text = "Update";
+            // 
             // RealmStudioMainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -9624,6 +9709,10 @@
         private Label label95;
         private Label label94;
         private NumericUpDown BrushStrengthUpDown;
-        private FontAwesome.Sharp.IconButton iconButton2;
+        private FontAwesome.Sharp.IconButton ShowHeightMap3DView;
+        private FontAwesome.Sharp.IconButton Open3DViewButton;
+        private Label label96;
+        private Label label97;
+        private ReaLTaiizor.Controls.CyberSwitch Update3DViewSwitch;
     }
 }
