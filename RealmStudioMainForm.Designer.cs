@@ -117,10 +117,13 @@
             LandBrushSizeTrack = new TrackBar();
             ShowLandLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label4 = new Label();
-            HeightMapToolStrip = new ToolStrip();
-            HeightUpButton = new FontAwesome.Sharp.IconToolStripButton();
-            HeightDownButton = new FontAwesome.Sharp.IconToolStripButton();
-            ShowHeightMap3DViewButton = new FontAwesome.Sharp.IconToolStripButton();
+            HeightMapToolsPanel = new Panel();
+            iconButton2 = new FontAwesome.Sharp.IconButton();
+            BrushStrengthUpDown = new NumericUpDown();
+            label95 = new Label();
+            label94 = new Label();
+            DecreaseHeightButton = new FontAwesome.Sharp.IconButton();
+            IncreaseHeightButton = new FontAwesome.Sharp.IconButton();
             LandToolStrip = new ToolStrip();
             LandformSelectButton = new FontAwesome.Sharp.IconToolStripButton();
             LandformPaintButton = new FontAwesome.Sharp.IconToolStripButton();
@@ -607,7 +610,8 @@
             ((System.ComponentModel.ISupportInitialize)LandformOutlineWidthTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LandformTexturePreviewPicture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LandBrushSizeTrack).BeginInit();
-            HeightMapToolStrip.SuspendLayout();
+            HeightMapToolsPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)BrushStrengthUpDown).BeginInit();
             LandToolStrip.SuspendLayout();
             WaterTab.SuspendLayout();
             WaterEraserGroup.SuspendLayout();
@@ -1714,7 +1718,7 @@
             LandTab.Controls.Add(LandformValuesGroup);
             LandTab.Controls.Add(ShowLandLayerSwitch);
             LandTab.Controls.Add(label4);
-            LandTab.Controls.Add(HeightMapToolStrip);
+            LandTab.Controls.Add(HeightMapToolsPanel);
             LandTab.Controls.Add(LandToolStrip);
             LandTab.Location = new Point(26, 4);
             LandTab.Name = "LandTab";
@@ -2106,75 +2110,117 @@
             label4.TabIndex = 15;
             label4.Text = "Show";
             // 
-            // HeightMapToolStrip
+            // HeightMapToolsPanel
             // 
-            HeightMapToolStrip.AllowMerge = false;
-            HeightMapToolStrip.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            HeightMapToolStrip.AutoSize = false;
-            HeightMapToolStrip.BackColor = SystemColors.Control;
-            HeightMapToolStrip.Dock = DockStyle.None;
-            HeightMapToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            HeightMapToolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            HeightMapToolStrip.Items.AddRange(new ToolStripItem[] { HeightUpButton, HeightDownButton, ShowHeightMap3DViewButton });
-            HeightMapToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
-            HeightMapToolStrip.Location = new Point(158, 0);
-            HeightMapToolStrip.Name = "HeightMapToolStrip";
-            HeightMapToolStrip.Size = new Size(72, 878);
-            HeightMapToolStrip.TabIndex = 21;
-            HeightMapToolStrip.Text = "LandformTools";
+            HeightMapToolsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            HeightMapToolsPanel.Controls.Add(iconButton2);
+            HeightMapToolsPanel.Controls.Add(BrushStrengthUpDown);
+            HeightMapToolsPanel.Controls.Add(label95);
+            HeightMapToolsPanel.Controls.Add(label94);
+            HeightMapToolsPanel.Controls.Add(DecreaseHeightButton);
+            HeightMapToolsPanel.Controls.Add(IncreaseHeightButton);
+            HeightMapToolsPanel.Location = new Point(154, 0);
+            HeightMapToolsPanel.Name = "HeightMapToolsPanel";
+            HeightMapToolsPanel.Size = new Size(80, 882);
+            HeightMapToolsPanel.TabIndex = 21;
             // 
-            // HeightUpButton
+            // iconButton2
             // 
-            HeightUpButton.AutoSize = false;
-            HeightUpButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            HeightUpButton.ForeColor = SystemColors.ControlDarkDark;
-            HeightUpButton.IconChar = FontAwesome.Sharp.IconChar.ArrowUpShortWide;
-            HeightUpButton.IconColor = Color.Black;
-            HeightUpButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            HeightUpButton.IconSize = 24;
-            HeightUpButton.ImageScaling = ToolStripItemImageScaling.None;
-            HeightUpButton.ImageTransparentColor = Color.Magenta;
-            HeightUpButton.Margin = new Padding(0, 25, 0, 2);
-            HeightUpButton.Name = "HeightUpButton";
-            HeightUpButton.Size = new Size(60, 60);
-            HeightUpButton.Text = "Increase";
-            HeightUpButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            HeightUpButton.Click += HeightUpButton_Click;
+            iconButton2.FlatAppearance.BorderColor = SystemColors.Control;
+            iconButton2.FlatAppearance.BorderSize = 0;
+            iconButton2.FlatStyle = FlatStyle.Flat;
+            iconButton2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            iconButton2.ForeColor = SystemColors.ControlDarkDark;
+            iconButton2.IconChar = FontAwesome.Sharp.IconChar.Cubes;
+            iconButton2.IconColor = Color.Black;
+            iconButton2.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton2.IconSize = 32;
+            iconButton2.Location = new Point(0, 307);
+            iconButton2.Name = "iconButton2";
+            iconButton2.Size = new Size(76, 60);
+            iconButton2.TabIndex = 5;
+            iconButton2.Text = "3D View";
+            iconButton2.TextImageRelation = TextImageRelation.TextAboveImage;
+            iconButton2.UseVisualStyleBackColor = true;
+            iconButton2.Click += Show3DViewButton_Click;
             // 
-            // HeightDownButton
+            // BrushStrengthUpDown
             // 
-            HeightDownButton.AutoSize = false;
-            HeightDownButton.Flip = FontAwesome.Sharp.FlipOrientation.Horizontal;
-            HeightDownButton.ForeColor = SystemColors.ControlDarkDark;
-            HeightDownButton.IconChar = FontAwesome.Sharp.IconChar.ArrowUpShortWide;
-            HeightDownButton.IconColor = Color.Black;
-            HeightDownButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            HeightDownButton.IconSize = 24;
-            HeightDownButton.ImageScaling = ToolStripItemImageScaling.None;
-            HeightDownButton.ImageTransparentColor = Color.Magenta;
-            HeightDownButton.Margin = new Padding(0, 25, 0, 2);
-            HeightDownButton.Name = "HeightDownButton";
-            HeightDownButton.Rotation = 180D;
-            HeightDownButton.Size = new Size(60, 60);
-            HeightDownButton.Text = "Decrease";
-            HeightDownButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            HeightDownButton.Click += HeightDownButton_Click;
+            BrushStrengthUpDown.DecimalPlaces = 1;
+            BrushStrengthUpDown.Increment = new decimal(new int[] { 5, 0, 0, 65536 });
+            BrushStrengthUpDown.Location = new Point(12, 224);
+            BrushStrengthUpDown.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
+            BrushStrengthUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            BrushStrengthUpDown.Name = "BrushStrengthUpDown";
+            BrushStrengthUpDown.Size = new Size(52, 23);
+            BrushStrengthUpDown.TabIndex = 4;
+            BrushStrengthUpDown.TextAlign = HorizontalAlignment.Center;
+            BrushStrengthUpDown.Value = new decimal(new int[] { 10, 0, 0, 0 });
             // 
-            // ShowHeightMap3DViewButton
+            // label95
             // 
-            ShowHeightMap3DViewButton.ForeColor = SystemColors.ControlDarkDark;
-            ShowHeightMap3DViewButton.IconChar = FontAwesome.Sharp.IconChar.Cubes;
-            ShowHeightMap3DViewButton.IconColor = Color.Black;
-            ShowHeightMap3DViewButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ShowHeightMap3DViewButton.IconSize = 32;
-            ShowHeightMap3DViewButton.ImageScaling = ToolStripItemImageScaling.None;
-            ShowHeightMap3DViewButton.ImageTransparentColor = Color.Magenta;
-            ShowHeightMap3DViewButton.Margin = new Padding(0, 25, 0, 2);
-            ShowHeightMap3DViewButton.Name = "ShowHeightMap3DViewButton";
-            ShowHeightMap3DViewButton.Size = new Size(70, 53);
-            ShowHeightMap3DViewButton.Text = "3D View";
-            ShowHeightMap3DViewButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            ShowHeightMap3DViewButton.Click += Show3DViewButton_Click;
+            label95.AutoSize = true;
+            label95.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label95.ForeColor = SystemColors.ControlDarkDark;
+            label95.Location = new Point(12, 205);
+            label95.Name = "label95";
+            label95.Size = new Size(52, 15);
+            label95.TabIndex = 3;
+            label95.Text = "Strength";
+            // 
+            // label94
+            // 
+            label94.AutoSize = true;
+            label94.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label94.ForeColor = SystemColors.ControlDarkDark;
+            label94.Location = new Point(19, 190);
+            label94.Name = "label94";
+            label94.Size = new Size(37, 15);
+            label94.TabIndex = 2;
+            label94.Text = "Brush";
+            // 
+            // DecreaseHeightButton
+            // 
+            DecreaseHeightButton.FlatAppearance.BorderColor = SystemColors.Control;
+            DecreaseHeightButton.FlatAppearance.BorderSize = 0;
+            DecreaseHeightButton.FlatStyle = FlatStyle.Flat;
+            DecreaseHeightButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            DecreaseHeightButton.ForeColor = SystemColors.ControlDarkDark;
+            DecreaseHeightButton.IconChar = FontAwesome.Sharp.IconChar.ArrowUpShortWide;
+            DecreaseHeightButton.IconColor = Color.Black;
+            DecreaseHeightButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            DecreaseHeightButton.IconSize = 24;
+            DecreaseHeightButton.Location = new Point(0, 105);
+            DecreaseHeightButton.Margin = new Padding(3, 25, 3, 3);
+            DecreaseHeightButton.Name = "DecreaseHeightButton";
+            DecreaseHeightButton.Rotation = 180D;
+            DecreaseHeightButton.Size = new Size(76, 60);
+            DecreaseHeightButton.TabIndex = 1;
+            DecreaseHeightButton.Text = "Decrease";
+            DecreaseHeightButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            DecreaseHeightButton.UseVisualStyleBackColor = true;
+            DecreaseHeightButton.Click += HeightDownButton_Click;
+            // 
+            // IncreaseHeightButton
+            // 
+            IncreaseHeightButton.FlatAppearance.BorderColor = SystemColors.Control;
+            IncreaseHeightButton.FlatAppearance.BorderSize = 0;
+            IncreaseHeightButton.FlatStyle = FlatStyle.Flat;
+            IncreaseHeightButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            IncreaseHeightButton.ForeColor = SystemColors.ControlDarkDark;
+            IncreaseHeightButton.IconChar = FontAwesome.Sharp.IconChar.ArrowUpShortWide;
+            IncreaseHeightButton.IconColor = Color.Black;
+            IncreaseHeightButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            IncreaseHeightButton.IconSize = 24;
+            IncreaseHeightButton.Location = new Point(0, 20);
+            IncreaseHeightButton.Margin = new Padding(3, 3, 3, 25);
+            IncreaseHeightButton.Name = "IncreaseHeightButton";
+            IncreaseHeightButton.Size = new Size(76, 60);
+            IncreaseHeightButton.TabIndex = 0;
+            IncreaseHeightButton.Text = "Increase";
+            IncreaseHeightButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            IncreaseHeightButton.UseVisualStyleBackColor = true;
+            IncreaseHeightButton.Click += HeightUpButton_Click;
             // 
             // LandToolStrip
             // 
@@ -6486,7 +6532,7 @@
             NewToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             NewToolStripMenuItem.Name = "NewToolStripMenuItem";
             NewToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            NewToolStripMenuItem.Size = new Size(146, 22);
+            NewToolStripMenuItem.Size = new Size(180, 22);
             NewToolStripMenuItem.Text = "&New";
             NewToolStripMenuItem.Click += NewToolStripMenuItem_Click;
             // 
@@ -6496,14 +6542,14 @@
             OpenToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             OpenToolStripMenuItem.Name = "OpenToolStripMenuItem";
             OpenToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
-            OpenToolStripMenuItem.Size = new Size(146, 22);
+            OpenToolStripMenuItem.Size = new Size(180, 22);
             OpenToolStripMenuItem.Text = "&Open";
             OpenToolStripMenuItem.Click += OpenToolStripMenuItem_Click;
             // 
             // toolStripSeparator
             // 
             toolStripSeparator.Name = "toolStripSeparator";
-            toolStripSeparator.Size = new Size(143, 6);
+            toolStripSeparator.Size = new Size(177, 6);
             // 
             // SaveToolStripMenuItem
             // 
@@ -6511,21 +6557,21 @@
             SaveToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
             SaveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            SaveToolStripMenuItem.Size = new Size(146, 22);
+            SaveToolStripMenuItem.Size = new Size(180, 22);
             SaveToolStripMenuItem.Text = "&Save";
             SaveToolStripMenuItem.Click += SaveToolStripMenuItem_Click;
             // 
             // SaveAsToolStripMenuItem
             // 
             SaveAsToolStripMenuItem.Name = "SaveAsToolStripMenuItem";
-            SaveAsToolStripMenuItem.Size = new Size(146, 22);
+            SaveAsToolStripMenuItem.Size = new Size(180, 22);
             SaveAsToolStripMenuItem.Text = "Save &As";
             SaveAsToolStripMenuItem.Click += SaveAsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(143, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // ExportMapMenuItem
             // 
@@ -6533,14 +6579,14 @@
             ExportMapMenuItem.IconColor = Color.Black;
             ExportMapMenuItem.IconFont = FontAwesome.Sharp.IconFont.Auto;
             ExportMapMenuItem.Name = "ExportMapMenuItem";
-            ExportMapMenuItem.Size = new Size(146, 22);
+            ExportMapMenuItem.Size = new Size(180, 22);
             ExportMapMenuItem.Text = "&Export...";
             ExportMapMenuItem.Click += ExportMapMenuItem_Click;
             // 
             // toolStripSeparator6
             // 
             toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new Size(143, 6);
+            toolStripSeparator6.Size = new Size(177, 6);
             // 
             // PrintToolStripMenuItem
             // 
@@ -6548,19 +6594,19 @@
             PrintToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             PrintToolStripMenuItem.Name = "PrintToolStripMenuItem";
             PrintToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.P;
-            PrintToolStripMenuItem.Size = new Size(146, 22);
+            PrintToolStripMenuItem.Size = new Size(180, 22);
             PrintToolStripMenuItem.Text = "&Print";
             PrintToolStripMenuItem.Click += PrintToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(143, 6);
+            toolStripSeparator2.Size = new Size(177, 6);
             // 
             // ExitToolStripMenuItem
             // 
             ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-            ExitToolStripMenuItem.Size = new Size(146, 22);
+            ExitToolStripMenuItem.Size = new Size(180, 22);
             ExitToolStripMenuItem.Text = "E&xit";
             ExitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
             // 
@@ -8859,8 +8905,9 @@
             ((System.ComponentModel.ISupportInitialize)LandformOutlineWidthTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LandformTexturePreviewPicture).EndInit();
             ((System.ComponentModel.ISupportInitialize)LandBrushSizeTrack).EndInit();
-            HeightMapToolStrip.ResumeLayout(false);
-            HeightMapToolStrip.PerformLayout();
+            HeightMapToolsPanel.ResumeLayout(false);
+            HeightMapToolsPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)BrushStrengthUpDown).EndInit();
             LandToolStrip.ResumeLayout(false);
             LandToolStrip.PerformLayout();
             WaterTab.ResumeLayout(false);
@@ -9550,9 +9597,6 @@
         private ReaLTaiizor.Controls.CyberSwitch EditRiverPointsSwitch;
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripMenuItem RenderAsHeightMapMenuItem;
-        private ToolStrip HeightMapToolStrip;
-        private FontAwesome.Sharp.IconToolStripButton HeightUpButton;
-        private FontAwesome.Sharp.IconToolStripButton HeightDownButton;
         private FontAwesome.Sharp.IconButton AreaSelectButton;
         private ToolStripMenuItem ClearSelectionToolStripMenuItem;
         private Label label87;
@@ -9574,6 +9618,12 @@
         private Label label93;
         private ReaLTaiizor.Controls.CyberSwitch MirrorOceanTextureSwitch;
         private FontAwesome.Sharp.IconToolStripButton MarkerSymbolsButton;
-        private FontAwesome.Sharp.IconToolStripButton ShowHeightMap3DViewButton;
+        private Panel HeightMapToolsPanel;
+        private FontAwesome.Sharp.IconButton IncreaseHeightButton;
+        private FontAwesome.Sharp.IconButton DecreaseHeightButton;
+        private Label label95;
+        private Label label94;
+        private NumericUpDown BrushStrengthUpDown;
+        private FontAwesome.Sharp.IconButton iconButton2;
     }
 }

@@ -84,19 +84,27 @@ namespace RealmStudio
             string content = reader.ReadOuterXml();
             XDocument mapBitmapDoc = XDocument.Parse(content);
 
-            string? base64String = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "Bitmap").Value).FirstOrDefault();
-
-            if (!string.IsNullOrEmpty(base64String))
+            IEnumerable<XElement?> mapImageBitmapElem = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "Bitmap"));
+            if (mapImageBitmapElem != null && mapImageBitmapElem.Any() && mapImageBitmapElem.First() != null)
             {
-                // Convert Base64 string to byte array
-                byte[] imageBytes = Convert.FromBase64String(base64String);
+                string? base64String = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "Bitmap").Value).FirstOrDefault();
 
-                // Create an image from the byte array
-                using MemoryStream ms = new(imageBytes);
-                MapImageBitmap = SKBitmap.Decode(ms);
+                if (!string.IsNullOrEmpty(base64String))
+                {
+                    try
+                    {
+                        // Convert Base64 string to byte array
+                        byte[] imageBytes = Convert.FromBase64String(base64String);
 
-                Width = MapImageBitmap.Width;
-                Height = MapImageBitmap.Height;
+                        // Create an image from the byte array
+                        using MemoryStream ms = new(imageBytes);
+                        MapImageBitmap = SKBitmap.Decode(ms);
+
+                        Width = MapImageBitmap.Width;
+                        Height = MapImageBitmap.Height;
+                    }
+                    catch { }
+                }
             }
 
             IEnumerable<XElement?> mirrorImageElem = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "MirrorImage"));

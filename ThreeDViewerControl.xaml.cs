@@ -27,12 +27,12 @@ namespace RealmStudio
 {
     /// <summary>
     /// Interaction logic for ThreeDViewerControl.xaml
+    /// User interaction logic for the ThreeDView that
+    /// hosts this control is in the ThreeDView class.
     /// </summary>
     public partial class ThreeDViewerControl : UserControl
     {
-        ThreeDView ParentForm { get; set; }
-
-        public ThreeDViewerControl(ThreeDView threeDView)
+        public ThreeDViewerControl()
         {
             InitializeComponent();
         }

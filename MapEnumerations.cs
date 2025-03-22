@@ -219,6 +219,7 @@ namespace RealmStudio
         UpscaledImage,
         MapLayers,
         Heightmap,
+        HeightMap3DModel,
     }
 
     /// <summary>

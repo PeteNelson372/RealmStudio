@@ -22,6 +22,7 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace RealmStudio
@@ -46,12 +47,18 @@ namespace RealmStudio
         [XmlIgnore]
         public bool ShowLayer { get; set; } = true;
 
+        [XmlIgnore]
+        public SKRectI LayerRect { get; set; }
+
         public override void Render(SKCanvas canvas)
         {
             if (ShowLayer)
             {
                 if (MapLayerComponents != null)
                 {
+                    LayerRect = new(0, 0, Width, Height);
+                    canvas.ClipRect(LayerRect);
+
                     foreach (var component in MapLayerComponents)
                     {
                         if (component.RenderComponent)
@@ -59,7 +66,6 @@ namespace RealmStudio
                             // clip drawing to the boundaries of the layer
                             using (new SKAutoCanvasRestore(canvas))
                             {
-                                canvas.ClipRect(new SKRectI(0, 0, Width, Height));
                                 component.Render(canvas);
                             }
                         }

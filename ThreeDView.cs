@@ -22,37 +22,18 @@
 *
 ***************************************************************************************************************************/
 using HelixToolkit.Wpf;
-using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms.Integration;
 using System.Windows.Media.Media3D;
-//using System.Windows.Media.Media3D;
 
 namespace RealmStudio
 {
+    /***
+     * This form hosts the ThreeDViwerControl WPF UserControl that displays a 3D model.
+     */
     public partial class ThreeDView : Form
     {
-
         private readonly ThreeDViewerControl ThreeDViewer;
-
-        private static readonly ToolTip TOOLTIP = new();
-
-        private ScaleTransform3D ScaleTransform = new(1, 1, 1);
-        private RotateTransform3D YawRotation = new(new AxisAngleRotation3D(new Vector3D(0, 1, 0), 0));
-        private RotateTransform3D PitchRotation = new(new AxisAngleRotation3D(new Vector3D(1, 0, 0), 0));
-        private RotateTransform3D RollRotation = new(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 0));
-
-        private TranslateTransform3D PanTransform = new TranslateTransform3D(0, 0, 0);
-        private TranslateTransform3D ElevateTransform = new TranslateTransform3D(0, 0, 0);
-        private TranslateTransform3D ZoomTransform = new TranslateTransform3D(0, 0, 0);
-
-        private static readonly Vector3D thetaAxis = new Vector3D(0, 1, 0);
-        private static readonly Vector3D phiAxis = new Vector3D(-1, 0, 0);
-
-        private QuaternionRotation3D PitchQuaternion = new QuaternionRotation3D(new Quaternion(-phiAxis, 0));
-        private QuaternionRotation3D RotationQuaternion = new QuaternionRotation3D(new Quaternion(-thetaAxis, 0));
-
-        private readonly Transform3DGroup ModelTransform3DGroup = new();
-        private readonly Transform3DGroup CameraTransform3DGroup = new();
 
         private readonly ModelVisual3D GridlinesModel = new();
         private readonly GridLinesVisual3D GridLines = new()
@@ -63,7 +44,7 @@ namespace RealmStudio
             Length = 20,
             MinorDistance = 1,
             MajorDistance = 10,
-            Thickness = 0.02,
+            Thickness = 0.002,
             Fill = System.Windows.Media.Brushes.Gray
         };
 
@@ -71,17 +52,50 @@ namespace RealmStudio
         {
             InitializeComponent();
             ThreeDViewOverlay.Text = formTitle;
-            ThreeDViewer = new(this);
+
+            // construct the WPF ThreeDViewerControl UserControl
+            ThreeDViewer = new();
+        }
+
+        private void ThreeDView_Load(object sender, EventArgs e)
+        {
+            // Create the ElementHost control for hosting the
+            // WPF ThreeDViewerControl UserControl
+            // and assign the WPF UserControl to the ElementHost control's
+            // Child property.
+            ElementHost host = new()
+            {
+                Parent = TDContainerPanel,
+                Dock = DockStyle.Fill,
+                Child = ThreeDViewer,
+            };
+
+            // add the ElementHost control to the container panel's controls.
+            TDContainerPanel.Controls.Add(host);
+
+            // add handlers for events
+            ThreeDViewer.ModelGroup.Changed += ModelGroup_Changed;
+
+            // add gridlines
+            GridlinesModel.SetName("GridLines");
+            GridlinesModel.Children.Add(GridLines);
+            ThreeDViewer.HelixTKViewport.Children.Add(GridlinesModel);
+
+            ThreeDViewer.HelixTKViewport.PanGesture = null;
+            ThreeDViewer.HelixTKViewport.PanGesture2 = new System.Windows.Input.MouseGesture(System.Windows.Input.MouseAction.LeftClick);
+
+            ThreeDViewer.HelixTKViewport.RotateGesture = null;
+            ThreeDViewer.HelixTKViewport.RotateGesture2 = null;
+            ThreeDViewer.HelixTKViewport.RotateGesture2 = new System.Windows.Input.MouseGesture(System.Windows.Input.MouseAction.RightClick);
+
+            ThreeDViewer.HelixTKViewport.ZoomSensitivity = 1.0;
+
+            ThreeDViewer.HelixTKViewport.InfiniteSpin = true;
         }
 
         private void ThreeDView_FormClosing(object sender, FormClosingEventArgs e)
         {
 
-        }
-
-        private void ThreeDView_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            char key = e.KeyChar.ToString().ToUpper(new System.Globalization.CultureInfo("en-us"))[0];
         }
 
         private void CloseFormButton_Click(object sender, EventArgs e)
@@ -91,223 +105,131 @@ namespace RealmStudio
 
         private void LoadModelButton_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void ThreeDView_Load(object sender, EventArgs e)
-        {
-            // Create the ElementHost control for hosting the
-            // WPF ThreeDViewerControl UserControl.
-            ElementHost host = new()
+            // create a directional light matching the default one in the ThreeDViewerControl
+            DirectionalLight light = new()
             {
-                Parent = TDContainerPanel,
-                Dock = DockStyle.Fill,
-                Child = ThreeDViewer,
+                Color = System.Windows.Media.Colors.White,
+                Direction = new Vector3D(3, -4, 5)
             };
 
-            // Assign the WPF UserControl to the ElementHost control's
-            // Child property.
+            GeometryModel3D materialModel = new()
+            {
+                Material = new DiffuseMaterial()
+                {
+                    Brush = new System.Windows.Media.SolidColorBrush()
+                    {
+                        Color = System.Windows.Media.Colors.Red,
+                        Opacity = 1
+                    },
+                },
+            };
 
-            // Add the ElementHost control to the container panel's controls.
-            TDContainerPanel.Controls.Add(host);
+            try
+            {
+                OpenFileDialog ofd = new()
+                {
+                    Title = "Open 3D Model",
+                    DefaultExt = "obj",
+                    Filter = "3D Model files|*.obj;*.stl;*.3ds;*.lwo;*.off|OBJ files (*.obj)|*.obj|All files (*.*)|*.*",
+                    CheckFileExists = true,
+                    RestoreDirectory = true,
+                    ShowHelp = false,           // enabling the help button causes the dialog not to display files
+                    Multiselect = false
+                };
 
-            // add gridlines
-            GridlinesModel.SetName("GridLines");
-            GridlinesModel.Children.Add(GridLines);
-            ThreeDViewer.HelixTKViewport.Children.Add(GridlinesModel);
+                if (ofd.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (ofd.FileName != "")
+                    {
+                        Cursor.Current = Cursors.WaitCursor;
+
+                        Model3DGroup? modelGroup = null;
+
+                        try
+                        {
+                            switch (Path.GetExtension(ofd.FileName).ToUpper(System.Globalization.CultureInfo.CurrentCulture))
+                            {
+                                case ".3DS":
+                                    StudioReader tdsReader = new();
+                                    modelGroup = tdsReader.Read(ofd.FileName);
+                                    break;
+                                case ".LWO":
+                                    LwoReader lwoReader = new();
+                                    modelGroup = lwoReader.Read(ofd.FileName);
+                                    break;
+                                case ".OFF":
+                                    OffReader offReader = new();
+                                    modelGroup = offReader.Read(ofd.FileName);
+                                    break;
+                                case ".OBJ":
+                                    ObjReader objReader = new();
+                                    modelGroup = objReader.Read(ofd.FileName);
+                                    break;
+                                case ".STL":
+                                    StLReader stlReader = new();
+                                    modelGroup = stlReader.Read(ofd.FileName);
+                                    break;
+                                default:
+                                    {
+                                        throw new Exception("Unsupported 3D model format.");
+                                    }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.LOGGER.Error(ex);
+                            throw;
+                        }
+
+                        int vertexCount = 0;
+                        int faceCount = 0;
+
+                        if (modelGroup != null)
+                        {
+                            for (int i = 0; i < modelGroup.Children.Count; i++)
+                            {
+                                if (modelGroup.Children[i] is GeometryModel3D gm3d)
+                                {
+                                    MeshGeometry3D mg3d = (MeshGeometry3D)gm3d.Geometry;
+                                    vertexCount = mg3d.Positions.Count;
+                                    faceCount = mg3d.TriangleIndices.Count / 3;
+                                    break;
+                                }
+                            }
+
+                            ModelStatisticsLabel.Text = "Loaded " + vertexCount + " vertices; " + faceCount + " faces.";
+
+                            modelGroup.SetName("DisplayedModel");
+                            modelGroup.Children.Add(materialModel);
+
+                            ThreeDViewer.ModelGroup.Children.Clear();
+                            ThreeDViewer.ModelGroup.Children.Add(modelGroup);
+                            ThreeDViewer.ModelGroup.Children.Add(light);
+                            ThreeDViewer.ModelGroup.Children.Add(materialModel);
+
+                            ThreeDViewer.HelixTKViewport.ResetCamera();
+                            ThreeDViewer.HelixTKViewport.FitView(new Vector3D(0, 0, 1), new Vector3D(0, 1, 0));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.LOGGER.Error(ex);
+                MessageBox.Show("Error loading model: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+
         }
 
         private void ModelGroup_Changed(object? sender, EventArgs e)
         {
-            Vector3D lookedAtPoint = ThreeDViewer.ModelCamera.LookDirection;
-            Point3D? newPosition = ThreeDViewer.ModelCamera.Position;
+            //Vector3D lookedAtPoint = ThreeDViewer.ModelCamera.LookDirection;
+            //Point3D? cameraPosition = ThreeDViewer.ModelCamera.Position;
 
-            Point3D p3d = (Point3D)(newPosition + lookedAtPoint);
-
-            Debug.WriteLine("ModelGroup_Changed NP: " + newPosition.ToString());
-            Debug.WriteLine("ModelGroup_Changed V3D: " + lookedAtPoint.ToString());
-
-            Debug.WriteLine("ModelGroup_Changed P3D (NP + V3D): " + p3d.ToString());
-        }
-
-        private void ScaleTrack_Scroll(object sender, EventArgs e)
-        {
-            TOOLTIP.Show(ScaleTrack.Value.ToString(), ModelGroup, new Point(ScaleTrack.Right - 30, ScaleTrack.Top - 20), 2000);
-
-            // scale up/down
-            double scalePercent = ScaleTrack.Value / 100.0;
-            ScaleTransform = new ScaleTransform3D(scalePercent, scalePercent, scalePercent);
-            ApplyModelTransforms();
-        }
-
-
-        private void YawTrack_Scroll(object sender, EventArgs e)
-        {
-            TOOLTIP.Show(YawTrack.Value.ToString(), ModelGroup, new Point(YawTrack.Right - 30, YawTrack.Top - 20), 2000);
-
-            YawRotation = new(new AxisAngleRotation3D(new Vector3D(0, 1, 0), YawTrack.Value));
-            ApplyModelTransforms();
-        }
-
-        private void PitchTrack_Scroll(object sender, EventArgs e)
-        {
-            TOOLTIP.Show(PitchTrack.Value.ToString(), ModelGroup, new Point(PitchTrack.Right - 30, PitchTrack.Top - 20), 2000);
-
-            PitchRotation = new(new AxisAngleRotation3D(new Vector3D(1, 0, 0), PitchTrack.Value));
-            ApplyModelTransforms();
-        }
-
-        private void RollTrack_Scroll(object sender, EventArgs e)
-        {
-            TOOLTIP.Show(RollTrack.Value.ToString(), ModelGroup, new Point(RollTrack.Right - 30, RollTrack.Top - 20), 2000);
-
-            RollRotation = new(new AxisAngleRotation3D(new Vector3D(0, 0, 1), RollTrack.Value));
-            ApplyModelTransforms();
-        }
-
-        private void PanTrack_Scroll(object sender, EventArgs e)
-        {
-            TOOLTIP.Show(PanTrack.Value.ToString(), CameraGroup, new Point(PanTrack.Right - 30, PanTrack.Top - 20), 2000);
-
-            double panValue = -(100.0 - PanTrack.Value) / 100.0;
-            PanTransform = new TranslateTransform3D(panValue, 0, 0);
-
-            ApplyCameraTransforms();
-        }
-
-        private void ElevateTrack_Scroll(object sender, EventArgs e)
-        {
-            TOOLTIP.Show(ElevateTrack.Value.ToString(), CameraGroup, new Point(ElevateTrack.Right - 30, ElevateTrack.Top - 20), 2000);
-
-            double elevateValue = (100.0 - ElevateTrack.Value) / 100.0;
-            ElevateTransform = new TranslateTransform3D(0, elevateValue, 0);
-
-            ApplyCameraTransforms();
-        }
-
-        private void ZoomTrack_Scroll(object sender, EventArgs e)
-        {
-            TOOLTIP.Show(ZoomTrack.Value.ToString(), CameraGroup, new Point(ZoomTrack.Right - 30, ZoomTrack.Top - 20), 2000);
-
-            double zoomValue = (250.0 - ZoomTrack.Value) / 100.0;
-            ZoomTransform = new TranslateTransform3D(0, 0, zoomValue);
-
-            ApplyCameraTransforms();
-        }
-
-        private void RotateTrack_Scroll(object sender, EventArgs e)
-        {
-            TOOLTIP.Show(RotateTrack.Value.ToString(), CameraGroup, new Point(RotateTrack.Right - 30, RotateTrack.Top - 20), 2000);
-
-            RotationQuaternion = new(new Quaternion(thetaAxis, RotateTrack.Value));
-            ApplyCameraTransforms();
-        }
-
-        private void CameraPitchTrack_Scroll(object sender, EventArgs e)
-        {
-            double pitchValue = 90.0 - CameraPitchTrack.Value;
-
-            TOOLTIP.Show(pitchValue.ToString(), CameraGroup, new Point(CameraPitchTrack.Right - 30, CameraPitchTrack.Top - 20), 2000);
-
-            PitchQuaternion = new QuaternionRotation3D(new Quaternion(phiAxis, pitchValue));
-            ApplyCameraTransforms();
-        }
-
-        private void ApplyModelTransforms()
-        {
-            ModelTransform3DGroup.Children.Clear();
-
-            ModelTransform3DGroup.Children.Add(YawRotation);
-            ModelTransform3DGroup.Children.Add(PitchRotation);
-            ModelTransform3DGroup.Children.Add(RollRotation);
-            ModelTransform3DGroup.Children.Add(ScaleTransform);
-
-            ThreeDViewer.DisplayedModel.Transform = ModelTransform3DGroup;
-        }
-
-        private void ApplyCameraTransforms()
-        {
-            CameraTransform3DGroup.Children.Clear();
-
-            // translation
-            CameraTransform3DGroup.Children.Add(PanTransform);
-            CameraTransform3DGroup.Children.Add(ElevateTransform);
-            CameraTransform3DGroup.Children.Add(ZoomTransform);
-
-            // rotation
-            CameraTransform3DGroup.Children.Add(new RotateTransform3D(RotationQuaternion));
-            CameraTransform3DGroup.Children.Add(new RotateTransform3D(PitchQuaternion));
-
-
-            ThreeDViewer.ModelCamera.Transform = CameraTransform3DGroup;
-        }
-
-        private void ModelResetButton_Click(object sender, EventArgs e)
-        {
-            ScaleTransform = new(1, 1, 1);
-            YawRotation = new(new AxisAngleRotation3D(new Vector3D(0, 1, 0), 0));
-            PitchRotation = new(new AxisAngleRotation3D(new Vector3D(1, 0, 0), 0));
-            RollRotation = new(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 0));
-
-            ScaleTrack.Value = 100;
-            YawTrack.Value = 0;
-            PitchTrack.Value = 0;
-            RollTrack.Value = 0;
-
-            ApplyModelTransforms();
-        }
-
-        private void ModelResetButton_MouseHover(object sender, EventArgs e)
-        {
-            TOOLTIP.Show("Reset model transformations", ModelGroup, new Point(ModelResetButton.Left, ModelResetButton.Top + 30), 2000);
-        }
-
-        private void ResetCameraButton_Click(object sender, EventArgs e)
-        {
-            PanTransform = new TranslateTransform3D(0, 0, 0);
-            ElevateTransform = new TranslateTransform3D(0, 0, 0);
-            ZoomTransform = new TranslateTransform3D(0, 0, 0);
-
-            PitchQuaternion = new QuaternionRotation3D(new Quaternion(-phiAxis, 0));
-            RotationQuaternion = new QuaternionRotation3D(new Quaternion(-thetaAxis, 0));
-
-            PanTrack.Value = 100;
-            ElevateTrack.Value = 100;
-            ZoomTrack.Value = 100;
-            CameraPitchTrack.Value = 90;
-            RotateTrack.Value = 0;
-
-            ApplyCameraTransforms();
-        }
-
-        private void ResetCameraButton_MouseHover(object sender, EventArgs e)
-        {
-            TOOLTIP.Show("Reset camera transformations", CameraGroup, new Point(ResetCameraButton.Left, ResetCameraButton.Top + 30), 2000);
-        }
-
-        private void PanCameraLabelButton_MouseHover(object sender, EventArgs e)
-        {
-            TOOLTIP.Show("Pan camera left/right", CameraGroup, new Point(PanCameraLabelButton.Left, PanCameraLabelButton.Top + 30), 2000);
-        }
-
-        private void ElevateCameraLabelButton_MouseHover(object sender, EventArgs e)
-        {
-            TOOLTIP.Show("Move camera up/down", CameraGroup, new Point(PanCameraLabelButton.Left, PanCameraLabelButton.Top + 30), 2000);
-        }
-
-        private void ZoomCameraLabelButton_MouseHover(object sender, EventArgs e)
-        {
-            TOOLTIP.Show("Zoom camera forward/back", CameraGroup, new Point(PanCameraLabelButton.Left, PanCameraLabelButton.Top + 30), 2000);
-        }
-
-        private void RotateCameraLabelButton_MouseHover(object sender, EventArgs e)
-        {
-            TOOLTIP.Show("Revolve camera around model", CameraGroup, new Point(PanCameraLabelButton.Left, PanCameraLabelButton.Top + 30), 2000);
-        }
-
-        private void PitchCameraLabelButton_MouseHover(object sender, EventArgs e)
-        {
-            TOOLTIP.Show("Tilt camera up/down", CameraGroup, new Point(PanCameraLabelButton.Left, PanCameraLabelButton.Top + 30), 2000);
         }
 
         private void ShowGridlinesCheck_CheckedChanged(object sender, EventArgs e)
@@ -320,6 +242,59 @@ namespace RealmStudio
             {
                 ThreeDViewer.HelixTKViewport.Children.Remove(GridlinesModel);
             }
+        }
+
+        private void ResetCameraButton_Click(object sender, EventArgs e)
+        {
+            ThreeDViewer.HelixTKViewport.ResetCamera();
+        }
+
+        private void ThreeDView_SizeChanged(object sender, EventArgs e)
+        {
+            ThreeDViewer.HelixTKViewport.FitView(new Vector3D(0, 0, 1), new Vector3D(0, 1, 0));
+        }
+
+        private void ChangeAxesButton_Click(object sender, EventArgs e)
+        {
+            Vector3D xUp = new(1, 0, 0);
+            Vector3D yUp = new(0, 1, 0);
+            Vector3D zUp = new(0, 0, 1);
+
+            Vector3D xDir = new(0, 1, 0);
+            Vector3D yDir = new(0, 0, 1);
+            Vector3D zDir = new(1, 0, 0);
+
+            Vector3D newUp;
+            Vector3D newDir;
+
+            Vector3D currentUp = ThreeDViewer.ModelCamera.UpDirection;
+
+            if (currentUp == xUp)
+            {
+                newUp = yUp;
+                newDir = yDir;
+            }
+            else if (currentUp == yUp)
+            {
+                newUp = zUp;
+                newDir = zDir;
+            }
+            else if (currentUp == zUp)
+            {
+                newUp = xUp;
+                newDir = xDir;
+            }
+            else
+            {
+                newUp = yUp;
+                newDir = yDir;
+            }
+
+            ThreeDViewer.HelixTKViewport.ResetCamera();
+            ThreeDViewer.ModelCamera.UpDirection = newUp;
+            ThreeDViewer.ModelCamera.LookDirection = newDir;
+
+            ThreeDViewer.HelixTKViewport.FitView(newDir, newUp);
         }
     }
 }

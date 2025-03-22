@@ -31,19 +31,20 @@
             ExportRealmOverlay = new ReaLTaiizor.Forms.DungeonForm();
             CloseExportButton = new Button();
             OKExportButton = new Button();
-            groupBox2 = new GroupBox();
+            ExportFormatGroup = new GroupBox();
             GIFRadio = new RadioButton();
             BMPRadio = new RadioButton();
             JPEGRadio = new RadioButton();
             PNGRadio = new RadioButton();
-            groupBox1 = new GroupBox();
+            ExportTypeGroup = new GroupBox();
+            HeightMap3DRadio = new RadioButton();
             HeightmapRadio = new RadioButton();
             MapLayersRadio = new RadioButton();
             UpscaledImageRadio = new RadioButton();
             ExportImageRadio = new RadioButton();
             ExportRealmOverlay.SuspendLayout();
-            groupBox2.SuspendLayout();
-            groupBox1.SuspendLayout();
+            ExportFormatGroup.SuspendLayout();
+            ExportTypeGroup.SuspendLayout();
             SuspendLayout();
             // 
             // ExportRealmOverlay
@@ -52,8 +53,8 @@
             ExportRealmOverlay.BorderColor = Color.FromArgb(38, 38, 38);
             ExportRealmOverlay.Controls.Add(CloseExportButton);
             ExportRealmOverlay.Controls.Add(OKExportButton);
-            ExportRealmOverlay.Controls.Add(groupBox2);
-            ExportRealmOverlay.Controls.Add(groupBox1);
+            ExportRealmOverlay.Controls.Add(ExportFormatGroup);
+            ExportRealmOverlay.Controls.Add(ExportTypeGroup);
             ExportRealmOverlay.Dock = DockStyle.Fill;
             ExportRealmOverlay.FillEdgeColorA = Color.FromArgb(69, 68, 63);
             ExportRealmOverlay.FillEdgeColorB = Color.FromArgb(69, 68, 63);
@@ -98,18 +99,18 @@
             OKExportButton.UseVisualStyleBackColor = true;
             OKExportButton.Click += OKExportButton_Click;
             // 
-            // groupBox2
+            // ExportFormatGroup
             // 
-            groupBox2.Controls.Add(GIFRadio);
-            groupBox2.Controls.Add(BMPRadio);
-            groupBox2.Controls.Add(JPEGRadio);
-            groupBox2.Controls.Add(PNGRadio);
-            groupBox2.Location = new Point(255, 59);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(200, 124);
-            groupBox2.TabIndex = 1;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Export Format";
+            ExportFormatGroup.Controls.Add(GIFRadio);
+            ExportFormatGroup.Controls.Add(BMPRadio);
+            ExportFormatGroup.Controls.Add(JPEGRadio);
+            ExportFormatGroup.Controls.Add(PNGRadio);
+            ExportFormatGroup.Location = new Point(255, 59);
+            ExportFormatGroup.Name = "ExportFormatGroup";
+            ExportFormatGroup.Size = new Size(200, 124);
+            ExportFormatGroup.TabIndex = 1;
+            ExportFormatGroup.TabStop = false;
+            ExportFormatGroup.Text = "Export Format";
             // 
             // GIFRadio
             // 
@@ -160,18 +161,31 @@
             PNGRadio.Text = "PNG File (.png)";
             PNGRadio.UseVisualStyleBackColor = true;
             // 
-            // groupBox1
+            // ExportTypeGroup
             // 
-            groupBox1.Controls.Add(HeightmapRadio);
-            groupBox1.Controls.Add(MapLayersRadio);
-            groupBox1.Controls.Add(UpscaledImageRadio);
-            groupBox1.Controls.Add(ExportImageRadio);
-            groupBox1.Location = new Point(23, 59);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(226, 124);
-            groupBox1.TabIndex = 0;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Export Realm As...";
+            ExportTypeGroup.Controls.Add(HeightMap3DRadio);
+            ExportTypeGroup.Controls.Add(HeightmapRadio);
+            ExportTypeGroup.Controls.Add(MapLayersRadio);
+            ExportTypeGroup.Controls.Add(UpscaledImageRadio);
+            ExportTypeGroup.Controls.Add(ExportImageRadio);
+            ExportTypeGroup.Location = new Point(23, 59);
+            ExportTypeGroup.Name = "ExportTypeGroup";
+            ExportTypeGroup.Size = new Size(226, 153);
+            ExportTypeGroup.TabIndex = 0;
+            ExportTypeGroup.TabStop = false;
+            ExportTypeGroup.Text = "Export Realm As...";
+            // 
+            // HeightMap3DRadio
+            // 
+            HeightMap3DRadio.AutoSize = true;
+            HeightMap3DRadio.ForeColor = SystemColors.ControlDarkDark;
+            HeightMap3DRadio.Location = new Point(6, 122);
+            HeightMap3DRadio.Name = "HeightMap3DRadio";
+            HeightMap3DRadio.Size = new Size(142, 19);
+            HeightMap3DRadio.TabIndex = 4;
+            HeightMap3DRadio.Text = "Height Map 3D Model";
+            HeightMap3DRadio.UseVisualStyleBackColor = true;
+            HeightMap3DRadio.MouseHover += HeightMap3DRadio_MouseHover;
             // 
             // HeightmapRadio
             // 
@@ -179,10 +193,11 @@
             HeightmapRadio.ForeColor = SystemColors.ControlDarkDark;
             HeightmapRadio.Location = new Point(6, 97);
             HeightmapRadio.Name = "HeightmapRadio";
-            HeightmapRadio.Size = new Size(138, 19);
+            HeightmapRadio.Size = new Size(141, 19);
             HeightmapRadio.TabIndex = 3;
-            HeightmapRadio.Text = "Grayscale Heightmap";
+            HeightmapRadio.Text = "Grayscale Height Map";
             HeightmapRadio.UseVisualStyleBackColor = true;
+            HeightmapRadio.MouseHover += HeightmapRadio_MouseHover;
             // 
             // MapLayersRadio
             // 
@@ -194,6 +209,7 @@
             MapLayersRadio.TabIndex = 2;
             MapLayersRadio.Text = "Map Layers";
             MapLayersRadio.UseVisualStyleBackColor = true;
+            MapLayersRadio.MouseHover += MapLayersRadio_MouseHover;
             // 
             // UpscaledImageRadio
             // 
@@ -205,6 +221,7 @@
             UpscaledImageRadio.TabIndex = 1;
             UpscaledImageRadio.Text = "Upscaled Image (2X)";
             UpscaledImageRadio.UseVisualStyleBackColor = true;
+            UpscaledImageRadio.MouseHover += UpscaledImageRadio_MouseHover;
             // 
             // ExportImageRadio
             // 
@@ -218,6 +235,7 @@
             ExportImageRadio.TabStop = true;
             ExportImageRadio.Text = "Image";
             ExportImageRadio.UseVisualStyleBackColor = true;
+            ExportImageRadio.MouseHover += ExportImageRadio_MouseHover;
             // 
             // RealmExportDialog
             // 
@@ -232,18 +250,18 @@
             Text = "Export Realm";
             TransparencyKey = Color.Fuchsia;
             ExportRealmOverlay.ResumeLayout(false);
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
+            ExportFormatGroup.ResumeLayout(false);
+            ExportFormatGroup.PerformLayout();
+            ExportTypeGroup.ResumeLayout(false);
+            ExportTypeGroup.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
         private ReaLTaiizor.Forms.DungeonForm ExportRealmOverlay;
-        private GroupBox groupBox1;
-        private GroupBox groupBox2;
+        private GroupBox ExportTypeGroup;
+        private GroupBox ExportFormatGroup;
         private Button CloseExportButton;
         private Button OKExportButton;
         internal RadioButton ExportImageRadio;
@@ -254,5 +272,6 @@
         internal RadioButton HeightmapRadio;
         internal RadioButton BMPRadio;
         internal RadioButton GIFRadio;
+        internal RadioButton HeightMap3DRadio;
     }
 }

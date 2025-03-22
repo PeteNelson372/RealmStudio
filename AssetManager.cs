@@ -82,6 +82,9 @@ namespace RealmStudio
         private static string TerrainSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
         private static string VegetationSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
 
+        public static string DefaultModelsDirectory = Settings.Default.DefaultRealmDirectory + Path.DirectorySeparatorChar + "Models";
+
+
         public static readonly string CollectionFileName = "collection.xml";
 
         public static readonly string WonderdraftSymbolsFileName = ".wonderdraft_symbols";
@@ -101,6 +104,8 @@ namespace RealmStudio
         internal static int LoadAllAssets()
         {
             int LoadPercentage = 0;
+
+            DefaultModelsDirectory = Settings.Default.DefaultRealmDirectory + Path.DirectorySeparatorChar + "Models";
 
             DefaultSymbolDirectory = ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols";
 

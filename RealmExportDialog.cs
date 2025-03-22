@@ -25,6 +25,8 @@ namespace RealmStudio
 {
     public partial class RealmExportDialog : Form
     {
+        private static readonly ToolTip TOOLTIP = new();
+
         public RealmExportDialog()
         {
             InitializeComponent();
@@ -38,6 +40,31 @@ namespace RealmStudio
         private void OKExportButton_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void ExportImageRadio_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Export the realm as an image file with the selected format", ExportTypeGroup, new Point(ExportImageRadio.Left, ExportImageRadio.Top + 30), 3000);
+        }
+
+        private void UpscaledImageRadio_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Export the realm as a 2X-upscaled image file with the selected format", ExportTypeGroup, new Point(ExportImageRadio.Left, ExportImageRadio.Top + 30), 3000);
+        }
+
+        private void MapLayersRadio_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Export the realm as a ZIP file containing a separate image for each map layer", ExportTypeGroup, new Point(ExportImageRadio.Left, ExportImageRadio.Top + 30), 3000);
+        }
+
+        private void HeightmapRadio_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Export a grayscale heightmap of the realm in the selected format", ExportTypeGroup, new Point(ExportImageRadio.Left, ExportImageRadio.Top + 30), 3000);
+        }
+
+        private void HeightMap3DRadio_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Export a Wavefront OBJ 3D model of the realm", ExportTypeGroup, new Point(ExportImageRadio.Left, ExportImageRadio.Top + 30), 3000);
         }
     }
 }

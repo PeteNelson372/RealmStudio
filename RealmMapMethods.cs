@@ -23,11 +23,122 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using System.IO;
+using System.IO.Compression;
 
 namespace RealmStudio
 {
     internal sealed class RealmMapMethods
     {
+        internal static void RenderHeightMapToCanvas(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
+        {
+            renderCanvas.Clear(SKColors.Black);
+            MapRenderMethods.RenderHeightMap(map, renderCanvas, scrollPoint);
+        }
+
+        internal static void ChangeHeightMapAreaHeight(RealmStudioMap? map, SKPoint mapPoint, int brushRadius, float changeAmount)
+        {
+            ArgumentNullException.ThrowIfNull(map);
+
+            MapLayer heightMapLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.HEIGHTMAPLAYER);
+
+            if (heightMapLayer.MapLayerComponents.Count == 2)
+            {
+                MapHeightMap mapHeightMap = (MapHeightMap)heightMapLayer.MapLayerComponents[1];
+
+                float[,]? heightMap = mapHeightMap.HeightMap;
+
+                SKBitmap? heightMapBitmap = mapHeightMap.MapImageBitmap;
+
+                if (heightMapBitmap != null && heightMap != null)
+                {
+                    // get all pixels within the brush area
+                    // for each pixel in the brush area, get its color and then change its value by adding
+                    // changeAmount
+                    List<SKPoint> brushPoints = [];
+
+                    // radius of the circle squared
+                    double radiusSquared = brushRadius * brushRadius;
+
+                    for (int x = (int)mapPoint.X - brushRadius; x < (int)mapPoint.X + brushRadius; x++)
+                    {
+                        for (int y = (int)mapPoint.Y - brushRadius; y < (int)mapPoint.Y + brushRadius; y++)
+                        {
+                            if (x >= 0 && x < heightMapBitmap.Width && y >= 0 && y < heightMapBitmap.Height)
+                            {
+                                // delta x,y from the point at the center of the circle brush
+                                double dx = x - mapPoint.X;
+                                double dy = y - mapPoint.Y;
+
+                                // distance squared of the point from the center of the circle at point
+                                double distanceSquared = dx * dx + dy * dy;
+
+                                // a random value ranging from 0.0 to the radius squared
+                                double pointRandom = Random.Shared.NextDouble() * radiusSquared;
+
+                                // if the point is inside the circle brush and the random value is greater than the
+                                // distance squared, add the point to the list of points to be increased/decreased in grayscale color
+                                // points closer to the center of the brush circle are more likely to be included,
+                                // since distance squared increases as points are further from the center point of the brush
+                                if (distanceSquared <= radiusSquared && pointRandom >= distanceSquared)
+                                {
+                                    brushPoints.Add(new SKPoint(x, y));
+                                }
+                            }
+                        }
+                    }
+
+                    foreach (SKPoint index in brushPoints)
+                    {
+                        SKColor pixelColor = heightMapBitmap.GetPixel((int)index.X, (int)index.Y);
+                        float colorValue;
+
+                        if (pixelColor == SKColors.Black || pixelColor == SKColors.Transparent || pixelColor == SKColors.Empty)
+                        {
+                            colorValue = 35;
+                        }
+                        else
+                        {
+                            colorValue = heightMap[(int)index.X, (int)index.Y];
+                        }
+
+                        colorValue += changeAmount;
+                        heightMap[(int)index.X, (int)index.Y] = colorValue;
+
+                        // color value is the average of the colorValue and the
+                        // eight pixels surrounding the current pixel
+
+                        float accumulatedHeight = 0;
+
+                        for (int i = -1; i < 2; i++)
+                        {
+                            for (int j = -1; j < 2; j++)
+                            {
+                                if (index.X + i >= 0 && index.X + i < heightMapBitmap.Width
+                                    && index.Y + j >= 0 && index.Y + j < heightMapBitmap.Height)
+                                {
+                                    accumulatedHeight += heightMap[(int)(index.X + i), (int)(index.Y + j)];
+                                }
+                            }
+                        }
+
+                        colorValue = accumulatedHeight / 9;
+
+                        colorValue = Math.Min(255.0F, colorValue);
+                        colorValue = Math.Max(35.0F, colorValue);
+
+                        heightMap[(int)index.X, (int)index.Y] = colorValue;
+
+                        int r = (int)Math.Round(colorValue);
+                        int g = (int)Math.Round(colorValue);
+                        int b = (int)Math.Round(colorValue);
+
+                        heightMapBitmap.SetPixel((int)index.X, (int)index.Y, new SKColor((byte)r, (byte)g, (byte)b));
+                    }
+                }
+            }
+        }
+
         internal static RealmStudioMap? CreateDetailMap(RealmStudioMainForm mainForm, RealmStudioMap currentMap, SKRect selectedArea)
         {
             if (selectedArea.IsEmpty)
@@ -976,5 +1087,306 @@ namespace RealmStudio
             return newRealmMap;
         }
 
+        internal static void ExportMapLayersAsZipFile(FileStream fileStream, RealmStudioMap map, RealmMapExportFormat exportFormat)
+        {
+            using var archive = new ZipArchive(fileStream, ZipArchiveMode.Update, true);
+
+            ImageConverter converter = new();
+
+            SKSurface s = SKSurface.Create(new SKImageInfo(map.MapWidth, map.MapHeight));
+            s.Canvas.Clear();
+
+            // background
+            MapRenderMethods.RenderBackgroundForExport(map, s.Canvas);
+            Bitmap bitmap = s.Snapshot().ToBitmap();
+
+            byte[]? bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "background" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // ocean layers
+            MapRenderMethods.RenderOceanForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "ocean" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // wind roses
+            MapRenderMethods.RenderWindrosesForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "windroses" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // lower grid layer (above ocean)
+            MapRenderMethods.RenderLowerGridForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "gridlower" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // landforms
+            MapRenderMethods.RenderLandformsForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "landforms" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // water features
+            MapRenderMethods.RenderWaterFeaturesForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "waterfeatures" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // upper grid layer (above water features)
+            MapRenderMethods.RenderUpperGridForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "gridupper" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // lower path layer
+            MapRenderMethods.RenderLowerMapPathsForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "pathslower" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // symbol layer
+            MapRenderMethods.RenderSymbolsForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "symbols" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // upper path layer
+            MapRenderMethods.RenderUpperMapPathsForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "pathsupper" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // region and region overlay layers
+            MapRenderMethods.RenderRegionsForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "regions" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // default grid layer
+            MapRenderMethods.RenderDefaultGridForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "griddefault" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // box layer
+            MapRenderMethods.RenderBoxesForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "boxes" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // label layer
+            MapRenderMethods.RenderLabelsForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "labels" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // overlay layer (map scale)
+            MapRenderMethods.RenderOverlaysForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "overlay" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // render frame
+            MapRenderMethods.RenderFrameForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "frame" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // measure layer
+            MapRenderMethods.RenderMeasuresForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "measures" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+
+            // TODO: drawing layer
+            //MapRenderMethods.RenderDrawingForExport(CURRENT_MAP, s.Canvas);
+
+            // vignette layer
+            MapRenderMethods.RenderVignetteForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "vignette" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
+        }
     }
 }
