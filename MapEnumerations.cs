@@ -41,6 +41,7 @@ namespace RealmStudio
         RiverEdit,
         ColorSelect,
         LandformSelect,
+        LandformHeightMapSelect,
         RealmAreaSelect,
         WaterFeatureSelect,
         PathSelect,

@@ -118,6 +118,9 @@
             ShowLandLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label4 = new Label();
             HeightMapToolsPanel = new Panel();
+            label96 = new Label();
+            label97 = new Label();
+            Update3DViewSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             ShowHeightMap3DView = new FontAwesome.Sharp.IconButton();
             BrushStrengthUpDown = new NumericUpDown();
             label95 = new Label();
@@ -580,9 +583,7 @@
             LabelBoxStyleTable = new TableLayoutPanel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
-            Update3DViewSwitch = new ReaLTaiizor.Controls.CyberSwitch();
-            label96 = new Label();
-            label97 = new Label();
+            HeightMapLandformSelectButton = new FontAwesome.Sharp.IconButton();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -2117,6 +2118,7 @@
             // HeightMapToolsPanel
             // 
             HeightMapToolsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            HeightMapToolsPanel.Controls.Add(HeightMapLandformSelectButton);
             HeightMapToolsPanel.Controls.Add(label96);
             HeightMapToolsPanel.Controls.Add(label97);
             HeightMapToolsPanel.Controls.Add(Update3DViewSwitch);
@@ -2131,6 +2133,66 @@
             HeightMapToolsPanel.Size = new Size(80, 882);
             HeightMapToolsPanel.TabIndex = 21;
             // 
+            // label96
+            // 
+            label96.AutoSize = true;
+            label96.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label96.ForeColor = SystemColors.ControlDarkDark;
+            label96.Location = new Point(12, 462);
+            label96.Name = "label96";
+            label96.Size = new Size(49, 15);
+            label96.TabIndex = 24;
+            label96.Text = "3D View";
+            // 
+            // label97
+            // 
+            label97.AutoSize = true;
+            label97.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label97.ForeColor = SystemColors.ControlDarkDark;
+            label97.Location = new Point(14, 446);
+            label97.Name = "label97";
+            label97.Size = new Size(45, 15);
+            label97.TabIndex = 23;
+            label97.Text = "Update";
+            // 
+            // Update3DViewSwitch
+            // 
+            Update3DViewSwitch.Alpha = 50;
+            Update3DViewSwitch.BackColor = Color.Transparent;
+            Update3DViewSwitch.Background = true;
+            Update3DViewSwitch.Background_WidthPen = 2F;
+            Update3DViewSwitch.BackgroundPen = false;
+            Update3DViewSwitch.Checked = true;
+            Update3DViewSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            Update3DViewSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            Update3DViewSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            Update3DViewSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            Update3DViewSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            Update3DViewSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            Update3DViewSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            Update3DViewSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            Update3DViewSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            Update3DViewSwitch.ColorValue = Color.ForestGreen;
+            Update3DViewSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            Update3DViewSwitch.Font = new Font("Arial", 11F);
+            Update3DViewSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            Update3DViewSwitch.Lighting = true;
+            Update3DViewSwitch.LinearGradient_Background = false;
+            Update3DViewSwitch.LinearGradient_Value = false;
+            Update3DViewSwitch.LinearGradientPen = false;
+            Update3DViewSwitch.Location = new Point(15, 480);
+            Update3DViewSwitch.Name = "Update3DViewSwitch";
+            Update3DViewSwitch.PenWidth = 10;
+            Update3DViewSwitch.RGB = false;
+            Update3DViewSwitch.Rounding = true;
+            Update3DViewSwitch.RoundingInt = 90;
+            Update3DViewSwitch.Size = new Size(41, 20);
+            Update3DViewSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            Update3DViewSwitch.TabIndex = 22;
+            Update3DViewSwitch.Tag = "Cyber";
+            Update3DViewSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            Update3DViewSwitch.Timer_RGB = 300;
+            // 
             // ShowHeightMap3DView
             // 
             ShowHeightMap3DView.FlatAppearance.BorderColor = SystemColors.Control;
@@ -2142,7 +2204,7 @@
             ShowHeightMap3DView.IconColor = Color.Black;
             ShowHeightMap3DView.IconFont = FontAwesome.Sharp.IconFont.Auto;
             ShowHeightMap3DView.IconSize = 32;
-            ShowHeightMap3DView.Location = new Point(0, 307);
+            ShowHeightMap3DView.Location = new Point(0, 361);
             ShowHeightMap3DView.Name = "ShowHeightMap3DView";
             ShowHeightMap3DView.Size = new Size(76, 60);
             ShowHeightMap3DView.TabIndex = 5;
@@ -2155,7 +2217,7 @@
             // 
             BrushStrengthUpDown.DecimalPlaces = 1;
             BrushStrengthUpDown.Increment = new decimal(new int[] { 5, 0, 0, 65536 });
-            BrushStrengthUpDown.Location = new Point(12, 224);
+            BrushStrengthUpDown.Location = new Point(12, 313);
             BrushStrengthUpDown.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
             BrushStrengthUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             BrushStrengthUpDown.Name = "BrushStrengthUpDown";
@@ -2169,7 +2231,7 @@
             label95.AutoSize = true;
             label95.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label95.ForeColor = SystemColors.ControlDarkDark;
-            label95.Location = new Point(12, 205);
+            label95.Location = new Point(12, 295);
             label95.Name = "label95";
             label95.Size = new Size(52, 15);
             label95.TabIndex = 3;
@@ -2180,7 +2242,7 @@
             label94.AutoSize = true;
             label94.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label94.ForeColor = SystemColors.ControlDarkDark;
-            label94.Location = new Point(19, 190);
+            label94.Location = new Point(19, 280);
             label94.Name = "label94";
             label94.Size = new Size(37, 15);
             label94.TabIndex = 2;
@@ -2197,7 +2259,7 @@
             DecreaseHeightButton.IconColor = Color.Black;
             DecreaseHeightButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             DecreaseHeightButton.IconSize = 24;
-            DecreaseHeightButton.Location = new Point(0, 105);
+            DecreaseHeightButton.Location = new Point(0, 195);
             DecreaseHeightButton.Margin = new Padding(3, 25, 3, 3);
             DecreaseHeightButton.Name = "DecreaseHeightButton";
             DecreaseHeightButton.Rotation = 180D;
@@ -2219,7 +2281,7 @@
             IncreaseHeightButton.IconColor = Color.Black;
             IncreaseHeightButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             IncreaseHeightButton.IconSize = 24;
-            IncreaseHeightButton.Location = new Point(0, 20);
+            IncreaseHeightButton.Location = new Point(0, 110);
             IncreaseHeightButton.Margin = new Padding(3, 3, 3, 25);
             IncreaseHeightButton.Name = "IncreaseHeightButton";
             IncreaseHeightButton.Size = new Size(76, 60);
@@ -8867,65 +8929,24 @@
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
             // 
-            // Update3DViewSwitch
+            // HeightMapLandformSelectButton
             // 
-            Update3DViewSwitch.Alpha = 50;
-            Update3DViewSwitch.BackColor = Color.Transparent;
-            Update3DViewSwitch.Background = true;
-            Update3DViewSwitch.Background_WidthPen = 2F;
-            Update3DViewSwitch.BackgroundPen = false;
-            Update3DViewSwitch.Checked = true;
-            Update3DViewSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            Update3DViewSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            Update3DViewSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            Update3DViewSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            Update3DViewSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            Update3DViewSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            Update3DViewSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            Update3DViewSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            Update3DViewSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            Update3DViewSwitch.ColorValue = Color.ForestGreen;
-            Update3DViewSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            Update3DViewSwitch.Font = new Font("Arial", 11F);
-            Update3DViewSwitch.ForeColor = Color.FromArgb(245, 245, 245);
-            Update3DViewSwitch.Lighting = true;
-            Update3DViewSwitch.LinearGradient_Background = false;
-            Update3DViewSwitch.LinearGradient_Value = false;
-            Update3DViewSwitch.LinearGradientPen = false;
-            Update3DViewSwitch.Location = new Point(15, 431);
-            Update3DViewSwitch.Name = "Update3DViewSwitch";
-            Update3DViewSwitch.PenWidth = 10;
-            Update3DViewSwitch.RGB = false;
-            Update3DViewSwitch.Rounding = true;
-            Update3DViewSwitch.RoundingInt = 90;
-            Update3DViewSwitch.Size = new Size(41, 20);
-            Update3DViewSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            Update3DViewSwitch.TabIndex = 22;
-            Update3DViewSwitch.Tag = "Cyber";
-            Update3DViewSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            Update3DViewSwitch.Timer_RGB = 300;
-            // 
-            // label96
-            // 
-            label96.AutoSize = true;
-            label96.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label96.ForeColor = SystemColors.ControlDarkDark;
-            label96.Location = new Point(12, 413);
-            label96.Name = "label96";
-            label96.Size = new Size(49, 15);
-            label96.TabIndex = 24;
-            label96.Text = "3D View";
-            // 
-            // label97
-            // 
-            label97.AutoSize = true;
-            label97.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label97.ForeColor = SystemColors.ControlDarkDark;
-            label97.Location = new Point(14, 397);
-            label97.Name = "label97";
-            label97.Size = new Size(45, 15);
-            label97.TabIndex = 23;
-            label97.Text = "Update";
+            HeightMapLandformSelectButton.FlatAppearance.BorderSize = 0;
+            HeightMapLandformSelectButton.FlatStyle = FlatStyle.Flat;
+            HeightMapLandformSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            HeightMapLandformSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            HeightMapLandformSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
+            HeightMapLandformSelectButton.IconColor = Color.Black;
+            HeightMapLandformSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            HeightMapLandformSelectButton.IconSize = 24;
+            HeightMapLandformSelectButton.Location = new Point(0, 25);
+            HeightMapLandformSelectButton.Name = "HeightMapLandformSelectButton";
+            HeightMapLandformSelectButton.Size = new Size(76, 60);
+            HeightMapLandformSelectButton.TabIndex = 25;
+            HeightMapLandformSelectButton.Text = "Select";
+            HeightMapLandformSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            HeightMapLandformSelectButton.UseVisualStyleBackColor = true;
+            HeightMapLandformSelectButton.Click += HeightMapLandformSelectButton_Click;
             // 
             // RealmStudioMainForm
             // 
@@ -9714,5 +9735,6 @@
         private Label label96;
         private Label label97;
         private ReaLTaiizor.Controls.CyberSwitch Update3DViewSwitch;
+        private FontAwesome.Sharp.IconButton HeightMapLandformSelectButton;
     }
 }

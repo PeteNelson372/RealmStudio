@@ -31,7 +31,7 @@ namespace RealmStudio
         {
             Style = SKPaintStyle.Stroke,
             IsAntialias = true,
-            Color = SKColors.Firebrick,
+            Color = SKColors.Blue,
             StrokeWidth = 2,
             PathEffect = SKPathEffect.CreateDash([5F, 5F], 10F),
         };
@@ -54,7 +54,7 @@ namespace RealmStudio
         {
             Style = SKPaintStyle.Stroke,
             IsAntialias = true,
-            Color = SKColors.SteelBlue,
+            Color = SKColors.Green,
             StrokeWidth = 3,
             PathEffect = SKPathEffect.CreateDash([4F, 4F], 8F),
         };

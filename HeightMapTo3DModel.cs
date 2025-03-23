@@ -21,13 +21,6 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-
-/*
- * This class was based on https://github.com/shanto462/HeightMapTo3dTerrain/tree/main/HeightMapTo3dTerrain
- * 
- * Look at: https://github.com/Bonmas-Technologies/HeightMapObjCreator/tree/master/HeightMapObjCreator
- */
-
 using SkiaSharp;
 using System.Globalization;
 using System.IO;

@@ -30,10 +30,10 @@ namespace RealmStudio
 {
     internal sealed class RealmMapMethods
     {
-        internal static void RenderHeightMapToCanvas(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
+        internal static void RenderHeightMapToCanvas(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint, SKRect? selectedArea)
         {
             renderCanvas.Clear(SKColors.Black);
-            MapRenderMethods.RenderHeightMap(map, renderCanvas, scrollPoint);
+            MapRenderMethods.RenderHeightMap(map, renderCanvas, scrollPoint, selectedArea);
         }
 
         internal static void ChangeHeightMapAreaHeight(RealmStudioMap? map, SKPoint mapPoint, int brushRadius, float changeAmount)
@@ -55,7 +55,6 @@ namespace RealmStudio
                     // get all pixels within the brush area
                     // for each pixel in the brush area, get its color and then change its value by adding
                     // changeAmount
-                    List<SKPoint> brushPoints = [];
 
                     // radius of the circle squared
                     double radiusSquared = brushRadius * brushRadius;
@@ -82,61 +81,59 @@ namespace RealmStudio
                                 // since distance squared increases as points are further from the center point of the brush
                                 if (distanceSquared <= radiusSquared && pointRandom >= distanceSquared)
                                 {
-                                    brushPoints.Add(new SKPoint(x, y));
+                                    SetHeightmapPixelHeight(x, y, heightMapBitmap, heightMap, changeAmount);
                                 }
                             }
                         }
-                    }
-
-                    foreach (SKPoint index in brushPoints)
-                    {
-                        SKColor pixelColor = heightMapBitmap.GetPixel((int)index.X, (int)index.Y);
-                        float colorValue;
-
-                        if (pixelColor == SKColors.Black || pixelColor == SKColors.Transparent || pixelColor == SKColors.Empty)
-                        {
-                            colorValue = 35;
-                        }
-                        else
-                        {
-                            colorValue = heightMap[(int)index.X, (int)index.Y];
-                        }
-
-                        colorValue += changeAmount;
-                        heightMap[(int)index.X, (int)index.Y] = colorValue;
-
-                        // color value is the average of the colorValue and the
-                        // eight pixels surrounding the current pixel
-
-                        float accumulatedHeight = 0;
-
-                        for (int i = -1; i < 2; i++)
-                        {
-                            for (int j = -1; j < 2; j++)
-                            {
-                                if (index.X + i >= 0 && index.X + i < heightMapBitmap.Width
-                                    && index.Y + j >= 0 && index.Y + j < heightMapBitmap.Height)
-                                {
-                                    accumulatedHeight += heightMap[(int)(index.X + i), (int)(index.Y + j)];
-                                }
-                            }
-                        }
-
-                        colorValue = accumulatedHeight / 9;
-
-                        colorValue = Math.Min(255.0F, colorValue);
-                        colorValue = Math.Max(35.0F, colorValue);
-
-                        heightMap[(int)index.X, (int)index.Y] = colorValue;
-
-                        int r = (int)Math.Round(colorValue);
-                        int g = (int)Math.Round(colorValue);
-                        int b = (int)Math.Round(colorValue);
-
-                        heightMapBitmap.SetPixel((int)index.X, (int)index.Y, new SKColor((byte)r, (byte)g, (byte)b));
                     }
                 }
             }
+        }
+
+        internal static void SetHeightmapPixelHeight(int x, int y, SKBitmap heightMapBitmap, float[,] heightMap, float changeAmount)
+        {
+            SKColor pixelColor = heightMapBitmap.GetPixel(x, y);
+            float colorValue;
+
+            if (pixelColor == SKColors.Black || pixelColor == SKColors.Transparent || pixelColor == SKColors.Empty)
+            {
+                colorValue = 35;
+            }
+            else
+            {
+                colorValue = heightMap[x, y];
+            }
+
+            colorValue += changeAmount;
+            heightMap[x, y] = colorValue;
+
+            // color value is the average of the colorValue and the
+            // eight pixels surrounding the current pixel
+
+            float accumulatedHeight = 0;
+
+            for (int i = -1; i < 2; i++)
+            {
+                for (int j = -1; j < 2; j++)
+                {
+                    if (x + i >= 0 && x + i < heightMapBitmap.Width
+                        && y + j >= 0 && y + j < heightMapBitmap.Height)
+                    {
+                        accumulatedHeight += heightMap[x + i, y + j];
+                    }
+                }
+            }
+
+            colorValue = accumulatedHeight / 9;
+
+            colorValue = Math.Min(255.0F, colorValue);
+            colorValue = Math.Max(35.0F, colorValue);
+            heightMap[x, y] = colorValue;
+
+            int r = (int)Math.Round(colorValue);
+            int g = (int)Math.Round(colorValue);
+            int b = (int)Math.Round(colorValue);
+            heightMapBitmap.SetPixel(x, y, new SKColor((byte)r, (byte)g, (byte)b));
         }
 
         internal static RealmStudioMap? CreateDetailMap(RealmStudioMainForm mainForm, RealmStudioMap currentMap, SKRect selectedArea)

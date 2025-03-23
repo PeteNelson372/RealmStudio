@@ -866,6 +866,16 @@ namespace RealmStudio
 
             canvas.DrawPath(ContourPath, LandformHeightMapOutlinePaint);
 
+            if (IsSelected)
+            {
+                // draw an outline around the landform to show that it is selected
+                ContourPath.GetBounds(out SKRect boundRect);
+                using SKPath boundsPath = new();
+                boundsPath.AddRect(boundRect);
+
+                canvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
+            }
+
             IsModified = true;
         }
 

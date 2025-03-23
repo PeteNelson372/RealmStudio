@@ -344,7 +344,7 @@ namespace RealmStudio
             renderCanvas.DrawBitmap(b2, new SKPoint(0, 0));
         }
 
-        internal static void RenderHeightMap(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
+        internal static void RenderHeightMap(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint, SKRect? selectedArea)
         {
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
             MapLayer heightMapLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.HEIGHTMAPLAYER);
@@ -377,6 +377,13 @@ namespace RealmStudio
 
             heightMapLayer.Render(heightMapLayer.LayerSurface.Canvas);
             renderCanvas.DrawSurface(heightMapLayer.LayerSurface, scrollPoint);
+
+            if (selectedArea != null)
+            {
+                MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
+                workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                workLayer.LayerSurface?.Canvas.DrawRect((SKRect)selectedArea, PaintObjects.LandformAreaSelectPaint);
+            }
         }
 
         internal static void RenderLowerMapPaths(RealmStudioMap map, MapPath? currentPath, SKCanvas renderCanvas, SKPoint scrollPoint)

@@ -35,7 +35,9 @@ namespace RealmStudio
     public partial class ThreeDView : Form
     {
         private readonly ThreeDViewerControl ThreeDViewer;
-        private string? OBJModelString;
+        private readonly List<string>? ModelUpdateQueue;
+
+        private string? LoadedModelString;
 
         private readonly ModelVisual3D GridlinesModel = new();
         private readonly GridLinesVisual3D GridLines = new()
@@ -57,6 +59,32 @@ namespace RealmStudio
 
             // construct the WPF ThreeDViewerControl UserControl
             ThreeDViewer = new();
+        }
+
+        public ThreeDView(string formTitle, List<string> modelUpdateQueue)
+        {
+            InitializeComponent();
+            ThreeDViewOverlay.Text = formTitle;
+            ModelUpdateQueue = modelUpdateQueue;
+
+            LoadModelButton.Enabled = false;
+
+            // construct the WPF ThreeDViewerControl UserControl
+            ThreeDViewer = new();
+        }
+
+        public void UpdateView()
+        {
+            if (ModelUpdateQueue != null && ModelUpdateQueue.Count > 0)
+            {
+                string? objModelString = ModelUpdateQueue.Last();
+
+                if (!string.IsNullOrEmpty(objModelString))
+                {
+                    LoadModelFromQueue(objModelString);
+                    ModelUpdateQueue.Clear();
+                }
+            }
         }
 
         private void ThreeDView_Load(object sender, EventArgs e)
@@ -93,28 +121,36 @@ namespace RealmStudio
             ThreeDViewer.HelixTKViewport.ZoomSensitivity = 1.0;
 
             ThreeDViewer.HelixTKViewport.InfiniteSpin = true;
-
-            if (!string.IsNullOrEmpty(OBJModelString))
-            {
-                LoadModelFromString(OBJModelString);
-            }
         }
 
-        internal void LoadModelFromString(string objModelString)
+        private void LoadModelFromQueue(string objModelString)
         {
             try
             {
                 if (!string.IsNullOrEmpty(objModelString))
                 {
-                    Cursor.Current = Cursors.WaitCursor;
-                    OBJModelString = objModelString;
-                    Model3DGroup? modelGroup = null;
+                    LoadedModelString = objModelString;
 
                     ObjReader objReader = new();
 
-                    using MemoryStream ms = new(Encoding.ASCII.GetBytes(OBJModelString));
-                    modelGroup = objReader.Read(ms);
+                    using MemoryStream ms = new(Encoding.ASCII.GetBytes(objModelString));
+                    Model3DGroup modelGroup = objReader.Read(ms);
 
+                    int vertexCount = 0;
+                    int faceCount = 0;
+
+                    for (int i = 0; i < modelGroup.Children.Count; i++)
+                    {
+                        if (modelGroup.Children[i] is GeometryModel3D gm3d)
+                        {
+                            MeshGeometry3D mg3d = (MeshGeometry3D)gm3d.Geometry;
+                            vertexCount = mg3d.Positions.Count;
+                            faceCount = mg3d.TriangleIndices.Count / 3;
+                            break;
+                        }
+                    }
+
+                    ModelStatisticsLabel.Text = "Loaded " + vertexCount + " vertices; " + faceCount + " faces.";
                     LoadModelGroupIntoViewer(modelGroup);
                 }
             }
@@ -127,21 +163,20 @@ namespace RealmStudio
             {
                 Cursor.Current = Cursors.Default;
             }
-
         }
 
         private void ThreeDView_FormClosing(object sender, FormClosingEventArgs e)
         {
+            ModelUpdateQueue?.Clear();
 
-        }
-
-        private void CloseFormButton_Click(object sender, EventArgs e)
-        {
             if (ParentForm != null && ((RealmStudioMainForm)ParentForm).CurrentHeightMapView == this)
             {
                 ((RealmStudioMainForm)ParentForm).CurrentHeightMapView = null;
             }
+        }
 
+        private void CloseFormButton_Click(object sender, EventArgs e)
+        {
             Close();
         }
 
@@ -165,9 +200,9 @@ namespace RealmStudio
                     if (ofd.FileName != "")
                     {
                         Cursor.Current = Cursors.WaitCursor;
-                        OBJModelString = string.Empty;
-
                         Model3DGroup? modelGroup = null;
+
+                        LoadedModelString = File.ReadAllText(ofd.FileName);
 
                         try
                         {
@@ -205,7 +240,26 @@ namespace RealmStudio
                             throw;
                         }
 
-                        LoadModelGroupIntoViewer(modelGroup);
+                        if (modelGroup != null)
+                        {
+                            LoadModelGroupIntoViewer(modelGroup);
+
+                            int vertexCount = 0;
+                            int faceCount = 0;
+
+                            for (int i = 0; i < modelGroup.Children.Count; i++)
+                            {
+                                if (modelGroup.Children[i] is GeometryModel3D gm3d)
+                                {
+                                    MeshGeometry3D mg3d = (MeshGeometry3D)gm3d.Geometry;
+                                    vertexCount = mg3d.Positions.Count;
+                                    faceCount = mg3d.TriangleIndices.Count / 3;
+                                    break;
+                                }
+                            }
+
+                            ModelStatisticsLabel.Text = "Loaded " + vertexCount + " vertices; " + faceCount + " faces.";
+                        }
                     }
                 }
             }
@@ -221,11 +275,16 @@ namespace RealmStudio
 
         }
 
+        private void SaveModelButton_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(LoadedModelString))
+            {
+                HeightMapTo3DModel.WriteObjModelToFile([.. LoadedModelString.Split(Environment.NewLine)]);
+            }
+        }
+
         private void LoadModelGroupIntoViewer(Model3DGroup modelGroup)
         {
-            int vertexCount = 0;
-            int faceCount = 0;
-
             // create a directional light matching the default one in the ThreeDViewerControl
             DirectionalLight light = new()
             {
@@ -247,19 +306,6 @@ namespace RealmStudio
 
             if (modelGroup != null)
             {
-                for (int i = 0; i < modelGroup.Children.Count; i++)
-                {
-                    if (modelGroup.Children[i] is GeometryModel3D gm3d)
-                    {
-                        MeshGeometry3D mg3d = (MeshGeometry3D)gm3d.Geometry;
-                        vertexCount = mg3d.Positions.Count;
-                        faceCount = mg3d.TriangleIndices.Count / 3;
-                        break;
-                    }
-                }
-
-                ModelStatisticsLabel.Text = "Loaded " + vertexCount + " vertices; " + faceCount + " faces.";
-
                 modelGroup.SetName("DisplayedModel");
                 modelGroup.Children.Add(materialModel);
 

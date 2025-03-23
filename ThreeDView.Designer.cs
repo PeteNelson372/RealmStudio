@@ -83,11 +83,11 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label1.ForeColor = SystemColors.ControlDarkDark;
-            label1.Location = new Point(286, 710);
+            label1.Location = new Point(252, 712);
             label1.Name = "label1";
-            label1.Size = new Size(827, 13);
+            label1.Size = new Size(825, 13);
             label1.TabIndex = 59;
-            label1.Text = "Click+drag left mouse button to move. Click+drag right mouse button to rotate. Turn Mouse Wheel to zoom. CLick Change Axis button to change rotation axis.";
+            label1.Text = "Click+drag left mouse button to move. Click+drag right mouse button to rotate. Turn Mouse Wheel to zoom. Click Change Axis button to change rotation axis.";
             // 
             // ModelStatisticsLabel
             // 
@@ -190,6 +190,7 @@
             SaveModelButton.TabIndex = 55;
             SaveModelButton.Text = "Save";
             SaveModelButton.UseVisualStyleBackColor = true;
+            SaveModelButton.Click += SaveModelButton_Click;
             // 
             // LoadModelButton
             // 
