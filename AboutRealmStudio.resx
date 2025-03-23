@@ -129,11 +129,17 @@ Cyotek (https://www.cyotek.com/)
 Delaunator (https://github.com/nol1fe/delaunator-sharp)
 FontAwesome.Sharp (https://awesome-inc.github.io/FontAwesome.Sharp/)
 FontAwesome (https://fontawesome.com/)
+Helix Toolkit (https://github.com/helix-toolkit/helix-toolkit)
 log4net by the Apache Software Foundation (https://logging.apache.org/log4net/)
+RealTaiizor (https://github.com/Taiizor/ReaLTaiizor)
+SimplexNoise (https://github.com/WardBenjamin/SimplexNoise)
+SVG.Skia (https://github.com/wieslawsoltes/Svg.Skia)
+
+Several other libraries are included as transitive packages (packages that are used by the libraries that use directly). See the project pages for the libraries for their acknowledgements.
 
 Embedded fonts (those not installed on your computer) are redistributed and licensed under the SIL Open Font License. See https://openfontlicense.org/open-font-license-official-text/ 
 
-Realm Studio uses image assets from Freepik (freepik.com) and FreeImages (freeimages.com) credited to artists:
+Realm Studio uses image assets from SVG Repo (https://www.svgrepo.com/vectors/map-marker/), Freepik (freepik.com) and FreeImages (freeimages.com). Credit is given to artists:
 efe_madrid, kjpargeter, Layerace, rawpixel (rawpixel.com), and jvror.
 
 Realm Studio also uses Wonderdraft assets imported from CartographyAssets (cartographyassets.com). See the Help file for information on importing assets into Realm Studio.</value>

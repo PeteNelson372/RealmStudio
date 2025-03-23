@@ -9,9 +9,9 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.82.3433</AssemblyVersion>
-    <FileVersion>1.2025.82.3433</FileVersion>
-    <Version>1.2025.0-alpha-704</Version>
+    <AssemblyVersion>1.2025.82.4124</AssemblyVersion>
+    <FileVersion>1.2025.82.4124</FileVersion>
+    <Version>1.2025.0-alpha-707</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
@@ -93,7 +93,6 @@
     <PackageReference Include="Delaunator" Version="1.0.11" />
     <PackageReference Include="FontAwesome" Version="4.7.0" />
     <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
-    <PackageReference Include="geometry4Sharp" Version="1.0.0" />
     <PackageReference Include="HelixToolkit" Version="2.26.0" />
     <PackageReference Include="HelixToolkit.Wpf" Version="2.26.0" />
     <PackageReference Include="HelixToolkit.Wpf.Input" Version="2.26.0" />
