@@ -229,7 +229,7 @@ namespace RealmStudio
 
                 if (i == 0)
                 {
-                    float lineAngle = DrawingMethods.CalculateLineAngle(points[i].MapPoint, points[i + 1].MapPoint);
+                    float lineAngle = DrawingMethods.CalculateAngleBetweenPoints(points[i].MapPoint, points[i + 1].MapPoint);
                     float circleRadius = (float)Math.Sqrt(distance * distance + distance * distance);
                     newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle + offsetAngle, points[i].MapPoint);
                     parallelPoints.Add(new MapPathPoint(newPoint));
@@ -256,8 +256,8 @@ namespace RealmStudio
                 }
                 else
                 {
-                    float lineAngle1 = DrawingMethods.CalculateLineAngle(points[i - 1].MapPoint, points[i].MapPoint);
-                    float lineAngle2 = DrawingMethods.CalculateLineAngle(points[i].MapPoint, points[i + 1].MapPoint);
+                    float lineAngle1 = DrawingMethods.CalculateAngleBetweenPoints(points[i - 1].MapPoint, points[i].MapPoint);
+                    float lineAngle2 = DrawingMethods.CalculateAngleBetweenPoints(points[i].MapPoint, points[i + 1].MapPoint);
 
                     float angleDifference = (float)((lineAngle2 - lineAngle1 >= 0) ? Math.Round(lineAngle2 - lineAngle1) : Math.Round((lineAngle2 - lineAngle1) + 360.0F));
                     float circleRadius = (float)Math.Sqrt(distance * distance + distance * distance);
@@ -676,6 +676,217 @@ namespace RealmStudio
             }
 
             return null;
+        }
+
+        public static void FinalizeMapPaths(RealmStudioMap map)
+        {
+            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
+            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER);
+
+            for (int i = 0; i < pathLowerLayer.MapLayerComponents.Count; i++)
+            {
+                if (pathLowerLayer.MapLayerComponents[i] is MapPath mapPath)
+                {
+                    mapPath.ParentMap = map;
+                    ConstructPathPaint(mapPath);
+
+                    if (mapPath.PathPoints.Count > 1)
+                    {
+                        SKPath path = GenerateMapPathBoundaryPath(mapPath.PathPoints);
+
+                        if (path.PointCount > 0)
+                        {
+                            mapPath.BoundaryPath?.Dispose();
+                            mapPath.BoundaryPath = new(path);
+                            path.Dispose();
+                        }
+                        else
+                        {
+                            pathLowerLayer.MapLayerComponents.Remove(mapPath);
+                        }
+                    }
+                    else
+                    {
+                        pathLowerLayer.MapLayerComponents.Remove(mapPath);
+                    }
+                }
+            }
+
+            for (int i = 0; i < pathUpperLayer.MapLayerComponents.Count; i++)
+            {
+                if (pathUpperLayer.MapLayerComponents[i] is MapPath mapPath)
+                {
+                    mapPath.ParentMap = map;
+                    ConstructPathPaint(mapPath);
+
+                    if (mapPath.PathPoints.Count > 1)
+                    {
+                        SKPath path = GenerateMapPathBoundaryPath(mapPath.PathPoints);
+
+                        if (path.PointCount > 0)
+                        {
+                            mapPath.BoundaryPath?.Dispose();
+                            mapPath.BoundaryPath = new(path);
+                            path.Dispose();
+                        }
+                        else
+                        {
+                            pathUpperLayer.MapLayerComponents.Remove(mapPath);
+                        }
+                    }
+                    else
+                    {
+                        pathUpperLayer.MapLayerComponents.Remove(mapPath);
+                    }
+                }
+            }
+        }
+
+        internal static MapPath? CreatePath(RealmStudioMap map, SKPoint zoomedScrolledPoint, PathType pathType, Color pathColor,
+            int pathWidth, bool drawOverSymbols, MapTexture mapTexture)
+        {
+
+            // initialize map path
+            MapPath? newPath = new()
+            {
+                ParentMap = map,
+                PathType = pathType,
+                PathColor = pathColor,
+                PathWidth = pathWidth,
+                DrawOverSymbols = drawOverSymbols,
+            };
+
+            if (mapTexture.TextureBitmap == null)
+            {
+                mapTexture.TextureBitmap = (Bitmap?)Bitmap.FromFile(mapTexture.TexturePath);
+            }
+
+            newPath.PathTexture = mapTexture;
+
+            ConstructPathPaint(newPath);
+            newPath.PathPoints.Add(new MapPathPoint(zoomedScrolledPoint));
+
+            return newPath;
+        }
+
+        internal static void MovePath(MapPath selectedPath, SKPoint zoomedScrolledPoint, SKPoint previousCursorPoint)
+        {
+            selectedPath.BoundaryPath = GenerateMapPathBoundaryPath(selectedPath.PathPoints);
+            selectedPath.BoundaryPath.GetTightBounds(out SKRect boundsRect);
+
+            // move the entire selected path with the mouse
+            SizeF delta = new()
+            {
+                Width = zoomedScrolledPoint.X - previousCursorPoint.X,
+                Height = zoomedScrolledPoint.Y - previousCursorPoint.Y,
+            };
+
+            foreach (MapPathPoint point in selectedPath.PathPoints)
+            {
+                SKPoint p = point.MapPoint;
+                p.X = p.X + delta.Width - (int)(boundsRect.MidX - previousCursorPoint.X);
+                p.Y = p.Y + delta.Height - (int)(boundsRect.MidY - previousCursorPoint.Y);
+                point.MapPoint = p;
+            }
+
+            selectedPath.BoundaryPath = GenerateMapPathBoundaryPath(selectedPath.PathPoints);
+        }
+
+        internal static float Get5DegreePathAngle(SKPoint mapPoint, SKPoint zoomedScrolledPoint)
+        {
+            float lineAngle = DrawingMethods.CalculateAngleBetweenPoints(mapPoint, zoomedScrolledPoint, true);
+
+            lineAngle = (float)(Math.Round(lineAngle / 5, MidpointRounding.AwayFromZero) * 5);
+
+            return lineAngle;
+        }
+
+        internal static SKPoint ForceHorizontalVerticalLine(SKPoint pathPoint, SKPoint firstPoint, float pathAngle)
+        {
+            // clamp the line to straight horizontal or straight vertical
+            // by forcing the new point X or Y coordinate to be the
+            // same as the first point of the path
+            if (pathAngle >= 0 && pathAngle < 45)
+            {
+                pathPoint.Y = firstPoint.Y;
+            }
+            else if (pathAngle >= 45 && pathAngle < 135)
+            {
+                pathPoint.X = firstPoint.X;
+            }
+            else if (pathAngle >= 135 && pathAngle < 225)
+            {
+                pathPoint.Y = firstPoint.Y;
+            }
+            else if (pathAngle >= 225 && pathAngle < 315)
+            {
+                pathPoint.X = firstPoint.X;
+            }
+            else if (pathAngle >= 315 && pathAngle < 360)
+            {
+                pathPoint.Y = firstPoint.Y;
+            }
+
+            return pathPoint;
+        }
+
+        internal static void AddNewPathPoint(MapPath? mapPath, SKPoint newPathPoint)
+        {
+            // make the spacing between points consistent
+            float spacing = 4.0F;
+
+            if (mapPath != null)
+            {
+                if (mapPath.PathType == PathType.RailroadTracksPath)
+                {
+                    // railroad track points are further apart to make them look better
+                    spacing = 2.0F;
+                }
+
+                if (SKPoint.Distance(mapPath.PathPoints.Last().MapPoint, newPathPoint) >= mapPath.PathWidth / spacing)
+                {
+                    mapPath.PathPoints.Add(new MapPathPoint(newPathPoint));
+                }
+            }
+        }
+
+        internal static SKPoint GetNewPathPoint(MapPath? mapPath, Keys modifierKeys, float selectedPathAngle, SKPoint zoomedScrolledPoint, int minimumPathPointCount)
+        {
+            SKPoint newPathPoint = zoomedScrolledPoint;
+            MapPathPoint? firstPoint = mapPath?.PathPoints.First();
+
+            if (modifierKeys == Keys.Shift && mapPath?.PathPoints.Count > minimumPathPointCount)
+            {
+                // draw straight path, clamped to 5 degree angles
+                if (firstPoint != null)
+                {
+                    if (selectedPathAngle == -1)
+                    {
+                        selectedPathAngle = Get5DegreePathAngle(firstPoint.MapPoint, zoomedScrolledPoint);
+                    }
+
+                    float distance = SKPoint.Distance(firstPoint.MapPoint, zoomedScrolledPoint);
+                    newPathPoint = DrawingMethods.PointOnCircle(distance, selectedPathAngle, firstPoint.MapPoint);
+                }
+            }
+            else if (modifierKeys == Keys.Control)
+            {
+                // draw straight horizontal or vertical path
+                if (firstPoint != null)
+                {
+                    if (selectedPathAngle == -1)
+                    {
+                        selectedPathAngle = DrawingMethods.CalculateAngleBetweenPoints(firstPoint.MapPoint, zoomedScrolledPoint, true); ;
+                    }
+
+                    // clamp the line to straight horizontal or straight vertical
+                    // by forcing the new point X or Y coordinate to be the
+                    // same as the first point of the path
+                    newPathPoint = ForceHorizontalVerticalLine(newPathPoint, firstPoint.MapPoint, selectedPathAngle);
+                }
+            }
+
+            return newPathPoint;
         }
     }
 }

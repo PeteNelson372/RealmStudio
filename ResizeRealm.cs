@@ -102,6 +102,7 @@ namespace RealmStudio
                     true,
                     true,
                     true,
+                    true,
                     true);
             }
         }

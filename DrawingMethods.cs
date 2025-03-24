@@ -192,12 +192,19 @@ namespace RealmStudio
             return lineContains;
         }
 
-        public static float CalculateLineAngle(SKPoint start, SKPoint end)
+        public static float CalculateAngleBetweenPoints(SKPoint start, SKPoint end, bool clampedTo360 = false)
         {
             float xDiff = end.X - start.X;
             float yDiff = end.Y - start.Y;
 
-            return (float)((float)Math.Atan2(yDiff, xDiff) * D180_OVER_PI);
+            float lineAngle = (float)((float)Math.Atan2(yDiff, xDiff) * D180_OVER_PI);
+
+            if (clampedTo360)
+            {
+                lineAngle = (lineAngle < 0) ? lineAngle + 360 : lineAngle;
+            }
+
+            return lineAngle;
         }
 
         internal static float CalculatePolygonArea(List<SKPoint> polygonPoints)

@@ -287,7 +287,7 @@ namespace RealmStudio
 
                 if (i == 0)
                 {
-                    float lineAngle = DrawingMethods.CalculateLineAngle(points[i].RiverPoint, points[i + 1].RiverPoint);
+                    float lineAngle = DrawingMethods.CalculateAngleBetweenPoints(points[i].RiverPoint, points[i + 1].RiverPoint, true);
                     newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle + offsetAngle, points[i].RiverPoint);
                     parallelPoints.Add(new MapRiverPoint(newPoint));
 
@@ -313,8 +313,8 @@ namespace RealmStudio
                 }
                 else
                 {
-                    float lineAngle1 = DrawingMethods.CalculateLineAngle(points[i - 1].RiverPoint, points[i].RiverPoint);
-                    float lineAngle2 = DrawingMethods.CalculateLineAngle(points[i].RiverPoint, points[i + 1].RiverPoint);
+                    float lineAngle1 = DrawingMethods.CalculateAngleBetweenPoints(points[i - 1].RiverPoint, points[i].RiverPoint, true);
+                    float lineAngle2 = DrawingMethods.CalculateAngleBetweenPoints(points[i].RiverPoint, points[i + 1].RiverPoint, true);
 
                     float angleDifference = (float)((lineAngle2 - lineAngle1 >= 0) ? Math.Round(lineAngle2 - lineAngle1) : Math.Round((lineAngle2 - lineAngle1) + 360.0F));
                     if (angleDifference == 0.0F)
@@ -370,7 +370,7 @@ namespace RealmStudio
                             minYPoint = newPoint;
                         }
                     }
-                    else if (angleDifference == 180.0F) //====================================
+                    else if (angleDifference == 180.0F)
                     {
                         newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle1 + offsetAngle, points[i + 1].RiverPoint);
                         parallelPoints.Add(new MapRiverPoint(newPoint));
@@ -982,6 +982,122 @@ namespace RealmStudio
                 ConstructRiverPaths(selectedRiver);
                 ConstructRiverPaintObjects(selectedRiver);
             }
+        }
+
+        internal static void FinalizeWaterFeatures(RealmStudioMap map)
+        {
+            // finalize loading of water features and rivers
+            MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER);
+
+            for (int i = 0; i < waterLayer.MapLayerComponents.Count; i++)
+            {
+                if (waterLayer.MapLayerComponents[i] is WaterFeature waterFeature)
+                {
+                    waterFeature.ParentMap = map;
+                    CreateInnerAndOuterPaths(map, waterFeature);
+                    ConstructWaterFeaturePaintObjects(waterFeature);
+                }
+                else if (waterLayer.MapLayerComponents[i] is River river)
+                {
+                    river.ParentMap = map;
+                    ConstructRiverPaths(river);
+                    ConstructRiverPaintObjects(river);
+                }
+            }
+
+            // finalize loading of water drawing layer
+            MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERDRAWINGLAYER);
+
+            for (int i = 0; i < waterDrawingLayer.MapLayerComponents.Count; i++)
+            {
+                if (waterDrawingLayer.MapLayerComponents[i] is LayerPaintStroke paintStroke)
+                {
+                    paintStroke.ParentMap = map;
+
+                    if (!paintStroke.Erase)
+                    {
+                        paintStroke.ShaderPaint = PaintObjects.WaterColorPaint;
+                    }
+                    else
+                    {
+                        paintStroke.ShaderPaint = PaintObjects.WaterColorEraserPaint;
+                    }
+                }
+            }
+        }
+
+        internal static void FinalizeWindroses(RealmStudioMap map)
+        {
+            // finalize loading of wind roses
+            MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WINDROSELAYER);
+            for (int i = 0; i < windroseLayer.MapLayerComponents.Count; i++)
+            {
+                if (windroseLayer.MapLayerComponents[i] is MapWindrose windrose)
+                {
+                    windrose.ParentMap = map;
+
+                    windrose.WindrosePaint = new()
+                    {
+                        Style = SKPaintStyle.Stroke,
+                        StrokeWidth = windrose.LineWidth,
+                        Color = windrose.WindroseColor.ToSKColor(),
+                        IsAntialias = true,
+                    };
+                }
+            }
+        }
+
+        internal static WaterFeature? CreateLake(RealmStudioMap map, SKPoint zoomedScrolledPoint, int brushSize, Color waterFeatureColor, Color shorelineColor)
+        {
+            WaterFeature? newLake = new()
+            {
+                ParentMap = map,
+                X = (int)zoomedScrolledPoint.X,
+                Y = (int)zoomedScrolledPoint.Y,
+                Width = brushSize,
+                Height = brushSize,
+                WaterFeatureType = WaterFeatureType.Lake,
+                WaterFeatureColor = waterFeatureColor,
+                WaterFeatureShorelineColor = shorelineColor,
+            };
+
+            SKPath? lakePath = GenerateRandomLakePath(zoomedScrolledPoint, brushSize);
+
+            if (lakePath != null)
+            {
+                newLake.WaterFeaturePath = lakePath;
+                CreateInnerAndOuterPaths(map, newLake);
+                ConstructWaterFeaturePaintObjects(newLake);
+                MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER).MapLayerComponents.Add(newLake);
+
+                MergeWaterFeatures(map);
+            }
+            else
+            {
+                newLake = null;
+            }
+
+            return newLake;
+        }
+
+        internal static River? CreateRiver(RealmStudioMap map, SKPoint zoomedScrolledPoint, Color riverColor, Color shorelineColor,
+            int riverWidth, bool sourceFadeIn, bool useTexture)
+        {
+            // initialize river
+            River? newRiver = new()
+            {
+                ParentMap = map,
+                RiverColor = riverColor,
+                RiverShorelineColor = shorelineColor,
+                RiverWidth = riverWidth,
+                RiverSourceFadeIn = sourceFadeIn,
+                RenderRiverTexture = useTexture,
+            };
+
+            ConstructRiverPaintObjects(newRiver);
+            newRiver.RiverPoints.Add(new MapRiverPoint(zoomedScrolledPoint));
+
+            return newRiver;
         }
     }
 }

@@ -512,5 +512,53 @@ namespace RealmStudio
                 return null;
             }
         }
+
+        internal static void FinalizeMapSymbols(RealmStudioMap map)
+        {
+            // finalize loading of symbols
+            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER);
+
+            for (int i = 0; i < symbolLayer.MapLayerComponents.Count; i++)
+            {
+                if (symbolLayer.MapLayerComponents[i] is MapSymbol symbol)
+                {
+                    SKColor? paintColor = symbol.CustomSymbolColors[0];
+
+                    // reconstruct paint object for grayscale symbols
+                    if (symbol.IsGrayscale && paintColor != null)
+                    {
+                        SKPaint paint = new()
+                        {
+                            ColorFilter = SKColorFilter.CreateBlendMode((SKColor)paintColor,
+                                SKBlendMode.Modulate) // combine the selected color with the bitmap colors
+                        };
+
+                        symbol.SymbolPaint = paint;
+
+                        if (symbol.PlacedBitmap != null)
+                        {
+                            if (symbol.Width != symbol.PlacedBitmap.Width || symbol.Height != symbol.PlacedBitmap.Height)
+                            {
+                                // resize the placed bitmap to match the size set in the symbol - this shouldn't be necessary
+                                SKBitmap resizedPlacedBitmap = new(symbol.Width, symbol.Height);
+
+                                symbol.PlacedBitmap.ScalePixels(resizedPlacedBitmap, SKSamplingOptions.Default);
+                                symbol.SetPlacedBitmap(resizedPlacedBitmap);
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        internal static void MoveSymbol(MapSymbol? mapSymbol, SKPoint zoomedScrolledPoint)
+        {
+            if (mapSymbol != null && mapSymbol.IsSelected)
+            {
+                mapSymbol.X = (int)zoomedScrolledPoint.X - mapSymbol.Width / 2;
+                mapSymbol.Y = (int)zoomedScrolledPoint.Y - mapSymbol.Height / 2;
+            }
+        }
     }
 }

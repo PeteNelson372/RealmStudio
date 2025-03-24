@@ -143,7 +143,8 @@ namespace RealmStudio
                     IncludePathsCheck.Checked,
                     false,
                     false,
-                    false);
+                    false,
+                    true);
             }
         }
     }

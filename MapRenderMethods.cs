@@ -27,6 +27,68 @@ namespace RealmStudio
 {
     internal sealed class MapRenderMethods
     {
+        public static void RenderMapToCanvas(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint,
+            Landform? currentLandform, WaterFeature? currentWaterFeature, River? currentRiver, MapPath? currentMapPath,
+            MapWindrose? currentWindrose)
+        {
+            // background
+            RenderBackground(map, renderCanvas, scrollPoint);
+
+            // ocean layers
+            RenderOcean(map, renderCanvas, scrollPoint);
+
+            // wind roses
+            RenderWindroses(map, currentWindrose, renderCanvas, scrollPoint);
+
+            // lower grid layer (above ocean)
+            RenderLowerGrid(map, renderCanvas, scrollPoint);
+
+            // landforms
+            RenderLandforms(map, currentLandform, renderCanvas, scrollPoint);
+
+            // water features
+            RenderWaterFeatures(map, currentWaterFeature, currentRiver, renderCanvas, scrollPoint);
+
+            // upper grid layer (above water features)
+            RenderUpperGrid(map, renderCanvas, scrollPoint);
+
+            // lower path layer
+            RenderLowerMapPaths(map, currentMapPath, renderCanvas, scrollPoint);
+
+            // symbol layer
+            RenderSymbols(map, renderCanvas, scrollPoint);
+
+            // upper path layer
+            RenderUpperMapPaths(map, currentMapPath, renderCanvas, scrollPoint);
+
+            // region and region overlay layers
+            RenderRegions(map, renderCanvas, scrollPoint);
+
+            // default grid layer
+            RenderDefaultGrid(map, renderCanvas, scrollPoint);
+
+            // box layer
+            RenderBoxes(map, renderCanvas, scrollPoint);
+
+            // label layer
+            RenderLabels(map, renderCanvas, scrollPoint);
+
+            // overlay layer (map scale)
+            RenderOverlays(map, renderCanvas, scrollPoint);
+
+            // render frame
+            RenderFrame(map, renderCanvas, scrollPoint);
+
+            // measure layer
+            RenderMeasures(map, renderCanvas, scrollPoint);
+
+            // TODO: drawing layer
+            //RenderDrawing(map, renderCanvas, scrollPoint);
+
+            // vignette layer
+            RenderVignette(map, renderCanvas, scrollPoint);
+        }
+
         public static void RenderMapForExport(RealmStudioMap map, SKCanvas renderCanvas)
         {
             // background
@@ -85,6 +147,72 @@ namespace RealmStudio
 
             // vignette layer
             RenderVignetteForExport(map, renderCanvas);
+        }
+
+        internal static void DrawCursor(SKCanvas canvas, MapDrawingMode drawingMode, SKPoint point, int brushSize, float symbolScale, float symbolRotation,
+            bool mirrorSymbol, bool useAreaBrush)
+        {
+            switch (drawingMode)
+            {
+                case MapDrawingMode.SymbolPlace:
+                    {
+                        if (SymbolMethods.SelectedSymbolTableMapSymbol != null && !useAreaBrush)
+                        {
+                            if (SymbolMethods.SelectedSymbolTableMapSymbol.SymbolFormat != SymbolFileFormat.Vector)
+                            {
+                                SKBitmap? symbolBitmap = SymbolMethods.SelectedSymbolTableMapSymbol.ColorMappedBitmap;
+                                if (symbolBitmap != null)
+                                {
+                                    // TODO: use matrix for scaling and rotation
+                                    SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleSKBitmap(symbolBitmap, symbolScale);
+                                    SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateSKBitmap(scaledSymbolBitmap, symbolRotation, mirrorSymbol);
+
+                                    canvas.DrawBitmap(rotatedAndScaledBitmap,
+                                        new SKPoint(point.X - (rotatedAndScaledBitmap.Width / 2), point.Y - (rotatedAndScaledBitmap.Height / 2)), null);
+
+                                    scaledSymbolBitmap.Dispose();
+                                    rotatedAndScaledBitmap.Dispose();
+                                }
+                            }
+                            else
+                            {
+                                // display the SVG as the cursor
+                                SKBitmap? symbolBitmap = SymbolMethods.GetBitmapForVectorSymbol(SymbolMethods.SelectedSymbolTableMapSymbol,
+                                    0, 0, symbolRotation, symbolScale);
+
+                                if (symbolBitmap != null)
+                                {
+                                    SKPoint pt = new(point.X - (symbolBitmap.Width / 2), point.Y - (symbolBitmap.Height / 2));
+                                    canvas.DrawBitmap(symbolBitmap, pt);
+                                }
+                            }
+                        }
+                        else if (useAreaBrush)
+                        {
+                            canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                        }
+                        else
+                        {
+                            canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                        }
+                    }
+                    break;
+                default:
+                    {
+                        if (brushSize > 0)
+                        {
+                            if (drawingMode == MapDrawingMode.MapHeightIncrease || drawingMode == MapDrawingMode.MapHeightDecrease)
+                            {
+                                canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCircleGreenPaint);
+                            }
+                            else
+                            {
+                                canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                            }
+                        }
+                    }
+                    break;
+            }
         }
 
         internal static void ClearSelectionLayer(RealmStudioMap map)

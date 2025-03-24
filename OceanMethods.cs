@@ -31,6 +31,29 @@ namespace RealmStudio
         public static int OceanPaintBrushSize { get; set; } = 64;
         public static int OceanPaintEraserSize { get; set; } = 64;
 
+        internal static void FinalizeOceanLayer(RealmStudioMap map)
+        {
+            // finalize loading of ocean drawing layer
+            MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OCEANDRAWINGLAYER);
+
+            for (int i = 0; i < oceanDrawingLayer.MapLayerComponents.Count; i++)
+            {
+                if (oceanDrawingLayer.MapLayerComponents[i] is LayerPaintStroke paintStroke)
+                {
+                    paintStroke.ParentMap = map;
+
+                    if (!paintStroke.Erase)
+                    {
+                        paintStroke.ShaderPaint = PaintObjects.OceanPaint;
+                    }
+                    else
+                    {
+                        paintStroke.ShaderPaint = PaintObjects.OceanEraserPaint;
+                    }
+                }
+            }
+        }
+
         internal static void ApplyOceanTexture(RealmStudioMap map, Bitmap? textureBitmap, float scale, bool mirrorBackground)
         {
             if (textureBitmap != null && scale > 0.0F)

@@ -21,6 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using RealmStudio.Properties;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.IO;
@@ -30,110 +31,157 @@ namespace RealmStudio
 {
     internal sealed class RealmMapMethods
     {
-        internal static void RenderHeightMapToCanvas(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint, SKRect? selectedArea)
+        internal static int GetNewBrushSize(TrackBar brushSizeTrack, int sizeDelta)
         {
-            renderCanvas.Clear(SKColors.Black);
-            MapRenderMethods.RenderHeightMap(map, renderCanvas, scrollPoint, selectedArea);
+            int newValue = brushSizeTrack.Value + sizeDelta;
+            newValue = Math.Max(brushSizeTrack.Minimum, Math.Min(newValue, brushSizeTrack.Maximum));
+
+            brushSizeTrack.Value = newValue;
+
+            return newValue;
         }
 
-        internal static void ChangeHeightMapAreaHeight(RealmStudioMap? map, SKPoint mapPoint, int brushRadius, float changeAmount)
+        internal static List<MapComponent> SelectMapComponentsInArea(RealmStudioMap map, SKRect selectedArea)
         {
-            ArgumentNullException.ThrowIfNull(map);
+            List<MapComponent> selectedMapComponents = [];
 
-            MapLayer heightMapLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.HEIGHTMAPLAYER);
+            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER);
+            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
+            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER);
+            MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER);
 
-            if (heightMapLayer.MapLayerComponents.Count == 2)
+            for (int i = symbolLayer.MapLayerComponents.Count - 1; i >= 0; i--)
             {
-                MapHeightMap mapHeightMap = (MapHeightMap)heightMapLayer.MapLayerComponents[1];
-
-                float[,]? heightMap = mapHeightMap.HeightMap;
-
-                SKBitmap? heightMapBitmap = mapHeightMap.MapImageBitmap;
-
-                if (heightMapBitmap != null && heightMap != null)
+                if (symbolLayer.MapLayerComponents[i] is MapSymbol ms)
                 {
-                    // get all pixels within the brush area
-                    // for each pixel in the brush area, get its color and then change its value by adding
-                    // changeAmount
-
-                    // radius of the circle squared
-                    double radiusSquared = brushRadius * brushRadius;
-
-                    for (int x = (int)mapPoint.X - brushRadius; x < (int)mapPoint.X + brushRadius; x++)
+                    if (selectedArea.Contains(ms.X, ms.Y))
                     {
-                        for (int y = (int)mapPoint.Y - brushRadius; y < (int)mapPoint.Y + brushRadius; y++)
+                        selectedMapComponents.Add(ms);
+                    }
+                }
+            }
+
+            for (int i = pathLowerLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (pathLowerLayer.MapLayerComponents[i] is MapPath mp)
+                {
+                    mp.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(mp.PathPoints);
+                    SKRect pathBounds = mp.BoundaryPath.ComputeTightBounds();
+
+                    if (selectedArea.Contains(pathBounds))
+                    {
+                        selectedMapComponents.Add(mp);
+                    }
+                }
+            }
+
+            for (int i = pathUpperLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (pathUpperLayer.MapLayerComponents[i] is MapPath mp)
+                {
+                    mp.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(mp.PathPoints);
+                    SKRect pathBounds = mp.BoundaryPath.ComputeTightBounds();
+
+                    if (selectedArea.Contains(pathBounds))
+                    {
+                        selectedMapComponents.Add(mp);
+                    }
+                }
+            }
+
+            for (int i = waterLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (waterLayer.MapLayerComponents[i] is IWaterFeature iwf)
+                {
+                    if (iwf is WaterFeature wf)
+                    {
+                        SKRect pathBounds = wf.ContourPath.ComputeTightBounds();
+
+                        if (selectedArea.Contains(pathBounds))
                         {
-                            if (x >= 0 && x < heightMapBitmap.Width && y >= 0 && y < heightMapBitmap.Height)
+                            selectedMapComponents.Add(wf);
+                        }
+                    }
+                    else if (iwf is River mr)
+                    {
+                        if (mr.RiverBoundaryPath != null && mr.RiverBoundaryPath.PointCount > 0)
+                        {
+                            SKRect pathBounds = mr.RiverBoundaryPath.ComputeTightBounds();
+
+                            if (selectedArea.Contains(pathBounds))
                             {
-                                // delta x,y from the point at the center of the circle brush
-                                double dx = x - mapPoint.X;
-                                double dy = y - mapPoint.Y;
-
-                                // distance squared of the point from the center of the circle at point
-                                double distanceSquared = dx * dx + dy * dy;
-
-                                // a random value ranging from 0.0 to the radius squared
-                                double pointRandom = Random.Shared.NextDouble() * radiusSquared;
-
-                                // if the point is inside the circle brush and the random value is greater than the
-                                // distance squared, add the point to the list of points to be increased/decreased in grayscale color
-                                // points closer to the center of the brush circle are more likely to be included,
-                                // since distance squared increases as points are further from the center point of the brush
-                                if (distanceSquared <= radiusSquared && pointRandom >= distanceSquared)
-                                {
-                                    SetHeightmapPixelHeight(x, y, heightMapBitmap, heightMap, changeAmount);
-                                }
+                                selectedMapComponents.Add(mr);
                             }
                         }
                     }
                 }
             }
+
+            return selectedMapComponents;
         }
 
-        internal static void SetHeightmapPixelHeight(int x, int y, SKBitmap heightMapBitmap, float[,] heightMap, float changeAmount)
+        internal static void SaveRealmFileBackup(string filepath)
         {
-            SKColor pixelColor = heightMapBitmap.GetPixel(x, y);
-            float colorValue;
+            string autosaveDirectory = Settings.Default.AutosaveDirectory;
 
-            if (pixelColor == SKColors.Black || pixelColor == SKColors.Transparent || pixelColor == SKColors.Empty)
+            if (string.IsNullOrEmpty(autosaveDirectory))
             {
-                colorValue = 35;
-            }
-            else
-            {
-                colorValue = heightMap[x, y];
+                autosaveDirectory = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
             }
 
-            colorValue += changeAmount;
-            heightMap[x, y] = colorValue;
+            string fileNameNoExtension = Path.GetFileNameWithoutExtension(filepath);
+            string saveTime = DateTime.Now.ToFileTimeUtc().ToString();
 
-            // color value is the average of the colorValue and the
-            // eight pixels surrounding the current pixel
+            string saveFilename = fileNameNoExtension + "_" + saveTime + ".rsmapx";
+            string autosaveFullPath = autosaveDirectory + Path.DirectorySeparatorChar + saveFilename;
 
-            float accumulatedHeight = 0;
+            File.Copy(filepath, autosaveFullPath, true);
+        }
 
-            for (int i = -1; i < 2; i++)
+        internal static bool SaveRealmBackup(RealmStudioMap map, bool useMapNameForBackup = false)
+        {
+            string currentmapFileName = map.MapPath;
+
+            try
             {
-                for (int j = -1; j < 2; j++)
+                // realm autosave folder (location where map backups are saved during autosave)
+                string autosaveDirectory = Settings.Default.AutosaveDirectory;
+
+                if (string.IsNullOrEmpty(autosaveDirectory))
                 {
-                    if (x + i >= 0 && x + i < heightMapBitmap.Width
-                        && y + j >= 0 && y + j < heightMapBitmap.Height)
-                    {
-                        accumulatedHeight += heightMap[x + i, y + j];
-                    }
+                    autosaveDirectory = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
                 }
+
+                string autosaveFilename = map.MapGuid.ToString();
+
+                if (useMapNameForBackup)
+                {
+                    autosaveFilename = map.MapName;
+                }
+
+                string saveTime = DateTime.Now.ToFileTimeUtc().ToString();
+
+                autosaveFilename += "_" + saveTime + ".rsmapx";
+
+                string autosaveFullPath = autosaveDirectory + Path.DirectorySeparatorChar + autosaveFilename;
+
+                map.MapPath = autosaveFullPath;
+
+                MapFileMethods.SaveMap(map);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Program.LOGGER.Error(ex);
+                MessageBox.Show("An error has occurred while saving a backup copy of the map.", "Map Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+            }
+            finally
+            {
+                map.MapPath = currentmapFileName;
             }
 
-            colorValue = accumulatedHeight / 9;
-
-            colorValue = Math.Min(255.0F, colorValue);
-            colorValue = Math.Max(35.0F, colorValue);
-            heightMap[x, y] = colorValue;
-
-            int r = (int)Math.Round(colorValue);
-            int g = (int)Math.Round(colorValue);
-            int b = (int)Math.Round(colorValue);
-            heightMapBitmap.SetPixel(x, y, new SKColor((byte)r, (byte)g, (byte)b));
+            return false;
         }
 
         internal static RealmStudioMap? CreateDetailMap(RealmStudioMainForm mainForm, RealmStudioMap currentMap, SKRect selectedArea)
@@ -185,7 +233,8 @@ namespace RealmStudio
             bool includePaths,
             bool includeScale,
             bool includeGrid,
-            bool includeRegions)
+            bool includeRegions,
+            bool includeHeightMap)
         {
             // if the current map is being resized, the selectedMapArea is the entire current map
             // if a detail map is being created, the selectedMapArea is the area of the current map that is selected by the user
@@ -1071,6 +1120,51 @@ namespace RealmStudio
                 }
             }
 
+            if (includeHeightMap)
+            {
+                MapLayer heightMapLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.HEIGHTMAPLAYER);
+
+                if (heightMapLayer.MapLayerComponents.Count == 2)
+                {
+                    MapLayer newHeightMapLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.HEIGHTMAPLAYER);
+
+                    using SKBitmap b = new(new SKImageInfo(newRealmMap.MapWidth, newRealmMap.MapHeight));
+                    using SKCanvas canvas = new(b);
+
+                    canvas.Clear(SKColors.Black);
+
+                    for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
+                    {
+                        if (landformLayer.MapLayerComponents[i] is Landform l)
+                        {
+                            l.RenderLandformForHeightMap(canvas);
+                        }
+                    }
+
+                    MapImage landformImage = new()
+                    {
+                        MapImageBitmap = b.Copy()
+                    };
+
+                    newHeightMapLayer.MapLayerComponents.Add(landformImage);
+
+                    if (heightMapLayer.MapLayerComponents[1] is MapHeightMap mhm)
+                    {
+                        Bitmap resizedBitmap = new(mhm.MapImageBitmap.ToBitmap(), newRealmMap.MapWidth, newRealmMap.MapHeight);
+
+                        MapHeightMap heightMap = new()
+                        {
+                            Width = newRealmMap.MapWidth,
+                            Height = newRealmMap.MapHeight,
+                            MapImageBitmap = resizedBitmap.ToSKBitmap(),
+                        };
+
+                        newHeightMapLayer.MapLayerComponents.Add(heightMap);
+                    }
+                }
+            }
+
+
             // vignette
             MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.VIGNETTELAYER);
             MapLayer newRealmVignetteLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.VIGNETTELAYER);
@@ -1384,6 +1478,243 @@ namespace RealmStudio
             }
 
             s.Canvas.Clear();
+        }
+
+        internal static void AddMapImagesToHeightMapLayer(RealmStudioMap map)
+        {
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
+            MapLayer heightMapLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.HEIGHTMAPLAYER);
+
+            if (heightMapLayer.MapLayerComponents.Count == 2)
+            {
+                // heightmap images have already been created
+                return;
+            }
+
+            using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+            using SKCanvas canvas = new(b);
+
+            canvas.Clear(SKColors.Black);
+
+            for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
+            {
+                if (landformLayer.MapLayerComponents[i] is Landform l)
+                {
+                    l.RenderLandformForHeightMap(canvas);
+                }
+            }
+
+            heightMapLayer.MapLayerComponents.Clear();
+
+            MapImage landformImage = new()
+            {
+                MapImageBitmap = b.Copy()
+            };
+
+            heightMapLayer.MapLayerComponents.Add(landformImage);
+
+            using SKBitmap b2 = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+            b2.Erase(SKColors.Transparent);
+
+            MapHeightMap heightMap = new()
+            {
+                HeightMap = new float[map.MapWidth, map.MapHeight],
+                MapImageBitmap = b2.Copy(),
+            };
+
+            heightMapLayer.MapLayerComponents.Add(heightMap);
+        }
+
+        internal static void FinalizeMap(RealmStudioMap map, SKGLControl glControl)
+        {
+            OceanMethods.FinalizeOceanLayer(map);
+
+            LandformMethods.FinalizeLandforms(map, glControl);
+
+            WaterFeatureMethods.FinalizeWaterFeatures(map);
+
+            MapPathMethods.FinalizeMapPaths(map);
+
+            SymbolMethods.FinalizeMapSymbols(map);
+
+            WaterFeatureMethods.FinalizeWindroses(map);
+
+            MapLabelMethods.FinalizeMapBoxes(map);
+
+            MapRegionMethods.FinalizeMapRegions(map);
+
+            BackgroundMethods.FinalizeMapVignette(map, glControl);
+        }
+
+        internal static void PruneOldBackupsOfMap(RealmStudioMap map, int backupCount)
+        {
+            // realm autosave folder (location where map backups are saved during autosave)
+            string defaultAutosaveFolder = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
+
+            string autosaveDirectory = Settings.Default.AutosaveDirectory;
+
+            if (string.IsNullOrEmpty(autosaveDirectory))
+            {
+                autosaveDirectory = defaultAutosaveFolder;
+            }
+
+            string autosaveFilename = map.MapGuid.ToString();
+
+            string oldestFilePath = string.Empty;
+            DateTime? oldestCreationDateTime = null;
+
+            var files = from file in Directory.EnumerateFiles(autosaveDirectory, "*.*", SearchOption.AllDirectories).Order()
+                        where file.Contains(autosaveFilename)
+                        select new
+                        {
+                            File = file
+                        };
+
+            // keep 5 backups of the map
+            if (files.Count() >= backupCount)
+            {
+                foreach (var f in files)
+                {
+                    DateTime creationDateTime = File.GetCreationTimeUtc(f.File);
+                    string path = Path.GetFullPath(f.File);
+
+                    if (string.IsNullOrEmpty(oldestFilePath) || creationDateTime < oldestCreationDateTime)
+                    {
+                        oldestFilePath = path;
+                        oldestCreationDateTime = creationDateTime;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(oldestFilePath)
+                    && File.Exists(oldestFilePath)
+                    && oldestFilePath.Contains("autosave")
+                    && oldestFilePath.StartsWith(autosaveDirectory)
+                    && oldestFilePath.EndsWith(".rsmapx"))
+                {
+                    try
+                    {
+                        File.Delete(oldestFilePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Program.LOGGER.Error(ex);
+                        throw new Exception("Prune backup failed");
+                    }
+                }
+            }
+        }
+
+        public static void DeselectAllMapComponents(RealmStudioMap map, MapComponent? selectedComponent)
+        {
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
+
+            foreach (Landform l in landformLayer.MapLayerComponents.Cast<Landform>())
+            {
+                if (selectedComponent != null && selectedComponent is Landform landform && landform == l) continue;
+                l.IsSelected = false;
+            }
+
+            MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER);
+            foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
+            {
+                if (selectedComponent == null)
+                {
+                    if (w is WaterFeature wf)
+                    {
+                        wf.IsSelected = false;
+                    }
+                    else if (w is River r)
+                    {
+                        r.IsSelected = false;
+                    }
+                }
+                else if (selectedComponent != null)
+                {
+                    if (w is WaterFeature wf)
+                    {
+                        if (wf == selectedComponent)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            wf.IsSelected = false;
+                        }
+                    }
+                    else if (w is River r)
+                    {
+                        if (r == selectedComponent)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            r.IsSelected = false;
+                        }
+                    }
+                }
+            }
+
+            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER);
+
+            foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+            {
+                if (selectedComponent != null && selectedComponent is MapPath mapPath && mapPath == mp) continue;
+                mp.IsSelected = false;
+                mp.ShowPathPoints = false;
+            }
+
+            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
+
+            foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+            {
+                if (selectedComponent != null && selectedComponent is MapPath mapPath && mapPath == mp) continue;
+                mp.IsSelected = false;
+                mp.ShowPathPoints = false;
+            }
+
+            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER);
+
+            foreach (MapSymbol symbol in symbolLayer.MapLayerComponents.Cast<MapSymbol>())
+            {
+                if (selectedComponent != null && selectedComponent is MapSymbol s && s == symbol) continue;
+                symbol.IsSelected = false;
+            }
+
+            MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LABELLAYER);
+
+            foreach (MapLabel label in labelLayer.MapLayerComponents.Cast<MapLabel>())
+            {
+                if (selectedComponent != null && selectedComponent is MapLabel l && l == label) continue;
+                label.IsSelected = false;
+            }
+
+            MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BOXLAYER);
+
+            foreach (PlacedMapBox box in boxLayer.MapLayerComponents.Cast<PlacedMapBox>())
+            {
+                if (selectedComponent != null && selectedComponent is PlacedMapBox b && b == box) continue;
+                box.IsSelected = false;
+            }
+
+            MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONLAYER);
+            foreach (MapRegion r in regionLayer.MapLayerComponents.Cast<MapRegion>())
+            {
+                if (selectedComponent != null && selectedComponent is MapRegion region && region == r) continue;
+                r.IsSelected = false;
+            }
+        }
+
+        internal static SKRect DrawSelectedRealmAreaOnWorkLayer(RealmStudioMap map, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
+        {
+            SKRect selectedArea = new(previousPoint.X, previousPoint.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
+
+            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
+            MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+            MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawRect(selectedArea, PaintObjects.LandformAreaSelectPaint);
+
+            return selectedArea;
         }
     }
 }

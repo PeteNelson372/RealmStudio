@@ -92,6 +92,15 @@ namespace RealmStudio
             PathEffect = SKPathEffect.CreateDash([5F, 5F], 10F),
         };
 
+        public static readonly SKPaint CursorCircleGreenPaint = new()
+        {
+            Color = SKColors.Green,
+            StrokeWidth = 2,
+            Style = SKPaintStyle.Stroke,
+            //IsAntialias = true,
+            PathEffect = SKPathEffect.CreateDash([5F, 5F], 10F),
+        };
+
         public static readonly SKPaint ContourPathPaint = new()
         {
             Style = SKPaintStyle.Fill,

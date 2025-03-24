@@ -165,5 +165,213 @@ namespace RealmStudio
                 }
             }
         }
+
+        internal static void FinalizeMapRegions(RealmStudioMap map)
+        {
+            // finalize loading of regions
+            MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONLAYER);
+            for (int i = 0; i < regionLayer.MapLayerComponents.Count; i++)
+            {
+                if (regionLayer.MapLayerComponents[i] is MapRegion region)
+                {
+                    region.ParentMap = map;
+                    SKPathEffect? regionBorderEffect = ConstructRegionBorderEffect(region);
+                    ConstructRegionPaintObjects(region, regionBorderEffect);
+                }
+            }
+        }
+
+        internal static void SnapRegionToLandformCoastline(RealmStudioMap map, MapRegion currentMapRegion, SKPoint zoomedScrolledPoint, SKPoint previousCursorPoint)
+        {
+            // find the closest point to the current point
+            // on the contour path of a coastline;
+            // if the nearest point on the coastline
+            // is within 5 pixels of the current point,
+            // then set the region point to be the point
+            // on the coastline
+            // then check the *previous* region point; if the previous
+            // region point is on the coastline of the same landform
+            // then add all of the points on the coastline contour
+            // to the region points
+
+            int coastlinePointIndex = -1;
+            SKPoint coastlinePoint = SKPoint.Empty;
+            Landform? landform1 = null;
+            Landform? landform2 = null;
+
+            float currentDistance = float.MaxValue;
+
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
+
+            // get the distance from the point the cursor was clicked to the contour points of all landforms
+            foreach (Landform lf in landformLayer.MapLayerComponents.Cast<Landform>())
+            {
+                for (int i = 0; i < lf.ContourPoints.Count; i++)
+                {
+                    SKPoint p = lf.ContourPoints[i];
+                    float distance = SKPoint.Distance(zoomedScrolledPoint, p);
+
+                    if (distance < currentDistance && distance < 5)
+                    {
+                        landform1 = lf;
+                        coastlinePointIndex = i;
+                        coastlinePoint = p;
+                        currentDistance = distance;
+                    }
+                }
+
+                if (coastlinePointIndex >= 0) break;
+            }
+
+            int previousCoastlinePointIndex = -1;
+            currentDistance = float.MaxValue;
+
+            if (landform1 != null && coastlinePointIndex >= 0)
+            {
+                MapRegionPoint mrp = new(landform1.ContourPoints[coastlinePointIndex]);
+                currentMapRegion.MapRegionPoints.Add(mrp);
+
+                if (currentMapRegion.MapRegionPoints.Count > 1 && coastlinePointIndex > 1)
+                {
+                    SKPoint previousPoint = currentMapRegion.MapRegionPoints[^2].RegionPoint;
+
+                    foreach (Landform lf in landformLayer.MapLayerComponents.Cast<Landform>())
+                    {
+                        for (int i = 0; i < lf.ContourPoints.Count; i++)
+                        {
+                            SKPoint p = lf.ContourPoints[i];
+                            float distance = SKPoint.Distance(previousPoint, p);
+
+                            if (distance < currentDistance && !coastlinePoint.Equals(previousPoint))
+                            {
+                                landform2 = lf;
+                                previousCoastlinePointIndex = i;
+                                currentDistance = distance;
+                            }
+                        }
+
+                        if (previousCoastlinePointIndex >= 0) break;
+                    }
+                }
+            }
+
+            if (landform1 != null && landform2 != null
+                && landform1.LandformGuid.ToString() == landform2.LandformGuid.ToString()
+                && coastlinePointIndex >= 0 && previousCoastlinePointIndex >= 0)
+            {
+                currentMapRegion.MapRegionPoints.Clear();
+
+                if (zoomedScrolledPoint.Y < previousCursorPoint.Y)
+                {
+                    // drag mouse up to snap to west coast of landform
+                    for (int i = previousCoastlinePointIndex; i < landform1.ContourPoints.Count - 1; i++)
+                    {
+                        MapRegionPoint mrp = new(landform1.ContourPoints[i]);
+                        currentMapRegion.MapRegionPoints.Add(mrp);
+                    }
+
+                    for (int i = 0; i <= coastlinePointIndex; i++)
+                    {
+                        MapRegionPoint mrp = new(landform1.ContourPoints[i]);
+                        currentMapRegion.MapRegionPoints.Add(mrp);
+                    }
+                }
+                else
+                {
+                    // drag mouse down to snap region to east coast of landform
+                    if (coastlinePointIndex > previousCoastlinePointIndex)
+                    {
+                        for (int i = previousCoastlinePointIndex; i <= coastlinePointIndex; i++)
+                        {
+                            MapRegionPoint mrp = new(landform1.ContourPoints[i]);
+                            currentMapRegion.MapRegionPoints.Add(mrp);
+                        }
+                    }
+                    else
+                    {
+                        for (int i = coastlinePointIndex; i <= previousCoastlinePointIndex; i++)
+                        {
+                            MapRegionPoint mrp = new(landform1.ContourPoints[i]);
+                            currentMapRegion.MapRegionPoints.Add(mrp);
+                        }
+                    }
+                }
+            }
+        }
+
+        internal static void EndMapRegion(RealmStudioMap map, MapRegion mapRegion, SKPoint zoomedScrolledPoint)
+        {
+            MapRegionPoint mrp = new(zoomedScrolledPoint);
+            mapRegion.MapRegionPoints.Add(mrp);
+
+            Cmd_AddMapRegion cmd = new(map, mapRegion);
+            CommandManager.AddCommand(cmd);
+            cmd.DoOperation();
+
+            mapRegion.IsSelected = false;
+        }
+
+        internal static void DrawRegionOnWorkLayer(RealmStudioMap map, MapRegion mapRegion, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
+        {
+            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
+            MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+            if (mapRegion.MapRegionPoints.Count > 1)
+            {
+                // temporarily add the layer click point for rendering
+                MapRegionPoint mrp = new(zoomedScrolledPoint);
+                mapRegion.MapRegionPoints.Add(mrp);
+
+                // render
+                mapRegion.Render(MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas);
+
+                // remove it
+                mapRegion.MapRegionPoints.RemoveAt(mapRegion.MapRegionPoints.Count - 1);
+            }
+            else
+            {
+                MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawLine(previousPoint, zoomedScrolledPoint, mapRegion.RegionBorderPaint);
+            }
+        }
+
+        internal static void MoveRegion(MapRegion mapRegion, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
+        {
+            // not moving a point, so drag the region
+            float xDelta = zoomedScrolledPoint.X - previousPoint.X;
+            float yDelta = zoomedScrolledPoint.Y - previousPoint.Y;
+
+            foreach (MapRegionPoint p in mapRegion.MapRegionPoints)
+            {
+                SKPoint newPoint = p.RegionPoint;
+                newPoint.X += xDelta;
+                newPoint.Y += yDelta;
+                p.RegionPoint = newPoint;
+            }
+        }
+
+        internal static MapRegionPoint? GetSelectedMapRegionPoint(MapRegion mapRegion, SKPoint zoomedScrolledPoint)
+        {
+            MapRegionPoint? selectedMapRegionPoint = null;
+
+            foreach (MapRegionPoint p in mapRegion.MapRegionPoints)
+            {
+                using SKPath path = new();
+                path.AddCircle(p.RegionPoint.X, p.RegionPoint.Y, 5);
+
+                if (path.Contains(zoomedScrolledPoint.X, zoomedScrolledPoint.Y))
+                {
+                    // editing (moving) the selected point
+                    p.IsSelected = true;
+                    selectedMapRegionPoint = p;
+                    EDITING_REGION = true;
+                }
+                else
+                {
+                    p.IsSelected = false;
+                }
+            }
+
+            return selectedMapRegionPoint;
+        }
     }
 }

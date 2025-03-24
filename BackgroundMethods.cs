@@ -21,6 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
@@ -146,6 +147,49 @@ namespace RealmStudio
                 {
                     v.RectangleVignette = isRectangleVignette;
                     v.IsModified = true;
+                }
+            }
+        }
+
+        internal static void FinalizeMapVignette(RealmStudioMap map, SKGLControl glControl)
+        {
+            // finalize loading of vignette
+            MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.VIGNETTELAYER);
+            for (int i = 0; i < vignetteLayer.MapLayerComponents.Count; i++)
+            {
+                if (vignetteLayer.MapLayerComponents[i] is MapVignette vignette)
+                {
+                    vignette.ParentMap = map;
+                    vignette.Width = map.MapWidth;
+                    vignette.Height = map.MapHeight;
+                    vignette.VignetteRenderSurface ??= SKSurface.Create(glControl.GRContext, false, new SKImageInfo(map.MapWidth, map.MapHeight));
+                }
+            }
+        }
+
+        internal static void AddVignette(RealmStudioMap map, int argbColor, int vignetteStrength, bool isRectangleVignette, SKGLControl glControl)
+        {
+            MapVignette vignette = new()
+            {
+                ParentMap = map,
+                VignetteColor = argbColor,
+                VignetteStrength = vignetteStrength,
+                RectangleVignette = isRectangleVignette,
+                VignetteRenderSurface = SKSurface.Create(glControl.GRContext, false,
+                                    new SKImageInfo(map.MapWidth, map.MapHeight)),
+            };
+
+            MapBuilder.GetMapLayerByIndex(map, MapBuilder.VIGNETTELAYER).MapLayerComponents.Add(vignette);
+        }
+
+        internal static void RemoveVignette(RealmStudioMap map)
+        {
+            for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.VIGNETTELAYER).MapLayerComponents.Count - 1; i > 0; i--)
+            {
+                if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.VIGNETTELAYER).MapLayerComponents[i] is MapVignette)
+                {
+                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.VIGNETTELAYER).MapLayerComponents.RemoveAt(i);
+                    break;
                 }
             }
         }

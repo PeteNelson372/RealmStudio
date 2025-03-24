@@ -198,5 +198,140 @@ namespace RealmStudio
 
             MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents.Add(mapFrame);
         }
+
+        internal static MapMeasure? CreateMapMeasure(RealmStudioMap map, bool useMapUnits, bool measureArea, Color lineColor)
+        {
+            // make sure there is only one measure object
+            MapBuilder.GetMapLayerByIndex(map, MapBuilder.MEASURELAYER).MapLayerComponents.Clear();
+
+            MapMeasure? newMapMeasure = new(map)
+            {
+                UseMapUnits = useMapUnits,
+                MeasureArea = measureArea,
+                MeasureLineColor = lineColor
+            };
+
+            MapBuilder.GetMapLayerByIndex(map, MapBuilder.MEASURELAYER).MapLayerComponents.Add(newMapMeasure);
+
+            return newMapMeasure;
+        }
+
+        internal static void DrawMapMeasureOnWorkLayer(RealmStudioMap map, MapMeasure mapMeasure, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
+        {
+            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
+            MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+            if (mapMeasure.MeasureArea && mapMeasure.MeasurePoints.Count > 1)
+            {
+                SKPath path = new();
+
+                path.MoveTo(mapMeasure.MeasurePoints.First());
+
+                for (int i = 1; i < mapMeasure.MeasurePoints.Count; i++)
+                {
+                    path.LineTo(mapMeasure.MeasurePoints[i]);
+                }
+
+                path.LineTo(zoomedScrolledPoint);
+
+                path.Close();
+
+                MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawPath(path, mapMeasure.MeasureAreaPaint);
+            }
+            else
+            {
+                MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawLine(previousPoint, zoomedScrolledPoint, mapMeasure.MeasureLinePaint);
+            }
+
+            // render measure value and units
+            SKPoint measureValuePoint = new(zoomedScrolledPoint.X + 30, zoomedScrolledPoint.Y + 20);
+
+            float lineLength = SKPoint.Distance(previousPoint, zoomedScrolledPoint);
+            float totalLength = mapMeasure.TotalMeasureLength + lineLength;
+
+            mapMeasure.RenderDistanceLabel(MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas, measureValuePoint, totalLength);
+
+            if (mapMeasure.MeasureArea && mapMeasure.MeasurePoints.Count > 1)
+            {
+                // temporarity add the point at the mouse position
+                mapMeasure.MeasurePoints.Add(zoomedScrolledPoint);
+
+                // calculate the polygon area
+                float area = DrawingMethods.CalculatePolygonArea(mapMeasure.MeasurePoints);
+
+                // remove the temporarily added point
+                mapMeasure.MeasurePoints.RemoveAt(mapMeasure.MeasurePoints.Count - 1);
+
+                // display the area label
+                SKPoint measureAreaPoint = new(zoomedScrolledPoint.X + 30, zoomedScrolledPoint.Y + 40);
+
+                mapMeasure.RenderAreaLabel(MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas, measureAreaPoint, area);
+            }
+        }
+
+        internal static void EndMapMeasure(MapMeasure mapMeasure, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
+        {
+            mapMeasure.MeasurePoints.Add(zoomedScrolledPoint);
+
+            float lineLength = SKPoint.Distance(previousPoint, zoomedScrolledPoint);
+            mapMeasure.TotalMeasureLength += lineLength;
+            mapMeasure.RenderValue = true;
+        }
+
+        internal static MapGrid? FinalizeMapGrid(RealmStudioMap map)
+        {
+            // finalize loading of grid
+            MapGrid? currentMapGrid = null;
+
+            MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER);
+            for (int i = 0; i < defaultGridLayer.MapLayerComponents.Count; i++)
+            {
+                if (defaultGridLayer.MapLayerComponents[i] is MapGrid grid)
+                {
+                    currentMapGrid = grid;
+                    currentMapGrid.GridLayerIndex = MapBuilder.DEFAULTGRIDLAYER;
+                    currentMapGrid.GridEnabled = true;
+                    break;
+                }
+            }
+
+            if (currentMapGrid == null)
+            {
+                MapLayer oceanGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER);
+                for (int i = 0; i < oceanGridLayer.MapLayerComponents.Count; i++)
+                {
+                    if (oceanGridLayer.MapLayerComponents[i] is MapGrid grid)
+                    {
+                        currentMapGrid = grid;
+                        currentMapGrid.GridLayerIndex = MapBuilder.ABOVEOCEANGRIDLAYER;
+                        currentMapGrid.GridEnabled = true;
+                        break;
+                    }
+                }
+            }
+
+            if (currentMapGrid == null)
+            {
+                MapLayer symbolGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER);
+                for (int i = 0; i < symbolGridLayer.MapLayerComponents.Count; i++)
+                {
+                    if (symbolGridLayer.MapLayerComponents[i] is MapGrid grid)
+                    {
+                        currentMapGrid = grid;
+                        currentMapGrid.GridLayerIndex = MapBuilder.BELOWSYMBOLSGRIDLAYER;
+                        currentMapGrid.GridEnabled = true;
+                        break;
+                    }
+                }
+            }
+
+            return currentMapGrid;
+        }
+
+        internal static void MoveMapScale(MapScale mapScale, SKPoint zoomedScrolledPoint)
+        {
+            mapScale.X = (int)zoomedScrolledPoint.X - mapScale.Width / 2;
+            mapScale.Y = (int)zoomedScrolledPoint.Y - mapScale.Height / 2;
+        }
     }
 }
