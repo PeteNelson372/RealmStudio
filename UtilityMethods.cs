@@ -119,5 +119,22 @@ namespace RealmStudio
 
             return sKFont;
         }
+
+        internal static RealmStudioMainForm? GetMainForm()
+        {
+            FormCollection forms = Application.OpenForms;
+            RealmStudioMainForm? mainForm = null;
+
+            foreach (Form form in forms)
+            {
+                if (form is RealmStudioMainForm)
+                {
+                    mainForm = (RealmStudioMainForm?)form;
+                    break;
+                }
+            }
+
+            return mainForm;
+        }
     }
 }

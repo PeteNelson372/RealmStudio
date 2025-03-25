@@ -320,7 +320,7 @@ namespace RealmStudio
             {
                 for (int y = 0; y < height; y++)
                 {
-                    elevation[x, y] = ((Noise.CalcPixel2D(x, y, 0.005F) / 255.0F) + (Noise.CalcPixel2D(x, y, 0.01F) / 255.0F)) / 2.0F;
+                    elevation[x, y] = ((Noise.CalcPixel2D(x, y, 0.0075F) / 255.0F) + (Noise.CalcPixel2D(x, y, 0.01F) / 255.0F)) / 2.0F;
                 }
             }
 

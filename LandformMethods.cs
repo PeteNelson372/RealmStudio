@@ -214,86 +214,6 @@ namespace RealmStudio
             cmd.DoOperation();
         }
 
-        internal static List<SKPath> GenerateRandomLandformPaths(SKPoint location, SKSize size, GeneratedLandformType selectedLandformType, bool flipVertical = false)
-        {
-            List<SKPath> generatedLandformPaths = [];
-
-            Bitmap? landformBitmap = ShapeGenerator.GetNoiseGeneratedLandformShape((int)size.Width, (int)size.Height, selectedLandformType, flipVertical);
-
-            if (landformBitmap == null) { return generatedLandformPaths; }
-
-            // fill any holes in the bitmap
-            Bitmap filledBitmap = DrawingMethods.FillHoles(landformBitmap);
-
-            // extract all blobs over set size - arbitrarily set to 1/16 the input size
-            List<Bitmap> generatedBitmaps = DrawingMethods.ExtractBlobs(filledBitmap, new Size((int)(size.Width / 16), (int)(size.Height / 16)));
-
-            for (int i = 0; i < generatedBitmaps.Count; i++)
-            {
-                Bitmap landBitmap = generatedBitmaps[i];
-
-                // the mean filter smooths out pixels that differ a lot in color from their neighbors;
-                // when applied to a monochrome image like the generated landform bitmaps, the filter
-                // will average out black or white pixels that are surrounded (or mostly surrounded)
-                // by pixels of the opposite color. When the bitmap colors are then flattened back to
-                // monochrome (black and white), this has the effect of removing "spikes" from around the
-                // edges of the landform (and other anomalies) that cause the Moore neighborhood algorithm
-                // to fail, causing the landform boundaries not to be computed correctly
-                Mean meanFilter = new();
-                meanFilter.ApplyInPlace(landBitmap);
-                meanFilter.ApplyInPlace(landBitmap);
-
-                DrawingMethods.FlattenBitmapColors(ref landBitmap);
-
-                // fill any holes in the bitmap
-                Bitmap filledLandBitmap = DrawingMethods.FillHoles(landBitmap);
-
-                using Graphics g = Graphics.FromImage(filledLandBitmap);
-                using Pen p = new(Color.White, 3);
-
-                g.DrawLine(p, new Point(2, 2), new Point(filledLandBitmap.Width - 2, 2));
-                g.DrawLine(p, new Point(2, filledLandBitmap.Height - 2), new Point(filledLandBitmap.Width - 2, filledLandBitmap.Height - 2));
-                g.DrawLine(p, new Point(2, 2), new Point(2, filledLandBitmap.Height - 2));
-                g.DrawLine(p, new Point(filledLandBitmap.Width - 2, 2), new Point(filledLandBitmap.Width - 2, filledLandBitmap.Height - 2));
-
-                // run Moore meighborhood algorithm to get the perimeter path
-                List<SKPoint> contourPoints = DrawingMethods.GetBitmapContourPoints(filledLandBitmap);
-
-                SKPath landformPath = new();
-                if (contourPoints.Count > 4)   // require at least 4 points in the contour to be added as a landform
-                {
-                    // the Moore-Neighbor algorithm sets the first (0th) pixel in the list of contour points to
-                    // an empty pixel, so remove it before constructing the path from the contour points
-                    contourPoints.RemoveAt(0);
-
-                    landformPath.MoveTo(contourPoints[0]);
-
-                    for (int j = 1; j < contourPoints.Count; j++)
-                    {
-                        landformPath.LineTo(contourPoints[j]);
-                    }
-
-                    if (landformPath[0] != landformPath[contourPoints.Count - 1])
-                    {
-                        landformPath.Close();
-                    }
-
-                    if (selectedLandformType != GeneratedLandformType.Icecap)
-                    {
-                        landformPath.Transform(SKMatrix.CreateTranslation(location.X - (size.Width / 2.0F), location.Y - (size.Height / 2.0F)));
-                    }
-                    else
-                    {
-                        landformPath.Transform(SKMatrix.CreateTranslation(location.X - (size.Width / 2.0F), location.Y));
-                    }
-
-                    generatedLandformPaths.Add(new(landformPath));
-                }
-            }
-
-            return generatedLandformPaths;
-        }
-
         internal static SKPath TraceImage(string fileName)
         {
             Bitmap b = (Bitmap)Bitmap.FromFile(fileName);
@@ -619,21 +539,29 @@ namespace RealmStudio
             if (erasedLandform != null)
             {
                 EraseLandForm(erasedLandform);
-                MergeLandforms(map);
                 CreateAllPathsFromDrawnPath(map, erasedLandform);
 
                 erasedLandform.IsModified = true;
 
                 if (erasedLandform.ContourPath.PointCount == 0)
                 {
-                    // the landform has been totally erased, so remove it
-                    DeleteLandform(map, erasedLandform);
+                    // the landform has been totally erased, so mark it deleted
+                    MarkLandformDeleted(erasedLandform);
                 }
+
+                MergeLandforms(map);
             }
+        }
+
+        private static void MarkLandformDeleted(Landform deletedLandform)
+        {
+            deletedLandform.IsDeleted = true;
         }
 
         private static void DeleteLandform(RealmStudioMap map, Landform erasedLandform)
         {
+            erasedLandform.IsDeleted = true;
+
             // TODO: what should be done about water features and other objects drawn on top of the landform?
             for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
@@ -665,8 +593,9 @@ namespace RealmStudio
                     {
                         if (boundaryPath.Contains(mapClickPoint.X, mapClickPoint.Y))
                         {
-                            mapLandform.IsSelected = !mapLandform.IsSelected;
+                            //mapLandform.IsSelected = !mapLandform.IsSelected;
 
+                            mapLandform.IsSelected = true;
                             if (mapLandform.IsSelected)
                             {
                                 selectedLandform = mapLandform;
@@ -679,6 +608,30 @@ namespace RealmStudio
 
             RealmMapMethods.DeselectAllMapComponents(map, selectedLandform);
             return selectedLandform;
+        }
+
+        internal static void MoveLandform(Landform landform, SKPoint zoomedScrolledPoint, SKPoint previousCursorPoint)
+        {
+            // move the entire selected landform with the mouse
+
+            float deltaX = zoomedScrolledPoint.X - previousCursorPoint.X;
+            float deltaY = zoomedScrolledPoint.Y - previousCursorPoint.Y;
+
+            landform.ContourPath.GetTightBounds(out SKRect boundsRect);
+
+            SKPoint p = new()
+            {
+                X = deltaX - (int)(boundsRect.MidX - previousCursorPoint.X),
+                Y = deltaY - (int)(boundsRect.MidY - previousCursorPoint.Y)
+            };
+
+            SKMatrix tm = SKMatrix.CreateTranslation(p.X, p.Y);
+
+            landform.DrawPath.Transform(tm);
+            CreateAllPathsFromDrawnPath(landform.ParentMap, landform);
+
+            landform.X += (int)deltaX;
+            landform.Y += (int)deltaY;
         }
     }
 }

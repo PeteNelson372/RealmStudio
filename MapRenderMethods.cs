@@ -401,17 +401,20 @@ namespace RealmStudio
             {
                 if (landformLayer.MapLayerComponents[i] is Landform l)
                 {
-                    l.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
-                    l.RenderLandform(landformLayer.LayerSurface.Canvas);
-
-                    if (l.IsSelected)
+                    if (!l.IsDeleted)
                     {
-                        // draw an outline around the landform to show that it is selected
-                        l.ContourPath.GetBounds(out SKRect boundRect);
-                        using SKPath boundsPath = new();
-                        boundsPath.AddRect(boundRect);
+                        l.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
+                        l.RenderLandform(landformLayer.LayerSurface.Canvas);
 
-                        landformLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
+                        if (l.IsSelected)
+                        {
+                            // draw an outline around the landform to show that it is selected
+                            l.ContourPath.GetBounds(out SKRect boundRect);
+                            using SKPath boundsPath = new();
+                            boundsPath.AddRect(boundRect);
+
+                            landformLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
+                        }
                     }
                 }
             }
@@ -1049,9 +1052,10 @@ namespace RealmStudio
             MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WINDROSELAYER);
             if (windroseLayer.LayerSurface == null) return;
 
+            windroseLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+
             currentWindrose?.Render(windroseLayer.LayerSurface.Canvas);
 
-            windroseLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
             windroseLayer.Render(windroseLayer.LayerSurface.Canvas);
 
             renderCanvas.DrawSurface(windroseLayer.LayerSurface, scrollPoint);

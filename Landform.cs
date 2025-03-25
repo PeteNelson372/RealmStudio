@@ -202,6 +202,7 @@ namespace RealmStudio
         public bool FillWithTexture { get; set; } = true;
         public bool IsSelected { get; set; }
         public bool IsModified { get; set; } = true;
+        public bool IsDeleted { get; set; }
 
         public SKSurface? LandformRenderSurface { get; set; }
         public SKSurface? CoastlineRenderSurface { get; set; }
@@ -818,31 +819,31 @@ namespace RealmStudio
 
                 landformCanvas.DrawPath(InnerPath8, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (12 * colorAlphaStep)), LandformFillColor);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (8 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 landformCanvas.DrawPath(InnerPath7, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (16 * colorAlphaStep)), LandformFillColor);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (12 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 landformCanvas.DrawPath(InnerPath6, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (20 * colorAlphaStep)), LandformFillColor);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (16 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 landformCanvas.DrawPath(InnerPath5, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (24 * colorAlphaStep)), LandformFillColor);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (20 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 landformCanvas.DrawPath(InnerPath4, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (28 * colorAlphaStep)), LandformFillColor);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (24 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 landformCanvas.DrawPath(InnerPath3, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (32 * colorAlphaStep)), LandformFillColor);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (28 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 landformCanvas.DrawPath(InnerPath2, LandformGradientPaint);
 
-                landformColor = Color.FromArgb((int)(LandformFillColor.A * (36 * colorAlphaStep)), LandformFillColor);
+                landformColor = Color.FromArgb((int)(LandformFillColor.A * (32 * colorAlphaStep)), LandformFillColor);
                 LandformGradientPaint.Color = landformColor.ToSKColor();
                 landformCanvas.DrawPath(InnerPath1, LandformGradientPaint);
 
