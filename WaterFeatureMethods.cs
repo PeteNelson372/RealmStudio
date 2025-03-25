@@ -1068,9 +1068,6 @@ namespace RealmStudio
                 newLake.WaterFeaturePath = lakePath;
                 CreateInnerAndOuterPaths(map, newLake);
                 ConstructWaterFeaturePaintObjects(newLake);
-                MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER).MapLayerComponents.Add(newLake);
-
-                MergeWaterFeatures(map);
             }
             else
             {
@@ -1098,6 +1095,23 @@ namespace RealmStudio
             newRiver.RiverPoints.Add(new MapRiverPoint(zoomedScrolledPoint));
 
             return newRiver;
+        }
+
+        internal static MapRiverPoint? GetSelectedRiverPoint(IWaterFeature? wf, SKPoint zoomedScrolledPoint)
+        {
+            if (wf == null) return null;
+
+            if (wf is River river)
+            {
+                foreach (MapRiverPoint mp in river.RiverPoints)
+                {
+                    mp.IsSelected = false;
+                }
+
+                return SelectRiverPointAtPoint(river, zoomedScrolledPoint);
+            }
+
+            return null;
         }
     }
 }

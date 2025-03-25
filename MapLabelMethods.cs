@@ -346,5 +346,78 @@ namespace RealmStudio
 
             return rect;
         }
+
+        internal static TextBox? CreateNewLabelTextbox(SKGLControl glControl, Font tbFont, Rectangle labelRect, Color tbColor)
+        {
+            TextBox labelTextBox = new()
+            {
+                Parent = glControl,
+                Name = Guid.NewGuid().ToString(),
+                Left = labelRect.Left,
+                Top = labelRect.Top,
+                Width = labelRect.Width,
+                Height = labelRect.Height,
+                Margin = System.Windows.Forms.Padding.Empty,
+                AutoSize = false,
+                Font = tbFont,
+                Visible = true,
+                PlaceholderText = "...Label...",
+                BackColor = Color.Peru,
+                ForeColor = tbColor,
+                BorderStyle = BorderStyle.FixedSingle,
+                Multiline = false,
+                TextAlign = HorizontalAlignment.Center,
+                Text = "...Label...",
+            };
+
+            return labelTextBox;
+        }
+
+        internal static void AddNewBox(RealmStudioMap map, PlacedMapBox? placedMapBox)
+        {
+            if (placedMapBox != null && placedMapBox.BoxBitmap != null)
+            {
+                SKRectI center = new((int)placedMapBox.BoxCenterLeft,
+                    (int)placedMapBox.BoxCenterTop,
+                    (int)(placedMapBox.Width - placedMapBox.BoxCenterRight),
+                    (int)(placedMapBox.Height - placedMapBox.BoxCenterBottom));
+
+                if (center.IsEmpty || center.Left < 0 || center.Right <= 0 || center.Top < 0 || center.Bottom <= 0)
+                {
+                    return;
+                }
+                else if (center.Width <= 0 || center.Height <= 0)
+                {
+                    // swap 
+                    if (center.Right < center.Left)
+                    {
+                        (center.Left, center.Right) = (center.Right, center.Left);
+                    }
+
+                    if (center.Bottom < center.Top)
+                    {
+                        (center.Top, center.Bottom) = (center.Bottom, center.Top);
+                    }
+                }
+
+                SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(placedMapBox.BoxBitmap, center);
+
+                placedMapBox.PatchA = bitmapSlices[0].Copy();   // top-left corner
+                placedMapBox.PatchB = bitmapSlices[1].Copy();   // top
+                placedMapBox.PatchC = bitmapSlices[2].Copy();   // top-right corner
+                placedMapBox.PatchD = bitmapSlices[3].Copy();   // left size
+                placedMapBox.PatchE = bitmapSlices[4].Copy();   // middle
+                placedMapBox.PatchF = bitmapSlices[5].Copy();   // right side
+                placedMapBox.PatchG = bitmapSlices[6].Copy();   // bottom-left corner
+                placedMapBox.PatchH = bitmapSlices[7].Copy();   // bottom
+                placedMapBox.PatchI = bitmapSlices[8].Copy();   // bottom-right corner
+
+                Cmd_AddLabelBox cmd = new(map, placedMapBox);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+
+            }
+        }
     }
 }

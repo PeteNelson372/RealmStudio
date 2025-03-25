@@ -1,5 +1,5 @@
 ﻿/**************************************************************************************************************************
-* Copyright 2024, Peter R. Nelson
+* Copyright 2025, Peter R. Nelson
 *
 * This file is part of the RealmStudio application. The RealmStudio application is intended
 * for creating fantasy maps for gaming and world building.
@@ -23,25 +23,25 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal sealed class Cmd_AddMapRegion(RealmStudioMap map, MapRegion mapRegion) : IMapOperation
+    internal class Cmd_AddNewWaterFeature(RealmStudioMap map, WaterFeature newWaterFeature) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
-        private readonly MapRegion NewMapRegion = mapRegion;
+        private readonly WaterFeature NewWaterFeature = newWaterFeature;
 
         public void DoOperation()
         {
-            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.REGIONLAYER).MapLayerComponents.Add(NewMapRegion);
+            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WATERLAYER).MapLayerComponents.Add(NewWaterFeature);
         }
 
         public void UndoOperation()
         {
-            for (int i = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.REGIONLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
+            for (int i = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WATERLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
-                if (MapBuilder.GetMapLayerByIndex(Map, MapBuilder.REGIONLAYER).MapLayerComponents[i] is MapRegion r)
+                if (MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WATERLAYER).MapLayerComponents[i] is WaterFeature wf)
                 {
-                    if (r.RegionGuid.ToString() == NewMapRegion.RegionGuid.ToString())
+                    if (wf.WaterFeatureGuid.ToString() == NewWaterFeature.WaterFeatureGuid.ToString())
                     {
-                        MapBuilder.GetMapLayerByIndex(Map, MapBuilder.REGIONLAYER).MapLayerComponents.RemoveAt(i);
+                        MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WATERLAYER).MapLayerComponents.RemoveAt(i);
                         break;
                     }
                 }

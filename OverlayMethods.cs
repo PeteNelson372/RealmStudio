@@ -333,5 +333,30 @@ namespace RealmStudio
             mapScale.X = (int)zoomedScrolledPoint.X - mapScale.Width / 2;
             mapScale.Y = (int)zoomedScrolledPoint.Y - mapScale.Height / 2;
         }
+
+        internal static MapScale? SelectMapScale(RealmStudioMap map, SKPoint zoomedScrolledPoint)
+        {
+            MapScale? mapScale = null;
+
+            for (int i = 0; i < MapBuilder.GetMapLayerByIndex(map, MapBuilder.OVERLAYLAYER).MapLayerComponents.Count; i++)
+            {
+                if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.OVERLAYLAYER).MapLayerComponents[i] is MapScale)
+                {
+                    mapScale = (MapScale?)MapBuilder.GetMapLayerByIndex(map, MapBuilder.OVERLAYLAYER).MapLayerComponents[i];
+                }
+            }
+
+            if (mapScale != null)
+            {
+                SKRect scaleRect = new(mapScale.X, mapScale.Y, mapScale.X + mapScale.Width, mapScale.Y + mapScale.Height);
+
+                if (scaleRect.Contains(zoomedScrolledPoint))
+                {
+                    mapScale.IsSelected = true;
+                }
+            }
+
+            return mapScale;
+        }
     }
 }

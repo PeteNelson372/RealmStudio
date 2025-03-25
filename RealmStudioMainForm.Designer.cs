@@ -118,6 +118,7 @@
             ShowLandLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label4 = new Label();
             HeightMapToolsPanel = new Panel();
+            HeightMapLandformSelectButton = new FontAwesome.Sharp.IconButton();
             label96 = new Label();
             label97 = new Label();
             Update3DViewSwitch = new ReaLTaiizor.Controls.CyberSwitch();
@@ -583,7 +584,6 @@
             LabelBoxStyleTable = new TableLayoutPanel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
-            HeightMapLandformSelectButton = new FontAwesome.Sharp.IconButton();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -1723,8 +1723,8 @@
             LandTab.Controls.Add(LandformValuesGroup);
             LandTab.Controls.Add(ShowLandLayerSwitch);
             LandTab.Controls.Add(label4);
-            LandTab.Controls.Add(HeightMapToolsPanel);
             LandTab.Controls.Add(LandToolStrip);
+            LandTab.Controls.Add(HeightMapToolsPanel);
             LandTab.Location = new Point(26, 4);
             LandTab.Name = "LandTab";
             LandTab.Size = new Size(230, 878);
@@ -2132,6 +2132,25 @@
             HeightMapToolsPanel.Name = "HeightMapToolsPanel";
             HeightMapToolsPanel.Size = new Size(80, 882);
             HeightMapToolsPanel.TabIndex = 21;
+            // 
+            // HeightMapLandformSelectButton
+            // 
+            HeightMapLandformSelectButton.FlatAppearance.BorderSize = 0;
+            HeightMapLandformSelectButton.FlatStyle = FlatStyle.Flat;
+            HeightMapLandformSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            HeightMapLandformSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            HeightMapLandformSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
+            HeightMapLandformSelectButton.IconColor = Color.Black;
+            HeightMapLandformSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            HeightMapLandformSelectButton.IconSize = 24;
+            HeightMapLandformSelectButton.Location = new Point(0, 25);
+            HeightMapLandformSelectButton.Name = "HeightMapLandformSelectButton";
+            HeightMapLandformSelectButton.Size = new Size(76, 60);
+            HeightMapLandformSelectButton.TabIndex = 25;
+            HeightMapLandformSelectButton.Text = "Select";
+            HeightMapLandformSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            HeightMapLandformSelectButton.UseVisualStyleBackColor = true;
+            HeightMapLandformSelectButton.Click += HeightMapLandformSelectButton_Click;
             // 
             // label96
             // 
@@ -8928,25 +8947,6 @@
             materialCheckBox2.Text = "materialCheckBox2";
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
-            // 
-            // HeightMapLandformSelectButton
-            // 
-            HeightMapLandformSelectButton.FlatAppearance.BorderSize = 0;
-            HeightMapLandformSelectButton.FlatStyle = FlatStyle.Flat;
-            HeightMapLandformSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            HeightMapLandformSelectButton.ForeColor = SystemColors.ControlDarkDark;
-            HeightMapLandformSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
-            HeightMapLandformSelectButton.IconColor = Color.Black;
-            HeightMapLandformSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            HeightMapLandformSelectButton.IconSize = 24;
-            HeightMapLandformSelectButton.Location = new Point(0, 25);
-            HeightMapLandformSelectButton.Name = "HeightMapLandformSelectButton";
-            HeightMapLandformSelectButton.Size = new Size(76, 60);
-            HeightMapLandformSelectButton.TabIndex = 25;
-            HeightMapLandformSelectButton.Text = "Select";
-            HeightMapLandformSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            HeightMapLandformSelectButton.UseVisualStyleBackColor = true;
-            HeightMapLandformSelectButton.Click += HeightMapLandformSelectButton_Click;
             // 
             // RealmStudioMainForm
             // 

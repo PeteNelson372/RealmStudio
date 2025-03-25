@@ -27,13 +27,15 @@ namespace RealmStudio
 {
     internal class MapHeightMapMethods
     {
+        public List<string> LandFormObjModelList { get; set; } = [];
+
         internal static void ExportHeightMap3DModel(RealmStudioMap map)
         {
             SKSurface s = SKSurface.Create(new SKImageInfo(map.MapWidth, map.MapHeight));
             s.Canvas.Clear(SKColors.Black);
 
             // render the map as a height map
-            MapHeightMapMethods.RenderHeightMapToCanvas(map, s.Canvas, new SKPoint(0, 0), null);
+            RenderHeightMapToCanvas(map, s.Canvas, new SKPoint(0, 0), null);
 
             SKBitmap heightMap = SKBitmap.FromImage(s.Snapshot());
 
@@ -152,22 +154,24 @@ namespace RealmStudio
             heightMapBitmap.SetPixel(x, y, new SKColor((byte)r, (byte)g, (byte)b));
         }
 
-        internal static SKBitmap ExtractRectFromHeightMap(RealmStudioMap map, SKRect extractRect)
+        internal static SKBitmap? ExtractRectFromHeightMap(RealmStudioMap map, SKRect? extractRect)
         {
+            if (extractRect == null) return null;
+
             using SKSurface s = SKSurface.Create(new SKImageInfo(map.MapWidth, map.MapHeight));
             s.Canvas.Clear(SKColors.Black);
 
-            MapHeightMapMethods.RenderHeightMapToCanvas(map, s.Canvas, new SKPoint(0, 0), null);
+            RenderHeightMapToCanvas(map, s.Canvas, new SKPoint(0, 0), null);
 
             SKBitmap heightMap = SKBitmap.FromImage(s.Snapshot());
 
             // extract the section of the heightmap within the bounding box from the heightmap
-            SKBitmap extractedBitmap = new((int)extractRect.Width, (int)extractRect.Height);
+            SKBitmap extractedBitmap = new((int)((SKRect)extractRect).Width, (int)((SKRect)extractRect).Height);
             using SKCanvas canvas = new(extractedBitmap);
 
             canvas.Clear(SKColors.Black);
 
-            canvas.DrawBitmap(heightMap, extractRect, new SKRect(0, 0, extractRect.Width, extractRect.Height));
+            canvas.DrawBitmap(heightMap, (SKRect)extractRect, new SKRect(0, 0, ((SKRect)extractRect).Width, ((SKRect)extractRect).Height));
 
             return extractedBitmap;
         }
@@ -219,6 +223,54 @@ namespace RealmStudio
                     RealmMapMethods.AddMapImagesToHeightMapLayer(map);
                 }
             }
+        }
+
+        internal static SKBitmap? GetBitmapForThreeDView(RealmStudioMap map, Landform? landform, SKRect? realmArea)
+        {
+            SKBitmap? heightMapBitmap = null;
+
+            try
+            {
+                if (realmArea != SKRect.Empty)
+                {
+                    SKBitmap? extractedBitmap = ExtractRectFromHeightMap(map, (SKRect)realmArea);
+                    heightMapBitmap = extractedBitmap?.Copy();
+                }
+                else if (landform != null)
+                {
+                    // extract a heightmap bitmap using the area of the selected landform bounds
+                    // then create a 3D model from the bitmap and display it in the ThreeDView
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    landform.ContourPath.GetTightBounds(out SKRect landformBounds);
+
+                    // inflate the bounds by 20 pixels to give the height map some border
+                    landformBounds.Inflate(20, 20);
+                    landformBounds.Left = Math.Max(0, landformBounds.Left - 10);
+                    landformBounds.Top = Math.Max(0, landformBounds.Top - 10);
+
+                    SKBitmap? extractedBitmap = ExtractRectFromHeightMap(map, landformBounds);
+
+                    heightMapBitmap = extractedBitmap?.Copy();
+                }
+                else
+                {
+                    // generate the 3D model from the entire map
+                    using SKSurface s = SKSurface.Create(new SKImageInfo(map.MapWidth, map.MapHeight));
+                    s.Canvas.Clear(SKColors.Black);
+
+                    RenderHeightMapToCanvas(map, s.Canvas, new SKPoint(0, 0), null);
+
+                    heightMapBitmap = SKBitmap.FromImage(s.Snapshot()).Copy();
+                }
+            }
+            catch { }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+
+            return heightMapBitmap;
         }
     }
 }

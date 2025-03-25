@@ -667,241 +667,6 @@ namespace RealmStudio
 
         #endregion
 
-        #region Main Form Methods
-
-        private void ExportMapAsImage(RealmMapExportFormat exportFormat, bool upscale = false)
-        {
-            SaveFileDialog ofd = new()
-            {
-                Title = "Export Map",
-                DefaultExt = exportFormat.ToString().ToLowerInvariant(),
-                RestoreDirectory = true,
-                ShowHelp = true,
-                Filter = "",
-                AddExtension = true,
-                CheckPathExists = true,
-                ShowHiddenFiles = false,
-                ValidateNames = true,
-            };
-
-            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
-            string sep = string.Empty;
-            foreach (ImageCodecInfo c in codecs)
-            {
-                if (c.CodecName != null && c.FilenameExtension != null)
-                {
-                    string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
-                    ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLowerInvariant());
-                    sep = "|";
-                }
-            }
-
-            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
-
-            int filterIndex = 0;
-
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-
-            for (int i = 0; i < codecs.Length; i++)
-            {
-                if (codecs[i].FilenameExtension != null)
-                {
-                    if (codecs[i].FilenameExtension.Contains(exportFormat.ToString(), StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        filterIndex = i + 1;
-                        break;
-                    }
-                }
-            }
-
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-
-            ofd.FilterIndex = filterIndex;
-
-            DialogResult result = ofd.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                string filename = ofd.FileName;
-                try
-                {
-                    StopAutosaveTimer();
-                    StopBrushTimer();
-                    StopLocationUpdateTimer();
-                    StopSymbolAreaBrushTimer();
-
-                    SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
-                    s.Canvas.Clear();
-
-                    MapRenderMethods.RenderMapForExport(CURRENT_MAP, s.Canvas);
-
-                    Bitmap bitmap = s.Snapshot().ToBitmap();
-
-                    if (upscale)
-                    {
-                        Bitmap upscaledBitmap = new(bitmap.Width * 2, bitmap.Height * 2);
-                        using (Graphics g = Graphics.FromImage(upscaledBitmap))
-                        {
-                            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                            g.DrawImage(bitmap, 0, 0, bitmap.Width * 2, bitmap.Height * 2);
-                        }
-                        bitmap = upscaledBitmap;
-                    }
-
-                    bitmap.Save(filename);
-
-                    MessageBox.Show("Map exported to " + ofd.FileName, "Map Exported", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                }
-                catch (Exception ex)
-                {
-                    Program.LOGGER.Error(ex);
-                    MessageBox.Show("AN error occurred while exporting map to " + ofd.FileName, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                }
-                finally
-                {
-                    StartAutosaveTimer();
-                    StartLocationUpdateTimer();
-                }
-            }
-        }
-
-        private void ExportMapAsLayers(RealmMapExportFormat exportFormat)
-        {
-            SaveFileDialog ofd = new()
-            {
-                Title = "Export Map",
-                DefaultExt = "zip",
-                RestoreDirectory = true,
-                ShowHelp = true,
-                Filter = "",
-                AddExtension = true,
-                CheckPathExists = true,
-                ShowHiddenFiles = false,
-                ValidateNames = true,
-            };
-
-            string sep = string.Empty;
-
-            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "Zip File", "zip");
-            sep = "|";
-            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
-
-            ofd.FilterIndex = 1;
-
-            // create a zip file and add each of the layer bitmaps to it
-            DialogResult result = ofd.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                string filename = ofd.FileName;
-                try
-                {
-                    StopAutosaveTimer();
-                    StopBrushTimer();
-                    StopLocationUpdateTimer();
-                    StopSymbolAreaBrushTimer();
-
-                    using (FileStream fileStream = new(filename, FileMode.OpenOrCreate))
-                    {
-                        RealmMapMethods.ExportMapLayersAsZipFile(fileStream, CURRENT_MAP, exportFormat);
-                    }
-
-                    MessageBox.Show("Map layers exported to " + ofd.FileName, "Map Exported", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                }
-                catch (Exception ex)
-                {
-                    Program.LOGGER.Error(ex);
-                    MessageBox.Show("An error occurred while exporting map layers to " + ofd.FileName, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                }
-                finally
-                {
-                    StartAutosaveTimer();
-                    StartLocationUpdateTimer();
-                }
-            }
-        }
-
-        private void ExportHeightMap(RealmMapExportFormat exportFormat)
-        {
-            SaveFileDialog ofd = new()
-            {
-                Title = "Export Map",
-                DefaultExt = exportFormat.ToString().ToLowerInvariant(),
-                RestoreDirectory = true,
-                ShowHelp = true,
-                Filter = "",
-                AddExtension = true,
-                CheckPathExists = true,
-                ShowHiddenFiles = false,
-                ValidateNames = true,
-            };
-
-            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
-            string sep = string.Empty;
-            foreach (ImageCodecInfo c in codecs)
-            {
-                if (c.CodecName != null && c.FilenameExtension != null)
-                {
-                    string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
-                    ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLowerInvariant());
-                    sep = "|";
-                }
-            }
-
-            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
-
-            int filterIndex = 0;
-
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-
-            for (int i = 0; i < codecs.Length; i++)
-            {
-                if (codecs[i].FilenameExtension != null)
-                {
-                    if (codecs[i].FilenameExtension.Contains(exportFormat.ToString(), StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        filterIndex = i + 1;
-                        break;
-                    }
-                }
-            }
-
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-
-            ofd.FilterIndex = filterIndex;
-
-            DialogResult result = ofd.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                string filename = ofd.FileName;
-                try
-                {
-                    StopAutosaveTimer();
-                    StopBrushTimer();
-                    StopLocationUpdateTimer();
-                    StopSymbolAreaBrushTimer();
-
-                    SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
-                    s.Canvas.Clear(SKColors.Black);
-
-                    // render the map as a height map
-                    MapHeightMapMethods.RenderHeightMapToCanvas(CURRENT_MAP, s.Canvas, new SKPoint(0, 0), null);
-
-                    Bitmap bitmap = s.Snapshot().ToBitmap();
-
-                    bitmap.Save(filename);
-
-                    StartAutosaveTimer();
-                    StartLocationUpdateTimer();
-                    MessageBox.Show("Height map exported to " + ofd.FileName, "Height Map Exported", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                }
-                catch (Exception ex)
-                {
-                    Program.LOGGER.Error(ex);
-                    MessageBox.Show("Failed to export height map to " + ofd.FileName, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                }
-            }
-        }
-        #endregion
-
         #region Main Menu Event Handlers
 
         private void NewToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1530,6 +1295,26 @@ namespace RealmStudio
          * MAIN FORM METHODS
          *******************************************************************************************************/
 
+        private void PanMap(MouseEventArgs e)
+        {
+            // pan the map when middle button (mouse wheel) is held down and dragged
+
+            int xDelta = e.Location.X - PREVIOUS_MOUSE_LOCATION.X;
+            int yDelta = e.Location.Y - PREVIOUS_MOUSE_LOCATION.Y;
+
+            ScrollPoint.X += xDelta;
+            DrawingPoint.X += -xDelta;
+
+            MapRenderHScroll.Value = Math.Max(0, Math.Min((int)DrawingPoint.X, CURRENT_MAP.MapWidth));
+
+            ScrollPoint.Y += yDelta;
+            DrawingPoint.Y += -yDelta;
+
+            MapRenderVScroll.Value = Math.Max(0, Math.Min((int)DrawingPoint.Y, CURRENT_MAP.MapHeight));
+
+            PREVIOUS_MOUSE_LOCATION = e.Location;
+        }
+
         private void CreateNewMap()
         {
             MapBuilder.DisposeMap(CURRENT_MAP);
@@ -1622,7 +1407,6 @@ namespace RealmStudio
             SYMBOL_AREA_BRUSH_TIMER.Elapsed += new ElapsedEventHandler(SymbolAreaBrushTimerEventHandler);
             SYMBOL_AREA_BRUSH_TIMER.Start();
         }
-
 
         private void StartLocationUpdateTimer()
         {
@@ -1719,7 +1503,6 @@ namespace RealmStudio
 
             return result;
         }
-
 
         private void MainTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -2102,6 +1885,238 @@ namespace RealmStudio
             b.Refresh();
         }
 
+        private void ExportMapAsImage(RealmMapExportFormat exportFormat, bool upscale = false)
+        {
+            SaveFileDialog ofd = new()
+            {
+                Title = "Export Map",
+                DefaultExt = exportFormat.ToString().ToLowerInvariant(),
+                RestoreDirectory = true,
+                ShowHelp = true,
+                Filter = "",
+                AddExtension = true,
+                CheckPathExists = true,
+                ShowHiddenFiles = false,
+                ValidateNames = true,
+            };
+
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+            string sep = string.Empty;
+            foreach (ImageCodecInfo c in codecs)
+            {
+                if (c.CodecName != null && c.FilenameExtension != null)
+                {
+                    string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
+                    ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLowerInvariant());
+                    sep = "|";
+                }
+            }
+
+            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
+
+            int filterIndex = 0;
+
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
+            for (int i = 0; i < codecs.Length; i++)
+            {
+                if (codecs[i].FilenameExtension != null)
+                {
+                    if (codecs[i].FilenameExtension.Contains(exportFormat.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        filterIndex = i + 1;
+                        break;
+                    }
+                }
+            }
+
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+            ofd.FilterIndex = filterIndex;
+
+            DialogResult result = ofd.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string filename = ofd.FileName;
+                try
+                {
+                    StopAutosaveTimer();
+                    StopBrushTimer();
+                    StopLocationUpdateTimer();
+                    StopSymbolAreaBrushTimer();
+
+                    SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+                    s.Canvas.Clear();
+
+                    MapRenderMethods.RenderMapForExport(CURRENT_MAP, s.Canvas);
+
+                    Bitmap bitmap = s.Snapshot().ToBitmap();
+
+                    if (upscale)
+                    {
+                        Bitmap upscaledBitmap = new(bitmap.Width * 2, bitmap.Height * 2);
+                        using (Graphics g = Graphics.FromImage(upscaledBitmap))
+                        {
+                            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                            g.DrawImage(bitmap, 0, 0, bitmap.Width * 2, bitmap.Height * 2);
+                        }
+                        bitmap = upscaledBitmap;
+                    }
+
+                    bitmap.Save(filename);
+
+                    MessageBox.Show("Map exported to " + ofd.FileName, "Map Exported", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+                catch (Exception ex)
+                {
+                    Program.LOGGER.Error(ex);
+                    MessageBox.Show("AN error occurred while exporting map to " + ofd.FileName, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+                finally
+                {
+                    StartAutosaveTimer();
+                    StartLocationUpdateTimer();
+                }
+            }
+        }
+
+        private void ExportMapAsLayers(RealmMapExportFormat exportFormat)
+        {
+            SaveFileDialog ofd = new()
+            {
+                Title = "Export Map",
+                DefaultExt = "zip",
+                RestoreDirectory = true,
+                ShowHelp = true,
+                Filter = "",
+                AddExtension = true,
+                CheckPathExists = true,
+                ShowHiddenFiles = false,
+                ValidateNames = true,
+            };
+
+            string sep = string.Empty;
+
+            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "Zip File", "zip");
+            sep = "|";
+            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
+
+            ofd.FilterIndex = 1;
+
+            // create a zip file and add each of the layer bitmaps to it
+            DialogResult result = ofd.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string filename = ofd.FileName;
+                try
+                {
+                    StopAutosaveTimer();
+                    StopBrushTimer();
+                    StopLocationUpdateTimer();
+                    StopSymbolAreaBrushTimer();
+
+                    using (FileStream fileStream = new(filename, FileMode.OpenOrCreate))
+                    {
+                        RealmMapMethods.ExportMapLayersAsZipFile(fileStream, CURRENT_MAP, exportFormat);
+                    }
+
+                    MessageBox.Show("Map layers exported to " + ofd.FileName, "Map Exported", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+                catch (Exception ex)
+                {
+                    Program.LOGGER.Error(ex);
+                    MessageBox.Show("An error occurred while exporting map layers to " + ofd.FileName, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+                finally
+                {
+                    StartAutosaveTimer();
+                    StartLocationUpdateTimer();
+                }
+            }
+        }
+
+        private void ExportHeightMap(RealmMapExportFormat exportFormat)
+        {
+            SaveFileDialog ofd = new()
+            {
+                Title = "Export Map",
+                DefaultExt = exportFormat.ToString().ToLowerInvariant(),
+                RestoreDirectory = true,
+                ShowHelp = true,
+                Filter = "",
+                AddExtension = true,
+                CheckPathExists = true,
+                ShowHiddenFiles = false,
+                ValidateNames = true,
+            };
+
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+            string sep = string.Empty;
+            foreach (ImageCodecInfo c in codecs)
+            {
+                if (c.CodecName != null && c.FilenameExtension != null)
+                {
+                    string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
+                    ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLowerInvariant());
+                    sep = "|";
+                }
+            }
+
+            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
+
+            int filterIndex = 0;
+
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
+            for (int i = 0; i < codecs.Length; i++)
+            {
+                if (codecs[i].FilenameExtension != null)
+                {
+                    if (codecs[i].FilenameExtension.Contains(exportFormat.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        filterIndex = i + 1;
+                        break;
+                    }
+                }
+            }
+
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+            ofd.FilterIndex = filterIndex;
+
+            DialogResult result = ofd.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string filename = ofd.FileName;
+                try
+                {
+                    StopAutosaveTimer();
+                    StopBrushTimer();
+                    StopLocationUpdateTimer();
+                    StopSymbolAreaBrushTimer();
+
+                    SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
+                    s.Canvas.Clear(SKColors.Black);
+
+                    // render the map as a height map
+                    MapHeightMapMethods.RenderHeightMapToCanvas(CURRENT_MAP, s.Canvas, new SKPoint(0, 0), null);
+
+                    Bitmap bitmap = s.Snapshot().ToBitmap();
+
+                    bitmap.Save(filename);
+
+                    StartAutosaveTimer();
+                    StartLocationUpdateTimer();
+                    MessageBox.Show("Height map exported to " + ofd.FileName, "Height Map Exported", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+                catch (Exception ex)
+                {
+                    Program.LOGGER.Error(ex);
+                    MessageBox.Show("Failed to export height map to " + ofd.FileName, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+            }
+        }
+
         #endregion
 
         #region Map File Open and Save Methods
@@ -2338,6 +2353,7 @@ namespace RealmStudio
 
         #endregion
 
+        #region Form Panel Event Handlers and Methods
         private void PopulateFontPanelUI()
         {
             InstalledFontCollection installedFontCollection = new();
@@ -2649,6 +2665,8 @@ namespace RealmStudio
         {
             FontSelectionPanel.Visible = false;
         }
+
+        #endregion
 
         #region Theme Methods
 
@@ -3559,7 +3577,7 @@ namespace RealmStudio
 
         private void SKGLRenderControl_MouseWheel(object? sender, MouseEventArgs e)
         {
-            int cursorDelta = 5;
+            const int cursorDelta = 5;
             int sizeDelta = e.Delta < 0 ? -cursorDelta : cursorDelta;
 
             if (ModifierKeys == Keys.None && CURRENT_DRAWING_MODE == MapDrawingMode.LandErase)
@@ -3679,30 +3697,20 @@ namespace RealmStudio
 
         #region SKGLRenderControl Mouse Down Event Handling Methods (called from event handlers)
 
+        #region Left Button Down Handler
+
         private void LeftButtonMouseDownHandler(MouseEventArgs e, int brushSize)
         {
             SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
 
             // has the map scale been clicked?
-            for (int i = 0; i < MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents.Count; i++)
-            {
-                if (MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents[i] is MapScale)
-                {
-                    SELECTED_MAP_SCALE = (MapScale?)MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.OVERLAYLAYER).MapLayerComponents[i];
-                }
-            }
+            SELECTED_MAP_SCALE = OverlayMethods.SelectMapScale(CURRENT_MAP, zoomedScrolledPoint);
 
             if (SELECTED_MAP_SCALE != null)
             {
-                SKRect scaleRect = new(SELECTED_MAP_SCALE.X, SELECTED_MAP_SCALE.Y,
-                    SELECTED_MAP_SCALE.X + SELECTED_MAP_SCALE.Width, SELECTED_MAP_SCALE.Y + SELECTED_MAP_SCALE.Height);
-
-                if (scaleRect.Contains(zoomedScrolledPoint))
-                {
-                    Cursor = Cursors.SizeAll;
-                    SELECTED_MAP_SCALE.IsSelected = true;
-                    CURRENT_DRAWING_MODE = MapDrawingMode.SelectMapScale;
-                }
+                CURRENT_DRAWING_MODE = MapDrawingMode.SelectMapScale;
+                SetDrawingModeLabel();
+                Cursor.Current = Cursors.SizeAll;
             }
 
             switch (CURRENT_DRAWING_MODE)
@@ -3757,7 +3765,7 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Default;
 
-                        SELECTED_LANDFORM = SelectLandformAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+                        SELECTED_LANDFORM = LandformMethods.SelectLandformAtPoint(CURRENT_MAP, zoomedScrolledPoint);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3766,7 +3774,7 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Default;
 
-                        SELECTED_LANDFORM = SelectLandformAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+                        SELECTED_LANDFORM = LandformMethods.SelectLandformAtPoint(CURRENT_MAP, zoomedScrolledPoint);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3791,22 +3799,6 @@ namespace RealmStudio
                     {
                         CURRENT_MAP.IsSaved = false;
                         Cursor = Cursors.Cross;
-
-                        if (CURRENT_LAND_ERASE_STROKE == null)
-                        {
-                            CURRENT_LAND_ERASE_STROKE = new LayerPaintStroke(CURRENT_MAP, SKColors.White,
-                                ColorPaintBrush.HardBrush, SELECTED_BRUSH_SIZE / 2, MapBuilder.LANDFORMLAYER, true)
-                            {
-                                RenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false,
-                                new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight))
-                            };
-
-                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(CURRENT_LAND_ERASE_STROKE);
-                        }
-
-                        CURRENT_LAND_ERASE_STROKE?.AddLayerPaintStrokePoint(zoomedScrolledPoint);
-
-                        SKGLRenderControl.Refresh();
                     }
                     break;
                 case MapDrawingMode.LandColor:
@@ -3876,13 +3868,21 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.LakePaint:
                     {
-                        // TODO: undo/redo
                         Cursor = Cursors.Cross;
 
                         CURRENT_WATERFEATURE = WaterFeatureMethods.CreateLake(CURRENT_MAP, zoomedScrolledPoint,
                             brushSize, WaterColorSelectionButton.BackColor, ShorelineColorSelectionButton.BackColor);
 
-                        SKGLRenderControl.Invalidate();
+                        if (CURRENT_WATERFEATURE != null)
+                        {
+                            Cmd_AddNewWaterFeature cmd = new(CURRENT_MAP, CURRENT_WATERFEATURE);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            WaterFeatureMethods.MergeWaterFeatures(CURRENT_MAP);
+
+                            SKGLRenderControl.Invalidate();
+                        }
                     }
                     break;
                 case MapDrawingMode.RiverPaint:
@@ -4144,10 +4144,18 @@ namespace RealmStudio
             }
         }
 
+        #endregion
+
+        #region Middle Button Down Handler
+
         private static void MiddleButtonMouseDownHandler(MouseEventArgs e)
         {
             PREVIOUS_MOUSE_LOCATION = e.Location;
         }
+
+        #endregion
+
+        #region Right Button Down Handler
 
         private void RightButtonMouseDownHandler(MouseEventArgs e)
         {
@@ -4226,6 +4234,8 @@ namespace RealmStudio
 
         #endregion
 
+        #endregion
+
         #region SKGLRenderControl Mouse Move Event Handling Methods (called from event handlers)
 
         #region Left Button Move Handler Method
@@ -4272,8 +4282,10 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
 
                         LandformMethods.LandformErasePath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
+                        LandformMethods.EraseFromLandform(CURRENT_MAP, zoomedScrolledPoint, brushRadius);
 
-                        CURRENT_LAND_ERASE_STROKE?.AddLayerPaintStrokePoint(zoomedScrolledPoint);
+                        CURRENT_LAND_ERASE_STROKE = null;
+
                         SKGLRenderControl.Refresh();
                     }
                     break;
@@ -4531,37 +4543,21 @@ namespace RealmStudio
 
         #endregion
 
+        #region Middle Button Move Handler Method
+        private void MiddleButtonMouseMoveHandler(object sender, MouseEventArgs e)
+        {
+            Cursor = Cursors.Hand;
+            PanMap(e);
+            SKGLRenderControl.Invalidate();
+        }
+
+        #endregion
+
         #region Right Button Move Handler Method
 
         private void RightButtonMouseMoveHandler(object sender, MouseEventArgs e)
         {
 
-        }
-        #endregion
-
-        #region Middle Button Move Handler Method
-        private void MiddleButtonMouseMoveHandler(object sender, MouseEventArgs e)
-        {
-            Cursor = Cursors.Hand;
-
-            // pan the map when middle button (mouse wheel) is held down and dragged
-
-            int xDelta = e.Location.X - PREVIOUS_MOUSE_LOCATION.X;
-            int yDelta = e.Location.Y - PREVIOUS_MOUSE_LOCATION.Y;
-
-            ScrollPoint.X += xDelta;
-            DrawingPoint.X += -xDelta;
-
-            MapRenderHScroll.Value = Math.Max(0, Math.Min((int)DrawingPoint.X, CURRENT_MAP.MapWidth));
-
-            ScrollPoint.Y += yDelta;
-            DrawingPoint.Y += -yDelta;
-
-            MapRenderVScroll.Value = Math.Max(0, Math.Min((int)DrawingPoint.Y, CURRENT_MAP.MapHeight));
-
-            PREVIOUS_MOUSE_LOCATION = e.Location;
-
-            SKGLRenderControl.Invalidate();
         }
 
         #endregion
@@ -4575,41 +4571,20 @@ namespace RealmStudio
             switch (CURRENT_DRAWING_MODE)
             {
                 case MapDrawingMode.PlaceWindrose:
-                    if (CURRENT_WINDROSE != null)
                     {
-                        CURRENT_WINDROSE.X = (int)zoomedScrolledPoint.X;
-                        CURRENT_WINDROSE.Y = (int)zoomedScrolledPoint.Y;
-
+                        BackgroundMethods.MoveWindrose(CURRENT_WINDROSE, zoomedScrolledPoint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
                 case MapDrawingMode.RiverEdit:
                     {
-                        if (SELECTED_WATERFEATURE != null && SELECTED_WATERFEATURE is River river)
-                        {
-                            foreach (MapRiverPoint mp in river.RiverPoints)
-                            {
-                                mp.IsSelected = false;
-                            }
-
-                            SELECTED_RIVERPOINT = WaterFeatureMethods.SelectRiverPointAtPoint(river, zoomedScrolledPoint);
-                        }
-
+                        SELECTED_RIVERPOINT = WaterFeatureMethods.GetSelectedRiverPoint(SELECTED_WATERFEATURE, zoomedScrolledPoint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
                 case MapDrawingMode.PathEdit:
                     {
-                        if (SELECTED_PATH != null)
-                        {
-                            foreach (MapPathPoint mp in SELECTED_PATH.PathPoints)
-                            {
-                                mp.IsSelected = false;
-                            }
-
-                            SELECTED_PATHPOINT = MapPathMethods.SelectMapPathPointAtPoint(SELECTED_PATH, zoomedScrolledPoint);
-                        }
-
+                        SELECTED_PATHPOINT = MapPathMethods.GetSelectedPathPoint(SELECTED_PATH, zoomedScrolledPoint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -4619,72 +4594,12 @@ namespace RealmStudio
                         {
                             if (ModifierKeys == Keys.Shift)
                             {
-                                // find the closest point to the current point
-                                // on the contour path of a coastline;
-                                // if the nearest point on the coastline
-                                // is within 5 pixels of the current point,
-                                // then set the region point to be the point
-                                // on the coastline
-                                // then check the *previous* region point; if the previous
-                                // region point is on the coastline of the same landform
-                                // then add all of the points on the coastline contour
-                                // to the region points
-
-                                int coastlinePointIndex = -1;
-                                SKPoint coastlinePoint = SKPoint.Empty;
-
-                                float currentDistance = float.MaxValue;
-
-                                MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
-                                MapLayer workLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER);
-                                workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
-
-                                // get the distance from the cursor point to the contour points of all landforms
-                                foreach (Landform lf in landformLayer.MapLayerComponents.Cast<Landform>())
-                                {
-                                    for (int i = 0; i < lf.ContourPoints.Count; i++)
-                                    {
-                                        SKPoint p = lf.ContourPoints[i];
-                                        float distance = SKPoint.Distance(zoomedScrolledPoint, p);
-
-                                        if (distance < currentDistance && distance < 5)
-                                        {
-                                            coastlinePointIndex = i;
-                                            coastlinePoint = p;
-                                            currentDistance = distance;
-                                        }
-                                    }
-
-                                    if (coastlinePointIndex >= 0) break;
-                                }
-
-                                if (coastlinePoint != SKPoint.Empty)
-                                {
-                                    workLayer.LayerSurface?.Canvas.DrawCircle(coastlinePoint, 5, PaintObjects.MapPathSelectedControlPointPaint);
-                                }
+                                MapRegionMethods.DrawCoastlinePointOnWorkLayer(CURRENT_MAP, zoomedScrolledPoint);
                             }
                         }
                         else
                         {
-                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
-
-                            if (CURRENT_MAP_REGION.MapRegionPoints.Count > 1)
-                            {
-                                // temporarily add the layer click point for rendering
-                                MapRegionPoint mrp = new(zoomedScrolledPoint);
-                                CURRENT_MAP_REGION.MapRegionPoints.Add(mrp);
-
-                                // render
-                                CURRENT_MAP_REGION.Render(MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas);
-
-                                // remove it
-                                CURRENT_MAP_REGION.MapRegionPoints.RemoveAt(CURRENT_MAP_REGION.MapRegionPoints.Count - 1);
-                            }
-                            else
-                            {
-                                MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawLine(PREVIOUS_CURSOR_POINT, zoomedScrolledPoint, CURRENT_MAP_REGION.RegionBorderPaint);
-                            }
-
+                            MapRegionMethods.DrawRegionOnWorkLayer(CURRENT_MAP, CURRENT_MAP_REGION, zoomedScrolledPoint, PREVIOUS_CURSOR_POINT);
                             SKGLRenderControl.Invalidate();
                         }
                     }
@@ -4693,66 +4608,13 @@ namespace RealmStudio
                     {
                         if (CURRENT_MAP_REGION != null && CURRENT_MAP_REGION.IsSelected)
                         {
-                            bool pointSelected = false;
-                            foreach (MapRegionPoint p in CURRENT_MAP_REGION.MapRegionPoints)
-                            {
-                                using SKPath path = new();
-                                path.AddCircle(p.RegionPoint.X, p.RegionPoint.Y, 5);
-
-                                if (path.Contains(zoomedScrolledPoint.X, zoomedScrolledPoint.Y))
-                                {
-                                    pointSelected = true;
-                                    p.IsSelected = true;
-                                }
-                                else
-                                {
-                                    if (!MapRegionMethods.EDITING_REGION)
-                                    {
-                                        p.IsSelected = false;
-                                    }
-                                }
-                            }
+                            bool pointSelected = MapRegionMethods.IsRegionPointSelected(CURRENT_MAP_REGION, zoomedScrolledPoint);
 
                             if (!pointSelected)
                             {
-                                MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
-
-                                MapRegionMethods.PREVIOUS_REGION_POINT_INDEX = -1;
-                                MapRegionMethods.NEXT_REGION_POINT_INDEX = -1;
-                                MapRegionMethods.NEW_REGION_POINT = null;
-
-                                // is the cursor on a line segment between 2 region vertices? if so, draw a circle at the cursor location
-                                for (int i = 0; i < CURRENT_MAP_REGION.MapRegionPoints.Count - 1; i++)
-                                {
-                                    if (DrawingMethods.LineContainsPoint(zoomedScrolledPoint, CURRENT_MAP_REGION.MapRegionPoints[i].RegionPoint, CURRENT_MAP_REGION.MapRegionPoints[i + 1].RegionPoint))
-                                    {
-                                        MapRegionMethods.EDITING_REGION = true;
-
-                                        MapRegionMethods.PREVIOUS_REGION_POINT_INDEX = i;
-                                        MapRegionMethods.NEXT_REGION_POINT_INDEX = i + 1;
-
-                                        MapRegionMethods.NEW_REGION_POINT = new MapRegionPoint(zoomedScrolledPoint);
-
-                                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionNewPointFillPaint);
-                                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
-
-                                        break;
-                                    }
-                                }
-
-                                if (DrawingMethods.LineContainsPoint(zoomedScrolledPoint, CURRENT_MAP_REGION.MapRegionPoints[0].RegionPoint,
-                                    CURRENT_MAP_REGION.MapRegionPoints[^1].RegionPoint))
-                                {
-                                    MapRegionMethods.EDITING_REGION = true;
-
-                                    MapRegionMethods.PREVIOUS_REGION_POINT_INDEX = 0;
-                                    MapRegionMethods.NEXT_REGION_POINT_INDEX = CURRENT_MAP_REGION.MapRegionPoints.Count;
-
-                                    MapRegionMethods.NEW_REGION_POINT = new MapRegionPoint(zoomedScrolledPoint);
-
-                                    MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionNewPointFillPaint);
-                                    MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(zoomedScrolledPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
-                                }
+                                // cursor is not on a region point; is it on a line segment between vertices of the region?
+                                // if so draw a yellow circle at that point
+                                MapRegionMethods.DrawRegionPointOnWorkLayer(CURRENT_MAP, CURRENT_MAP_REGION, zoomedScrolledPoint);
                             }
                         }
 
@@ -4767,6 +4629,8 @@ namespace RealmStudio
         #endregion
 
         #region SKGLRenderControl Mouse Up Event Handling Methods (called from event handers)
+
+        #region Left Button Up Handler
 
         private void LeftButtonMouseUpHandler(MouseEventArgs e, int brushRadius)
         {
@@ -4804,19 +4668,10 @@ namespace RealmStudio
                 case MapDrawingMode.LandPaint:
                     if (CURRENT_LANDFORM != null)
                     {
-                        // TODO: undo/redo
+                        Cmd_AddNewLandform cmd = new(CURRENT_MAP, CURRENT_LANDFORM);
+                        CommandManager.AddCommand(cmd);
+                        cmd.DoOperation();
 
-                        bool createPathsWhilePainting = Settings.Default.CalculateContoursWhilePainting;
-
-                        if (!createPathsWhilePainting)
-                        {
-                            // compute contour path and inner and outer paths in a separate thread
-                            LandformMethods.CreateAllPathsFromDrawnPath(CURRENT_MAP, CURRENT_LANDFORM);
-                        }
-
-                        CURRENT_LANDFORM.IsModified = true;
-
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(CURRENT_LANDFORM);
                         LandformMethods.MergeLandforms(CURRENT_MAP);
 
                         CURRENT_LANDFORM = null;
@@ -4830,31 +4685,12 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
-
-                        for (int i = landformLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-                        {
-                            if (landformLayer.MapLayerComponents[i] is LayerPaintStroke)
-                            {
-                                landformLayer.MapLayerComponents.RemoveAt(i);
-                            }
-                        }
+                        LandformMethods.EraseFromLandform(CURRENT_MAP, zoomedScrolledPoint, brushRadius);
 
                         CURRENT_LAND_ERASE_STROKE = null;
 
-                        Landform? erasedLandform = GetLandformIntersectingCircle(CURRENT_MAP, zoomedScrolledPoint, brushRadius);
-
-                        if (erasedLandform != null)
-                        {
-                            LandformMethods.EraseLandForm(erasedLandform);
-                            LandformMethods.MergeLandforms(CURRENT_MAP);
-                            LandformMethods.CreateAllPathsFromDrawnPath(CURRENT_MAP, erasedLandform);
-
-                            erasedLandform.IsModified = true;
-                        }
-
                         CURRENT_MAP.IsSaved = false;
-                        SKGLRenderControl.Refresh();
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case MapDrawingMode.LandColor:
@@ -4867,7 +4703,6 @@ namespace RealmStudio
                         {
                             CURRENT_LAYER_PAINT_STROKE = null;
                             CURRENT_MAP.IsSaved = false;
-                            SKGLRenderControl.Invalidate();
                         }
 
                         SKGLRenderControl.Invalidate();
@@ -4901,8 +4736,10 @@ namespace RealmStudio
                 case MapDrawingMode.WaterPaint:
                     if (CURRENT_WATERFEATURE != null)
                     {
-                        // TODO: undo/redo
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER).MapLayerComponents.Add(CURRENT_WATERFEATURE);
+                        Cmd_AddNewWaterFeature cmd = new(CURRENT_MAP, CURRENT_WATERFEATURE);
+                        CommandManager.AddCommand(cmd);
+                        cmd.DoOperation();
+
                         WaterFeatureMethods.MergeWaterFeatures(CURRENT_MAP);
 
                         CURRENT_WATERFEATURE = null;
@@ -4926,7 +4763,10 @@ namespace RealmStudio
                     if (CURRENT_RIVER != null)
                     {
                         WaterFeatureMethods.ConstructRiverPaths(CURRENT_RIVER);
-                        MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WATERLAYER).MapLayerComponents.Add(CURRENT_RIVER);
+
+                        Cmd_AddNewRiver cmd = new(CURRENT_MAP, CURRENT_RIVER);
+                        CommandManager.AddCommand(cmd);
+                        cmd.DoOperation();
 
                         CURRENT_RIVER = null;
 
@@ -4970,14 +4810,9 @@ namespace RealmStudio
                     {
                         CURRENT_MAP_PATH.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(CURRENT_MAP_PATH.PathPoints);
 
-                        if (CURRENT_MAP_PATH.DrawOverSymbols)
-                        {
-                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHUPPERLAYER).MapLayerComponents.Add(CURRENT_MAP_PATH);
-                        }
-                        else
-                        {
-                            MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.PATHLOWERLAYER).MapLayerComponents.Add(CURRENT_MAP_PATH);
-                        }
+                        Cmd_AddNewMapPath cmd = new(CURRENT_MAP, CURRENT_MAP_PATH);
+                        CommandManager.AddCommand(cmd);
+                        cmd.DoOperation();
 
                         CURRENT_MAP_PATH = null;
                         SELECTED_PATH_ANGLE = -1;
@@ -5022,39 +4857,24 @@ namespace RealmStudio
                             new Size(int.MaxValue, int.MaxValue),
                             TextFormatFlags.Default | TextFormatFlags.LeftAndRightPadding | TextFormatFlags.ExternalLeading | TextFormatFlags.SingleLine);
 
-                        LABEL_TEXT_BOX = new()
+                        Rectangle labelRect = new(e.X - (labelSize.Width / 2), e.Y - (labelSize.Height / 2), labelSize.Width, labelSize.Height);
+
+                        LABEL_TEXT_BOX = MapLabelMethods.CreateNewLabelTextbox(SKGLRenderControl, tbFont,
+                            labelRect, FontColorSelectButton.BackColor);
+
+                        if (LABEL_TEXT_BOX != null)
                         {
-                            Parent = SKGLRenderControl,
-                            Name = Guid.NewGuid().ToString(),
-                            Left = e.X - (labelSize.Width / 2),
-                            Top = e.Y - (labelSize.Height / 2),
-                            Width = labelSize.Width,
-                            Height = labelSize.Height,
-                            Margin = System.Windows.Forms.Padding.Empty,
-                            AutoSize = false,
-                            Font = tbFont,
-                            Visible = true,
-                            PlaceholderText = "...Label...",
-                            BackColor = Color.Peru,
-                            ForeColor = FontColorSelectButton.BackColor,
-                            BorderStyle = BorderStyle.FixedSingle,
-                            Multiline = false,
-                            TextAlign = HorizontalAlignment.Center,
-                            Text = "...Label...",
-                        };
+                            LABEL_TEXT_BOX.KeyPress += LabelTextBox_KeyPress;
 
-                        LABEL_TEXT_BOX.KeyPress += LabelTextBox_KeyPress;
+                            SKGLRenderControl.Controls.Add(LABEL_TEXT_BOX);
 
-                        SKGLRenderControl.Controls.Add(LABEL_TEXT_BOX);
+                            SKGLRenderControl.Refresh();
 
-                        SKGLRenderControl.Refresh();
-                        Refresh();
-
-                        LABEL_TEXT_BOX.BringToFront();
-                        LABEL_TEXT_BOX.Select(LABEL_TEXT_BOX.Text.Length, 0);
-                        LABEL_TEXT_BOX.Focus();
-                        LABEL_TEXT_BOX.ScrollToCaret();
-
+                            LABEL_TEXT_BOX.BringToFront();
+                            LABEL_TEXT_BOX.Select(LABEL_TEXT_BOX.Text.Length, 0);
+                            LABEL_TEXT_BOX.Focus();
+                            LABEL_TEXT_BOX.ScrollToCaret();
+                        }
                     }
                     break;
                 case MapDrawingMode.LabelSelect:
@@ -5110,57 +4930,17 @@ namespace RealmStudio
                     }
                     break;
                 case MapDrawingMode.DrawBox:
-                    // finalize box drawing
-
                     // clear the work layer
                     MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-                    if (SELECTED_PLACED_MAP_BOX != null && SELECTED_PLACED_MAP_BOX.BoxBitmap != null)
-                    {
-                        SKRectI center = new((int)SELECTED_PLACED_MAP_BOX.BoxCenterLeft,
-                            (int)SELECTED_PLACED_MAP_BOX.BoxCenterTop,
-                            (int)(SELECTED_PLACED_MAP_BOX.Width - SELECTED_PLACED_MAP_BOX.BoxCenterRight),
-                            (int)(SELECTED_PLACED_MAP_BOX.Height - SELECTED_PLACED_MAP_BOX.BoxCenterBottom));
+                    // finalize box drawing and add the box
+                    MapLabelMethods.AddNewBox(CURRENT_MAP, SELECTED_PLACED_MAP_BOX);
 
-                        if (center.IsEmpty || center.Left < 0 || center.Right <= 0 || center.Top < 0 || center.Bottom <= 0)
-                        {
-                            return;
-                        }
-                        else if (center.Width <= 0 || center.Height <= 0)
-                        {
-                            // swap 
-                            if (center.Right < center.Left)
-                            {
-                                (center.Left, center.Right) = (center.Right, center.Left);
-                            }
+                    CURRENT_MAP.IsSaved = false;
+                    SELECTED_PLACED_MAP_BOX = null;
 
-                            if (center.Bottom < center.Top)
-                            {
-                                (center.Top, center.Bottom) = (center.Bottom, center.Top);
-                            }
-                        }
+                    SKGLRenderControl.Invalidate();
 
-                        SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(SELECTED_PLACED_MAP_BOX.BoxBitmap, center);
-
-                        SELECTED_PLACED_MAP_BOX.PatchA = bitmapSlices[0].Copy();   // top-left corner
-                        SELECTED_PLACED_MAP_BOX.PatchB = bitmapSlices[1].Copy();   // top
-                        SELECTED_PLACED_MAP_BOX.PatchC = bitmapSlices[2].Copy();   // top-right corner
-                        SELECTED_PLACED_MAP_BOX.PatchD = bitmapSlices[3].Copy();   // left size
-                        SELECTED_PLACED_MAP_BOX.PatchE = bitmapSlices[4].Copy();   // middle
-                        SELECTED_PLACED_MAP_BOX.PatchF = bitmapSlices[5].Copy();   // right side
-                        SELECTED_PLACED_MAP_BOX.PatchG = bitmapSlices[6].Copy();   // bottom-left corner
-                        SELECTED_PLACED_MAP_BOX.PatchH = bitmapSlices[7].Copy();   // bottom
-                        SELECTED_PLACED_MAP_BOX.PatchI = bitmapSlices[8].Copy();   // bottom-right corner
-
-                        Cmd_AddLabelBox cmd = new(CURRENT_MAP, SELECTED_PLACED_MAP_BOX);
-                        CommandManager.AddCommand(cmd);
-                        cmd.DoOperation();
-
-                        CURRENT_MAP.IsSaved = false;
-                        SELECTED_PLACED_MAP_BOX = null;
-
-                        SKGLRenderControl.Invalidate();
-                    }
                     break;
                 case MapDrawingMode.DrawMapMeasure:
                     {
@@ -5270,7 +5050,7 @@ namespace RealmStudio
                             {
                                 Cursor.Current = Cursors.WaitCursor;
 
-                                SKBitmap? heightMapBitmap = GetBitmapForThreeDView();
+                                SKBitmap? heightMapBitmap = MapHeightMapMethods.GetBitmapForThreeDView(CURRENT_MAP, SELECTED_LANDFORM, SELECTED_REALM_AREA);
                                 if (heightMapBitmap != null)
                                 {
                                     // generate the 3D model from the height information in the selected area
@@ -5307,7 +5087,7 @@ namespace RealmStudio
                             {
                                 Cursor.Current = Cursors.WaitCursor;
 
-                                SKBitmap? heightMapBitmap = GetBitmapForThreeDView();
+                                SKBitmap? heightMapBitmap = MapHeightMapMethods.GetBitmapForThreeDView(CURRENT_MAP, SELECTED_LANDFORM, SELECTED_REALM_AREA);
                                 if (heightMapBitmap != null)
                                 {
                                     // generate the 3D model from the height information in the selected area
@@ -5339,6 +5119,19 @@ namespace RealmStudio
 
         }
 
+        #endregion
+
+        #region Middle Button Up Handler
+
+        private void MiddleButtonMouseUpHandler(object sender, MouseEventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+
+        #endregion
+
+        #region Right Button Up Handler
+
         private void RightButtonMouseUpHandler(object sender, MouseEventArgs e)
         {
             SKPoint zoomedScrolledPoint = new((e.X / DrawingZoom) + DrawingPoint.X, (e.Y / DrawingZoom) + DrawingPoint.Y);
@@ -5349,7 +5142,7 @@ namespace RealmStudio
 
                     LandformSelectButton.Checked = false;
 
-                    SELECTED_LANDFORM = SelectLandformAtPoint(CURRENT_MAP, zoomedScrolledPoint);
+                    SELECTED_LANDFORM = LandformMethods.SelectLandformAtPoint(CURRENT_MAP, zoomedScrolledPoint);
 
                     SKGLRenderControl.Invalidate();
 
@@ -5424,10 +5217,7 @@ namespace RealmStudio
             }
         }
 
-        private void MiddleButtonMouseUpHandler(object sender, MouseEventArgs e)
-        {
-            Cursor = Cursors.Default;
-        }
+        #endregion
 
         #endregion
 
@@ -5455,6 +5245,8 @@ namespace RealmStudio
                 // dispose of any map label path
                 CURRENT_MAP_LABEL_PATH.Dispose();
                 CURRENT_MAP_LABEL_PATH = new();
+
+                // clear other selected and current objects?
 
                 // clear the work layer
                 MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
@@ -5900,7 +5692,6 @@ namespace RealmStudio
                 Color oceanColor = b.BackColor;
 
                 OceanPaintColorSelectButton.BackColor = oceanColor;
-
                 OceanPaintColorSelectButton.Refresh();
             }
         }
@@ -6414,28 +6205,28 @@ namespace RealmStudio
         {
             CURRENT_DRAWING_MODE = MapDrawingMode.None;
 
-            if (LandformTexturePreviewPicture.Image != null)
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
+
+            if (landformLayer.MapLayerComponents.Count > 0)
             {
-                MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(CURRENT_MAP, MapBuilder.LANDFORMLAYER);
-
-                if (landformLayer.MapLayerComponents.Count > 0)
-                {
-                    MessageBox.Show("Landforms have already been drawn. Please clear them before filling the map.", "Landforms Already Drawn", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                }
-                else
-                {
-                    Landform landform = new();
-                    SetLandformData(landform);
-
-                    LandformMethods.FillMapWithLandForm(CURRENT_MAP, landform);
-
-                    CURRENT_MAP.IsSaved = false;
-                    SKGLRenderControl.Invalidate();
-                }
+                MessageBox.Show("Landforms have already been drawn. Please clear them before filling the map.", "Landforms Already Drawn", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
             else
             {
-                MessageBox.Show("Please select a landform texture.", "Select Texture", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                Landform landform = new()
+                {
+                    LandformRenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false,
+                        new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight)),
+                    CoastlineRenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false,
+                        new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight))
+                };
+
+                SetLandformData(landform);
+
+                LandformMethods.FillMapWithLandForm(CURRENT_MAP, landform);
+
+                CURRENT_MAP.IsSaved = false;
+                SKGLRenderControl.Invalidate();
             }
         }
 
@@ -6728,7 +6519,7 @@ namespace RealmStudio
 
         private void Show3DViewButton_Click(object sender, EventArgs e)
         {
-            SKBitmap? heightMapBitmap = GetBitmapForThreeDView();
+            SKBitmap? heightMapBitmap = MapHeightMapMethods.GetBitmapForThreeDView(CURRENT_MAP, SELECTED_LANDFORM, SELECTED_REALM_AREA);
             if (heightMapBitmap != null)
             {
                 Cursor.Current = Cursors.WaitCursor;
@@ -6755,61 +6546,6 @@ namespace RealmStudio
                 CurrentHeightMapView.UpdateView();
             }
         }
-
-        private static SKBitmap? GetBitmapForThreeDView()
-        {
-            SKBitmap? heightMapBitmap = null;
-
-            try
-            {
-                if (SELECTED_REALM_AREA != SKRect.Empty)
-                {
-                    SKBitmap extractedBitmap = MapHeightMapMethods.ExtractRectFromHeightMap(CURRENT_MAP, SELECTED_REALM_AREA);
-                    heightMapBitmap = extractedBitmap.Copy();
-                }
-                else if (SELECTED_LANDFORM != null)
-                {
-                    // extract a heightmap bitmap using the area of the selected landform bounds
-                    // then create a 3D model from the bitmap and display it in the ThreeDView
-                    Cursor.Current = Cursors.WaitCursor;
-
-                    SELECTED_LANDFORM.ContourPath.GetTightBounds(out SKRect landformBounds);
-
-                    // inflate the bounds by 20 pixels to give the height map some border
-                    landformBounds.Inflate(20, 20);
-                    landformBounds.Left = Math.Max(0, landformBounds.Left - 10);
-                    landformBounds.Top = Math.Max(0, landformBounds.Top - 10);
-
-                    SKBitmap extractedBitmap = MapHeightMapMethods.ExtractRectFromHeightMap(CURRENT_MAP, landformBounds);
-
-                    heightMapBitmap = extractedBitmap.Copy();
-                }
-                else
-                {
-                    // generate the 3D model from the entire map
-                    using SKSurface s = SKSurface.Create(new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight));
-                    s.Canvas.Clear(SKColors.Black);
-
-                    MapHeightMapMethods.RenderHeightMapToCanvas(CURRENT_MAP, s.Canvas, new SKPoint(0, 0), null);
-
-                    heightMapBitmap = SKBitmap.FromImage(s.Snapshot()).Copy();
-                }
-            }
-            catch { }
-            finally
-            {
-                Cursor.Current = Cursors.Default;
-            }
-
-            return heightMapBitmap;
-        }
-
-
-
-
-
-
-
 
         #endregion
 
@@ -7179,6 +6915,8 @@ namespace RealmStudio
 
         private void SetLandformData(Landform landform)
         {
+            landform.FillWithTexture = UseTextureForBackgroundCheck.Checked;
+
             // set the landform data from values of the UI controls
             if (AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TextureBitmap == null)
             {
@@ -7254,63 +6992,6 @@ namespace RealmStudio
             }
 
             landform.IsModified = true;
-
-        }
-
-        internal static Landform? GetLandformIntersectingCircle(RealmStudioMap map, SKPoint mapPoint, int circleRadius)
-        {
-            using SKPath circlePath = new();
-            circlePath.AddCircle(mapPoint.X, mapPoint.Y, circleRadius);
-
-            List<MapComponent> landformComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents;
-
-            for (int i = 0; i < landformComponents.Count; i++)
-            {
-                if (landformComponents[i] is Landform mapLandform)
-                {
-                    if (mapLandform.DrawPath != null && mapLandform.DrawPath.PointCount > 0)
-                    {
-                        if (!mapLandform.DrawPath.Op(circlePath, SKPathOp.Intersect).IsEmpty)
-                        {
-                            return mapLandform;
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        internal static Landform? SelectLandformAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
-        {
-            Landform? selectedLandform = null;
-
-            List<MapComponent> landformComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents;
-
-            for (int i = 0; i < landformComponents.Count; i++)
-            {
-                if (landformComponents[i] is Landform mapLandform)
-                {
-                    SKPath boundaryPath = mapLandform.DrawPath;
-
-                    if (boundaryPath.PointCount > 0)
-                    {
-                        if (boundaryPath.Contains(mapClickPoint.X, mapClickPoint.Y))
-                        {
-                            mapLandform.IsSelected = !mapLandform.IsSelected;
-
-                            if (mapLandform.IsSelected)
-                            {
-                                selectedLandform = mapLandform;
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-
-            RealmMapMethods.DeselectAllMapComponents(CURRENT_MAP, selectedLandform);
-            return selectedLandform;
         }
 
         private void SetLandPaintColorFromCustomPresetButton(Button b)
@@ -11049,7 +10730,6 @@ namespace RealmStudio
         }
 
         #endregion
-
 
     }
 }

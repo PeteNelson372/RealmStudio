@@ -577,5 +577,111 @@ namespace RealmStudio
 
             return landform;
         }
+
+        internal static void RemoveLayerPaintStrokesFromLandformLayer(RealmStudioMap map)
+        {
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
+
+            for (int i = landformLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (landformLayer.MapLayerComponents[i] is LayerPaintStroke)
+                {
+                    landformLayer.MapLayerComponents.RemoveAt(i);
+                }
+            }
+        }
+
+        internal static Landform? GetLandformIntersectingCircle(RealmStudioMap map, SKPoint mapPoint, int circleRadius)
+        {
+            using SKPath circlePath = new();
+            circlePath.AddCircle(mapPoint.X, mapPoint.Y, circleRadius);
+
+            List<MapComponent> landformComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents;
+
+            for (int i = 0; i < landformComponents.Count; i++)
+            {
+                if (landformComponents[i] is Landform mapLandform)
+                {
+                    if (mapLandform.DrawPath != null && mapLandform.DrawPath.PointCount > 0)
+                    {
+                        if (!mapLandform.DrawPath.Op(circlePath, SKPathOp.Intersect).IsEmpty)
+                        {
+                            return mapLandform;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        internal static void EraseFromLandform(RealmStudioMap map, SKPoint zoomedScrolledPoint, int brushRadius)
+        {
+            Landform? erasedLandform = GetLandformIntersectingCircle(map, zoomedScrolledPoint, brushRadius);
+
+            if (erasedLandform != null)
+            {
+                EraseLandForm(erasedLandform);
+                MergeLandforms(map);
+                CreateAllPathsFromDrawnPath(map, erasedLandform);
+
+                erasedLandform.IsModified = true;
+
+                if (erasedLandform.ContourPath.PointCount == 0)
+                {
+                    // the landform has been totally erased, so remove it
+                    DeleteLandform(map, erasedLandform);
+                }
+            }
+        }
+
+        private static void DeleteLandform(RealmStudioMap map, Landform erasedLandform)
+        {
+            // TODO: what should be done about water features and other objects drawn on top of the landform?
+            for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents[i] is Landform l)
+                {
+                    if (l.LandformGuid.ToString() == erasedLandform.LandformGuid.ToString())
+                    {
+                        MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+
+        }
+
+        internal static Landform? SelectLandformAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
+        {
+            Landform? selectedLandform = null;
+
+            List<MapComponent> landformComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents;
+
+            for (int i = 0; i < landformComponents.Count; i++)
+            {
+                if (landformComponents[i] is Landform mapLandform)
+                {
+                    SKPath boundaryPath = mapLandform.DrawPath;
+
+                    if (boundaryPath.PointCount > 0)
+                    {
+                        if (boundaryPath.Contains(mapClickPoint.X, mapClickPoint.Y))
+                        {
+                            mapLandform.IsSelected = !mapLandform.IsSelected;
+
+                            if (mapLandform.IsSelected)
+                            {
+                                selectedLandform = mapLandform;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            RealmMapMethods.DeselectAllMapComponents(map, selectedLandform);
+            return selectedLandform;
+        }
     }
 }

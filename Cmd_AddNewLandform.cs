@@ -1,5 +1,5 @@
 ﻿/**************************************************************************************************************************
-* Copyright 2024, Peter R. Nelson
+* Copyright 2025, Peter R. Nelson
 *
 * This file is part of the RealmStudio application. The RealmStudio application is intended
 * for creating fantasy maps for gaming and world building.
@@ -21,27 +21,39 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using RealmStudio.Properties;
+
 namespace RealmStudio
 {
-    internal sealed class Cmd_AddMapRegion(RealmStudioMap map, MapRegion mapRegion) : IMapOperation
+    internal class Cmd_AddNewLandform(RealmStudioMap map, Landform newLandform) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
-        private readonly MapRegion NewMapRegion = mapRegion;
+        private readonly Landform NewLandform = newLandform;
 
         public void DoOperation()
         {
-            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.REGIONLAYER).MapLayerComponents.Add(NewMapRegion);
+            bool createPathsWhilePainting = Settings.Default.CalculateContoursWhilePainting;
+
+            if (!createPathsWhilePainting)
+            {
+                // compute contour path and inner and outer paths in a separate thread
+                LandformMethods.CreateAllPathsFromDrawnPath(Map, NewLandform);
+            }
+
+            NewLandform.IsModified = true;
+
+            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(NewLandform);
         }
 
         public void UndoOperation()
         {
-            for (int i = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.REGIONLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
+            for (int i = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
-                if (MapBuilder.GetMapLayerByIndex(Map, MapBuilder.REGIONLAYER).MapLayerComponents[i] is MapRegion r)
+                if (MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER).MapLayerComponents[i] is Landform l)
                 {
-                    if (r.RegionGuid.ToString() == NewMapRegion.RegionGuid.ToString())
+                    if (l.LandformGuid.ToString() == NewLandform.LandformGuid.ToString())
                     {
-                        MapBuilder.GetMapLayerByIndex(Map, MapBuilder.REGIONLAYER).MapLayerComponents.RemoveAt(i);
+                        MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER).MapLayerComponents.RemoveAt(i);
                         break;
                     }
                 }

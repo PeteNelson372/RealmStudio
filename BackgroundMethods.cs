@@ -193,5 +193,13 @@ namespace RealmStudio
                 }
             }
         }
+
+        internal static void MoveWindrose(MapWindrose? windrose, SKPoint zoomedScrolledPoint)
+        {
+            if (windrose == null) return;
+
+            windrose.X = (int)zoomedScrolledPoint.X;
+            windrose.Y = (int)zoomedScrolledPoint.Y;
+        }
     }
 }

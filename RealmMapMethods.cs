@@ -499,8 +499,6 @@ namespace RealmStudio
                         }
                     }
                 }
-
-                // TODO:layer paint strokes in land layer
             }
 
             // go through the current map to get textures, painted colors, etc. and assign them to the detail map

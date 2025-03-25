@@ -414,11 +414,6 @@ namespace RealmStudio
                         landformLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
                     }
                 }
-                else if (landformLayer.MapLayerComponents[i] is LayerPaintStroke lps)
-                {
-                    // layer paint strokes for erasing
-                    lps.Render(landformLayer.LayerSurface.Canvas);
-                }
             }
 
             renderCanvas.DrawSurface(landCoastlineLayer.LayerSurface, scrollPoint);

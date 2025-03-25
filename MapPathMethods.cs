@@ -888,5 +888,17 @@ namespace RealmStudio
 
             return newPathPoint;
         }
+
+        internal static MapPathPoint? GetSelectedPathPoint(MapPath? mapPath, SKPoint zoomedScrolledPoint)
+        {
+            if (mapPath == null) return null;
+
+            foreach (MapPathPoint mp in mapPath.PathPoints)
+            {
+                mp.IsSelected = false;
+            }
+
+            return SelectMapPathPointAtPoint(mapPath, zoomedScrolledPoint);
+        }
     }
 }

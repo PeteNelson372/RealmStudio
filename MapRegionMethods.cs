@@ -373,5 +373,125 @@ namespace RealmStudio
 
             return selectedMapRegionPoint;
         }
+
+        internal static void DrawCoastlinePointOnWorkLayer(RealmStudioMap map, SKPoint zoomedScrolledPoint)
+        {
+            const int maxPointToCoastlineDistance = 5;
+
+            // find the closest point to the current point
+            // on the contour path of a coastline;
+            // if the nearest point on the coastline
+            // is within 5 pixels of the current point,
+            // then set the region point to be the point
+            // on the coastline
+            // then check the *previous* region point; if the previous
+            // region point is on the coastline of the same landform
+            // then add all of the points on the coastline contour
+            // to the region points
+
+            int coastlinePointIndex = -1;
+            SKPoint coastlinePoint = SKPoint.Empty;
+
+            float currentDistance = float.MaxValue;
+
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
+            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
+            workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+            // get the distance from the cursor point to the contour points of all landforms
+            foreach (Landform lf in landformLayer.MapLayerComponents.Cast<Landform>())
+            {
+                for (int i = 0; i < lf.ContourPoints.Count; i++)
+                {
+                    SKPoint p = lf.ContourPoints[i];
+                    float distance = SKPoint.Distance(zoomedScrolledPoint, p);
+
+                    if (distance < currentDistance && distance < maxPointToCoastlineDistance)
+                    {
+                        coastlinePointIndex = i;
+                        coastlinePoint = p;
+                        currentDistance = distance;
+                    }
+                }
+
+                if (coastlinePointIndex >= 0) break;
+            }
+
+            if (coastlinePoint != SKPoint.Empty)
+            {
+                workLayer.LayerSurface?.Canvas.DrawCircle(coastlinePoint, 5, PaintObjects.MapPathSelectedControlPointPaint);
+            }
+        }
+
+        internal static bool IsRegionPointSelected(MapRegion mapRegion, SKPoint zoomedScrolledPoint)
+        {
+            const int regionEditPointRadius = 5;
+            bool regionPointSelected = false;
+
+            foreach (MapRegionPoint p in mapRegion.MapRegionPoints)
+            {
+                using SKPath path = new();
+                path.AddCircle(p.RegionPoint.X, p.RegionPoint.Y, regionEditPointRadius);
+
+                if (path.Contains(zoomedScrolledPoint.X, zoomedScrolledPoint.Y))
+                {
+                    regionPointSelected = true;
+                    p.IsSelected = true;
+                }
+                else
+                {
+                    if (!EDITING_REGION)
+                    {
+                        p.IsSelected = false;
+                    }
+                }
+            }
+
+            return regionPointSelected;
+        }
+
+        internal static void DrawRegionPointOnWorkLayer(RealmStudioMap map, MapRegion mapRegion, SKPoint zoomedScrolledPoint)
+        {
+            MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+            PREVIOUS_REGION_POINT_INDEX = -1;
+            NEXT_REGION_POINT_INDEX = -1;
+            NEW_REGION_POINT = null;
+
+            // is the cursor on a line segment between 2 region vertices? if so, draw a circle at the cursor location
+            for (int i = 0; i < mapRegion.MapRegionPoints.Count - 1; i++)
+            {
+                if (DrawingMethods.LineContainsPoint(zoomedScrolledPoint,
+                    mapRegion.MapRegionPoints[i].RegionPoint, mapRegion.MapRegionPoints[i + 1].RegionPoint))
+                {
+                    EDITING_REGION = true;
+
+                    PREVIOUS_REGION_POINT_INDEX = i;
+                    NEXT_REGION_POINT_INDEX = i + 1;
+
+                    NEW_REGION_POINT = new MapRegionPoint(zoomedScrolledPoint);
+
+                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(zoomedScrolledPoint, POINT_CIRCLE_RADIUS, PaintObjects.RegionNewPointFillPaint);
+                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(zoomedScrolledPoint, POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
+
+                    break;
+                }
+            }
+
+            // is the cursor on the segment between the first and last region vertices?
+            if (DrawingMethods.LineContainsPoint(zoomedScrolledPoint, mapRegion.MapRegionPoints[0].RegionPoint,
+                mapRegion.MapRegionPoints[^1].RegionPoint))
+            {
+                EDITING_REGION = true;
+
+                PREVIOUS_REGION_POINT_INDEX = 0;
+                NEXT_REGION_POINT_INDEX = mapRegion.MapRegionPoints.Count;
+
+                NEW_REGION_POINT = new MapRegionPoint(zoomedScrolledPoint);
+
+                MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(zoomedScrolledPoint, POINT_CIRCLE_RADIUS, PaintObjects.RegionNewPointFillPaint);
+                MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(zoomedScrolledPoint, POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
+            }
+        }
     }
 }

@@ -37,7 +37,7 @@ namespace RealmStudio
     {
         private const float PI_OVER_180 = (float)Math.PI / 180F;
         private const float D180_OVER_PI = (float)((float)180.0F / Math.PI);
-        private const double SELECTION_FUZZINESS = 3;
+        private const double SELECTION_FUZZINESS = 4;
 
         public static Icon IconFromImage(System.Drawing.Image img)
         {
@@ -163,7 +163,7 @@ namespace RealmStudio
             }
 
             // If point is out of bounds, no need to do further checks.                  
-            if (pointToCheck.X + SELECTION_FUZZINESS < leftPoint.X || rightPoint.X < pointToCheck.X - SELECTION_FUZZINESS)
+            if (pointToCheck.X + SELECTION_FUZZINESS < Math.Min(leftPoint.X, rightPoint.X) || Math.Max(leftPoint.X, rightPoint.X) < pointToCheck.X - SELECTION_FUZZINESS)
             {
                 return false;
             }
