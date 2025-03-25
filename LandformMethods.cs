@@ -32,13 +32,10 @@ namespace RealmStudio
     internal sealed class LandformMethods
     {
         public static SKPath LandformErasePath { get; set; } = new SKPath();
-
         public static int LandformBrushSize { get; set; } = 64;
         public static int LandformEraserSize { get; set; } = 64;
         public static int LandformColorBrushSize { get; set; } = 20;
         public static int LandformColorEraserBrushSize { get; set; } = 20;
-
-
 
         internal static void CreateAllPathsFromDrawnPath(RealmStudioMap map, Landform landform)
         {

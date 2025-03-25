@@ -6215,6 +6215,9 @@ namespace RealmStudio
             {
                 Landform landform = new()
                 {
+                    ParentMap = CURRENT_MAP,
+                    Width = CURRENT_MAP.MapWidth,
+                    Height = CURRENT_MAP.MapHeight,
                     LandformRenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false,
                         new SKImageInfo(CURRENT_MAP.MapWidth, CURRENT_MAP.MapHeight)),
                     CoastlineRenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false,
