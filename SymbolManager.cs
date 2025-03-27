@@ -24,24 +24,77 @@
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using Svg.Skia;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 
 namespace RealmStudio
 {
-    internal sealed class SymbolMethods
+    internal sealed class SymbolManager : IMapComponentManager
     {
-        public static MapSymbolType SELECTED_SYMBOL_TYPE { get; set; } = MapSymbolType.NotSet;
+        private static MapSymbolUIMediator? _symbolUIMediator;
 
-        private static readonly string SymbolTagsFilePath = AssetManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
+        private static MapSymbolType _selectedSymbolType = MapSymbolType.NotSet;
+        private static readonly string _symbolTagsFilePath = AssetManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
+        private static readonly List<Tuple<string, List<MapSymbol>>> _tagSymbolAssociationList = [];
+        private static MapSymbol? _selectedSymbolTableMapSymbol;
+        private static readonly List<MapSymbol> _secondarySelectedSymbols = [];
 
-        private static readonly List<Tuple<string, List<MapSymbol>>> TagSymbolAssociationList = [];
+        internal static MapSymbolUIMediator? SymbolUIMediator
+        {
+            get { return _symbolUIMediator; }
+            set { _symbolUIMediator = value; }
+        }
+
+        internal static MapSymbolType SelectedSymbolType
+        {
+            get { return _selectedSymbolType; }
+            set { _selectedSymbolType = value; }
+        }
+
+        internal static string SymbolTagsFilePath
+        {
+            get { return _symbolTagsFilePath; }
+        }
+
+        internal static List<Tuple<string, List<MapSymbol>>> TagSymbolAssociationList
+        {
+            get { return _tagSymbolAssociationList; }
+        }
 
         // the symbol selected by the user from the SymbolTable control on the UI
-        public static MapSymbol? SelectedSymbolTableMapSymbol;
+        internal static MapSymbol? SelectedSymbolTableMapSymbol
+        {
+            get { return _selectedSymbolTableMapSymbol; }
+            set { _selectedSymbolTableMapSymbol = value; }
+        }
 
         // additional symbols selected by the user from the SymbolTable control on the UI
-        public static readonly List<MapSymbol> SecondarySelectedSymbols = [];
+        internal static List<MapSymbol> SecondarySelectedSymbols
+        {
+            get { return _secondarySelectedSymbols; }
+        }
+
+        public static IMapComponent? GetComponentById(Guid componentGuid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool Update(RealmStudioMap? map, RealmMapState? realmMapState, IUIMediatorObserver? mediator)
+        {
+            return true;
+            //throw new NotImplementedException();
+        }
+
+        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        {
+            throw new NotImplementedException();
+        }
 
         internal static void PlaceSymbolOnMap(RealmStudioMap map, MapSymbol? mapSymbol, SKBitmap? bitmap, SKPoint cursorPoint)
         {
@@ -319,7 +372,7 @@ namespace RealmStudio
 
                 if (DrawingMethods.PointInCircle(colorBrushRadius, colorCursorPoint, symbolPoint))
                 {
-                    if (symbol.IsGrayscale && symbol.SymbolType == SELECTED_SYMBOL_TYPE)
+                    if (symbol.IsGrayscale && symbol.SymbolType == SelectedSymbolType)
                     {
                         if (randomizeColors)
                         {
@@ -559,6 +612,271 @@ namespace RealmStudio
                 mapSymbol.X = (int)zoomedScrolledPoint.X - mapSymbol.Width / 2;
                 mapSymbol.Y = (int)zoomedScrolledPoint.Y - mapSymbol.Height / 2;
             }
+        }
+
+        private static void PlaceSelectedMapSymbolAtPoint(SKPoint cursorPoint, float symbolScale, float symbolRotation)
+        {
+            if (SymbolUIMediator == null) return;
+
+            MapSymbol? symbolToPlace = SelectedSymbolTableMapSymbol;
+
+            if (symbolToPlace != null)
+            {
+                if (SecondarySelectedSymbols.Count > 0)
+                {
+                    int selectedIndex = Random.Shared.Next(0, SecondarySelectedSymbols.Count + 1);
+
+                    if (selectedIndex > 0)
+                    {
+                        symbolToPlace = SecondarySelectedSymbols[selectedIndex - 1];
+                    }
+                }
+
+                symbolToPlace.X = (int)cursorPoint.X;
+                symbolToPlace.Y = (int)cursorPoint.Y;
+
+                SKBitmap? symbolBitmap = symbolToPlace.ColorMappedBitmap;
+
+                if (symbolBitmap != null)
+                {
+                    SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleSKBitmap(symbolBitmap, symbolScale);
+                    SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateSKBitmap(scaledSymbolBitmap, symbolRotation, SymbolUIMediator.MirrorSymbol);
+
+                    float bitmapRadius = rotatedAndScaledBitmap.Width / 2;
+
+                    // PLACEMENT_RATE controls the timer used for placing symbols with the area brush
+                    // PLACEMENT_DENSITY controls how close together symbols can be placed
+
+                    // decreasing this value increases the density of symbol placement on the map
+                    // so high values of placement density on the placement density updown increase placement density on the map
+                    float placementDensityRadius = bitmapRadius / SymbolUIMediator.SymbolPlacementDensity;
+
+                    bool canPlaceSymbol = CanPlaceSymbol(RealmMapState.CurrentMap, cursorPoint, placementDensityRadius);
+
+                    if (canPlaceSymbol)
+                    {
+                        if (SymbolUIMediator != null)
+                        {
+                            symbolToPlace.CustomSymbolColors[0] = SymbolUIMediator.SymbolColor1.ToSKColor();
+                            symbolToPlace.CustomSymbolColors[1] = SymbolUIMediator.SymbolColor2.ToSKColor();
+                            symbolToPlace.CustomSymbolColors[2] = SymbolUIMediator.SymbolColor3.ToSKColor();
+                        }
+                        symbolToPlace.Width = rotatedAndScaledBitmap.Width;
+                        symbolToPlace.Height = rotatedAndScaledBitmap.Height;
+
+                        PlaceSymbolOnMap(RealmMapState.CurrentMap, symbolToPlace, rotatedAndScaledBitmap, cursorPoint);
+                    }
+                }
+            }
+        }
+
+        private static SKBitmap RotateAndScaleSymbolBitmap(SKBitmap symbolBitmap, float symbolScale, float symbolRotation)
+        {
+            if (SymbolUIMediator != null)
+            {
+                SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleSKBitmap(symbolBitmap, symbolScale);
+
+                SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateSKBitmap(scaledSymbolBitmap, symbolRotation, SymbolUIMediator.MirrorSymbol);
+
+                return rotatedAndScaledBitmap;
+            }
+
+            return symbolBitmap;
+        }
+
+        internal static void PlaceSelectedSymbolInArea(SKPoint mouseCursorPoint, float symbolScale, float symbolRotation, int areaBrushSize)
+        {
+
+            if (SelectedSymbolTableMapSymbol != null && SymbolUIMediator != null)
+            {
+                lock (SelectedSymbolTableMapSymbol)
+                {
+                    SKBitmap? symbolBitmap = SelectedSymbolTableMapSymbol.SymbolBitmap;
+                    if (symbolBitmap != null)
+                    {
+                        SKBitmap rotatedAndScaledBitmap = RotateAndScaleSymbolBitmap(symbolBitmap, symbolScale, symbolRotation);
+
+                        SKPoint cursorPoint = new(mouseCursorPoint.X - (rotatedAndScaledBitmap.Width / 2), mouseCursorPoint.Y - (rotatedAndScaledBitmap.Height / 2));
+
+                        float bitmapRadius = rotatedAndScaledBitmap.Width / 2;
+
+                        // decreasing this value increases the density of symbol placement on the map
+                        // so high values of placement density on the placement density updown increase placement density on the map
+                        float placementDensityRadius = bitmapRadius / SymbolUIMediator.SymbolPlacementDensity;
+
+                        List<SKPoint> areaPoints = DrawingMethods.GetPointsInCircle(cursorPoint, (int)Math.Ceiling((double)areaBrushSize), (int)placementDensityRadius);
+
+                        foreach (SKPoint p in areaPoints)
+                        {
+                            SKPoint point = p;
+
+                            // 1% randomization of point location
+                            point.X = Random.Shared.Next((int)(p.X * 0.99F), (int)(p.X * 1.01F));
+                            point.Y = Random.Shared.Next((int)(p.Y * 0.99F), (int)(p.Y * 1.01F));
+
+                            PlaceSelectedMapSymbolAtPoint(point, symbolScale, symbolRotation);
+                        }
+                    }
+                }
+            }
+        }
+
+        internal static void PlaceSelectedSymbolAtCursor(SKPoint mouseCursorPoint)
+        {
+            if (SymbolUIMediator == null) return;
+
+            if (SelectedSymbolTableMapSymbol != null)
+            {
+                float symbolScale = SymbolUIMediator.SymbolScale / 100.0F;
+                float symbolRotation = SymbolUIMediator.SymbolRotation;
+
+                if (SelectedSymbolTableMapSymbol.SymbolFormat != SymbolFileFormat.Vector)
+                {
+                    SKBitmap? symbolBitmap = SelectedSymbolTableMapSymbol.SymbolBitmap;
+                    if (symbolBitmap != null)
+                    {
+                        SKBitmap rotatedAndScaledBitmap = RotateAndScaleSymbolBitmap(symbolBitmap, symbolScale, symbolRotation);
+                        SKPoint cursorPoint = new(mouseCursorPoint.X - (rotatedAndScaledBitmap.Width / 2), mouseCursorPoint.Y - (rotatedAndScaledBitmap.Height / 2));
+
+                        PlaceSelectedMapSymbolAtPoint(cursorPoint, symbolScale, symbolRotation);
+                    }
+                }
+                else
+                {
+                    PlaceVectorSymbolAtPoint(mouseCursorPoint, symbolScale, symbolRotation);
+                }
+            }
+        }
+
+
+        private static void PlaceVectorSymbolAtPoint(SKPoint mouseCursorPoint, float symbolScale, float symbolRotation)
+        {
+            if (SymbolUIMediator == null) return;
+
+            MapSymbol? symbolToPlace = SelectedSymbolTableMapSymbol;
+
+            if (symbolToPlace != null)
+            {
+                SKBitmap? b = GetBitmapForVectorSymbol(symbolToPlace,
+                    0, 0, symbolRotation, symbolScale);
+
+                if (b != null)
+                {
+                    float bitmapRadius = b.Width / 2;
+                    float placementDensityRadius = bitmapRadius / SymbolUIMediator.SymbolPlacementDensity;
+
+                    SKPoint cursorPoint = new(mouseCursorPoint.X - (b.Width / 2), mouseCursorPoint.Y - (b.Height / 2));
+
+                    bool canPlaceSymbol = CanPlaceSymbol(RealmMapState.CurrentMap, cursorPoint, placementDensityRadius);
+
+                    if (canPlaceSymbol)
+                    {
+                        symbolToPlace.CustomSymbolColors[0] = SymbolUIMediator.SymbolColor1.ToSKColor();
+                        symbolToPlace.CustomSymbolColors[1] = SymbolUIMediator.SymbolColor2.ToSKColor();
+                        symbolToPlace.CustomSymbolColors[2] = SymbolUIMediator.SymbolColor3.ToSKColor();
+
+                        symbolToPlace.Width = b.Width;
+                        symbolToPlace.Height = b.Height;
+
+                        PlaceVectorSymbolOnMap(RealmMapState.CurrentMap, SelectedSymbolTableMapSymbol, b, cursorPoint);
+                    }
+                }
+            }
+        }
+
+        internal static Bitmap? GetSymbolPictureBoxBitmap(MapSymbol symbol)
+        {
+            if (SymbolUIMediator == null) return null;
+
+            Bitmap pbm = new(MapSymbolUIMediator.SymbolPictureBoxWidth - 2, MapSymbolUIMediator.SymbolPictureBoxHeight - 8);
+
+            if (symbol.SymbolFormat != SymbolFileFormat.Vector)
+            {
+                symbol.ColorMappedBitmap = symbol.SymbolBitmap?.Copy();
+
+                Bitmap colorMappedBitmap = (Bitmap)Extensions.ToBitmap(symbol.ColorMappedBitmap).Clone();
+
+                if (colorMappedBitmap.PixelFormat != PixelFormat.Format32bppArgb)
+                {
+                    Bitmap clone = new(colorMappedBitmap.Width, colorMappedBitmap.Height, PixelFormat.Format32bppPArgb);
+
+                    using Graphics gr = Graphics.FromImage(clone);
+                    gr.DrawImage(colorMappedBitmap, new Rectangle(0, 0, clone.Width, clone.Height));
+                    colorMappedBitmap = new(clone);
+                    clone.Dispose();
+                }
+
+                if (symbol.UseCustomColors)
+                {
+                    MapCustomColorsToColorableBitmap(ref colorMappedBitmap,
+                        SymbolUIMediator.SymbolColor1, SymbolUIMediator.SymbolColor2, SymbolUIMediator.SymbolColor3);
+                }
+                else if (symbol.IsGrayscale)
+                {
+                    // TODO: color the grayscale with custom color (using SymbolColor1Button background color)?
+                }
+
+                symbol.ColorMappedBitmap = Extensions.ToSKBitmap((Bitmap)colorMappedBitmap.Clone());
+
+                pbm = DrawingMethods.ScaleBitmap(colorMappedBitmap,
+                    MapSymbolUIMediator.SymbolPictureBoxWidth - 2, MapSymbolUIMediator.SymbolPictureBoxHeight - 8);
+                colorMappedBitmap.Dispose();
+            }
+            else
+            {
+                // display the SVG
+                using MemoryStream ms = new(Encoding.ASCII.GetBytes(symbol.SymbolSVG));
+                var skSvg = new SKSvg();
+                skSvg.Load(ms);
+
+                using SKBitmap b = new(new SKImageInfo(MapSymbolUIMediator.SymbolPictureBoxHeight - 8, MapSymbolUIMediator.SymbolPictureBoxHeight - 8));
+                using SKCanvas c = new(b);
+
+                /*
+                using (var paint = new SKPaint())
+                {
+                    paint.IsAntialias = true;
+
+
+                    //could also tint the svg:
+                    //paint.ColorFilter = SKColorFilter.CreateBlendMode(TintColor.ToSKColor(), SKBlendMode.SrcIn);
+
+                }
+                */
+
+                if (skSvg.Picture != null)
+                {
+                    SKMatrix matrix = SKMatrix.CreateScale((MapSymbolUIMediator.SymbolPictureBoxHeight - 8) / skSvg.Picture.CullRect.Width,
+                        (MapSymbolUIMediator.SymbolPictureBoxHeight - 8) / skSvg.Picture.CullRect.Height);
+
+                    c.DrawPicture(skSvg.Picture, in matrix);
+
+                    pbm = Extensions.ToBitmap(b.Copy());
+                }
+            }
+
+            return pbm;
+        }
+
+        internal static void ColorSelectedSymbol(MapSymbol? selectedMapSymbol)
+        {
+            if (selectedMapSymbol == null || SymbolUIMediator == null) return;
+
+            // if a symbol has been selected and is grayscale or custom colored, then color it with the
+            // selected custom colors
+
+            if (selectedMapSymbol.IsGrayscale || selectedMapSymbol.UseCustomColors)
+            {
+                Cmd_PaintSymbol cmd = new(selectedMapSymbol,
+                    SymbolUIMediator.SymbolColor1.ToSKColor(), SymbolUIMediator.SymbolColor1.ToSKColor(),
+                    SymbolUIMediator.SymbolColor2.ToSKColor(), SymbolUIMediator.SymbolColor3.ToSKColor());
+
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+            }
+
+            selectedMapSymbol.IsSelected = false;
+            RealmMapState.SelectedMapSymbol = null;
         }
     }
 }

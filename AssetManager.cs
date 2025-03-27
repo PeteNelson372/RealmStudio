@@ -543,7 +543,7 @@ namespace RealmStudio
 
                                 foreach (string tag in symbol.SymbolTags)
                                 {
-                                    SymbolMethods.AddTagSymbolAssocation(tag, symbol);
+                                    SymbolManager.AddTagSymbolAssocation(tag, symbol);
                                 }
                             }
 

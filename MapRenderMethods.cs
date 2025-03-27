@@ -143,7 +143,7 @@ namespace RealmStudio
             RenderMeasuresForExport(map, renderCanvas);
 
             // TODO: drawing layer
-            //MapRenderMethods.RenderDrawingForExport(CURRENT_MAP, renderCanvas);
+            //MapRenderMethods.RenderDrawingForExport(map, renderCanvas);
 
             // vignette layer
             RenderVignetteForExport(map, renderCanvas);
@@ -156,11 +156,11 @@ namespace RealmStudio
             {
                 case MapDrawingMode.SymbolPlace:
                     {
-                        if (SymbolMethods.SelectedSymbolTableMapSymbol != null && !useAreaBrush)
+                        if (SymbolManager.SelectedSymbolTableMapSymbol != null && !useAreaBrush)
                         {
-                            if (SymbolMethods.SelectedSymbolTableMapSymbol.SymbolFormat != SymbolFileFormat.Vector)
+                            if (SymbolManager.SelectedSymbolTableMapSymbol.SymbolFormat != SymbolFileFormat.Vector)
                             {
-                                SKBitmap? symbolBitmap = SymbolMethods.SelectedSymbolTableMapSymbol.ColorMappedBitmap;
+                                SKBitmap? symbolBitmap = SymbolManager.SelectedSymbolTableMapSymbol.ColorMappedBitmap;
                                 if (symbolBitmap != null)
                                 {
                                     // TODO: use matrix for scaling and rotation
@@ -177,7 +177,7 @@ namespace RealmStudio
                             else
                             {
                                 // display the SVG as the cursor
-                                SKBitmap? symbolBitmap = SymbolMethods.GetBitmapForVectorSymbol(SymbolMethods.SelectedSymbolTableMapSymbol,
+                                SKBitmap? symbolBitmap = SymbolManager.GetBitmapForVectorSymbol(SymbolManager.SelectedSymbolTableMapSymbol,
                                     0, 0, symbolRotation, symbolScale);
 
                                 if (symbolBitmap != null)

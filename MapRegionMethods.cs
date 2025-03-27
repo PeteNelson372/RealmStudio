@@ -35,6 +35,39 @@ namespace RealmStudio
         public static int PREVIOUS_REGION_POINT_INDEX = -1;
         public static int NEXT_REGION_POINT_INDEX = -1;
 
+        internal static MapRegion? SelectRegionAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
+        {
+            MapRegion? selectedRegion = null;
+
+            List<MapComponent> mapRegionComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONLAYER).MapLayerComponents;
+
+            for (int i = 0; i < mapRegionComponents.Count; i++)
+            {
+                if (mapRegionComponents[i] is MapRegion mapRegion)
+                {
+                    SKPath? boundaryPath = mapRegion.BoundaryPath;
+
+                    if (boundaryPath != null && boundaryPath.PointCount > 0)
+                    {
+                        if (boundaryPath.Contains(zoomedScrolledPoint.X, zoomedScrolledPoint.Y))
+                        {
+                            mapRegion.IsSelected = !mapRegion.IsSelected;
+
+                            if (mapRegion.IsSelected)
+                            {
+                                selectedRegion = mapRegion;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            RealmMapMethods.DeselectAllMapComponents(map, selectedRegion);
+
+            return selectedRegion;
+        }
+
         public static SKPath GetLinePathFromRegionPoints(List<MapRegionPoint> points)
         {
             SKPath path = new();

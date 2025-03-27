@@ -558,23 +558,19 @@ namespace RealmStudio
             deletedLandform.IsDeleted = true;
         }
 
-        private static void DeleteLandform(RealmStudioMap map, Landform erasedLandform)
+        internal static void RemoveDeletedLandforms(RealmStudioMap map)
         {
-            erasedLandform.IsDeleted = true;
-
             // TODO: what should be done about water features and other objects drawn on top of the landform?
             for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
                 if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents[i] is Landform l)
                 {
-                    if (l.LandformGuid.ToString() == erasedLandform.LandformGuid.ToString())
+                    if (l.IsDeleted)
                     {
                         MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents.RemoveAt(i);
-                        break;
                     }
                 }
             }
-
         }
 
         internal static Landform? SelectLandformAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
@@ -593,13 +589,8 @@ namespace RealmStudio
                     {
                         if (boundaryPath.Contains(mapClickPoint.X, mapClickPoint.Y))
                         {
-                            //mapLandform.IsSelected = !mapLandform.IsSelected;
-
                             mapLandform.IsSelected = true;
-                            if (mapLandform.IsSelected)
-                            {
-                                selectedLandform = mapLandform;
-                            }
+                            selectedLandform = mapLandform;
                             break;
                         }
                     }

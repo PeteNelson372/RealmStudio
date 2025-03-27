@@ -277,7 +277,7 @@ namespace RealmStudio
                     try
                     {
                         symbol.SetSymbolBitmapFromPath(f.File);
-                        SymbolMethods.AnalyzeSymbolBitmapColors(symbol);
+                        SymbolManager.AnalyzeSymbolBitmapColors(symbol);
                     }
                     catch { }
 

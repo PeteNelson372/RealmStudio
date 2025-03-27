@@ -59,7 +59,7 @@ namespace RealmStudio
 
                 Bitmap colorMappedBitmap = Extensions.ToBitmap(Symbol.SymbolBitmap?.Copy());
 
-                SymbolMethods.MapCustomColorsToColorableBitmap(ref colorMappedBitmap,
+                SymbolManager.MapCustomColorsToColorableBitmap(ref colorMappedBitmap,
                     Symbol.CustomSymbolColors[0].ToDrawingColor(),
                     Symbol.CustomSymbolColors[1].ToDrawingColor(),
                     Symbol.CustomSymbolColors[2].ToDrawingColor());

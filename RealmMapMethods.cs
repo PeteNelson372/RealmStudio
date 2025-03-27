@@ -1004,18 +1004,6 @@ namespace RealmStudio
                             }
                         }
 
-                        SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(newBox.BoxBitmap, center);
-
-                        newBox.PatchA = bitmapSlices[0].Copy();   // top-left corner
-                        newBox.PatchB = bitmapSlices[1].Copy();   // top
-                        newBox.PatchC = bitmapSlices[2].Copy();   // top-right corner
-                        newBox.PatchD = bitmapSlices[3].Copy();   // left size
-                        newBox.PatchE = bitmapSlices[4].Copy();   // middle
-                        newBox.PatchF = bitmapSlices[5].Copy();   // right side
-                        newBox.PatchG = bitmapSlices[6].Copy();   // bottom-left corner
-                        newBox.PatchH = bitmapSlices[7].Copy();   // bottom
-                        newBox.PatchI = bitmapSlices[8].Copy();   // bottom-right corner
-
                         newRealmBoxLayer.MapLayerComponents.Add(newBox);
                     }
                 }
@@ -1533,7 +1521,7 @@ namespace RealmStudio
 
             MapPathMethods.FinalizeMapPaths(map);
 
-            SymbolMethods.FinalizeMapSymbols(map);
+            SymbolManager.FinalizeMapSymbols(map);
 
             WaterFeatureMethods.FinalizeWindroses(map);
 

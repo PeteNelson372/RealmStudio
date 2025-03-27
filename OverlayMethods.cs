@@ -58,7 +58,6 @@ namespace RealmStudio
                     }
                 }
 
-
                 SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(mapFrame.FrameBitmap, center);
 
                 mapFrame.PatchA = bitmapSlices[0].Copy();
@@ -328,6 +327,17 @@ namespace RealmStudio
             return currentMapGrid;
         }
 
+        internal static void DeleteScale(RealmStudioMap map)
+        {
+            for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.OVERLAYLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.OVERLAYLAYER).MapLayerComponents[i] is MapScale)
+                {
+                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.OVERLAYLAYER).MapLayerComponents.RemoveAt(i);
+                }
+            }
+        }
+
         internal static void MoveMapScale(MapScale mapScale, SKPoint zoomedScrolledPoint)
         {
             mapScale.X = (int)zoomedScrolledPoint.X - mapScale.Width / 2;
@@ -357,6 +367,109 @@ namespace RealmStudio
             }
 
             return mapScale;
+        }
+
+        internal static MapScale CreateMapScale(RealmStudioMap map, int scaleWidth, int scaleHeight, int segmentCount, int lineWidth,
+            Color color1, Color color2, Color color3, decimal scaleDistance, string scaleUnits, Color fontColor,
+            int outlineLineWidth, Color outlineColor, Font scaleFont, ScaleNumbersDisplayLocation scaleNumbersDisplayType)
+        {
+            MapScale mapScale = new()
+            {
+                X = 100,
+                Y = map.MapHeight - 100,
+                Width = scaleWidth,
+                Height = scaleHeight,
+                ScaleSegmentCount = segmentCount,
+                ScaleLineWidth = lineWidth,
+                ScaleColor1 = color1,
+                ScaleColor2 = color2,
+                ScaleColor3 = color3,
+                ScaleDistance = (float)scaleDistance,
+                ScaleDistanceUnit = scaleUnits,
+                ScaleFontColor = fontColor,
+                ScaleOutlineWidth = outlineLineWidth,
+                ScaleOutlineColor = outlineColor,
+                ScaleFont = scaleFont,
+                ScaleNumbersDisplayType = scaleNumbersDisplayType,
+            };
+
+            return mapScale;
+        }
+
+        internal static void RemoveGrid(RealmStudioMap map)
+        {
+            for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents[i] is MapGrid)
+                {
+                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.RemoveAt(i);
+                    break;
+                }
+            }
+
+            for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents[i] is MapGrid)
+                {
+                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.RemoveAt(i);
+                    break;
+                }
+            }
+
+            for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
+            {
+                if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents[i] is MapGrid)
+                {
+                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
+        internal static MapGrid? CreateGrid(RealmStudioMap map, MapGridType gridType,
+            string? selectedLayerItem, Color gridColor, int lineWidth, int gridSize)
+        {
+            MapGrid newGrid = new()
+            {
+                ParentMap = map,
+                GridType = gridType,
+                GridEnabled = true,
+                GridColor = gridColor,
+                GridLineWidth = lineWidth,
+                GridSize = gridSize,
+                Width = map.MapWidth,
+                Height = map.MapHeight,
+            };
+
+            if (gridType == MapGridType.FlatHex || gridType == MapGridType.PointedHex)
+            {
+                newGrid.GridSize /= 2;
+            }
+
+            if (selectedLayerItem != null)
+            {
+                newGrid.GridLayerIndex = selectedLayerItem switch
+                {
+                    "Default" => MapBuilder.DEFAULTGRIDLAYER,
+                    "Above Ocean" => MapBuilder.ABOVEOCEANGRIDLAYER,
+                    "Below Symbols" => MapBuilder.BELOWSYMBOLSGRIDLAYER,
+                    _ => MapBuilder.DEFAULTGRIDLAYER,
+                };
+            }
+            else
+            {
+                newGrid.GridLayerIndex = MapBuilder.DEFAULTGRIDLAYER;
+            }
+
+            newGrid.GridPaint = new()
+            {
+                Style = SKPaintStyle.Stroke,
+                Color = newGrid.GridColor.ToSKColor(),
+                StrokeWidth = newGrid.GridLineWidth,
+                StrokeJoin = SKStrokeJoin.Bevel
+            };
+
+            return newGrid;
         }
     }
 }

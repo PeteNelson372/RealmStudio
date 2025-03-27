@@ -177,18 +177,6 @@ namespace RealmStudio
                             (center.Top, center.Bottom) = (center.Bottom, center.Top);
                         }
                     }
-
-                    SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(box.BoxBitmap, center);
-
-                    box.PatchA = bitmapSlices[0].Copy();   // top-left corner
-                    box.PatchB = bitmapSlices[1].Copy();   // top
-                    box.PatchC = bitmapSlices[2].Copy();   // top-right corner
-                    box.PatchD = bitmapSlices[3].Copy();   // left size
-                    box.PatchE = bitmapSlices[4].Copy();   // middle
-                    box.PatchF = bitmapSlices[5].Copy();   // right side
-                    box.PatchG = bitmapSlices[6].Copy();   // bottom-left corner
-                    box.PatchH = bitmapSlices[7].Copy();   // bottom
-                    box.PatchI = bitmapSlices[8].Copy();   // bottom-right corner
                 }
             }
         }
@@ -400,23 +388,9 @@ namespace RealmStudio
                     }
                 }
 
-                SKBitmap[] bitmapSlices = DrawingMethods.SliceNinePatchBitmap(placedMapBox.BoxBitmap, center);
-
-                placedMapBox.PatchA = bitmapSlices[0].Copy();   // top-left corner
-                placedMapBox.PatchB = bitmapSlices[1].Copy();   // top
-                placedMapBox.PatchC = bitmapSlices[2].Copy();   // top-right corner
-                placedMapBox.PatchD = bitmapSlices[3].Copy();   // left size
-                placedMapBox.PatchE = bitmapSlices[4].Copy();   // middle
-                placedMapBox.PatchF = bitmapSlices[5].Copy();   // right side
-                placedMapBox.PatchG = bitmapSlices[6].Copy();   // bottom-left corner
-                placedMapBox.PatchH = bitmapSlices[7].Copy();   // bottom
-                placedMapBox.PatchI = bitmapSlices[8].Copy();   // bottom-right corner
-
                 Cmd_AddLabelBox cmd = new(map, placedMapBox);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
-
-
             }
         }
     }

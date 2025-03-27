@@ -85,7 +85,7 @@ namespace RealmStudio
                                         || symbol.SymbolFormat == SymbolFileFormat.BMP)
                                     {
                                         symbol.SetSymbolBitmapFromPath(symbol.SymbolFilePath);
-                                        SymbolMethods.AnalyzeSymbolBitmapColors(symbol);
+                                        SymbolManager.AnalyzeSymbolBitmapColors(symbol);
                                     }
                                 }
 
@@ -94,7 +94,7 @@ namespace RealmStudio
 
                                 if (!(symbol.SymbolTags.Count > 0))
                                 {
-                                    List<string> potentialTags = SymbolMethods.AutoTagSymbol(symbol);
+                                    List<string> potentialTags = SymbolManager.AutoTagSymbol(symbol);
 
                                     foreach (string tag in potentialTags)
                                     {
@@ -105,7 +105,7 @@ namespace RealmStudio
 
                                 if (symbol.SymbolType == MapSymbolType.NotSet)
                                 {
-                                    SymbolMethods.GuessSymbolTypeFromTags(symbol);
+                                    SymbolManager.GuessSymbolTypeFromTags(symbol);
                                 }
 
                                 ORIGINAL_COLLECTION.AddCollectionMapSymbol(new MapSymbol(symbol));
@@ -135,7 +135,7 @@ namespace RealmStudio
 
                                     string symbolName = mapSymbol.SymbolName;
 
-                                    List<string> potentialTags = SymbolMethods.AutoTagSymbol(mapSymbol);
+                                    List<string> potentialTags = SymbolManager.AutoTagSymbol(mapSymbol);
 
                                     foreach (string tag in potentialTags)
                                     {
@@ -143,7 +143,7 @@ namespace RealmStudio
                                         mapSymbol.AddSymbolTag(tag);
                                     }
 
-                                    SymbolMethods.GuessSymbolTypeFromTags(mapSymbol);
+                                    SymbolManager.GuessSymbolTypeFromTags(mapSymbol);
 
                                     foreach (WonderdraftSymbol s in wdSymbols)
                                     {
@@ -220,7 +220,7 @@ namespace RealmStudio
 
                             string symbolName = mapSymbol.SymbolName;
 
-                            List<string> potentialTags = SymbolMethods.AutoTagSymbol(mapSymbol);
+                            List<string> potentialTags = SymbolManager.AutoTagSymbol(mapSymbol);
 
                             foreach (string tag in potentialTags)
                             {
@@ -228,7 +228,7 @@ namespace RealmStudio
                                 mapSymbol.AddSymbolTag(tag);
                             }
 
-                            SymbolMethods.GuessSymbolTypeFromTags(mapSymbol);
+                            SymbolManager.GuessSymbolTypeFromTags(mapSymbol);
 
                             foreach (WonderdraftSymbol s in wdSymbols)
                             {
@@ -669,7 +669,7 @@ namespace RealmStudio
                         SELECTED_SYMBOL.SetSymbolVectorFromPath(SELECTED_SYMBOL.SymbolFilePath);
                     }
 
-                    SKBitmap? symbolBitmap = SymbolMethods.GetBitmapForVectorSymbol(SELECTED_SYMBOL, SymbolPictureBox.Width, SymbolPictureBox.Height, 0);
+                    SKBitmap? symbolBitmap = SymbolManager.GetBitmapForVectorSymbol(SELECTED_SYMBOL, SymbolPictureBox.Width, SymbolPictureBox.Height, 0);
 
                     // display the SVG
                     if (symbolBitmap != null)
