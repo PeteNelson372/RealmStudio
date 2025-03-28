@@ -47,14 +47,14 @@ namespace RealmStudio
         {
             if (IsSelected)
             {
-                canvas.DrawCircle(RegionPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionPointSelectedFillPaint);
+                canvas.DrawCircle(RegionPoint, RegionManager.POINT_CIRCLE_RADIUS, PaintObjects.RegionPointSelectedFillPaint);
             }
             else
             {
-                canvas.DrawCircle(RegionPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionPointFillPaint);
+                canvas.DrawCircle(RegionPoint, RegionManager.POINT_CIRCLE_RADIUS, PaintObjects.RegionPointFillPaint);
             }
 
-            canvas.DrawCircle(RegionPoint, MapRegionMethods.POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
+            canvas.DrawCircle(RegionPoint, RegionManager.POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
         }
 
         public XmlSchema? GetSchema()

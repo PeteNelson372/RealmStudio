@@ -277,55 +277,7 @@ namespace RealmStudio
             mapMeasure.RenderValue = true;
         }
 
-        internal static MapGrid? FinalizeMapGrid(RealmStudioMap map)
-        {
-            // finalize loading of grid
-            MapGrid? currentMapGrid = null;
 
-            MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER);
-            for (int i = 0; i < defaultGridLayer.MapLayerComponents.Count; i++)
-            {
-                if (defaultGridLayer.MapLayerComponents[i] is MapGrid grid)
-                {
-                    currentMapGrid = grid;
-                    currentMapGrid.GridLayerIndex = MapBuilder.DEFAULTGRIDLAYER;
-                    currentMapGrid.GridEnabled = true;
-                    break;
-                }
-            }
-
-            if (currentMapGrid == null)
-            {
-                MapLayer oceanGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER);
-                for (int i = 0; i < oceanGridLayer.MapLayerComponents.Count; i++)
-                {
-                    if (oceanGridLayer.MapLayerComponents[i] is MapGrid grid)
-                    {
-                        currentMapGrid = grid;
-                        currentMapGrid.GridLayerIndex = MapBuilder.ABOVEOCEANGRIDLAYER;
-                        currentMapGrid.GridEnabled = true;
-                        break;
-                    }
-                }
-            }
-
-            if (currentMapGrid == null)
-            {
-                MapLayer symbolGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER);
-                for (int i = 0; i < symbolGridLayer.MapLayerComponents.Count; i++)
-                {
-                    if (symbolGridLayer.MapLayerComponents[i] is MapGrid grid)
-                    {
-                        currentMapGrid = grid;
-                        currentMapGrid.GridLayerIndex = MapBuilder.BELOWSYMBOLSGRIDLAYER;
-                        currentMapGrid.GridEnabled = true;
-                        break;
-                    }
-                }
-            }
-
-            return currentMapGrid;
-        }
 
         internal static void DeleteScale(RealmStudioMap map)
         {
@@ -396,35 +348,7 @@ namespace RealmStudio
             return mapScale;
         }
 
-        internal static void RemoveGrid(RealmStudioMap map)
-        {
-            for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents[i] is MapGrid)
-                {
-                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.RemoveAt(i);
-                    break;
-                }
-            }
 
-            for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents[i] is MapGrid)
-                {
-                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.RemoveAt(i);
-                    break;
-                }
-            }
-
-            for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents[i] is MapGrid)
-                {
-                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.RemoveAt(i);
-                    break;
-                }
-            }
-        }
 
         internal static MapGrid? CreateGrid(RealmStudioMap map, MapGridType gridType,
             string? selectedLayerItem, Color gridColor, int lineWidth, int gridSize)

@@ -284,7 +284,7 @@ namespace RealmStudio
         internal static void RenderLowerGrid(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             // render grid below symbols
-            MapLayer belowSymbolGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER);
+            MapLayer belowSymbolGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER);
             if (belowSymbolGridLayer.LayerSurface == null) return;
 
             belowSymbolGridLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
@@ -296,7 +296,7 @@ namespace RealmStudio
         internal static void RenderLowerGridForExport(RealmStudioMap map, SKCanvas renderCanvas)
         {
             // render grid below symbols
-            MapLayer belowSymbolGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER);
+            MapLayer belowSymbolGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER);
 
             using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
             using SKCanvas canvas = new(b);
@@ -310,7 +310,7 @@ namespace RealmStudio
         internal static void RenderUpperGrid(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             // render grid layer above ocean
-            MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER);
+            MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER);
             if (aboveOceanGridLayer.LayerSurface == null) return;
 
             aboveOceanGridLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
@@ -322,7 +322,7 @@ namespace RealmStudio
         internal static void RenderUpperGridForExport(RealmStudioMap map, SKCanvas renderCanvas)
         {
             // render grid layer above ocean
-            MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER);
+            MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER);
 
             using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
             using SKCanvas canvas = new(b);

@@ -74,13 +74,11 @@ namespace RealmStudio
 
         public static string ASSET_DIRECTORY = string.Empty;
 
-        public static string DefaultSymbolDirectory = Settings.Default.MapAssetDirectory + Path.DirectorySeparatorChar + "Symbols";
+        private static string SymbolTagsFilePath = Path.DirectorySeparatorChar + "SymbolTags.txt";
 
-        private static string SymbolTagsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
-
-        private static string StructureSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "StructureSynonyms.txt";
-        private static string TerrainSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
-        private static string VegetationSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
+        private static string StructureSynonymsFilePath = Path.DirectorySeparatorChar + "StructureSynonyms.txt";
+        private static string TerrainSynonymsFilePath = Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
+        private static string VegetationSynonymsFilePath = Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
 
         public static string DefaultModelsDirectory = Settings.Default.DefaultRealmDirectory + Path.DirectorySeparatorChar + "Models";
 
@@ -107,13 +105,13 @@ namespace RealmStudio
 
             DefaultModelsDirectory = Settings.Default.DefaultRealmDirectory + Path.DirectorySeparatorChar + "Models";
 
-            DefaultSymbolDirectory = ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols";
+            SymbolManager.DefaultSymbolDirectory = ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols";
 
-            SymbolTagsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
+            SymbolTagsFilePath = SymbolManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
 
-            StructureSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "StructureSynonyms.txt";
-            TerrainSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
-            VegetationSynonymsFilePath = DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
+            StructureSynonymsFilePath = SymbolManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "StructureSynonyms.txt";
+            TerrainSynonymsFilePath = SymbolManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
+            VegetationSynonymsFilePath = SymbolManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
 
             ResetAssets();
 
@@ -468,7 +466,7 @@ namespace RealmStudio
             int numSymbols = 0;
             try
             {
-                var files = from file in Directory.EnumerateFiles(DefaultSymbolDirectory, "*.*", SearchOption.AllDirectories).Order()
+                var files = from file in Directory.EnumerateFiles(SymbolManager.DefaultSymbolDirectory, "*.*", SearchOption.AllDirectories).Order()
                             where file.EndsWith(CollectionFileName)
                             select new
                             {

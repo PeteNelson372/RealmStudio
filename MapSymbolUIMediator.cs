@@ -31,7 +31,7 @@ namespace RealmStudio
         private const int _pictureBoxWidth = 120;
         private const int _pictureBoxHeight = 45;
 
-        public MapSymbolUIMediator(RealmStudioMainForm mainForm)
+        internal MapSymbolUIMediator(RealmStudioMainForm mainForm)
         {
             MainForm = mainForm;
             _symbolTable = mainForm.SymbolTable;
@@ -39,30 +39,27 @@ namespace RealmStudio
             PropertyChanged += MapSymbolUIMediator_PropertyChanged;
         }
 
-        private void MapSymbolUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            NotifyUpdate(e.PropertyName);
-        }
+        #region Property Setter/Getters
 
-        public RealmMapState? MapState
+        internal RealmMapState? MapState
         {
             get { return _mapState; }
             set { _mapState = value; }
         }
 
-        public TableLayoutPanel SymbolTable
+        internal TableLayoutPanel SymbolTable
         {
             get { return _symbolTable; }
             set { _symbolTable = value; }
         }
 
-        public Panel SymbolToolPanel
+        internal Panel SymbolToolPanel
         {
             get { return _symbolToolPanel; }
         }
 
         // UI value setters/getters
-        public bool SymbolScaleLocked
+        internal bool SymbolScaleLocked
         {
             get { return _symbolScaleLocked; }
             set
@@ -71,7 +68,7 @@ namespace RealmStudio
             }
         }
 
-        public float SymbolScale
+        internal float SymbolScale
         {
             get { return _symbolScale; }
             set
@@ -83,7 +80,7 @@ namespace RealmStudio
             }
         }
 
-        public bool RandomizeSymbolColors
+        internal bool RandomizeSymbolColors
         {
             get { return _randomizeSymbolColors; }
             set
@@ -92,7 +89,7 @@ namespace RealmStudio
             }
         }
 
-        public Color SymbolColor1
+        internal Color SymbolColor1
         {
             get { return _symbolColor1; }
             set
@@ -101,7 +98,7 @@ namespace RealmStudio
             }
         }
 
-        public Color SymbolColor2
+        internal Color SymbolColor2
         {
             get { return _symbolColor2; }
             set
@@ -110,7 +107,7 @@ namespace RealmStudio
             }
         }
 
-        public Color SymbolColor3
+        internal Color SymbolColor3
         {
             get { return _symbolColor3; }
             set
@@ -119,7 +116,7 @@ namespace RealmStudio
             }
         }
 
-        public bool UseAreaBrush
+        internal bool UseAreaBrush
         {
             get { return _useAreaBrush; }
             set
@@ -128,7 +125,7 @@ namespace RealmStudio
             }
         }
 
-        public int AreaBrushSize
+        internal int AreaBrushSize
         {
             get { return _areaBrushSize; }
             set
@@ -137,7 +134,7 @@ namespace RealmStudio
             }
         }
 
-        public bool MirrorSymbol
+        internal bool MirrorSymbol
         {
             get { return _mirrorSymbol; }
             set
@@ -146,7 +143,7 @@ namespace RealmStudio
             }
         }
 
-        public float SymbolRotation
+        internal float SymbolRotation
         {
             get { return _symbolRotation; }
             set
@@ -155,7 +152,7 @@ namespace RealmStudio
             }
         }
 
-        public float SymbolPlacementRate
+        internal float SymbolPlacementRate
         {
             get { return _symbolPlacementRate; }
             set
@@ -164,7 +161,7 @@ namespace RealmStudio
             }
         }
 
-        public float SymbolPlacementDensity
+        internal float SymbolPlacementDensity
         {
             get { return _symbolPlacementDensity; }
             set
@@ -173,99 +170,20 @@ namespace RealmStudio
             }
         }
 
-        public static int SymbolPictureBoxWidth
+        internal static int SymbolPictureBoxWidth
         {
             get { return _pictureBoxWidth; }
         }
 
-        public static int SymbolPictureBoxHeight
+        internal static int SymbolPictureBoxHeight
         {
             get { return _pictureBoxHeight; }
         }
 
-        #region Symbol UI Methods
-        public void ResetSymbolColorButtons()
-        {
-            if (AssetManager.CURRENT_THEME != null && AssetManager.CURRENT_THEME.SymbolCustomColors != null)
-            {
-                SymbolColor1 = Color.FromArgb(AssetManager.CURRENT_THEME.SymbolCustomColors[0] ?? Color.FromArgb(85, 44, 36).ToArgb());
-                SymbolColor2 = Color.FromArgb(AssetManager.CURRENT_THEME.SymbolCustomColors[1] ?? Color.FromArgb(255, 53, 45, 32).ToArgb());
-                SymbolColor3 = Color.FromArgb(AssetManager.CURRENT_THEME.SymbolCustomColors[2] ?? Color.FromArgb(161, 214, 202, 171).ToArgb());
-            }
-            else
-            {
-                SymbolColor1 = Color.FromArgb(255, 85, 44, 36);
-                SymbolColor2 = Color.FromArgb(255, 53, 45, 32);
-                SymbolColor3 = Color.FromArgb(161, 214, 202, 171);
-            }
-        }
-
-        public void AddSymbolsToSymbolTable(List<MapSymbol> symbols)
-        {
-            const int _pictureBoxBaseHeight = 680;
-
-            MainForm.SymbolTable.AutoScroll = false;
-            SymbolTable.VerticalScroll.Enabled = true;
-            SymbolTable.Hide();
-            SymbolToolPanel.Refresh();
-            SymbolTable.Controls.Clear();
-            SymbolTable.RowCount = 0;
-            SymbolTable.Refresh();
-
-            for (int i = 0; i < symbols.Count; i++)
-            {
-                MapSymbol symbol = symbols[i];
-                Bitmap? pbm = SymbolManager.GetSymbolPictureBoxBitmap(symbol);
-
-                if (pbm != null)
-                {
-                    PictureBox pb = new()
-                    {
-                        Width = SymbolPictureBoxWidth,
-                        Height = SymbolPictureBoxHeight,
-                        Tag = symbol,
-                        SizeMode = PictureBoxSizeMode.CenterImage,
-                        Image = (Image)pbm.Clone(),
-                        Margin = new Padding(0, 0, 0, 0),
-                        Padding = new Padding(0, 4, 0, 4),
-                        BorderStyle = BorderStyle.None,
-                    };
-
-                    pb.MouseHover += SymbolPictureBox_MouseHover;
-                    pb.MouseClick += SymbolPictureBox_MouseClick;
-                    pb.Paint += SymbolPictureBox_Paint;
-
-                    SymbolTable.Controls.Add(pb);
-                    SymbolTable.RowStyles.Add(new RowStyle(SizeType.Absolute, SymbolPictureBoxHeight));
-                }
-            }
-
-            SymbolTable.RowCount = symbols.Count;
-            SymbolTable.Width = 130;
-
-            SymbolTable.Height = Math.Min(_pictureBoxBaseHeight, (symbols.Count * SymbolPictureBoxHeight));
-            SymbolTable.VerticalScroll.Maximum = (symbols.Count * SymbolPictureBoxHeight) + (symbols.Count * 2);
-            SymbolTable.HorizontalScroll.Maximum = 0;
-            SymbolTable.HorizontalScroll.Enabled = false;
-            SymbolTable.HorizontalScroll.Visible = false;
-            SymbolTable.AutoScroll = true;
-
-            SymbolTable.Show();
-
-            SymbolTable.Refresh();
-            SymbolToolPanel.Refresh();
-        }
-
-        internal List<MapSymbol> GetFilteredMapSymbols()
-        {
-            List<string> selectedCollections = [.. MainForm.SymbolCollectionsListBox.CheckedItems.Cast<string>()];
-            List<string> selectedTags = [.. MainForm.SymbolTagsListBox.CheckedItems.Cast<string>()];
-            List<MapSymbol> filteredSymbols = SymbolManager.GetFilteredSymbolList(SymbolManager.SelectedSymbolType, selectedCollections, selectedTags);
-
-            return filteredSymbols;
-        }
-
         #endregion
+
+
+        #region Property Change Handler Methods
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
@@ -292,6 +210,8 @@ namespace RealmStudio
 
         private void UpdateSymbolUI(string? changedPropertyName)
         {
+            // this methods updates the Main Form Symbol Tab UI
+            // based on the property that has changed
             if (string.IsNullOrEmpty(changedPropertyName))
             {
                 SymbolScaleLockChange();
@@ -329,8 +249,6 @@ namespace RealmStudio
                         }
                 }
             }
-
-
         }
 
         private void SymbolScaleLockChange()
@@ -408,49 +326,21 @@ namespace RealmStudio
             }));
         }
 
-        internal void SelectPrimarySymbolInSymbolTable(PictureBox pb)
-        {
-            if (pb.Tag is MapSymbol s)
-            {
-                if (SymbolManager.SelectedSymbolTableMapSymbol == null ||
-                    s.SymbolGuid.ToString() != SymbolManager.SelectedSymbolTableMapSymbol.SymbolGuid.ToString())
-                {
-                    foreach (Control control in SymbolTable.Controls)
-                    {
-                        if (control != pb)
-                        {
-                            control.BackColor = SystemColors.Control;
-                            control.Refresh();
-                        }
-                    }
-
-                    SymbolManager.SecondarySelectedSymbols.Clear();
-                    Color pbBackColor = pb.BackColor;
-
-                    if (pbBackColor == SystemColors.Control)
-                    {
-                        // clicked symbol is not selected, so select it
-                        pb.BackColor = Color.LightSkyBlue;
-                        pb.Refresh();
-
-                        SymbolManager.SelectedSymbolTableMapSymbol = s;
-                    }
-                    else
-                    {
-                        // clicked symbol is already selected, so deselect it
-                        pb.BackColor = SystemColors.Control;
-                        pb.Refresh();
-
-                        SymbolManager.SelectedSymbolTableMapSymbol = null;
-                        RealmMapState.CurrentDrawingMode = MapDrawingMode.None;
-                        MainForm.SetDrawingModeLabel();
-                    }
-                }
-            }
-        }
+        #endregion
 
         #region EventHandlers
 
+        private void MapSymbolUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            // this event handler is called whenever a property is set
+            // using the SetPropertyField method
+
+            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
+
+            NotifyUpdate(e.PropertyName);
+        }
+
+        // MainForm UI Event handlers //
         private void SymbolPictureBox_Paint(object? sender, PaintEventArgs e)
         {
             PictureBox? pb = (PictureBox?)sender;
@@ -530,6 +420,10 @@ namespace RealmStudio
             }
         }
 
+        #endregion
+
+        #region Map Symbol UI Methods
+
         internal void ColorButtonMouseUp(object sender, MouseEventArgs e)
         {
             IconButton colorButton = (IconButton)sender;
@@ -555,6 +449,288 @@ namespace RealmStudio
                     cmd.DoOperation();
                 }
             }
+        }
+
+        internal void ResetSymbolColorButtons()
+        {
+            if (AssetManager.CURRENT_THEME != null && AssetManager.CURRENT_THEME.SymbolCustomColors != null)
+            {
+                SymbolColor1 = Color.FromArgb(AssetManager.CURRENT_THEME.SymbolCustomColors[0] ?? Color.FromArgb(85, 44, 36).ToArgb());
+                SymbolColor2 = Color.FromArgb(AssetManager.CURRENT_THEME.SymbolCustomColors[1] ?? Color.FromArgb(255, 53, 45, 32).ToArgb());
+                SymbolColor3 = Color.FromArgb(AssetManager.CURRENT_THEME.SymbolCustomColors[2] ?? Color.FromArgb(161, 214, 202, 171).ToArgb());
+            }
+            else
+            {
+                SymbolColor1 = Color.FromArgb(255, 85, 44, 36);
+                SymbolColor2 = Color.FromArgb(255, 53, 45, 32);
+                SymbolColor3 = Color.FromArgb(161, 214, 202, 171);
+            }
+        }
+
+        internal void AddSymbolsToSymbolTable(List<MapSymbol> symbols)
+        {
+            const int _pictureBoxBaseHeight = 680;
+
+            MainForm.SymbolTable.AutoScroll = false;
+            SymbolTable.VerticalScroll.Enabled = true;
+            SymbolTable.Hide();
+            SymbolToolPanel.Refresh();
+            SymbolTable.Controls.Clear();
+            SymbolTable.RowCount = 0;
+            SymbolTable.Refresh();
+
+            for (int i = 0; i < symbols.Count; i++)
+            {
+                MapSymbol symbol = symbols[i];
+                Bitmap? pbm = SymbolManager.GetSymbolPictureBoxBitmap(symbol);
+
+                if (pbm != null)
+                {
+                    PictureBox pb = new()
+                    {
+                        Width = SymbolPictureBoxWidth,
+                        Height = SymbolPictureBoxHeight,
+                        Tag = symbol,
+                        SizeMode = PictureBoxSizeMode.CenterImage,
+                        Image = (Image)pbm.Clone(),
+                        Margin = new Padding(0, 0, 0, 0),
+                        Padding = new Padding(0, 4, 0, 4),
+                        BorderStyle = BorderStyle.None,
+                    };
+
+                    pb.MouseHover += SymbolPictureBox_MouseHover;
+                    pb.MouseClick += SymbolPictureBox_MouseClick;
+                    pb.Paint += SymbolPictureBox_Paint;
+
+                    SymbolTable.Controls.Add(pb);
+                    SymbolTable.RowStyles.Add(new RowStyle(SizeType.Absolute, SymbolPictureBoxHeight));
+                }
+            }
+
+            SymbolTable.RowCount = symbols.Count;
+            SymbolTable.Width = 130;
+
+            SymbolTable.Height = Math.Min(_pictureBoxBaseHeight, (symbols.Count * SymbolPictureBoxHeight));
+            SymbolTable.VerticalScroll.Maximum = (symbols.Count * SymbolPictureBoxHeight) + (symbols.Count * 2);
+            SymbolTable.HorizontalScroll.Maximum = 0;
+            SymbolTable.HorizontalScroll.Enabled = false;
+            SymbolTable.HorizontalScroll.Visible = false;
+            SymbolTable.AutoScroll = true;
+
+            SymbolTable.Show();
+
+            SymbolTable.Refresh();
+            SymbolToolPanel.Refresh();
+        }
+
+        internal List<MapSymbol> GetFilteredMapSymbols()
+        {
+            List<string> selectedCollections = [.. MainForm.SymbolCollectionsListBox.CheckedItems.Cast<string>()];
+            List<string> selectedTags = [.. MainForm.SymbolTagsListBox.CheckedItems.Cast<string>()];
+            List<MapSymbol> filteredSymbols = SymbolManager.GetFilteredSymbolList(SymbolManager.SelectedSymbolType, selectedCollections, selectedTags);
+
+            return filteredSymbols;
+        }
+
+        internal void SymbolCollectionsListItemCheck(ItemCheckEventArgs e)
+        {
+            List<string> checkedCollections = [];
+            foreach (string item in MainForm.SymbolCollectionsListBox.CheckedItems)
+            {
+                checkedCollections.Add(item.ToString());
+            }
+
+            string? collectionitem = MainForm.SymbolCollectionsListBox.Items[e.Index].ToString();
+
+            if (!string.IsNullOrEmpty(collectionitem))
+            {
+                collectionitem = collectionitem.Trim();
+                if (e.NewValue == CheckState.Checked)
+                {
+                    checkedCollections.Add(collectionitem);
+                }
+                else
+                {
+                    checkedCollections.Remove(collectionitem);
+                }
+            }
+
+            List<string> selectedTags = [.. MainForm.SymbolTagsListBox.CheckedItems.Cast<string>()];
+            List<MapSymbol> filteredSymbols = SymbolManager.GetFilteredSymbolList(SymbolManager.SelectedSymbolType, checkedCollections, selectedTags);
+            AddSymbolsToSymbolTable(filteredSymbols);
+        }
+
+        internal void SymbolTagsListItemCheck(ItemCheckEventArgs e)
+        {
+
+            List<string> checkedTags = [];
+            foreach (string item in MainForm.SymbolTagsListBox.CheckedItems)
+            {
+                checkedTags.Add(item.ToString());
+            }
+
+            string? tagItem = MainForm.SymbolTagsListBox.Items[e.Index].ToString();
+            if (!string.IsNullOrEmpty(tagItem))
+            {
+                if (e.NewValue == CheckState.Checked)
+                {
+                    checkedTags.Add(tagItem);
+                }
+                else
+                {
+                    checkedTags.Remove(tagItem);
+                }
+            }
+
+
+            List<string> selectedCollections = [.. MainForm.SymbolCollectionsListBox.CheckedItems.Cast<string>()];
+            List<MapSymbol> filteredSymbols = SymbolManager.GetFilteredSymbolList(SymbolManager.SelectedSymbolType, selectedCollections, checkedTags);
+            AddSymbolsToSymbolTable(filteredSymbols);
+        }
+
+        internal void ColorSymbols()
+        {
+            if (RealmMapState.SelectedMapSymbol != null && RealmMapState.SelectedMapSymbol.IsSelected)
+            {
+                SymbolManager.ColorSelectedSymbol(RealmMapState.SelectedMapSymbol);
+            }
+            else
+            {
+                RealmMapState.CurrentDrawingMode = MapDrawingMode.SymbolColor;
+                MainForm.SetDrawingModeLabel();
+
+                if (UseAreaBrush)
+                {
+                    RealmMapState.SelectedBrushSize = MainForm.AreaBrushSizeTrack.Value;
+                    AreaBrushSize = RealmMapState.SelectedBrushSize;
+                }
+                else
+                {
+                    RealmMapState.SelectedBrushSize = 0;
+                    AreaBrushSize = 0;
+                }
+            }
+        }
+
+        internal void SelectPrimarySymbolInSymbolTable(PictureBox pb)
+        {
+            if (pb.Tag is MapSymbol s)
+            {
+                if (SymbolManager.SelectedSymbolTableMapSymbol == null ||
+                    s.SymbolGuid.ToString() != SymbolManager.SelectedSymbolTableMapSymbol.SymbolGuid.ToString())
+                {
+                    foreach (Control control in SymbolTable.Controls)
+                    {
+                        if (control != pb)
+                        {
+                            control.BackColor = SystemColors.Control;
+                            control.Refresh();
+                        }
+                    }
+
+                    SymbolManager.SecondarySelectedSymbols.Clear();
+                    Color pbBackColor = pb.BackColor;
+
+                    if (pbBackColor == SystemColors.Control)
+                    {
+                        // clicked symbol is not selected, so select it
+                        pb.BackColor = Color.LightSkyBlue;
+                        pb.Refresh();
+
+                        SymbolManager.SelectedSymbolTableMapSymbol = s;
+                    }
+                    else
+                    {
+                        // clicked symbol is already selected, so deselect it
+                        pb.BackColor = SystemColors.Control;
+                        pb.Refresh();
+
+                        SymbolManager.SelectedSymbolTableMapSymbol = null;
+                        RealmMapState.CurrentDrawingMode = MapDrawingMode.None;
+                        MainForm.SetDrawingModeLabel();
+                    }
+                }
+            }
+        }
+
+        internal void SelectSymbolsOfType(MapSymbolType symbolType)
+        {
+            RealmMapState.CurrentDrawingMode = MapDrawingMode.SymbolPlace;
+            MainForm.SetDrawingModeLabel();
+            RealmMapState.SelectedBrushSize = 0;
+
+            if (SymbolManager.SelectedSymbolType != symbolType)
+            {
+                SymbolManager.SelectedSymbolType = symbolType;
+                List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+
+                AddSymbolsToSymbolTable(selectedSymbols);
+                MainForm.AreaBrushSwitch.Checked = false;
+                MainForm.AreaBrushSwitch.Enabled = false;
+            }
+
+            if (SymbolManager.SelectedSymbolType == MapSymbolType.Vegetation || SymbolManager.SelectedSymbolType == MapSymbolType.Terrain)
+            {
+                MainForm.AreaBrushSwitch.Enabled = true;
+            }
+
+            if (SymbolTable.Controls.Count > 0)
+            {
+                if (SymbolManager.SelectedSymbolTableMapSymbol == null || SymbolManager.SelectedSymbolTableMapSymbol.SymbolType != symbolType)
+                {
+                    PictureBox pb = (PictureBox)SymbolTable.Controls[0];
+                    SelectPrimarySymbolInSymbolTable(pb);
+                }
+            }
+        }
+
+        internal void SearchSymbols(string searchText)
+        {
+            // filter symbol list based on text entered by the user
+
+            if (searchText.Length > 2)
+            {
+                List<string> selectedCollections = [.. MainForm.SymbolCollectionsListBox.CheckedItems.Cast<string>()];
+                List<string> selectedTags = [.. MainForm.SymbolTagsListBox.CheckedItems.Cast<string>()];
+                List<MapSymbol> filteredSymbols = SymbolManager.GetFilteredSymbolList(SymbolManager.SelectedSymbolType,
+                    selectedCollections, selectedTags, searchText);
+
+                AddSymbolsToSymbolTable(filteredSymbols);
+            }
+            else if (searchText.Length == 0)
+            {
+                List<string> selectedCollections = [.. MainForm.SymbolCollectionsListBox.CheckedItems.Cast<string>()];
+                List<string> selectedTags = [.. MainForm.SymbolTagsListBox.CheckedItems.Cast<string>()];
+                List<MapSymbol> filteredSymbols = SymbolManager.GetFilteredSymbolList(SymbolManager.SelectedSymbolType, selectedCollections, selectedTags);
+
+                AddSymbolsToSymbolTable(filteredSymbols);
+            }
+        }
+
+        #endregion
+
+        #region static Map Symbol UI methods
+        internal static MapSymbol? SelectMapSymbolAtPoint(RealmStudioMap map, PointF mapClickPoint)
+        {
+            MapSymbol? selectedSymbol = null;
+
+            List<MapComponent> mapSymbolComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER).MapLayerComponents;
+
+            for (int i = 0; i < mapSymbolComponents.Count; i++)
+            {
+                if (mapSymbolComponents[i] is MapSymbol mapSymbol)
+                {
+                    RectangleF symbolRect = new(mapSymbol.X, mapSymbol.Y, mapSymbol.Width, mapSymbol.Height);
+
+                    if (symbolRect.Contains(mapClickPoint))
+                    {
+                        selectedSymbol = mapSymbol;
+                    }
+                }
+            }
+
+            RealmMapMethods.DeselectAllMapComponents(RealmMapState.CurrentMap, selectedSymbol);
+            return selectedSymbol;
         }
 
         #endregion

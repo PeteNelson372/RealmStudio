@@ -35,7 +35,8 @@ namespace RealmStudio
         private static MapSymbolUIMediator? _symbolUIMediator;
 
         private static MapSymbolType _selectedSymbolType = MapSymbolType.NotSet;
-        private static readonly string _symbolTagsFilePath = AssetManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
+        private static string _defaultSymbolDirectory = AssetManager.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols";
+        private static string _symbolTagsFilePath = AssetManager.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols" + Path.DirectorySeparatorChar + "SymbolTags.txt";
         private static readonly List<Tuple<string, List<MapSymbol>>> _tagSymbolAssociationList = [];
         private static MapSymbol? _selectedSymbolTableMapSymbol;
         private static readonly List<MapSymbol> _secondarySelectedSymbols = [];
@@ -50,6 +51,16 @@ namespace RealmStudio
         {
             get { return _selectedSymbolType; }
             set { _selectedSymbolType = value; }
+        }
+
+        internal static string DefaultSymbolDirectory
+        {
+            get { return _defaultSymbolDirectory; }
+            set
+            {
+                _defaultSymbolDirectory = value;
+                _symbolTagsFilePath = _defaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
+            }
         }
 
         internal static string SymbolTagsFilePath
@@ -75,7 +86,7 @@ namespace RealmStudio
             get { return _secondarySelectedSymbols; }
         }
 
-        public static IMapComponent? GetComponentById(Guid componentGuid)
+        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
         {
             throw new NotImplementedException();
         }
@@ -599,6 +610,88 @@ namespace RealmStudio
                                 symbol.SetPlacedBitmap(resizedPlacedBitmap);
 
                             }
+                        }
+                    }
+                }
+            }
+        }
+
+        internal static void MoveSelectedSymbolInRenderOrder(ComponentMoveDirection direction, int amount = 1, bool toTopBottom = false)
+        {
+            if (RealmMapState.SelectedMapSymbol != null)
+            {
+                // find the selected symbol in the Symbol Layer MapComponents
+                MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(RealmMapState.CurrentMap, MapBuilder.SYMBOLLAYER);
+
+                List<MapComponent> symbolComponents = symbolLayer.MapLayerComponents;
+                MapSymbol? selectedSymbol = null;
+
+                int selectedSymbolIndex = 0;
+
+                for (int i = 0; i < symbolComponents.Count; i++)
+                {
+                    MapComponent symbolComponent = symbolComponents[i];
+                    if (symbolComponent is MapSymbol symbol && symbol.SymbolGuid.ToString() == RealmMapState.SelectedMapSymbol.SymbolGuid.ToString())
+                    {
+                        selectedSymbolIndex = i;
+                        selectedSymbol = symbol;
+                        break;
+                    }
+                }
+
+                if (direction == ComponentMoveDirection.Up)
+                {
+                    // moving a symbol up in render order means increasing its index
+                    if (selectedSymbol != null && selectedSymbolIndex < symbolComponents.Count - 1)
+                    {
+                        if (toTopBottom)
+                        {
+                            symbolComponents.RemoveAt(selectedSymbolIndex);
+                            symbolComponents.Add(selectedSymbol);
+                        }
+                        else
+                        {
+                            int moveLocation;
+
+                            if (selectedSymbolIndex + amount < symbolComponents.Count - 1)
+                            {
+                                moveLocation = selectedSymbolIndex + amount;
+                            }
+                            else
+                            {
+                                moveLocation = symbolComponents.Count - 1;
+                            }
+
+                            symbolComponents[selectedSymbolIndex] = symbolComponents[moveLocation];
+                            symbolComponents[moveLocation] = selectedSymbol;
+                        }
+                    }
+                }
+                else if (direction == ComponentMoveDirection.Down)
+                {
+                    // moving a symbol down in render order means decreasing its index
+                    if (selectedSymbol != null && selectedSymbolIndex > 0)
+                    {
+                        if (toTopBottom)
+                        {
+                            symbolComponents.RemoveAt(selectedSymbolIndex);
+                            symbolComponents.Insert(0, selectedSymbol);
+                        }
+                        else
+                        {
+                            int moveLocation;
+
+                            if (selectedSymbolIndex - amount >= 0)
+                            {
+                                moveLocation = selectedSymbolIndex - amount;
+                            }
+                            else
+                            {
+                                moveLocation = 0;
+                            }
+
+                            symbolComponents[selectedSymbolIndex] = symbolComponents[moveLocation];
+                            symbolComponents[moveLocation] = selectedSymbol;
                         }
                     }
                 }

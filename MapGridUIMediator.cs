@@ -31,11 +31,13 @@ namespace RealmStudio
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        private readonly RealmStudioMainForm _mainForm;
+        private readonly RealmStudioMainForm MainForm;
         private RealmMapState? _mapState;
 
-        private MapGridType _gridType = MapGridType.NotSet;
+        private bool _gridEnabled = true;
+        private MapGridType _gridType = MapGridType.Square;
         private int _gridLayerIndex = MapBuilder.DEFAULTGRIDLAYER;
+        private string? _gridLayerName = "Default";
         private int _gridSize = 64;
         private int _gridLineWidth = 2;
         private Color _gridColor = Color.FromArgb(126, 0, 0, 0);
@@ -43,23 +45,83 @@ namespace RealmStudio
 
         public MapGridUIMediator(RealmStudioMainForm mainForm)
         {
-            _mainForm = mainForm;
+            MainForm = mainForm;
+            PropertyChanged += MapGridUIMediator_PropertyChanged;
         }
+
+        #region Property Setters/Getters
 
         public RealmMapState? MapState
         {
             get { return _mapState; }
             set { _mapState = value; }
         }
+        public bool GridEnabled
+        {
+            get => _gridEnabled;
+            set { SetPropertyField(nameof(GridEnabled), ref _gridEnabled, value); }
+        }
         public MapGridType GridType
         {
             get { return _gridType; }
             set { SetPropertyField(nameof(GridType), ref _gridType, value); }
         }
-        public int GridLayer
+        public int GridLayerIndex
         {
             get { return _gridLayerIndex; }
-            set { SetPropertyField(nameof(GridLayer), ref _gridLayerIndex, value); }
+            set
+            {
+                SetPropertyField(nameof(GridLayerIndex), ref _gridLayerIndex, value);
+
+                if (value == MapBuilder.DEFAULTGRIDLAYER)
+                {
+                    _gridLayerName = "Default";
+                }
+                else if (value == MapBuilder.ABOVEOCEANGRIDLAYER)
+                {
+                    _gridLayerName = "Above Ocean";
+                }
+                else if (value == MapBuilder.BELOWSYMBOLSGRIDLAYER)
+                {
+                    _gridLayerName = "Below Symbols";
+                }
+                else
+                {
+                    _gridLayerName = "Default";
+                }
+            }
+        }
+        public string? GridLayerName
+        {
+            get { return _gridLayerName; }
+            set
+            {
+                SetPropertyField(nameof(GridLayerName), ref _gridLayerName, value);
+
+                switch (value)
+                {
+                    case "Default":
+                        {
+                            _gridLayerIndex = MapBuilder.DEFAULTGRIDLAYER;
+                        }
+                        break;
+                    case "Above Ocean":
+                        {
+                            _gridLayerIndex = MapBuilder.ABOVEOCEANGRIDLAYER;
+                        }
+                        break;
+                    case "Below Symbols":
+                        {
+                            _gridLayerIndex = MapBuilder.BELOWSYMBOLSGRIDLAYER;
+                        }
+                        break;
+                    default:
+                        {
+                            _gridLayerIndex = MapBuilder.DEFAULTGRIDLAYER;
+                        }
+                        break;
+                }
+            }
         }
         public int GridSize
         {
@@ -74,13 +136,23 @@ namespace RealmStudio
         public Color GridColor
         {
             get => _gridColor;
-            set { SetPropertyField(nameof(GridColor), ref _gridColor, value); }
+            set
+            {
+                if (value.ToArgb() != Color.Empty.ToArgb())
+                {
+                    SetPropertyField(nameof(GridColor), ref _gridColor, value);
+                }
+            }
         }
         public bool ShowGridSize
         {
             get => _showGridSize;
             set { SetPropertyField(nameof(ShowGridSize), ref _showGridSize, value); }
         }
+
+        #endregion
+
+        #region Property Change Handler Methods
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
@@ -100,8 +172,88 @@ namespace RealmStudio
         {
             if (RealmMapState.CurrentMap != null)
             {
+                UpdateGridUI(changedPropertyName);
                 MapGridManager.Update(RealmMapState.CurrentMap, MapState, this);
+                RealmMapState.GLRenderControl?.Invalidate();
             }
         }
+
+        private void UpdateGridUI(string? changedPropertyName)
+        {
+            // this methods updates the Main Form Symbol Tab UI
+            // based on the property that has changed
+            MainForm.EnableGridSwitch.Checked = GridEnabled;
+
+            switch (GridType)
+            {
+                case MapGridType.Square:
+                    {
+                        MainForm.SquareGridRadio.Checked = true;
+                    }
+                    break;
+                case MapGridType.FlatHex:
+                    {
+                        MainForm.FlatHexGridRadio.Checked = true;
+                    }
+                    break;
+                case MapGridType.PointedHex:
+                    {
+                        MainForm.PointedHexGridRadio.Checked = true;
+                    }
+                    break;
+                default:
+                    {
+                        MainForm.SquareGridRadio.Checked = true;
+                    }
+                    break;
+            }
+
+            MainForm.GridLayerUpDown.SelectedItem = GridLayerName;
+            MainForm.GridColorSelectButton.BackColor = GridColor;
+            MainForm.ShowGridSizeSwitch.Checked = ShowGridSize;
+
+            if (string.IsNullOrEmpty(changedPropertyName))
+            {
+                MainForm.GridSizeTrack.Value = GridSize;
+                MainForm.GridLineWidthTrack.Value = GridLineWidth;
+            }
+            else
+            {
+                switch (changedPropertyName)
+                {
+                    case "GridSize":
+                        {
+                            MainForm.GridSizeTrack.Value = GridSize;
+                        }
+                        break;
+                    case "GridLineWidth":
+                        {
+                            MainForm.GridLineWidthTrack.Value = GridLineWidth;
+                            break;
+                        }
+                    default:
+                        {
+                            MainForm.GridSizeTrack.Value = GridSize;
+                            MainForm.GridLineWidthTrack.Value = GridLineWidth;
+                            break;
+                        }
+                }
+            }
+        }
+
+        #endregion
+
+        #region Event Handlers
+        private void MapGridUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            // this event handler is called whenever a property is set
+            // using the SetPropertyField method
+
+            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
+
+            NotifyUpdate(e.PropertyName);
+        }
+
+        #endregion
     }
 }

@@ -84,8 +84,8 @@ namespace RealmStudio
 
             MapRegion.RegionBorderType = GetSelectedRegionBorderType();
 
-            SKPathEffect? regionBorderEffect = MapRegionMethods.ConstructRegionBorderEffect(MapRegion);
-            MapRegionMethods.ConstructRegionPaintObjects(MapRegion, regionBorderEffect);
+            SKPathEffect? regionBorderEffect = RegionManager.ConstructRegionBorderEffect(MapRegion);
+            RegionManager.ConstructRegionPaintObjects(MapRegion, regionBorderEffect);
 
             TOOLTIP.Show("Region data changes applied", this, new Point(StatusMessageLabel.Left, StatusMessageLabel.Top), 3000);
 

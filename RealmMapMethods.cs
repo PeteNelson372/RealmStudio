@@ -1095,8 +1095,8 @@ namespace RealmStudio
                                     newRegion.MapRegionPoints.Add(newRegionPoint);
                                 }
 
-                                SKPathEffect? regionBorderEffect = MapRegionMethods.ConstructRegionBorderEffect(newRegion);
-                                MapRegionMethods.ConstructRegionPaintObjects(newRegion, regionBorderEffect);
+                                SKPathEffect? regionBorderEffect = RegionManager.ConstructRegionBorderEffect(newRegion);
+                                RegionManager.ConstructRegionPaintObjects(newRegion, regionBorderEffect);
 
                                 newRealmRegionLayer.MapLayerComponents.Add(newRegion);
                                 break;
@@ -1527,7 +1527,7 @@ namespace RealmStudio
 
             MapLabelMethods.FinalizeMapBoxes(map);
 
-            MapRegionMethods.FinalizeMapRegions(map);
+            RegionManager.FinalizeMapRegions(map);
 
             BackgroundMethods.FinalizeMapVignette(map, glControl);
         }

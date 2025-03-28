@@ -58,7 +58,7 @@ namespace RealmStudio
         {
             FolderBrowserDialog fbd = new()
             {
-                InitialDirectory = AssetManager.DefaultSymbolDirectory
+                InitialDirectory = SymbolManager.DefaultSymbolDirectory,
             };
 
             if (fbd.ShowDialog() == DialogResult.OK)

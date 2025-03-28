@@ -72,6 +72,7 @@ namespace RealmStudio
         // UI Mediators
         private MapSymbolUIMediator SymbolUIMediator { get; set; }
         private MapGridUIMediator GridUIMediator { get; set; }
+        private RegionUIMediator MapRegionUIMediator { get; set; }
 
 
         #region Constructor
@@ -115,13 +116,16 @@ namespace RealmStudio
 
             Settings.Default.Save();
 
-            SymbolUIMediator = new MapSymbolUIMediator(this);
+            // create and initialize managers and UI mediators
 
+            SymbolUIMediator = new MapSymbolUIMediator(this);
             SymbolManager.SymbolUIMediator = SymbolUIMediator;
 
             GridUIMediator = new MapGridUIMediator(this);
-
             MapGridManager.GridUIMediator = GridUIMediator;
+
+            MapRegionUIMediator = new(this);
+            RegionManager.RegionUIMediator = MapRegionUIMediator;
 
             TimerManager.SymbolUIMediator = SymbolUIMediator;
         }
@@ -2110,14 +2114,12 @@ namespace RealmStudio
 
                 RealmMapMethods.FinalizeMap(RealmMapState.CurrentMap, SKGLRenderControl);
 
-                RealmMapState.CurrentMapGrid = OverlayMethods.FinalizeMapGrid(RealmMapState.CurrentMap);
+                RealmMapState.CurrentMapGrid = MapGridManager.FinalizeMapGrid(RealmMapState.CurrentMap);
 
                 if (RealmMapState.CurrentMapGrid != null)
                 {
-                    UpdateUIFromGrid(RealmMapState.CurrentMapGrid);
-
                     RealmMapState.CurrentMapGrid.ParentMap = RealmMapState.CurrentMap;
-                    RealmMapState.CurrentMapGrid.GridEnabled = true;
+                    MapGridManager.Update(RealmMapState.CurrentMap, null, null);
                 }
 
                 MapHeightMapMethods.ConvertMapImageToMapHeightMap(RealmMapState.CurrentMap);
@@ -3914,41 +3916,40 @@ namespace RealmStudio
                         // initialize region
                         if (RealmMapState.CurrentMapRegion == null)
                         {
-                            RealmMapState.CurrentMapRegion = new()
+                            RegionManager.Create(RealmMapState.CurrentMap, MapRegionUIMediator);
+                        }
+
+                        if (RealmMapState.CurrentMapRegion != null)
+                        {
+                            if (ModifierKeys == Keys.Shift)
                             {
-                                ParentMap = RealmMapState.CurrentMap
-                            };
+                                RegionManager.SnapRegionToLandformCoastline(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion,
+                                    zoomedScrolledPoint, RealmMapState.PreviousCursorPoint);
+                            }
+                            else
+                            {
+                                MapRegionPoint mrp = new(zoomedScrolledPoint);
+                                RealmMapState.CurrentMapRegion.MapRegionPoints.Add(mrp);
+                            }
 
-                            SetRegionData(RealmMapState.CurrentMapRegion);
+                            RealmMapState.PreviousCursorPoint = zoomedScrolledPoint;
                         }
 
-                        if (ModifierKeys == Keys.Shift)
-                        {
-                            MapRegionMethods.SnapRegionToLandformCoastline(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion,
-                                zoomedScrolledPoint, RealmMapState.PreviousCursorPoint);
-                        }
-                        else
-                        {
-                            MapRegionPoint mrp = new(zoomedScrolledPoint);
-                            RealmMapState.CurrentMapRegion.MapRegionPoints.Add(mrp);
-                        }
-
-                        RealmMapState.PreviousCursorPoint = zoomedScrolledPoint;
                         SKGLRenderControl.Invalidate();
                     }
                     break;
                 case MapDrawingMode.RegionSelect:
                     {
-                        if (RealmMapState.CurrentMapRegion != null && MapRegionMethods.NEW_REGION_POINT != null)
+                        if (RealmMapState.CurrentMapRegion != null && RegionManager.NEW_REGION_POINT != null)
                         {
-                            Cmd_AddMapRegionPoint cmd = new(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion, MapRegionMethods.NEW_REGION_POINT, MapRegionMethods.NEXT_REGION_POINT_INDEX);
+                            Cmd_AddMapRegionPoint cmd = new(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion, RegionManager.NEW_REGION_POINT, RegionManager.NEXT_REGION_POINT_INDEX);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
                             // reset
-                            MapRegionMethods.NEW_REGION_POINT = null;
-                            MapRegionMethods.NEXT_REGION_POINT_INDEX = -1;
-                            MapRegionMethods.PREVIOUS_REGION_POINT_INDEX = -1;
+                            RegionManager.NEW_REGION_POINT = null;
+                            RegionManager.NEXT_REGION_POINT_INDEX = -1;
+                            RegionManager.PREVIOUS_REGION_POINT_INDEX = -1;
                         }
 
                         RealmMapState.PreviousCursorPoint = zoomedScrolledPoint;
@@ -4037,7 +4038,7 @@ namespace RealmStudio
                 case MapDrawingMode.RegionPaint:
                     if (RealmMapState.CurrentMapRegion != null)
                     {
-                        MapRegionMethods.EndMapRegion(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion, zoomedScrolledPoint);
+                        RegionManager.EndMapRegion(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion, zoomedScrolledPoint);
 
                         RealmMapState.CurrentMap.IsSaved = false;
 
@@ -4314,7 +4315,7 @@ namespace RealmStudio
                     {
                         if (RealmMapState.CurrentMapRegion != null)
                         {
-                            MapRegionMethods.DrawRegionOnWorkLayer(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion, zoomedScrolledPoint, RealmMapState.PreviousCursorPoint);
+                            RegionManager.DrawRegionOnWorkLayer(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion, zoomedScrolledPoint, RealmMapState.PreviousCursorPoint);
                             SKGLRenderControl.Invalidate();
                         }
                     }
@@ -4323,16 +4324,16 @@ namespace RealmStudio
                     {
                         if (RealmMapState.CurrentMapRegion != null && RealmMapState.CurrentMapRegion.IsSelected)
                         {
-                            MapRegionPoint? selectedMapRegionPoint = MapRegionMethods.GetSelectedMapRegionPoint(RealmMapState.CurrentMapRegion, zoomedScrolledPoint);
+                            MapRegionPoint? selectedMapRegionPoint = RegionManager.GetSelectedMapRegionPoint(RealmMapState.CurrentMapRegion, zoomedScrolledPoint);
 
                             if (selectedMapRegionPoint != null)
                             {
                                 selectedMapRegionPoint.RegionPoint = zoomedScrolledPoint;
                             }
 
-                            if (!MapRegionMethods.EDITING_REGION)
+                            if (!RegionManager.EDITING_REGION)
                             {
-                                MapRegionMethods.MoveRegion(RealmMapState.CurrentMapRegion, zoomedScrolledPoint, RealmMapState.PreviousCursorPoint);
+                                RegionManager.MoveRegion(RealmMapState.CurrentMapRegion, zoomedScrolledPoint, RealmMapState.PreviousCursorPoint);
                                 RealmMapState.PreviousCursorPoint = zoomedScrolledPoint;
                             }
                         }
@@ -4429,12 +4430,12 @@ namespace RealmStudio
                         {
                             if (ModifierKeys == Keys.Shift)
                             {
-                                MapRegionMethods.DrawCoastlinePointOnWorkLayer(RealmMapState.CurrentMap, zoomedScrolledPoint);
+                                RegionManager.DrawCoastlinePointOnWorkLayer(RealmMapState.CurrentMap, zoomedScrolledPoint);
                             }
                         }
                         else
                         {
-                            MapRegionMethods.DrawRegionOnWorkLayer(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion,
+                            RegionManager.DrawRegionOnWorkLayer(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion,
                                 zoomedScrolledPoint, RealmMapState.PreviousCursorPoint);
                             SKGLRenderControl.Invalidate();
                         }
@@ -4444,13 +4445,13 @@ namespace RealmStudio
                     {
                         if (RealmMapState.CurrentMapRegion != null && RealmMapState.CurrentMapRegion.IsSelected)
                         {
-                            bool pointSelected = MapRegionMethods.IsRegionPointSelected(RealmMapState.CurrentMapRegion, zoomedScrolledPoint);
+                            bool pointSelected = RegionManager.IsRegionPointSelected(RealmMapState.CurrentMapRegion, zoomedScrolledPoint);
 
                             if (!pointSelected)
                             {
                                 // cursor is not on a region point; is it on a line segment between vertices of the region?
                                 // if so draw a yellow circle at that point
-                                MapRegionMethods.DrawRegionPointOnWorkLayer(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion, zoomedScrolledPoint);
+                                RegionManager.DrawRegionPointOnWorkLayer(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion, zoomedScrolledPoint);
                             }
                         }
 
@@ -4668,7 +4669,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.SymbolSelect:
                     {
-                        RealmMapState.SelectedMapSymbol = SelectMapSymbolAtPoint(RealmMapState.CurrentMap, zoomedScrolledPoint.ToDrawingPoint());
+                        RealmMapState.SelectedMapSymbol = MapSymbolUIMediator.SelectMapSymbolAtPoint(RealmMapState.CurrentMap, zoomedScrolledPoint.ToDrawingPoint());
 
                         if (RealmMapState.SelectedMapSymbol != null)
                         {
@@ -4795,13 +4796,13 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.RegionSelect:
                     {
-                        if (MapRegionMethods.EDITING_REGION)
+                        if (RegionManager.EDITING_REGION)
                         {
-                            MapRegionMethods.EDITING_REGION = false;
+                            RegionManager.EDITING_REGION = false;
                         }
                         else
                         {
-                            MapRegion? selectedRegion = MapRegionMethods.SelectRegionAtPoint(RealmMapState.CurrentMap, zoomedScrolledPoint);
+                            MapRegion? selectedRegion = RegionManager.SelectRegionAtPoint(RealmMapState.CurrentMap, zoomedScrolledPoint);
 
                             if (selectedRegion != null)
                             {
@@ -5024,7 +5025,7 @@ namespace RealmStudio
                     SKGLRenderControl.Invalidate();
                     break;
                 case MapDrawingMode.SymbolSelect:
-                    MapSymbol? selectedSymbol = SelectMapSymbolAtPoint(RealmMapState.CurrentMap, zoomedScrolledPoint.ToDrawingPoint());
+                    MapSymbol? selectedSymbol = MapSymbolUIMediator.SelectMapSymbolAtPoint(RealmMapState.CurrentMap, zoomedScrolledPoint.ToDrawingPoint());
                     if (selectedSymbol != null)
                     {
                         RealmMapState.SelectedMapSymbol = selectedSymbol;
@@ -5036,7 +5037,7 @@ namespace RealmStudio
                     }
                     break;
                 case MapDrawingMode.RegionSelect:
-                    MapRegion? selectedRegion = MapRegionMethods.SelectRegionAtPoint(RealmMapState.CurrentMap, zoomedScrolledPoint);
+                    MapRegion? selectedRegion = RegionManager.SelectRegionAtPoint(RealmMapState.CurrentMap, zoomedScrolledPoint);
 
                     if (selectedRegion != null)
                     {
@@ -5275,17 +5276,17 @@ namespace RealmStudio
                         {
                             if (ModifierKeys == Keys.Control)
                             {
-                                MoveSelectedSymbolInRenderOrder(ComponentMoveDirection.Up, 5);
+                                SymbolManager.MoveSelectedSymbolInRenderOrder(ComponentMoveDirection.Up, 5);
                             }
                             else if (ModifierKeys == Keys.None)
                             {
-                                MoveSelectedSymbolInRenderOrder(ComponentMoveDirection.Up, 1);
+                                SymbolManager.MoveSelectedSymbolInRenderOrder(ComponentMoveDirection.Up, 1);
                             }
                         }
                         break;
                     case MapDrawingMode.RegionSelect:
                         {
-                            MapRegionMethods.MoveSelectedRegionInRenderOrder(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion, ComponentMoveDirection.Up);
+                            RegionManager.MoveSelectedRegionInRenderOrder(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion, ComponentMoveDirection.Up);
                         }
                         break;
                 }
@@ -5301,17 +5302,17 @@ namespace RealmStudio
                         {
                             if (ModifierKeys == Keys.Control)
                             {
-                                MoveSelectedSymbolInRenderOrder(ComponentMoveDirection.Down, 5);
+                                SymbolManager.MoveSelectedSymbolInRenderOrder(ComponentMoveDirection.Down, 5);
                             }
                             else if (ModifierKeys == Keys.None)
                             {
-                                MoveSelectedSymbolInRenderOrder(ComponentMoveDirection.Down, 1);
+                                SymbolManager.MoveSelectedSymbolInRenderOrder(ComponentMoveDirection.Down, 1);
                             }
                         }
                         break;
                     case MapDrawingMode.RegionSelect:
                         {
-                            MapRegionMethods.MoveSelectedRegionInRenderOrder(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion, ComponentMoveDirection.Down);
+                            RegionManager.MoveSelectedRegionInRenderOrder(RealmMapState.CurrentMap, RealmMapState.CurrentMapRegion, ComponentMoveDirection.Down);
                         }
                         break;
                 }
@@ -5326,7 +5327,7 @@ namespace RealmStudio
                     case MapDrawingMode.SymbolSelect:
                         {
                             // move symbol to bottom of render order
-                            MoveSelectedSymbolInRenderOrder(ComponentMoveDirection.Down, 1, true);
+                            SymbolManager.MoveSelectedSymbolInRenderOrder(ComponentMoveDirection.Down, 1, true);
                             SKGLRenderControl.Invalidate();
                         }
                         break;
@@ -5340,7 +5341,7 @@ namespace RealmStudio
                     case MapDrawingMode.SymbolSelect:
                         {
                             // move symbol to top of render order
-                            MoveSelectedSymbolInRenderOrder(ComponentMoveDirection.Up, 1, true);
+                            SymbolManager.MoveSelectedSymbolInRenderOrder(ComponentMoveDirection.Up, 1, true);
                             SKGLRenderControl.Invalidate();
                         }
                         break;
@@ -7556,51 +7557,32 @@ namespace RealmStudio
 
         private void ColorSymbolsButton_Click(object sender, EventArgs e)
         {
-            if (RealmMapState.SelectedMapSymbol != null && RealmMapState.SelectedMapSymbol.IsSelected)
-            {
-                SymbolManager.ColorSelectedSymbol(RealmMapState.SelectedMapSymbol);
-            }
-            else
-            {
-                RealmMapState.CurrentDrawingMode = MapDrawingMode.SymbolColor;
-                SetDrawingModeLabel();
-
-                if (SymbolUIMediator.UseAreaBrush)
-                {
-                    RealmMapState.SelectedBrushSize = AreaBrushSizeTrack.Value;
-                    SymbolUIMediator.AreaBrushSize = RealmMapState.SelectedBrushSize;
-                }
-                else
-                {
-                    RealmMapState.SelectedBrushSize = 0;
-                    SymbolUIMediator.AreaBrushSize = 0;
-                }
-            }
+            SymbolUIMediator.ColorSymbols();
         }
 
         private void StructuresSymbolButton_Click(object sender, EventArgs e)
         {
-            SelectSymbolsOfType(MapSymbolType.Structure);
+            SymbolUIMediator.SelectSymbolsOfType(MapSymbolType.Structure);
         }
 
         private void VegetationSymbolsButton_Click(object sender, EventArgs e)
         {
-            SelectSymbolsOfType(MapSymbolType.Vegetation);
+            SymbolUIMediator.SelectSymbolsOfType(MapSymbolType.Vegetation);
         }
 
         private void TerrainSymbolsButton_Click(object sender, EventArgs e)
         {
-            SelectSymbolsOfType(MapSymbolType.Terrain);
+            SymbolUIMediator.SelectSymbolsOfType(MapSymbolType.Terrain);
         }
 
         private void MarkerSymbolsButton_Click(object sender, EventArgs e)
         {
-            SelectSymbolsOfType(MapSymbolType.Marker);
+            SymbolUIMediator.SelectSymbolsOfType(MapSymbolType.Marker);
         }
 
         private void OtherSymbolsButton_Click(object sender, EventArgs e)
         {
-            SelectSymbolsOfType(MapSymbolType.Other);
+            SymbolUIMediator.SelectSymbolsOfType(MapSymbolType.Other);
         }
 
         private void SymbolScaleTrack_Scroll(object sender, EventArgs e)
@@ -7677,232 +7659,31 @@ namespace RealmStudio
 
         private void ResetSymbolPlacementRateButton_Click(object sender, EventArgs e)
         {
-            SymbolPlacementRateUpDown.Value = 1.0M;
-            SymbolPlacementRateUpDown.Refresh();
-
-            SymbolUIMediator.SymbolPlacementRate = (float)SymbolPlacementRateUpDown.Value;
+            SymbolUIMediator.SymbolPlacementRate = 1.0F;
         }
 
         private void ResetSymbolPlacementDensityButton_Click(object sender, EventArgs e)
         {
-            SymbolPlacementDensityUpDown.Value = 1.0M;
-            SymbolPlacementDensityUpDown.Refresh();
-
-            SymbolUIMediator.SymbolPlacementDensity = (float)SymbolPlacementDensityUpDown.Value;
+            SymbolUIMediator.SymbolPlacementDensity = 1.0F;
         }
 
         private void SymbolCollectionsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-#pragma warning disable CS8604 // Possible null reference argument.
-            List<string> checkedCollections = [];
-            foreach (var item in SymbolCollectionsListBox.CheckedItems)
-            {
-                checkedCollections.Add(item.ToString());
-            }
-
-            if (e.NewValue == CheckState.Checked)
-            {
-                checkedCollections.Add(SymbolCollectionsListBox.Items[e.Index].ToString());
-            }
-            else
-            {
-                checkedCollections.Remove(SymbolCollectionsListBox.Items[e.Index].ToString());
-            }
-
-#pragma warning restore CS8604 // Possible null reference argument.
-            List<string> selectedTags = [.. SymbolTagsListBox.CheckedItems.Cast<string>()];
-            List<MapSymbol> filteredSymbols = SymbolManager.GetFilteredSymbolList(SymbolManager.SelectedSymbolType, checkedCollections, selectedTags);
-            SymbolUIMediator.AddSymbolsToSymbolTable(filteredSymbols);
+            SymbolUIMediator.SymbolCollectionsListItemCheck(e);
         }
 
         private void SymbolTagsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-#pragma warning disable CS8604 // Possible null reference argument.
-            List<string> checkedTags = [];
-            foreach (var item in SymbolTagsListBox.CheckedItems)
-            {
-                checkedTags.Add(item.ToString());
-            }
-
-            if (e.NewValue == CheckState.Checked)
-            {
-                checkedTags.Add(SymbolTagsListBox.Items[e.Index].ToString());
-            }
-            else
-            {
-                checkedTags.Remove(SymbolTagsListBox.Items[e.Index].ToString());
-            }
-
-#pragma warning restore CS8604 // Possible null reference argument.
-            List<string> selectedCollections = [.. SymbolCollectionsListBox.CheckedItems.Cast<string>()];
-            List<MapSymbol> filteredSymbols = SymbolManager.GetFilteredSymbolList(SymbolManager.SelectedSymbolType, selectedCollections, checkedTags);
-            SymbolUIMediator.AddSymbolsToSymbolTable(filteredSymbols);
+            SymbolUIMediator.SymbolTagsListItemCheck(e);
         }
 
         private void SymbolSearchTextBox_TextChanged(object sender, EventArgs e)
         {
-            // filter symbol list based on text entered by the user
-
-            if (SymbolSearchTextBox.Text.Length > 2)
-            {
-                List<string> selectedCollections = [.. SymbolCollectionsListBox.CheckedItems.Cast<string>()];
-                List<string> selectedTags = [.. SymbolTagsListBox.CheckedItems.Cast<string>()];
-                List<MapSymbol> filteredSymbols = SymbolManager.GetFilteredSymbolList(SymbolManager.SelectedSymbolType, selectedCollections, selectedTags, SymbolSearchTextBox.Text);
-
-                SymbolUIMediator.AddSymbolsToSymbolTable(filteredSymbols);
-            }
-            else if (SymbolSearchTextBox.Text.Length == 0)
-            {
-                List<string> selectedCollections = [.. SymbolCollectionsListBox.CheckedItems.Cast<string>()];
-                List<string> selectedTags = [.. SymbolTagsListBox.CheckedItems.Cast<string>()];
-                List<MapSymbol> filteredSymbols = SymbolManager.GetFilteredSymbolList(SymbolManager.SelectedSymbolType, selectedCollections, selectedTags);
-
-                SymbolUIMediator.AddSymbolsToSymbolTable(filteredSymbols);
-            }
+            SymbolUIMediator.SearchSymbols(SymbolSearchTextBox.Text);
         }
 
         #endregion
 
-        #region Symbol Tab Methods
-
-        private void SelectSymbolsOfType(MapSymbolType symbolType)
-        {
-            RealmMapState.CurrentDrawingMode = MapDrawingMode.SymbolPlace;
-            SetDrawingModeLabel();
-            RealmMapState.SelectedBrushSize = 0;
-
-            if (SymbolManager.SelectedSymbolType != symbolType)
-            {
-                SymbolManager.SelectedSymbolType = symbolType;
-                List<MapSymbol> selectedSymbols = SymbolUIMediator.GetFilteredMapSymbols();
-
-                SymbolUIMediator.AddSymbolsToSymbolTable(selectedSymbols);
-                AreaBrushSwitch.Checked = false;
-                AreaBrushSwitch.Enabled = false;
-            }
-
-            if (SymbolManager.SelectedSymbolType == MapSymbolType.Vegetation || SymbolManager.SelectedSymbolType == MapSymbolType.Terrain)
-            {
-                AreaBrushSwitch.Enabled = true;
-            }
-
-            if (SymbolTable.Controls.Count > 0)
-            {
-                if (SymbolManager.SelectedSymbolTableMapSymbol == null || SymbolManager.SelectedSymbolTableMapSymbol.SymbolType != symbolType)
-                {
-                    PictureBox pb = (PictureBox)SymbolTable.Controls[0];
-                    SymbolUIMediator.SelectPrimarySymbolInSymbolTable(pb);
-                }
-            }
-        }
-
-
-
-        internal static MapSymbol? SelectMapSymbolAtPoint(RealmStudioMap map, PointF mapClickPoint)
-        {
-            MapSymbol? selectedSymbol = null;
-
-            List<MapComponent> mapSymbolComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER).MapLayerComponents;
-
-            for (int i = 0; i < mapSymbolComponents.Count; i++)
-            {
-                if (mapSymbolComponents[i] is MapSymbol mapSymbol)
-                {
-                    RectangleF symbolRect = new(mapSymbol.X, mapSymbol.Y, mapSymbol.Width, mapSymbol.Height);
-
-                    if (symbolRect.Contains(mapClickPoint))
-                    {
-                        selectedSymbol = mapSymbol;
-                    }
-                }
-            }
-
-            RealmMapMethods.DeselectAllMapComponents(RealmMapState.CurrentMap, selectedSymbol);
-            return selectedSymbol;
-        }
-
-        private static void MoveSelectedSymbolInRenderOrder(ComponentMoveDirection direction, int amount = 1, bool toTopBottom = false)
-        {
-            if (RealmMapState.SelectedMapSymbol != null)
-            {
-                // find the selected symbol in the Symbol Layer MapComponents
-                MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(RealmMapState.CurrentMap, MapBuilder.SYMBOLLAYER);
-
-                List<MapComponent> symbolComponents = symbolLayer.MapLayerComponents;
-                MapSymbol? selectedSymbol = null;
-
-                int selectedSymbolIndex = 0;
-
-                for (int i = 0; i < symbolComponents.Count; i++)
-                {
-                    MapComponent symbolComponent = symbolComponents[i];
-                    if (symbolComponent is MapSymbol symbol && symbol.SymbolGuid.ToString() == RealmMapState.SelectedMapSymbol.SymbolGuid.ToString())
-                    {
-                        selectedSymbolIndex = i;
-                        selectedSymbol = symbol;
-                        break;
-                    }
-                }
-
-                if (direction == ComponentMoveDirection.Up)
-                {
-                    // moving a symbol up in render order means increasing its index
-                    if (selectedSymbol != null && selectedSymbolIndex < symbolComponents.Count - 1)
-                    {
-                        if (toTopBottom)
-                        {
-                            symbolComponents.RemoveAt(selectedSymbolIndex);
-                            symbolComponents.Add(selectedSymbol);
-                        }
-                        else
-                        {
-                            int moveLocation;
-
-                            if (selectedSymbolIndex + amount < symbolComponents.Count - 1)
-                            {
-                                moveLocation = selectedSymbolIndex + amount;
-                            }
-                            else
-                            {
-                                moveLocation = symbolComponents.Count - 1;
-                            }
-
-                            symbolComponents[selectedSymbolIndex] = symbolComponents[moveLocation];
-                            symbolComponents[moveLocation] = selectedSymbol;
-                        }
-                    }
-                }
-                else if (direction == ComponentMoveDirection.Down)
-                {
-                    // moving a symbol down in render order means decreasing its index
-                    if (selectedSymbol != null && selectedSymbolIndex > 0)
-                    {
-                        if (toTopBottom)
-                        {
-                            symbolComponents.RemoveAt(selectedSymbolIndex);
-                            symbolComponents.Insert(0, selectedSymbol);
-                        }
-                        else
-                        {
-                            int moveLocation;
-
-                            if (selectedSymbolIndex - amount >= 0)
-                            {
-                                moveLocation = selectedSymbolIndex - amount;
-                            }
-                            else
-                            {
-                                moveLocation = 0;
-                            }
-
-                            symbolComponents[selectedSymbolIndex] = symbolComponents[moveLocation];
-                            symbolComponents[moveLocation] = selectedSymbol;
-                        }
-                    }
-                }
-            }
-        }
-        #endregion
 
         #region Label Tab Methods
 
@@ -8732,72 +8513,6 @@ namespace RealmStudio
             FrameStyleTable.Show();
         }
 
-        private void CreateGrid()
-        {
-            MapGridType gridType = MapGridType.NotSet;
-
-            if (SquareGridRadio.Checked)
-            {
-                gridType = MapGridType.Square;
-            }
-            else if (FlatHexGridRadio.Checked)
-            {
-                gridType = MapGridType.FlatHex;
-
-            }
-            else if (PointedHexGridRadio.Checked)
-            {
-                gridType = MapGridType.PointedHex;
-            }
-
-            string? selectedLayerItem = (string?)GridLayerUpDown.SelectedItem;
-
-            RealmMapState.CurrentMapGrid = OverlayMethods.CreateGrid(RealmMapState.CurrentMap,
-                gridType,
-                selectedLayerItem,
-                GridColorSelectButton.BackColor,
-                GridLineWidthTrack.Value,
-                GridSizeTrack.Value);
-        }
-
-        private static void RemoveGrid()
-        {
-            OverlayMethods.RemoveGrid(RealmMapState.CurrentMap);
-        }
-
-        private void UpdateUIFromGrid(MapGrid mapGrid)
-        {
-            switch (mapGrid.GridType)
-            {
-                case MapGridType.Square:
-                    SquareGridRadio.Checked = true;
-                    break;
-                case MapGridType.PointedHex:
-                    PointedHexGridRadio.Checked = true;
-                    break;
-                case MapGridType.FlatHex:
-                    FlatHexGridRadio.Checked = true;
-                    break;
-            }
-
-            GridSizeTrack.Value = mapGrid.GridSize;
-            GridLineWidthTrack.Value = mapGrid.GridLineWidth;
-            GridColorSelectButton.BackColor = mapGrid.GridColor;
-
-            if (mapGrid.GridLayerIndex == MapBuilder.ABOVEOCEANGRIDLAYER)
-            {
-                GridLayerUpDown.SelectedItem = "Above Ocean";
-            }
-            else if (mapGrid.GridLayerIndex == MapBuilder.BELOWSYMBOLSGRIDLAYER)
-            {
-                GridLayerUpDown.SelectedItem = "Below Symbols";
-            }
-            else
-            {
-                GridLayerUpDown.SelectedItem = "Default";
-            }
-        }
-
         #endregion
 
         #region Overlay Tab Event Handlers (Frame, Grid, Scale, Measure)
@@ -9086,152 +8801,57 @@ namespace RealmStudio
 
         private void GridButton_Click(object sender, EventArgs e)
         {
-            if (EnableGridSwitch.Checked)
-            {
-                // make sure there is only one grid
-                RemoveGrid();
-
-                CreateGrid();
-
-                if (RealmMapState.CurrentMapGrid != null)
-                {
-                    MapBuilder.GetMapLayerByIndex(RealmMapState.CurrentMap, RealmMapState.CurrentMapGrid.GridLayerIndex).MapLayerComponents.Add(RealmMapState.CurrentMapGrid);
-                }
-
-                SKGLRenderControl.Invalidate();
-            }
-            else
-            {
-                // make sure there is only one grid
-                RemoveGrid();
-                SKGLRenderControl.Invalidate();
-            }
+            MapGridManager.Create(RealmMapState.CurrentMap, null);
+            SKGLRenderControl.Invalidate();
         }
 
         private void EnableGridSwitch_CheckedChanged()
         {
-            if (RealmMapState.CurrentMapGrid != null)
-            {
-                RealmMapState.CurrentMapGrid.GridEnabled = EnableGridSwitch.Checked;
-                SKGLRenderControl.Invalidate();
-            }
+            GridUIMediator.GridEnabled = EnableGridSwitch.Checked;
         }
 
         private void SquareGridRadio_CheckedChanged(object sender, EventArgs e)
         {
-            if (RealmMapState.CurrentMapGrid != null)
-            {
-                RealmMapState.CurrentMapGrid.GridType = MapGridType.Square;
-                SKGLRenderControl.Invalidate();
-            }
+            GridUIMediator.GridType = MapGridType.Square;
         }
 
         private void FlatHexGridRadio_CheckedChanged(object sender, EventArgs e)
         {
-            if (RealmMapState.CurrentMapGrid != null)
-            {
-                RealmMapState.CurrentMapGrid.GridType = MapGridType.FlatHex;
-                SKGLRenderControl.Invalidate();
-            }
+            GridUIMediator.GridType = MapGridType.FlatHex;
         }
 
         private void PointedHexGridRadio_CheckedChanged(object sender, EventArgs e)
         {
-            if (RealmMapState.CurrentMapGrid != null)
-            {
-                RealmMapState.CurrentMapGrid.GridType = MapGridType.PointedHex;
-                SKGLRenderControl.Invalidate();
-            }
+            GridUIMediator.GridType = MapGridType.PointedHex;
         }
 
         private void GridLayerUpDown_SelectedItemChanged(object sender, EventArgs e)
         {
-            if (EnableGridSwitch.Checked)
-            {
-                // make sure there is only one grid
-                RemoveGrid();
-                CreateGrid();
-
-                if (RealmMapState.CurrentMapGrid != null)
-                {
-                    MapBuilder.GetMapLayerByIndex(RealmMapState.CurrentMap, RealmMapState.CurrentMapGrid.GridLayerIndex).MapLayerComponents.Add(RealmMapState.CurrentMapGrid);
-                }
-
-                SKGLRenderControl.Invalidate();
-            }
-            else
-            {
-                // make sure there is only one grid
-                RemoveGrid();
-
-                SKGLRenderControl.Invalidate();
-            }
+            GridUIMediator.GridLayerName = (string?)GridLayerUpDown.SelectedItem;
+            MapGridManager.Create(RealmMapState.CurrentMap, null);
         }
 
         private void GridSizeTrack_ValueChanged(object sender, EventArgs e)
         {
+            GridUIMediator.GridSize = GridSizeTrack.Value;
             TOOLTIP.Show(GridSizeTrack.Value.ToString(), GridValuesGroup, new Point(GridSizeTrack.Right - 30, GridSizeTrack.Top - 20), 2000);
-
-            if (RealmMapState.CurrentMapGrid != null)
-            {
-                RealmMapState.CurrentMapGrid.GridSize = GridSizeTrack.Value;
-                SKGLRenderControl.Invalidate();
-            }
         }
 
         private void GridLineWidthTrack_ValueChanged(object sender, EventArgs e)
         {
+            GridUIMediator.GridLineWidth = GridLineWidthTrack.Value;
             TOOLTIP.Show(GridLineWidthTrack.Value.ToString(), GridValuesGroup, new Point(GridLineWidthTrack.Right - 30, GridLineWidthTrack.Top - 20), 2000);
-
-            if (RealmMapState.CurrentMapGrid != null)
-            {
-                RealmMapState.CurrentMapGrid.GridLineWidth = GridLineWidthTrack.Value;
-
-                RealmMapState.CurrentMapGrid.GridPaint = new()
-                {
-                    Style = SKPaintStyle.Stroke,
-                    Color = RealmMapState.CurrentMapGrid.GridColor.ToSKColor(),
-                    StrokeWidth = RealmMapState.CurrentMapGrid.GridLineWidth,
-                    StrokeJoin = SKStrokeJoin.Bevel
-                };
-
-                SKGLRenderControl.Invalidate();
-            }
         }
 
         private void GridColorSelectButton_Click(object sender, EventArgs e)
         {
             Color gridColor = UtilityMethods.SelectColorFromDialog(this, GridColorSelectButton.BackColor);
-
-            if (gridColor.ToArgb() != Color.Empty.ToArgb())
-            {
-                GridColorSelectButton.BackColor = gridColor;
-                GridColorSelectButton.Refresh();
-
-                if (RealmMapState.CurrentMapGrid != null)
-                {
-                    RealmMapState.CurrentMapGrid.GridColor = gridColor;
-
-                    RealmMapState.CurrentMapGrid.GridPaint = new()
-                    {
-                        Style = SKPaintStyle.Stroke,
-                        Color = RealmMapState.CurrentMapGrid.GridColor.ToSKColor(),
-                        StrokeWidth = RealmMapState.CurrentMapGrid.GridLineWidth,
-                        StrokeJoin = SKStrokeJoin.Bevel
-                    };
-
-                    SKGLRenderControl.Invalidate();
-                }
-            }
+            GridUIMediator.GridColor = gridColor;
         }
 
         private void ShowGridSizeSwitch_CheckedChanged()
         {
-            if (RealmMapState.CurrentMapGrid != null)
-            {
-                RealmMapState.CurrentMapGrid.ShowGridSize = ShowGridSizeSwitch.Checked;
-                SKGLRenderControl.Invalidate();
-            }
+            GridUIMediator.ShowGridSize = ShowGridSizeSwitch.Checked;
         }
 
         #endregion
@@ -9306,72 +8926,6 @@ namespace RealmStudio
 
         #endregion 
 
-        #region Region Methods
-
-        internal void SetRegionData(MapRegion mapRegion)
-        {
-            if (mapRegion == null) { return; }
-
-            mapRegion.RegionBorderColor = RegionColorSelectButton.BackColor;
-            mapRegion.RegionBorderWidth = RegionBorderWidthTrack.Value;
-            mapRegion.RegionInnerOpacity = RegionOpacityTrack.Value;
-            mapRegion.RegionBorderSmoothing = RegionBorderSmoothingTrack.Value;
-
-            if (RegionSolidBorderRadio.Checked)
-            {
-                mapRegion.RegionBorderType = PathType.SolidLinePath;
-            }
-
-            SKPathEffect? regionBorderEffect;
-            if (RegionDottedBorderRadio.Checked)
-            {
-                mapRegion.RegionBorderType = PathType.DottedLinePath;
-            }
-
-            if (RegionDashBorderRadio.Checked)
-            {
-                mapRegion.RegionBorderType = PathType.DashedLinePath;
-            }
-
-            if (RegionDashDotBorderRadio.Checked)
-            {
-                mapRegion.RegionBorderType = PathType.DashDotLinePath;
-
-            }
-
-            if (RegionDashDotDotBorderRadio.Checked)
-            {
-                mapRegion.RegionBorderType = PathType.DashDotDotLinePath;
-            }
-
-            if (RegionDoubleSolidBorderRadio.Checked)
-            {
-                mapRegion.RegionBorderType = PathType.DoubleSolidBorderPath;
-            }
-
-            if (RegionSolidAndDashesBorderRadio.Checked)
-            {
-                mapRegion.RegionBorderType = PathType.LineAndDashesPath;
-            }
-
-            if (RegionBorderedGradientRadio.Checked)
-            {
-                mapRegion.RegionBorderType = PathType.BorderedGradientPath;
-            }
-
-            if (RegionBorderedLightSolidRadio.Checked)
-            {
-                mapRegion.RegionBorderType = PathType.BorderedLightSolidPath;
-            }
-
-            regionBorderEffect = MapRegionMethods.ConstructRegionBorderEffect(mapRegion);
-            MapRegionMethods.ConstructRegionPaintObjects(mapRegion, regionBorderEffect);
-
-            SKGLRenderControl.Invalidate();
-        }
-
-        #endregion
-
         #region Region Tab Event Handlers
 
         private void ShowRegionLayerSwitch_CheckedChanged()
@@ -9404,59 +8958,32 @@ namespace RealmStudio
         private void RegionColorSelectButton_Click(object sender, EventArgs e)
         {
             Color regionColor = UtilityMethods.SelectColorFromDialog(this, RegionColorSelectButton.BackColor);
-
-            if (regionColor.ToArgb() != Color.Empty.ToArgb())
-            {
-                RegionColorSelectButton.BackColor = regionColor;
-                RegionColorSelectButton.Refresh();
-
-                if (RealmMapState.CurrentMapRegion != null)
-                {
-                    SetRegionData(RealmMapState.CurrentMapRegion);
-                    SKGLRenderControl.Invalidate();
-                }
-            }
+            MapRegionUIMediator.RegionColor = regionColor;
         }
 
         private void RegionBorderWidthTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(RegionBorderWidthTrack.Value.ToString(), RegionValuesGroup, new Point(RegionBorderWidthTrack.Right - 30, RegionBorderWidthTrack.Top - 20), 2000);
-
-            if (RealmMapState.CurrentMapRegion != null)
-            {
-                SetRegionData(RealmMapState.CurrentMapRegion);
-                SKGLRenderControl.Invalidate();
-            }
+            MapRegionUIMediator.RegionBorderWidth = RegionBorderWidthTrack.Value;
+            TOOLTIP.Show(MapRegionUIMediator.RegionBorderWidth.ToString(), RegionValuesGroup, new Point(RegionBorderWidthTrack.Right - 30, RegionBorderWidthTrack.Top - 20), 2000);
         }
 
         private void RegionBorderSmoothingTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(RegionBorderSmoothingTrack.Value.ToString(), RegionValuesGroup, new Point(RegionBorderSmoothingTrack.Right - 30, RegionBorderSmoothingTrack.Top - 20), 2000);
-
-            if (RealmMapState.CurrentMapRegion != null)
-            {
-                SetRegionData(RealmMapState.CurrentMapRegion);
-                SKGLRenderControl.Invalidate();
-            }
+            MapRegionUIMediator.RegionBorderSmoothing = RegionBorderSmoothingTrack.Value;
+            TOOLTIP.Show(MapRegionUIMediator.RegionBorderSmoothing.ToString(), RegionValuesGroup, new Point(RegionBorderSmoothingTrack.Right - 30, RegionBorderSmoothingTrack.Top - 20), 2000);
         }
 
         private void RegionOpacityTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(RegionOpacityTrack.Value.ToString(), RegionValuesGroup, new Point(RegionOpacityTrack.Right - 30, RegionOpacityTrack.Top - 20), 2000);
-
-            if (RealmMapState.CurrentMapRegion != null)
-            {
-                SetRegionData(RealmMapState.CurrentMapRegion);
-                SKGLRenderControl.Invalidate();
-            }
+            MapRegionUIMediator.RegionInnerOpacity = RegionOpacityTrack.Value;
+            TOOLTIP.Show(MapRegionUIMediator.RegionInnerOpacity.ToString(), RegionValuesGroup, new Point(RegionOpacityTrack.Right - 30, RegionOpacityTrack.Top - 20), 2000);
         }
 
         private void RegionSolidBorderRadio_CheckedChanged(object sender, EventArgs e)
         {
-            if (RealmMapState.CurrentMapRegion != null)
+            if (RegionSolidBorderRadio.Checked)
             {
-                SetRegionData(RealmMapState.CurrentMapRegion);
-                SKGLRenderControl.Invalidate();
+                MapRegionUIMediator.RegionBorderType = PathType.SolidLinePath;
             }
         }
 
@@ -9467,10 +8994,9 @@ namespace RealmStudio
 
         private void RegionDottedBorderRadio_CheckedChanged(object sender, EventArgs e)
         {
-            if (RealmMapState.CurrentMapRegion != null)
+            if (RegionDottedBorderRadio.Checked)
             {
-                SetRegionData(RealmMapState.CurrentMapRegion);
-                SKGLRenderControl.Invalidate();
+                MapRegionUIMediator.RegionBorderType = PathType.DottedLinePath;
             }
         }
 
@@ -9481,10 +9007,9 @@ namespace RealmStudio
 
         private void RegionDashBorderRadio_CheckedChanged(object sender, EventArgs e)
         {
-            if (RealmMapState.CurrentMapRegion != null)
+            if (RegionDashBorderRadio.Checked)
             {
-                SetRegionData(RealmMapState.CurrentMapRegion);
-                SKGLRenderControl.Invalidate();
+                MapRegionUIMediator.RegionBorderType = PathType.DashedLinePath;
             }
         }
 
@@ -9495,10 +9020,9 @@ namespace RealmStudio
 
         private void RegionDashDotBorderRadio_CheckedChanged(object sender, EventArgs e)
         {
-            if (RealmMapState.CurrentMapRegion != null)
+            if (RegionDashDotBorderRadio.Checked)
             {
-                SetRegionData(RealmMapState.CurrentMapRegion);
-                SKGLRenderControl.Invalidate();
+                MapRegionUIMediator.RegionBorderType = PathType.DashDotLinePath;
             }
         }
 
@@ -9509,10 +9033,9 @@ namespace RealmStudio
 
         private void RegionDashDotDotBorderRadio_CheckedChanged(object sender, EventArgs e)
         {
-            if (RealmMapState.CurrentMapRegion != null)
+            if (RegionDashDotBorderRadio.Checked)
             {
-                SetRegionData(RealmMapState.CurrentMapRegion);
-                SKGLRenderControl.Invalidate();
+                MapRegionUIMediator.RegionBorderType = PathType.DashDotDotLinePath;
             }
         }
 
@@ -9523,10 +9046,9 @@ namespace RealmStudio
 
         private void RegionDoubleSolidBorderRadio_CheckedChanged(object sender, EventArgs e)
         {
-            if (RealmMapState.CurrentMapRegion != null)
+            if (RegionDoubleSolidBorderRadio.Checked)
             {
-                SetRegionData(RealmMapState.CurrentMapRegion);
-                SKGLRenderControl.Invalidate();
+                MapRegionUIMediator.RegionBorderType = PathType.DoubleSolidBorderPath;
             }
         }
 
@@ -9537,10 +9059,9 @@ namespace RealmStudio
 
         private void RegionSolidAndDashesBorderRadio_CheckedChanged(object sender, EventArgs e)
         {
-            if (RealmMapState.CurrentMapRegion != null)
+            if (RegionSolidAndDashesBorderRadio.Checked)
             {
-                SetRegionData(RealmMapState.CurrentMapRegion);
-                SKGLRenderControl.Invalidate();
+                MapRegionUIMediator.RegionBorderType = PathType.LineAndDashesPath;
             }
         }
 
@@ -9551,10 +9072,9 @@ namespace RealmStudio
 
         private void RegionBorderedGradientRadio_CheckedChanged(object sender, EventArgs e)
         {
-            if (RealmMapState.CurrentMapRegion != null)
+            if (RegionBorderedGradientRadio.Checked)
             {
-                SetRegionData(RealmMapState.CurrentMapRegion);
-                SKGLRenderControl.Invalidate();
+                MapRegionUIMediator.RegionBorderType = PathType.BorderedGradientPath;
             }
         }
 
@@ -9565,10 +9085,9 @@ namespace RealmStudio
 
         private void RegionBorderedLightSolidRadio_CheckedChanged(object sender, EventArgs e)
         {
-            if (RealmMapState.CurrentMapRegion != null)
+            if (RegionBorderedLightSolidRadio.Checked)
             {
-                SetRegionData(RealmMapState.CurrentMapRegion);
-                SKGLRenderControl.Invalidate();
+                MapRegionUIMediator.RegionBorderType = PathType.BorderedLightSolidPath;
             }
         }
 

@@ -180,26 +180,26 @@ namespace RealmStudio
             Color clr = Color.FromArgb(154, RegionBorderPaint.Color.ToDrawingColor());
             gradientPaint.Color = Extensions.ToSKColor(clr);
             List<MapRegionPoint> parallelPoints = DrawingMethods.GetParallelRegionPoints(MapRegionPoints, RegionBorderPaint.StrokeWidth * 0.4F, ParallelDirection.Below);
-            using SKPath p1 = MapRegionMethods.GetLinePathFromRegionPoints(parallelPoints);
+            using SKPath p1 = RegionManager.GetLinePathFromRegionPoints(parallelPoints);
             canvas.DrawPath(p1, gradientPaint);
 
             clr = Color.FromArgb(102, RegionBorderPaint.Color.ToDrawingColor());
             gradientPaint.Color = Extensions.ToSKColor(clr);
             parallelPoints = DrawingMethods.GetParallelRegionPoints(MapRegionPoints, RegionBorderPaint.StrokeWidth * 0.6F, ParallelDirection.Below);
-            using SKPath p2 = MapRegionMethods.GetLinePathFromRegionPoints(parallelPoints);
+            using SKPath p2 = RegionManager.GetLinePathFromRegionPoints(parallelPoints);
             canvas.DrawPath(p2, gradientPaint);
 
             clr = Color.FromArgb(51, RegionBorderPaint.Color.ToDrawingColor());
             gradientPaint.Color = Extensions.ToSKColor(clr);
             parallelPoints = DrawingMethods.GetParallelRegionPoints(MapRegionPoints, RegionBorderPaint.StrokeWidth * 0.8F, ParallelDirection.Below);
-            using SKPath p3 = MapRegionMethods.GetLinePathFromRegionPoints(parallelPoints);
+            using SKPath p3 = RegionManager.GetLinePathFromRegionPoints(parallelPoints);
             canvas.DrawPath(p3, gradientPaint);
 
             clr = Color.FromArgb(25, RegionBorderPaint.Color.ToDrawingColor());
             gradientPaint.Color = Extensions.ToSKColor(clr);
 
             parallelPoints = DrawingMethods.GetParallelRegionPoints(MapRegionPoints, RegionBorderPaint.StrokeWidth, ParallelDirection.Below);
-            using SKPath p4 = MapRegionMethods.GetLinePathFromRegionPoints(parallelPoints);
+            using SKPath p4 = RegionManager.GetLinePathFromRegionPoints(parallelPoints);
             canvas.DrawPath(p4, gradientPaint);
         }
 
@@ -234,7 +234,7 @@ namespace RealmStudio
             linePaint1.Color = Extensions.ToSKColor(clr);
 
             List<MapRegionPoint> parallelPoints = DrawingMethods.GetParallelRegionPoints(MapRegionPoints, RegionBorderPaint.StrokeWidth * 0.2F, ParallelDirection.Below);
-            using SKPath p1 = MapRegionMethods.GetLinePathFromRegionPoints(parallelPoints);
+            using SKPath p1 = RegionManager.GetLinePathFromRegionPoints(parallelPoints);
             canvas.DrawPath(p1, linePaint1);
         }
 

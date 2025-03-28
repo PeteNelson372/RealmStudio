@@ -26,7 +26,7 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal sealed class MapRegionMethods
+    internal sealed class RegionManager : IMapComponentManager
     {
         public static int POINT_CIRCLE_RADIUS = 5;
 
@@ -34,6 +34,58 @@ namespace RealmStudio
         public static MapRegionPoint? NEW_REGION_POINT;
         public static int PREVIOUS_REGION_POINT_INDEX = -1;
         public static int NEXT_REGION_POINT_INDEX = -1;
+
+        private static RegionUIMediator? _regionUIMediator;
+
+        internal static RegionUIMediator? RegionUIMediator
+        {
+            get { return _regionUIMediator; }
+            set { _regionUIMediator = value; }
+        }
+
+        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        {
+            ArgumentNullException.ThrowIfNull(RegionUIMediator);
+
+            RealmMapState.CurrentMapRegion = new()
+            {
+                ParentMap = RealmMapState.CurrentMap,
+            };
+
+            Update(map, null, null);
+
+            return RealmMapState.CurrentMapRegion;
+        }
+
+        public static bool Update(RealmStudioMap? map, RealmMapState? realmMapState, IUIMediatorObserver? mediator)
+        {
+            ArgumentNullException.ThrowIfNull(RegionUIMediator);
+
+            MapRegion? mapRegion = RealmMapState.CurrentMapRegion;
+            if (mapRegion == null) return false;
+
+            mapRegion.RegionBorderColor = RegionUIMediator.RegionColor;
+            mapRegion.RegionBorderWidth = RegionUIMediator.RegionBorderWidth;
+
+            mapRegion.RegionInnerOpacity = RegionUIMediator.RegionInnerOpacity;
+            mapRegion.RegionBorderSmoothing = RegionUIMediator.RegionBorderSmoothing;
+            mapRegion.RegionBorderType = RegionUIMediator.RegionBorderType;
+
+            SKPathEffect? regionBorderEffect = ConstructRegionBorderEffect(mapRegion);
+            ConstructRegionPaintObjects(mapRegion, regionBorderEffect);
+
+            return true;
+        }
+
+        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        {
+            throw new NotImplementedException();
+        }
 
         internal static MapRegion? SelectRegionAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
         {
