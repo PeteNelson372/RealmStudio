@@ -35,6 +35,8 @@ namespace RealmStudio
         private static double _currentBrushVelocity = 2.0;
         private static float _drawingZoom = 1.0f;
 
+        private bool _overlayLayerEnabled = true;
+
         public MainFormUIMediator(RealmStudioMainForm mainForm)
         {
             MainForm = mainForm;
@@ -67,6 +69,12 @@ namespace RealmStudio
         {
             get { return _drawingZoom; }
             set { SetPropertyField(nameof(DrawingZoom), ref _drawingZoom, value); }
+        }
+
+        internal bool OverlayLayerEnabled
+        {
+            get { return _overlayLayerEnabled; }
+            set { SetPropertyField(nameof(OverlayLayerEnabled), ref _overlayLayerEnabled, value); }
         }
 
         #endregion
@@ -102,6 +110,11 @@ namespace RealmStudio
                     case "CurrentDrawingMode":
                         {
                             SetDrawingModeLabel();
+                        }
+                        break;
+                    case "OverlayLayerEnabled":
+                        {
+                            EnabledDisableOverlayLayer();
                         }
                         break;
 
@@ -212,6 +225,27 @@ namespace RealmStudio
             // TODO: scrollbars need to be updated
             // increase/decrease zoom by 10%, limiting to no less than 10% and no greater than 800%
             DrawingZoom = (upDown < 0) ? Math.Max(0.1f, DrawingZoom - 0.1f) : Math.Min(8.0f, DrawingZoom + 0.1f);
+        }
+
+        internal void EnabledDisableOverlayLayer()
+        {
+            MapLayer overlayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OVERLAYLAYER);
+            overlayLayer.ShowLayer = OverlayLayerEnabled;
+
+            MapLayer frameLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER);
+            frameLayer.ShowLayer = OverlayLayerEnabled;
+
+            MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.ABOVEOCEANGRIDLAYER);
+            aboveOceanGridLayer.ShowLayer = OverlayLayerEnabled;
+
+            MapLayer belowSymbolsGridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BELOWSYMBOLSGRIDLAYER);
+            belowSymbolsGridLayer.ShowLayer = OverlayLayerEnabled;
+
+            MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER);
+            defaultGridLayer.ShowLayer = OverlayLayerEnabled;
+
+            MapLayer measureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER);
+            measureLayer.ShowLayer = OverlayLayerEnabled;
         }
 
         #endregion

@@ -95,12 +95,12 @@ namespace RealmStudio
 
         public void NotifyUpdate(string? changedPropertyName)
         {
-            UpdateMapMeasureUI(changedPropertyName);
+            UpdateMapMeasureUI();
             MapMeasureManager.Update(MapStateMediator.CurrentMap, MapState, this);
             MainForm.SKGLRenderControl.Invalidate();
         }
 
-        private void UpdateMapMeasureUI(string? changedPropertyName)
+        private void UpdateMapMeasureUI()
         {
             MainForm.Invoke(new MethodInvoker(delegate ()
             {

@@ -150,65 +150,6 @@ namespace RealmStudio
             Marshal.FreeCoTaskMem(fontPtr);
         }
 
-        internal static void FinalizeMapBoxes(RealmStudioMap map)
-        {
-            // finalize loading of placed map boxes
-            MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BOXLAYER);
-            for (int i = 0; i < boxLayer.MapLayerComponents.Count; i++)
-            {
-                if (boxLayer.MapLayerComponents[i] is PlacedMapBox box && box.BoxBitmap != null)
-                {
-                    SKRectI center = new((int)box.BoxCenterLeft, (int)box.BoxCenterTop,
-                        (int)(box.Width - box.BoxCenterRight), (int)(box.Height - box.BoxCenterBottom));
-
-                    if (center.IsEmpty || center.Left < 0 || center.Right <= 0 || center.Top < 0 || center.Bottom <= 0)
-                    {
-                    }
-                    else if (center.Width <= 0 || center.Height <= 0)
-                    {
-                        // swap 
-                        if (center.Right < center.Left)
-                        {
-                            (center.Left, center.Right) = (center.Right, center.Left);
-                        }
-
-                        if (center.Bottom < center.Top)
-                        {
-                            (center.Top, center.Bottom) = (center.Bottom, center.Top);
-                        }
-                    }
-                }
-            }
-        }
-
-        internal static PlacedMapBox? CreatePlacedMapBox(MapBox mapBox, SKPoint zoomedScrolledPoint, Color boxTintColor)
-        {
-            PlacedMapBox? newPlacedMapBox = new()
-            {
-                X = (int)zoomedScrolledPoint.X,
-                Y = (int)zoomedScrolledPoint.Y,
-
-                BoxCenterLeft = mapBox.BoxCenterLeft,
-                BoxCenterTop = mapBox.BoxCenterTop,
-                BoxCenterRight = mapBox.BoxCenterRight,
-                BoxCenterBottom = mapBox.BoxCenterBottom,
-                BoxTint = boxTintColor
-            };
-
-            PaintObjects.BoxPaint.Dispose();
-
-            PaintObjects.BoxPaint = new()
-            {
-                Style = SKPaintStyle.Fill,
-                ColorFilter = SKColorFilter.CreateBlendMode(
-                    Extensions.ToSKColor(boxTintColor),
-                    SKBlendMode.Modulate) // combine the tint with the bitmap color
-            };
-
-            newPlacedMapBox.BoxPaint = PaintObjects.BoxPaint.Clone();
-
-            return newPlacedMapBox;
-        }
 
         internal static TextBox? CreateLabelEditTextBox(SKGLControl glControl, MapLabel mapLabel, Rectangle tbRect)
         {
@@ -299,29 +240,7 @@ namespace RealmStudio
             MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawPath(mapLabelPath, PaintObjects.LabelPathPaint);
         }
 
-        internal static void DrawBoxOnWorkLayer(RealmStudioMap map, MapBox mapBox, PlacedMapBox placedMapBox, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
-        {
-            SKRect boxRect = new(previousPoint.X, previousPoint.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
 
-            if (boxRect.Width > 0 && boxRect.Height > 0)
-            {
-                SKBitmap? b = mapBox.BoxBitmap.ToSKBitmap();
-
-                if (b != null)
-                {
-                    SKBitmap resizedBitmap = b.Resize(new SKSizeI((int)boxRect.Width, (int)boxRect.Height), SKSamplingOptions.Default);
-
-                    placedMapBox.SetBoxBitmap(resizedBitmap);
-                    placedMapBox.Width = resizedBitmap.Width;
-                    placedMapBox.Height = resizedBitmap.Height;
-
-                    MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
-                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
-
-                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawBitmap(resizedBitmap, previousPoint, PaintObjects.BoxPaint);
-                }
-            }
-        }
 
         internal static Rectangle GetLabelTextBoxRect(MapLabel mapLabel, SKPoint drawingPoint, float drawingZoom, Size labelSize)
         {
@@ -361,37 +280,6 @@ namespace RealmStudio
             return labelTextBox;
         }
 
-        internal static void AddNewBox(RealmStudioMap map, PlacedMapBox? placedMapBox)
-        {
-            if (placedMapBox != null && placedMapBox.BoxBitmap != null)
-            {
-                SKRectI center = new((int)placedMapBox.BoxCenterLeft,
-                    (int)placedMapBox.BoxCenterTop,
-                    (int)(placedMapBox.Width - placedMapBox.BoxCenterRight),
-                    (int)(placedMapBox.Height - placedMapBox.BoxCenterBottom));
 
-                if (center.IsEmpty || center.Left < 0 || center.Right <= 0 || center.Top < 0 || center.Bottom <= 0)
-                {
-                    return;
-                }
-                else if (center.Width <= 0 || center.Height <= 0)
-                {
-                    // swap 
-                    if (center.Right < center.Left)
-                    {
-                        (center.Left, center.Right) = (center.Right, center.Left);
-                    }
-
-                    if (center.Bottom < center.Top)
-                    {
-                        (center.Top, center.Bottom) = (center.Bottom, center.Top);
-                    }
-                }
-
-                Cmd_AddLabelBox cmd = new(map, placedMapBox);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
-            }
-        }
     }
 }

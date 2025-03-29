@@ -1525,7 +1525,7 @@ namespace RealmStudio
 
             WaterFeatureMethods.FinalizeWindroses(map);
 
-            MapLabelMethods.FinalizeMapBoxes(map);
+            BoxManager.FinalizeMapBoxes(map);
 
             RegionManager.FinalizeMapRegions(map);
 
@@ -1608,6 +1608,11 @@ namespace RealmStudio
                     if (w is WaterFeature wf)
                     {
                         wf.IsSelected = false;
+
+                        if (MapStateMediator.SelectedWaterFeature == wf)
+                        {
+                            MapStateMediator.SelectedWaterFeature = null;
+                        }
                     }
                     else if (w is River r)
                     {
@@ -1648,6 +1653,11 @@ namespace RealmStudio
                 if (selectedComponent != null && selectedComponent is MapPath mapPath && mapPath == mp) continue;
                 mp.IsSelected = false;
                 mp.ShowPathPoints = false;
+
+                if (MapStateMediator.SelectedMapPath?.MapPathGuid.ToString() == mp.MapPathGuid.ToString())
+                {
+                    MapStateMediator.SelectedMapPath = null;
+                }
             }
 
             MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
@@ -1657,6 +1667,11 @@ namespace RealmStudio
                 if (selectedComponent != null && selectedComponent is MapPath mapPath && mapPath == mp) continue;
                 mp.IsSelected = false;
                 mp.ShowPathPoints = false;
+
+                if (MapStateMediator.SelectedMapPath?.MapPathGuid.ToString() == mp.MapPathGuid.ToString())
+                {
+                    MapStateMediator.SelectedMapPath = null;
+                }
             }
 
             MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER);

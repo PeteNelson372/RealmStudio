@@ -23,18 +23,16 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal sealed class Cmd_CreateMapFrame(RealmStudioMap map, MapFrame? frame, Color frameTint, float frameScale) : IMapOperation
+    internal sealed class Cmd_CreateMapFrame(RealmStudioMap map, MapFrame? frame) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private MapFrame? Frame = frame;
         private MapFrame? StoredFrame;
-        private readonly Color FrameTint = frameTint;
-        private readonly float FrameScale = frameScale;
 
         public void DoOperation()
         {
             StoredFrame = Frame;
-            OverlayMethods.CreateFrame(Map, Frame, FrameTint, FrameScale);
+            FrameManager.Create(Map, null);
         }
 
         public void UndoOperation()
@@ -43,7 +41,7 @@ namespace RealmStudio
             {
                 Frame = StoredFrame;
 
-                OverlayMethods.CreateFrame(Map, Frame, FrameTint, FrameScale);
+                FrameManager.Create(Map, null);
             }
             else
             {

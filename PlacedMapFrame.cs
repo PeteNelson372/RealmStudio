@@ -311,7 +311,7 @@ namespace RealmStudio
                 FrameCenterBottom = float.Parse(frameCenterBottom);
             }
 
-            OverlayMethods.CompletePlacedFrame(this);
+            FrameManager.CompletePlacedFrame(this);
 
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8604 // Possible null reference argument.

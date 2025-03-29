@@ -34,7 +34,6 @@ using System.Reflection;
 using System.Timers;
 using Button = System.Windows.Forms.Button;
 using ComboBox = System.Windows.Forms.ComboBox;
-using Control = System.Windows.Forms.Control;
 using Image = System.Drawing.Image;
 using TextBox = System.Windows.Forms.TextBox;
 
@@ -69,13 +68,17 @@ namespace RealmStudio
         public ThreeDView? CurrentHeightMapView { get; set; }
         public List<string> LandFormObjModelList { get; set; } = [];
 
-        private static MapStateMediator MStateMediator { get; set; } = new();
-
         // UI Mediators
 
         // UI mediator for the UI controls and values on the RealmStudioMainFOrm
         // not related to any map object (e.g. DrawingZoom)
         private MainFormUIMediator MainUIMediator { get; set; }
+
+        // UI mediator for map boxes
+        private BoxUIMediator BoxMediator { get; set; }
+
+        // UI mediator for the map frame
+        private FrameUIMediator FrameMediator { get; set; }
 
         // UI mediator for MapGrid
         private MapGridUIMediator GridUIMediator { get; set; }
@@ -139,8 +142,11 @@ namespace RealmStudio
             MainUIMediator = new(this);
             MapStateMediator.MainUIMediator = MainUIMediator;
 
-            SymbolUIMediator = new MapSymbolUIMediator(this);
-            SymbolManager.SymbolUIMediator = SymbolUIMediator;
+            BoxMediator = new BoxUIMediator(this);
+            BoxManager.BoxMediator = BoxMediator;
+
+            FrameMediator = new FrameUIMediator(this);
+            FrameManager.FrameMediator = FrameMediator;
 
             GridUIMediator = new MapGridUIMediator(this);
             MapGridManager.GridUIMediator = GridUIMediator;
@@ -154,6 +160,10 @@ namespace RealmStudio
             ScaleUIMediator = new(this);
             MapScaleManager.ScaleUIMediator = ScaleUIMediator;
 
+            SymbolUIMediator = new MapSymbolUIMediator(this);
+            SymbolManager.SymbolUIMediator = SymbolUIMediator;
+
+
             ApplicationTimerManager = new(this)
             {
                 SymbolUIMediator = SymbolUIMediator
@@ -166,6 +176,9 @@ namespace RealmStudio
             // mediators handle changes directly with the associated manager
             // but in some cases, changes to the current map (and maybe to other objects)
             // result in UI changes that the map object mediators don't know about
+
+            MapStateMediator.BoxMediator = BoxMediator;
+            MapStateMediator.FrameMediator = FrameMediator;
             MapStateMediator.GridUIMediator = GridUIMediator;
             MapStateMediator.SymbolUIMediator = SymbolUIMediator;
             MapStateMediator.RegionUIMediator = MapRegionUIMediator;
@@ -1503,7 +1516,7 @@ namespace RealmStudio
 
             AddMapBoxesToLabelBoxTable(AssetManager.MAP_BOX_LIST);
 
-            AddMapFramesToFrameTable(AssetManager.MAP_FRAME_TEXTURES);
+            FrameMediator.AddMapFramesToFrameTable(AssetManager.MAP_FRAME_TEXTURES);
 
             // apply default theme in main form
             if (AssetManager.CURRENT_THEME != null)
@@ -3853,14 +3866,16 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawBox:
                     {
-                        if (MapStateMediator.SelectedMapBox != null)
+                        if (BoxMediator.Box != null)
                         {
                             // initialize new box
                             Cursor = Cursors.Cross;
 
+                            MapStateMediator.CurrentCursorPoint = zoomedScrolledPoint;
                             MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
 
-                            MapStateMediator.SelectedPlacedMapBox = MapLabelMethods.CreatePlacedMapBox(MapStateMediator.SelectedMapBox, zoomedScrolledPoint,
+                            // creates a temporary box to show on the work layer as the box is being drawn
+                            MapStateMediator.SelectedPlacedMapBox = BoxManager.CreatePlacedMapBox(BoxMediator.Box, zoomedScrolledPoint,
                                 SelectBoxTintButton.BackColor);
                         }
                     }
@@ -4257,9 +4272,9 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawBox:
                     // draw box as mouse is moved
-                    if (MapStateMediator.SelectedMapBox != null && MapStateMediator.SelectedPlacedMapBox != null)
+                    if (BoxMediator.Box != null && MapStateMediator.SelectedPlacedMapBox != null)
                     {
-                        MapLabelMethods.DrawBoxOnWorkLayer(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapBox,
+                        BoxMediator.DrawBoxOnWorkLayer(MapStateMediator.CurrentMap, BoxMediator.Box,
                             MapStateMediator.SelectedPlacedMapBox, zoomedScrolledPoint, MapStateMediator.PreviousCursorPoint);
 
                         SKGLRenderControl.Invalidate();
@@ -4702,27 +4717,7 @@ namespace RealmStudio
                         {
                             MapStateMediator.SelectedMapLabel = null;
 
-                            PlacedMapBox? selectedMapBox = SelectMapBoxAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint);
-
-                            if (selectedMapBox != null)
-                            {
-                                bool isSelected = !selectedMapBox.IsSelected;
-                                selectedMapBox.IsSelected = isSelected;
-
-                                if (selectedMapBox.IsSelected)
-                                {
-                                    MapStateMediator.SelectedPlacedMapBox = selectedMapBox;
-                                }
-                                else
-                                {
-                                    MapStateMediator.SelectedPlacedMapBox = null;
-                                }
-                            }
-                            else
-                            {
-                                MapStateMediator.SelectedPlacedMapBox = null;
-                            }
-
+                            BoxManager.SelectMapBoxAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint);
                             SKGLRenderControl.Invalidate();
                         }
                     }
@@ -4732,7 +4727,7 @@ namespace RealmStudio
                     MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                     // finalize box drawing and add the box
-                    MapLabelMethods.AddNewBox(MapStateMediator.CurrentMap, MapStateMediator.SelectedPlacedMapBox);
+                    BoxManager.Create(MapStateMediator.CurrentMap, null);
 
                     MapStateMediator.CurrentMap.IsSaved = false;
                     MapStateMediator.SelectedPlacedMapBox = null;
@@ -7777,7 +7772,7 @@ namespace RealmStudio
                     };
 
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-                    pb.MouseClick += MapBoxPictureBox_MouseClick;
+                    pb.MouseClick += BoxMediator.MapBoxPictureBox_MouseClick;
 #pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
 
                     LabelBoxStyleTable.Controls.Add(pb);
@@ -7833,29 +7828,7 @@ namespace RealmStudio
             return selectedLabel;
         }
 
-        private static PlacedMapBox? SelectMapBoxAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
-        {
-            PlacedMapBox? selectedBox = null;
 
-            List<MapComponent> mapLabelComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BOXLAYER).MapLayerComponents;
-
-            for (int i = 0; i < mapLabelComponents.Count; i++)
-            {
-                if (mapLabelComponents[i] is PlacedMapBox mapBox)
-                {
-                    SKRect boxRect = new(mapBox.X, mapBox.Y, mapBox.X + mapBox.Width, mapBox.Y + mapBox.Height);
-
-                    if (boxRect.Contains(zoomedScrolledPoint))
-                    {
-                        selectedBox = mapBox;
-                    }
-                }
-            }
-
-            RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, selectedBox);
-
-            return selectedBox;
-        }
 
         private static void ConstructBezierPathFromPoints()
         {
@@ -7992,42 +7965,7 @@ namespace RealmStudio
             SKGLRenderControl.Invalidate();
         }
 
-        private void MapBoxPictureBox_MouseClick(object sender, EventArgs e)
-        {
-            if (((MouseEventArgs)e).Button == MouseButtons.Left)
-            {
-                if (ModifierKeys == Keys.None)
-                {
-                    PictureBox pb = (PictureBox)sender;
 
-                    if (pb.Tag is MapBox b)
-                    {
-                        foreach (Control control in LabelBoxStyleTable.Controls)
-                        {
-                            if (control != pb)
-                            {
-                                control.BackColor = SystemColors.Control;
-                            }
-                        }
-
-                        Color pbBackColor = pb.BackColor;
-
-                        if (pbBackColor.ToArgb() == SystemColors.Control.ToArgb())
-                        {
-                            // clicked symbol is not selected, so select it
-                            pb.BackColor = Color.LightSkyBlue;
-                            MapStateMediator.SelectedMapBox = b;
-                        }
-                        else
-                        {
-                            // clicked symbol is already selected, so deselect it
-                            pb.BackColor = SystemColors.Control;
-                            MapStateMediator.SelectedMapBox = null;
-                        }
-                    }
-                }
-            }
-        }
 
         private void LabelPresetsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -8361,161 +8299,31 @@ namespace RealmStudio
         }
         #endregion
 
-        #region Overlay Tab Methods (Frame, Grid, Scale, Measure)
-
-        private void AddMapFramesToFrameTable(List<MapFrame> mapFrames)
-        {
-            FrameStyleTable.Hide();
-            FrameStyleTable.Controls.Clear();
-            foreach (MapFrame frame in mapFrames)
-            {
-                if (frame.FrameBitmapPath != null)
-                {
-                    if (frame.FrameBitmap == null)
-                    {
-                        SKImage image = SKImage.FromEncodedData(frame.FrameBitmapPath);
-                        frame.FrameBitmap = SKBitmap.FromImage(image);
-                    }
-
-                    PictureBox pb = new()
-                    {
-                        Tag = frame,
-                        SizeMode = PictureBoxSizeMode.Zoom,
-                        Image = frame.FrameBitmap.ToBitmap(),
-                    };
-
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-                    pb.MouseClick += FramePictureBox_MouseClick;
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-
-                    FrameStyleTable.Controls.Add(pb);
-                }
-            }
-            FrameStyleTable.Show();
-        }
-
-        #endregion
 
         #region Overlay Tab Event Handlers (Frame, Grid, Scale, Measure)
 
         private void ShowOverlayLayerSwitch_CheckedChanged()
         {
-            MapLayer overlayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OVERLAYLAYER);
-
-            overlayLayer.ShowLayer = ShowOverlayLayerSwitch.Checked;
-
-            MapLayer frameLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER);
-
-            frameLayer.ShowLayer = ShowOverlayLayerSwitch.Checked;
-
-            MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.ABOVEOCEANGRIDLAYER);
-
-            aboveOceanGridLayer.ShowLayer = ShowOverlayLayerSwitch.Checked;
-
-            MapLayer belowSymbolsGridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BELOWSYMBOLSGRIDLAYER);
-
-            belowSymbolsGridLayer.ShowLayer = ShowOverlayLayerSwitch.Checked;
-
-            MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER);
-
-            defaultGridLayer.ShowLayer = ShowOverlayLayerSwitch.Checked;
-
-            MapLayer measureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER);
-
-            measureLayer.ShowLayer = ShowOverlayLayerSwitch.Checked;
-
-            SKGLRenderControl.Invalidate();
+            MainUIMediator.OverlayLayerEnabled = ShowOverlayLayerSwitch.Checked;
         }
 
         #region Frame Event Handlers
 
-        private void FramePictureBox_MouseClick(object sender, EventArgs e)
-        {
-            if (((MouseEventArgs)e).Button == MouseButtons.Left)
-            {
-                if (ModifierKeys == Keys.None)
-                {
-                    PictureBox pb = (PictureBox)sender;
-
-                    if (pb.Tag is MapFrame frame)
-                    {
-                        foreach (Control control in FrameStyleTable.Controls)
-                        {
-                            if (control != pb)
-                            {
-                                control.BackColor = SystemColors.Control;
-                            }
-                        }
-
-                        Color pbBackColor = pb.BackColor;
-
-                        if (pbBackColor.ToArgb() == SystemColors.Control.ToArgb())
-                        {
-                            // clicked picture box is not selected, so select it
-                            pb.BackColor = Color.LightSkyBlue;
-
-                            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Clear();
-
-                            Cmd_CreateMapFrame cmd = new(MapStateMediator.CurrentMap, frame, FrameTintColorSelectButton.BackColor, (float)(FrameScaleTrack.Value / 100F));
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
-
-                            MapStateMediator.CurrentMap.IsSaved = false;
-
-                            SKGLRenderControl.Invalidate();
-                        }
-                        else
-                        {
-                            // clicked symbol is already selected, so deselect it
-                            pb.BackColor = SystemColors.Control;
-                        }
-                    }
-                }
-            }
-        }
-
         private void EnableFrameSwitch_CheckedChanged()
         {
-            if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Count > 0)
-            {
-                ((PlacedMapFrame)MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents[0])
-                    .FrameEnabled = EnableFrameSwitch.Checked;
-                SKGLRenderControl.Invalidate();
-            }
+            FrameMediator.FrameEnabled = EnableFrameSwitch.Checked;
         }
 
         private void FrameScaleTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show((FrameScaleTrack.Value / 100F).ToString(), FrameValuesGroup, new Point(FrameScaleTrack.Right - 30, FrameScaleTrack.Top - 20), 2000);
-
-            if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Count > 0)
-            {
-                // there can only be one frame on the map, so get it and update the frame scale
-                PlacedMapFrame placedFrame = (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents[0];
-                placedFrame.FrameScale = FrameScaleTrack.Value / 100F;
-                OverlayMethods.CompletePlacedFrame(placedFrame);
-
-                SKGLRenderControl.Invalidate();
-            }
+            FrameMediator.FrameScale = FrameScaleTrack.Value;
+            TOOLTIP.Show((FrameMediator.FrameScale / 100F).ToString(), FrameValuesGroup, new Point(FrameScaleTrack.Right - 30, FrameScaleTrack.Top - 20), 2000);
         }
 
         private void FrameTintColorSelectButton_Click(object sender, EventArgs e)
         {
             Color frameColor = UtilityMethods.SelectColorFromDialog(this, FrameTintColorSelectButton.BackColor);
-
-            if (frameColor.ToArgb() != Color.Empty.ToArgb())
-            {
-                FrameTintColorSelectButton.BackColor = frameColor;
-                FrameTintColorSelectButton.Refresh();
-
-                PlacedMapFrame placedFrame = (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents[0];
-
-                Cmd_ChangeFrameColor cmd = new(placedFrame, FrameTintColorSelectButton.BackColor);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
-
-                SKGLRenderControl.Invalidate();
-            }
+            FrameMediator.FrameTint = frameColor;
         }
 
         #endregion

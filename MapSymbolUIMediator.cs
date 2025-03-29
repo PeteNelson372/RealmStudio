@@ -312,6 +312,8 @@ namespace RealmStudio
 
         private void UseAreaBrushChanged()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
                 if (UseAreaBrush)
@@ -362,6 +364,8 @@ namespace RealmStudio
 
         private void SymbolPictureBox_MouseClick(object? sender, EventArgs e)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+
             PictureBox? pb = (PictureBox?)sender;
             if (pb == null) return;
 
@@ -588,6 +592,8 @@ namespace RealmStudio
 
         internal void ColorSymbols()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+
             if (MapStateMediator.SelectedMapSymbol != null && MapStateMediator.SelectedMapSymbol.IsSelected)
             {
                 SymbolManager.ColorSelectedSymbol(MapStateMediator.SelectedMapSymbol);
@@ -609,6 +615,8 @@ namespace RealmStudio
 
         internal void SelectPrimarySymbolInSymbolTable(PictureBox pb)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+
             if (pb.Tag is MapSymbol s)
             {
                 if (SymbolManager.SelectedSymbolTableMapSymbol == null ||
@@ -649,6 +657,8 @@ namespace RealmStudio
 
         internal void SelectSymbolsOfType(MapSymbolType symbolType)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+
             MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.SymbolPlace, 0);
 
             if (SymbolManager.SelectedSymbolType != symbolType)

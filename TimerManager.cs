@@ -27,9 +27,11 @@ using System.Timers;
 
 namespace RealmStudio
 {
-    internal class TimerManager
+    internal class TimerManager(RealmStudioMainForm mainForm) : IDisposable
     {
-        private readonly RealmStudioMainForm MainForm;
+        private bool disposedValue;
+
+        private readonly RealmStudioMainForm MainForm = mainForm;
         private MapSymbolUIMediator? _symbolUIMediator;
 
         private System.Timers.Timer? _autosaveTimer;
@@ -39,11 +41,6 @@ namespace RealmStudio
         private bool autosaveEnabled;
         private bool brushTimerEnabled;
         private bool symbolAreaBrushEnabled;
-
-        public TimerManager(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-        }
 
         internal MapSymbolUIMediator? SymbolUIMediator
         {
@@ -247,5 +244,29 @@ namespace RealmStudio
             SymbolManager.PlaceSelectedSymbolInArea(MapStateMediator.CurrentCursorPoint,
                 symbolScale, symbolRotation, (int)(SymbolUIMediator.AreaBrushSize / 2.0F));
         }
+
+        #region IDisposable Implementation
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _autosaveTimer?.Dispose();
+                    _brushTimer?.Dispose();
+                    _symbolAreaBrushTimer?.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
     }
 }

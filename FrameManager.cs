@@ -1,5 +1,5 @@
 ﻿/**************************************************************************************************************************
-* Copyright 2024, Peter R. Nelson
+* Copyright 2025, Peter R. Nelson
 *
 * This file is part of the RealmStudio application. The RealmStudio application is intended
 * for creating fantasy maps for gaming and world building.
@@ -26,8 +26,99 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal sealed class OverlayMethods
+    internal sealed class FrameManager : IMapComponentManager
     {
+        private static FrameUIMediator? _frameMediator;
+
+        internal static FrameUIMediator? FrameMediator
+        {
+            get { return _frameMediator; }
+            set { _frameMediator = value; }
+        }
+
+        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        {
+            ArgumentNullException.ThrowIfNull(map);
+            ArgumentNullException.ThrowIfNull(FrameMediator);
+
+            if (FrameMediator.Frame == null || FrameMediator.Frame.FrameBitmap == null) return null;
+
+            PlacedMapFrame mapFrame = new()
+            {
+                X = 0,
+                Y = 0,
+                Width = map.MapWidth,
+                Height = map.MapHeight,
+                FrameBitmap = FrameMediator.Frame.FrameBitmap.Copy(),
+                FrameScale = FrameMediator.FrameScale / 100.0F,
+                FrameCenterLeft = FrameMediator.Frame.FrameCenterLeft,
+                FrameCenterTop = FrameMediator.Frame.FrameCenterTop,
+                FrameCenterRight = FrameMediator.Frame.FrameCenterRight,
+                FrameCenterBottom = FrameMediator.Frame.FrameCenterBottom,
+                FrameTint = FrameMediator.FrameTint,
+            };
+
+            using SKPaint framePaint = new()
+            {
+                Style = SKPaintStyle.Fill,
+                ColorFilter = SKColorFilter.CreateBlendMode(
+                Extensions.ToSKColor(mapFrame.FrameTint),
+                SKBlendMode.Modulate) // combine the tint with the bitmap color
+            };
+
+            mapFrame.FramePaint = framePaint.Clone();
+
+            CompletePlacedFrame(mapFrame);
+
+            MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents.Add(mapFrame);
+
+            return mapFrame;
+        }
+
+        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        {
+            ArgumentNullException.ThrowIfNull(map);
+
+            // there can only be one frame on the map, so remove any existing frame
+            MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents.Clear();
+
+            return true;
+        }
+
+        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        {
+            // there is only one frame, so ignore componentGuid (pass Guid.Empty to this method)
+            if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Count > 0)
+            {
+                return (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents[0];
+            }
+
+            return null;
+        }
+
+        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        {
+            ArgumentNullException.ThrowIfNull(map);
+            ArgumentNullException.ThrowIfNull(FrameMediator);
+
+            if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Count > 0)
+            {
+                // there can only be one frame on the map, so update it
+                PlacedMapFrame placedFrame = (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents[0];
+
+                placedFrame.FrameScale = FrameMediator.FrameScale / 100F;
+
+                CompletePlacedFrame(placedFrame);
+
+                Cmd_ChangeFrameColor cmd = new(placedFrame, FrameMediator.FrameTint);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+            }
+
+            return true;
+        }
+
+
         internal static void CompletePlacedFrame(PlacedMapFrame mapFrame)
         {
             if (mapFrame.FrameBitmap != null)
@@ -159,43 +250,6 @@ namespace RealmStudio
 
                 mapFrame.FramePaint = framePaint;
             }
-        }
-
-        internal static void CreateFrame(RealmStudioMap map, MapFrame? frame, Color frameTint, float frameScale)
-        {
-            if (frame == null || frame.FrameBitmap == null) return;
-
-            PlacedMapFrame mapFrame = new()
-            {
-                X = 0,
-                Y = 0,
-                Width = map.MapWidth,
-                Height = map.MapHeight,
-                FrameBitmap = frame.FrameBitmap.Copy(),
-                FrameScale = frameScale,
-                FrameCenterLeft = frame.FrameCenterLeft,
-                FrameCenterTop = frame.FrameCenterTop,
-                FrameCenterRight = frame.FrameCenterRight,
-                FrameCenterBottom = frame.FrameCenterBottom,
-                FrameTint = frameTint,
-            };
-
-            using SKPaint framePaint = new()
-            {
-                Style = SKPaintStyle.Fill,
-                ColorFilter = SKColorFilter.CreateBlendMode(
-                Extensions.ToSKColor(mapFrame.FrameTint),
-                SKBlendMode.Modulate) // combine the tint with the bitmap color
-            };
-
-            mapFrame.FramePaint = framePaint.Clone();
-
-            CompletePlacedFrame(mapFrame);
-
-            // there can only be one frame on the map, so remove any existing frame
-            MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents.Clear();
-
-            MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents.Add(mapFrame);
         }
     }
 }

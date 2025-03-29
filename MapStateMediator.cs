@@ -33,11 +33,14 @@ namespace RealmStudio
         private static RealmStudioMap _currentMap = new();
 
         private static MainFormUIMediator? _mainFormUIMediator;
+
+        private static BoxUIMediator? _boxUIMediator;
+        private static FrameUIMediator? _frameUIMediator;
         private static MapGridUIMediator? _gridUIMediator;
-        private static MapSymbolUIMediator? _symbolUIMediator;
         private static RegionUIMediator? _regionUIMediator;
         private static MapMeasureUIMediator? _measureUIMediator;
         private static MapScaleUIMediator? _scaleUIMediator;
+        private static MapSymbolUIMediator? _symbolUIMediator;
 
         // objects that are currently being created/updated/deleted/etc.
         private static Landform? _currentLandform;
@@ -56,7 +59,6 @@ namespace RealmStudio
         private static MapPath? _selectedMapPath;
         private static MapPathPoint? _selectedMapPathPoint;
         private static MapSymbol? _selectedMapSymbol;
-        private static MapBox? _selectedMapBox;
         private static PlacedMapBox? _selectedPlacedMapBox;
         private static MapLabel? _selectedMapLabel;
         private static MapScale? _selectedMapScale;
@@ -102,6 +104,18 @@ namespace RealmStudio
         {
             get { return _mainFormUIMediator; }
             set { _mainFormUIMediator = value; }
+        }
+
+        internal static BoxUIMediator? BoxMediator
+        {
+            get { return _boxUIMediator; }
+            set { _boxUIMediator = value; }
+        }
+
+        internal static FrameUIMediator? FrameMediator
+        {
+            get { return _frameUIMediator; }
+            set { _frameUIMediator = value; }
         }
 
         internal static MapGridUIMediator? GridUIMediator
@@ -215,12 +229,6 @@ namespace RealmStudio
         {
             get { return _selectedMapSymbol; }
             set { _selectedMapSymbol = value; }
-        }
-
-        internal static MapBox? SelectedMapBox
-        {
-            get { return _selectedMapBox; }
-            set { _selectedMapBox = value; }
         }
 
         internal static PlacedMapBox? SelectedPlacedMapBox

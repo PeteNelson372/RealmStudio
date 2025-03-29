@@ -437,26 +437,6 @@
             HelpContentsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
-            RegionToolPanel = new Panel();
-            label90 = new Label();
-            LightSolidRegionBorderPicture = new PictureBox();
-            GradientRegionBorderPicture = new PictureBox();
-            SolidAndDashRegionBorderPicture = new PictureBox();
-            DoubleSolidRegionBorderPicture = new PictureBox();
-            DashDotDotRegionBorderPicture = new PictureBox();
-            DashDotRegionBorderPicture = new PictureBox();
-            DashedRegionBorderPicture = new PictureBox();
-            DottedRegionBorderPicture = new PictureBox();
-            SolidRegionBorderPicture = new PictureBox();
-            RegionDoubleSolidBorderRadio = new RadioButton();
-            RegionBorderedLightSolidRadio = new RadioButton();
-            RegionBorderedGradientRadio = new RadioButton();
-            RegionSolidAndDashesBorderRadio = new RadioButton();
-            RegionDashDotDotBorderRadio = new RadioButton();
-            RegionDashDotBorderRadio = new RadioButton();
-            RegionDashBorderRadio = new RadioButton();
-            RegionDottedBorderRadio = new RadioButton();
-            RegionSolidBorderRadio = new RadioButton();
             OverlayToolPanel = new Panel();
             FrameStyleTable = new TableLayoutPanel();
             LabelToolPanel = new Panel();
@@ -582,6 +562,26 @@
             BackgroundToolPanel = new Panel();
             DrawingToolPanel = new Panel();
             label26 = new Label();
+            RegionToolPanel = new Panel();
+            label90 = new Label();
+            LightSolidRegionBorderPicture = new PictureBox();
+            GradientRegionBorderPicture = new PictureBox();
+            SolidAndDashRegionBorderPicture = new PictureBox();
+            DoubleSolidRegionBorderPicture = new PictureBox();
+            DashDotDotRegionBorderPicture = new PictureBox();
+            DashDotRegionBorderPicture = new PictureBox();
+            DashedRegionBorderPicture = new PictureBox();
+            DottedRegionBorderPicture = new PictureBox();
+            SolidRegionBorderPicture = new PictureBox();
+            RegionDoubleSolidBorderRadio = new RadioButton();
+            RegionBorderedLightSolidRadio = new RadioButton();
+            RegionBorderedGradientRadio = new RadioButton();
+            RegionSolidAndDashesBorderRadio = new RadioButton();
+            RegionDashDotDotBorderRadio = new RadioButton();
+            RegionDashDotBorderRadio = new RadioButton();
+            RegionDashBorderRadio = new RadioButton();
+            RegionDottedBorderRadio = new RadioButton();
+            RegionSolidBorderRadio = new RadioButton();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
             OceanTab = new TabPage();
@@ -695,16 +695,6 @@
             MapStatusStrip.SuspendLayout();
             ApplicationStatusStrip.SuspendLayout();
             RealmStudioMainMenuStrip.SuspendLayout();
-            RegionToolPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)SolidAndDashRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DoubleSolidRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DashDotDotRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DashDotRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).BeginInit();
             OverlayToolPanel.SuspendLayout();
             LabelToolPanel.SuspendLayout();
             SymbolToolPanel.SuspendLayout();
@@ -739,6 +729,16 @@
             ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).BeginInit();
             DrawingToolPanel.SuspendLayout();
+            RegionToolPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SolidAndDashRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DoubleSolidRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DashDotDotRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DashDotRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).BeginInit();
             SuspendLayout();
             // 
             // OceanTab
@@ -4969,7 +4969,7 @@
             FrameScaleTrack.AutoSize = false;
             FrameScaleTrack.Location = new Point(46, 132);
             FrameScaleTrack.Maximum = 200;
-            FrameScaleTrack.Minimum = 25;
+            FrameScaleTrack.Minimum = 10;
             FrameScaleTrack.Name = "FrameScaleTrack";
             FrameScaleTrack.Size = new Size(96, 20);
             FrameScaleTrack.TabIndex = 90;
@@ -5533,8 +5533,6 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(RealmStudioMainMenuStrip);
-            RealmStudioForm.Controls.Add(RegionToolPanel);
-            RealmStudioForm.Controls.Add(OverlayToolPanel);
             RealmStudioForm.Controls.Add(LabelToolPanel);
             RealmStudioForm.Controls.Add(SymbolToolPanel);
             RealmStudioForm.Controls.Add(PathToolPanel);
@@ -5543,6 +5541,8 @@
             RealmStudioForm.Controls.Add(OceanToolPanel);
             RealmStudioForm.Controls.Add(BackgroundToolPanel);
             RealmStudioForm.Controls.Add(DrawingToolPanel);
+            RealmStudioForm.Controls.Add(RegionToolPanel);
+            RealmStudioForm.Controls.Add(OverlayToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
             RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
             RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
@@ -6930,258 +6930,6 @@
             AboutToolStripMenuItem.Size = new Size(122, 22);
             AboutToolStripMenuItem.Text = "&About...";
             AboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
-            // 
-            // RegionToolPanel
-            // 
-            RegionToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            RegionToolPanel.BackColor = SystemColors.Control;
-            RegionToolPanel.Controls.Add(label90);
-            RegionToolPanel.Controls.Add(LightSolidRegionBorderPicture);
-            RegionToolPanel.Controls.Add(GradientRegionBorderPicture);
-            RegionToolPanel.Controls.Add(SolidAndDashRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DoubleSolidRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DashDotDotRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DashDotRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DashedRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DottedRegionBorderPicture);
-            RegionToolPanel.Controls.Add(SolidRegionBorderPicture);
-            RegionToolPanel.Controls.Add(RegionDoubleSolidBorderRadio);
-            RegionToolPanel.Controls.Add(RegionBorderedLightSolidRadio);
-            RegionToolPanel.Controls.Add(RegionBorderedGradientRadio);
-            RegionToolPanel.Controls.Add(RegionSolidAndDashesBorderRadio);
-            RegionToolPanel.Controls.Add(RegionDashDotDotBorderRadio);
-            RegionToolPanel.Controls.Add(RegionDashDotBorderRadio);
-            RegionToolPanel.Controls.Add(RegionDashBorderRadio);
-            RegionToolPanel.Controls.Add(RegionDottedBorderRadio);
-            RegionToolPanel.Controls.Add(RegionSolidBorderRadio);
-            RegionToolPanel.Location = new Point(1421, 90);
-            RegionToolPanel.Margin = new Padding(0);
-            RegionToolPanel.Name = "RegionToolPanel";
-            RegionToolPanel.Size = new Size(152, 806);
-            RegionToolPanel.TabIndex = 25;
-            // 
-            // label90
-            // 
-            label90.AutoSize = true;
-            label90.CausesValidation = false;
-            label90.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label90.ForeColor = SystemColors.ControlDarkDark;
-            label90.Location = new Point(17, 22);
-            label90.Name = "label90";
-            label90.Size = new Size(93, 20);
-            label90.TabIndex = 120;
-            label90.Text = "Border Style";
-            label90.UseMnemonic = false;
-            // 
-            // LightSolidRegionBorderPicture
-            // 
-            LightSolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            LightSolidRegionBorderPicture.Image = (Image)resources.GetObject("LightSolidRegionBorderPicture.Image");
-            LightSolidRegionBorderPicture.InitialImage = null;
-            LightSolidRegionBorderPicture.Location = new Point(31, 246);
-            LightSolidRegionBorderPicture.Name = "LightSolidRegionBorderPicture";
-            LightSolidRegionBorderPicture.Size = new Size(106, 18);
-            LightSolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            LightSolidRegionBorderPicture.TabIndex = 119;
-            LightSolidRegionBorderPicture.TabStop = false;
-            LightSolidRegionBorderPicture.Click += LightSolidRegionBorderPicture_Click;
-            // 
-            // GradientRegionBorderPicture
-            // 
-            GradientRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            GradientRegionBorderPicture.Image = (Image)resources.GetObject("GradientRegionBorderPicture.Image");
-            GradientRegionBorderPicture.InitialImage = null;
-            GradientRegionBorderPicture.Location = new Point(31, 220);
-            GradientRegionBorderPicture.Name = "GradientRegionBorderPicture";
-            GradientRegionBorderPicture.Size = new Size(106, 18);
-            GradientRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            GradientRegionBorderPicture.TabIndex = 118;
-            GradientRegionBorderPicture.TabStop = false;
-            GradientRegionBorderPicture.Click += GradientRegionBorderPicture_Click;
-            // 
-            // SolidAndDashRegionBorderPicture
-            // 
-            SolidAndDashRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            SolidAndDashRegionBorderPicture.Image = (Image)resources.GetObject("SolidAndDashRegionBorderPicture.Image");
-            SolidAndDashRegionBorderPicture.InitialImage = null;
-            SolidAndDashRegionBorderPicture.Location = new Point(31, 194);
-            SolidAndDashRegionBorderPicture.Name = "SolidAndDashRegionBorderPicture";
-            SolidAndDashRegionBorderPicture.Size = new Size(106, 18);
-            SolidAndDashRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            SolidAndDashRegionBorderPicture.TabIndex = 117;
-            SolidAndDashRegionBorderPicture.TabStop = false;
-            SolidAndDashRegionBorderPicture.Click += SolidAndDashRegionBorderPicture_Click;
-            // 
-            // DoubleSolidRegionBorderPicture
-            // 
-            DoubleSolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DoubleSolidRegionBorderPicture.Image = (Image)resources.GetObject("DoubleSolidRegionBorderPicture.Image");
-            DoubleSolidRegionBorderPicture.InitialImage = null;
-            DoubleSolidRegionBorderPicture.Location = new Point(31, 170);
-            DoubleSolidRegionBorderPicture.Name = "DoubleSolidRegionBorderPicture";
-            DoubleSolidRegionBorderPicture.Size = new Size(106, 18);
-            DoubleSolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DoubleSolidRegionBorderPicture.TabIndex = 116;
-            DoubleSolidRegionBorderPicture.TabStop = false;
-            DoubleSolidRegionBorderPicture.Click += DoubleSolidRegionBorderPicture_Click;
-            // 
-            // DashDotDotRegionBorderPicture
-            // 
-            DashDotDotRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DashDotDotRegionBorderPicture.Image = (Image)resources.GetObject("DashDotDotRegionBorderPicture.Image");
-            DashDotDotRegionBorderPicture.InitialImage = null;
-            DashDotDotRegionBorderPicture.Location = new Point(31, 145);
-            DashDotDotRegionBorderPicture.Name = "DashDotDotRegionBorderPicture";
-            DashDotDotRegionBorderPicture.Size = new Size(106, 18);
-            DashDotDotRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DashDotDotRegionBorderPicture.TabIndex = 115;
-            DashDotDotRegionBorderPicture.TabStop = false;
-            DashDotDotRegionBorderPicture.Click += DashDotDotRegionBorderPicture_Click;
-            // 
-            // DashDotRegionBorderPicture
-            // 
-            DashDotRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DashDotRegionBorderPicture.Image = (Image)resources.GetObject("DashDotRegionBorderPicture.Image");
-            DashDotRegionBorderPicture.InitialImage = null;
-            DashDotRegionBorderPicture.Location = new Point(31, 120);
-            DashDotRegionBorderPicture.Name = "DashDotRegionBorderPicture";
-            DashDotRegionBorderPicture.Size = new Size(106, 18);
-            DashDotRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DashDotRegionBorderPicture.TabIndex = 114;
-            DashDotRegionBorderPicture.TabStop = false;
-            DashDotRegionBorderPicture.Click += DashDotRegionBorderPicture_Click;
-            // 
-            // DashedRegionBorderPicture
-            // 
-            DashedRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DashedRegionBorderPicture.Image = (Image)resources.GetObject("DashedRegionBorderPicture.Image");
-            DashedRegionBorderPicture.InitialImage = null;
-            DashedRegionBorderPicture.Location = new Point(31, 95);
-            DashedRegionBorderPicture.Name = "DashedRegionBorderPicture";
-            DashedRegionBorderPicture.Size = new Size(106, 18);
-            DashedRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DashedRegionBorderPicture.TabIndex = 113;
-            DashedRegionBorderPicture.TabStop = false;
-            DashedRegionBorderPicture.Click += DashedRegionBorderPicture_Click;
-            // 
-            // DottedRegionBorderPicture
-            // 
-            DottedRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DottedRegionBorderPicture.Image = (Image)resources.GetObject("DottedRegionBorderPicture.Image");
-            DottedRegionBorderPicture.InitialImage = null;
-            DottedRegionBorderPicture.Location = new Point(31, 69);
-            DottedRegionBorderPicture.Name = "DottedRegionBorderPicture";
-            DottedRegionBorderPicture.Size = new Size(106, 18);
-            DottedRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DottedRegionBorderPicture.TabIndex = 112;
-            DottedRegionBorderPicture.TabStop = false;
-            DottedRegionBorderPicture.Click += DottedRegionBorderPicture_Click;
-            // 
-            // SolidRegionBorderPicture
-            // 
-            SolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            SolidRegionBorderPicture.Image = (Image)resources.GetObject("SolidRegionBorderPicture.Image");
-            SolidRegionBorderPicture.InitialImage = null;
-            SolidRegionBorderPicture.Location = new Point(31, 45);
-            SolidRegionBorderPicture.Name = "SolidRegionBorderPicture";
-            SolidRegionBorderPicture.Size = new Size(106, 18);
-            SolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            SolidRegionBorderPicture.TabIndex = 111;
-            SolidRegionBorderPicture.TabStop = false;
-            SolidRegionBorderPicture.Click += SolidRegionBorderPicture_Click;
-            // 
-            // RegionDoubleSolidBorderRadio
-            // 
-            RegionDoubleSolidBorderRadio.AutoSize = true;
-            RegionDoubleSolidBorderRadio.Location = new Point(16, 175);
-            RegionDoubleSolidBorderRadio.Name = "RegionDoubleSolidBorderRadio";
-            RegionDoubleSolidBorderRadio.Size = new Size(14, 13);
-            RegionDoubleSolidBorderRadio.TabIndex = 110;
-            RegionDoubleSolidBorderRadio.UseVisualStyleBackColor = true;
-            RegionDoubleSolidBorderRadio.CheckedChanged += RegionDoubleSolidBorderRadio_CheckedChanged;
-            // 
-            // RegionBorderedLightSolidRadio
-            // 
-            RegionBorderedLightSolidRadio.AutoSize = true;
-            RegionBorderedLightSolidRadio.Location = new Point(16, 251);
-            RegionBorderedLightSolidRadio.Name = "RegionBorderedLightSolidRadio";
-            RegionBorderedLightSolidRadio.Size = new Size(14, 13);
-            RegionBorderedLightSolidRadio.TabIndex = 109;
-            RegionBorderedLightSolidRadio.UseVisualStyleBackColor = true;
-            RegionBorderedLightSolidRadio.CheckedChanged += RegionBorderedLightSolidRadio_CheckedChanged;
-            // 
-            // RegionBorderedGradientRadio
-            // 
-            RegionBorderedGradientRadio.AutoSize = true;
-            RegionBorderedGradientRadio.Location = new Point(16, 225);
-            RegionBorderedGradientRadio.Name = "RegionBorderedGradientRadio";
-            RegionBorderedGradientRadio.Size = new Size(14, 13);
-            RegionBorderedGradientRadio.TabIndex = 108;
-            RegionBorderedGradientRadio.UseVisualStyleBackColor = true;
-            RegionBorderedGradientRadio.CheckedChanged += RegionBorderedGradientRadio_CheckedChanged;
-            // 
-            // RegionSolidAndDashesBorderRadio
-            // 
-            RegionSolidAndDashesBorderRadio.AutoSize = true;
-            RegionSolidAndDashesBorderRadio.Location = new Point(16, 199);
-            RegionSolidAndDashesBorderRadio.Name = "RegionSolidAndDashesBorderRadio";
-            RegionSolidAndDashesBorderRadio.Size = new Size(14, 13);
-            RegionSolidAndDashesBorderRadio.TabIndex = 107;
-            RegionSolidAndDashesBorderRadio.UseVisualStyleBackColor = true;
-            RegionSolidAndDashesBorderRadio.CheckedChanged += RegionSolidAndDashesBorderRadio_CheckedChanged;
-            // 
-            // RegionDashDotDotBorderRadio
-            // 
-            RegionDashDotDotBorderRadio.AutoSize = true;
-            RegionDashDotDotBorderRadio.Location = new Point(16, 150);
-            RegionDashDotDotBorderRadio.Name = "RegionDashDotDotBorderRadio";
-            RegionDashDotDotBorderRadio.Size = new Size(14, 13);
-            RegionDashDotDotBorderRadio.TabIndex = 106;
-            RegionDashDotDotBorderRadio.UseVisualStyleBackColor = true;
-            RegionDashDotDotBorderRadio.CheckedChanged += RegionDashDotDotBorderRadio_CheckedChanged;
-            // 
-            // RegionDashDotBorderRadio
-            // 
-            RegionDashDotBorderRadio.AutoSize = true;
-            RegionDashDotBorderRadio.Location = new Point(16, 125);
-            RegionDashDotBorderRadio.Name = "RegionDashDotBorderRadio";
-            RegionDashDotBorderRadio.Size = new Size(14, 13);
-            RegionDashDotBorderRadio.TabIndex = 105;
-            RegionDashDotBorderRadio.UseVisualStyleBackColor = true;
-            RegionDashDotBorderRadio.CheckedChanged += RegionDashDotBorderRadio_CheckedChanged;
-            // 
-            // RegionDashBorderRadio
-            // 
-            RegionDashBorderRadio.AutoSize = true;
-            RegionDashBorderRadio.Location = new Point(16, 100);
-            RegionDashBorderRadio.Name = "RegionDashBorderRadio";
-            RegionDashBorderRadio.Size = new Size(14, 13);
-            RegionDashBorderRadio.TabIndex = 104;
-            RegionDashBorderRadio.UseVisualStyleBackColor = true;
-            RegionDashBorderRadio.CheckedChanged += RegionDashBorderRadio_CheckedChanged;
-            // 
-            // RegionDottedBorderRadio
-            // 
-            RegionDottedBorderRadio.AutoSize = true;
-            RegionDottedBorderRadio.Location = new Point(16, 75);
-            RegionDottedBorderRadio.Name = "RegionDottedBorderRadio";
-            RegionDottedBorderRadio.Size = new Size(14, 13);
-            RegionDottedBorderRadio.TabIndex = 103;
-            RegionDottedBorderRadio.UseVisualStyleBackColor = true;
-            RegionDottedBorderRadio.CheckedChanged += RegionDottedBorderRadio_CheckedChanged;
-            // 
-            // RegionSolidBorderRadio
-            // 
-            RegionSolidBorderRadio.AutoSize = true;
-            RegionSolidBorderRadio.BackgroundImageLayout = ImageLayout.Stretch;
-            RegionSolidBorderRadio.Checked = true;
-            RegionSolidBorderRadio.Location = new Point(16, 50);
-            RegionSolidBorderRadio.Name = "RegionSolidBorderRadio";
-            RegionSolidBorderRadio.Size = new Size(14, 13);
-            RegionSolidBorderRadio.TabIndex = 102;
-            RegionSolidBorderRadio.TabStop = true;
-            RegionSolidBorderRadio.UseVisualStyleBackColor = true;
-            RegionSolidBorderRadio.CheckedChanged += RegionSolidBorderRadio_CheckedChanged;
             // 
             // OverlayToolPanel
             // 
@@ -8919,6 +8667,258 @@
             label26.TabIndex = 0;
             label26.Text = "Drawing";
             // 
+            // RegionToolPanel
+            // 
+            RegionToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            RegionToolPanel.BackColor = SystemColors.Control;
+            RegionToolPanel.Controls.Add(label90);
+            RegionToolPanel.Controls.Add(LightSolidRegionBorderPicture);
+            RegionToolPanel.Controls.Add(GradientRegionBorderPicture);
+            RegionToolPanel.Controls.Add(SolidAndDashRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DoubleSolidRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DashDotDotRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DashDotRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DashedRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DottedRegionBorderPicture);
+            RegionToolPanel.Controls.Add(SolidRegionBorderPicture);
+            RegionToolPanel.Controls.Add(RegionDoubleSolidBorderRadio);
+            RegionToolPanel.Controls.Add(RegionBorderedLightSolidRadio);
+            RegionToolPanel.Controls.Add(RegionBorderedGradientRadio);
+            RegionToolPanel.Controls.Add(RegionSolidAndDashesBorderRadio);
+            RegionToolPanel.Controls.Add(RegionDashDotDotBorderRadio);
+            RegionToolPanel.Controls.Add(RegionDashDotBorderRadio);
+            RegionToolPanel.Controls.Add(RegionDashBorderRadio);
+            RegionToolPanel.Controls.Add(RegionDottedBorderRadio);
+            RegionToolPanel.Controls.Add(RegionSolidBorderRadio);
+            RegionToolPanel.Location = new Point(1421, 90);
+            RegionToolPanel.Margin = new Padding(0);
+            RegionToolPanel.Name = "RegionToolPanel";
+            RegionToolPanel.Size = new Size(152, 806);
+            RegionToolPanel.TabIndex = 25;
+            // 
+            // label90
+            // 
+            label90.AutoSize = true;
+            label90.CausesValidation = false;
+            label90.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label90.ForeColor = SystemColors.ControlDarkDark;
+            label90.Location = new Point(17, 22);
+            label90.Name = "label90";
+            label90.Size = new Size(93, 20);
+            label90.TabIndex = 120;
+            label90.Text = "Border Style";
+            label90.UseMnemonic = false;
+            // 
+            // LightSolidRegionBorderPicture
+            // 
+            LightSolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            LightSolidRegionBorderPicture.Image = (Image)resources.GetObject("LightSolidRegionBorderPicture.Image");
+            LightSolidRegionBorderPicture.InitialImage = null;
+            LightSolidRegionBorderPicture.Location = new Point(31, 246);
+            LightSolidRegionBorderPicture.Name = "LightSolidRegionBorderPicture";
+            LightSolidRegionBorderPicture.Size = new Size(106, 18);
+            LightSolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            LightSolidRegionBorderPicture.TabIndex = 119;
+            LightSolidRegionBorderPicture.TabStop = false;
+            LightSolidRegionBorderPicture.Click += LightSolidRegionBorderPicture_Click;
+            // 
+            // GradientRegionBorderPicture
+            // 
+            GradientRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            GradientRegionBorderPicture.Image = (Image)resources.GetObject("GradientRegionBorderPicture.Image");
+            GradientRegionBorderPicture.InitialImage = null;
+            GradientRegionBorderPicture.Location = new Point(31, 220);
+            GradientRegionBorderPicture.Name = "GradientRegionBorderPicture";
+            GradientRegionBorderPicture.Size = new Size(106, 18);
+            GradientRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            GradientRegionBorderPicture.TabIndex = 118;
+            GradientRegionBorderPicture.TabStop = false;
+            GradientRegionBorderPicture.Click += GradientRegionBorderPicture_Click;
+            // 
+            // SolidAndDashRegionBorderPicture
+            // 
+            SolidAndDashRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            SolidAndDashRegionBorderPicture.Image = (Image)resources.GetObject("SolidAndDashRegionBorderPicture.Image");
+            SolidAndDashRegionBorderPicture.InitialImage = null;
+            SolidAndDashRegionBorderPicture.Location = new Point(31, 194);
+            SolidAndDashRegionBorderPicture.Name = "SolidAndDashRegionBorderPicture";
+            SolidAndDashRegionBorderPicture.Size = new Size(106, 18);
+            SolidAndDashRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            SolidAndDashRegionBorderPicture.TabIndex = 117;
+            SolidAndDashRegionBorderPicture.TabStop = false;
+            SolidAndDashRegionBorderPicture.Click += SolidAndDashRegionBorderPicture_Click;
+            // 
+            // DoubleSolidRegionBorderPicture
+            // 
+            DoubleSolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DoubleSolidRegionBorderPicture.Image = (Image)resources.GetObject("DoubleSolidRegionBorderPicture.Image");
+            DoubleSolidRegionBorderPicture.InitialImage = null;
+            DoubleSolidRegionBorderPicture.Location = new Point(31, 170);
+            DoubleSolidRegionBorderPicture.Name = "DoubleSolidRegionBorderPicture";
+            DoubleSolidRegionBorderPicture.Size = new Size(106, 18);
+            DoubleSolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DoubleSolidRegionBorderPicture.TabIndex = 116;
+            DoubleSolidRegionBorderPicture.TabStop = false;
+            DoubleSolidRegionBorderPicture.Click += DoubleSolidRegionBorderPicture_Click;
+            // 
+            // DashDotDotRegionBorderPicture
+            // 
+            DashDotDotRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DashDotDotRegionBorderPicture.Image = (Image)resources.GetObject("DashDotDotRegionBorderPicture.Image");
+            DashDotDotRegionBorderPicture.InitialImage = null;
+            DashDotDotRegionBorderPicture.Location = new Point(31, 145);
+            DashDotDotRegionBorderPicture.Name = "DashDotDotRegionBorderPicture";
+            DashDotDotRegionBorderPicture.Size = new Size(106, 18);
+            DashDotDotRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DashDotDotRegionBorderPicture.TabIndex = 115;
+            DashDotDotRegionBorderPicture.TabStop = false;
+            DashDotDotRegionBorderPicture.Click += DashDotDotRegionBorderPicture_Click;
+            // 
+            // DashDotRegionBorderPicture
+            // 
+            DashDotRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DashDotRegionBorderPicture.Image = (Image)resources.GetObject("DashDotRegionBorderPicture.Image");
+            DashDotRegionBorderPicture.InitialImage = null;
+            DashDotRegionBorderPicture.Location = new Point(31, 120);
+            DashDotRegionBorderPicture.Name = "DashDotRegionBorderPicture";
+            DashDotRegionBorderPicture.Size = new Size(106, 18);
+            DashDotRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DashDotRegionBorderPicture.TabIndex = 114;
+            DashDotRegionBorderPicture.TabStop = false;
+            DashDotRegionBorderPicture.Click += DashDotRegionBorderPicture_Click;
+            // 
+            // DashedRegionBorderPicture
+            // 
+            DashedRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DashedRegionBorderPicture.Image = (Image)resources.GetObject("DashedRegionBorderPicture.Image");
+            DashedRegionBorderPicture.InitialImage = null;
+            DashedRegionBorderPicture.Location = new Point(31, 95);
+            DashedRegionBorderPicture.Name = "DashedRegionBorderPicture";
+            DashedRegionBorderPicture.Size = new Size(106, 18);
+            DashedRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DashedRegionBorderPicture.TabIndex = 113;
+            DashedRegionBorderPicture.TabStop = false;
+            DashedRegionBorderPicture.Click += DashedRegionBorderPicture_Click;
+            // 
+            // DottedRegionBorderPicture
+            // 
+            DottedRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DottedRegionBorderPicture.Image = (Image)resources.GetObject("DottedRegionBorderPicture.Image");
+            DottedRegionBorderPicture.InitialImage = null;
+            DottedRegionBorderPicture.Location = new Point(31, 69);
+            DottedRegionBorderPicture.Name = "DottedRegionBorderPicture";
+            DottedRegionBorderPicture.Size = new Size(106, 18);
+            DottedRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DottedRegionBorderPicture.TabIndex = 112;
+            DottedRegionBorderPicture.TabStop = false;
+            DottedRegionBorderPicture.Click += DottedRegionBorderPicture_Click;
+            // 
+            // SolidRegionBorderPicture
+            // 
+            SolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            SolidRegionBorderPicture.Image = (Image)resources.GetObject("SolidRegionBorderPicture.Image");
+            SolidRegionBorderPicture.InitialImage = null;
+            SolidRegionBorderPicture.Location = new Point(31, 45);
+            SolidRegionBorderPicture.Name = "SolidRegionBorderPicture";
+            SolidRegionBorderPicture.Size = new Size(106, 18);
+            SolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            SolidRegionBorderPicture.TabIndex = 111;
+            SolidRegionBorderPicture.TabStop = false;
+            SolidRegionBorderPicture.Click += SolidRegionBorderPicture_Click;
+            // 
+            // RegionDoubleSolidBorderRadio
+            // 
+            RegionDoubleSolidBorderRadio.AutoSize = true;
+            RegionDoubleSolidBorderRadio.Location = new Point(16, 175);
+            RegionDoubleSolidBorderRadio.Name = "RegionDoubleSolidBorderRadio";
+            RegionDoubleSolidBorderRadio.Size = new Size(14, 13);
+            RegionDoubleSolidBorderRadio.TabIndex = 110;
+            RegionDoubleSolidBorderRadio.UseVisualStyleBackColor = true;
+            RegionDoubleSolidBorderRadio.CheckedChanged += RegionDoubleSolidBorderRadio_CheckedChanged;
+            // 
+            // RegionBorderedLightSolidRadio
+            // 
+            RegionBorderedLightSolidRadio.AutoSize = true;
+            RegionBorderedLightSolidRadio.Location = new Point(16, 251);
+            RegionBorderedLightSolidRadio.Name = "RegionBorderedLightSolidRadio";
+            RegionBorderedLightSolidRadio.Size = new Size(14, 13);
+            RegionBorderedLightSolidRadio.TabIndex = 109;
+            RegionBorderedLightSolidRadio.UseVisualStyleBackColor = true;
+            RegionBorderedLightSolidRadio.CheckedChanged += RegionBorderedLightSolidRadio_CheckedChanged;
+            // 
+            // RegionBorderedGradientRadio
+            // 
+            RegionBorderedGradientRadio.AutoSize = true;
+            RegionBorderedGradientRadio.Location = new Point(16, 225);
+            RegionBorderedGradientRadio.Name = "RegionBorderedGradientRadio";
+            RegionBorderedGradientRadio.Size = new Size(14, 13);
+            RegionBorderedGradientRadio.TabIndex = 108;
+            RegionBorderedGradientRadio.UseVisualStyleBackColor = true;
+            RegionBorderedGradientRadio.CheckedChanged += RegionBorderedGradientRadio_CheckedChanged;
+            // 
+            // RegionSolidAndDashesBorderRadio
+            // 
+            RegionSolidAndDashesBorderRadio.AutoSize = true;
+            RegionSolidAndDashesBorderRadio.Location = new Point(16, 199);
+            RegionSolidAndDashesBorderRadio.Name = "RegionSolidAndDashesBorderRadio";
+            RegionSolidAndDashesBorderRadio.Size = new Size(14, 13);
+            RegionSolidAndDashesBorderRadio.TabIndex = 107;
+            RegionSolidAndDashesBorderRadio.UseVisualStyleBackColor = true;
+            RegionSolidAndDashesBorderRadio.CheckedChanged += RegionSolidAndDashesBorderRadio_CheckedChanged;
+            // 
+            // RegionDashDotDotBorderRadio
+            // 
+            RegionDashDotDotBorderRadio.AutoSize = true;
+            RegionDashDotDotBorderRadio.Location = new Point(16, 150);
+            RegionDashDotDotBorderRadio.Name = "RegionDashDotDotBorderRadio";
+            RegionDashDotDotBorderRadio.Size = new Size(14, 13);
+            RegionDashDotDotBorderRadio.TabIndex = 106;
+            RegionDashDotDotBorderRadio.UseVisualStyleBackColor = true;
+            RegionDashDotDotBorderRadio.CheckedChanged += RegionDashDotDotBorderRadio_CheckedChanged;
+            // 
+            // RegionDashDotBorderRadio
+            // 
+            RegionDashDotBorderRadio.AutoSize = true;
+            RegionDashDotBorderRadio.Location = new Point(16, 125);
+            RegionDashDotBorderRadio.Name = "RegionDashDotBorderRadio";
+            RegionDashDotBorderRadio.Size = new Size(14, 13);
+            RegionDashDotBorderRadio.TabIndex = 105;
+            RegionDashDotBorderRadio.UseVisualStyleBackColor = true;
+            RegionDashDotBorderRadio.CheckedChanged += RegionDashDotBorderRadio_CheckedChanged;
+            // 
+            // RegionDashBorderRadio
+            // 
+            RegionDashBorderRadio.AutoSize = true;
+            RegionDashBorderRadio.Location = new Point(16, 100);
+            RegionDashBorderRadio.Name = "RegionDashBorderRadio";
+            RegionDashBorderRadio.Size = new Size(14, 13);
+            RegionDashBorderRadio.TabIndex = 104;
+            RegionDashBorderRadio.UseVisualStyleBackColor = true;
+            RegionDashBorderRadio.CheckedChanged += RegionDashBorderRadio_CheckedChanged;
+            // 
+            // RegionDottedBorderRadio
+            // 
+            RegionDottedBorderRadio.AutoSize = true;
+            RegionDottedBorderRadio.Location = new Point(16, 75);
+            RegionDottedBorderRadio.Name = "RegionDottedBorderRadio";
+            RegionDottedBorderRadio.Size = new Size(14, 13);
+            RegionDottedBorderRadio.TabIndex = 103;
+            RegionDottedBorderRadio.UseVisualStyleBackColor = true;
+            RegionDottedBorderRadio.CheckedChanged += RegionDottedBorderRadio_CheckedChanged;
+            // 
+            // RegionSolidBorderRadio
+            // 
+            RegionSolidBorderRadio.AutoSize = true;
+            RegionSolidBorderRadio.BackgroundImageLayout = ImageLayout.Stretch;
+            RegionSolidBorderRadio.Checked = true;
+            RegionSolidBorderRadio.Location = new Point(16, 50);
+            RegionSolidBorderRadio.Name = "RegionSolidBorderRadio";
+            RegionSolidBorderRadio.Size = new Size(14, 13);
+            RegionSolidBorderRadio.TabIndex = 102;
+            RegionSolidBorderRadio.TabStop = true;
+            RegionSolidBorderRadio.UseVisualStyleBackColor = true;
+            RegionSolidBorderRadio.CheckedChanged += RegionSolidBorderRadio_CheckedChanged;
+            // 
             // materialCheckBox1
             // 
             materialCheckBox1.AutoSize = true;
@@ -9132,17 +9132,6 @@
             ApplicationStatusStrip.PerformLayout();
             RealmStudioMainMenuStrip.ResumeLayout(false);
             RealmStudioMainMenuStrip.PerformLayout();
-            RegionToolPanel.ResumeLayout(false);
-            RegionToolPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)SolidAndDashRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DoubleSolidRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DashDotDotRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DashDotRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).EndInit();
             OverlayToolPanel.ResumeLayout(false);
             LabelToolPanel.ResumeLayout(false);
             SymbolToolPanel.ResumeLayout(false);
@@ -9183,6 +9172,17 @@
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).EndInit();
             DrawingToolPanel.ResumeLayout(false);
             DrawingToolPanel.PerformLayout();
+            RegionToolPanel.ResumeLayout(false);
+            RegionToolPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SolidAndDashRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DoubleSolidRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DashDotDotRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DashDotRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).EndInit();
             ResumeLayout(false);
         }
 
@@ -9275,10 +9275,8 @@
         private TrackBar LandEraserSizeTrack;
         private Panel PathToolPanel;
         private Panel LandToolPanel;
-        private Panel OverlayToolPanel;
         private Panel DrawingToolPanel;
         private Label label26;
-        private Panel LabelToolPanel;
         private Panel WaterToolPanel;
         private Panel OceanToolPanel;
         private ToolStrip LandToolStrip;
@@ -9291,7 +9289,6 @@
         private FontAwesome.Sharp.IconToolStripButton PathSelectButton;
         private ToolStrip SymbolToolStrip;
         private ToolStrip LabelToolStrip;
-        private FontAwesome.Sharp.IconToolStripButton LabelSelectButton;
         private ToolStrip OverlayToolStrip;
         private FontAwesome.Sharp.IconToolStripButton ScaleButton;
         private ToolStrip RegionToolStrip;
@@ -9448,31 +9445,14 @@
         private VScrollBar MapRenderVScroll;
         private HScrollBar MapRenderHScroll;
         private GroupBox LabelPresetGroup;
-        private FontAwesome.Sharp.IconButton AddPresetButton;
         private Label label54;
-        private ListBox LabelPresetsListBox;
-        private FontAwesome.Sharp.IconButton RemovePresetButton;
         private GroupBox LabelFontGroup;
-        private FontAwesome.Sharp.IconButton FontColorSelectButton;
         private GroupBox LabelOutlineGroup;
-        private FontAwesome.Sharp.IconButton OutlineColorSelectButton;
-        private FontAwesome.Sharp.IconButton SelectLabelFontButton;
         private GroupBox LabelGlowGroup;
         private Label label56;
-        private TrackBar GlowStrengthTrack;
-        private FontAwesome.Sharp.IconButton GlowColorSelectButton;
         private Label label55;
-        private TrackBar OutlineWidthTrack;
         private GroupBox LabelPathGroup;
-        private FontAwesome.Sharp.IconButton BezierTextPathButton;
-        private FontAwesome.Sharp.IconButton CircleTextPathButton;
         private GroupBox LabelRotationGroup;
-        private TrackBar LabelRotationTrack;
-        private FontAwesome.Sharp.IconToolStripButton PlaceLabelButton;
-        private FontAwesome.Sharp.IconToolStripButton CreateBoxButton;
-        private FontAwesome.Sharp.IconToolStripButton GenerateNameButton;
-        private TableLayoutPanel LabelBoxStyleTable;
-        private FontAwesome.Sharp.IconButton SelectBoxTintButton;
         private PictureBox TopLogoPictureBox;
         private FontAwesome.Sharp.IconButton OceanPaintButton;
         private Label label18;
@@ -9540,7 +9520,6 @@
         private TrackBar WaterColorBrushSizeTrack;
         private Label label62;
         private FontAwesome.Sharp.IconButton WaterPaintColorSelectButton;
-        private TableLayoutPanel FrameStyleTable;
         private FontAwesome.Sharp.IconToolStripButton GridButton;
         private FontAwesome.Sharp.IconToolStripButton MeasureButton;
         private GroupBox FrameValuesGroup;
@@ -9599,19 +9578,9 @@
         private FontAwesome.Sharp.IconButton CreateScaleButton;
         private FontAwesome.Sharp.IconButton DeleteScaleButton;
         private Panel FontSelectionPanel;
-        private GroupBox groupBox5;
-        private ComboBox FontFamilyCombo;
-        private ComboBox FontSizeCombo;
-        private FontAwesome.Sharp.IconButton IncreaseFontSizeButton;
-        private FontAwesome.Sharp.IconButton SetItalicFontButton;
-        private FontAwesome.Sharp.IconButton SetBoldFontButton;
-        private FontAwesome.Sharp.IconButton DecreaseFontSizeButton;
-        private Button FontPanelOKButton;
-        private Label ExampleTextLabel;
         private FontAwesome.Sharp.IconMenuItem ExportMapMenuItem;
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripMenuItem NameGeneratorConfigurationToolStripMenuItem;
-        private NumericUpDown LabelRotationUpDown;
         private FontAwesome.Sharp.IconToolStripButton LandformFillButton;
         private FontAwesome.Sharp.IconToolStripButton LandformClearButton;
         private FontAwesome.Sharp.IconToolStripButton LandformGenerateButton;
@@ -9741,5 +9710,36 @@
         internal TrackBar ScaleOutlineWidthTrack;
         internal FontAwesome.Sharp.IconButton SelectScaleOutlineColorButton;
         internal Panel MapScaleCreatorPanel;
+        internal Panel OverlayToolPanel;
+        internal TableLayoutPanel FrameStyleTable;
+        internal Panel LabelToolPanel;
+        internal FontAwesome.Sharp.IconToolStripButton LabelSelectButton;
+        internal FontAwesome.Sharp.IconButton AddPresetButton;
+        internal ListBox LabelPresetsListBox;
+        internal FontAwesome.Sharp.IconButton RemovePresetButton;
+        internal FontAwesome.Sharp.IconButton FontColorSelectButton;
+        internal FontAwesome.Sharp.IconButton OutlineColorSelectButton;
+        internal FontAwesome.Sharp.IconButton SelectLabelFontButton;
+        internal TrackBar GlowStrengthTrack;
+        internal FontAwesome.Sharp.IconButton GlowColorSelectButton;
+        internal TrackBar OutlineWidthTrack;
+        internal FontAwesome.Sharp.IconButton BezierTextPathButton;
+        internal FontAwesome.Sharp.IconButton CircleTextPathButton;
+        internal TrackBar LabelRotationTrack;
+        internal FontAwesome.Sharp.IconToolStripButton PlaceLabelButton;
+        internal FontAwesome.Sharp.IconToolStripButton CreateBoxButton;
+        internal FontAwesome.Sharp.IconToolStripButton GenerateNameButton;
+        internal TableLayoutPanel LabelBoxStyleTable;
+        internal FontAwesome.Sharp.IconButton SelectBoxTintButton;
+        internal GroupBox groupBox5;
+        internal ComboBox FontFamilyCombo;
+        internal ComboBox FontSizeCombo;
+        internal FontAwesome.Sharp.IconButton IncreaseFontSizeButton;
+        internal FontAwesome.Sharp.IconButton SetItalicFontButton;
+        internal FontAwesome.Sharp.IconButton SetBoldFontButton;
+        internal FontAwesome.Sharp.IconButton DecreaseFontSizeButton;
+        internal Button FontPanelOKButton;
+        internal Label ExampleTextLabel;
+        internal NumericUpDown LabelRotationUpDown;
     }
 }
