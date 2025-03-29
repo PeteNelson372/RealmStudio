@@ -280,8 +280,8 @@ namespace RealmStudio
         {
             Style = SKPaintStyle.Stroke,
             IsAntialias = true,
-            Color = SKColors.Coral,
-            StrokeWidth = 2,
+            Color = SKColors.Green,
+            StrokeWidth = 3,
             PathEffect = SKPathEffect.CreateDash([4F, 2F], 6F),
         };
 

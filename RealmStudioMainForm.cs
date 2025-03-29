@@ -34,7 +34,6 @@ using System.Reflection;
 using System.Timers;
 using Button = System.Windows.Forms.Button;
 using ComboBox = System.Windows.Forms.ComboBox;
-using Image = System.Drawing.Image;
 using TextBox = System.Windows.Forms.TextBox;
 
 namespace RealmStudio
@@ -1514,7 +1513,7 @@ namespace RealmStudio
 
             LabelPresetsListBox.Refresh();
 
-            AddMapBoxesToLabelBoxTable(AssetManager.MAP_BOX_LIST);
+            BoxMediator.AddMapBoxesToLabelBoxTable(AssetManager.MAP_BOX_LIST);
 
             FrameMediator.AddMapFramesToFrameTable(AssetManager.MAP_FRAME_TEXTURES);
 
@@ -4274,8 +4273,7 @@ namespace RealmStudio
                     // draw box as mouse is moved
                     if (BoxMediator.Box != null && MapStateMediator.SelectedPlacedMapBox != null)
                     {
-                        BoxMediator.DrawBoxOnWorkLayer(MapStateMediator.CurrentMap, BoxMediator.Box,
-                            MapStateMediator.SelectedPlacedMapBox, zoomedScrolledPoint, MapStateMediator.PreviousCursorPoint);
+                        BoxMediator.DrawBoxOnWorkLayer(zoomedScrolledPoint, MapStateMediator.PreviousCursorPoint);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -5175,12 +5173,7 @@ namespace RealmStudio
 
                             if (MapStateMediator.SelectedPlacedMapBox != null)
                             {
-                                Cmd_DeleteLabelBox cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedPlacedMapBox);
-                                CommandManager.AddCommand(cmd);
-                                cmd.DoOperation();
-
-                                MapStateMediator.CurrentMap.IsSaved = false;
-                                MapStateMediator.SelectedPlacedMapBox = null;
+                                BoxManager.Delete(MapStateMediator.CurrentMap, null);
                             }
 
                             SKGLRenderControl.Invalidate();
@@ -7748,40 +7741,7 @@ namespace RealmStudio
             }
         }
 
-        private void AddMapBoxesToLabelBoxTable(List<MapBox> mapBoxes)
-        {
-            LabelBoxStyleTable.Hide();
-            LabelBoxStyleTable.Controls.Clear();
-            foreach (MapBox box in mapBoxes)
-            {
-                if (box.BoxBitmap == null && !string.IsNullOrEmpty(box.BoxBitmapPath))
-                {
-                    if (File.Exists(box.BoxBitmapPath))
-                    {
-                        box.BoxBitmap ??= new Bitmap(box.BoxBitmapPath);
-                    }
-                }
 
-                if (box.BoxBitmap != null)
-                {
-                    PictureBox pb = new()
-                    {
-                        Tag = box,
-                        SizeMode = PictureBoxSizeMode.Zoom,
-                        Image = (Image)box.BoxBitmap.Clone(),
-                    };
-
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-                    pb.MouseClick += BoxMediator.MapBoxPictureBox_MouseClick;
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-
-                    LabelBoxStyleTable.Controls.Add(pb);
-                }
-
-            }
-            LabelBoxStyleTable.Show();
-            LabelBoxStyleTable.Refresh();
-        }
 
         private void UpdateSelectedLabelOnUIChange()
         {
@@ -8258,22 +8218,7 @@ namespace RealmStudio
         private void SelectBoxTintButton_Click(object sender, EventArgs e)
         {
             Color boxColor = UtilityMethods.SelectColorFromDialog(this, SelectBoxTintButton.BackColor);
-
-            if (boxColor.ToArgb() != Color.Empty.ToArgb())
-            {
-                SelectBoxTintButton.BackColor = boxColor;
-
-                SelectBoxTintButton.Refresh();
-
-                if (MapStateMediator.SelectedPlacedMapBox != null)
-                {
-                    Cmd_ChangeBoxColor cmd = new(MapStateMediator.SelectedPlacedMapBox, boxColor);
-                    CommandManager.AddCommand(cmd);
-                    cmd.DoOperation();
-
-                    SKGLRenderControl.Invalidate();
-                }
-            }
+            BoxMediator.BoxTint = boxColor;
         }
 
         private void GenerateNameButton_Click(object sender, EventArgs e)

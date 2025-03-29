@@ -58,10 +58,11 @@ namespace RealmStudio
             SKBitmap b = BoxMediator.Box.BoxBitmap.ToSKBitmap();
             SKBitmap resizedBitmap = b.Resize(new SKSizeI((int)BoxMediator.BoxRect.Width, (int)BoxMediator.BoxRect.Height), SKSamplingOptions.Default);
 
-            newPlacedMapBox.SetBoxBitmap(resizedBitmap);
+            newPlacedMapBox.BoxBitmap = resizedBitmap.Copy();
             newPlacedMapBox.Width = resizedBitmap.Width;
             newPlacedMapBox.Height = resizedBitmap.Height;
 
+            resizedBitmap.Dispose();
             PaintObjects.BoxPaint.Dispose();
 
             PaintObjects.BoxPaint = new()
@@ -83,16 +84,41 @@ namespace RealmStudio
 
         public static bool Delete(RealmStudioMap? map, IMapComponent? component)
         {
-            throw new NotImplementedException();
+            if (MapStateMediator.SelectedPlacedMapBox == null) return false;
+
+            Cmd_DeleteLabelBox cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedPlacedMapBox);
+            CommandManager.AddCommand(cmd);
+            cmd.DoOperation();
+
+            MapStateMediator.CurrentMap.IsSaved = false;
+            MapStateMediator.SelectedPlacedMapBox = null;
+
+            return true;
         }
 
         public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
         {
-            throw new NotImplementedException();
+            List<MapComponent> mapLabelComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BOXLAYER).MapLayerComponents;
+
+            for (int i = 0; i < mapLabelComponents.Count; i++)
+            {
+                if (mapLabelComponents[i] is PlacedMapBox mapBox && mapBox.BoxGuid.ToString() == componentGuid.ToString())
+                {
+                    return mapBox;
+                }
+            }
+
+            return null;
         }
 
         public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
         {
+            ArgumentNullException.ThrowIfNull(BoxMediator);
+            if (MapStateMediator.SelectedPlacedMapBox == null) return false;
+
+            Cmd_ChangeBoxColor cmd = new(MapStateMediator.SelectedPlacedMapBox, BoxMediator.BoxTint);
+            CommandManager.AddCommand(cmd);
+            cmd.DoOperation();
 
             return true;
         }
@@ -129,11 +155,21 @@ namespace RealmStudio
                 }
                 else
                 {
+                    if (MapStateMediator.SelectedPlacedMapBox != null)
+                    {
+                        MapStateMediator.SelectedPlacedMapBox.IsSelected = false;
+                    }
+
                     MapStateMediator.SelectedPlacedMapBox = null;
                 }
             }
             else
             {
+                if (MapStateMediator.SelectedPlacedMapBox != null)
+                {
+                    MapStateMediator.SelectedPlacedMapBox.IsSelected = false;
+                }
+
                 MapStateMediator.SelectedPlacedMapBox = null;
             }
 
@@ -146,13 +182,15 @@ namespace RealmStudio
             {
                 X = (int)zoomedScrolledPoint.X,
                 Y = (int)zoomedScrolledPoint.Y,
-
+                Width = 0,
+                Height = 0,
                 BoxCenterLeft = mapBox.BoxCenterLeft,
                 BoxCenterTop = mapBox.BoxCenterTop,
                 BoxCenterRight = mapBox.BoxCenterRight,
                 BoxCenterBottom = mapBox.BoxCenterBottom,
                 BoxTint = boxTintColor
             };
+
 
             PaintObjects.BoxPaint.Dispose();
 
@@ -198,6 +236,11 @@ namespace RealmStudio
                             (center.Top, center.Bottom) = (center.Bottom, center.Top);
                         }
                     }
+
+                    box.BoxCenterBottom = center.Bottom;
+                    box.BoxCenterLeft = center.Left;
+                    box.BoxCenterTop = center.Top;
+                    box.BoxCenterRight = center.Right;
                 }
             }
         }

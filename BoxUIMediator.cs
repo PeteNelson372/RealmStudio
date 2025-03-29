@@ -24,6 +24,7 @@
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.ComponentModel;
+using System.IO;
 
 namespace RealmStudio
 {
@@ -163,30 +164,85 @@ namespace RealmStudio
 
         #region Box UI Methods
 
-        internal void DrawBoxOnWorkLayer(RealmStudioMap map, MapBox mapBox, PlacedMapBox placedMapBox, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
+        internal void DrawBoxOnWorkLayer(SKPoint zoomedScrolledPoint, SKPoint previousPoint)
         {
             SKRect boxRect = new(previousPoint.X, previousPoint.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
 
-            if (boxRect.Width > 0 && boxRect.Height > 0)
+            if (Box != null && MapStateMediator.SelectedPlacedMapBox != null && boxRect.Width > 0 && boxRect.Height > 0)
             {
                 BoxRect = boxRect;
 
-                SKBitmap? b = mapBox.BoxBitmap.ToSKBitmap();
+                SKBitmap? b = Box.BoxBitmap.ToSKBitmap();
 
                 if (b != null)
                 {
-                    SKBitmap resizedBitmap = b.Resize(new SKSizeI((int)boxRect.Width, (int)boxRect.Height), SKSamplingOptions.Default);
+                    float xScale = (float)(boxRect.Width / b.Width);
+                    float yScale = (float)(boxRect.Height / b.Height);
 
-                    placedMapBox.SetBoxBitmap(resizedBitmap);
-                    placedMapBox.Width = resizedBitmap.Width;
-                    placedMapBox.Height = resizedBitmap.Height;
+                    SKRect center = new(MapStateMediator.SelectedPlacedMapBox.BoxCenterLeft,
+                        MapStateMediator.SelectedPlacedMapBox.BoxCenterTop,
+                        MapStateMediator.SelectedPlacedMapBox.BoxCenterRight,
+                        MapStateMediator.SelectedPlacedMapBox.BoxCenterBottom);
 
-                    MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
+                    SKMatrix tm = SKMatrix.CreateScale(xScale, yScale);
+                    SKRect newCenter = tm.MapRect(center);
+
+                    MapStateMediator.SelectedPlacedMapBox.BoxCenterLeft = newCenter.Left;
+                    MapStateMediator.SelectedPlacedMapBox.BoxCenterTop = newCenter.Top;
+                    MapStateMediator.SelectedPlacedMapBox.BoxCenterRight = newCenter.Right;
+                    MapStateMediator.SelectedPlacedMapBox.BoxCenterBottom = newCenter.Bottom;
+
+                    SKBitmap resizedBitmap = b.Resize(new SKImageInfo((int)boxRect.Width, (int)boxRect.Height), SKSamplingOptions.Default);
+
+                    MapStateMediator.SelectedPlacedMapBox.BoxBitmap = resizedBitmap.Copy();
+                    MapStateMediator.SelectedPlacedMapBox.Width = resizedBitmap.Width;
+                    MapStateMediator.SelectedPlacedMapBox.Height = resizedBitmap.Height;
+
+
+
+                    MapLayer workLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER);
                     workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
 
                     workLayer.LayerSurface?.Canvas.DrawBitmap(resizedBitmap, previousPoint, PaintObjects.BoxPaint);
                 }
             }
+        }
+
+
+        internal void AddMapBoxesToLabelBoxTable(List<MapBox> mapBoxes)
+        {
+            MainForm.LabelBoxStyleTable.Hide();
+            MainForm.LabelBoxStyleTable.Controls.Clear();
+            foreach (MapBox box in mapBoxes)
+            {
+                if (box.BoxBitmap == null && !string.IsNullOrEmpty(box.BoxBitmapPath))
+                {
+                    if (File.Exists(box.BoxBitmapPath))
+                    {
+                        box.BoxBitmap ??= new Bitmap(box.BoxBitmapPath);
+                    }
+                }
+
+                if (box.BoxBitmap != null)
+                {
+                    PictureBox pb = new()
+                    {
+                        Tag = box,
+                        SizeMode = PictureBoxSizeMode.Zoom,
+                        Image = (Image)box.BoxBitmap.Clone(),
+                    };
+
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+                    pb.MouseClick += MapBoxPictureBox_MouseClick;
+#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+
+                    MainForm.LabelBoxStyleTable.Controls.Add(pb);
+                }
+
+            }
+            MainForm.LabelBoxStyleTable.Show();
+            MainForm.LabelBoxStyleTable.Refresh();
         }
 
         #endregion

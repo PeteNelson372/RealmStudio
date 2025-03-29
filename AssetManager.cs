@@ -617,7 +617,6 @@ namespace RealmStudio
                             {
                                 mapFrame.FrameBitmap = SKBitmap.Decode(stream);
                             }
-                            ;
 
                             if (rewriteFrameFile)
                             {
@@ -677,6 +676,23 @@ namespace RealmStudio
                         if (File.Exists(mapBox.BoxBitmapPath))
                         {
                             mapBox.BoxBitmap = new Bitmap(mapBox.BoxBitmapPath);
+                            mapBox.BoxBitmap.SetResolution(96.0F, 96.0F);
+
+                            float xScale = (float)(96.0 / mapBox.BoxBitmap.HorizontalResolution);
+                            float yScale = (float)(96.0 / mapBox.BoxBitmap.VerticalResolution);
+
+                            SKRect center = new(mapBox.BoxCenterLeft,
+                                mapBox.BoxCenterTop,
+                                mapBox.BoxCenterRight,
+                                mapBox.BoxCenterBottom);
+
+                            SKMatrix tm = SKMatrix.CreateScale(xScale, yScale);
+                            SKRect newCenter = tm.MapRect(center);
+
+                            mapBox.BoxCenterLeft = newCenter.Left;
+                            mapBox.BoxCenterTop = newCenter.Top;
+                            mapBox.BoxCenterRight = newCenter.Right;
+                            mapBox.BoxCenterBottom = newCenter.Bottom;
 
                             if (rewriteBoxFile)
                             {

@@ -1592,12 +1592,15 @@ namespace RealmStudio
 
         public static void DeselectAllMapComponents(RealmStudioMap map, MapComponent? selectedComponent)
         {
+            // when components are deselected, the MapStateMediator selected objexct has to be updated
+
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
 
             foreach (Landform l in landformLayer.MapLayerComponents.Cast<Landform>())
             {
                 if (selectedComponent != null && selectedComponent is Landform landform && landform == l) continue;
                 l.IsSelected = false;
+                MapStateMediator.SelectedLandform = null;
             }
 
             MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER);
@@ -1617,6 +1620,7 @@ namespace RealmStudio
                     else if (w is River r)
                     {
                         r.IsSelected = false;
+                        MapStateMediator.SelectedWaterFeature = null;
                     }
                 }
                 else if (selectedComponent != null)
@@ -1630,6 +1634,7 @@ namespace RealmStudio
                         else
                         {
                             wf.IsSelected = false;
+                            MapStateMediator.SelectedWaterFeature = null;
                         }
                     }
                     else if (w is River r)
@@ -1641,6 +1646,7 @@ namespace RealmStudio
                         else
                         {
                             r.IsSelected = false;
+                            MapStateMediator.SelectedWaterFeature = null;
                         }
                     }
                 }
@@ -1654,7 +1660,7 @@ namespace RealmStudio
                 mp.IsSelected = false;
                 mp.ShowPathPoints = false;
 
-                if (MapStateMediator.SelectedMapPath?.MapPathGuid.ToString() == mp.MapPathGuid.ToString())
+                if (MapStateMediator.SelectedMapPath == mp)
                 {
                     MapStateMediator.SelectedMapPath = null;
                 }
@@ -1668,7 +1674,7 @@ namespace RealmStudio
                 mp.IsSelected = false;
                 mp.ShowPathPoints = false;
 
-                if (MapStateMediator.SelectedMapPath?.MapPathGuid.ToString() == mp.MapPathGuid.ToString())
+                if (MapStateMediator.SelectedMapPath == mp)
                 {
                     MapStateMediator.SelectedMapPath = null;
                 }
@@ -1711,9 +1717,9 @@ namespace RealmStudio
             SKRect selectedArea = new(previousPoint.X, previousPoint.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
 
             MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
-            MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-            MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawRect(selectedArea, PaintObjects.LandformAreaSelectPaint);
+            workLayer.LayerSurface?.Canvas.DrawRect(selectedArea, PaintObjects.LandformAreaSelectPaint);
 
             return selectedArea;
         }

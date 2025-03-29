@@ -73,13 +73,24 @@ namespace RealmStudio
 
         public override void Render(SKCanvas canvas)
         {
-            if (BoxBitmap != null)
+            try
             {
-                canvas.DrawBitmapNinePatch(BoxBitmap,
-                    new SKRectI((int)BoxCenterLeft, (int)BoxCenterTop, (int)BoxCenterRight, (int)BoxCenterBottom),
-                    new SKRect(X, Y, X + Width, Y + Height),
-                    BoxPaint);
+                // the box center can be outside the bounds of the bitmap if
+                // the box is drawn to be very narrow in height or width
+                if (BoxBitmap != null)
+                {
+                    canvas.DrawBitmapNinePatch(BoxBitmap,
+                        new SKRectI((int)BoxCenterLeft, (int)BoxCenterTop, (int)BoxCenterRight, (int)BoxCenterBottom),
+                        new SKRect(X, Y, X + Width, Y + Height),
+                        BoxPaint);
+
+                    if (IsSelected)
+                    {
+                        canvas.DrawRect(X, Y, Width, Height, PaintObjects.BoxSelectPaint);
+                    }
+                }
             }
+            catch { }
         }
 
         private void GetBoxCenterFromMapBox()
