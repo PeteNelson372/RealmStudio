@@ -73,9 +73,9 @@ namespace RealmStudio
             };
 
             MapBuilder.GetMapLayerByIndex(map, newGrid.GridLayerIndex).MapLayerComponents.Add(newGrid);
-            RealmMapState.CurrentMapGrid = newGrid;
+            MapStateMediator.CurrentMapGrid = newGrid;
 
-            return RealmMapState.CurrentMapGrid;
+            return MapStateMediator.CurrentMapGrid;
         }
 
         public static bool Delete(RealmStudioMap? map, IMapComponent? component)
@@ -150,34 +150,32 @@ namespace RealmStudio
             return component;
         }
 
-        public static bool Update(RealmStudioMap? map, RealmMapState? mapState, IUIMediatorObserver? mediator)
+        public static bool Update(RealmStudioMap? map, MapStateMediator? mapState, IUIMediatorObserver? mediator)
         {
             ArgumentNullException.ThrowIfNull(GridUIMediator);
 
-            if (RealmMapState.CurrentMapGrid != null)
+            if (MapStateMediator.CurrentMapGrid != null)
             {
-                RealmMapState.CurrentMapGrid.GridEnabled = GridUIMediator.GridEnabled;
-                RealmMapState.CurrentMapGrid.GridType = GridUIMediator.GridType;
-                RealmMapState.CurrentMapGrid.GridColor = GridUIMediator.GridColor;
-                RealmMapState.CurrentMapGrid.GridLineWidth = GridUIMediator.GridLineWidth;
-                RealmMapState.CurrentMapGrid.GridSize = GridUIMediator.GridSize;
+                MapStateMediator.CurrentMapGrid.GridEnabled = GridUIMediator.GridEnabled;
+                MapStateMediator.CurrentMapGrid.GridType = GridUIMediator.GridType;
+                MapStateMediator.CurrentMapGrid.GridColor = GridUIMediator.GridColor;
+                MapStateMediator.CurrentMapGrid.GridLineWidth = GridUIMediator.GridLineWidth;
+                MapStateMediator.CurrentMapGrid.GridSize = GridUIMediator.GridSize;
 
-                if (RealmMapState.CurrentMapGrid.GridType == MapGridType.FlatHex || RealmMapState.CurrentMapGrid.GridType == MapGridType.PointedHex)
+                if (MapStateMediator.CurrentMapGrid.GridType == MapGridType.FlatHex || MapStateMediator.CurrentMapGrid.GridType == MapGridType.PointedHex)
                 {
-                    RealmMapState.CurrentMapGrid.GridSize /= 2;
+                    MapStateMediator.CurrentMapGrid.GridSize /= 2;
                 }
 
-                RealmMapState.CurrentMapGrid.ShowGridSize = GridUIMediator.ShowGridSize;
+                MapStateMediator.CurrentMapGrid.ShowGridSize = GridUIMediator.ShowGridSize;
 
-                RealmMapState.CurrentMapGrid.GridPaint = new()
+                MapStateMediator.CurrentMapGrid.GridPaint = new()
                 {
                     Style = SKPaintStyle.Stroke,
-                    Color = RealmMapState.CurrentMapGrid.GridColor.ToSKColor(),
-                    StrokeWidth = RealmMapState.CurrentMapGrid.GridLineWidth,
+                    Color = MapStateMediator.CurrentMapGrid.GridColor.ToSKColor(),
+                    StrokeWidth = MapStateMediator.CurrentMapGrid.GridLineWidth,
                     StrokeJoin = SKStrokeJoin.Bevel
                 };
-
-                RealmMapState.GLRenderControl?.Invalidate();
             }
 
             return true;

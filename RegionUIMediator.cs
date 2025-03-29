@@ -30,7 +30,7 @@ namespace RealmStudio
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private readonly RealmStudioMainForm MainForm;
-        private RealmMapState? _mapState;
+        private MapStateMediator? _mapState;
 
         private Color _regionColor = Color.FromArgb(0, 86, 179);
         private int _regionBorderWidth = 8;
@@ -46,7 +46,7 @@ namespace RealmStudio
 
         #region Property Setters/Getters
 
-        public RealmMapState? MapState
+        public MapStateMediator? MapState
         {
             get { return _mapState; }
             set { _mapState = value; }
@@ -108,8 +108,8 @@ namespace RealmStudio
         public void NotifyUpdate(string? changedPropertyName)
         {
             UpdateRegionUI(changedPropertyName);
-            RegionManager.Update(RealmMapState.CurrentMap, MapState, this);
-            RealmMapState.GLRenderControl?.Invalidate();
+            RegionManager.Update(MapStateMediator.CurrentMap, MapState, this);
+            MainForm.SKGLRenderControl.Invalidate();
         }
 
         private void UpdateRegionUI(string? changedPropertyName)

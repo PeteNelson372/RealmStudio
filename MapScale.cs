@@ -226,10 +226,11 @@ namespace RealmStudio
             if (!string.IsNullOrEmpty(ScaleDistanceUnit))
             {
                 // draw the scale unit label
-                int unitLabelX = X + (Width / 2);
+                skScaleFont.MeasureText(ScaleDistanceUnit, out SKRect bounds, ScaleLabelPaint);
+
+                int unitLabelX = (int)(X + (Width / 2) - (bounds.Width / 2.0F));
                 int unitLabelY = Y + Height;
 
-                skScaleFont.MeasureText(ScaleDistanceUnit, out SKRect bounds, ScaleLabelPaint);
                 unitLabelY = (int)(unitLabelY + bounds.Height * 2);
 
                 SKPoint unitLabelPoint = new(unitLabelX, unitLabelY);

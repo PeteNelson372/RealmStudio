@@ -748,6 +748,16 @@ namespace RealmStudio
         private void OkayButton_Click(object sender, EventArgs e)
         {
             Map.MapName = RealmNameTextBox.Text;
+
+            if (MapAreaUnitCombo.SelectedIndex >= 0)
+            {
+                string? areaUnits = (string?)MapAreaUnitCombo.Items[MapAreaUnitCombo.SelectedIndex];
+                if (!string.IsNullOrEmpty(areaUnits))
+                {
+                    Map.MapAreaUnits = areaUnits;
+                }
+            }
+
             Close();
         }
 

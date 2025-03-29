@@ -32,7 +32,7 @@ namespace RealmStudio
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private readonly RealmStudioMainForm MainForm;
-        private RealmMapState? _mapState;
+        private MapStateMediator? _mapState;
 
         private bool _gridEnabled = true;
         private MapGridType _gridType = MapGridType.Square;
@@ -51,7 +51,7 @@ namespace RealmStudio
 
         #region Property Setters/Getters
 
-        public RealmMapState? MapState
+        public MapStateMediator? MapState
         {
             get { return _mapState; }
             set { _mapState = value; }
@@ -170,11 +170,11 @@ namespace RealmStudio
 
         public void NotifyUpdate(string? changedPropertyName)
         {
-            if (RealmMapState.CurrentMap != null)
+            if (MapStateMediator.CurrentMap != null)
             {
                 UpdateGridUI(changedPropertyName);
-                MapGridManager.Update(RealmMapState.CurrentMap, MapState, this);
-                RealmMapState.GLRenderControl?.Invalidate();
+                MapGridManager.Update(MapStateMediator.CurrentMap, MapState, this);
+                MainForm.SKGLRenderControl.Invalidate();
             }
         }
 

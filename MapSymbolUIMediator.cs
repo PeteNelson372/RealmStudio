@@ -9,7 +9,7 @@ namespace RealmStudio
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private readonly RealmStudioMainForm MainForm;
-        private RealmMapState? _mapState;
+        private MapStateMediator? _mapState;
         private TableLayoutPanel _symbolTable;
         private readonly Panel _symbolToolPanel;
 
@@ -41,7 +41,7 @@ namespace RealmStudio
 
         #region Property Setter/Getters
 
-        internal RealmMapState? MapState
+        internal MapStateMediator? MapState
         {
             get { return _mapState; }
             set { _mapState = value; }
@@ -201,10 +201,10 @@ namespace RealmStudio
 
         public void NotifyUpdate(string? changedPropertyName)
         {
-            if (RealmMapState.CurrentMap != null)
+            if (MapStateMediator.CurrentMap != null)
             {
                 UpdateSymbolUI(changedPropertyName);
-                SymbolManager.Update(RealmMapState.CurrentMap, MapState, this);
+                SymbolManager.Update(MapStateMediator.CurrentMap, MapState, this);
             }
         }
 
@@ -316,12 +316,12 @@ namespace RealmStudio
             {
                 if (UseAreaBrush)
                 {
-                    RealmMapState.SelectedBrushSize = AreaBrushSize;
+                    MapStateMediator.MainUIMediator.SelectedBrushSize = AreaBrushSize;
                 }
                 else
                 {
                     AreaBrushSize = 0;
-                    RealmMapState.SelectedBrushSize = 0;
+                    MapStateMediator.MainUIMediator.SelectedBrushSize = 0;
                 }
             }));
         }
@@ -373,7 +373,7 @@ namespace RealmStudio
                 if (RealmStudioMainForm.ModifierKeys == Keys.Shift && clickedSymbol?.SymbolType != MapSymbolType.Marker)
                 {
                     // secondary symbol selection - for additional symbols to be used when painting symbols to the map (forests, etc.)
-                    if (RealmMapState.CurrentDrawingMode == MapDrawingMode.SymbolPlace)
+                    if (MapStateMediator.MainUIMediator.CurrentDrawingMode == MapDrawingMode.SymbolPlace)
                     {
                         if (pb.BackColor == Color.AliceBlue)
                         {
@@ -399,9 +399,7 @@ namespace RealmStudio
                 }
                 else if (RealmStudioMainForm.ModifierKeys == Keys.None)
                 {
-                    RealmMapState.CurrentDrawingMode = MapDrawingMode.SymbolPlace;
-                    MainForm.SetDrawingModeLabel();
-                    RealmMapState.SelectedBrushSize = 0;
+                    MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.SymbolPlace, 0);
 
                     // primary symbol selection                    
                     if (pb.Tag is MapSymbol)
@@ -436,13 +434,13 @@ namespace RealmStudio
                 List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
                 AddSymbolsToSymbolTable(selectedSymbols);
             }
-            else if (e.Button == MouseButtons.Right && RealmMapState.SelectedMapSymbol != null)
+            else if (e.Button == MouseButtons.Right && MapStateMediator.SelectedMapSymbol != null)
             {
-                if (RealmMapState.SelectedMapSymbol.IsGrayscale || RealmMapState.SelectedMapSymbol.UseCustomColors)
+                if (MapStateMediator.SelectedMapSymbol.IsGrayscale || MapStateMediator.SelectedMapSymbol.UseCustomColors)
                 {
                     // if a symbol has been selected and is grayscale or custom colored, then color it with the
                     // selected custom colors
-                    Cmd_PaintSymbol cmd = new(RealmMapState.SelectedMapSymbol,
+                    Cmd_PaintSymbol cmd = new(MapStateMediator.SelectedMapSymbol,
                         SymbolColor1.ToSKColor(), SymbolColor1.ToSKColor(), SymbolColor2.ToSKColor(), SymbolColor2.ToSKColor());
 
                     CommandManager.AddCommand(cmd);
@@ -590,23 +588,20 @@ namespace RealmStudio
 
         internal void ColorSymbols()
         {
-            if (RealmMapState.SelectedMapSymbol != null && RealmMapState.SelectedMapSymbol.IsSelected)
+            if (MapStateMediator.SelectedMapSymbol != null && MapStateMediator.SelectedMapSymbol.IsSelected)
             {
-                SymbolManager.ColorSelectedSymbol(RealmMapState.SelectedMapSymbol);
+                SymbolManager.ColorSelectedSymbol(MapStateMediator.SelectedMapSymbol);
             }
             else
             {
-                RealmMapState.CurrentDrawingMode = MapDrawingMode.SymbolColor;
-                MainForm.SetDrawingModeLabel();
-
                 if (UseAreaBrush)
                 {
-                    RealmMapState.SelectedBrushSize = MainForm.AreaBrushSizeTrack.Value;
-                    AreaBrushSize = RealmMapState.SelectedBrushSize;
+                    MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.SymbolColor, MainForm.AreaBrushSizeTrack.Value);
+                    AreaBrushSize = MapStateMediator.MainUIMediator.SelectedBrushSize;
                 }
                 else
                 {
-                    RealmMapState.SelectedBrushSize = 0;
+                    MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.SymbolColor, 0);
                     AreaBrushSize = 0;
                 }
             }
@@ -646,8 +641,7 @@ namespace RealmStudio
                         pb.Refresh();
 
                         SymbolManager.SelectedSymbolTableMapSymbol = null;
-                        RealmMapState.CurrentDrawingMode = MapDrawingMode.None;
-                        MainForm.SetDrawingModeLabel();
+                        MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.None, 0);
                     }
                 }
             }
@@ -655,9 +649,7 @@ namespace RealmStudio
 
         internal void SelectSymbolsOfType(MapSymbolType symbolType)
         {
-            RealmMapState.CurrentDrawingMode = MapDrawingMode.SymbolPlace;
-            MainForm.SetDrawingModeLabel();
-            RealmMapState.SelectedBrushSize = 0;
+            MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.SymbolPlace, 0);
 
             if (SymbolManager.SelectedSymbolType != symbolType)
             {
@@ -729,7 +721,7 @@ namespace RealmStudio
                 }
             }
 
-            RealmMapMethods.DeselectAllMapComponents(RealmMapState.CurrentMap, selectedSymbol);
+            RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, selectedSymbol);
             return selectedSymbol;
         }
 

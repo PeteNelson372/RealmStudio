@@ -22,16 +22,22 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
-using SkiaSharp.Views.Desktop;
+using System.ComponentModel;
 
 namespace RealmStudio
 {
-    internal class RealmMapState
+    internal class MapStateMediator
     {
-        private static RealmStudioMap _currentMap = new();
-        private static SKGLControl? _glControl;
+        public static event PropertyChangedEventHandler? PropertyChanged;
 
-        private static MapDrawingMode _currentDrawingMode = MapDrawingMode.None;
+        private static RealmStudioMap _currentMap = new();
+
+        private static MainFormUIMediator? _mainFormUIMediator;
+        private static MapGridUIMediator? _gridUIMediator;
+        private static MapSymbolUIMediator? _symbolUIMediator;
+        private static RegionUIMediator? _regionUIMediator;
+        private static MapMeasureUIMediator? _measureUIMediator;
+        private static MapScaleUIMediator? _scaleUIMediator;
 
         // objects that are currently being created/updated/deleted/etc.
         private static Landform? _currentLandform;
@@ -41,6 +47,7 @@ namespace RealmStudio
         private static MapPath? _currentMapPath;
         private static MapGrid? _currentMapGrid;
         private static MapMeasure? _currentMapMeasure;
+        private static MapScale? _currentMapScale;
         private static MapRegion? _currentMapRegion;
         private static LayerPaintStroke? _currentPaintStroke;
 
@@ -60,13 +67,7 @@ namespace RealmStudio
         private static SKRect _selectedRealmArea = SKRect.Empty;
         private static SKRect _previousSelectedRealmArea = SKRect.Empty;
         private static Font _selectedLabelFont = new("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
-        private static Font _selectedMapScaleFont = new("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
 
-        // UI values (TODO: maybe move into UIMediatorObserver for main form?)
-        private static int _selectedBrushSize;
-        private static double _currentBrushVelocity = 2.0;
-
-        private static float _drawingZoom = 1.0f;
 
         // TODO: how are these points related; can some be eliminated?
         private static SKPoint _scrollPoint = new(0, 0);
@@ -83,225 +84,236 @@ namespace RealmStudio
         private static readonly double _basePaintEventInterval = 10.0;
         private static readonly int _backupCount = 5;
 
+        internal MapStateMediator()
+        {
+            PropertyChanged += MapStateMediator_PropertyChanged;
+        }
 
+        #region Property Setters/Getters
 
-        public static RealmStudioMap CurrentMap
+        internal static RealmStudioMap CurrentMap
         {
             get { return _currentMap; }
-            set { _currentMap = value; }
+            set { SetPropertyField(nameof(CurrentMap), ref _currentMap, value); }
         }
 
-        public static SKGLControl? GLRenderControl
+        // mediators
+        internal static MainFormUIMediator? MainUIMediator
         {
-            get { return _glControl; }
-            set { _glControl = value; }
+            get { return _mainFormUIMediator; }
+            set { _mainFormUIMediator = value; }
         }
 
-        public static MapDrawingMode CurrentDrawingMode
+        internal static MapGridUIMediator? GridUIMediator
         {
-            get { return _currentDrawingMode; }
-            set { _currentDrawingMode = value; }
+            get { return _gridUIMediator; }
+            set { _gridUIMediator = value; }
         }
 
-        public static Landform? CurrentLandform
+        internal static MapSymbolUIMediator? SymbolUIMediator
+        {
+            get { return _symbolUIMediator; }
+            set { _symbolUIMediator = value; }
+        }
+
+        internal static RegionUIMediator? RegionUIMediator
+        {
+            get { return _regionUIMediator; }
+            set { _regionUIMediator = value; }
+        }
+
+        internal static MapMeasureUIMediator? MeasureUIMediator
+        {
+            get { return _measureUIMediator; }
+            set { _measureUIMediator = value; }
+        }
+
+        internal static MapScaleUIMediator? ScaleUIMediator
+        {
+            get { return _scaleUIMediator; }
+            set { _scaleUIMediator = value; }
+        }
+
+        // map state properties
+        internal static Landform? CurrentLandform
         {
             get { return _currentLandform; }
             set { _currentLandform = value; }
         }
-        public static MapWindrose? CurrentWindrose
+        internal static MapWindrose? CurrentWindrose
         {
             get { return _currentWindrose; }
             set { _currentWindrose = value; }
         }
-        public static WaterFeature? CurrentWaterFeature
+        internal static WaterFeature? CurrentWaterFeature
         {
             get { return _currentWaterFeature; }
             set { _currentWaterFeature = value; }
         }
 
-        public static River? CurrentRiver
+        internal static River? CurrentRiver
         {
             get { return _currentRiver; }
             set { _currentRiver = value; }
         }
 
-        public static MapPath? CurrentMapPath
+        internal static MapPath? CurrentMapPath
         {
             get { return _currentMapPath; }
             set { _currentMapPath = value; }
         }
 
-        public static MapGrid? CurrentMapGrid
+        internal static MapGrid? CurrentMapGrid
         {
             get { return _currentMapGrid; }
             set { _currentMapGrid = value; }
         }
 
-        public static MapMeasure? CurrentMapMeasure
+        internal static MapMeasure? CurrentMapMeasure
         {
             get { return _currentMapMeasure; }
             set { _currentMapMeasure = value; }
         }
 
-        public static MapRegion? CurrentMapRegion
+        internal static MapScale? CurrentMapScale
+        {
+            get { return _currentMapScale; }
+            set { _currentMapScale = value; }
+        }
+
+        internal static MapRegion? CurrentMapRegion
         {
             get { return _currentMapRegion; }
             set { _currentMapRegion = value; }
         }
 
-        public static LayerPaintStroke? CurrentLayerPaintStroke
+        internal static LayerPaintStroke? CurrentLayerPaintStroke
         {
             get { return _currentPaintStroke; }
             set { _currentPaintStroke = value; }
         }
 
-        public static Landform? SelectedLandform
+        internal static Landform? SelectedLandform
         {
             get { return _selectedLandform; }
             set { _selectedLandform = value; }
         }
 
-        public static MapPath? SelectedMapPath
+        internal static MapPath? SelectedMapPath
         {
             get { return _selectedMapPath; }
             set { _selectedMapPath = value; }
         }
 
-        public static MapPathPoint? SelectedMapPathPoint
+        internal static MapPathPoint? SelectedMapPathPoint
         {
             get { return _selectedMapPathPoint; }
             set { _selectedMapPathPoint = value; }
         }
 
-        public static MapSymbol? SelectedMapSymbol
+        internal static MapSymbol? SelectedMapSymbol
         {
             get { return _selectedMapSymbol; }
             set { _selectedMapSymbol = value; }
         }
 
-        public static MapBox? SelectedMapBox
+        internal static MapBox? SelectedMapBox
         {
             get { return _selectedMapBox; }
             set { _selectedMapBox = value; }
         }
 
-        public static PlacedMapBox? SelectedPlacedMapBox
+        internal static PlacedMapBox? SelectedPlacedMapBox
         {
             get { return _selectedPlacedMapBox; }
             set { _selectedPlacedMapBox = value; }
         }
 
-        public static MapLabel? SelectedMapLabel
+        internal static MapLabel? SelectedMapLabel
         {
             get { return _selectedMapLabel; }
             set { _selectedMapLabel = value; }
         }
 
-        public static MapScale? SelectedMapScale
+        internal static MapScale? SelectedMapScale
         {
             get { return _selectedMapScale; }
             set { _selectedMapScale = value; }
         }
 
-        public static IWaterFeature? SelectedWaterFeature
+        internal static IWaterFeature? SelectedWaterFeature
         {
             get { return _selectedWaterFeature; }
             set { _selectedWaterFeature = value; }
         }
 
-        public static MapRiverPoint? SelectedRiverPoint
+        internal static MapRiverPoint? SelectedRiverPoint
         {
             get { return _selectedRiverPoint; }
             set { _selectedRiverPoint = value; }
         }
 
-        public static ColorPaintBrush SelectedColorPaintBrush
+        internal static ColorPaintBrush SelectedColorPaintBrush
         {
             get { return _selectedColorPaintBrush; }
             set { _selectedColorPaintBrush = value; }
         }
 
-        public static GeneratedLandformType GeneratedLandformType
+        internal static GeneratedLandformType GeneratedLandformType
         {
             get { return _selectedLandformType; }
             set { _selectedLandformType = value; }
         }
 
-        public static SKRect SelectedRealmArea
+        internal static SKRect SelectedRealmArea
         {
             get { return _selectedRealmArea; }
             set { _selectedRealmArea = value; }
         }
 
-        public static SKRect PreviousSelectedRealmArea
+        internal static SKRect PreviousSelectedRealmArea
         {
             get { return _previousSelectedRealmArea; }
             set { _previousSelectedRealmArea = value; }
         }
 
-        public static Font SelectedLabelFont
+        internal static Font SelectedLabelFont
         {
             get { return _selectedLabelFont; }
             set { _selectedLabelFont = value; }
         }
 
-        public static Font SelectedMapScaleFont
-        {
-            get { return _selectedMapScaleFont; }
-            set { _selectedMapScaleFont = value; }
-        }
-
-        // UI values
-
-        public static int SelectedBrushSize
-        {
-            get { return _selectedBrushSize; }
-            set { _selectedBrushSize = value; }
-        }
-
-        public static double CurrentBrushVelocity
-        {
-            get { return _currentBrushVelocity; }
-            set { _currentBrushVelocity = value; }
-        }
-
-        public static float DrawingZoom
-        {
-            get { return _drawingZoom; }
-            set { _drawingZoom = value; }
-        }
-
-        public static SKPoint ScrollPoint
+        internal static SKPoint ScrollPoint
         {
             get { return _scrollPoint; }
             set { _scrollPoint = value; }
         }
 
-        public static SKPoint DrawingPoint
+        internal static SKPoint DrawingPoint
         {
             get { return _drawingPoint; }
             set { _drawingPoint = value; }
         }
 
-        public static SKPoint CurrentMouseLocation
+        internal static SKPoint CurrentMouseLocation
         {
             get { return _currentMouseLocation; }
             set { _currentMouseLocation = value; }
         }
 
-        public static SKPoint PreviousMouseLocation
+        internal static SKPoint PreviousMouseLocation
         {
             get { return _previousMouseLocation; }
             set { _previousMouseLocation = value; }
         }
 
-        public static SKPoint CurrentCursorPoint
+        internal static SKPoint CurrentCursorPoint
         {
             get { return _currentCursorPoint; }
             set { _currentCursorPoint = value; }
         }
 
-        public static SKPoint PreviousCursorPoint
+        internal static SKPoint PreviousCursorPoint
         {
             get { return _previousCursorPoint; }
             set { _previousCursorPoint = value; }
@@ -309,19 +321,69 @@ namespace RealmStudio
 
         // default values
 
-        public static Font DefaultLabelFont
+        internal static Font DefaultLabelFont
         {
             get { return _defaultLabelFont; }
         }
 
-        public static double BasePaintEventInterval
+        internal static double BasePaintEventInterval
         {
             get { return _basePaintEventInterval; }
         }
 
-        public static int BackupCount
+        internal static int BackupCount
         {
             get { return _backupCount; }
         }
+
+        #endregion
+
+        #region Property Change Handler Methods
+        protected static void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(null, e);
+        }
+
+        protected static void SetPropertyField<T>(string propertyName, ref T field, T newValue)
+        {
+            if (!EqualityComparer<T>.Default.Equals(field, newValue))
+            {
+                field = newValue;
+                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public static void NotifyUpdate(string? changedPropertyName)
+        {
+            switch (changedPropertyName)
+            {
+                case "CurrentMap":
+                    {
+                        if (ScaleUIMediator != null)
+                        {
+                            ScaleUIMediator.ScaleUnitsText = CurrentMap.MapAreaUnits;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        private static void MapStateMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            // this event handler is called whenever a property is set
+            // using the SetPropertyField method
+
+            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
+
+            NotifyUpdate(e.PropertyName);
+        }
+
+        #endregion
     }
 }

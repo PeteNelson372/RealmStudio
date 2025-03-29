@@ -52,21 +52,21 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(RegionUIMediator);
 
-            RealmMapState.CurrentMapRegion = new()
+            MapStateMediator.CurrentMapRegion = new()
             {
-                ParentMap = RealmMapState.CurrentMap,
+                ParentMap = MapStateMediator.CurrentMap,
             };
 
             Update(map, null, null);
 
-            return RealmMapState.CurrentMapRegion;
+            return MapStateMediator.CurrentMapRegion;
         }
 
-        public static bool Update(RealmStudioMap? map, RealmMapState? realmMapState, IUIMediatorObserver? mediator)
+        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
         {
             ArgumentNullException.ThrowIfNull(RegionUIMediator);
 
-            MapRegion? mapRegion = RealmMapState.CurrentMapRegion;
+            MapRegion? mapRegion = MapStateMediator.CurrentMapRegion;
             if (mapRegion == null) return false;
 
             mapRegion.RegionBorderColor = RegionUIMediator.RegionColor;

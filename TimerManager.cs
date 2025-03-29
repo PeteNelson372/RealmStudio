@@ -29,23 +29,29 @@ namespace RealmStudio
 {
     internal class TimerManager
     {
-        private static MapSymbolUIMediator? _symbolUIMediator;
+        private readonly RealmStudioMainForm MainForm;
+        private MapSymbolUIMediator? _symbolUIMediator;
 
-        private static System.Timers.Timer? _autosaveTimer;
-        private static System.Timers.Timer? _brushTimer;
-        private static System.Timers.Timer? _symbolAreaBrushTimer;
+        private System.Timers.Timer? _autosaveTimer;
+        private System.Timers.Timer? _brushTimer;
+        private System.Timers.Timer? _symbolAreaBrushTimer;
 
-        private static bool autosaveEnabled;
-        private static bool brushTimerEnabled;
-        private static bool symbolAreaBrushEnabled;
+        private bool autosaveEnabled;
+        private bool brushTimerEnabled;
+        private bool symbolAreaBrushEnabled;
 
-        internal static MapSymbolUIMediator? SymbolUIMediator
+        public TimerManager(RealmStudioMainForm mainForm)
+        {
+            MainForm = mainForm;
+        }
+
+        internal MapSymbolUIMediator? SymbolUIMediator
         {
             get { return _symbolUIMediator; }
             set { _symbolUIMediator = value; }
         }
 
-        public static bool AutosaveEnabled
+        public bool AutosaveEnabled
         {
             get { return autosaveEnabled; }
             set
@@ -63,7 +69,7 @@ namespace RealmStudio
             }
         }
 
-        internal static bool BrushTimerEnabled
+        internal bool BrushTimerEnabled
         {
             get { return brushTimerEnabled; }
             set
@@ -81,7 +87,7 @@ namespace RealmStudio
             }
         }
 
-        internal static bool SymbolAreaBrushTimerEnabled
+        internal bool SymbolAreaBrushTimerEnabled
         {
             get { return symbolAreaBrushEnabled; }
             set
@@ -99,7 +105,7 @@ namespace RealmStudio
             }
         }
 
-        internal static void StartAutosaveTimer()
+        internal void StartAutosaveTimer()
         {
             // stop the autosave timer
             StopAutosaveTimer();
@@ -114,34 +120,34 @@ namespace RealmStudio
             {
                 Interval = saveIntervalMillis,
                 AutoReset = true,
-                SynchronizingObject = RealmMapState.GLRenderControl
+                SynchronizingObject = MainForm,
             };
 
             _autosaveTimer.Elapsed += new ElapsedEventHandler(AutosaveTimerEventHandler);
             _autosaveTimer.Start();
         }
 
-        internal static void StopAutosaveTimer()
+        internal void StopAutosaveTimer()
         {
             _autosaveTimer?.Stop();
             _autosaveTimer?.Dispose();
             _autosaveTimer = null;
         }
 
-        private static void AutosaveTimerEventHandler(object? sender, ElapsedEventArgs e)
+        private void AutosaveTimerEventHandler(object? sender, ElapsedEventArgs e)
         {
             try
             {
-                RealmMapMethods.PruneOldBackupsOfMap(RealmMapState.CurrentMap, RealmMapState.BackupCount);
+                RealmMapMethods.PruneOldBackupsOfMap(MapStateMediator.CurrentMap, MapStateMediator.BackupCount);
 
-                if (!RealmMapState.CurrentMap.IsSaved)
+                if (!MapStateMediator.CurrentMap.IsSaved)
                 {
-                    if (!string.IsNullOrWhiteSpace(RealmMapState.CurrentMap.MapPath))
+                    if (!string.IsNullOrWhiteSpace(MapStateMediator.CurrentMap.MapPath))
                     {
-                        MapFileMethods.SaveMap(RealmMapState.CurrentMap);
+                        MapFileMethods.SaveMap(MapStateMediator.CurrentMap);
                     }
 
-                    bool saveSuccess = RealmMapMethods.SaveRealmBackup(RealmMapState.CurrentMap, false);
+                    bool saveSuccess = RealmMapMethods.SaveRealmBackup(MapStateMediator.CurrentMap, false);
 
                     if (saveSuccess)
                     {
@@ -160,7 +166,7 @@ namespace RealmStudio
             }
         }
 
-        private static void StartBrushTimer()
+        private void StartBrushTimer()
         {
             if (SymbolUIMediator == null) return;
 
@@ -172,34 +178,37 @@ namespace RealmStudio
             {
                 Interval = 200.0F / SymbolUIMediator.SymbolPlacementRate,
                 AutoReset = true,
-                SynchronizingObject = RealmMapState.GLRenderControl,
+                SynchronizingObject = MainForm.SKGLRenderControl,
             };
 
             _brushTimer.Elapsed += new ElapsedEventHandler(BrushTimerEventHandler);
             _brushTimer.Start();
         }
 
-        private static void StopBrushTimer()
+        private void StopBrushTimer()
         {
             _brushTimer?.Stop();
             _brushTimer?.Dispose();
             _brushTimer = null;
         }
 
-        private static void BrushTimerEventHandler(Object? eventObject, EventArgs eventArgs)
+        private void BrushTimerEventHandler(Object? eventObject, EventArgs eventArgs)
         {
-            if (RealmMapState.GLRenderControl == null) return;
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
 
-            Point cursorPoint = RealmMapState.GLRenderControl.PointToClient(Cursor.Position);
 
-            SKPoint zoomedScrolledPoint = new((cursorPoint.X / RealmMapState.DrawingZoom) + RealmMapState.DrawingPoint.X, (cursorPoint.Y / RealmMapState.DrawingZoom) + RealmMapState.DrawingPoint.Y);
-            RealmMapState.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(zoomedScrolledPoint);
+            Point cursorPoint = MainForm.SKGLRenderControl.PointToClient(Cursor.Position);
 
-            RealmMapState.GLRenderControl.Invalidate();
+            SKPoint zoomedScrolledPoint = new((cursorPoint.X / MapStateMediator.MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.X,
+                (cursorPoint.Y / MapStateMediator.MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.Y);
+
+            MapStateMediator.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(zoomedScrolledPoint);
+
+            MainForm.SKGLRenderControl.Invalidate();
         }
 
 
-        private static void StartSymbolAreaBrushTimer()
+        private void StartSymbolAreaBrushTimer()
         {
             if (SymbolUIMediator == null) return;
 
@@ -218,23 +227,24 @@ namespace RealmStudio
             _symbolAreaBrushTimer.Start();
         }
 
-        private static void StopSymbolAreaBrushTimer()
+        private void StopSymbolAreaBrushTimer()
         {
             _symbolAreaBrushTimer?.Stop();
             _symbolAreaBrushTimer?.Dispose();
             _symbolAreaBrushTimer = null;
         }
 
-        private static void SymbolAreaBrushTimerEventHandler(object? sender, ElapsedEventArgs e)
+        private void SymbolAreaBrushTimerEventHandler(object? sender, ElapsedEventArgs e)
         {
-            if (SymbolUIMediator == null) return;
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(SymbolUIMediator);
 
             float symbolScale = SymbolUIMediator.SymbolScale / 100.0F;
             float symbolRotation = SymbolUIMediator.SymbolRotation;
 
-            RealmMapState.SelectedBrushSize = SymbolUIMediator.AreaBrushSize;
+            MapStateMediator.MainUIMediator.SelectedBrushSize = SymbolUIMediator.AreaBrushSize;
 
-            SymbolManager.PlaceSelectedSymbolInArea(RealmMapState.CurrentCursorPoint,
+            SymbolManager.PlaceSelectedSymbolInArea(MapStateMediator.CurrentCursorPoint,
                 symbolScale, symbolRotation, (int)(SymbolUIMediator.AreaBrushSize / 2.0F));
         }
     }

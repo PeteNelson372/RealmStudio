@@ -96,7 +96,7 @@ namespace RealmStudio
             throw new NotImplementedException();
         }
 
-        public static bool Update(RealmStudioMap? map, RealmMapState? realmMapState, IUIMediatorObserver? mediator)
+        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
         {
             return true;
             //throw new NotImplementedException();
@@ -618,10 +618,10 @@ namespace RealmStudio
 
         internal static void MoveSelectedSymbolInRenderOrder(ComponentMoveDirection direction, int amount = 1, bool toTopBottom = false)
         {
-            if (RealmMapState.SelectedMapSymbol != null)
+            if (MapStateMediator.SelectedMapSymbol != null)
             {
                 // find the selected symbol in the Symbol Layer MapComponents
-                MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(RealmMapState.CurrentMap, MapBuilder.SYMBOLLAYER);
+                MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER);
 
                 List<MapComponent> symbolComponents = symbolLayer.MapLayerComponents;
                 MapSymbol? selectedSymbol = null;
@@ -631,7 +631,7 @@ namespace RealmStudio
                 for (int i = 0; i < symbolComponents.Count; i++)
                 {
                     MapComponent symbolComponent = symbolComponents[i];
-                    if (symbolComponent is MapSymbol symbol && symbol.SymbolGuid.ToString() == RealmMapState.SelectedMapSymbol.SymbolGuid.ToString())
+                    if (symbolComponent is MapSymbol symbol && symbol.SymbolGuid.ToString() == MapStateMediator.SelectedMapSymbol.SymbolGuid.ToString())
                     {
                         selectedSymbolIndex = i;
                         selectedSymbol = symbol;
@@ -744,7 +744,7 @@ namespace RealmStudio
                     // so high values of placement density on the placement density updown increase placement density on the map
                     float placementDensityRadius = bitmapRadius / SymbolUIMediator.SymbolPlacementDensity;
 
-                    bool canPlaceSymbol = CanPlaceSymbol(RealmMapState.CurrentMap, cursorPoint, placementDensityRadius);
+                    bool canPlaceSymbol = CanPlaceSymbol(MapStateMediator.CurrentMap, cursorPoint, placementDensityRadius);
 
                     if (canPlaceSymbol)
                     {
@@ -757,7 +757,7 @@ namespace RealmStudio
                         symbolToPlace.Width = rotatedAndScaledBitmap.Width;
                         symbolToPlace.Height = rotatedAndScaledBitmap.Height;
 
-                        PlaceSymbolOnMap(RealmMapState.CurrentMap, symbolToPlace, rotatedAndScaledBitmap, cursorPoint);
+                        PlaceSymbolOnMap(MapStateMediator.CurrentMap, symbolToPlace, rotatedAndScaledBitmap, cursorPoint);
                     }
                 }
             }
@@ -860,7 +860,7 @@ namespace RealmStudio
 
                     SKPoint cursorPoint = new(mouseCursorPoint.X - (b.Width / 2), mouseCursorPoint.Y - (b.Height / 2));
 
-                    bool canPlaceSymbol = CanPlaceSymbol(RealmMapState.CurrentMap, cursorPoint, placementDensityRadius);
+                    bool canPlaceSymbol = CanPlaceSymbol(MapStateMediator.CurrentMap, cursorPoint, placementDensityRadius);
 
                     if (canPlaceSymbol)
                     {
@@ -871,7 +871,7 @@ namespace RealmStudio
                         symbolToPlace.Width = b.Width;
                         symbolToPlace.Height = b.Height;
 
-                        PlaceVectorSymbolOnMap(RealmMapState.CurrentMap, SelectedSymbolTableMapSymbol, b, cursorPoint);
+                        PlaceVectorSymbolOnMap(MapStateMediator.CurrentMap, SelectedSymbolTableMapSymbol, b, cursorPoint);
                     }
                 }
             }
@@ -969,7 +969,7 @@ namespace RealmStudio
             }
 
             selectedMapSymbol.IsSelected = false;
-            RealmMapState.SelectedMapSymbol = null;
+            MapStateMediator.SelectedMapSymbol = null;
         }
     }
 }

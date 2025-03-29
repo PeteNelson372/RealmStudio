@@ -264,7 +264,6 @@
         private CheckBox ShowGridlinesCheck;
         private FontAwesome.Sharp.IconButton SaveModelButton;
         private GroupBox CameraGroup;
-        private FontAwesome.Sharp.IconButton iconButton1;
         private FontAwesome.Sharp.IconButton ResetCameraButton;
         private ReaLTaiizor.Controls.ThunderControlBox ThreeDViewControlBox;
         private FontAwesome.Sharp.IconButton ChangeAxesButton;
