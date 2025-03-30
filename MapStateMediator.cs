@@ -68,8 +68,6 @@ namespace RealmStudio
         private static GeneratedLandformType _selectedLandformType = GeneratedLandformType.NotSet;
         private static SKRect _selectedRealmArea = SKRect.Empty;
         private static SKRect _previousSelectedRealmArea = SKRect.Empty;
-        private static Font _selectedLabelFont = new("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
-
 
         // TODO: how are these points related; can some be eliminated?
         private static SKPoint _scrollPoint = new(0, 0);
@@ -283,12 +281,6 @@ namespace RealmStudio
         {
             get { return _previousSelectedRealmArea; }
             set { _previousSelectedRealmArea = value; }
-        }
-
-        internal static Font SelectedLabelFont
-        {
-            get { return _selectedLabelFont; }
-            set { _selectedLabelFont = value; }
         }
 
         internal static SKPoint ScrollPoint

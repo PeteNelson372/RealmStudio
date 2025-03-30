@@ -72,8 +72,8 @@ namespace RealmStudio
             Label.LabelGlowStrength = GlowStrength;
             Label.LabelFont = SelectedFont;
 
-            SKFont skLabelFont = MapLabelMethods.GetSkLabelFont(Label.LabelFont);
-            SKPaint paint = MapLabelMethods.CreateLabelPaint(Label.LabelColor);
+            SKFont skLabelFont = LabelManager.GetSkLabelFont(Label.LabelFont);
+            SKPaint paint = LabelManager.CreateLabelPaint(Label.LabelColor);
 
             Label.LabelSKFont.Dispose();
             Label.LabelSKFont = skLabelFont;
@@ -92,8 +92,8 @@ namespace RealmStudio
             Label.LabelGlowStrength = StoredGlowStrength;
             Label.LabelFont = StoredSelectedFont;
 
-            SKFont skLabelFont = MapLabelMethods.GetSkLabelFont(Label.LabelFont);
-            SKPaint paint = MapLabelMethods.CreateLabelPaint(Label.LabelColor);
+            SKFont skLabelFont = LabelManager.GetSkLabelFont(Label.LabelFont);
+            SKPaint paint = LabelManager.CreateLabelPaint(Label.LabelColor);
 
             Label.LabelSKFont.Dispose();
             Label.LabelSKFont = skLabelFont;

@@ -920,8 +920,8 @@ namespace RealmStudio
 
                     newLabel.LabelFont = labelFont;
 
-                    SKFont skLabelFont = MapLabelMethods.GetSkLabelFont(labelFont);
-                    SKPaint paint = MapLabelMethods.CreateLabelPaint(newLabel.LabelColor);
+                    SKFont skLabelFont = LabelManager.GetSkLabelFont(labelFont);
+                    SKPaint paint = LabelManager.CreateLabelPaint(newLabel.LabelColor);
 
                     newLabel.LabelPaint = paint;
                     newLabel.LabelSKFont.Dispose();

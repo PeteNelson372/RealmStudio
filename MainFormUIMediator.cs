@@ -21,6 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using SkiaSharp;
 using System.ComponentModel;
 
 namespace RealmStudio
@@ -138,14 +139,24 @@ namespace RealmStudio
 
         #endregion
 
-        #region UI Update Handlers
+        #region UI Update Methods
+
+        internal static SKPoint CalculateCursorPoint(MouseEventArgs e)
+        {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+
+            SKPoint cursorPoint = new((e.X / MapStateMediator.MainUIMediator.DrawingZoom) - MapStateMediator.DrawingPoint.X,
+                (e.Y / MapStateMediator.MainUIMediator.DrawingZoom) - MapStateMediator.DrawingPoint.Y);
+
+            return cursorPoint;
+        }
 
         internal void SetDrawingMode(MapDrawingMode newDrawingMode, int newBrushSize = -1)
         {
             CurrentDrawingMode = newDrawingMode;
             SetDrawingModeLabel();
 
-            if (newBrushSize > 0)
+            if (newBrushSize >= 0)
             {
                 SelectedBrushSize = newBrushSize;
             }

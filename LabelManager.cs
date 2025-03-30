@@ -29,9 +29,94 @@ using System.Runtime.InteropServices;
 
 namespace RealmStudio
 {
-    internal sealed class MapLabelMethods
+    internal sealed class LabelManager : IMapComponentManager
     {
         public static PrivateFontCollection EMBEDDED_FONTS { get; } = new();
+        private static SKPath? _currentMapLabelPath = new();
+        private static readonly List<SKPoint> _currentMapPathLabelPoints = [];
+
+        private static LabelUIMediator? _labelMediator;
+
+        internal static LabelUIMediator? LabelMediator
+        {
+            get { return _labelMediator; }
+            set { _labelMediator = value; }
+        }
+
+        internal static SKPath? CurrentMapLabelPath
+        {
+            get { return _currentMapLabelPath; }
+            set { _currentMapLabelPath = value; }
+        }
+
+        internal static List<SKPoint> CurrentMapPathLabelPoints
+        {
+            get { return _currentMapPathLabelPoints; }
+        }
+
+        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        {
+            ArgumentNullException.ThrowIfNull(LabelMediator);
+
+            if (MapStateMediator.SelectedMapLabel != null)
+            {
+                // update label rotation
+                Cmd_ChangeLabelRotation cmd = new(MapStateMediator.SelectedMapLabel, LabelMediator.LabelRotation);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                // update other attributes
+                Color labelColor = LabelMediator.LabelColor;
+                Color outlineColor = LabelMediator.OutlineColor;
+                float outlineWidth = LabelMediator.OutlineWidth;
+                Color glowColor = LabelMediator.GlowColor;
+                int glowStrength = (int)LabelMediator.GlowStrength;
+
+                Font tbFont = new(LabelMediator.SelectedLabelFont.FontFamily,
+                    LabelMediator.SelectedLabelFont.Size * 0.75F, LabelMediator.SelectedLabelFont.Style, GraphicsUnit.Point);
+
+                Cmd_ChangeLabelAttributes cmd2 = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapLabel, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, tbFont);
+                CommandManager.AddCommand(cmd2);
+                cmd2.DoOperation();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        {
+            ArgumentNullException.ThrowIfNull(map);
+
+            if (MapStateMediator.SelectedMapLabel != null)
+            {
+                // delete the currently selected label
+                MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LABELLAYER);
+
+                for (int i = labelLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+                {
+                    if (labelLayer.MapLayerComponents[i] is MapLabel l && l.LabelGuid.ToString() == MapStateMediator.SelectedMapLabel.LabelGuid.ToString())
+                    {
+                        labelLayer.MapLayerComponents.RemoveAt(i);
+                        MapStateMediator.SelectedMapLabel = null;
+                        break;
+                    }
+                }
+            }
+
+            return true;
+        }
 
         internal static SKPaint CreateLabelPaint(Color labelColor)
         {
@@ -212,6 +297,25 @@ namespace RealmStudio
             placedMapBox.Y = (int)zoomedScrolledPoint.Y - (placedMapBox.Height / 2);
         }
 
+        internal static void ConstructBezierPathFromPoints()
+        {
+            CurrentMapLabelPath?.Dispose();
+            CurrentMapLabelPath = new();
+
+            if (CurrentMapPathLabelPoints.Count > 2)
+            {
+                CurrentMapLabelPath.MoveTo(CurrentMapPathLabelPoints[0]);
+
+                for (int j = 0; j < CurrentMapPathLabelPoints.Count; j += 3)
+                {
+                    if (j < CurrentMapPathLabelPoints.Count - 2)
+                    {
+                        CurrentMapLabelPath.CubicTo(CurrentMapPathLabelPoints[j], CurrentMapPathLabelPoints[j + 1], CurrentMapPathLabelPoints[j + 2]);
+                    }
+                }
+            }
+        }
+
         internal static SKPath CreateNewArcPath(SKPoint zoomedScrolledPoint, SKPoint previousCursorPoint)
         {
             SKPath newArcPath = new();
@@ -239,8 +343,6 @@ namespace RealmStudio
 
             MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawPath(mapLabelPath, PaintObjects.LabelPathPaint);
         }
-
-
 
         internal static Rectangle GetLabelTextBoxRect(MapLabel mapLabel, SKPoint drawingPoint, float drawingZoom, Size labelSize)
         {
@@ -280,6 +382,11 @@ namespace RealmStudio
             return labelTextBox;
         }
 
-
+        internal static void ResetLabelPath()
+        {
+            CurrentMapLabelPath?.Dispose();
+            CurrentMapLabelPath = new();
+            CurrentMapPathLabelPoints.Clear();
+        }
     }
 }

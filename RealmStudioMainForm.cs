@@ -30,7 +30,6 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
-using System.Reflection;
 using System.Timers;
 using Button = System.Windows.Forms.Button;
 using ComboBox = System.Windows.Forms.ComboBox;
@@ -46,9 +45,6 @@ namespace RealmStudio
         private int MAP_HEIGHT = MapBuilder.MAP_DEFAULT_HEIGHT;
 
         private static System.Timers.Timer? LOCATION_UPDATE_TIMER;
-
-        private static SKPath CURRENT_MAP_LABEL_PATH = new();
-        private static readonly List<SKPoint> CURRENT_MAP_LABEL_PATH_POINTS = [];
 
         internal static readonly System.Windows.Forms.ToolTip TOOLTIP = new();
 
@@ -82,6 +78,12 @@ namespace RealmStudio
         // UI mediator for MapGrid
         private MapGridUIMediator GridUIMediator { get; set; }
 
+        // UI mediator for Labels
+        private LabelUIMediator LabelMediator { get; set; }
+
+        // UI Mediator for Label Presets
+        private LabelPresetUIMediator PresetMediator { get; set; }
+
         // UI mediator for MapMeasure
         private MapMeasureUIMediator MeasureUIMediator { get; set; }
 
@@ -102,7 +104,7 @@ namespace RealmStudio
         *******************************************************************************************************/
         public RealmStudioMainForm(string[] args)
         {
-            AssetManager.InitializeAssetDirectory();
+            AssetManager.InitializeAssetDirectories();
 
             InitializeComponent();
 
@@ -150,11 +152,17 @@ namespace RealmStudio
             GridUIMediator = new MapGridUIMediator(this);
             MapGridManager.GridUIMediator = GridUIMediator;
 
+            LabelMediator = new LabelUIMediator(this);
+            LabelManager.LabelMediator = LabelMediator;
+
             MapRegionUIMediator = new(this);
             RegionManager.RegionUIMediator = MapRegionUIMediator;
 
             MeasureUIMediator = new(this);
             MapMeasureManager.MeasureUIMediator = MeasureUIMediator;
+
+            PresetMediator = new(this);
+            LabelPresetManager.PresetMediator = PresetMediator;
 
             ScaleUIMediator = new(this);
             MapScaleManager.ScaleUIMediator = ScaleUIMediator;
@@ -1485,33 +1493,7 @@ namespace RealmStudio
                 SymbolTagsListBox.Items.Add(tag);
             }
 
-            LabelPresetsListBox.DisplayMember = "LabelPresetName";
-            LabelPresetsListBox.Items.Clear();
-
-            foreach (LabelPreset preset in AssetManager.LABEL_PRESETS)
-            {
-                if (!string.IsNullOrEmpty(preset.LabelPresetTheme)
-                    && AssetManager.CURRENT_THEME != null
-                    && preset.LabelPresetTheme == AssetManager.CURRENT_THEME.ThemeName)
-                {
-                    LabelPresetsListBox.Items.Add(preset);
-                }
-            }
-
-            if (LabelPresetsListBox.Items.Count > 0)
-            {
-                LabelPresetsListBox.SelectedIndex = 0;
-
-                LabelPreset? selectedPreset = AssetManager.LABEL_PRESETS.Find(x => !string.IsNullOrEmpty(((LabelPreset?)LabelPresetsListBox.Items[0])?.LabelPresetName)
-                    && x.LabelPresetName == ((LabelPreset?)LabelPresetsListBox.Items[0])?.LabelPresetName);
-
-                if (selectedPreset != null)
-                {
-                    SetLabelValuesFromPreset(selectedPreset);
-                }
-            }
-
-            LabelPresetsListBox.Refresh();
+            PresetMediator.AddLabelPresets();
 
             BoxMediator.AddMapBoxesToLabelBoxTable(AssetManager.MAP_BOX_LIST);
 
@@ -2145,37 +2127,37 @@ namespace RealmStudio
             FontFamilyCombo.DisplayMember = "Name";
 
             // add embedded fonts
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.Aladin_Regular);
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.BarlowCondensed_Regular);
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.Bilbo_Regular);
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.CinzelDecorative_Regular);
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.EastSeaDokdo_Regular);
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.FrederickatheGreat_Regular);
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.GentiumBookPlus_Bold);
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.IMFellDWPica_Regular);
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.IMFellEnglish_Italic);
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.Katibeh_Regular);
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.Lancelot_Regular);
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.MarkoOne_Regular);
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.Merriweather_Regular);
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.Metamorphous_Regular);
-            MapLabelMethods.AddEmbeddedResourceFont(Properties.Resources.UncialAntiqua_Regular);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.Aladin_Regular);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.BarlowCondensed_Regular);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.Bilbo_Regular);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.CinzelDecorative_Regular);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.EastSeaDokdo_Regular);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.FrederickatheGreat_Regular);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.GentiumBookPlus_Bold);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.IMFellDWPica_Regular);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.IMFellEnglish_Italic);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.Katibeh_Regular);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.Lancelot_Regular);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.MarkoOne_Regular);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.Merriweather_Regular);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.Metamorphous_Regular);
+            LabelManager.AddEmbeddedResourceFont(Properties.Resources.UncialAntiqua_Regular);
 
-            Font aladinFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[0], 12.0F);
-            Font barlowCondensedFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[1], 12.0F);
-            Font bilboFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[2], 12.0F);
-            Font cinzelDecorativeFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[3], 12.0F);
-            Font eastSeaDokdoFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[4], 12.0F);
-            Font frederickaFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[5], 12.0F);
-            Font gentiumBookPlusFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[6], 12.0F);
-            Font imFellDWPicaFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[7], 12.0F);
-            Font imFellEnglishItalicFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[8], 12.0F);
-            Font katibehFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[9], 12.0F);
-            Font lancelotFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[10], 12.0F);
-            Font markoOneFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[11], 12.0F);
-            Font merriweatherFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[12], 12.0F);
-            Font metamorphousFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[13], 12.0F);
-            Font uncialAntiquaFont = new(MapLabelMethods.EMBEDDED_FONTS.Families[14], 12.0F);
+            Font aladinFont = new(LabelManager.EMBEDDED_FONTS.Families[0], 12.0F);
+            Font barlowCondensedFont = new(LabelManager.EMBEDDED_FONTS.Families[1], 12.0F);
+            Font bilboFont = new(LabelManager.EMBEDDED_FONTS.Families[2], 12.0F);
+            Font cinzelDecorativeFont = new(LabelManager.EMBEDDED_FONTS.Families[3], 12.0F);
+            Font eastSeaDokdoFont = new(LabelManager.EMBEDDED_FONTS.Families[4], 12.0F);
+            Font frederickaFont = new(LabelManager.EMBEDDED_FONTS.Families[5], 12.0F);
+            Font gentiumBookPlusFont = new(LabelManager.EMBEDDED_FONTS.Families[6], 12.0F);
+            Font imFellDWPicaFont = new(LabelManager.EMBEDDED_FONTS.Families[7], 12.0F);
+            Font imFellEnglishItalicFont = new(LabelManager.EMBEDDED_FONTS.Families[8], 12.0F);
+            Font katibehFont = new(LabelManager.EMBEDDED_FONTS.Families[9], 12.0F);
+            Font lancelotFont = new(LabelManager.EMBEDDED_FONTS.Families[10], 12.0F);
+            Font markoOneFont = new(LabelManager.EMBEDDED_FONTS.Families[11], 12.0F);
+            Font merriweatherFont = new(LabelManager.EMBEDDED_FONTS.Families[12], 12.0F);
+            Font metamorphousFont = new(LabelManager.EMBEDDED_FONTS.Families[13], 12.0F);
+            Font uncialAntiquaFont = new(LabelManager.EMBEDDED_FONTS.Families[14], 12.0F);
 
             FontFamilyCombo.Items.Add(aladinFont);
             FontFamilyCombo.Items.Add(barlowCondensedFont);
@@ -2301,7 +2283,7 @@ namespace RealmStudio
                 {
                     e.DrawBackground();
 
-                    PanoseFontFamilyTypes familyType = MapLabelMethods.PanoseFontFamilyType(e.Graphics, font);
+                    PanoseFontFamilyTypes familyType = LabelManager.PanoseFontFamilyType(e.Graphics, font);
 
                     // Marlett is a special case of a font family that does not render as text, but its PanoseFontFamily indicates it does
                     if (familyType == PanoseFontFamilyTypes.PanFamilyDecorative
@@ -2414,7 +2396,7 @@ namespace RealmStudio
 
                         SelectLabelFontButton.Refresh();
 
-                        MapStateMediator.SelectedLabelFont = FontPanelManager.FontPanelSelectedFont.SelectedFont;
+                        LabelMediator.SelectedLabelFont = FontPanelManager.FontPanelSelectedFont.SelectedFont;
 
                         if (MapStateMediator.SelectedMapLabel != null)
                         {
@@ -2540,7 +2522,7 @@ namespace RealmStudio
 
             // label
             FontConverter cvt = new();
-            string? fontString = cvt.ConvertToString(MapStateMediator.SelectedLabelFont);
+            string? fontString = cvt.ConvertToString(LabelMediator.SelectedLabelFont);
             theme.LabelFont = fontString ?? string.Empty;
             theme.LabelColor = FontColorSelectButton.BackColor.ToArgb();
             theme.LabelOutlineColor = OutlineColorSelectButton.BackColor.ToArgb();
@@ -3100,32 +3082,7 @@ namespace RealmStudio
 
                 if (themeFilter.ApplyLabelPresetSettings)
                 {
-                    LabelPresetsListBox.Items.Clear();
-
-                    foreach (LabelPreset preset in AssetManager.LABEL_PRESETS)
-                    {
-                        if (!string.IsNullOrEmpty(preset.LabelPresetTheme)
-                            && AssetManager.CURRENT_THEME != null
-                            && preset.LabelPresetTheme == AssetManager.CURRENT_THEME.ThemeName)
-                        {
-                            LabelPresetsListBox.Items.Add(preset);
-                        }
-                    }
-
-                    if (LabelPresetsListBox.Items.Count > 0)
-                    {
-                        LabelPresetsListBox.SelectedIndex = 0;
-
-                        LabelPreset? selectedPreset = AssetManager.LABEL_PRESETS.Find(x => !string.IsNullOrEmpty(((LabelPreset?)LabelPresetsListBox.Items[0])?.LabelPresetName)
-                            && x.LabelPresetName == ((LabelPreset?)LabelPresetsListBox.Items[0])?.LabelPresetName);
-
-                        if (selectedPreset != null)
-                        {
-                            SetLabelValuesFromPreset(selectedPreset);
-                        }
-                    }
-
-                    LabelPresetsListBox.Refresh();
+                    LabelPresetManager.PresetMediator?.AddLabelPresets();
                 }
 
                 if (themeFilter.ApplyLabelSettings)
@@ -3172,11 +3129,11 @@ namespace RealmStudio
                                 catch
                                 {
                                     // couldn't create the font, so try to find it in the list of embedded fonts
-                                    for (int i = 0; i < MapLabelMethods.EMBEDDED_FONTS.Families.Length; i++)
+                                    for (int i = 0; i < LabelManager.EMBEDDED_FONTS.Families.Length; i++)
                                     {
-                                        if (MapLabelMethods.EMBEDDED_FONTS.Families[i].Name == ff)
+                                        if (LabelManager.EMBEDDED_FONTS.Families[i].Name == ff)
                                         {
-                                            themeFont = new Font(MapLabelMethods.EMBEDDED_FONTS.Families[i], fontsize, FontStyle.Regular, GraphicsUnit.Point);
+                                            themeFont = new Font(LabelManager.EMBEDDED_FONTS.Families[i], fontsize, FontStyle.Regular, GraphicsUnit.Point);
                                         }
                                     }
                                 }
@@ -3187,24 +3144,18 @@ namespace RealmStudio
                         {
                             FontPanelManager.FontPanelSelectedFont.SelectedFont = new Font(themeFont.FontFamily, 12);
                             FontPanelManager.FontPanelSelectedFont.FontSize = themeFont.SizeInPoints;
-                            MapStateMediator.SelectedLabelFont = themeFont;
+                            LabelMediator.SelectedLabelFont = themeFont;
                             SelectLabelFontButton.Font = new Font(themeFont.FontFamily, 14);
                             SelectLabelFontButton.Refresh();
                         }
                     }
 
-                    FontColorSelectButton.BackColor = Color.FromArgb(theme.LabelColor ?? Color.FromArgb(61, 53, 30).ToArgb());
-                    FontColorSelectButton.Refresh();
+                    LabelMediator.LabelColor = Color.FromArgb(theme.LabelColor ?? Color.FromArgb(61, 53, 30).ToArgb());
+                    LabelMediator.OutlineColor = Color.FromArgb(theme.LabelOutlineColor ?? Color.FromArgb(161, 214, 202, 171).ToArgb());
+                    LabelMediator.OutlineWidth = (int?)theme.LabelOutlineWidth ?? 0;
+                    LabelMediator.GlowColor = Color.FromArgb(theme.LabelGlowColor ?? Color.White.ToArgb());
+                    LabelMediator.GlowStrength = theme.LabelGlowStrength ?? 0;
 
-                    OutlineColorSelectButton.BackColor = Color.FromArgb(theme.LabelOutlineColor ?? Color.FromArgb(161, 214, 202, 171).ToArgb());
-                    OutlineColorSelectButton.Refresh();
-
-                    OutlineWidthTrack.Value = (int?)theme.LabelOutlineWidth ?? 0;
-                    OutlineWidthTrack.Refresh();
-
-                    GlowColorSelectButton.BackColor = Color.FromArgb(theme.LabelGlowColor ?? Color.White.ToArgb());
-                    GlowStrengthTrack.Value = theme.LabelGlowStrength ?? 0;
-                    GlowStrengthTrack.Refresh();
                 }
             }
             catch
@@ -3296,6 +3247,9 @@ namespace RealmStudio
 
         private void SKGLRenderControl_MouseDown(object sender, MouseEventArgs e)
         {
+            MapStateMediator.CurrentMouseLocation = e.Location.ToSKPoint();
+            MapStateMediator.CurrentCursorPoint = MainFormUIMediator.CalculateCursorPoint(e);
+
             // objects are created and/or initialized on mouse down
             if (e.Button == MouseButtons.Left)
             {
@@ -3319,8 +3273,7 @@ namespace RealmStudio
             }
 
             MapStateMediator.CurrentMouseLocation = e.Location.ToSKPoint();
-            MapStateMediator.CurrentCursorPoint = new((e.X / MainUIMediator.DrawingZoom) - MapStateMediator.DrawingPoint.X,
-                (e.Y / MainUIMediator.DrawingZoom) - MapStateMediator.DrawingPoint.Y);
+            MapStateMediator.CurrentCursorPoint = MainFormUIMediator.CalculateCursorPoint(e);
 
             // objects are drawn or moved on mouse move
             if (e.Button == MouseButtons.Left)
@@ -3345,6 +3298,9 @@ namespace RealmStudio
 
         private void SKGLRenderControl_MouseUp(object sender, MouseEventArgs e)
         {
+            MapStateMediator.CurrentMouseLocation = e.Location.ToSKPoint();
+            MapStateMediator.CurrentCursorPoint = MainFormUIMediator.CalculateCursorPoint(e);
+
             // objects are finalized or reset on mouse up
             if (e.Button == MouseButtons.Left)
             {
@@ -3503,11 +3459,8 @@ namespace RealmStudio
 
         private void LeftButtonMouseDownHandler(MouseEventArgs e, int brushSize)
         {
-            SKPoint zoomedScrolledPoint = new((e.X / MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.X,
-                (e.Y / MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.Y);
-
             // has the map scale been clicked?
-            MapStateMediator.SelectedMapScale = MapScaleManager.SelectMapScale(MapStateMediator.CurrentMap, zoomedScrolledPoint);
+            MapStateMediator.SelectedMapScale = MapScaleManager.SelectMapScale(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
 
             if (MapStateMediator.SelectedMapScale != null)
             {
@@ -3567,7 +3520,7 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Default;
 
-                        MapStateMediator.SelectedLandform = LandformMethods.SelectLandformAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint);
+                        MapStateMediator.SelectedLandform = LandformMethods.SelectLandformAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3576,7 +3529,7 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Default;
 
-                        MapStateMediator.SelectedLandform = LandformMethods.SelectLandformAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint);
+                        MapStateMediator.SelectedLandform = LandformMethods.SelectLandformAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3592,7 +3545,7 @@ namespace RealmStudio
 
                         SetLandformData(MapStateMediator.CurrentLandform);
 
-                        MapStateMediator.CurrentLandform.DrawPath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushSize / 2);
+                        MapStateMediator.CurrentLandform.DrawPath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, brushSize / 2);
 
                         SKGLRenderControl.Refresh();
                     }
@@ -3651,7 +3604,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.WaterFeatureSelect:
                     {
-                        MapStateMediator.SelectedWaterFeature = (IWaterFeature?)SelectWaterFeatureAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint);
+                        MapStateMediator.SelectedWaterFeature = (IWaterFeature?)SelectWaterFeatureAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -3674,7 +3627,7 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        MapStateMediator.CurrentWaterFeature = WaterFeatureMethods.CreateLake(MapStateMediator.CurrentMap, zoomedScrolledPoint,
+                        MapStateMediator.CurrentWaterFeature = WaterFeatureMethods.CreateLake(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint,
                             brushSize, WaterColorSelectionButton.BackColor, ShorelineColorSelectionButton.BackColor);
 
                         if (MapStateMediator.CurrentWaterFeature != null)
@@ -3695,7 +3648,7 @@ namespace RealmStudio
 
                         if (MapStateMediator.CurrentRiver == null)
                         {
-                            MapStateMediator.CurrentRiver = WaterFeatureMethods.CreateRiver(MapStateMediator.CurrentMap, zoomedScrolledPoint, WaterColorSelectionButton.BackColor,
+                            MapStateMediator.CurrentRiver = WaterFeatureMethods.CreateRiver(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, WaterColorSelectionButton.BackColor,
                                 ShorelineColorSelectionButton.BackColor, RiverWidthTrack.Value, RiverSourceFadeInSwitch.Checked,
                                 RiverTextureSwitch.Checked);
 
@@ -3717,7 +3670,7 @@ namespace RealmStudio
                                     mp.IsSelected = false;
                                 }
 
-                                MapStateMediator.SelectedRiverPoint = WaterFeatureMethods.SelectRiverPointAtPoint(river, zoomedScrolledPoint, false);
+                                MapStateMediator.SelectedRiverPoint = WaterFeatureMethods.SelectRiverPointAtPoint(river, MapStateMediator.CurrentCursorPoint, false);
 
                                 if (MapStateMediator.SelectedRiverPoint != null)
                                 {
@@ -3777,12 +3730,12 @@ namespace RealmStudio
                 case MapDrawingMode.PathPaint:
                     {
                         Cursor = Cursors.Cross;
-                        MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
                         if (MapStateMediator.CurrentMapPath == null)
                         {
                             MapStateMediator.CurrentMapPath = MapPathMethods.CreatePath(MapStateMediator.CurrentMap,
-                                zoomedScrolledPoint, GetSelectedPathType(), PathColorSelectButton.BackColor,
+                                MapStateMediator.CurrentCursorPoint, GetSelectedPathType(), PathColorSelectButton.BackColor,
                                 PathWidthTrack.Value, DrawOverSymbolsSwitch.Checked,
                                 AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX]);
 
@@ -3804,7 +3757,8 @@ namespace RealmStudio
                                     mp.IsSelected = false;
                                 }
 
-                                MapStateMediator.SelectedMapPathPoint = MapPathMethods.SelectMapPathPointAtPoint(MapStateMediator.SelectedMapPath, zoomedScrolledPoint, false);
+                                MapStateMediator.SelectedMapPathPoint = MapPathMethods.SelectMapPathPointAtPoint(MapStateMediator.SelectedMapPath,
+                                    MapStateMediator.CurrentCursorPoint, false);
 
                                 if (MapStateMediator.SelectedMapPathPoint != null)
                                 {
@@ -3824,16 +3778,16 @@ namespace RealmStudio
                         }
                         else
                         {
-                            SymbolManager.PlaceSelectedSymbolAtCursor(zoomedScrolledPoint);
+                            SymbolManager.PlaceSelectedSymbolAtCursor(MapStateMediator.CurrentCursorPoint);
                         }
 
-                        MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
                     }
                     break;
                 case MapDrawingMode.SymbolErase:
                     int eraserRadius = SymbolUIMediator.AreaBrushSize / 2;
 
-                    SKPoint eraserCursorPoint = new(zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
+                    SKPoint eraserCursorPoint = new(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
 
                     SymbolManager.RemovePlacedSymbolsFromArea(MapStateMediator.CurrentMap, eraserCursorPoint, eraserRadius);
                     break;
@@ -3841,10 +3795,8 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        CURRENT_MAP_LABEL_PATH.Dispose();
-                        CURRENT_MAP_LABEL_PATH = new();
-
-                        MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
+                        LabelManager.ResetLabelPath();
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
                         MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
                     }
@@ -3852,13 +3804,9 @@ namespace RealmStudio
                 case MapDrawingMode.DrawBezierLabelPath:
                     {
                         Cursor = Cursors.Cross;
+                        LabelManager.ResetLabelPath();
 
-                        CURRENT_MAP_LABEL_PATH.Dispose();
-                        CURRENT_MAP_LABEL_PATH = new();
-
-                        CURRENT_MAP_LABEL_PATH_POINTS.Clear();
-
-                        MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
                         MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
                     }
@@ -3870,11 +3818,11 @@ namespace RealmStudio
                             // initialize new box
                             Cursor = Cursors.Cross;
 
-                            MapStateMediator.CurrentCursorPoint = zoomedScrolledPoint;
-                            MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
+                            MapStateMediator.CurrentCursorPoint = MapStateMediator.CurrentCursorPoint;
+                            MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
                             // creates a temporary box to show on the work layer as the box is being drawn
-                            MapStateMediator.SelectedPlacedMapBox = BoxManager.CreatePlacedMapBox(BoxMediator.Box, zoomedScrolledPoint,
+                            MapStateMediator.SelectedPlacedMapBox = BoxManager.CreatePlacedMapBox(BoxMediator.Box, MapStateMediator.CurrentCursorPoint,
                                 SelectBoxTintButton.BackColor);
                         }
                     }
@@ -3884,12 +3832,12 @@ namespace RealmStudio
                         if (MapStateMediator.CurrentMapMeasure == null)
                         {
                             MapMeasureManager.Create(MapStateMediator.CurrentMap, null);
-                            MapMeasureManager.AddMeasurePoint(zoomedScrolledPoint);
-                            MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
+                            MapMeasureManager.AddMeasurePoint(MapStateMediator.CurrentCursorPoint);
+                            MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
                         }
                         else
                         {
-                            MapMeasureManager.AddMeasurePoint(zoomedScrolledPoint);
+                            MapMeasureManager.AddMeasurePoint(MapStateMediator.CurrentCursorPoint);
                         }
 
                         SKGLRenderControl.Invalidate();
@@ -3910,15 +3858,15 @@ namespace RealmStudio
                             if (ModifierKeys == Keys.Shift)
                             {
                                 RegionManager.SnapRegionToLandformCoastline(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion,
-                                    zoomedScrolledPoint, MapStateMediator.PreviousCursorPoint);
+                                    MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
                             }
                             else
                             {
-                                MapRegionPoint mrp = new(zoomedScrolledPoint);
+                                MapRegionPoint mrp = new(MapStateMediator.CurrentCursorPoint);
                                 MapStateMediator.CurrentMapRegion.MapRegionPoints.Add(mrp);
                             }
 
-                            MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
+                            MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
                         }
 
                         SKGLRenderControl.Invalidate();
@@ -3938,12 +3886,12 @@ namespace RealmStudio
                             RegionManager.PREVIOUS_REGION_POINT_INDEX = -1;
                         }
 
-                        MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
                     }
                     break;
                 case MapDrawingMode.RealmAreaSelect:
                     Cursor = Cursors.Cross;
-                    MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
+                    MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
                     break;
             }
         }
@@ -3963,9 +3911,6 @@ namespace RealmStudio
 
         private void RightButtonMouseDownHandler(MouseEventArgs e)
         {
-            SKPoint zoomedScrolledPoint = new((e.X / MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.X,
-                (e.Y / MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.Y);
-
             switch (MainUIMediator.CurrentDrawingMode)
             {
                 case MapDrawingMode.LabelSelect:
@@ -3982,14 +3927,14 @@ namespace RealmStudio
                                 new Size(int.MaxValue, int.MaxValue),
                                 TextFormatFlags.Default | TextFormatFlags.SingleLine | TextFormatFlags.TextBoxControl);
 
-                            Rectangle textBoxRect = MapLabelMethods.GetLabelTextBoxRect(MapStateMediator.SelectedMapLabel,
+                            Rectangle textBoxRect = LabelManager.GetLabelTextBoxRect(MapStateMediator.SelectedMapLabel,
                                 MapStateMediator.DrawingPoint, MainUIMediator.DrawingZoom, labelSize);
 
-                            LABEL_TEXT_BOX = MapLabelMethods.CreateLabelEditTextBox(SKGLRenderControl, MapStateMediator.SelectedMapLabel, textBoxRect);
+                            LABEL_TEXT_BOX = LabelManager.CreateLabelEditTextBox(SKGLRenderControl, MapStateMediator.SelectedMapLabel, textBoxRect);
 
                             if (LABEL_TEXT_BOX != null)
                             {
-                                LABEL_TEXT_BOX.KeyPress += LabelTextBox_KeyPress;
+                                LABEL_TEXT_BOX.KeyPress += LabelMediator.LabelTextBox_KeyPress;
 
                                 SKGLRenderControl.Controls.Add(LABEL_TEXT_BOX);
 
@@ -4000,7 +3945,7 @@ namespace RealmStudio
 
                                 LABEL_TEXT_BOX.Tag = MapStateMediator.SelectedMapLabel.LabelPath;
 
-                                MapLabelMethods.DeleteLabel(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapLabel);
+                                LabelManager.Delete(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapLabel);
                             }
 
                             SKGLRenderControl.Refresh();
@@ -4010,14 +3955,14 @@ namespace RealmStudio
                 case MapDrawingMode.DrawMapMeasure:
                     if (MapStateMediator.CurrentMapMeasure != null)
                     {
-                        MapMeasureManager.EndMapMeasure(MapStateMediator.CurrentMapMeasure, zoomedScrolledPoint, MapStateMediator.PreviousCursorPoint);
+                        MapMeasureManager.EndMapMeasure(MapStateMediator.CurrentMapMeasure, MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
                         MainUIMediator.SetDrawingMode(MapDrawingMode.None, 0);
                     }
                     break;
                 case MapDrawingMode.RegionPaint:
                     if (MapStateMediator.CurrentMapRegion != null)
                     {
-                        RegionManager.EndMapRegion(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion, zoomedScrolledPoint);
+                        RegionManager.EndMapRegion(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion, MapStateMediator.CurrentCursorPoint);
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
@@ -4041,16 +3986,13 @@ namespace RealmStudio
 
         private void LeftButtonMouseMoveHandler(MouseEventArgs e, int brushRadius)
         {
-            SKPoint zoomedScrolledPoint = new((e.X / MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.X,
-                (e.Y / MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.Y);
-
             switch (MainUIMediator.CurrentDrawingMode)
             {
                 case MapDrawingMode.OceanErase:
                     {
                         Cursor = Cursors.Cross;
 
-                        MapStateMediator.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(zoomedScrolledPoint);
+                        MapStateMediator.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(MapStateMediator.CurrentCursorPoint);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4058,12 +4000,12 @@ namespace RealmStudio
                 case MapDrawingMode.LandPaint:
                     {
                         if (MapStateMediator.CurrentLandform != null
-                            && zoomedScrolledPoint.X > 0 && zoomedScrolledPoint.X < MapStateMediator.CurrentMap.MapWidth
-                            && zoomedScrolledPoint.Y > 0 && zoomedScrolledPoint.Y < MapStateMediator.CurrentMap.MapHeight)
+                            && MapStateMediator.CurrentCursorPoint.X > 0 && MapStateMediator.CurrentCursorPoint.X < MapStateMediator.CurrentMap.MapWidth
+                            && MapStateMediator.CurrentCursorPoint.Y > 0 && MapStateMediator.CurrentCursorPoint.Y < MapStateMediator.CurrentMap.MapHeight)
                         {
                             MapStateMediator.CurrentLandform.IsModified = true;
 
-                            MapStateMediator.CurrentLandform.DrawPath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
+                            MapStateMediator.CurrentLandform.DrawPath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, brushRadius);
 
                             bool createPathsWhilePainting = Settings.Default.CalculateContoursWhilePainting;
 
@@ -4081,8 +4023,8 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        LandformMethods.LandformErasePath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
-                        LandformMethods.EraseFromLandform(MapStateMediator.CurrentMap, zoomedScrolledPoint, brushRadius);
+                        LandformMethods.LandformErasePath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, brushRadius);
+                        LandformMethods.EraseFromLandform(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, brushRadius);
 
                         LandformMethods.LandformErasePath.Reset();
 
@@ -4093,9 +4035,9 @@ namespace RealmStudio
                     {
                         if (MapStateMediator.SelectedLandform != null)
                         {
-                            LandformMethods.MoveLandform(MapStateMediator.SelectedLandform, zoomedScrolledPoint, MapStateMediator.PreviousCursorPoint);
+                            LandformMethods.MoveLandform(MapStateMediator.SelectedLandform, MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
 
-                            MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
+                            MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
                             SKGLRenderControl.Invalidate();
                         }
@@ -4105,7 +4047,7 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        MapStateMediator.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(zoomedScrolledPoint);
+                        MapStateMediator.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(MapStateMediator.CurrentCursorPoint);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4116,7 +4058,7 @@ namespace RealmStudio
 
                         if (MapStateMediator.CurrentWaterFeature != null)
                         {
-                            MapStateMediator.CurrentWaterFeature.WaterFeaturePath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
+                            MapStateMediator.CurrentWaterFeature.WaterFeaturePath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, brushRadius);
 
                             // compute contour path and inner and outer paths in a separate thread
                             Task.Run(() => WaterFeatureMethods.CreateInnerAndOuterPaths(MapStateMediator.CurrentMap, MapStateMediator.CurrentWaterFeature));
@@ -4129,7 +4071,7 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        WaterFeatureMethods.WaterFeaturErasePath.AddCircle(zoomedScrolledPoint.X, zoomedScrolledPoint.Y, brushRadius);
+                        WaterFeatureMethods.WaterFeaturErasePath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, brushRadius);
 
                         WaterFeatureMethods.EraseWaterFeature(MapStateMediator.CurrentMap);
 
@@ -4140,7 +4082,7 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        MapStateMediator.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(zoomedScrolledPoint);
+                        MapStateMediator.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(MapStateMediator.CurrentCursorPoint);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4149,7 +4091,7 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        MapStateMediator.CurrentRiver?.RiverPoints.Add(new MapRiverPoint(zoomedScrolledPoint));
+                        MapStateMediator.CurrentRiver?.RiverPoints.Add(new MapRiverPoint(MapStateMediator.CurrentCursorPoint));
 
                         if (MapStateMediator.CurrentRiver != null)
                         {
@@ -4163,7 +4105,7 @@ namespace RealmStudio
                     if (MapStateMediator.SelectedWaterFeature != null && MapStateMediator.SelectedWaterFeature is River river && MapStateMediator.SelectedRiverPoint != null)
                     {
                         // move the selected point on the path
-                        WaterFeatureMethods.MoveSelectedRiverPoint(river, MapStateMediator.SelectedRiverPoint, zoomedScrolledPoint);
+                        WaterFeatureMethods.MoveSelectedRiverPoint(river, MapStateMediator.SelectedRiverPoint, MapStateMediator.CurrentCursorPoint);
 
                         MapStateMediator.CurrentMap.IsSaved = false;
                         SKGLRenderControl.Invalidate();
@@ -4174,7 +4116,7 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
                         const int minimumPathPointCount = 5;
 
-                        SKPoint newPathPoint = MapPathMethods.GetNewPathPoint(MapStateMediator.CurrentMapPath, ModifierKeys, SELECTED_PATH_ANGLE, zoomedScrolledPoint, minimumPathPointCount);
+                        SKPoint newPathPoint = MapPathMethods.GetNewPathPoint(MapStateMediator.CurrentMapPath, ModifierKeys, SELECTED_PATH_ANGLE, MapStateMediator.CurrentCursorPoint, minimumPathPointCount);
 
                         MapPathMethods.AddNewPathPoint(MapStateMediator.CurrentMapPath, newPathPoint);
 
@@ -4185,9 +4127,9 @@ namespace RealmStudio
                     {
                         if (MapStateMediator.SelectedMapPath != null)
                         {
-                            MapPathMethods.MovePath(MapStateMediator.SelectedMapPath, zoomedScrolledPoint, MapStateMediator.PreviousCursorPoint);
+                            MapPathMethods.MovePath(MapStateMediator.SelectedMapPath, MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
 
-                            MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
+                            MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
                             SKGLRenderControl.Invalidate();
                         }
@@ -4197,7 +4139,7 @@ namespace RealmStudio
                     if (MapStateMediator.SelectedMapPathPoint != null)
                     {
                         // move the selected point on the path
-                        MapPathMethods.MoveSelectedMapPathPoint(MapStateMediator.SelectedMapPath, MapStateMediator.SelectedMapPathPoint, zoomedScrolledPoint);
+                        MapPathMethods.MoveSelectedMapPathPoint(MapStateMediator.SelectedMapPath, MapStateMediator.SelectedMapPathPoint, MapStateMediator.CurrentCursorPoint);
 
                         MapStateMediator.CurrentMap.IsSaved = false;
                         SKGLRenderControl.Invalidate();
@@ -4206,17 +4148,17 @@ namespace RealmStudio
                 case MapDrawingMode.SymbolPlace:
                     if (!SymbolUIMediator.UseAreaBrush)
                     {
-                        SymbolManager.PlaceSelectedSymbolAtCursor(zoomedScrolledPoint);
+                        SymbolManager.PlaceSelectedSymbolAtCursor(MapStateMediator.CurrentCursorPoint);
                     }
 
-                    MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
+                    MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
                     SKGLRenderControl.Invalidate();
                     break;
                 case MapDrawingMode.SymbolErase:
                     int eraserRadius = SymbolUIMediator.AreaBrushSize / 2;
 
-                    SymbolManager.RemovePlacedSymbolsFromArea(MapStateMediator.CurrentMap, zoomedScrolledPoint, eraserRadius);
+                    SymbolManager.RemovePlacedSymbolsFromArea(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, eraserRadius);
 
                     MapStateMediator.CurrentMap.IsSaved = false;
                     break;
@@ -4225,12 +4167,12 @@ namespace RealmStudio
                     int colorBrushRadius = SymbolUIMediator.AreaBrushSize / 2;
 
                     Color[] symbolColors = [SymbolColor1Button.BackColor, SymbolColor2Button.BackColor, SymbolColor3Button.BackColor];
-                    SymbolManager.ColorSymbolsInArea(MapStateMediator.CurrentMap, zoomedScrolledPoint, colorBrushRadius, symbolColors, RandomizeColorCheck.Checked);
+                    SymbolManager.ColorSymbolsInArea(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, colorBrushRadius, symbolColors, RandomizeColorCheck.Checked);
 
                     MapStateMediator.CurrentMap.IsSaved = false;
                     break;
                 case MapDrawingMode.SymbolSelect:
-                    SymbolManager.MoveSymbol(MapStateMediator.SelectedMapSymbol, zoomedScrolledPoint);
+                    SymbolManager.MoveSymbol(MapStateMediator.SelectedMapSymbol, MapStateMediator.CurrentCursorPoint);
 
                     MapStateMediator.CurrentMap.IsSaved = false;
                     SKGLRenderControl.Invalidate();
@@ -4239,11 +4181,11 @@ namespace RealmStudio
                 case MapDrawingMode.LabelSelect:
                     if (MapStateMediator.SelectedMapLabel != null)
                     {
-                        MapLabelMethods.MoveLabel(MapStateMediator.SelectedMapLabel, zoomedScrolledPoint);
+                        LabelManager.MoveLabel(MapStateMediator.SelectedMapLabel, MapStateMediator.CurrentCursorPoint);
                     }
                     else if (MapStateMediator.SelectedPlacedMapBox != null)
                     {
-                        MapLabelMethods.MoveBox(MapStateMediator.SelectedPlacedMapBox, zoomedScrolledPoint);
+                        LabelManager.MoveBox(MapStateMediator.SelectedPlacedMapBox, MapStateMediator.CurrentCursorPoint);
                     }
 
                     MapStateMediator.CurrentMap.IsSaved = false;
@@ -4251,20 +4193,20 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawArcLabelPath:
                     {
-                        CURRENT_MAP_LABEL_PATH.Dispose();
-                        CURRENT_MAP_LABEL_PATH = MapLabelMethods.CreateNewArcPath(zoomedScrolledPoint, MapStateMediator.PreviousCursorPoint);
+                        LabelManager.ResetLabelPath();
+                        LabelManager.CurrentMapLabelPath = LabelManager.CreateNewArcPath(MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
 
-                        MapLabelMethods.DrawLabelPathOnWorkLayer(MapStateMediator.CurrentMap, CURRENT_MAP_LABEL_PATH);
+                        LabelManager.DrawLabelPathOnWorkLayer(MapStateMediator.CurrentMap, LabelManager.CurrentMapLabelPath);
 
                         SKGLRenderControl.Invalidate();
                     }
                     break;
                 case MapDrawingMode.DrawBezierLabelPath:
                     {
-                        CURRENT_MAP_LABEL_PATH_POINTS.Add(zoomedScrolledPoint);
-                        ConstructBezierPathFromPoints();
+                        LabelManager.CurrentMapPathLabelPoints.Add(MapStateMediator.CurrentCursorPoint);
+                        LabelManager.ConstructBezierPathFromPoints();
 
-                        MapLabelMethods.DrawLabelPathOnWorkLayer(MapStateMediator.CurrentMap, CURRENT_MAP_LABEL_PATH);
+                        LabelManager.DrawLabelPathOnWorkLayer(MapStateMediator.CurrentMap, LabelManager.CurrentMapLabelPath);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4273,7 +4215,7 @@ namespace RealmStudio
                     // draw box as mouse is moved
                     if (BoxMediator.Box != null && MapStateMediator.SelectedPlacedMapBox != null)
                     {
-                        BoxMediator.DrawBoxOnWorkLayer(zoomedScrolledPoint, MapStateMediator.PreviousCursorPoint);
+                        BoxMediator.DrawBoxOnWorkLayer(MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4283,7 +4225,7 @@ namespace RealmStudio
                         if (MapStateMediator.CurrentMapMeasure != null)
                         {
                             MapMeasureManager.DrawMapMeasureOnWorkLayer(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapMeasure,
-                                zoomedScrolledPoint, MapStateMediator.PreviousCursorPoint);
+                                MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
                             SKGLRenderControl.Invalidate();
                         }
                     }
@@ -4292,7 +4234,7 @@ namespace RealmStudio
                     {
                         if (MapStateMediator.CurrentMapRegion != null)
                         {
-                            RegionManager.DrawRegionOnWorkLayer(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion, zoomedScrolledPoint, MapStateMediator.PreviousCursorPoint);
+                            RegionManager.DrawRegionOnWorkLayer(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion, MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
                             SKGLRenderControl.Invalidate();
                         }
                     }
@@ -4301,17 +4243,17 @@ namespace RealmStudio
                     {
                         if (MapStateMediator.CurrentMapRegion != null && MapStateMediator.CurrentMapRegion.IsSelected)
                         {
-                            MapRegionPoint? selectedMapRegionPoint = RegionManager.GetSelectedMapRegionPoint(MapStateMediator.CurrentMapRegion, zoomedScrolledPoint);
+                            MapRegionPoint? selectedMapRegionPoint = RegionManager.GetSelectedMapRegionPoint(MapStateMediator.CurrentMapRegion, MapStateMediator.CurrentCursorPoint);
 
                             if (selectedMapRegionPoint != null)
                             {
-                                selectedMapRegionPoint.RegionPoint = zoomedScrolledPoint;
+                                selectedMapRegionPoint.RegionPoint = MapStateMediator.CurrentCursorPoint;
                             }
 
                             if (!RegionManager.EDITING_REGION)
                             {
-                                RegionManager.MoveRegion(MapStateMediator.CurrentMapRegion, zoomedScrolledPoint, MapStateMediator.PreviousCursorPoint);
-                                MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
+                                RegionManager.MoveRegion(MapStateMediator.CurrentMapRegion, MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
+                                MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
                             }
                         }
                     }
@@ -4319,7 +4261,7 @@ namespace RealmStudio
                 case MapDrawingMode.SelectMapScale:
                     if (MapStateMediator.SelectedMapScale != null)
                     {
-                        MapScaleManager.MoveMapScale(MapStateMediator.SelectedMapScale, zoomedScrolledPoint);
+                        MapScaleManager.MoveMapScale(MapStateMediator.SelectedMapScale, MapStateMediator.CurrentCursorPoint);
                         MapStateMediator.CurrentMap.IsSaved = false;
                         SKGLRenderControl.Invalidate();
                     }
@@ -4327,14 +4269,14 @@ namespace RealmStudio
                 case MapDrawingMode.RealmAreaSelect:
                     {
                         MapStateMediator.SelectedRealmArea = RealmMapMethods.DrawSelectedRealmAreaOnWorkLayer(MapStateMediator.CurrentMap,
-                            zoomedScrolledPoint, MapStateMediator.PreviousCursorPoint);
+                            MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
                 case MapDrawingMode.MapHeightIncrease:
                     {
                         float brushStrength = (float)BrushStrengthUpDown.Value;
-                        MapHeightMapMethods.ChangeHeightMapAreaHeight(MapStateMediator.CurrentMap, zoomedScrolledPoint, brushRadius, brushStrength);
+                        MapHeightMapMethods.ChangeHeightMapAreaHeight(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, brushRadius, brushStrength);
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
@@ -4344,7 +4286,7 @@ namespace RealmStudio
                 case MapDrawingMode.MapHeightDecrease:
                     {
                         float brushStrength = (float)BrushStrengthUpDown.Value;
-                        MapHeightMapMethods.ChangeHeightMapAreaHeight(MapStateMediator.CurrentMap, zoomedScrolledPoint, brushRadius, -brushStrength);
+                        MapHeightMapMethods.ChangeHeightMapAreaHeight(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, brushRadius, -brushStrength);
 
                         MapStateMediator.CurrentMap.IsSaved = false;
                         SKGLRenderControl.Invalidate();
@@ -4379,25 +4321,23 @@ namespace RealmStudio
 
         private void NoButtonMouseMoveHandler(MouseEventArgs e)
         {
-            SKPoint zoomedScrolledPoint = new((e.X / MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.X, (e.Y / MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.Y);
-
             switch (MainUIMediator.CurrentDrawingMode)
             {
                 case MapDrawingMode.PlaceWindrose:
                     {
-                        BackgroundMethods.MoveWindrose(MapStateMediator.CurrentWindrose, zoomedScrolledPoint);
+                        BackgroundMethods.MoveWindrose(MapStateMediator.CurrentWindrose, MapStateMediator.CurrentCursorPoint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
                 case MapDrawingMode.RiverEdit:
                     {
-                        MapStateMediator.SelectedRiverPoint = WaterFeatureMethods.GetSelectedRiverPoint(MapStateMediator.SelectedWaterFeature, zoomedScrolledPoint);
+                        MapStateMediator.SelectedRiverPoint = WaterFeatureMethods.GetSelectedRiverPoint(MapStateMediator.SelectedWaterFeature, MapStateMediator.CurrentCursorPoint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
                 case MapDrawingMode.PathEdit:
                     {
-                        MapStateMediator.SelectedMapPathPoint = MapPathMethods.GetSelectedPathPoint(MapStateMediator.SelectedMapPath, zoomedScrolledPoint);
+                        MapStateMediator.SelectedMapPathPoint = MapPathMethods.GetSelectedPathPoint(MapStateMediator.SelectedMapPath, MapStateMediator.CurrentCursorPoint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -4407,13 +4347,13 @@ namespace RealmStudio
                         {
                             if (ModifierKeys == Keys.Shift)
                             {
-                                RegionManager.DrawCoastlinePointOnWorkLayer(MapStateMediator.CurrentMap, zoomedScrolledPoint);
+                                RegionManager.DrawCoastlinePointOnWorkLayer(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
                             }
                         }
                         else
                         {
                             RegionManager.DrawRegionOnWorkLayer(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion,
-                                zoomedScrolledPoint, MapStateMediator.PreviousCursorPoint);
+                                MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
                             SKGLRenderControl.Invalidate();
                         }
                     }
@@ -4422,13 +4362,13 @@ namespace RealmStudio
                     {
                         if (MapStateMediator.CurrentMapRegion != null && MapStateMediator.CurrentMapRegion.IsSelected)
                         {
-                            bool pointSelected = RegionManager.IsRegionPointSelected(MapStateMediator.CurrentMapRegion, zoomedScrolledPoint);
+                            bool pointSelected = RegionManager.IsRegionPointSelected(MapStateMediator.CurrentMapRegion, MapStateMediator.CurrentCursorPoint);
 
                             if (!pointSelected)
                             {
                                 // cursor is not on a region point; is it on a line segment between vertices of the region?
                                 // if so draw a yellow circle at that point
-                                RegionManager.DrawRegionPointOnWorkLayer(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion, zoomedScrolledPoint);
+                                RegionManager.DrawRegionPointOnWorkLayer(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion, MapStateMediator.CurrentCursorPoint);
                             }
                         }
 
@@ -4448,9 +4388,6 @@ namespace RealmStudio
 
         private void LeftButtonMouseUpHandler(MouseEventArgs e, int brushRadius)
         {
-            SKPoint zoomedScrolledPoint = new((e.X / MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.X,
-                (e.Y / MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.Y);
-
             ApplicationTimerManager.SymbolAreaBrushTimerEnabled = false;
 
             switch (MainUIMediator.CurrentDrawingMode)
@@ -4496,7 +4433,7 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        LandformMethods.EraseFromLandform(MapStateMediator.CurrentMap, zoomedScrolledPoint, brushRadius);
+                        LandformMethods.EraseFromLandform(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, brushRadius);
 
                         LandformMethods.LandformErasePath.Reset();
 
@@ -4532,8 +4469,8 @@ namespace RealmStudio
                 case MapDrawingMode.PlaceWindrose:
                     if (MapStateMediator.CurrentWindrose != null)
                     {
-                        MapStateMediator.CurrentWindrose.X = (int)zoomedScrolledPoint.X;
-                        MapStateMediator.CurrentWindrose.Y = (int)zoomedScrolledPoint.Y;
+                        MapStateMediator.CurrentWindrose.X = (int)MapStateMediator.CurrentCursorPoint.X;
+                        MapStateMediator.CurrentWindrose.Y = (int)MapStateMediator.CurrentCursorPoint.Y;
 
                         Cmd_AddWindrose cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentWindrose);
                         CommandManager.AddCommand(cmd);
@@ -4635,7 +4572,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.PathSelect:
                     {
-                        MapStateMediator.SelectedMapPath = SelectMapPathAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint);
+                        MapStateMediator.SelectedMapPath = SelectMapPathAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -4646,7 +4583,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.SymbolSelect:
                     {
-                        MapStateMediator.SelectedMapSymbol = MapSymbolUIMediator.SelectMapSymbolAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint.ToDrawingPoint());
+                        MapStateMediator.SelectedMapSymbol = MapSymbolUIMediator.SelectMapSymbolAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint.ToDrawingPoint());
 
                         if (MapStateMediator.SelectedMapSymbol != null)
                         {
@@ -4661,8 +4598,8 @@ namespace RealmStudio
                     {
                         CREATING_LABEL = true;
 
-                        Font tbFont = new(MapStateMediator.SelectedLabelFont.FontFamily,
-                                MapStateMediator.SelectedLabelFont.Size * 0.75F, MapStateMediator.SelectedLabelFont.Style, GraphicsUnit.Point);
+                        Font tbFont = new(LabelMediator.SelectedLabelFont.FontFamily,
+                                LabelMediator.SelectedLabelFont.Size * 0.75F, LabelMediator.SelectedLabelFont.Style, GraphicsUnit.Point);
 
                         Size labelSize = TextRenderer.MeasureText("...Label...", tbFont,
                             new Size(int.MaxValue, int.MaxValue),
@@ -4670,12 +4607,12 @@ namespace RealmStudio
 
                         Rectangle labelRect = new(e.X - (labelSize.Width / 2), e.Y - (labelSize.Height / 2), labelSize.Width, labelSize.Height);
 
-                        LABEL_TEXT_BOX = MapLabelMethods.CreateNewLabelTextbox(SKGLRenderControl, tbFont,
+                        LABEL_TEXT_BOX = LabelManager.CreateNewLabelTextbox(SKGLRenderControl, tbFont,
                             labelRect, FontColorSelectButton.BackColor);
 
                         if (LABEL_TEXT_BOX != null)
                         {
-                            LABEL_TEXT_BOX.KeyPress += LabelTextBox_KeyPress;
+                            LABEL_TEXT_BOX.KeyPress += LabelMediator.LabelTextBox_KeyPress;
 
                             SKGLRenderControl.Controls.Add(LABEL_TEXT_BOX);
 
@@ -4690,34 +4627,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.LabelSelect:
                     {
-                        MapLabel? selectedLabel = SelectLabelAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint);
-
-                        if (selectedLabel != null)
-                        {
-                            bool isSelected = selectedLabel.IsSelected;
-
-                            selectedLabel.IsSelected = !isSelected;
-
-                            if (selectedLabel.IsSelected)
-                            {
-                                MapStateMediator.SelectedMapLabel = selectedLabel;
-                                LabelRotationTrack.Value = (int)MapStateMediator.SelectedMapLabel.LabelRotationDegrees;
-                                LabelRotationUpDown.Value = (int)MapStateMediator.SelectedMapLabel.LabelRotationDegrees;
-                            }
-                            else
-                            {
-                                MapStateMediator.SelectedMapLabel = null;
-                            }
-
-                            SKGLRenderControl.Invalidate();
-                        }
-                        else
-                        {
-                            MapStateMediator.SelectedMapLabel = null;
-
-                            BoxManager.SelectMapBoxAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint);
-                            SKGLRenderControl.Invalidate();
-                        }
+                        LabelMediator.SelectLabelOrBox();
                     }
                     break;
                 case MapDrawingMode.DrawBox:
@@ -4742,13 +4652,13 @@ namespace RealmStudio
                                 MapStateMediator.CurrentMapMeasure.MeasurePoints.Add(MapStateMediator.PreviousCursorPoint);
                             }
 
-                            MapStateMediator.CurrentMapMeasure.MeasurePoints.Add(zoomedScrolledPoint);
+                            MapStateMediator.CurrentMapMeasure.MeasurePoints.Add(MapStateMediator.CurrentCursorPoint);
 
-                            float lineLength = SKPoint.Distance(MapStateMediator.PreviousCursorPoint, zoomedScrolledPoint);
+                            float lineLength = SKPoint.Distance(MapStateMediator.PreviousCursorPoint, MapStateMediator.CurrentCursorPoint);
                             MapStateMediator.CurrentMapMeasure.TotalMeasureLength += lineLength;
                         }
 
-                        MapStateMediator.PreviousCursorPoint = zoomedScrolledPoint;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
                     }
                     break;
                 case MapDrawingMode.RegionSelect:
@@ -4759,7 +4669,7 @@ namespace RealmStudio
                         }
                         else
                         {
-                            MapRegion? selectedRegion = RegionManager.SelectRegionAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint);
+                            MapRegion? selectedRegion = RegionManager.SelectRegionAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
 
                             if (selectedRegion != null)
                             {
@@ -4787,7 +4697,7 @@ namespace RealmStudio
 
                         using Bitmap colorBitmap = s.Snapshot().ToBitmap();
 
-                        Color pixelColor = colorBitmap.GetPixel((int)zoomedScrolledPoint.X, (int)zoomedScrolledPoint.Y);
+                        Color pixelColor = colorBitmap.GetPixel((int)MapStateMediator.CurrentCursorPoint.X, (int)MapStateMediator.CurrentCursorPoint.Y);
 
                         switch (MainTab.SelectedIndex)
                         {
@@ -4823,7 +4733,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.RealmAreaSelect:
                     {
-                        MapStateMediator.SelectedRealmArea = new(MapStateMediator.PreviousCursorPoint.X, MapStateMediator.PreviousCursorPoint.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
+                        MapStateMediator.SelectedRealmArea = new(MapStateMediator.PreviousCursorPoint.X, MapStateMediator.PreviousCursorPoint.Y, MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
 
                         MapLayer workLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER);
                         MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
@@ -4925,16 +4835,13 @@ namespace RealmStudio
 
         private void RightButtonMouseUpHandler(object sender, MouseEventArgs e)
         {
-            SKPoint zoomedScrolledPoint = new((e.X / MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.X,
-                (e.Y / MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.Y);
-
             switch (MainUIMediator.CurrentDrawingMode)
             {
                 case MapDrawingMode.LandformSelect:
 
                     LandformSelectButton.Checked = false;
 
-                    MapStateMediator.SelectedLandform = LandformMethods.SelectLandformAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint);
+                    MapStateMediator.SelectedLandform = LandformMethods.SelectLandformAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
 
                     SKGLRenderControl.Invalidate();
 
@@ -4945,7 +4852,7 @@ namespace RealmStudio
                     }
                     break;
                 case MapDrawingMode.WaterFeatureSelect:
-                    MapComponent? selectedWaterFeature = SelectWaterFeatureAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint);
+                    MapComponent? selectedWaterFeature = SelectWaterFeatureAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
 
                     SKGLRenderControl.Invalidate();
 
@@ -4967,7 +4874,7 @@ namespace RealmStudio
                     SKGLRenderControl.Invalidate();
                     break;
                 case MapDrawingMode.PathSelect:
-                    MapPath? selectedPath = SelectMapPathAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint);
+                    MapPath? selectedPath = SelectMapPathAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
 
                     SKGLRenderControl.Invalidate();
 
@@ -4982,7 +4889,7 @@ namespace RealmStudio
                     SKGLRenderControl.Invalidate();
                     break;
                 case MapDrawingMode.SymbolSelect:
-                    MapSymbol? selectedSymbol = MapSymbolUIMediator.SelectMapSymbolAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint.ToDrawingPoint());
+                    MapSymbol? selectedSymbol = MapSymbolUIMediator.SelectMapSymbolAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint.ToDrawingPoint());
                     if (selectedSymbol != null)
                     {
                         MapStateMediator.SelectedMapSymbol = selectedSymbol;
@@ -4994,7 +4901,7 @@ namespace RealmStudio
                     }
                     break;
                 case MapDrawingMode.RegionSelect:
-                    MapRegion? selectedRegion = RegionManager.SelectRegionAtPoint(MapStateMediator.CurrentMap, zoomedScrolledPoint);
+                    MapRegion? selectedRegion = RegionManager.SelectRegionAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
 
                     if (selectedRegion != null)
                     {
@@ -5033,8 +4940,8 @@ namespace RealmStudio
                 MainUIMediator.SetDrawingMode(MapDrawingMode.None, 0);
 
                 // dispose of any map label path
-                CURRENT_MAP_LABEL_PATH.Dispose();
-                CURRENT_MAP_LABEL_PATH = new();
+                LabelManager.CurrentMapLabelPath?.Dispose();
+                LabelManager.CurrentMapLabelPath = new();
 
                 // clear other selected and current objects?
 
@@ -5168,7 +5075,6 @@ namespace RealmStudio
 
                                 MapStateMediator.CurrentMap.IsSaved = false;
                                 MapStateMediator.SelectedMapLabel = null;
-
                             }
 
                             if (MapStateMediator.SelectedPlacedMapBox != null)
@@ -7417,11 +7323,7 @@ namespace RealmStudio
 
         private void ShowSymbolLayerSwitch_CheckedChanged()
         {
-            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER);
-
-            symbolLayer.ShowLayer = ShowSymbolLayerSwitch.Checked;
-
-            SKGLRenderControl.Invalidate();
+            SymbolUIMediator.Enabled = ShowSymbolLayerSwitch.Checked;
         }
 
         private void SymbolSelectButton_Click(object sender, EventArgs e)
@@ -7564,540 +7466,26 @@ namespace RealmStudio
 
         #endregion
 
-
-        #region Label Tab Methods
-
-        private void LabelTextBox_KeyPress(object? sender, EventArgs e)
-        {
-            if (sender != null)
-            {
-                MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LABELLAYER);
-
-                TextBox tb = (TextBox)sender;
-
-                Font labelFont = tb.Font;
-                Color labelColor = FontColorSelectButton.BackColor;
-                Color outlineColor = OutlineColorSelectButton.BackColor;
-                float outlineWidth = OutlineWidthTrack.Value / 10F;
-
-                Color glowColor = GlowColorSelectButton.BackColor;
-                int glowStrength = GlowStrengthTrack.Value;
-
-                int labelRotationDegrees = LabelRotationTrack.Value;
-
-                if (((KeyPressEventArgs)e).KeyChar == (char)Keys.Escape)
-                {
-                    ((KeyPressEventArgs)e).Handled = false; // pass the event up
-
-                    CREATING_LABEL = false;
-
-                    // dispose of the text box, as it isn't needed once the label text has been entered
-                    SKGLRenderControl.Controls.Remove(tb);
-                    tb.Dispose();
-                }
-                else if (((KeyPressEventArgs)e).KeyChar == (char)Keys.Return)
-                {
-                    ((KeyPressEventArgs)e).Handled = true;
-                    CREATING_LABEL = false;
-
-                    if (MapStateMediator.SelectedMapLabel != null)
-                    {
-                        labelFont = MapStateMediator.SelectedMapLabel.LabelFont;
-                        labelColor = MapStateMediator.SelectedMapLabel.LabelColor;
-                        outlineColor = MapStateMediator.SelectedMapLabel.LabelOutlineColor;
-                        outlineWidth = MapStateMediator.SelectedMapLabel.LabelOutlineWidth;
-                        glowColor = MapStateMediator.SelectedMapLabel.LabelGlowColor;
-                        glowStrength = MapStateMediator.SelectedMapLabel.LabelGlowStrength;
-                        labelRotationDegrees = (int)MapStateMediator.SelectedMapLabel.LabelRotationDegrees;
-                    }
-
-                    if (!string.IsNullOrEmpty(tb.Text))
-                    {
-                        // create a new MapLabel object and render it
-                        MapLabel label = new()
-                        {
-                            LabelText = tb.Text,
-                            LabelFont = labelFont,
-                            IsSelected = true,
-                            LabelColor = labelColor,
-                            LabelOutlineColor = outlineColor,
-                            LabelOutlineWidth = outlineWidth,
-                            LabelGlowColor = glowColor,
-                            LabelGlowStrength = glowStrength,
-                            LabelRotationDegrees = labelRotationDegrees,
-                        };
-
-                        SKFont skLabelFont = MapLabelMethods.GetSkLabelFont(labelFont);
-                        SKPaint paint = MapLabelMethods.CreateLabelPaint(labelColor);
-
-                        label.LabelPaint = paint;
-                        label.LabelSKFont.Dispose();
-                        label.LabelSKFont = skLabelFont;
-
-                        label.LabelSKFont.MeasureText(label.LabelText, out SKRect bounds, label.LabelPaint);
-
-                        float descent = labelFont.FontFamily.GetCellDescent(labelFont.Style);
-                        float descentPixel =
-                            labelFont.Size * descent / labelFont.FontFamily.GetEmHeight(FontStyle.Regular);
-
-                        // TODO: drawing zoom has to be taken into account?
-                        float xDiff = (tb.Width - bounds.Width) / 2;
-                        float yDiff = ((tb.Height - bounds.Height) / 2) + descentPixel / 2;
-
-                        SKPoint zoomedScrolledPoint = new(((tb.Left + xDiff) / MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.X,
-                            ((tb.Top + yDiff) / MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.Y);
-
-                        label.X = (int)zoomedScrolledPoint.X;
-                        label.Y = (int)zoomedScrolledPoint.Y;
-
-                        if (MapStateMediator.SelectedMapLabel != null)
-                        {
-                            label.X = MapStateMediator.SelectedMapLabel.X;
-                            label.Y = MapStateMediator.SelectedMapLabel.Y;
-                        }
-
-                        label.Width = (int)bounds.Width;
-                        label.Height = (int)bounds.Height;
-
-                        if (tb.Tag != null && tb.Tag is SKPath path)
-                        {
-                            label.LabelPath = path;
-                        }
-                        else if (CURRENT_MAP_LABEL_PATH?.PointCount > 0)
-                        {
-                            label.LabelPath = new(CURRENT_MAP_LABEL_PATH);
-
-                            CURRENT_MAP_LABEL_PATH.Dispose();
-                            CURRENT_MAP_LABEL_PATH = new();
-
-                            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
-                        }
-
-                        Cmd_AddLabel cmd = new(MapStateMediator.CurrentMap, label);
-                        CommandManager.AddCommand(cmd);
-                        cmd.DoOperation();
-
-                        RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, label);
-
-                        MapStateMediator.SelectedMapLabel = (MapLabel?)labelLayer.MapLayerComponents.Last();
-
-                        MapStateMediator.CurrentMap.IsSaved = false;
-                    }
-
-                    MainUIMediator.SetDrawingMode(MapDrawingMode.LabelSelect, 0);
-
-                    // dispose of the text box, as it isn't needed once the label text has been entered
-                    SKGLRenderControl.Controls.Remove(tb);
-                    tb.Dispose();
-
-                    SKGLRenderControl.Refresh();
-                }
-                else
-                {
-                    if (tb.Text.StartsWith("...Label..."))
-                    {
-                        tb.Text = tb.Text["...Label...".Length..];
-                    }
-
-                    SKFontStyle fs = SKFontStyle.Normal;
-
-                    if (labelFont.Bold && labelFont.Italic)
-                    {
-                        fs = SKFontStyle.BoldItalic;
-                    }
-                    else if (labelFont.Bold)
-                    {
-                        fs = SKFontStyle.Bold;
-                    }
-                    else if (labelFont.Italic)
-                    {
-                        fs = SKFontStyle.Italic;
-                    }
-
-                    List<string> resourceNames = [.. Assembly.GetExecutingAssembly().GetManifestResourceNames()];
-
-                    SKTypeface? fontTypeface = null;
-
-                    foreach (string resourceName in resourceNames)
-                    {
-                        if (resourceName.Contains(labelFont.FontFamily.Name))
-                        {
-                            fontTypeface = SKTypeface.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName));
-                            break;
-                        }
-                    }
-
-                    fontTypeface ??= SKTypeface.FromFamilyName(labelFont.FontFamily.Name, fs);
-
-                    SKFont paintFont = new(fontTypeface, labelFont.SizeInPoints, 1, 0);
-                    SKPaint labelPaint = MapLabelMethods.CreateLabelPaint(labelColor);
-
-                    float lblWidth = paintFont.MeasureText(tb.Text, labelPaint);
-                    int tbWidth = (int)Math.Max(lblWidth, tb.Width);
-                    tb.Width = tbWidth;
-
-                    SKGLRenderControl.Refresh();
-                }
-            }
-        }
-
-
-
-        private void UpdateSelectedLabelOnUIChange()
-        {
-            if (MapStateMediator.SelectedMapLabel != null)
-            {
-                Color labelColor = FontColorSelectButton.BackColor;
-                Color outlineColor = OutlineColorSelectButton.BackColor;
-                float outlineWidth = OutlineWidthTrack.Value / 10F;
-                Color glowColor = GlowColorSelectButton.BackColor;
-                int glowStrength = GlowStrengthTrack.Value;
-
-                Font tbFont = new(MapStateMediator.SelectedLabelFont.FontFamily,
-                    MapStateMediator.SelectedLabelFont.Size * 0.75F, MapStateMediator.SelectedLabelFont.Style, GraphicsUnit.Point);
-
-                Cmd_ChangeLabelAttributes cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapLabel, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, tbFont);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
-
-                SKGLRenderControl.Invalidate();
-            }
-        }
-
-        private static MapLabel? SelectLabelAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
-        {
-            MapLabel? selectedLabel = null;
-
-            List<MapComponent> mapLabelComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LABELLAYER).MapLayerComponents;
-
-            for (int i = 0; i < mapLabelComponents.Count; i++)
-            {
-                if (mapLabelComponents[i] is MapLabel mapLabel)
-                {
-                    SKRect labelRect = new(mapLabel.X, mapLabel.Y, mapLabel.X + mapLabel.Width, mapLabel.Y + mapLabel.Height);
-
-                    if (labelRect.Contains(zoomedScrolledPoint))
-                    {
-                        selectedLabel = mapLabel;
-                    }
-                }
-            }
-
-            RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, selectedLabel);
-
-            return selectedLabel;
-        }
-
-
-
-        private static void ConstructBezierPathFromPoints()
-        {
-            CURRENT_MAP_LABEL_PATH.Dispose();
-            CURRENT_MAP_LABEL_PATH = new();
-
-            if (CURRENT_MAP_LABEL_PATH_POINTS.Count > 2)
-            {
-                CURRENT_MAP_LABEL_PATH.MoveTo(CURRENT_MAP_LABEL_PATH_POINTS[0]);
-
-                for (int j = 0; j < CURRENT_MAP_LABEL_PATH_POINTS.Count; j += 3)
-                {
-                    if (j < CURRENT_MAP_LABEL_PATH_POINTS.Count - 2)
-                    {
-                        CURRENT_MAP_LABEL_PATH.CubicTo(CURRENT_MAP_LABEL_PATH_POINTS[j], CURRENT_MAP_LABEL_PATH_POINTS[j + 1], CURRENT_MAP_LABEL_PATH_POINTS[j + 2]);
-                    }
-                }
-            }
-        }
-
-        private void SetLabelValuesFromPreset(LabelPreset preset)
-        {
-            FontColorSelectButton.BackColor = Color.FromArgb(preset.LabelColor);
-            FontColorSelectButton.Refresh();
-
-            OutlineColorSelectButton.BackColor = Color.FromArgb(preset.LabelOutlineColor);
-            OutlineColorSelectButton.Refresh();
-
-            OutlineWidthTrack.Value = (int)(preset.LabelOutlineWidth * 10F);
-            OutlineWidthTrack.Refresh();
-
-            GlowColorSelectButton.BackColor = Color.FromArgb(preset.LabelGlowColor);
-            GlowColorSelectButton.Refresh();
-
-            GlowStrengthTrack.Value = preset.LabelGlowStrength;
-            GlowStrengthTrack.Refresh();
-
-            string fontString = preset.LabelFontString;
-
-            string[] fontParts = fontString.Split(',');
-
-            if (fontParts.Length == 2)
-            {
-                string ff = fontParts[0];
-                string fs = fontParts[1];
-
-                // remove any non-numeric characters from the font size string (but allow . and -)
-                fs = string.Join(",", new string(
-                    [.. fs.Where(c => char.IsBetween(c, '0', '9') || c == '.' || c == '-' || char.IsWhiteSpace(c))]).Split((char[]?)null,
-                    StringSplitOptions.RemoveEmptyEntries));
-
-                bool success = float.TryParse(fs, out float fontsize);
-
-                if (!success)
-                {
-                    fontsize = 12.0F;
-                }
-
-                try
-                {
-                    FontFamily family = new(ff);
-                    MapStateMediator.SelectedLabelFont = new Font(family, fontsize, FontStyle.Regular, GraphicsUnit.Point);
-                    SelectLabelFontButton.Font = new Font(MapStateMediator.SelectedLabelFont.FontFamily, 14);
-                }
-                catch
-                {
-                    // couldn't create the font, so try to find it in the list of embedded fonts
-                    for (int i = 0; i < MapLabelMethods.EMBEDDED_FONTS.Families.Length; i++)
-                    {
-                        if (MapLabelMethods.EMBEDDED_FONTS.Families[i].Name == ff)
-                        {
-                            MapStateMediator.SelectedLabelFont = new Font(MapLabelMethods.EMBEDDED_FONTS.Families[i], fontsize, FontStyle.Regular, GraphicsUnit.Point);
-                            SelectLabelFontButton.Font = new Font(MapStateMediator.SelectedLabelFont.FontFamily, 14);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                MapStateMediator.SelectedLabelFont = MapStateMediator.DefaultLabelFont;
-            }
-
-            SelectLabelFontButton.Refresh();
-
-            int selectedFontIndex = 0;
-
-            if (FontFamilyCombo.Items != null && FontFamilyCombo.Items.Count > 0)
-            {
-                for (int i = 0; i < FontFamilyCombo.Items?.Count; i++)
-                {
-                    if (FontFamilyCombo.Items != null && FontFamilyCombo.Items[i] != null
-                        && ((Font?)FontFamilyCombo.Items[i])?.FontFamily.Name == MapStateMediator.SelectedLabelFont.FontFamily.Name)
-                    {
-                        selectedFontIndex = i;
-                        break;
-                    }
-                }
-
-                FontFamilyCombo.SelectedIndex = selectedFontIndex;
-            }
-
-            int selectedSizeIndex = 0;
-
-            if (FontSizeCombo.Items != null && FontSizeCombo.Items.Count > 0)
-            {
-                for (int i = 0; i < FontSizeCombo.Items?.Count; i++)
-                {
-                    if (FontSizeCombo.Items != null && FontSizeCombo.Items[i] != null
-                        && FontSizeCombo.Items[i]?.ToString() == Math.Round(MapStateMediator.SelectedLabelFont.SizeInPoints).ToString())
-                    {
-                        selectedSizeIndex = i;
-                        break;
-                    }
-                }
-
-                FontSizeCombo.SelectedIndex = selectedSizeIndex;
-            }
-        }
-
-        #endregion
-
         #region Label Tab Event Handlers
 
         private void ShowLabelLayerSwitch_CheckedChanged()
         {
-            MapLayer labellLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LABELLAYER);
-
-            labellLayer.ShowLayer = ShowLabelLayerSwitch.Checked;
-
-            MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BOXLAYER);
-
-            boxLayer.ShowLayer = ShowLabelLayerSwitch.Checked;
-
-            SKGLRenderControl.Invalidate();
+            LabelMediator.Enabled = ShowLabelLayerSwitch.Checked;
         }
-
-
 
         private void LabelPresetsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (LabelPresetsListBox.SelectedIndex >= 0 && LabelPresetsListBox.SelectedIndex < AssetManager.LABEL_PRESETS.Count)
-            {
-                LabelPreset selectedPreset = (LabelPreset)LabelPresetsListBox.Items[LabelPresetsListBox.SelectedIndex];
-                SetLabelValuesFromPreset(selectedPreset);
-            }
+            PresetMediator.SelectPreset(LabelPresetsListBox.SelectedIndex);
         }
 
         private void AddPresetButton_Click(object sender, EventArgs e)
         {
-            LabelPreset? selectedPreset = null;
-
-            if (LabelPresetsListBox.SelectedIndex >= 0 && LabelPresetsListBox.SelectedIndex < AssetManager.LABEL_PRESETS.Count)
-            {
-                selectedPreset = (LabelPreset)LabelPresetsListBox.Items[LabelPresetsListBox.SelectedIndex];
-            }
-
-            LabelPresetNameEntry presetDialog = new();
-
-            if (selectedPreset != null)
-            {
-                presetDialog.PresetNameTextBox.Text = selectedPreset.LabelPresetName;
-            }
-
-            DialogResult result = presetDialog.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                string presetName = presetDialog.PresetNameTextBox.Text;
-
-                string currentThemeName = string.Empty;
-
-                if (AssetManager.CURRENT_THEME != null && !string.IsNullOrEmpty(AssetManager.CURRENT_THEME.ThemeName))
-                {
-                    currentThemeName = AssetManager.CURRENT_THEME.ThemeName;
-                }
-                else
-                {
-                    currentThemeName = "DEFAULT";
-                }
-
-                string presetFileName = AssetManager.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "LabelPresets" + Path.DirectorySeparatorChar + Guid.NewGuid().ToString() + ".mclblprst";
-
-                if (presetName == selectedPreset?.LabelPresetName)
-                {
-                    presetFileName = selectedPreset.PresetXmlFilePath;
-                }
-
-                bool makeNewPreset = true;
-
-                if (File.Exists(presetFileName))
-                {
-                    LabelPreset? existingPreset = AssetManager.LABEL_PRESETS.Find(x => x.LabelPresetName == presetName && x.LabelPresetTheme == currentThemeName);
-                    if (existingPreset != null && existingPreset.IsDefault)
-                    {
-                        makeNewPreset = false;
-                    }
-                    else
-                    {
-                        DialogResult r = MessageBox.Show("A label preset named " + presetName + " for theme " + currentThemeName + " already exists. Replace it?", "Replace Preset", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                        if (r == DialogResult.No)
-                        {
-                            makeNewPreset = false;
-                        }
-                    }
-                }
-
-                if (makeNewPreset)
-                {
-                    LabelPreset preset = new()
-                    {
-                        PresetXmlFilePath = presetFileName
-                    };
-
-                    FontConverter cvt = new();
-
-                    Font f = new(MapStateMediator.SelectedLabelFont.FontFamily, MapStateMediator.SelectedLabelFont.Size * 0.75F, MapStateMediator.SelectedLabelFont.Style, GraphicsUnit.Point);
-
-                    string? fontString = cvt.ConvertToString(f);
-
-                    if (!string.IsNullOrEmpty(fontString))
-                    {
-                        preset.LabelPresetName = presetName;
-                        if (AssetManager.CURRENT_THEME != null && !string.IsNullOrEmpty(AssetManager.CURRENT_THEME.ThemeName))
-                        {
-                            preset.LabelPresetTheme = AssetManager.CURRENT_THEME.ThemeName;
-                        }
-                        else
-                        {
-                            preset.LabelPresetTheme = "DEFAULT";
-                        }
-
-                        preset.LabelFontString = fontString;
-                        preset.LabelColor = FontColorSelectButton.BackColor.ToArgb();
-                        preset.LabelOutlineColor = OutlineColorSelectButton.BackColor.ToArgb();
-                        preset.LabelOutlineWidth = OutlineWidthTrack.Value / 10F;
-                        preset.LabelGlowColor = GlowColorSelectButton.BackColor.ToArgb();
-                        preset.LabelGlowStrength = GlowStrengthTrack.Value;
-
-                        preset.PresetXmlFilePath = presetFileName;
-
-                        MapFileMethods.SerializeLabelPreset(preset);
-
-                        int assetCount = AssetManager.LoadAllAssets();
-
-                        PopulateControlsWithAssets(assetCount);
-                    }
-                }
-            }
+            PresetMediator.AddNewLabelPreset();
         }
 
         private void RemovePresetButton_Click(object sender, EventArgs e)
         {
-            //remove a preset (prevent default presets from being deleted or changed)
-
-            if (LabelPresetsListBox.SelectedIndex >= 0)
-            {
-                string? presetName = ((LabelPreset?)LabelPresetsListBox.SelectedItem)?.LabelPresetName;
-
-                if (!string.IsNullOrEmpty(presetName))
-                {
-                    string currentThemeName = string.Empty;
-
-                    if (AssetManager.CURRENT_THEME != null && !string.IsNullOrEmpty(AssetManager.CURRENT_THEME.ThemeName))
-                    {
-                        currentThemeName = AssetManager.CURRENT_THEME.ThemeName;
-                    }
-                    else
-                    {
-                        currentThemeName = "DEFAULT";
-                    }
-
-                    LabelPreset? existingPreset = AssetManager.LABEL_PRESETS.Find(x => x.LabelPresetName == presetName && x.LabelPresetTheme == currentThemeName);
-
-                    if (existingPreset != null && !existingPreset.IsDefault)
-                    {
-                        if (!string.IsNullOrEmpty(existingPreset.PresetXmlFilePath))
-                        {
-                            if (File.Exists(existingPreset.PresetXmlFilePath))
-                            {
-                                DialogResult r = MessageBox.Show("The label preset named " + presetName + " for theme " + currentThemeName + " will be deleted. Continue?", "Delete Label Preset",
-                                    MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-
-                                if (r == DialogResult.Yes)
-                                {
-                                    try
-                                    {
-                                        File.Delete(existingPreset.PresetXmlFilePath);
-
-                                        int assetCount = AssetManager.LoadAllAssets();
-
-                                        PopulateControlsWithAssets(assetCount);
-
-                                        MessageBox.Show("The label preset has been deleted.", "Preset Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Program.LOGGER.Error(ex);
-                                        MessageBox.Show("The label preset could not be deleted.", "Preset Not Deleted", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("The selected label preset cannot be deleted.", "Preset Not Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                    }
-                }
-            }
+            PresetMediator.RemoveSelectedPreset();
         }
 
         private void SelectLabelFontButton_Click(object sender, EventArgs e)
@@ -8109,85 +7497,42 @@ namespace RealmStudio
         private void FontColorSelectButton_Click(object sender, EventArgs e)
         {
             Color labelColor = UtilityMethods.SelectColorFromDialog(this, FontColorSelectButton.BackColor);
-
-            if (labelColor.ToArgb() != Color.Empty.ToArgb())
-            {
-                FontColorSelectButton.BackColor = labelColor;
-
-                FontColorSelectButton.Refresh();
-
-                UpdateSelectedLabelOnUIChange();
-            }
+            LabelMediator.LabelColor = labelColor;
         }
 
         private void OutlineColorSelectButton_Click(object sender, EventArgs e)
         {
             Color outlineColor = UtilityMethods.SelectColorFromDialog(this, OutlineColorSelectButton.BackColor);
-
-            if (outlineColor.ToArgb() != Color.Empty.ToArgb())
-            {
-                OutlineColorSelectButton.BackColor = outlineColor;
-                OutlineColorSelectButton.Refresh();
-
-                UpdateSelectedLabelOnUIChange();
-            }
+            LabelMediator.OutlineColor = outlineColor;
         }
 
         private void OutlineWidthTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show((OutlineWidthTrack.Value / 10.0F).ToString(), LabelOutlineGroup, new Point(OutlineWidthTrack.Right - 30, OutlineWidthTrack.Top - 20), 2000);
-
-            UpdateSelectedLabelOnUIChange();
+            LabelMediator.OutlineWidth = OutlineWidthTrack.Value / 10.0F;
+            TOOLTIP.Show(LabelMediator.OutlineWidth.ToString(), LabelOutlineGroup, new Point(OutlineWidthTrack.Right - 30, OutlineWidthTrack.Top - 20), 2000);
         }
 
         private void GlowColorSelectButton_Click(object sender, EventArgs e)
         {
-            Color outlineColor = UtilityMethods.SelectColorFromDialog(this, GlowColorSelectButton.BackColor);
-
-            if (outlineColor.ToArgb() != Color.Empty.ToArgb())
-            {
-                GlowColorSelectButton.BackColor = outlineColor;
-                GlowColorSelectButton.Refresh();
-
-                UpdateSelectedLabelOnUIChange();
-            }
+            Color glowColor = UtilityMethods.SelectColorFromDialog(this, GlowColorSelectButton.BackColor);
+            LabelMediator.GlowColor = glowColor;
         }
 
         private void GlowWidthTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(GlowStrengthTrack.Value.ToString(), LabelGlowGroup, new Point(GlowStrengthTrack.Right - 30, GlowStrengthTrack.Top - 20), 2000);
-
-            UpdateSelectedLabelOnUIChange();
+            LabelMediator.GlowStrength = GlowStrengthTrack.Value;
+            TOOLTIP.Show(LabelMediator.GlowStrength.ToString(), LabelGlowGroup, new Point(GlowStrengthTrack.Right - 30, GlowStrengthTrack.Top - 20), 2000);
         }
 
         private void LabelRotationUpDown_ValueChanged(object sender, EventArgs e)
         {
-            LabelRotationTrack.Value = (int)LabelRotationUpDown.Value;
-
-            if (MapStateMediator.SelectedMapLabel != null)
-            {
-                Cmd_ChangeLabelRotation cmd = new(MapStateMediator.SelectedMapLabel, (float)LabelRotationTrack.Value);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
-
-                SKGLRenderControl.Invalidate();
-            }
+            LabelMediator.LabelRotation = (float)LabelRotationUpDown.Value;
         }
 
         private void LabelRotationTrack_Scroll(object sender, EventArgs e)
         {
-            TOOLTIP.Show(LabelRotationTrack.Value.ToString(), LabelRotationGroup, new Point(LabelRotationTrack.Right - 30, LabelRotationTrack.Top - 20), 2000);
-
-            LabelRotationUpDown.Value = LabelRotationTrack.Value;
-
-            if (MapStateMediator.SelectedMapLabel != null)
-            {
-                Cmd_ChangeLabelRotation cmd = new(MapStateMediator.SelectedMapLabel, LabelRotationTrack.Value);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
-
-                SKGLRenderControl.Invalidate();
-            }
+            LabelMediator.LabelRotation = LabelRotationTrack.Value;
+            TOOLTIP.Show(LabelMediator.LabelRotation.ToString(), LabelRotationGroup, new Point(LabelRotationTrack.Right - 30, LabelRotationTrack.Top - 20), 2000);
         }
 
         private void CircleTextPathButton_Click(object sender, EventArgs e)

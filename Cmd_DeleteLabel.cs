@@ -37,6 +37,7 @@ namespace RealmStudio
                 if (labelLayer.MapLayerComponents[i] is MapLabel l && l.LabelGuid.ToString() == Label.LabelGuid.ToString())
                 {
                     labelLayer.MapLayerComponents.RemoveAt(i);
+                    MapStateMediator.SelectedMapLabel = null;
                 }
             }
         }

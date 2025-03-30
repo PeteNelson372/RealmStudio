@@ -14,6 +14,7 @@ namespace RealmStudio
         private readonly Panel _symbolToolPanel;
 
         // symbol UI values
+        private bool _enabled = true;
         private bool _symbolScaleLocked;
         private float _symbolScale = 100;
         private bool _randomizeSymbolColors;
@@ -59,6 +60,12 @@ namespace RealmStudio
         }
 
         // UI value setters/getters
+        internal bool Enabled
+        {
+            get { return _enabled; }
+            set { SetPropertyField(nameof(Enabled), ref _enabled, value); }
+        }
+
         internal bool SymbolScaleLocked
         {
             get { return _symbolScaleLocked; }
@@ -205,6 +212,8 @@ namespace RealmStudio
             {
                 UpdateSymbolUI(changedPropertyName);
                 SymbolManager.Update(MapStateMediator.CurrentMap, MapState, this);
+
+                MainForm.SKGLRenderControl.Invalidate();
             }
         }
 
@@ -212,6 +221,10 @@ namespace RealmStudio
         {
             // this methods updates the Main Form Symbol Tab UI
             // based on the property that has changed
+
+            MapLayer symbollLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER);
+            symbollLayer.ShowLayer = Enabled;
+
             if (string.IsNullOrEmpty(changedPropertyName))
             {
                 SymbolScaleLockChange();

@@ -30,6 +30,10 @@ namespace RealmStudio
 {
     internal sealed class AssetManager
     {
+        // TODO: refactor AssetManager so map object managers are responsible
+        // for loading assets for the map objects they manage
+
+
         public static Cursor? EYEDROPPER_CURSOR { get; set; }
 
         public static readonly List<MapTexture> BACKGROUND_TEXTURE_LIST = [];
@@ -38,8 +42,6 @@ namespace RealmStudio
         public static List<MapTexture> HATCH_TEXTURE_LIST { get; set; } = [];
 
         public static List<MapBox> MAP_BOX_LIST = [];
-
-        public static List<LabelPreset> LABEL_PRESETS = [];
 
         public static List<MapFrame> MAP_FRAME_TEXTURES { get; set; } = [];
 
@@ -82,14 +84,13 @@ namespace RealmStudio
 
         public static string DefaultModelsDirectory = Settings.Default.DefaultRealmDirectory + Path.DirectorySeparatorChar + "Models";
 
-
         public static readonly string CollectionFileName = "collection.xml";
 
         public static readonly string WonderdraftSymbolsFileName = ".wonderdraft_symbols";
 
         public static LoadingStatusForm LOADING_STATUS_FORM = new();
 
-        internal static void InitializeAssetDirectory()
+        internal static void InitializeAssetDirectories()
         {
             ASSET_DIRECTORY = Settings.Default.MapAssetDirectory;
 
@@ -97,21 +98,23 @@ namespace RealmStudio
             {
                 ASSET_DIRECTORY = UtilityMethods.DEFAULT_ASSETS_FOLDER;
             }
-        }
-
-        internal static int LoadAllAssets()
-        {
-            int LoadPercentage = 0;
 
             DefaultModelsDirectory = Settings.Default.DefaultRealmDirectory + Path.DirectorySeparatorChar + "Models";
-
-            SymbolManager.DefaultSymbolDirectory = ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols";
 
             SymbolTagsFilePath = SymbolManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "SymbolTags.txt";
 
             StructureSynonymsFilePath = SymbolManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "StructureSynonyms.txt";
             TerrainSynonymsFilePath = SymbolManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "TerrainSynonyms.txt";
             VegetationSynonymsFilePath = SymbolManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
+
+            // set map object manager directories
+            SymbolManager.DefaultSymbolDirectory = ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols";
+            LabelPresetManager.LabelPresetsDirectory = ASSET_DIRECTORY + Path.DirectorySeparatorChar + "LabelPresets";
+        }
+
+        internal static int LoadAllAssets()
+        {
+            int LoadPercentage = 0;
 
             ResetAssets();
 
@@ -287,21 +290,13 @@ namespace RealmStudio
                 else if (Path.GetDirectoryName(f.File).EndsWith("\\Stamps"))
                 {
                 }
-                else if (Path.GetDirectoryName(f.File).EndsWith("\\LabelPresets"))
-                {
-                    LabelPreset? preset = MapFileMethods.ReadLabelPreset(path);
-
-                    if (preset != null)
-                    {
-                        LABEL_PRESETS.Add(preset);
-                    }
-                }
-
-
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
 
             numAssets += files.Count();
+
+            int numPresets = LabelPresetManager.LoadLabelPresets();
+            numAssets += numPresets;
 
             int numBoxes = LoadBoxAssets();
             numAssets += numBoxes;
@@ -335,7 +330,8 @@ namespace RealmStudio
             BRUSH_LIST.Clear();
             APPLICATION_ICON_LIST.Clear();
             THEME_LIST.Clear();
-            LABEL_PRESETS.Clear();
+
+            LabelPresetManager.ClearLabelPresets();
 
             MAP_SYMBOL_COLLECTIONS.Clear();
         }
@@ -387,7 +383,7 @@ namespace RealmStudio
                     {
                         if (!File.Exists(t.BackgroundTexture.TexturePath))
                         {
-                            string fileName = Path.GetFileName(t.BackgroundTexture.TexturePath);
+                            string fileName = System.IO.Path.GetFileName(t.BackgroundTexture.TexturePath);
 
                             string textureDirectory = assetDirectory + Path.DirectorySeparatorChar + "Textures"
                                 + Path.DirectorySeparatorChar + "Background" + Path.DirectorySeparatorChar;
@@ -454,6 +450,8 @@ namespace RealmStudio
                 }
             }
         }
+
+
 
         internal static int LoadSymbolCollections()
         {

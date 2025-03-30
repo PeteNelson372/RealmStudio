@@ -232,11 +232,7 @@ namespace RealmStudio
                         SizeMode = PictureBoxSizeMode.Zoom,
                         Image = (Image)box.BoxBitmap.Clone(),
                     };
-
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
                     pb.MouseClick += MapBoxPictureBox_MouseClick;
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-
                     MainForm.LabelBoxStyleTable.Controls.Add(pb);
                 }
 

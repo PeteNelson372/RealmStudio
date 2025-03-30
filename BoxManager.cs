@@ -98,6 +98,8 @@ namespace RealmStudio
 
         public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
         {
+            ArgumentNullException.ThrowIfNull(map);
+
             List<MapComponent> mapLabelComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BOXLAYER).MapLayerComponents;
 
             for (int i = 0; i < mapLabelComponents.Count; i++)

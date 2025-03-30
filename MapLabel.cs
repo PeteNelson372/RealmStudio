@@ -359,8 +359,8 @@ namespace RealmStudio
                 LabelPath = SKPath.ParseSvgPathData(labelPath);
             }
 
-            SKFont skLabelFont = MapLabelMethods.GetSkLabelFont(LabelFont);
-            SKPaint paint = MapLabelMethods.CreateLabelPaint(LabelColor);
+            SKFont skLabelFont = LabelManager.GetSkLabelFont(LabelFont);
+            SKPaint paint = LabelManager.CreateLabelPaint(LabelColor);
 
             LabelPaint = paint;
             LabelSKFont.Dispose();
