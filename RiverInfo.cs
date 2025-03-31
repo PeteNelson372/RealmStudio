@@ -90,7 +90,7 @@ namespace RealmStudio
 
             TOOLTIP.Show("River data changes applied", this, new Point(StatusMessageLabel.Left, StatusMessageLabel.Top), 3000);
 
-            WaterFeatureMethods.ConstructRiverPaintObjects(River);
+            WaterFeatureManager.ConstructRiverPaintObjects(River);
 
             RenderControl.Invalidate();
         }

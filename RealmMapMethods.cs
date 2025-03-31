@@ -663,8 +663,8 @@ namespace RealmStudio
 
                                 SKImageInfo lfImageInfo = new(newRealmMap.MapWidth, newRealmMap.MapHeight);
 
-                                WaterFeatureMethods.CreateInnerAndOuterPaths(newRealmMap, newRealmWf);
-                                WaterFeatureMethods.ConstructWaterFeaturePaintObjects(newRealmWf);
+                                WaterFeatureManager.CreateInnerAndOuterPaths(newRealmMap, newRealmWf);
+                                WaterFeatureManager.ConstructWaterFeaturePaintObjects(newRealmWf);
 
                                 newRealmWaterLayer.MapLayerComponents.Add(newRealmWf);
 
@@ -699,8 +699,8 @@ namespace RealmStudio
                                 newRealmRiver.RiverPoints.Add(newMrp);
                             }
 
-                            WaterFeatureMethods.ConstructRiverPaintObjects(newRealmRiver);
-                            WaterFeatureMethods.ConstructRiverPaths(newRealmRiver);
+                            WaterFeatureManager.ConstructRiverPaintObjects(newRealmRiver);
+                            WaterFeatureManager.ConstructRiverPaths(newRealmRiver);
 
                             newRealmWaterLayer.MapLayerComponents.Add(newRealmRiver);
 
@@ -1517,13 +1517,13 @@ namespace RealmStudio
 
             LandformMethods.FinalizeLandforms(map, glControl);
 
-            WaterFeatureMethods.FinalizeWaterFeatures(map);
+            WaterFeatureManager.FinalizeWaterFeatures(map);
 
             PathManager.FinalizeMapPaths(map);
 
             SymbolManager.FinalizeMapSymbols(map);
 
-            WaterFeatureMethods.FinalizeWindroses(map);
+            WaterFeatureManager.FinalizeWindroses(map);
 
             BoxManager.FinalizeMapBoxes(map);
 

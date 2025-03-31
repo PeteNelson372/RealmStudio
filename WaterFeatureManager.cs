@@ -26,18 +26,53 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal sealed class WaterFeatureMethods
+    internal sealed class WaterFeatureManager : IMapComponentManager
     {
         public static SKPath WaterFeaturErasePath { get; set; } = new();
 
-        public static int WaterFeatureBrushSize { get; set; } = 20;
-        public static int WaterFeatureEraserSize { get; set; } = 20;
-
-        public static int WaterColorBrushSize { get; set; } = 20;
-        public static int WaterColorEraserSize { get; set; } = 20;
 
         public static Color DEFAULT_WATER_OUTLINE_COLOR { get; } = ColorTranslator.FromHtml("#A19076");
         public static Color DEFAULT_WATER_COLOR { get; } = ColorTranslator.FromHtml("#658CBFC5");
+
+        private static WaterFeatureUIMediator? _waterFeatureMediator;
+
+        internal static WaterFeatureUIMediator? WaterFeatureMediator
+        {
+            get { return _waterFeatureMediator; }
+            set { _waterFeatureMediator = value; }
+        }
+
+        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        {
+            ArgumentNullException.ThrowIfNull(WaterFeatureMediator);
+
+            MapStateMediator.CurrentWaterFeature = new()
+            {
+                ParentMap = MapStateMediator.CurrentMap,
+                WaterFeatureType = WaterFeatureType.Other,
+                WaterFeatureColor = WaterFeatureMediator.WaterColor,
+                WaterFeatureShorelineColor = WaterFeatureMediator.ShorelineColor
+            };
+
+            ConstructWaterFeaturePaintObjects(MapStateMediator.CurrentWaterFeature);
+
+            return MapStateMediator.CurrentWaterFeature;
+        }
+
+        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        {
+            return true;
+        }
+
+        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        {
+            return true;
+        }
 
         internal static void MergeWaterFeatures(RealmStudioMap map)
         {
@@ -1112,6 +1147,75 @@ namespace RealmStudio
             }
 
             return null;
+        }
+
+        internal static void StartColorPainting(TimerManager applicationTimerManager, SKGLControl glRenderControl)
+        {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(WaterFeatureMediator);
+
+            if (MapStateMediator.CurrentLayerPaintStroke == null)
+            {
+                MapStateMediator.CurrentLayerPaintStroke = new LayerPaintStroke(MapStateMediator.CurrentMap, WaterFeatureMediator.WaterPaintColor.ToSKColor(),
+                    MapStateMediator.SelectedColorPaintBrush, MapStateMediator.MainUIMediator.SelectedBrushSize / 2, MapBuilder.WATERDRAWINGLAYER)
+                {
+                    RenderSurface = SKSurface.Create(glRenderControl.GRContext, false,
+                    new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
+                };
+
+                Cmd_AddWaterPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                applicationTimerManager.BrushTimerEnabled = true;
+            }
+        }
+
+        internal static void StopColorPainting(TimerManager applicationTimerManager)
+        {
+            applicationTimerManager.BrushTimerEnabled = false;
+
+            if (MapStateMediator.CurrentLayerPaintStroke != null)
+            {
+                MapStateMediator.CurrentLayerPaintStroke = null;
+            }
+        }
+
+        internal static void StartColorErasing(SKGLControl glRenderControl)
+        {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+
+            if (MapStateMediator.CurrentLayerPaintStroke == null)
+            {
+                MapStateMediator.CurrentLayerPaintStroke = new LayerPaintStroke(MapStateMediator.CurrentMap, SKColors.Empty,
+                    ColorPaintBrush.HardBrush, MapStateMediator.MainUIMediator.SelectedBrushSize / 2, MapBuilder.WATERDRAWINGLAYER, true)
+                {
+                    RenderSurface = SKSurface.Create(glRenderControl.GRContext, false, new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
+                };
+
+                Cmd_AddWaterPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+            }
+        }
+
+        internal static void StopColorErasing()
+        {
+            MapStateMediator.CurrentLayerPaintStroke = null;
+        }
+
+        internal static void AddWaterFeatureToMap()
+        {
+            if (MapStateMediator.CurrentWaterFeature != null)
+            {
+                Cmd_AddNewWaterFeature cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentWaterFeature);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                MergeWaterFeatures(MapStateMediator.CurrentMap);
+
+                MapStateMediator.CurrentWaterFeature = null;
+            }
         }
     }
 }

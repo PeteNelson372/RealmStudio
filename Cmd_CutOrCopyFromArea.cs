@@ -180,7 +180,7 @@ namespace RealmStudio
 
                                 newWf.WaterFeaturePath = wfPath;
 
-                                WaterFeatureMethods.CreateInnerAndOuterPaths(Map, newWf);
+                                WaterFeatureManager.CreateInnerAndOuterPaths(Map, newWf);
 
                                 StoredComponents.Add(newWf);
                                 selectedMapComponents[i] = newWf;
@@ -217,8 +217,8 @@ namespace RealmStudio
                                 newRiver.RiverPoints.Add(mrp);
                             }
 
-                            WaterFeatureMethods.ConstructRiverPaths(newRiver);
-                            WaterFeatureMethods.ConstructRiverPaintObjects(newRiver);
+                            WaterFeatureManager.ConstructRiverPaths(newRiver);
+                            WaterFeatureManager.ConstructRiverPaintObjects(newRiver);
 
                             StoredComponents.Add(newRiver);
                             selectedMapComponents[i] = newRiver;
@@ -293,7 +293,7 @@ namespace RealmStudio
                         wf.WaterFeaturePath.Dispose();
                         wf.WaterFeaturePath = wfPath;
 
-                        WaterFeatureMethods.CreateInnerAndOuterPaths(Map, wf);
+                        WaterFeatureManager.CreateInnerAndOuterPaths(Map, wf);
 
                         waterLayer.MapLayerComponents.Add(wf);
                     }
@@ -313,8 +313,8 @@ namespace RealmStudio
                             mr.RiverPoints.Add(mrp);
                         }
 
-                        WaterFeatureMethods.ConstructRiverPaths(mr);
-                        WaterFeatureMethods.ConstructRiverPaintObjects(mr);
+                        WaterFeatureManager.ConstructRiverPaths(mr);
+                        WaterFeatureManager.ConstructRiverPaintObjects(mr);
 
                         waterLayer.MapLayerComponents.Add(mr);
                     }

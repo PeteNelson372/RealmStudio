@@ -99,6 +99,9 @@ namespace RealmStudio
         // UI mediator for MapRegions
         private RegionUIMediator MapRegionUIMediator { get; set; }
 
+        // UI mediator for WaterFeatures (not Rivers)
+        private WaterFeatureUIMediator WaterFeatureMediator { get; set; }
+
         private TimerManager ApplicationTimerManager { get; set; }
 
         #region Constructor
@@ -175,6 +178,9 @@ namespace RealmStudio
 
             SymbolUIMediator = new MapSymbolUIMediator(this);
             SymbolManager.SymbolUIMediator = SymbolUIMediator;
+
+            WaterFeatureMediator = new WaterFeatureUIMediator(this);
+            WaterFeatureManager.WaterFeatureMediator = WaterFeatureMediator;
 
 
             ApplicationTimerManager = new(this)
@@ -1621,7 +1627,7 @@ namespace RealmStudio
                         }
                         else if (MainTab.SelectedTab.Text == "Water")
                         {
-                            SetWaterPaintColorFromCustomPresetButton((Button)sender);
+                            WaterFeatureMediator.SetWaterPaintColorFromCustomPresetButton((Button)sender);
                         }
 
                         ((Button)sender).Refresh();
@@ -2940,7 +2946,7 @@ namespace RealmStudio
                     }
                     else
                     {
-                        WaterColorSelectionButton.BackColor = WaterFeatureMethods.DEFAULT_WATER_COLOR;
+                        WaterColorSelectionButton.BackColor = WaterFeatureManager.DEFAULT_WATER_COLOR;
                         WaterColorSelectionButton.Refresh();
                     }
 
@@ -2951,7 +2957,7 @@ namespace RealmStudio
                     }
                     else
                     {
-                        ShorelineColorSelectionButton.BackColor = WaterFeatureMethods.DEFAULT_WATER_OUTLINE_COLOR;
+                        ShorelineColorSelectionButton.BackColor = WaterFeatureManager.DEFAULT_WATER_OUTLINE_COLOR;
                         ShorelineColorSelectionButton.Refresh();
                     }
 
@@ -2962,10 +2968,10 @@ namespace RealmStudio
                 }
                 else
                 {
-                    ShorelineColorSelectionButton.BackColor = WaterFeatureMethods.DEFAULT_WATER_OUTLINE_COLOR;
+                    ShorelineColorSelectionButton.BackColor = WaterFeatureManager.DEFAULT_WATER_OUTLINE_COLOR;
                     ShorelineColorSelectionButton.Refresh();
 
-                    WaterColorSelectionButton.BackColor = WaterFeatureMethods.DEFAULT_WATER_COLOR;
+                    WaterColorSelectionButton.BackColor = WaterFeatureManager.DEFAULT_WATER_COLOR;
                     WaterColorSelectionButton.Refresh();
                 }
 
@@ -3275,7 +3281,7 @@ namespace RealmStudio
             // objects are drawn or moved on mouse move
             if (e.Button == MouseButtons.Left)
             {
-                LeftButtonMouseMoveHandler(MainUIMediator.SelectedBrushSize / 2);
+                LeftButtonMouseMoveHandler();
             }
             else if (e.Button == MouseButtons.Right)
             {
@@ -3601,30 +3607,21 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.WaterFeatureSelect:
                     {
-                        MapStateMediator.SelectedWaterFeature = (IWaterFeature?)SelectWaterFeatureAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
+                        MapStateMediator.SelectedWaterFeature = (IWaterFeature?)WaterFeatureMediator.SelectWaterFeatureAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
                 case MapDrawingMode.WaterPaint:
                     {
                         Cursor = Cursors.Cross;
-
-                        MapStateMediator.CurrentWaterFeature = new()
-                        {
-                            ParentMap = MapStateMediator.CurrentMap,
-                            WaterFeatureType = WaterFeatureType.Other,
-                            WaterFeatureColor = WaterColorSelectionButton.BackColor,
-                            WaterFeatureShorelineColor = ShorelineColorSelectionButton.BackColor
-                        };
-
-                        WaterFeatureMethods.ConstructWaterFeaturePaintObjects(MapStateMediator.CurrentWaterFeature);
+                        WaterFeatureManager.Create(MapStateMediator.CurrentMap, WaterFeatureMediator);
                     }
                     break;
                 case MapDrawingMode.LakePaint:
                     {
                         Cursor = Cursors.Cross;
 
-                        MapStateMediator.CurrentWaterFeature = WaterFeatureMethods.CreateLake(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint,
+                        MapStateMediator.CurrentWaterFeature = WaterFeatureManager.CreateLake(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint,
                             brushSize, WaterColorSelectionButton.BackColor, ShorelineColorSelectionButton.BackColor);
 
                         if (MapStateMediator.CurrentWaterFeature != null)
@@ -3633,7 +3630,7 @@ namespace RealmStudio
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
-                            WaterFeatureMethods.MergeWaterFeatures(MapStateMediator.CurrentMap);
+                            WaterFeatureManager.MergeWaterFeatures(MapStateMediator.CurrentMap);
 
                             SKGLRenderControl.Invalidate();
                         }
@@ -3645,7 +3642,7 @@ namespace RealmStudio
 
                         if (MapStateMediator.CurrentRiver == null)
                         {
-                            MapStateMediator.CurrentRiver = WaterFeatureMethods.CreateRiver(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, WaterColorSelectionButton.BackColor,
+                            MapStateMediator.CurrentRiver = WaterFeatureManager.CreateRiver(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, WaterColorSelectionButton.BackColor,
                                 ShorelineColorSelectionButton.BackColor, RiverWidthTrack.Value, RiverSourceFadeInSwitch.Checked,
                                 RiverTextureSwitch.Checked);
 
@@ -3667,7 +3664,7 @@ namespace RealmStudio
                                     mp.IsSelected = false;
                                 }
 
-                                MapStateMediator.SelectedRiverPoint = WaterFeatureMethods.SelectRiverPointAtPoint(river, MapStateMediator.CurrentCursorPoint, false);
+                                MapStateMediator.SelectedRiverPoint = WaterFeatureManager.SelectRiverPointAtPoint(river, MapStateMediator.CurrentCursorPoint, false);
 
                                 if (MapStateMediator.SelectedRiverPoint != null)
                                 {
@@ -3684,23 +3681,7 @@ namespace RealmStudio
                         MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
-                        if (MapStateMediator.CurrentLayerPaintStroke == null)
-                        {
-                            MapStateMediator.CurrentLayerPaintStroke = new LayerPaintStroke(MapStateMediator.CurrentMap, WaterPaintColorSelectButton.BackColor.ToSKColor(),
-                                MapStateMediator.SelectedColorPaintBrush, MainUIMediator.SelectedBrushSize / 2, MapBuilder.WATERDRAWINGLAYER)
-                            {
-                                RenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false,
-                                new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
-                            };
-
-                            Cmd_AddWaterPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
-
-                            MainUIMediator.CurrentBrushVelocity = Math.Max(1, MapStateMediator.BasePaintEventInterval / (LandBrushVelocityTrack.Value / 100.0));
-
-                            ApplicationTimerManager.BrushTimerEnabled = true;
-                        }
+                        WaterFeatureManager.StartColorPainting(ApplicationTimerManager, SKGLRenderControl);
                     }
                     break;
                 case MapDrawingMode.WaterColorErase:
@@ -3708,20 +3689,7 @@ namespace RealmStudio
                         MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
-                        if (MapStateMediator.CurrentLayerPaintStroke == null)
-                        {
-                            MapStateMediator.CurrentLayerPaintStroke = new LayerPaintStroke(MapStateMediator.CurrentMap, SKColors.Empty,
-                                ColorPaintBrush.HardBrush, MainUIMediator.SelectedBrushSize / 2, MapBuilder.WATERDRAWINGLAYER, true)
-                            {
-                                RenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false, new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
-                            };
-
-                            Cmd_AddWaterPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
-                        }
-
-                        SKGLRenderControl.Invalidate();
+                        WaterFeatureManager.StartColorErasing(SKGLRenderControl);
                     }
                     break;
                 case MapDrawingMode.PathPaint:
@@ -3977,7 +3945,7 @@ namespace RealmStudio
 
         #region Left Button Move Handler Method
 
-        private void LeftButtonMouseMoveHandler(int brushRadius)
+        private void LeftButtonMouseMoveHandler()
         {
             switch (MainUIMediator.CurrentDrawingMode)
             {
@@ -3998,7 +3966,7 @@ namespace RealmStudio
                         {
                             MapStateMediator.CurrentLandform.IsModified = true;
 
-                            MapStateMediator.CurrentLandform.DrawPath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, brushRadius);
+                            MapStateMediator.CurrentLandform.DrawPath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, MainUIMediator.SelectedBrushSize / 2);
 
                             bool createPathsWhilePainting = Settings.Default.CalculateContoursWhilePainting;
 
@@ -4016,8 +3984,8 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        LandformMethods.LandformErasePath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, brushRadius);
-                        LandformMethods.EraseFromLandform(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, brushRadius);
+                        LandformMethods.LandformErasePath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, MainUIMediator.SelectedBrushSize / 2);
+                        LandformMethods.EraseFromLandform(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, MainUIMediator.SelectedBrushSize / 2);
 
                         LandformMethods.LandformErasePath.Reset();
 
@@ -4051,10 +4019,10 @@ namespace RealmStudio
 
                         if (MapStateMediator.CurrentWaterFeature != null)
                         {
-                            MapStateMediator.CurrentWaterFeature.WaterFeaturePath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, brushRadius);
+                            MapStateMediator.CurrentWaterFeature.WaterFeaturePath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, MainUIMediator.SelectedBrushSize / 2);
 
                             // compute contour path and inner and outer paths in a separate thread
-                            Task.Run(() => WaterFeatureMethods.CreateInnerAndOuterPaths(MapStateMediator.CurrentMap, MapStateMediator.CurrentWaterFeature));
+                            Task.Run(() => WaterFeatureManager.CreateInnerAndOuterPaths(MapStateMediator.CurrentMap, MapStateMediator.CurrentWaterFeature));
                         }
 
                         SKGLRenderControl.Invalidate();
@@ -4064,9 +4032,9 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        WaterFeatureMethods.WaterFeaturErasePath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, brushRadius);
+                        WaterFeatureManager.WaterFeaturErasePath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, MainUIMediator.SelectedBrushSize / 2);
 
-                        WaterFeatureMethods.EraseWaterFeature(MapStateMediator.CurrentMap);
+                        WaterFeatureManager.EraseWaterFeature(MapStateMediator.CurrentMap);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4088,7 +4056,7 @@ namespace RealmStudio
 
                         if (MapStateMediator.CurrentRiver != null)
                         {
-                            WaterFeatureMethods.ConstructRiverPaths(MapStateMediator.CurrentRiver);
+                            WaterFeatureManager.ConstructRiverPaths(MapStateMediator.CurrentRiver);
                         }
 
                         SKGLRenderControl.Refresh();
@@ -4098,7 +4066,7 @@ namespace RealmStudio
                     if (MapStateMediator.SelectedWaterFeature != null && MapStateMediator.SelectedWaterFeature is River river && MapStateMediator.SelectedRiverPoint != null)
                     {
                         // move the selected point on the path
-                        WaterFeatureMethods.MoveSelectedRiverPoint(river, MapStateMediator.SelectedRiverPoint, MapStateMediator.CurrentCursorPoint);
+                        WaterFeatureManager.MoveSelectedRiverPoint(river, MapStateMediator.SelectedRiverPoint, MapStateMediator.CurrentCursorPoint);
 
                         MapStateMediator.CurrentMap.IsSaved = false;
                         SKGLRenderControl.Invalidate();
@@ -4272,7 +4240,7 @@ namespace RealmStudio
                 case MapDrawingMode.MapHeightIncrease:
                     {
                         float brushStrength = (float)BrushStrengthUpDown.Value;
-                        MapHeightMapMethods.ChangeHeightMapAreaHeight(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, brushRadius, brushStrength);
+                        MapHeightMapMethods.ChangeHeightMapAreaHeight(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, MainUIMediator.SelectedBrushSize / 2, brushStrength);
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
@@ -4282,7 +4250,7 @@ namespace RealmStudio
                 case MapDrawingMode.MapHeightDecrease:
                     {
                         float brushStrength = (float)BrushStrengthUpDown.Value;
-                        MapHeightMapMethods.ChangeHeightMapAreaHeight(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, brushRadius, -brushStrength);
+                        MapHeightMapMethods.ChangeHeightMapAreaHeight(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, MainUIMediator.SelectedBrushSize / 2, -brushStrength);
 
                         MapStateMediator.CurrentMap.IsSaved = false;
                         SKGLRenderControl.Invalidate();
@@ -4327,7 +4295,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.RiverEdit:
                     {
-                        MapStateMediator.SelectedRiverPoint = WaterFeatureMethods.GetSelectedRiverPoint(MapStateMediator.SelectedWaterFeature, MapStateMediator.CurrentCursorPoint);
+                        MapStateMediator.SelectedRiverPoint = WaterFeatureManager.GetSelectedRiverPoint(MapStateMediator.SelectedWaterFeature, MapStateMediator.CurrentCursorPoint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -4429,11 +4397,10 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        LandformMethods.EraseFromLandform(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, brushRadius);
+                        LandformMethods.EraseFromLandform(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, MainUIMediator.SelectedBrushSize / 2);
 
                         LandformMethods.LandformErasePath.Reset();
 
-                        MapStateMediator.CurrentMap.IsSaved = false;
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -4478,18 +4445,8 @@ namespace RealmStudio
                     }
                     break;
                 case MapDrawingMode.WaterPaint:
-                    if (MapStateMediator.CurrentWaterFeature != null)
                     {
-                        Cmd_AddNewWaterFeature cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentWaterFeature);
-                        CommandManager.AddCommand(cmd);
-                        cmd.DoOperation();
-
-                        WaterFeatureMethods.MergeWaterFeatures(MapStateMediator.CurrentMap);
-
-                        MapStateMediator.CurrentWaterFeature = null;
-
-                        MapStateMediator.CurrentMap.IsSaved = false;
-
+                        WaterFeatureManager.AddWaterFeatureToMap();
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -4506,7 +4463,7 @@ namespace RealmStudio
                 case MapDrawingMode.RiverPaint:
                     if (MapStateMediator.CurrentRiver != null)
                     {
-                        WaterFeatureMethods.ConstructRiverPaths(MapStateMediator.CurrentRiver);
+                        WaterFeatureManager.ConstructRiverPaths(MapStateMediator.CurrentRiver);
 
                         Cmd_AddNewRiver cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentRiver);
                         CommandManager.AddCommand(cmd);
@@ -4526,27 +4483,12 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.WaterColor:
                     {
-                        ApplicationTimerManager.BrushTimerEnabled = false;
-
-                        if (MapStateMediator.CurrentLayerPaintStroke != null)
-                        {
-                            MapStateMediator.CurrentLayerPaintStroke = null;
-                            MapStateMediator.CurrentMap.IsSaved = false;
-                            SKGLRenderControl.Invalidate();
-                        }
+                        WaterFeatureManager.StopColorPainting(ApplicationTimerManager);
                     }
                     break;
                 case MapDrawingMode.WaterColorErase:
                     {
-                        Cursor = Cursors.Cross;
-
-                        if (MapStateMediator.CurrentLayerPaintStroke != null)
-                        {
-                            MapStateMediator.CurrentLayerPaintStroke = null;
-                            MapStateMediator.CurrentMap.IsSaved = false;
-                        }
-
-                        SKGLRenderControl.Invalidate();
+                        WaterFeatureManager.StopColorErasing();
                     }
                     break;
                 case MapDrawingMode.PathPaint:
@@ -4856,7 +4798,7 @@ namespace RealmStudio
                     }
                     break;
                 case MapDrawingMode.WaterFeatureSelect:
-                    MapComponent? selectedWaterFeature = SelectWaterFeatureAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
+                    MapComponent? selectedWaterFeature = WaterFeatureMediator.SelectWaterFeatureAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
 
                     SKGLRenderControl.Invalidate();
 
@@ -6486,14 +6428,7 @@ namespace RealmStudio
 
         private void ShowWaterLayerSwitch_CheckedChanged()
         {
-            MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WATERLAYER);
-            MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WATERDRAWINGLAYER);
-
-            waterLayer.ShowLayer = ShowWaterLayerSwitch.Checked;
-
-            waterDrawingLayer.ShowLayer = ShowWaterLayerSwitch.Checked;
-
-            SKGLRenderControl.Invalidate();
+            WaterFeatureMediator.ShowWaterFeatureLayers = ShowWaterLayerSwitch.Checked;
         }
 
         private void WaterFeatureSelectButton_Click(object sender, EventArgs e)
@@ -6503,12 +6438,12 @@ namespace RealmStudio
 
         private void WaterFeaturePaintButton_Click(object sender, EventArgs e)
         {
-            MainUIMediator.SetDrawingMode(MapDrawingMode.WaterPaint, 0);
+            MainUIMediator.SetDrawingMode(MapDrawingMode.WaterPaint, WaterFeatureMediator.WaterFeatureBrushSize);
         }
 
         private void WaterFeatureLakeButton_Click(object sender, EventArgs e)
         {
-            MainUIMediator.SetDrawingMode(MapDrawingMode.LakePaint, 0);
+            MainUIMediator.SetDrawingMode(MapDrawingMode.LakePaint, WaterFeatureMediator.WaterFeatureBrushSize);
         }
 
         private void WaterFeatureRiverButton_Click(object sender, EventArgs e)
@@ -6518,41 +6453,32 @@ namespace RealmStudio
 
         private void WaterFeatureEraseButton_Click(object sender, EventArgs e)
         {
-            MainUIMediator.SetDrawingMode(MapDrawingMode.WaterErase, WaterFeatureMethods.WaterFeatureEraserSize);
+            MainUIMediator.SetDrawingMode(MapDrawingMode.WaterErase, WaterFeatureMediator.WaterFeatureEraserSize);
         }
 
         private void WaterBrushSizeTrack_ValueChanged(object sender, EventArgs e)
         {
-            WaterFeatureMethods.WaterFeatureBrushSize = WaterBrushSizeTrack.Value;
-            TOOLTIP.Show(WaterFeatureMethods.WaterFeatureBrushSize.ToString(), WaterValuesGroup, new Point(WaterBrushSizeTrack.Right - 30, WaterBrushSizeTrack.Top - 20), 2000);
-            MainUIMediator.SelectedBrushSize = WaterFeatureMethods.WaterFeatureBrushSize;
+            WaterFeatureMediator.WaterFeatureBrushSize = WaterBrushSizeTrack.Value;
+            TOOLTIP.Show(WaterFeatureMediator.WaterFeatureBrushSize.ToString(), WaterValuesGroup, new Point(WaterBrushSizeTrack.Right - 30, WaterBrushSizeTrack.Top - 20), 2000);
+            MainUIMediator.SelectedBrushSize = WaterFeatureMediator.WaterFeatureBrushSize;
         }
 
         private void WaterColorSelectionButton_Click(object sender, EventArgs e)
         {
-            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, WaterColorSelectionButton.BackColor);
-
-            if (selectedColor != Color.Empty)
-            {
-                WaterColorSelectionButton.BackColor = selectedColor;
-                WaterColorSelectionButton.Refresh();
-            }
+            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, WaterFeatureMediator.WaterColor);
+            WaterFeatureMediator.WaterColor = selectedColor;
         }
 
         private void ShorelineColorSelectionButton_Click(object sender, EventArgs e)
         {
-            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, ShorelineColorSelectionButton.BackColor);
-
-            if (selectedColor != Color.Empty)
-            {
-                ShorelineColorSelectionButton.BackColor = selectedColor;
-                ShorelineColorSelectionButton.Refresh();
-            }
+            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, WaterFeatureMediator.ShorelineColor);
+            WaterFeatureMediator.ShorelineColor = selectedColor;
         }
 
         private void RiverWidthTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(RiverWidthTrack.Value.ToString(), RiverValuesGroup, new Point(RiverWidthTrack.Right - 30, RiverWidthTrack.Top - 20), 2000);
+            WaterFeatureMediator.RiverWidth = RiverWidthTrack.Value;
+            TOOLTIP.Show(WaterFeatureMediator.RiverWidth.ToString(), RiverValuesGroup, new Point(RiverWidthTrack.Right - 30, RiverWidthTrack.Top - 20), 2000);
         }
 
         private void RiverTextureSwitch_CheckedChanged()
@@ -6560,7 +6486,7 @@ namespace RealmStudio
             if (MapStateMediator.SelectedWaterFeature != null && MapStateMediator.SelectedWaterFeature is River river)
             {
                 river.RenderRiverTexture = RiverTextureSwitch.Checked;
-                WaterFeatureMethods.ConstructRiverPaintObjects(river);
+                WaterFeatureManager.ConstructRiverPaintObjects(river);
 
                 SKGLRenderControl.Invalidate();
             }
@@ -6590,9 +6516,9 @@ namespace RealmStudio
 
         private void WaterEraseSizeTrack_ValueChanged(object sender, EventArgs e)
         {
-            WaterFeatureMethods.WaterFeatureEraserSize = WaterEraserSizeTrack.Value;
-            TOOLTIP.Show(WaterFeatureMethods.WaterFeatureEraserSize.ToString(), WaterEraserGroup, new Point(WaterEraserSizeTrack.Right - 30, WaterEraserSizeTrack.Top - 20), 2000);
-            MainUIMediator.SelectedBrushSize = WaterFeatureMethods.WaterFeatureEraserSize;
+            WaterFeatureMediator.WaterFeatureEraserSize = WaterEraserSizeTrack.Value;
+            TOOLTIP.Show(WaterFeatureMediator.WaterFeatureEraserSize.ToString(), WaterEraserGroup, new Point(WaterEraserSizeTrack.Right - 30, WaterEraserSizeTrack.Top - 20), 2000);
+            MainUIMediator.SelectedBrushSize = WaterFeatureMediator.WaterFeatureEraserSize;
         }
 
         private void WaterSoftBrushButton_Click(object sender, EventArgs e)
@@ -6607,9 +6533,9 @@ namespace RealmStudio
 
         private void WaterColorBrushSizeTrack_ValueChanged(object sender, EventArgs e)
         {
-            WaterFeatureMethods.WaterColorBrushSize = WaterColorBrushSizeTrack.Value;
-            TOOLTIP.Show(WaterFeatureMethods.WaterColorBrushSize.ToString(), WaterToolPanel, new Point(WaterColorBrushSizeTrack.Right - 30, WaterColorBrushSizeTrack.Top - 20), 2000);
-            MainUIMediator.SelectedBrushSize = WaterFeatureMethods.WaterColorBrushSize;
+            WaterFeatureMediator.WaterColorBrushSize = WaterColorBrushSizeTrack.Value;
+            TOOLTIP.Show(WaterFeatureMediator.WaterColorBrushSize.ToString(), WaterToolPanel, new Point(WaterColorBrushSizeTrack.Right - 30, WaterColorBrushSizeTrack.Top - 20), 2000);
+            MainUIMediator.SelectedBrushSize = WaterFeatureMediator.WaterColorBrushSize;
         }
 
         private void WaterBrushVelocityTrack_ValueChanged(object sender, EventArgs e)
@@ -6620,51 +6546,45 @@ namespace RealmStudio
 
         private void WaterColorEraserSizeTrack_ValueChanged(object sender, EventArgs e)
         {
-            WaterFeatureMethods.WaterColorEraserSize = WaterColorEraserSizeTrack.Value;
-            TOOLTIP.Show(WaterFeatureMethods.WaterColorEraserSize.ToString(), WaterToolPanel, new Point(WaterColorEraserSizeTrack.Right - 30, WaterColorEraserSizeTrack.Top - 20), 2000);
-            MainUIMediator.SelectedBrushSize = WaterFeatureMethods.WaterColorEraserSize;
+            WaterFeatureMediator.WaterColorEraserSize = WaterColorEraserSizeTrack.Value;
+            TOOLTIP.Show(WaterFeatureMediator.WaterColorEraserSize.ToString(), WaterToolPanel, new Point(WaterColorEraserSizeTrack.Right - 30, WaterColorEraserSizeTrack.Top - 20), 2000);
+            MainUIMediator.SelectedBrushSize = WaterFeatureMediator.WaterColorEraserSize;
         }
 
         private void WaterColorButton_Click(object sender, EventArgs e)
         {
-            MainUIMediator.SetDrawingMode(MapDrawingMode.WaterColor, WaterFeatureMethods.WaterColorBrushSize);
+            MainUIMediator.SetDrawingMode(MapDrawingMode.WaterColor, WaterFeatureMediator.WaterColorBrushSize);
         }
 
         private void WaterColorEraseButton_Click(object sender, EventArgs e)
         {
-            MainUIMediator.SetDrawingMode(MapDrawingMode.WaterColorErase, WaterFeatureMethods.WaterColorEraserSize);
+            MainUIMediator.SetDrawingMode(MapDrawingMode.WaterColorErase, WaterFeatureMediator.WaterColorEraserSize);
         }
 
         private void WaterPaintColorSelectButton_Click(object sender, EventArgs e)
         {
-            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, WaterPaintColorSelectButton.BackColor);
-
-            if (selectedColor != Color.Empty)
-            {
-                WaterPaintColorSelectButton.BackColor = selectedColor;
-
-                WaterPaintColorSelectButton.Refresh();
-            }
+            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, WaterFeatureMediator.WaterPaintColor);
+            WaterFeatureMediator.WaterPaintColor = selectedColor;
         }
 
         private void WaterButton91CBB8_Click(object sender, EventArgs e)
         {
-            SetWaterColorFromPreset("#91CBB8");
+            WaterFeatureMediator.SetWaterColorFromPreset("#91CBB8");
         }
 
         private void WaterButton88B5BB_Click(object sender, EventArgs e)
         {
-            SetWaterColorFromPreset("#88B5BB");
+            WaterFeatureMediator.SetWaterColorFromPreset("#88B5BB");
         }
 
         private void WaterButton6BA5B9_Click(object sender, EventArgs e)
         {
-            SetWaterColorFromPreset("#6BA5B9");
+            WaterFeatureMediator.SetWaterColorFromPreset("#6BA5B9");
         }
 
         private void WaterButton42718D_Click(object sender, EventArgs e)
         {
-            SetWaterColorFromPreset("#42718D");
+            WaterFeatureMediator.SetWaterColorFromPreset("#42718D");
         }
 
         private void WaterCustomColor1_MouseClick(object sender, MouseEventArgs e)
@@ -6711,80 +6631,9 @@ namespace RealmStudio
 
         #region Water Tab Methods
 
-        internal MapComponent? SelectWaterFeatureAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
-        {
-            MapComponent? selectedWaterFeature = null;
 
-            List<MapComponent> waterFeatureComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER).MapLayerComponents;
 
-            for (int i = 0; i < waterFeatureComponents.Count; i++)
-            {
-                if (waterFeatureComponents[i] is WaterFeature waterFeature)
-                {
-                    SKPath boundaryPath = waterFeature.WaterFeaturePath;
 
-                    if (boundaryPath != null && boundaryPath.PointCount > 0)
-                    {
-                        if (boundaryPath.Contains(mapClickPoint.X, mapClickPoint.Y))
-                        {
-                            waterFeature.IsSelected = !waterFeature.IsSelected;
-
-                            if (waterFeature.IsSelected)
-                            {
-                                selectedWaterFeature = waterFeature;
-                            }
-                            break;
-                        }
-                    }
-                }
-                else if (waterFeatureComponents[i] is River river)
-                {
-                    SKPath? boundaryPath = river.RiverBoundaryPath;
-
-                    if (boundaryPath != null && boundaryPath.PointCount > 0)
-                    {
-                        if (boundaryPath.Contains(mapClickPoint.X, mapClickPoint.Y))
-                        {
-                            river.IsSelected = !river.IsSelected;
-
-                            if (river.IsSelected)
-                            {
-                                selectedWaterFeature = river;
-                            }
-                            else
-                            {
-                                EditRiverPointsSwitch.Checked = false;
-                                river.ShowRiverPoints = false;
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-
-            RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, selectedWaterFeature);
-            return selectedWaterFeature;
-        }
-
-        private void SetWaterColorFromPreset(string htmlColor)
-        {
-            Color waterColor = ColorTranslator.FromHtml(htmlColor);
-
-            WaterPaintColorSelectButton.BackColor = waterColor;
-            WaterPaintColorSelectButton.Refresh();
-        }
-
-        private void SetWaterPaintColorFromCustomPresetButton(Button b)
-        {
-            if (b.Text != "")
-            {
-                Color waterColor = b.BackColor;
-
-                WaterPaintColorSelectButton.BackColor = waterColor;
-
-                WaterPaintColorSelectButton.Refresh();
-            }
-        }
         #endregion
 
         #region Path Tab Event Handlers

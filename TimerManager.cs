@@ -22,7 +22,6 @@
 *
 ***************************************************************************************************************************/
 using RealmStudio.Properties;
-using SkiaSharp;
 using System.Timers;
 
 namespace RealmStudio
@@ -165,7 +164,7 @@ namespace RealmStudio
 
         private void StartBrushTimer()
         {
-            if (SymbolUIMediator == null) return;
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
 
             // stop the brush timer if it is running
             StopBrushTimer();
@@ -173,7 +172,7 @@ namespace RealmStudio
             // start the brush timer
             _brushTimer = new System.Timers.Timer
             {
-                Interval = 200.0F / SymbolUIMediator.SymbolPlacementRate,
+                Interval = MapStateMediator.MainUIMediator.CurrentBrushVelocity,
                 AutoReset = true,
                 SynchronizingObject = MainForm.SKGLRenderControl,
             };
@@ -189,25 +188,16 @@ namespace RealmStudio
             _brushTimer = null;
         }
 
-        private void BrushTimerEventHandler(Object? eventObject, EventArgs eventArgs)
+        private void BrushTimerEventHandler(object? eventObject, EventArgs eventArgs)
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
-
-
-            Point cursorPoint = MainForm.SKGLRenderControl.PointToClient(Cursor.Position);
-
-            SKPoint zoomedScrolledPoint = new((cursorPoint.X / MapStateMediator.MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.X,
-                (cursorPoint.Y / MapStateMediator.MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.Y);
-
-            MapStateMediator.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(zoomedScrolledPoint);
-
+            MapStateMediator.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(MapStateMediator.CurrentCursorPoint);
             MainForm.SKGLRenderControl.Invalidate();
         }
 
 
         private void StartSymbolAreaBrushTimer()
         {
-            if (SymbolUIMediator == null) return;
+            ArgumentNullException.ThrowIfNull(SymbolUIMediator);
 
             // stop the symbols area brush timer if it is running
             StopSymbolAreaBrushTimer();

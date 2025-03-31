@@ -84,7 +84,7 @@ namespace RealmStudio
 
             TOOLTIP.Show("Water feature data changes applied", this, new Point(StatusMessageLabel.Left, StatusMessageLabel.Top), 3000);
 
-            WaterFeatureMethods.ConstructWaterFeaturePaintObjects(WaterFeature);
+            WaterFeatureManager.ConstructWaterFeaturePaintObjects(WaterFeature);
 
             RenderControl.Invalidate();
         }

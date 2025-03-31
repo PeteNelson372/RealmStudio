@@ -31,7 +31,7 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            riverPointIndex = WaterFeatureMethods.GetRiverPointIndexById(_river, riverPoint.PointGuid);
+            riverPointIndex = WaterFeatureManager.GetRiverPointIndexById(_river, riverPoint.PointGuid);
 
             if (riverPointIndex > -1)
             {
@@ -39,8 +39,8 @@ namespace RealmStudio
                 _river.RiverPoints.RemoveAt(riverPointIndex);
             }
 
-            WaterFeatureMethods.ConstructRiverPaths(_river);
-            WaterFeatureMethods.ConstructRiverPaintObjects(_river);
+            WaterFeatureManager.ConstructRiverPaths(_river);
+            WaterFeatureManager.ConstructRiverPaintObjects(_river);
         }
 
         public void UndoOperation()
@@ -49,8 +49,8 @@ namespace RealmStudio
             {
                 _river.RiverPoints.Insert(riverPointIndex, riverPoint);
 
-                WaterFeatureMethods.ConstructRiverPaths(_river);
-                WaterFeatureMethods.ConstructRiverPaintObjects(_river);
+                WaterFeatureManager.ConstructRiverPaths(_river);
+                WaterFeatureManager.ConstructRiverPaintObjects(_river);
             }
         }
     }

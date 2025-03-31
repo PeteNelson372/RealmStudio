@@ -917,95 +917,98 @@ namespace RealmStudio
 
             waterLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
-            // water features
-            currentRiver?.Render(waterLayer.LayerSurface.Canvas);
-            currentWaterFeature?.Render(waterLayer.LayerSurface.Canvas);
-
-            // render rivers first, then water features (lakes, painted water features)
-            // so that water features are painted on top of rivers to make it appear that
-            // rivers flow into/out of water features
-            foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
+            if (waterLayer.ShowLayer)
             {
-                if (w is River r)
+                // water features
+                currentRiver?.Render(waterLayer.LayerSurface.Canvas);
+                currentWaterFeature?.Render(waterLayer.LayerSurface.Canvas);
+
+                // render rivers first, then water features (lakes, painted water features)
+                // so that water features are painted on top of rivers to make it appear that
+                // rivers flow into/out of water features
+                foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
                 {
-                    r.Render(waterLayer.LayerSurface.Canvas);
-
-                    if (r.ShowRiverPoints)
+                    if (w is River r)
                     {
-                        List<MapRiverPoint> controlPoints = r.GetRiverControlPoints();
+                        r.Render(waterLayer.LayerSurface.Canvas);
 
-                        foreach (MapRiverPoint p in controlPoints)
+                        if (r.ShowRiverPoints)
                         {
-                            if (p.IsSelected)
+                            List<MapRiverPoint> controlPoints = r.GetRiverControlPoints();
+
+                            foreach (MapRiverPoint p in controlPoints)
                             {
-                                waterLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, r.RiverWidth / 2.0F, PaintObjects.RiverSelectedControlPointPaint);
-                                waterLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, r.RiverWidth / 2.0F, PaintObjects.RiverControlPointOutlinePaint);
-                            }
-                            else
-                            {
-                                waterLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, r.RiverWidth / 2.0F, PaintObjects.RiverControlPointPaint);
-                                waterLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, r.RiverWidth / 2.0F, PaintObjects.RiverControlPointOutlinePaint);
+                                if (p.IsSelected)
+                                {
+                                    waterLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, r.RiverWidth / 2.0F, PaintObjects.RiverSelectedControlPointPaint);
+                                    waterLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, r.RiverWidth / 2.0F, PaintObjects.RiverControlPointOutlinePaint);
+                                }
+                                else
+                                {
+                                    waterLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, r.RiverWidth / 2.0F, PaintObjects.RiverControlPointPaint);
+                                    waterLayer.LayerSurface.Canvas.DrawCircle(p.RiverPoint.X, p.RiverPoint.Y, r.RiverWidth / 2.0F, PaintObjects.RiverControlPointOutlinePaint);
+                                }
                             }
                         }
                     }
                 }
-            }
-
-            foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
-            {
-                if (w is WaterFeature wf)
-                {
-                    wf.Render(waterLayer.LayerSurface.Canvas);
-                }
-            }
-
-            renderCanvas.DrawSurface(waterLayer.LayerSurface, scrollPoint);
-
-            // water drawing layer (colors painted on top of water features)
-            waterDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-            waterDrawingLayer.Render(waterDrawingLayer.LayerSurface.Canvas);
-
-            renderCanvas.DrawSurface(waterDrawingLayer.LayerSurface, scrollPoint);
-
-            // selection layer
-            MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
-
-            if (selectionLayer.LayerSurface != null)
-            {
-                selectionLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
                 foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
                 {
                     if (w is WaterFeature wf)
                     {
-                        if (wf.IsSelected)
-                        {
-                            // draw an outline around the water feature to show that it is selected
-                            wf.WaterFeaturePath.GetBounds(out SKRect boundRect);
-                            using SKPath boundsPath = new();
-                            boundsPath.AddRect(boundRect);
-                            selectionLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
-                            break;
-                        }
+                        wf.Render(waterLayer.LayerSurface.Canvas);
                     }
-                    else if (w is River r)
+                }
+
+                renderCanvas.DrawSurface(waterLayer.LayerSurface, scrollPoint);
+
+                // water drawing layer (colors painted on top of water features)
+                waterDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+                waterDrawingLayer.Render(waterDrawingLayer.LayerSurface.Canvas);
+
+                renderCanvas.DrawSurface(waterDrawingLayer.LayerSurface, scrollPoint);
+
+                // selection layer
+                MapLayer selectionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SELECTIONLAYER);
+
+                if (selectionLayer.LayerSurface != null)
+                {
+                    selectionLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+
+                    foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
                     {
-                        if (r.IsSelected)
+                        if (w is WaterFeature wf)
                         {
-                            if (r.RiverBoundaryPath != null)
+                            if (wf.IsSelected)
                             {
-                                // draw an outline around the path to show that it is selected
-                                r.RiverBoundaryPath.GetTightBounds(out SKRect boundRect);
+                                // draw an outline around the water feature to show that it is selected
+                                wf.WaterFeaturePath.GetBounds(out SKRect boundRect);
                                 using SKPath boundsPath = new();
                                 boundsPath.AddRect(boundRect);
                                 selectionLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
                                 break;
                             }
                         }
+                        else if (w is River r)
+                        {
+                            if (r.IsSelected)
+                            {
+                                if (r.RiverBoundaryPath != null)
+                                {
+                                    // draw an outline around the path to show that it is selected
+                                    r.RiverBoundaryPath.GetTightBounds(out SKRect boundRect);
+                                    using SKPath boundsPath = new();
+                                    boundsPath.AddRect(boundRect);
+                                    selectionLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
+                                    break;
+                                }
+                            }
+                        }
                     }
-                }
 
-                renderCanvas.DrawSurface(selectionLayer.LayerSurface, scrollPoint);
+                    renderCanvas.DrawSurface(selectionLayer.LayerSurface, scrollPoint);
+                }
             }
         }
 
