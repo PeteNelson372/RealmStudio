@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class FontPanelManager
+    internal sealed class FontPanelManager
     {
         private static readonly FontSelection _fontPanelSelectedFont = new();
         private static FontPanelOpener _fontPanelOpener = FontPanelOpener.NotSet;

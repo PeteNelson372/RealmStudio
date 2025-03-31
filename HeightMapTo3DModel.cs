@@ -28,7 +28,7 @@ using System.Numerics;
 
 namespace RealmStudio
 {
-    internal class HeightMapTo3DModel
+    internal sealed class HeightMapTo3DModel
     {
         public static void WriteObjModelToFile(List<string> objModelString)
         {

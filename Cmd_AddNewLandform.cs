@@ -25,7 +25,7 @@ using RealmStudio.Properties;
 
 namespace RealmStudio
 {
-    internal class Cmd_AddNewLandform(RealmStudioMap map, Landform newLandform) : IMapOperation
+    internal sealed class Cmd_AddNewLandform(RealmStudioMap map, Landform newLandform) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly Landform NewLandform = newLandform;

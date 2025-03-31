@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddNewMapPath(RealmStudioMap map, MapPath newMapPath) : IMapOperation
+    internal sealed class Cmd_AddNewMapPath(RealmStudioMap map, MapPath newMapPath) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly MapPath NewMapPath = newMapPath;

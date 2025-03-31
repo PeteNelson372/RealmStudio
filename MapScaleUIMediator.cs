@@ -25,7 +25,7 @@ using System.ComponentModel;
 
 namespace RealmStudio
 {
-    internal class MapScaleUIMediator : IUIMediatorObserver, INotifyPropertyChanged, IDisposable
+    internal sealed class MapScaleUIMediator : IUIMediatorObserver, INotifyPropertyChanged, IDisposable
     {
         private bool disposedValue;
 
@@ -157,12 +157,12 @@ namespace RealmStudio
 
         #region Property Change Handler Methods
 
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        internal void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
         }
 
-        protected void SetPropertyField<T>(string propertyName, ref T field, T newValue)
+        internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
@@ -173,13 +173,13 @@ namespace RealmStudio
 
         public void NotifyUpdate(string? changedPropertyName)
         {
-            UpdateMapScaleUI(changedPropertyName);
+            UpdateMapScaleUI();
             MapScaleManager.Update(MapStateMediator.CurrentMap, MapState, this);
 
             MainForm.SKGLRenderControl.Invalidate();
         }
 
-        private void UpdateMapScaleUI(string? changedPropertyName)
+        private void UpdateMapScaleUI()
         {
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
@@ -213,7 +213,7 @@ namespace RealmStudio
         #endregion
 
         #region IDisposable Implementation
-        protected virtual void Dispose(bool disposing)
+        internal void Dispose(bool disposing)
         {
             if (!disposedValue)
             {

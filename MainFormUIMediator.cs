@@ -26,7 +26,7 @@ using System.ComponentModel;
 
 namespace RealmStudio
 {
-    internal class MainFormUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class MainFormUIMediator : IUIMediatorObserver, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -82,12 +82,12 @@ namespace RealmStudio
 
         #region Property Change Handler Methods
 
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        internal void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
         }
 
-        protected void SetPropertyField<T>(string propertyName, ref T field, T newValue)
+        internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {

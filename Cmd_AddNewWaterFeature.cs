@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddNewWaterFeature(RealmStudioMap map, WaterFeature newWaterFeature) : IMapOperation
+    internal sealed class Cmd_AddNewWaterFeature(RealmStudioMap map, WaterFeature newWaterFeature) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly WaterFeature NewWaterFeature = newWaterFeature;

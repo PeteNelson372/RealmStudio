@@ -27,7 +27,7 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class MapGridManager : IMapComponentManager
+    internal sealed class MapGridManager : IMapComponentManager
     {
         private static MapGridUIMediator? _mapGridUIMediator;
 

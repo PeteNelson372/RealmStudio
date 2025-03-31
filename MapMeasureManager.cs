@@ -27,7 +27,7 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class MapMeasureManager : IMapComponentManager
+    internal sealed class MapMeasureManager : IMapComponentManager
     {
         private static MapMeasureUIMediator? _measureUIMediator;
 

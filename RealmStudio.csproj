@@ -9,9 +9,9 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.89.11909</AssemblyVersion>
-    <FileVersion>1.2025.89.11909</FileVersion>
-    <Version>1.2025.0-alpha-938</Version>
+    <AssemblyVersion>1.2025.90.6343</AssemblyVersion>
+    <FileVersion>1.2025.90.6343</FileVersion>
+    <Version>1.2025.0-alpha-957</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
@@ -93,9 +93,9 @@
     <PackageReference Include="Delaunator" Version="1.0.11" />
     <PackageReference Include="FontAwesome" Version="4.7.0" />
     <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
-    <PackageReference Include="HelixToolkit" Version="2.26.0" />
-    <PackageReference Include="HelixToolkit.Wpf" Version="2.26.0" />
-    <PackageReference Include="HelixToolkit.Wpf.Input" Version="2.26.0" />
+    <PackageReference Include="HelixToolkit" Version="2.27.0" />
+    <PackageReference Include="HelixToolkit.Wpf" Version="2.27.0" />
+    <PackageReference Include="HelixToolkit.Wpf.Input" Version="2.27.0" />
     <PackageReference Include="log4net" Version="3.0.4" />
     <PackageReference Include="ReaLTaiizor" Version="3.8.1.1" />
     <PackageReference Include="SimplexNoise" Version="2.0.0" />

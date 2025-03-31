@@ -27,7 +27,7 @@ using System.Timers;
 
 namespace RealmStudio
 {
-    internal class TimerManager(RealmStudioMainForm mainForm) : IDisposable
+    internal sealed class TimerManager(RealmStudioMainForm mainForm) : IDisposable
     {
         private bool disposedValue;
 
@@ -246,7 +246,7 @@ namespace RealmStudio
         }
 
         #region IDisposable Implementation
-        protected virtual void Dispose(bool disposing)
+        internal void Dispose(bool disposing)
         {
             if (!disposedValue)
             {

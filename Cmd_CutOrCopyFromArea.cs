@@ -145,7 +145,7 @@ namespace RealmStudio
                                 newMapPath.PathPoints.Add(mpp);
                             }
 
-                            MapPathMethods.ConstructPathPaint(newMapPath);
+                            PathManager.ConstructPathPaint(newMapPath);
 
                             StoredComponents.Add(newMapPath);
                             selectedMapComponents[i] = newMapPath;
@@ -268,11 +268,11 @@ namespace RealmStudio
                         mp.PathPoints.Add(mpp);
                     }
 
-                    SKPath boundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(mp.PathPoints);
+                    SKPath boundaryPath = PathManager.GenerateMapPathBoundaryPath(mp.PathPoints);
                     mp.BoundaryPath = boundaryPath;
 
                     mp.PathPaint = null;
-                    MapPathMethods.ConstructPathPaint(mp);
+                    PathManager.ConstructPathPaint(mp);
 
                     if (mp.DrawOverSymbols)
                     {

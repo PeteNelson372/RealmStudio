@@ -33,7 +33,7 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            pathPointIndex = MapPathMethods.GetMapPathPointIndexById(_mapPath, pathPoint.PointGuid);
+            pathPointIndex = PathManager.GetMapPathPointIndexById(_mapPath, pathPoint.PointGuid);
 
             if (pathPointIndex > -1)
             {
@@ -41,7 +41,7 @@ namespace RealmStudio
                 _mapPath.PathPoints.RemoveAt(pathPointIndex);
             }
 
-            SKPath boundarypath = MapPathMethods.GenerateMapPathBoundaryPath(_mapPath.PathPoints);
+            SKPath boundarypath = PathManager.GenerateMapPathBoundaryPath(_mapPath.PathPoints);
             _mapPath.BoundaryPath?.Dispose();
             _mapPath.BoundaryPath = new(boundarypath);
             boundarypath.Dispose();
@@ -54,7 +54,7 @@ namespace RealmStudio
             {
                 _mapPath.PathPoints.Insert(pathPointIndex, pathPoint);
 
-                SKPath boundarypath = MapPathMethods.GenerateMapPathBoundaryPath(_mapPath.PathPoints);
+                SKPath boundarypath = PathManager.GenerateMapPathBoundaryPath(_mapPath.PathPoints);
                 _mapPath.BoundaryPath?.Dispose();
                 _mapPath.BoundaryPath = new(boundarypath);
                 boundarypath.Dispose();

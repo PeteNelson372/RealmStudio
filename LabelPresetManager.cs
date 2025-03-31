@@ -26,7 +26,7 @@ using System.IO;
 
 namespace RealmStudio
 {
-    internal class LabelPresetManager : IMapComponentManager
+    internal sealed class LabelPresetManager : IMapComponentManager
     {
         private static List<LabelPreset> _labelPresets = [];
         private static LabelPresetUIMediator? _presetMediator;

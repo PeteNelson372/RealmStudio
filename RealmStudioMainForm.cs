@@ -81,6 +81,9 @@ namespace RealmStudio
         // UI mediator for Labels
         private LabelUIMediator LabelMediator { get; set; }
 
+        // UI mediator for Map Paths
+        private PathUIMediator PathMediator { get; set; }
+
         // UI Mediator for Label Presets
         private LabelPresetUIMediator PresetMediator { get; set; }
 
@@ -161,6 +164,9 @@ namespace RealmStudio
             MeasureUIMediator = new(this);
             MapMeasureManager.MeasureUIMediator = MeasureUIMediator;
 
+            PathMediator = new PathUIMediator(this);
+            PathManager.PathMediator = PathMediator;
+
             PresetMediator = new(this);
             LabelPresetManager.PresetMediator = PresetMediator;
 
@@ -191,6 +197,7 @@ namespace RealmStudio
             MapStateMediator.RegionUIMediator = MapRegionUIMediator;
             MapStateMediator.MeasureUIMediator = MeasureUIMediator;
             MapStateMediator.ScaleUIMediator = ScaleUIMediator;
+            MapStateMediator.PathUIMediator = PathMediator;
         }
 
         #endregion
@@ -1468,13 +1475,13 @@ namespace RealmStudio
             OceanTextureNameLabel.Text = AssetManager.WATER_TEXTURE_LIST.First().TextureName;
 
             // path texture
-            if (AssetManager.PATH_TEXTURE_LIST.First().TextureBitmap == null)
+            if (PathMediator.PathTextureList.First().TextureBitmap == null)
             {
-                AssetManager.PATH_TEXTURE_LIST.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.PATH_TEXTURE_LIST.First().TexturePath);
+                PathMediator.PathTextureList.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(PathMediator.PathTextureList.First().TexturePath);
             }
 
-            PathTexturePreviewPicture.Image = AssetManager.PATH_TEXTURE_LIST.First().TextureBitmap;
-            PathTextureNameLabel.Text = AssetManager.PATH_TEXTURE_LIST.First().TextureName;
+            PathTexturePreviewPicture.Image = PathMediator.PathTextureList.First().TextureBitmap;
+            PathTextureNameLabel.Text = PathMediator.PathTextureList.First().TextureName;
 
             CoastlineStyleList.SelectedIndex = 6;  // default is dash pattern
 
@@ -2518,7 +2525,7 @@ namespace RealmStudio
             // path
             theme.PathColor = PathColorSelectButton.BackColor.ToArgb();
             theme.PathWidth = PathWidthTrack.Value;
-            theme.PathStyle = GetSelectedPathType();
+            theme.PathStyle = PathMediator.PathType;
 
             // label
             FontConverter cvt = new();
@@ -3058,26 +3065,16 @@ namespace RealmStudio
 
                 if (themeFilter.ApplyPathSetSettings)
                 {
-                    PathColorSelectButton.BackColor = Color.FromArgb(theme.PathColor ?? Color.FromArgb(75, 49, 26).ToArgb());
-                    PathColorSelectButton.Refresh();
-
-                    PathWidthTrack.Value = theme.PathWidth ?? 8;
-                    PathWidthTrack.Refresh();
-
-                    SetSelectedPathType(theme.PathStyle ?? PathType.SolidLinePath);
+                    PathMediator.PathColor = Color.FromArgb(theme.PathColor ?? Color.FromArgb(75, 49, 26).ToArgb());
+                    PathMediator.PathWidth = theme.PathWidth ?? 8;
+                    PathMediator.PathType = theme.PathStyle ?? PathType.SolidLinePath;
                 }
 
                 if (themeFilter.ApplySymbolSettings && theme.SymbolCustomColors != null)
                 {
-                    SymbolColor1Button.BackColor = Color.FromArgb(theme.SymbolCustomColors[0] ?? Color.White.ToArgb());
-                    SymbolColor1Button.Refresh();
-
-                    SymbolColor2Button.BackColor = Color.FromArgb(theme.SymbolCustomColors[1] ?? Color.White.ToArgb());
-                    SymbolColor2Button.Refresh();
-
-                    SymbolColor3Button.BackColor = Color.FromArgb(theme.SymbolCustomColors[2] ?? Color.White.ToArgb());
-                    SymbolColor3Button.Refresh();
-
+                    SymbolUIMediator.SymbolColor1 = Color.FromArgb(theme.SymbolCustomColors[0] ?? Color.White.ToArgb());
+                    SymbolUIMediator.SymbolColor2 = Color.FromArgb(theme.SymbolCustomColors[1] ?? Color.White.ToArgb());
+                    SymbolUIMediator.SymbolColor3 = Color.FromArgb(theme.SymbolCustomColors[2] ?? Color.White.ToArgb());
                 }
 
                 if (themeFilter.ApplyLabelPresetSettings)
@@ -3253,7 +3250,7 @@ namespace RealmStudio
             // objects are created and/or initialized on mouse down
             if (e.Button == MouseButtons.Left)
             {
-                LeftButtonMouseDownHandler(e, MainUIMediator.SelectedBrushSize);
+                LeftButtonMouseDownHandler(MainUIMediator.SelectedBrushSize);
             }
             else if (e.Button == MouseButtons.Middle)
             {
@@ -3261,7 +3258,7 @@ namespace RealmStudio
             }
             else if (e.Button == MouseButtons.Right)
             {
-                RightButtonMouseDownHandler(e);
+                RightButtonMouseDownHandler();
             }
         }
 
@@ -3278,7 +3275,7 @@ namespace RealmStudio
             // objects are drawn or moved on mouse move
             if (e.Button == MouseButtons.Left)
             {
-                LeftButtonMouseMoveHandler(e, MainUIMediator.SelectedBrushSize / 2);
+                LeftButtonMouseMoveHandler(MainUIMediator.SelectedBrushSize / 2);
             }
             else if (e.Button == MouseButtons.Right)
             {
@@ -3290,7 +3287,7 @@ namespace RealmStudio
             }
             else if (e.Button == MouseButtons.None)
             {
-                NoButtonMouseMoveHandler(e);
+                NoButtonMouseMoveHandler();
             }
 
             SKGLRenderControl.Invalidate();
@@ -3457,7 +3454,7 @@ namespace RealmStudio
 
         #region Left Button Down Handler
 
-        private void LeftButtonMouseDownHandler(MouseEventArgs e, int brushSize)
+        private void LeftButtonMouseDownHandler(int brushSize)
         {
             // has the map scale been clicked?
             MapStateMediator.SelectedMapScale = MapScaleManager.SelectMapScale(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
@@ -3734,11 +3731,7 @@ namespace RealmStudio
 
                         if (MapStateMediator.CurrentMapPath == null)
                         {
-                            MapStateMediator.CurrentMapPath = MapPathMethods.CreatePath(MapStateMediator.CurrentMap,
-                                MapStateMediator.CurrentCursorPoint, GetSelectedPathType(), PathColorSelectButton.BackColor,
-                                PathWidthTrack.Value, DrawOverSymbolsSwitch.Checked,
-                                AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX]);
-
+                            MapStateMediator.CurrentMapPath = (MapPath?)PathManager.Create(MapStateMediator.CurrentMap, PathMediator);
                             SKGLRenderControl.Invalidate();
                         }
                     }
@@ -3757,7 +3750,7 @@ namespace RealmStudio
                                     mp.IsSelected = false;
                                 }
 
-                                MapStateMediator.SelectedMapPathPoint = MapPathMethods.SelectMapPathPointAtPoint(MapStateMediator.SelectedMapPath,
+                                MapStateMediator.SelectedMapPathPoint = PathManager.SelectMapPathPointAtPoint(MapStateMediator.SelectedMapPath,
                                     MapStateMediator.CurrentCursorPoint, false);
 
                                 if (MapStateMediator.SelectedMapPathPoint != null)
@@ -3909,7 +3902,7 @@ namespace RealmStudio
 
         #region Right Button Down Handler
 
-        private void RightButtonMouseDownHandler(MouseEventArgs e)
+        private void RightButtonMouseDownHandler()
         {
             switch (MainUIMediator.CurrentDrawingMode)
             {
@@ -3984,7 +3977,7 @@ namespace RealmStudio
 
         #region Left Button Move Handler Method
 
-        private void LeftButtonMouseMoveHandler(MouseEventArgs e, int brushRadius)
+        private void LeftButtonMouseMoveHandler(int brushRadius)
         {
             switch (MainUIMediator.CurrentDrawingMode)
             {
@@ -4116,9 +4109,9 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
                         const int minimumPathPointCount = 5;
 
-                        SKPoint newPathPoint = MapPathMethods.GetNewPathPoint(MapStateMediator.CurrentMapPath, ModifierKeys, SELECTED_PATH_ANGLE, MapStateMediator.CurrentCursorPoint, minimumPathPointCount);
+                        SKPoint newPathPoint = PathManager.GetNewPathPoint(MapStateMediator.CurrentMapPath, ModifierKeys, SELECTED_PATH_ANGLE, MapStateMediator.CurrentCursorPoint, minimumPathPointCount);
 
-                        MapPathMethods.AddNewPathPoint(MapStateMediator.CurrentMapPath, newPathPoint);
+                        PathManager.AddNewPathPoint(MapStateMediator.CurrentMapPath, newPathPoint);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4127,7 +4120,7 @@ namespace RealmStudio
                     {
                         if (MapStateMediator.SelectedMapPath != null)
                         {
-                            MapPathMethods.MovePath(MapStateMediator.SelectedMapPath, MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
+                            PathManager.MovePath(MapStateMediator.SelectedMapPath, MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
 
                             MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
@@ -4139,7 +4132,7 @@ namespace RealmStudio
                     if (MapStateMediator.SelectedMapPathPoint != null)
                     {
                         // move the selected point on the path
-                        MapPathMethods.MoveSelectedMapPathPoint(MapStateMediator.SelectedMapPath, MapStateMediator.SelectedMapPathPoint, MapStateMediator.CurrentCursorPoint);
+                        PathManager.MoveSelectedMapPathPoint(MapStateMediator.SelectedMapPath, MapStateMediator.SelectedMapPathPoint, MapStateMediator.CurrentCursorPoint);
 
                         MapStateMediator.CurrentMap.IsSaved = false;
                         SKGLRenderControl.Invalidate();
@@ -4206,7 +4199,10 @@ namespace RealmStudio
                         LabelManager.CurrentMapPathLabelPoints.Add(MapStateMediator.CurrentCursorPoint);
                         LabelManager.ConstructBezierPathFromPoints();
 
-                        LabelManager.DrawLabelPathOnWorkLayer(MapStateMediator.CurrentMap, LabelManager.CurrentMapLabelPath);
+                        if (LabelManager.CurrentMapLabelPath != null)
+                        {
+                            LabelManager.DrawLabelPathOnWorkLayer(MapStateMediator.CurrentMap, LabelManager.CurrentMapLabelPath);
+                        }
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4319,7 +4315,7 @@ namespace RealmStudio
 
         #region No Button Move Handler Method
 
-        private void NoButtonMouseMoveHandler(MouseEventArgs e)
+        private void NoButtonMouseMoveHandler()
         {
             switch (MainUIMediator.CurrentDrawingMode)
             {
@@ -4337,7 +4333,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.PathEdit:
                     {
-                        MapStateMediator.SelectedMapPathPoint = MapPathMethods.GetSelectedPathPoint(MapStateMediator.SelectedMapPath, MapStateMediator.CurrentCursorPoint);
+                        MapStateMediator.SelectedMapPathPoint = PathManager.GetSelectedPathPoint(MapStateMediator.SelectedMapPath, MapStateMediator.CurrentCursorPoint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -4556,7 +4552,7 @@ namespace RealmStudio
                 case MapDrawingMode.PathPaint:
                     if (MapStateMediator.CurrentMapPath != null)
                     {
-                        MapStateMediator.CurrentMapPath.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(MapStateMediator.CurrentMapPath.PathPoints);
+                        MapStateMediator.CurrentMapPath.BoundaryPath = PathManager.GenerateMapPathBoundaryPath(MapStateMediator.CurrentMapPath.PathPoints);
 
                         Cmd_AddNewMapPath cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapPath);
                         CommandManager.AddCommand(cmd);
@@ -4572,12 +4568,20 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.PathSelect:
                     {
-                        MapStateMediator.SelectedMapPath = SelectMapPathAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
+                        MapStateMediator.SelectedMapPath = PathUIMediator.SelectMapPathAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
                         SKGLRenderControl.Invalidate();
                     }
                     break;
                 case MapDrawingMode.PathEdit:
                     {
+                        if (MapStateMediator.CurrentMapPath == null)
+                        {
+                            MapStateMediator.SelectedMapPath = PathUIMediator.SelectMapPathAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
+                            PathUIMediator.SetShowPathPoints();
+
+                            SKGLRenderControl.Invalidate();
+                        }
+
                         MapStateMediator.SelectedMapPathPoint = null;
                     }
                     break;
@@ -4874,7 +4878,7 @@ namespace RealmStudio
                     SKGLRenderControl.Invalidate();
                     break;
                 case MapDrawingMode.PathSelect:
-                    MapPath? selectedPath = SelectMapPathAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
+                    MapPath? selectedPath = PathUIMediator.SelectMapPathAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
 
                     SKGLRenderControl.Invalidate();
 
@@ -6787,143 +6791,12 @@ namespace RealmStudio
 
         private void ShowPathLayerSwitch_CheckedChanged()
         {
-            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
-            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
-
-            pathLowerLayer.ShowLayer = ShowPathLayerSwitch.Checked;
-
-            pathUpperLayer.ShowLayer = ShowPathLayerSwitch.Checked;
-
-            SKGLRenderControl.Invalidate();
+            PathMediator.ShowPathLayers = ShowPathLayerSwitch.Checked;
         }
 
         private void PathSelectButton_Click(object sender, EventArgs e)
         {
-            if (MainUIMediator.CurrentDrawingMode != MapDrawingMode.PathSelect && MainUIMediator.CurrentDrawingMode != MapDrawingMode.PathEdit)
-            {
-                MainUIMediator.SetDrawingMode(MapDrawingMode.PathSelect, 0);
-            }
-            else
-            {
-                MainUIMediator.SetDrawingMode(MapDrawingMode.None, 0);
-            }
-
-            if (MainUIMediator.CurrentDrawingMode == MapDrawingMode.PathSelect)
-            {
-                if (EditPathPointSwitch.Checked)
-                {
-                    MainUIMediator.CurrentDrawingMode = MapDrawingMode.PathEdit;
-
-                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
-                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        if (mp.IsSelected)
-                        {
-                            mp.ShowPathPoints = true;
-                        }
-                    }
-
-                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
-                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        if (mp.IsSelected)
-                        {
-                            mp.ShowPathPoints = true;
-                        }
-                    }
-                }
-                else
-                {
-                    MainUIMediator.CurrentDrawingMode = MapDrawingMode.PathSelect;
-
-                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
-                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        mp.ShowPathPoints = false;
-                    }
-
-                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
-                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        mp.ShowPathPoints = false;
-                    }
-                }
-            }
-            else if (MainUIMediator.CurrentDrawingMode == MapDrawingMode.PathEdit)
-            {
-                if (EditPathPointSwitch.Checked)
-                {
-                    MainUIMediator.CurrentDrawingMode = MapDrawingMode.PathEdit;
-
-                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
-                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        if (mp.IsSelected)
-                        {
-                            mp.ShowPathPoints = true;
-                        }
-                    }
-
-                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
-                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        if (mp.IsSelected)
-                        {
-                            mp.ShowPathPoints = true;
-                        }
-                    }
-                }
-                else
-                {
-                    MainUIMediator.CurrentDrawingMode = MapDrawingMode.PathSelect;
-
-                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
-                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        mp.ShowPathPoints = false;
-                    }
-
-                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
-                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        mp.ShowPathPoints = false;
-                    }
-                }
-            }
-            else
-            {
-                MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
-                foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-                {
-                    mp.ShowPathPoints = false;
-                }
-
-                MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
-                foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-                {
-                    mp.ShowPathPoints = false;
-                }
-            }
-
-            if (MainUIMediator.CurrentDrawingMode == MapDrawingMode.None)
-            {
-                MapStateMediator.SelectedMapPath = null;
-                MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
-                foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-                {
-                    mp.IsSelected = false;
-                    mp.ShowPathPoints = false;
-                }
-
-                MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
-                foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-                {
-                    mp.IsSelected = false;
-                    mp.ShowPathPoints = false;
-                }
-            }
-
-            MainUIMediator.SetDrawingMode(MainUIMediator.CurrentDrawingMode, MainUIMediator.SelectedBrushSize);
+            PathMediator.EnableDisablePathSelection();
         }
 
         private void DrawPathButton_Click(object sender, EventArgs e)
@@ -6931,189 +6804,51 @@ namespace RealmStudio
             Cursor = Cursors.Cross;
             MainUIMediator.SetDrawingMode(MapDrawingMode.PathPaint, 0);
 
-            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
-            foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-            {
-                mp.IsSelected = false;
-                mp.ShowPathPoints = false;
-            }
+            PathUIMediator.ClearPathPointSelection();
+        }
 
-            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
-            foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-            {
-                mp.IsSelected = false;
-                mp.ShowPathPoints = false;
-            }
+        private void DrawOverSymbolsSwitch_CheckedChanged()
+        {
+            PathMediator.DrawOverSymbols = DrawOverSymbolsSwitch.Checked;
         }
 
         private void PathWidthTrack_ValueChanged(object sender, EventArgs e)
         {
-            TOOLTIP.Show(PathWidthTrack.Value.ToString(), MapPathValuesGroup, new Point(PathWidthTrack.Right - 30, PathWidthTrack.Top - 20), 2000);
+            PathMediator.PathWidth = PathWidthTrack.Value;
+            TOOLTIP.Show(PathMediator.PathWidth.ToString(), MapPathValuesGroup, new Point(PathWidthTrack.Right - 30, PathWidthTrack.Top - 20), 2000);
         }
 
         private void PathColorSelectButton_Click(object sender, EventArgs e)
         {
             Color selectedColor = UtilityMethods.SelectColorFromDialog(this, PathColorSelectButton.BackColor);
-
-            if (selectedColor != Color.Empty)
-            {
-                PathColorSelectButton.BackColor = selectedColor;
-            }
+            PathMediator.PathColor = selectedColor;
         }
 
         private void EditPathPointSwitch_CheckedChanged()
         {
             Cursor = Cursors.Default;
-            MainUIMediator.SelectedBrushSize = 0;
-
-            if (MainUIMediator.CurrentDrawingMode == MapDrawingMode.PathSelect)
-            {
-                if (EditPathPointSwitch.Checked)
-                {
-                    MainUIMediator.CurrentDrawingMode = MapDrawingMode.PathEdit;
-
-                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
-                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        if (mp.IsSelected)
-                        {
-                            mp.ShowPathPoints = true;
-                        }
-                    }
-
-                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
-                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        if (mp.IsSelected)
-                        {
-                            mp.ShowPathPoints = true;
-                        }
-                    }
-                }
-                else
-                {
-                    MainUIMediator.CurrentDrawingMode = MapDrawingMode.PathSelect;
-
-                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
-                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        mp.ShowPathPoints = false;
-                    }
-
-                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
-                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        mp.ShowPathPoints = false;
-                    }
-                }
-            }
-            else if (MainUIMediator.CurrentDrawingMode == MapDrawingMode.PathEdit)
-            {
-                if (EditPathPointSwitch.Checked)
-                {
-                    MainUIMediator.CurrentDrawingMode = MapDrawingMode.PathEdit;
-
-                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
-                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        if (mp.IsSelected)
-                        {
-                            mp.ShowPathPoints = true;
-                        }
-                    }
-
-                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
-                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        if (mp.IsSelected)
-                        {
-                            mp.ShowPathPoints = true;
-                        }
-                    }
-                }
-                else
-                {
-                    MainUIMediator.CurrentDrawingMode = MapDrawingMode.PathSelect;
-
-                    MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
-                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        mp.ShowPathPoints = false;
-                    }
-
-                    MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
-                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-                    {
-                        mp.ShowPathPoints = false;
-                    }
-                }
-            }
-            else
-            {
-                MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
-                foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-                {
-                    mp.ShowPathPoints = false;
-                }
-
-                MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
-                foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-                {
-                    mp.ShowPathPoints = false;
-                }
-            }
-
-            if (MainUIMediator.CurrentDrawingMode == MapDrawingMode.None)
-            {
-                MapStateMediator.SelectedMapPath = null;
-                MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
-                foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
-                {
-                    mp.IsSelected = false;
-                    mp.ShowPathPoints = false;
-                }
-
-                MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
-                foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
-                {
-                    mp.IsSelected = false;
-                    mp.ShowPathPoints = false;
-                }
-            }
-
-            MainUIMediator.SetDrawingMode(MainUIMediator.CurrentDrawingMode, MainUIMediator.SelectedBrushSize);
+            PathMediator.EditPathPoints = EditPathPointSwitch.Checked;
+            PathMediator.SelectOrEditPaths();
         }
 
         private void PreviousPathTextureButton_Click(object sender, EventArgs e)
         {
-            if (AssetManager.SELECTED_PATH_TEXTURE_INDEX > 0)
-            {
-                AssetManager.SELECTED_PATH_TEXTURE_INDEX--;
-            }
-
-            if (AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap == null)
-            {
-                AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TexturePath);
-            }
-
-            PathTexturePreviewPicture.Image = AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap;
-            PathTextureNameLabel.Text = AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureName;
+            PathMediator.PathTextureIndex--;
         }
 
         private void NextPathTextureButton_Click(object sender, EventArgs e)
         {
-            if (AssetManager.SELECTED_PATH_TEXTURE_INDEX < AssetManager.PATH_TEXTURE_LIST.Count - 1)
-            {
-                AssetManager.SELECTED_PATH_TEXTURE_INDEX++;
-            }
+            PathMediator.PathTextureIndex++;
+        }
 
-            if (AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap == null)
-            {
-                AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TexturePath);
-            }
+        private void PathTypeRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton pathTypeButton = (RadioButton)sender;
 
-            PathTexturePreviewPicture.Image = AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureBitmap;
-            PathTextureNameLabel.Text = AssetManager.PATH_TEXTURE_LIST[AssetManager.SELECTED_PATH_TEXTURE_INDEX].TextureName;
+            if (pathTypeButton.Checked)
+            {
+                PathMediator.SetPathTypeFromButtonName(pathTypeButton.Name);
+            }
         }
 
         private void SolidLinePictureBox_Click(object sender, EventArgs e)
@@ -7201,122 +6936,6 @@ namespace RealmStudio
             RailroadTracksRadio.Checked = !RailroadTracksRadio.Checked;
         }
 
-        #endregion
-
-        #region Path Tab Methods
-        private PathType GetSelectedPathType()
-        {
-            if (SolidLineRadio.Checked) return PathType.SolidLinePath;
-            if (DottedLineRadio.Checked) return PathType.DottedLinePath;
-            if (DashedLineRadio.Checked) return PathType.DashedLinePath;
-            if (DashDotLineRadio.Checked) return PathType.DashDotLinePath;
-            if (DashDotDotLineRadio.Checked) return PathType.DashDotDotLinePath;
-            if (ChevronLineRadio.Checked) return PathType.ChevronLinePath;
-            if (LineAndDashesRadio.Checked) return PathType.LineAndDashesPath;
-            if (SmallDashesRadio.Checked) return PathType.ShortIrregularDashPath;
-            if (ThickLineRadio.Checked) return PathType.ThickSolidLinePath;
-            if (BlackBorderPathRadio.Checked) return PathType.SolidBlackBorderPath;
-            if (BorderedGradientRadio.Checked) return PathType.BorderedGradientPath;
-            if (BorderedLightSolidRadio.Checked) return PathType.BorderedLightSolidPath;
-            if (DoubleSolidBorderRadio.Checked) return PathType.DoubleSolidBorderPath;
-            if (BearTracksRadio.Checked) return PathType.BearTracksPath;
-            if (BirdTracksRadio.Checked) return PathType.BirdTracksPath;
-            if (FootPrintsRadio.Checked) return PathType.FootprintsPath;
-            if (RailroadTracksRadio.Checked) return PathType.RailroadTracksPath;
-            if (TexturePathRadio.Checked) return PathType.TexturedPath;
-            if (BorderTexturePathRadio.Checked) return PathType.BorderAndTexturePath;
-
-            return PathType.SolidLinePath;
-        }
-
-        private void SetSelectedPathType(PathType pathType)
-        {
-            if (pathType == PathType.SolidLinePath) { SolidLineRadio.Checked = true; return; }
-            if (pathType == PathType.DottedLinePath) { DottedLineRadio.Checked = true; return; }
-            if (pathType == PathType.DashedLinePath) { DashedLineRadio.Checked = true; return; }
-            if (pathType == PathType.DashDotLinePath) { DashDotLineRadio.Checked = true; return; }
-            if (pathType == PathType.DashDotDotLinePath) { DashDotDotLineRadio.Checked = true; return; }
-            if (pathType == PathType.ChevronLinePath) { ChevronLineRadio.Checked = true; return; }
-            if (pathType == PathType.LineAndDashesPath) { LineAndDashesRadio.Checked = true; return; }
-            if (pathType == PathType.ShortIrregularDashPath) { SmallDashesRadio.Checked = true; return; }
-            if (pathType == PathType.ThickSolidLinePath) { ThickLineRadio.Checked = true; return; }
-            if (pathType == PathType.SolidBlackBorderPath) { BlackBorderPathRadio.Checked = true; return; }
-            if (pathType == PathType.BorderedGradientPath) { BorderedGradientRadio.Checked = true; return; }
-            if (pathType == PathType.BorderedLightSolidPath) { BorderedLightSolidRadio.Checked = true; return; }
-            if (pathType == PathType.DoubleSolidBorderPath) { DoubleSolidBorderRadio.Checked = true; return; }
-            if (pathType == PathType.BearTracksPath) { BearTracksRadio.Checked = true; return; }
-            if (pathType == PathType.BirdTracksPath) { BirdTracksRadio.Checked = true; return; }
-            if (pathType == PathType.FootprintsPath) { FootPrintsRadio.Checked = true; return; }
-            if (pathType == PathType.RailroadTracksPath) { RailroadTracksRadio.Checked = true; return; }
-            if (pathType == PathType.TexturedPath) { TexturePathRadio.Checked = true; return; }
-            if (pathType == PathType.BorderAndTexturePath) { BorderTexturePathRadio.Checked = true; return; }
-        }
-
-        internal static MapPath? SelectMapPathAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
-        {
-            MapPath? selectedMapPath = null;
-
-            List<MapComponent> mapPathUpperComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER).MapLayerComponents;
-
-            for (int i = 0; i < mapPathUpperComponents.Count; i++)
-            {
-                if (mapPathUpperComponents[i] is MapPath mapPath)
-                {
-                    SKPath? boundaryPath = mapPath.BoundaryPath;
-
-                    if (boundaryPath.PointCount > 0)
-                    {
-                        boundaryPath.GetBounds(out SKRect boundRect);
-
-                        if (boundRect.Contains(mapClickPoint))
-                        {
-                            mapPath.IsSelected = !mapPath.IsSelected;
-                            if (mapPath.IsSelected)
-                            {
-                                selectedMapPath = mapPath;
-                            }
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        mapPathUpperComponents.Remove(mapPath);
-                    }
-                }
-            }
-
-            List<MapComponent> mapPathLowerComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER).MapLayerComponents;
-
-            for (int i = 0; i < mapPathLowerComponents.Count; i++)
-            {
-                if (mapPathLowerComponents[i] is MapPath mapPath)
-                {
-                    SKPath? boundaryPath = mapPath.BoundaryPath;
-
-                    if (boundaryPath.PointCount > 0)
-                    {
-                        boundaryPath.GetBounds(out SKRect boundRect);
-
-                        if (boundRect.Contains(mapClickPoint))
-                        {
-                            mapPath.IsSelected = !mapPath.IsSelected;
-                            if (mapPath.IsSelected)
-                            {
-                                selectedMapPath = mapPath;
-                            }
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        mapPathLowerComponents.Remove(mapPath);
-                    }
-                }
-            }
-
-            RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, selectedMapPath);
-            return selectedMapPath;
-        }
         #endregion
 
         #region Symbol Tab Event Handlers
@@ -7994,6 +7613,7 @@ namespace RealmStudio
         }
 
         #endregion
+
 
 
     }

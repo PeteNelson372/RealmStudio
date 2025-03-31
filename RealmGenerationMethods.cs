@@ -28,7 +28,7 @@ using System.Diagnostics;
 
 namespace RealmStudio
 {
-    internal class RealmGenerationMethods
+    internal sealed class RealmGenerationMethods
     {
         internal static void GenerateRandomLandform(RealmStudioMap map, SKGLControl glControl, SKRect selectedArea, GeneratedLandformType selectedLandformType)
         {

@@ -26,7 +26,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class CutCopyPasteManager
+    internal sealed class CutCopyPasteManager
     {
         // map components that are currently selected in cut/copy/paste operations
         private static List<MapComponent> _selectedMapComponents = [];

@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddMapScale(RealmStudioMap map, MapScale mapScale) : IMapOperation
+    internal sealed class Cmd_AddMapScale(RealmStudioMap map, MapScale mapScale) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly MapScale NewMapScale = mapScale;

@@ -26,7 +26,7 @@ using System.ComponentModel;
 
 namespace RealmStudio
 {
-    internal class MapStateMediator
+    internal sealed class MapStateMediator
     {
         public static event PropertyChangedEventHandler? PropertyChanged;
 
@@ -41,6 +41,7 @@ namespace RealmStudio
         private static MapMeasureUIMediator? _measureUIMediator;
         private static MapScaleUIMediator? _scaleUIMediator;
         private static MapSymbolUIMediator? _symbolUIMediator;
+        private static PathUIMediator? _pathUIMediator;
 
         // objects that are currently being created/updated/deleted/etc.
         private static Landform? _currentLandform;
@@ -144,6 +145,12 @@ namespace RealmStudio
         {
             get { return _scaleUIMediator; }
             set { _scaleUIMediator = value; }
+        }
+
+        internal static PathUIMediator? PathUIMediator
+        {
+            get { return _pathUIMediator; }
+            set { _pathUIMediator = value; }
         }
 
         // map state properties
@@ -339,12 +346,12 @@ namespace RealmStudio
         #endregion
 
         #region Property Change Handler Methods
-        protected static void OnPropertyChanged(PropertyChangedEventArgs e)
+        internal static void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(null, e);
         }
 
-        protected static void SetPropertyField<T>(string propertyName, ref T field, T newValue)
+        internal static void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {

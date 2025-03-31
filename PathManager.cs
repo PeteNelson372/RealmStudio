@@ -26,8 +26,52 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal sealed class MapPathMethods
+    internal sealed class PathManager : IMapComponentManager
     {
+        private static PathUIMediator? _pathMediator;
+
+        internal static PathUIMediator? PathMediator
+        {
+            get { return _pathMediator; }
+            set { _pathMediator = value; }
+        }
+
+        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        {
+            ArgumentNullException.ThrowIfNull(PathMediator);
+
+            // initialize map path
+            MapPath? newPath = new()
+            {
+                ParentMap = map,
+                PathType = PathMediator.PathType,
+                PathColor = PathMediator.PathColor,
+                PathWidth = PathMediator.PathWidth,
+                DrawOverSymbols = PathMediator.DrawOverSymbols,
+                PathTexture = PathMediator.PathTextureList[PathMediator.PathTextureIndex]
+            };
+
+            ConstructPathPaint(newPath);
+            newPath.PathPoints.Add(new MapPathPoint(MapStateMediator.CurrentCursorPoint));
+
+            return newPath;
+        }
+
+        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        {
+            throw new NotImplementedException();
+        }
+
         public static void ConstructPathPaint(MapPath mapPath)
         {
             if (mapPath.PathPaint != null) return;
@@ -162,13 +206,15 @@ namespace RealmStudio
 
         private static SKPath? GetPathFromSvg(string vectorName, float pathWidth)
         {
+            ArgumentNullException.ThrowIfNull(PathMediator);
+
             MapVector? pathVector = null;
 
-            for (int i = 0; i < AssetManager.PATH_VECTOR_LIST.Count; i++)
+            for (int i = 0; i < PathMediator.PathVectorList.Count; i++)
             {
-                if (AssetManager.PATH_VECTOR_LIST[i].VectorName == vectorName)
+                if (PathMediator.PathVectorList[i].VectorName == vectorName)
                 {
-                    pathVector = AssetManager.PATH_VECTOR_LIST[i];
+                    pathVector = PathMediator.PathVectorList[i];
                     break;
                 }
             }
@@ -756,10 +802,7 @@ namespace RealmStudio
                 DrawOverSymbols = drawOverSymbols,
             };
 
-            if (mapTexture.TextureBitmap == null)
-            {
-                mapTexture.TextureBitmap = (Bitmap?)Bitmap.FromFile(mapTexture.TexturePath);
-            }
+            mapTexture.TextureBitmap ??= (Bitmap?)Bitmap.FromFile(mapTexture.TexturePath);
 
             newPath.PathTexture = mapTexture;
 

@@ -3,7 +3,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class MapScaleManager : IMapComponentManager
+    internal sealed class MapScaleManager : IMapComponentManager
     {
         private static MapScaleUIMediator? _scaleUIMediator;
 

@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class MapHeightMapMethods
+    internal sealed class MapHeightMapMethods
     {
         public List<string> LandFormObjModelList { get; set; } = [];
 
@@ -233,7 +233,7 @@ namespace RealmStudio
             {
                 if (realmArea != SKRect.Empty)
                 {
-                    SKBitmap? extractedBitmap = ExtractRectFromHeightMap(map, (SKRect)realmArea);
+                    SKBitmap? extractedBitmap = ExtractRectFromHeightMap(map, (SKRect?)realmArea);
                     heightMapBitmap = extractedBitmap?.Copy();
                 }
                 else if (landform != null)

@@ -27,7 +27,7 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class BoxManager : IMapComponentManager
+    internal sealed class BoxManager : IMapComponentManager
     {
         private static BoxUIMediator? _boxMediator;
 

@@ -92,11 +92,11 @@ namespace RealmStudio
                         newMapPath.PathPoints.Add(mpp);
                     }
 
-                    SKPath boundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(newMapPath.PathPoints);
+                    SKPath boundaryPath = PathManager.GenerateMapPathBoundaryPath(newMapPath.PathPoints);
                     newMapPath.BoundaryPath = boundaryPath;
 
                     newMapPath.PathPaint = null;
-                    MapPathMethods.ConstructPathPaint(newMapPath);
+                    PathManager.ConstructPathPaint(newMapPath);
 
                     if (mp.DrawOverSymbols)
                     {

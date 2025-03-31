@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddNewRiver(RealmStudioMap map, River newRiver) : IMapOperation
+    internal sealed class Cmd_AddNewRiver(RealmStudioMap map, River newRiver) : IMapOperation
     {
         private readonly RealmStudioMap Map = map;
         private readonly River NewRiver = newRiver;

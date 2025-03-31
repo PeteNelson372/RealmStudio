@@ -25,7 +25,7 @@ using OpenTK;
 
 namespace RealmStudio
 {
-    internal class ObjModelParser
+    internal sealed class ObjModelParser
     {
         private static readonly List<Vector3> vertices = [];
         private static readonly List<Vector3> normals = [];

@@ -437,15 +437,6 @@
             HelpContentsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
-            OverlayToolPanel = new Panel();
-            FrameStyleTable = new TableLayoutPanel();
-            LabelToolPanel = new Panel();
-            SelectBoxTintButton = new FontAwesome.Sharp.IconButton();
-            LabelBoxStyleTable = new TableLayoutPanel();
-            SymbolToolPanel = new Panel();
-            label22 = new Label();
-            SymbolSearchTextBox = new TextBox();
-            SymbolTable = new TableLayoutPanel();
             PathToolPanel = new Panel();
             RailroadTracksPictureBox = new PictureBox();
             FootPrintsPictureBox = new PictureBox();
@@ -582,6 +573,15 @@
             RegionDashBorderRadio = new RadioButton();
             RegionDottedBorderRadio = new RadioButton();
             RegionSolidBorderRadio = new RadioButton();
+            OverlayToolPanel = new Panel();
+            FrameStyleTable = new TableLayoutPanel();
+            LabelToolPanel = new Panel();
+            SelectBoxTintButton = new FontAwesome.Sharp.IconButton();
+            LabelBoxStyleTable = new TableLayoutPanel();
+            SymbolToolPanel = new Panel();
+            label22 = new Label();
+            SymbolSearchTextBox = new TextBox();
+            SymbolTable = new TableLayoutPanel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
             OceanTab = new TabPage();
@@ -695,9 +695,6 @@
             MapStatusStrip.SuspendLayout();
             ApplicationStatusStrip.SuspendLayout();
             RealmStudioMainMenuStrip.SuspendLayout();
-            OverlayToolPanel.SuspendLayout();
-            LabelToolPanel.SuspendLayout();
-            SymbolToolPanel.SuspendLayout();
             PathToolPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RailroadTracksPictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)FootPrintsPictureBox).BeginInit();
@@ -739,6 +736,9 @@
             ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).BeginInit();
+            OverlayToolPanel.SuspendLayout();
+            LabelToolPanel.SuspendLayout();
+            SymbolToolPanel.SuspendLayout();
             SuspendLayout();
             // 
             // OceanTab
@@ -3152,6 +3152,7 @@
             DrawOverSymbolsSwitch.Tag = "Cyber";
             DrawOverSymbolsSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             DrawOverSymbolsSwitch.Timer_RGB = 300;
+            DrawOverSymbolsSwitch.CheckedChanged += DrawOverSymbolsSwitch_CheckedChanged;
             // 
             // PathTextureNameLabel
             // 
@@ -5533,8 +5534,6 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(RealmStudioMainMenuStrip);
-            RealmStudioForm.Controls.Add(LabelToolPanel);
-            RealmStudioForm.Controls.Add(SymbolToolPanel);
             RealmStudioForm.Controls.Add(PathToolPanel);
             RealmStudioForm.Controls.Add(WaterToolPanel);
             RealmStudioForm.Controls.Add(LandToolPanel);
@@ -5543,6 +5542,8 @@
             RealmStudioForm.Controls.Add(DrawingToolPanel);
             RealmStudioForm.Controls.Add(RegionToolPanel);
             RealmStudioForm.Controls.Add(OverlayToolPanel);
+            RealmStudioForm.Controls.Add(LabelToolPanel);
+            RealmStudioForm.Controls.Add(SymbolToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
             RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
             RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
@@ -6931,121 +6932,6 @@
             AboutToolStripMenuItem.Text = "&About...";
             AboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
             // 
-            // OverlayToolPanel
-            // 
-            OverlayToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            OverlayToolPanel.BackColor = SystemColors.Control;
-            OverlayToolPanel.Controls.Add(FrameStyleTable);
-            OverlayToolPanel.Location = new Point(1421, 90);
-            OverlayToolPanel.Margin = new Padding(0);
-            OverlayToolPanel.Name = "OverlayToolPanel";
-            OverlayToolPanel.Size = new Size(152, 806);
-            OverlayToolPanel.TabIndex = 24;
-            // 
-            // FrameStyleTable
-            // 
-            FrameStyleTable.AutoScroll = true;
-            FrameStyleTable.CausesValidation = false;
-            FrameStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
-            FrameStyleTable.ColumnCount = 1;
-            FrameStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
-            FrameStyleTable.Location = new Point(20, 15);
-            FrameStyleTable.Name = "FrameStyleTable";
-            FrameStyleTable.RowCount = 1;
-            FrameStyleTable.RowStyles.Add(new RowStyle());
-            FrameStyleTable.Size = new Size(122, 779);
-            FrameStyleTable.TabIndex = 74;
-            // 
-            // LabelToolPanel
-            // 
-            LabelToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            LabelToolPanel.BackColor = SystemColors.Control;
-            LabelToolPanel.Controls.Add(SelectBoxTintButton);
-            LabelToolPanel.Controls.Add(LabelBoxStyleTable);
-            LabelToolPanel.Location = new Point(1421, 90);
-            LabelToolPanel.Margin = new Padding(0);
-            LabelToolPanel.Name = "LabelToolPanel";
-            LabelToolPanel.Size = new Size(152, 806);
-            LabelToolPanel.TabIndex = 27;
-            // 
-            // SelectBoxTintButton
-            // 
-            SelectBoxTintButton.BackColor = Color.White;
-            SelectBoxTintButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            SelectBoxTintButton.ForeColor = SystemColors.ControlDarkDark;
-            SelectBoxTintButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            SelectBoxTintButton.IconColor = Color.Tan;
-            SelectBoxTintButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            SelectBoxTintButton.Location = new Point(15, 20);
-            SelectBoxTintButton.Name = "SelectBoxTintButton";
-            SelectBoxTintButton.Size = new Size(120, 60);
-            SelectBoxTintButton.TabIndex = 113;
-            SelectBoxTintButton.Text = "Select Tint Color";
-            SelectBoxTintButton.UseVisualStyleBackColor = false;
-            SelectBoxTintButton.Click += SelectBoxTintButton_Click;
-            // 
-            // LabelBoxStyleTable
-            // 
-            LabelBoxStyleTable.AutoScroll = true;
-            LabelBoxStyleTable.CausesValidation = false;
-            LabelBoxStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
-            LabelBoxStyleTable.ColumnCount = 1;
-            LabelBoxStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
-            LabelBoxStyleTable.Location = new Point(15, 86);
-            LabelBoxStyleTable.Name = "LabelBoxStyleTable";
-            LabelBoxStyleTable.RowCount = 1;
-            LabelBoxStyleTable.RowStyles.Add(new RowStyle());
-            LabelBoxStyleTable.Size = new Size(122, 708);
-            LabelBoxStyleTable.TabIndex = 112;
-            // 
-            // SymbolToolPanel
-            // 
-            SymbolToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            SymbolToolPanel.BackColor = SystemColors.Control;
-            SymbolToolPanel.Controls.Add(label22);
-            SymbolToolPanel.Controls.Add(SymbolSearchTextBox);
-            SymbolToolPanel.Controls.Add(SymbolTable);
-            SymbolToolPanel.Location = new Point(1421, 90);
-            SymbolToolPanel.Margin = new Padding(0);
-            SymbolToolPanel.Name = "SymbolToolPanel";
-            SymbolToolPanel.Size = new Size(152, 806);
-            SymbolToolPanel.TabIndex = 22;
-            // 
-            // label22
-            // 
-            label22.AutoSize = true;
-            label22.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label22.ForeColor = SystemColors.ControlDarkDark;
-            label22.Location = new Point(10, 13);
-            label22.Name = "label22";
-            label22.Size = new Size(47, 17);
-            label22.TabIndex = 79;
-            label22.Text = "Search";
-            // 
-            // SymbolSearchTextBox
-            // 
-            SymbolSearchTextBox.BorderStyle = BorderStyle.FixedSingle;
-            SymbolSearchTextBox.Location = new Point(10, 33);
-            SymbolSearchTextBox.Name = "SymbolSearchTextBox";
-            SymbolSearchTextBox.Size = new Size(132, 23);
-            SymbolSearchTextBox.TabIndex = 78;
-            SymbolSearchTextBox.TextChanged += SymbolSearchTextBox_TextChanged;
-            // 
-            // SymbolTable
-            // 
-            SymbolTable.CausesValidation = false;
-            SymbolTable.ColumnCount = 1;
-            SymbolTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 110F));
-            SymbolTable.ForeColor = SystemColors.ControlDarkDark;
-            SymbolTable.Location = new Point(10, 62);
-            SymbolTable.MaximumSize = new Size(130, 680);
-            SymbolTable.MinimumSize = new Size(130, 42);
-            SymbolTable.Name = "SymbolTable";
-            SymbolTable.RowCount = 1;
-            SymbolTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 45F));
-            SymbolTable.Size = new Size(130, 680);
-            SymbolTable.TabIndex = 77;
-            // 
             // PathToolPanel
             // 
             PathToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
@@ -7215,7 +7101,7 @@
             LineDashPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
             LineDashPictureBox.Image = (Image)resources.GetObject("LineDashPictureBox.Image");
             LineDashPictureBox.InitialImage = null;
-            LineDashPictureBox.Location = new Point(32, 223);
+            LineDashPictureBox.Location = new Point(32, 222);
             LineDashPictureBox.Name = "LineDashPictureBox";
             LineDashPictureBox.Size = new Size(106, 18);
             LineDashPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -7324,6 +7210,7 @@
             BorderTexturePathRadio.TabIndex = 59;
             BorderTexturePathRadio.Text = "Border and Texture";
             BorderTexturePathRadio.UseVisualStyleBackColor = true;
+            BorderTexturePathRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // TexturePathRadio
             // 
@@ -7335,6 +7222,7 @@
             TexturePathRadio.TabIndex = 58;
             TexturePathRadio.Text = "Texture Filled";
             TexturePathRadio.UseVisualStyleBackColor = true;
+            TexturePathRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // DoubleSolidBorderRadio
             // 
@@ -7344,6 +7232,7 @@
             DoubleSolidBorderRadio.Size = new Size(14, 13);
             DoubleSolidBorderRadio.TabIndex = 57;
             DoubleSolidBorderRadio.UseVisualStyleBackColor = true;
+            DoubleSolidBorderRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // RailroadTracksRadio
             // 
@@ -7353,6 +7242,7 @@
             RailroadTracksRadio.Size = new Size(14, 13);
             RailroadTracksRadio.TabIndex = 56;
             RailroadTracksRadio.UseVisualStyleBackColor = true;
+            RailroadTracksRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // FootPrintsRadio
             // 
@@ -7362,6 +7252,7 @@
             FootPrintsRadio.Size = new Size(14, 13);
             FootPrintsRadio.TabIndex = 55;
             FootPrintsRadio.UseVisualStyleBackColor = true;
+            FootPrintsRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // BirdTracksRadio
             // 
@@ -7371,6 +7262,7 @@
             BirdTracksRadio.Size = new Size(14, 13);
             BirdTracksRadio.TabIndex = 54;
             BirdTracksRadio.UseVisualStyleBackColor = true;
+            BirdTracksRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // BearTracksRadio
             // 
@@ -7380,6 +7272,7 @@
             BearTracksRadio.Size = new Size(14, 13);
             BearTracksRadio.TabIndex = 53;
             BearTracksRadio.UseVisualStyleBackColor = true;
+            BearTracksRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // BorderedLightSolidRadio
             // 
@@ -7389,6 +7282,7 @@
             BorderedLightSolidRadio.Size = new Size(14, 13);
             BorderedLightSolidRadio.TabIndex = 52;
             BorderedLightSolidRadio.UseVisualStyleBackColor = true;
+            BorderedLightSolidRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // BorderedGradientRadio
             // 
@@ -7398,6 +7292,7 @@
             BorderedGradientRadio.Size = new Size(14, 13);
             BorderedGradientRadio.TabIndex = 51;
             BorderedGradientRadio.UseVisualStyleBackColor = true;
+            BorderedGradientRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // BlackBorderPathRadio
             // 
@@ -7407,6 +7302,7 @@
             BlackBorderPathRadio.Size = new Size(14, 13);
             BlackBorderPathRadio.TabIndex = 50;
             BlackBorderPathRadio.UseVisualStyleBackColor = true;
+            BlackBorderPathRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // ThickLineRadio
             // 
@@ -7416,6 +7312,7 @@
             ThickLineRadio.Size = new Size(14, 13);
             ThickLineRadio.TabIndex = 49;
             ThickLineRadio.UseVisualStyleBackColor = true;
+            ThickLineRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // SmallDashesRadio
             // 
@@ -7425,6 +7322,7 @@
             SmallDashesRadio.Size = new Size(14, 13);
             SmallDashesRadio.TabIndex = 48;
             SmallDashesRadio.UseVisualStyleBackColor = true;
+            SmallDashesRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // LineAndDashesRadio
             // 
@@ -7434,6 +7332,7 @@
             LineAndDashesRadio.Size = new Size(14, 13);
             LineAndDashesRadio.TabIndex = 47;
             LineAndDashesRadio.UseVisualStyleBackColor = true;
+            LineAndDashesRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // ChevronLineRadio
             // 
@@ -7443,6 +7342,7 @@
             ChevronLineRadio.Size = new Size(14, 13);
             ChevronLineRadio.TabIndex = 46;
             ChevronLineRadio.UseVisualStyleBackColor = true;
+            ChevronLineRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // DashDotDotLineRadio
             // 
@@ -7452,6 +7352,7 @@
             DashDotDotLineRadio.Size = new Size(14, 13);
             DashDotDotLineRadio.TabIndex = 45;
             DashDotDotLineRadio.UseVisualStyleBackColor = true;
+            DashDotDotLineRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // DashDotLineRadio
             // 
@@ -7461,6 +7362,7 @@
             DashDotLineRadio.Size = new Size(14, 13);
             DashDotLineRadio.TabIndex = 44;
             DashDotLineRadio.UseVisualStyleBackColor = true;
+            DashDotLineRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // DashedLineRadio
             // 
@@ -7470,6 +7372,7 @@
             DashedLineRadio.Size = new Size(14, 13);
             DashedLineRadio.TabIndex = 43;
             DashedLineRadio.UseVisualStyleBackColor = true;
+            DashedLineRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // DottedLineRadio
             // 
@@ -7479,6 +7382,7 @@
             DottedLineRadio.Size = new Size(14, 13);
             DottedLineRadio.TabIndex = 42;
             DottedLineRadio.UseVisualStyleBackColor = true;
+            DottedLineRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // SolidLineRadio
             // 
@@ -7491,6 +7395,7 @@
             SolidLineRadio.TabIndex = 41;
             SolidLineRadio.TabStop = true;
             SolidLineRadio.UseVisualStyleBackColor = true;
+            SolidLineRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
             // 
             // label51
             // 
@@ -8919,6 +8824,121 @@
             RegionSolidBorderRadio.UseVisualStyleBackColor = true;
             RegionSolidBorderRadio.CheckedChanged += RegionSolidBorderRadio_CheckedChanged;
             // 
+            // OverlayToolPanel
+            // 
+            OverlayToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            OverlayToolPanel.BackColor = SystemColors.Control;
+            OverlayToolPanel.Controls.Add(FrameStyleTable);
+            OverlayToolPanel.Location = new Point(1421, 90);
+            OverlayToolPanel.Margin = new Padding(0);
+            OverlayToolPanel.Name = "OverlayToolPanel";
+            OverlayToolPanel.Size = new Size(152, 806);
+            OverlayToolPanel.TabIndex = 24;
+            // 
+            // FrameStyleTable
+            // 
+            FrameStyleTable.AutoScroll = true;
+            FrameStyleTable.CausesValidation = false;
+            FrameStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
+            FrameStyleTable.ColumnCount = 1;
+            FrameStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
+            FrameStyleTable.Location = new Point(20, 15);
+            FrameStyleTable.Name = "FrameStyleTable";
+            FrameStyleTable.RowCount = 1;
+            FrameStyleTable.RowStyles.Add(new RowStyle());
+            FrameStyleTable.Size = new Size(122, 779);
+            FrameStyleTable.TabIndex = 74;
+            // 
+            // LabelToolPanel
+            // 
+            LabelToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            LabelToolPanel.BackColor = SystemColors.Control;
+            LabelToolPanel.Controls.Add(SelectBoxTintButton);
+            LabelToolPanel.Controls.Add(LabelBoxStyleTable);
+            LabelToolPanel.Location = new Point(1421, 90);
+            LabelToolPanel.Margin = new Padding(0);
+            LabelToolPanel.Name = "LabelToolPanel";
+            LabelToolPanel.Size = new Size(152, 806);
+            LabelToolPanel.TabIndex = 27;
+            // 
+            // SelectBoxTintButton
+            // 
+            SelectBoxTintButton.BackColor = Color.White;
+            SelectBoxTintButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SelectBoxTintButton.ForeColor = SystemColors.ControlDarkDark;
+            SelectBoxTintButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SelectBoxTintButton.IconColor = Color.Tan;
+            SelectBoxTintButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectBoxTintButton.Location = new Point(15, 20);
+            SelectBoxTintButton.Name = "SelectBoxTintButton";
+            SelectBoxTintButton.Size = new Size(120, 60);
+            SelectBoxTintButton.TabIndex = 113;
+            SelectBoxTintButton.Text = "Select Tint Color";
+            SelectBoxTintButton.UseVisualStyleBackColor = false;
+            SelectBoxTintButton.Click += SelectBoxTintButton_Click;
+            // 
+            // LabelBoxStyleTable
+            // 
+            LabelBoxStyleTable.AutoScroll = true;
+            LabelBoxStyleTable.CausesValidation = false;
+            LabelBoxStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
+            LabelBoxStyleTable.ColumnCount = 1;
+            LabelBoxStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
+            LabelBoxStyleTable.Location = new Point(15, 86);
+            LabelBoxStyleTable.Name = "LabelBoxStyleTable";
+            LabelBoxStyleTable.RowCount = 1;
+            LabelBoxStyleTable.RowStyles.Add(new RowStyle());
+            LabelBoxStyleTable.Size = new Size(122, 708);
+            LabelBoxStyleTable.TabIndex = 112;
+            // 
+            // SymbolToolPanel
+            // 
+            SymbolToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            SymbolToolPanel.BackColor = SystemColors.Control;
+            SymbolToolPanel.Controls.Add(label22);
+            SymbolToolPanel.Controls.Add(SymbolSearchTextBox);
+            SymbolToolPanel.Controls.Add(SymbolTable);
+            SymbolToolPanel.Location = new Point(1421, 90);
+            SymbolToolPanel.Margin = new Padding(0);
+            SymbolToolPanel.Name = "SymbolToolPanel";
+            SymbolToolPanel.Size = new Size(152, 806);
+            SymbolToolPanel.TabIndex = 22;
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label22.ForeColor = SystemColors.ControlDarkDark;
+            label22.Location = new Point(10, 13);
+            label22.Name = "label22";
+            label22.Size = new Size(47, 17);
+            label22.TabIndex = 79;
+            label22.Text = "Search";
+            // 
+            // SymbolSearchTextBox
+            // 
+            SymbolSearchTextBox.BorderStyle = BorderStyle.FixedSingle;
+            SymbolSearchTextBox.Location = new Point(10, 33);
+            SymbolSearchTextBox.Name = "SymbolSearchTextBox";
+            SymbolSearchTextBox.Size = new Size(132, 23);
+            SymbolSearchTextBox.TabIndex = 78;
+            SymbolSearchTextBox.TextChanged += SymbolSearchTextBox_TextChanged;
+            // 
+            // SymbolTable
+            // 
+            SymbolTable.CausesValidation = false;
+            SymbolTable.ColumnCount = 1;
+            SymbolTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 110F));
+            SymbolTable.ForeColor = SystemColors.ControlDarkDark;
+            SymbolTable.Location = new Point(10, 62);
+            SymbolTable.MaximumSize = new Size(130, 680);
+            SymbolTable.MinimumSize = new Size(130, 42);
+            SymbolTable.Name = "SymbolTable";
+            SymbolTable.RowCount = 1;
+            SymbolTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 45F));
+            SymbolTable.Size = new Size(130, 680);
+            SymbolTable.TabIndex = 77;
+            // 
             // materialCheckBox1
             // 
             materialCheckBox1.AutoSize = true;
@@ -9132,10 +9152,6 @@
             ApplicationStatusStrip.PerformLayout();
             RealmStudioMainMenuStrip.ResumeLayout(false);
             RealmStudioMainMenuStrip.PerformLayout();
-            OverlayToolPanel.ResumeLayout(false);
-            LabelToolPanel.ResumeLayout(false);
-            SymbolToolPanel.ResumeLayout(false);
-            SymbolToolPanel.PerformLayout();
             PathToolPanel.ResumeLayout(false);
             PathToolPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)RailroadTracksPictureBox).EndInit();
@@ -9183,6 +9199,10 @@
             ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).EndInit();
             ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).EndInit();
             ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).EndInit();
+            OverlayToolPanel.ResumeLayout(false);
+            LabelToolPanel.ResumeLayout(false);
+            SymbolToolPanel.ResumeLayout(false);
+            SymbolToolPanel.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -9273,7 +9293,6 @@
         private Label label17;
         private Label label19;
         private TrackBar LandEraserSizeTrack;
-        private Panel PathToolPanel;
         private Panel LandToolPanel;
         private Panel DrawingToolPanel;
         private Label label26;
@@ -9286,7 +9305,6 @@
         private ToolStrip WaterToolStrip;
         private FontAwesome.Sharp.IconToolStripButton WaterFeatureSelectButton;
         private ToolStrip PathToolStrip;
-        private FontAwesome.Sharp.IconToolStripButton PathSelectButton;
         private ToolStrip SymbolToolStrip;
         private ToolStrip LabelToolStrip;
         private ToolStrip OverlayToolStrip;
@@ -9374,54 +9392,9 @@
         private TrackBar RiverWidthTrack;
         private GroupBox MapPathValuesGroup;
         private Label label47;
-        private ReaLTaiizor.Controls.CyberSwitch DrawOverSymbolsSwitch;
-        private Label PathTextureNameLabel;
         private Label label45;
-        private FontAwesome.Sharp.IconButton PreviousPathTextureButton;
-        private FontAwesome.Sharp.IconButton NextPathTextureButton;
-        private PictureBox PathTexturePreviewPicture;
-        private FontAwesome.Sharp.IconButton PathColorSelectButton;
         private Label label46;
-        private TrackBar PathWidthTrack;
         private Label label48;
-        private ReaLTaiizor.Controls.CyberSwitch EditPathPointSwitch;
-        private FontAwesome.Sharp.IconToolStripButton DrawPathButton;
-        private PictureBox RailroadTracksPictureBox;
-        private PictureBox FootPrintsPictureBox;
-        private PictureBox BirdTracksPictureBox;
-        private PictureBox BearTracksPictureBox;
-        private PictureBox BorderedLightSolidPictureBox;
-        private PictureBox BorderedGradientPictureBox;
-        private PictureBox BlackBorderLinePictureBox;
-        private PictureBox ThickLinePictureBox;
-        private PictureBox SmallDashesPictureBox;
-        private PictureBox LineDashPictureBox;
-        private PictureBox ChevronPictureBox;
-        private PictureBox DoubleSolidBorderPictureBox;
-        private PictureBox DashDotDotPictureBox;
-        private PictureBox DashDotPictureBox;
-        private PictureBox DashedLinePictureBox;
-        private PictureBox DottedLinePictureBox;
-        private PictureBox SolidLinePictureBox;
-        private RadioButton BorderTexturePathRadio;
-        private RadioButton TexturePathRadio;
-        private RadioButton DoubleSolidBorderRadio;
-        private RadioButton RailroadTracksRadio;
-        private RadioButton FootPrintsRadio;
-        private RadioButton BirdTracksRadio;
-        private RadioButton BearTracksRadio;
-        private RadioButton BorderedLightSolidRadio;
-        private RadioButton BorderedGradientRadio;
-        private RadioButton BlackBorderPathRadio;
-        private RadioButton ThickLineRadio;
-        private RadioButton SmallDashesRadio;
-        private RadioButton LineAndDashesRadio;
-        private RadioButton ChevronLineRadio;
-        private RadioButton DashDotDotLineRadio;
-        private RadioButton DashDotLineRadio;
-        private RadioButton DashedLineRadio;
-        private RadioButton DottedLineRadio;
-        private RadioButton SolidLineRadio;
         private Label label51;
         private ToolStripSeparator toolStripSeparator4;
         private GroupBox SymbolScaleGroup;
@@ -9741,5 +9714,52 @@
         internal Button FontPanelOKButton;
         internal Label ExampleTextLabel;
         internal NumericUpDown LabelRotationUpDown;
+        internal Panel PathToolPanel;
+        internal FontAwesome.Sharp.IconToolStripButton PathSelectButton;
+        internal ReaLTaiizor.Controls.CyberSwitch DrawOverSymbolsSwitch;
+        internal FontAwesome.Sharp.IconButton PreviousPathTextureButton;
+        internal FontAwesome.Sharp.IconButton NextPathTextureButton;
+        internal PictureBox PathTexturePreviewPicture;
+        internal FontAwesome.Sharp.IconButton PathColorSelectButton;
+        internal TrackBar PathWidthTrack;
+        internal ReaLTaiizor.Controls.CyberSwitch EditPathPointSwitch;
+        internal FontAwesome.Sharp.IconToolStripButton DrawPathButton;
+        internal PictureBox SolidLinePictureBox;
+        internal PictureBox RailroadTracksPictureBox;
+        internal PictureBox FootPrintsPictureBox;
+        internal PictureBox BirdTracksPictureBox;
+        internal PictureBox BearTracksPictureBox;
+        internal PictureBox BorderedLightSolidPictureBox;
+        internal PictureBox BorderedGradientPictureBox;
+        internal PictureBox BlackBorderLinePictureBox;
+        internal PictureBox ThickLinePictureBox;
+        internal PictureBox SmallDashesPictureBox;
+        internal PictureBox LineDashPictureBox;
+        internal PictureBox ChevronPictureBox;
+        internal PictureBox DoubleSolidBorderPictureBox;
+        internal PictureBox DashDotDotPictureBox;
+        internal PictureBox DashDotPictureBox;
+        internal PictureBox DashedLinePictureBox;
+        internal PictureBox DottedLinePictureBox;
+        internal RadioButton TexturePathRadio;
+        internal RadioButton DoubleSolidBorderRadio;
+        internal RadioButton RailroadTracksRadio;
+        internal RadioButton FootPrintsRadio;
+        internal RadioButton BirdTracksRadio;
+        internal RadioButton BearTracksRadio;
+        internal RadioButton BorderedLightSolidRadio;
+        internal RadioButton BorderedGradientRadio;
+        internal RadioButton BlackBorderPathRadio;
+        internal RadioButton ThickLineRadio;
+        internal RadioButton SmallDashesRadio;
+        internal RadioButton LineAndDashesRadio;
+        internal RadioButton ChevronLineRadio;
+        internal RadioButton DashDotDotLineRadio;
+        internal RadioButton DashDotLineRadio;
+        internal RadioButton DashedLineRadio;
+        internal RadioButton DottedLineRadio;
+        internal RadioButton BorderTexturePathRadio;
+        internal RadioButton SolidLineRadio;
+        internal Label PathTextureNameLabel;
     }
 }

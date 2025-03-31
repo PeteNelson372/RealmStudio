@@ -339,9 +339,9 @@ namespace RealmStudio
         internal static void DrawLabelPathOnWorkLayer(RealmStudioMap map, SKPath mapLabelPath)
         {
             MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
-            MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-            MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawPath(mapLabelPath, PaintObjects.LabelPathPaint);
+            workLayer.LayerSurface?.Canvas.DrawPath(mapLabelPath, PaintObjects.LabelPathPaint);
         }
 
         internal static Rectangle GetLabelTextBoxRect(MapLabel mapLabel, SKPoint drawingPoint, float drawingZoom, Size labelSize)

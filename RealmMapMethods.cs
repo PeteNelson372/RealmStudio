@@ -65,7 +65,7 @@ namespace RealmStudio
             {
                 if (pathLowerLayer.MapLayerComponents[i] is MapPath mp)
                 {
-                    mp.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(mp.PathPoints);
+                    mp.BoundaryPath = PathManager.GenerateMapPathBoundaryPath(mp.PathPoints);
                     SKRect pathBounds = mp.BoundaryPath.ComputeTightBounds();
 
                     if (selectedArea.Contains(pathBounds))
@@ -79,7 +79,7 @@ namespace RealmStudio
             {
                 if (pathUpperLayer.MapLayerComponents[i] is MapPath mp)
                 {
-                    mp.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(mp.PathPoints);
+                    mp.BoundaryPath = PathManager.GenerateMapPathBoundaryPath(mp.PathPoints);
                     SKRect pathBounds = mp.BoundaryPath.ComputeTightBounds();
 
                     if (selectedArea.Contains(pathBounds))
@@ -871,7 +871,7 @@ namespace RealmStudio
                         }
 
                         newPath.PathPaint = null;   // force to null so that PathPaint is constructed
-                        MapPathMethods.ConstructPathPaint(newPath);
+                        PathManager.ConstructPathPaint(newPath);
 
                         if (mp.DrawOverSymbols)
                         {
@@ -1519,7 +1519,7 @@ namespace RealmStudio
 
             WaterFeatureMethods.FinalizeWaterFeatures(map);
 
-            MapPathMethods.FinalizeMapPaths(map);
+            PathManager.FinalizeMapPaths(map);
 
             SymbolManager.FinalizeMapSymbols(map);
 

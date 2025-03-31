@@ -37,6 +37,8 @@ namespace RealmStudio
 
         public MapPathInfo(RealmStudioMap map, MapPath mapPath, SKGLControl renderControl)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.PathUIMediator);
+
             InitializeComponent();
 
             Map = map;
@@ -56,7 +58,7 @@ namespace RealmStudio
 
             for (int i = 0; i < AssetManager.LAND_TEXTURE_LIST.Count; i++)
             {
-                if (AssetManager.PATH_TEXTURE_LIST[i].TexturePath == MapPath.PathTexture?.TexturePath)
+                if (MapStateMediator.PathUIMediator.PathTextureList[i].TexturePath == MapPath.PathTexture?.TexturePath)
                 {
                     SelectedPathTextureIndex = i;
                     break;
@@ -88,52 +90,61 @@ namespace RealmStudio
 
         private void PreviousPathTextureButton_Click(object sender, EventArgs e)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.PathUIMediator);
+
             if (SelectedPathTextureIndex > 0)
             {
                 SelectedPathTextureIndex--;
             }
 
-            if (AssetManager.PATH_TEXTURE_LIST[SelectedPathTextureIndex].TextureBitmap == null)
+            if (MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex].TextureBitmap == null)
             {
-                AssetManager.PATH_TEXTURE_LIST[SelectedPathTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.PATH_TEXTURE_LIST[SelectedPathTextureIndex].TexturePath);
+                MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex].TexturePath);
             }
 
-            PathTexturePreviewPicture.Image = AssetManager.PATH_TEXTURE_LIST[SelectedPathTextureIndex].TextureBitmap;
-            PathTextureNameLabel.Text = AssetManager.PATH_TEXTURE_LIST[SelectedPathTextureIndex].TextureName;
+            PathTexturePreviewPicture.Image = MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex].TextureBitmap;
+            PathTextureNameLabel.Text = MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex].TextureName;
         }
 
         private void NextPathTextureButton_Click(object sender, EventArgs e)
         {
-            if (SelectedPathTextureIndex < AssetManager.PATH_TEXTURE_LIST.Count - 1)
+            ArgumentNullException.ThrowIfNull(MapStateMediator.PathUIMediator);
+
+            if (SelectedPathTextureIndex < MapStateMediator.PathUIMediator.PathTextureList.Count - 1)
             {
                 SelectedPathTextureIndex++;
             }
 
-            if (AssetManager.PATH_TEXTURE_LIST[SelectedPathTextureIndex].TextureBitmap == null)
+            if (MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex].TextureBitmap == null)
             {
-                AssetManager.PATH_TEXTURE_LIST[SelectedPathTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.PATH_TEXTURE_LIST[SelectedPathTextureIndex].TexturePath);
+                MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex].TexturePath);
             }
 
-            PathTexturePreviewPicture.Image = AssetManager.PATH_TEXTURE_LIST[SelectedPathTextureIndex].TextureBitmap;
-            PathTextureNameLabel.Text = AssetManager.PATH_TEXTURE_LIST[SelectedPathTextureIndex].TextureName;
+            PathTexturePreviewPicture.Image = MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex].TextureBitmap;
+            PathTextureNameLabel.Text = MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex].TextureName;
         }
 
         private void ApplyChangesButton_Click(object sender, EventArgs e)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.PathUIMediator);
+
+            // TODO: does this dialog need to have a UI mediator or somehow hook into the main form PathMediator?
+            // there is a lot of redundant code here
+
             MapPath.MapPathName = NameTextbox.Text;
             MapPath.PathColor = PathColorSelectButton.BackColor;
             MapPath.DrawOverSymbols = DrawOverSymbolsSwitch.Checked;
             MapPath.PathWidth = PathWidthTrack.Value;
             MapPath.PathType = GetSelectedPathType();
 
-            MapPath.PathTexture = AssetManager.PATH_TEXTURE_LIST[SelectedPathTextureIndex];
+            MapPath.PathTexture = MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex];
 
             MapPath.PathPaint?.Dispose();
             MapPath.PathPaint = null;
 
-            MapPathMethods.ConstructPathPaint(MapPath);
+            PathManager.ConstructPathPaint(MapPath);
 
-            MapPath.BoundaryPath = MapPathMethods.GenerateMapPathBoundaryPath(MapPath.PathPoints);
+            MapPath.BoundaryPath = PathManager.GenerateMapPathBoundaryPath(MapPath.PathPoints);
 
             for (int i = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHUPPERLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
@@ -161,6 +172,7 @@ namespace RealmStudio
             {
                 MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHLOWERLAYER).MapLayerComponents.Add(MapPath);
             }
+
             TOOLTIP.Show("Map path data changes applied", this, new Point(StatusMessageLabel.Left, StatusMessageLabel.Top), 3000);
 
             RenderControl.Invalidate();

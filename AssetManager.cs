@@ -45,8 +45,7 @@ namespace RealmStudio
 
         public static List<MapFrame> MAP_FRAME_TEXTURES { get; set; } = [];
 
-        public static List<MapTexture> PATH_TEXTURE_LIST { get; set; } = [];
-        public static List<MapVector> PATH_VECTOR_LIST { get; set; } = [];
+
 
         public static readonly List<RealmStudioApplicationIcon> APPLICATION_ICON_LIST = [];
 
@@ -70,7 +69,6 @@ namespace RealmStudio
         public static int SELECTED_LAND_TEXTURE_INDEX { get; set; }
         public static int SELECTED_BACKGROUND_TEXTURE_INDEX { get; set; }
         public static int SELECTED_OCEAN_TEXTURE_INDEX { get; set; }
-        public static int SELECTED_PATH_TEXTURE_INDEX { get; set; }
 
         public static List<LandformShapingFunction> LANDFORM_SHAPING_FUNCTIONS = [];
 
@@ -196,7 +194,7 @@ namespace RealmStudio
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Path"))
                 {
                     MapTexture t = new(assetName, path);
-                    PATH_TEXTURE_LIST.Add(t);
+                    MapStateMediator.PathUIMediator.PathTextureList.Add(t);
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Vectors\\Path"))
                 {
@@ -244,7 +242,7 @@ namespace RealmStudio
                                 v.VectorSkPath = SKPath.ParseSvgPathData(v.VectorSvg);
                             }
 
-                            PATH_VECTOR_LIST.Add(v);
+                            MapStateMediator.PathUIMediator.PathVectorList.Add(v);
                         }
 
                     }
@@ -321,12 +319,14 @@ namespace RealmStudio
 
         private static void ResetAssets()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.PathUIMediator);
+
             BACKGROUND_TEXTURE_LIST.Clear();
             WATER_TEXTURE_LIST.Clear();
             LAND_TEXTURE_LIST.Clear();
             HATCH_TEXTURE_LIST.Clear();
-            PATH_TEXTURE_LIST.Clear();
-            PATH_VECTOR_LIST.Clear();
+            MapStateMediator.PathUIMediator.PathTextureList.Clear();
+            MapStateMediator.PathUIMediator.PathVectorList.Clear();
             BRUSH_LIST.Clear();
             APPLICATION_ICON_LIST.Clear();
             THEME_LIST.Clear();

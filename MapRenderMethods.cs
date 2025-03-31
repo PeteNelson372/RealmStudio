@@ -519,7 +519,8 @@ namespace RealmStudio
 
             pathLowerLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
-            if (pathLowerLayer.LayerSurface != null)
+
+            if (pathLowerLayer.LayerSurface != null && pathLowerLayer.ShowLayer)
             {
                 if (currentPath != null && !currentPath.DrawOverSymbols)
                 {
@@ -605,7 +606,7 @@ namespace RealmStudio
 
             pathUpperLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
-            if (pathUpperLayer.LayerSurface != null)
+            if (pathUpperLayer.LayerSurface != null && pathUpperLayer.ShowLayer)
             {
                 if (currentPath != null && currentPath.DrawOverSymbols)
                 {
