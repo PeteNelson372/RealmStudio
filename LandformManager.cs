@@ -29,13 +29,37 @@ using System.Drawing.Imaging;
 
 namespace RealmStudio
 {
-    internal sealed class LandformMethods
+    internal sealed class LandformManager : IMapComponentManager
     {
         public static SKPath LandformErasePath { get; set; } = new SKPath();
-        public static int LandformBrushSize { get; set; } = 64;
-        public static int LandformEraserSize { get; set; } = 64;
-        public static int LandformColorBrushSize { get; set; } = 20;
-        public static int LandformColorEraserBrushSize { get; set; } = 20;
+
+        private static LandformUIMediator? _landformUIMediator;
+
+        internal static LandformUIMediator? LandformMediator
+        {
+            get { return _landformUIMediator; }
+            set { _landformUIMediator = value; }
+        }
+
+        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        {
+            throw new NotImplementedException();
+        }
 
         internal static void CreateAllPathsFromDrawnPath(RealmStudioMap map, Landform landform)
         {
@@ -207,11 +231,40 @@ namespace RealmStudio
             return pathsMerged;
         }
 
-        public static void FillMapWithLandForm(RealmStudioMap map, Landform landform)
+        public static void FillMapWithLandForm(RealmStudioMap map, SKGLControl glControl)
         {
-            Cmd_FillMapWithLandform cmd = new(map, landform);
-            CommandManager.AddCommand(cmd);
-            cmd.DoOperation();
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+
+            MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.None, 0);
+
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
+
+            if (landformLayer.MapLayerComponents.Count > 0)
+            {
+                MessageBox.Show("Landforms have already been drawn. Please clear them before filling the map.", "Landforms Already Drawn", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+            }
+            else
+            {
+                Landform landform = new()
+                {
+                    ParentMap = MapStateMediator.CurrentMap,
+                    Width = MapStateMediator.CurrentMap.MapWidth,
+                    Height = MapStateMediator.CurrentMap.MapHeight,
+                    LandformRenderSurface = SKSurface.Create(glControl.GRContext, false,
+                        new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight)),
+                    CoastlineRenderSurface = SKSurface.Create(glControl.GRContext, false,
+                        new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
+                };
+
+                //SetLandformData(landform);
+
+                Cmd_FillMapWithLandform cmd = new(map, landform);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                MapStateMediator.CurrentMap.IsSaved = false;
+                glControl.Invalidate();
+            }
         }
 
         internal static SKPath TraceImage(string fileName)
@@ -326,6 +379,8 @@ namespace RealmStudio
 
         internal static void FinalizeLandforms(RealmStudioMap map, SKGLControl glControl)
         {
+            ArgumentNullException.ThrowIfNull(LandformMediator);
+
             // finalize loading of landforms
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
             SKImageInfo lfImageInfo = new(map.MapWidth, map.MapHeight);
@@ -375,12 +430,13 @@ namespace RealmStudio
                     else
                     {
                         // texture is not set in the landform object, so use default
-                        if (AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TextureBitmap == null)
+                        if (LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TextureBitmap == null)
                         {
-                            AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TexturePath);
+                            LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TextureBitmap =
+                                (Bitmap?)Bitmap.FromFile(LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TexturePath);
                         }
 
-                        landform.LandformTexture = AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX];
+                        landform.LandformTexture = LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex];
 
                         if (landform.LandformTexture.TextureBitmap != null)
                         {
@@ -623,6 +679,44 @@ namespace RealmStudio
 
             landform.X += (int)deltaX;
             landform.Y += (int)deltaY;
+        }
+
+        internal static void GenerateRandomLandform(SKGLControl glControl)
+        {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(LandformMediator);
+
+            MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.None, 0);
+
+            Cursor.Current = Cursors.WaitCursor;
+
+            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+            RealmGenerationMethods.GenerateRandomLandform(MapStateMediator.CurrentMap, glControl, MapStateMediator.SelectedRealmArea, LandformMediator.LandformGenerationType);
+
+            MapStateMediator.SelectedRealmArea = SKRect.Empty;
+
+            MapStateMediator.CurrentMap.IsSaved = false;
+            Cursor.Current = Cursors.Default;
+        }
+
+        internal static void ClearAllLandforms()
+        {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+
+            DialogResult confirmResult = MessageBox.Show("This action will clear all landform drawing and any drawn landforms.\nPlease confirm.", "Clear All?", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+            if (confirmResult != DialogResult.OK)
+            {
+                return;
+            }
+
+            MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.None, 0);
+
+            Cmd_ClearAllLandforms cmd = new(MapStateMediator.CurrentMap);
+
+            CommandManager.AddCommand(cmd);
+            cmd.DoOperation();
         }
     }
 }

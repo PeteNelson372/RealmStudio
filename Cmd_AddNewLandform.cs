@@ -37,7 +37,7 @@ namespace RealmStudio
             if (!createPathsWhilePainting)
             {
                 // compute contour path and inner and outer paths in a separate thread
-                LandformMethods.CreateAllPathsFromDrawnPath(Map, NewLandform);
+                LandformManager.CreateAllPathsFromDrawnPath(Map, NewLandform);
             }
 
             NewLandform.IsModified = true;

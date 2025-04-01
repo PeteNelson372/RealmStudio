@@ -34,6 +34,8 @@ namespace RealmStudio
         public static PrivateFontCollection EMBEDDED_FONTS { get; } = new();
         private static SKPath? _currentMapLabelPath = new();
         private static readonly List<SKPoint> _currentMapPathLabelPoints = [];
+        private static TextBox? _labelTextBox;
+        private static bool _creatingLabel;
 
         private static LabelUIMediator? _labelMediator;
 
@@ -53,6 +55,19 @@ namespace RealmStudio
         {
             get { return _currentMapPathLabelPoints; }
         }
+
+        internal static TextBox? LabelTextBox
+        {
+            get { return _labelTextBox; }
+            set { _labelTextBox = value; }
+        }
+
+        internal static bool CreatingLabel
+        {
+            get { return _creatingLabel; }
+            set { _creatingLabel = value; }
+        }
+
 
         public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
         {
@@ -99,23 +114,16 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(map);
 
-            if (MapStateMediator.SelectedMapLabel != null)
+            if (component != null)
             {
-                // delete the currently selected label
-                MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LABELLAYER);
+                Cmd_DeleteLabel cmd = new(map, (MapLabel)component);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
 
-                for (int i = labelLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-                {
-                    if (labelLayer.MapLayerComponents[i] is MapLabel l && l.LabelGuid.ToString() == MapStateMediator.SelectedMapLabel.LabelGuid.ToString())
-                    {
-                        labelLayer.MapLayerComponents.RemoveAt(i);
-                        MapStateMediator.SelectedMapLabel = null;
-                        break;
-                    }
-                }
+                return true;
             }
 
-            return true;
+            return false;
         }
 
         internal static SKPaint CreateLabelPaint(Color labelColor)

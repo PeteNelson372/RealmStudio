@@ -49,7 +49,7 @@ namespace RealmStudio
             if (storedLandform != null)
             {
                 MapBuilder.GetMapLayerByIndex(_map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(storedLandform);
-                LandformMethods.MergeLandforms(_map);
+                LandformManager.MergeLandforms(_map);
             }
         }
     }

@@ -169,9 +169,9 @@ namespace RealmStudio
         {
             ModelUpdateQueue?.Clear();
 
-            if (ParentForm != null && ((RealmStudioMainForm)ParentForm).CurrentHeightMapView == this)
+            if (ParentForm != null && HeightMapManager.CurrentHeightMapView == this)
             {
-                ((RealmStudioMainForm)ParentForm).CurrentHeightMapView = null;
+                HeightMapManager.CurrentHeightMapView = null;
             }
         }
 

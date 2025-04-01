@@ -38,7 +38,7 @@ namespace RealmStudio
 
         public static readonly List<MapTexture> BACKGROUND_TEXTURE_LIST = [];
         public static List<MapTexture> WATER_TEXTURE_LIST { get; set; } = [];
-        public static List<MapTexture> LAND_TEXTURE_LIST { get; set; } = [];
+
         public static List<MapTexture> HATCH_TEXTURE_LIST { get; set; } = [];
 
         public static List<MapBox> MAP_BOX_LIST = [];
@@ -66,7 +66,6 @@ namespace RealmStudio
 
         public static MapTheme? CURRENT_THEME { get; set; }
 
-        public static int SELECTED_LAND_TEXTURE_INDEX { get; set; }
         public static int SELECTED_BACKGROUND_TEXTURE_INDEX { get; set; }
         public static int SELECTED_OCEAN_TEXTURE_INDEX { get; set; }
 
@@ -184,7 +183,7 @@ namespace RealmStudio
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Land"))
                 {
                     MapTexture t = new(assetName, path);
-                    LAND_TEXTURE_LIST.Add(t);
+                    MapStateMediator.LandformMediator.LandTextureList.Add(t);
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Hatch"))
                 {
@@ -320,10 +319,11 @@ namespace RealmStudio
         private static void ResetAssets()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.PathUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.LandformMediator);
 
             BACKGROUND_TEXTURE_LIST.Clear();
             WATER_TEXTURE_LIST.Clear();
-            LAND_TEXTURE_LIST.Clear();
+            MapStateMediator.LandformMediator.LandTextureList.Clear();
             HATCH_TEXTURE_LIST.Clear();
             MapStateMediator.PathUIMediator.PathTextureList.Clear();
             MapStateMediator.PathUIMediator.PathVectorList.Clear();

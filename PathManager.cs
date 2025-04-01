@@ -69,7 +69,21 @@ namespace RealmStudio
 
         public static bool Delete(RealmStudioMap? map, IMapComponent? component)
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(map);
+
+            if (component != null)
+            {
+                Cmd_RemoveMapPath cmd = new(map, (MapPath)component);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                MapStateMediator.SelectedMapPath = null;
+                MapStateMediator.SelectedMapPathPoint = null;
+
+                return true;
+            }
+
+            return false;
         }
 
         public static void ConstructPathPaint(MapPath mapPath)
@@ -942,6 +956,20 @@ namespace RealmStudio
             }
 
             return SelectMapPathPointAtPoint(mapPath, zoomedScrolledPoint);
+        }
+
+        internal static void RemovePathPoint()
+        {
+            if (MapStateMediator.SelectedMapPath != null && MapStateMediator.SelectedMapPathPoint != null)
+            {
+                Cmd_RemovePathPoint cmd = new(MapStateMediator.SelectedMapPath, MapStateMediator.SelectedMapPathPoint);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                MapStateMediator.SelectedMapPathPoint = null;
+
+                MapStateMediator.CurrentMap.IsSaved = false;
+            }
         }
     }
 }

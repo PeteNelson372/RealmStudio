@@ -21,6 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using SkiaSharp;
 using System.ComponentModel;
 
 namespace RealmStudio
@@ -171,8 +172,6 @@ namespace RealmStudio
                         }
                         break;
                 }
-
-
             }));
         }
 
@@ -187,6 +186,45 @@ namespace RealmStudio
             // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
 
             NotifyUpdate(e.PropertyName);
+        }
+
+        #endregion
+
+        #region Map Region UI methods
+
+        internal static MapRegion? SelectRegionAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
+        {
+            MapRegion? selectedRegion = null;
+
+            List<MapComponent> mapRegionComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONLAYER).MapLayerComponents;
+
+            for (int i = 0; i < mapRegionComponents.Count; i++)
+            {
+                if (mapRegionComponents[i] is MapRegion mapRegion)
+                {
+                    SKPath? boundaryPath = mapRegion.BoundaryPath;
+
+                    if (boundaryPath != null && boundaryPath.PointCount > 0)
+                    {
+                        if (boundaryPath.Contains(zoomedScrolledPoint.X, zoomedScrolledPoint.Y))
+                        {
+                            mapRegion.IsSelected = !mapRegion.IsSelected;
+
+                            if (mapRegion.IsSelected)
+                            {
+                                selectedRegion = mapRegion;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            RealmMapMethods.DeselectAllMapComponents(map, selectedRegion);
+
+            MapStateMediator.CurrentMapRegion = selectedRegion;
+
+            return selectedRegion;
         }
 
         #endregion

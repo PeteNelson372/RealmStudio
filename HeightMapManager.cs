@@ -25,9 +25,10 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal sealed class MapHeightMapMethods
+    internal sealed class HeightMapManager
     {
-        public List<string> LandFormObjModelList { get; set; } = [];
+        public static ThreeDView? CurrentHeightMapView { get; set; }
+        public static List<string> LandFormObjModelList { get; set; } = [];
 
         internal static void ExportHeightMap3DModel(RealmStudioMap map)
         {
@@ -271,6 +272,36 @@ namespace RealmStudio
             }
 
             return heightMapBitmap;
+        }
+
+        internal static void ShowHeightMap3DModel()
+        {
+            SKBitmap? heightMapBitmap = HeightMapManager.GetBitmapForThreeDView(MapStateMediator.CurrentMap, MapStateMediator.SelectedLandform, MapStateMediator.SelectedRealmArea);
+            if (heightMapBitmap != null)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                ThreeDView td = new("Height Map 3D View", LandFormObjModelList);
+                CurrentHeightMapView = td;
+                td.Show();
+
+                Task updateTask = Task.Run(() =>
+                {
+                    // generate the 3D model from the height information in the selected area
+                    List<string> objModelStringList = HeightMapTo3DModel.GenerateOBJ(heightMapBitmap, Byte.MaxValue / 2.0F);
+
+                    // convert the list of strings to a single string
+                    string objModelString = string.Join(Environment.NewLine, objModelStringList);
+
+                    lock (LandFormObjModelList) // Ensure thread safety
+                    {
+                        LandFormObjModelList.Add(objModelString);
+                    }
+                });
+
+                updateTask.Wait();
+                CurrentHeightMapView.UpdateView();
+            }
         }
     }
 }

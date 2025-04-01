@@ -39,6 +39,8 @@ namespace RealmStudio
 
         public LandformInfo(RealmStudioMap map, Landform mapLandform, MapTheme? currentTheme, SKGLControl renderControl)
         {
+            ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
+
             InitializeComponent();
 
             Map = map;
@@ -58,15 +60,15 @@ namespace RealmStudio
             {
                 if (Landform.LandformTexture.TextureBitmap == null)
                 {
-                    Landform.LandformTexture.TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.LAND_TEXTURE_LIST.First().TexturePath);
+                    Landform.LandformTexture.TextureBitmap = (Bitmap?)Bitmap.FromFile(LandformManager.LandformMediator.LandTextureList.First().TexturePath);
                 }
 
                 LandformTexturePreviewPicture.Image = Landform.LandformTexture.TextureBitmap;
                 LandTextureNameLabel.Text = Landform.LandformTexture.TextureName;
 
-                for (int i = 0; i < AssetManager.LAND_TEXTURE_LIST.Count; i++)
+                for (int i = 0; i < LandformManager.LandformMediator.LandTextureList.Count; i++)
                 {
-                    if (AssetManager.LAND_TEXTURE_LIST[i].TexturePath == Landform.LandformTexture.TexturePath)
+                    if (LandformManager.LandformMediator.LandTextureList[i].TexturePath == Landform.LandformTexture.TexturePath)
                     {
                         SelectedLandTextureIndex = i;
                         break;
@@ -91,34 +93,38 @@ namespace RealmStudio
 
         private void PreviousTextureButton_Click(object sender, EventArgs e)
         {
+            ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
+
             if (SelectedLandTextureIndex > 0)
             {
                 SelectedLandTextureIndex--;
             }
 
-            if (AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TextureBitmap == null)
+            if (LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap == null)
             {
-                AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TexturePath);
+                LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TexturePath);
             }
 
-            LandformTexturePreviewPicture.Image = AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TextureBitmap;
-            LandTextureNameLabel.Text = AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TextureName;
+            LandformTexturePreviewPicture.Image = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap;
+            LandTextureNameLabel.Text = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureName;
         }
 
         private void NextTextureButton_Click(object sender, EventArgs e)
         {
-            if (SelectedLandTextureIndex < AssetManager.LAND_TEXTURE_LIST.Count - 1)
+            ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
+
+            if (SelectedLandTextureIndex < LandformManager.LandformMediator.LandTextureList.Count - 1)
             {
                 SelectedLandTextureIndex++;
             }
 
-            if (AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TextureBitmap == null)
+            if (LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap == null)
             {
-                AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TexturePath);
+                LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TexturePath);
             }
 
-            LandformTexturePreviewPicture.Image = AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TextureBitmap;
-            LandTextureNameLabel.Text = AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex].TextureName;
+            LandformTexturePreviewPicture.Image = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap;
+            LandTextureNameLabel.Text = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureName;
         }
 
         private void CloseLandformDataButton_Click(object sender, EventArgs e)
@@ -128,10 +134,12 @@ namespace RealmStudio
 
         private void ApplyChangesButton_Click(object sender, EventArgs e)
         {
+            ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
+
             Landform.LandformName = NameTextbox.Text;
             Landform.LandformOutlineColor = LandformOutlineColorSelectButton.BackColor;
             Landform.LandformFillColor = Color.FromArgb(Landform.LandformOutlineColor.A / 4, Landform.LandformOutlineColor);
-            Landform.LandformTexture = AssetManager.LAND_TEXTURE_LIST[SelectedLandTextureIndex];
+            Landform.LandformTexture = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex];
             Landform.LandformOutlineWidth = LandformOutlineWidthTrack.Value;
             Landform.FillWithTexture = UseTextureForBackgroundCheck.Checked;
             Landform.LandformBackgroundColor = LandformBackgroundColorSelectButton.BackColor;
@@ -242,6 +250,8 @@ namespace RealmStudio
 
         private void ApplyThemeSettingsButton_Click(object sender, EventArgs e)
         {
+            ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
+
             if (CurrentTheme != null)
             {
                 LandformOutlineColorSelectButton.BackColor = (CurrentTheme.LandformOutlineColor != null) ?
@@ -266,9 +276,9 @@ namespace RealmStudio
                     LandformTexturePreviewPicture.Image = CurrentTheme.LandformTexture.TextureBitmap;
                     LandTextureNameLabel.Text = CurrentTheme.LandformTexture.TextureName;
 
-                    for (int i = 0; i < AssetManager.LAND_TEXTURE_LIST.Count; i++)
+                    for (int i = 0; i < LandformManager.LandformMediator.LandTextureList.Count; i++)
                     {
-                        if (AssetManager.LAND_TEXTURE_LIST[i].TexturePath == CurrentTheme.LandformTexture.TexturePath)
+                        if (LandformManager.LandformMediator.LandTextureList[i].TexturePath == CurrentTheme.LandformTexture.TexturePath)
                         {
                             SelectedLandTextureIndex = i;
                             break;

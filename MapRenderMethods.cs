@@ -27,9 +27,7 @@ namespace RealmStudio
 {
     internal sealed class MapRenderMethods
     {
-        public static void RenderMapToCanvas(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint,
-            Landform? currentLandform, WaterFeature? currentWaterFeature, River? currentRiver, MapPath? currentMapPath,
-            MapWindrose? currentWindrose)
+        public static void RenderMapToCanvas(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             // background
             RenderBackground(map, renderCanvas, scrollPoint);
@@ -38,28 +36,28 @@ namespace RealmStudio
             RenderOcean(map, renderCanvas, scrollPoint);
 
             // wind roses
-            RenderWindroses(map, currentWindrose, renderCanvas, scrollPoint);
+            RenderWindroses(map, renderCanvas, scrollPoint);
 
             // lower grid layer (above ocean)
             RenderLowerGrid(map, renderCanvas, scrollPoint);
 
             // landforms
-            RenderLandforms(map, currentLandform, renderCanvas, scrollPoint);
+            RenderLandforms(map, renderCanvas, scrollPoint);
 
             // water features
-            RenderWaterFeatures(map, currentWaterFeature, currentRiver, renderCanvas, scrollPoint);
+            RenderWaterFeatures(map, renderCanvas, scrollPoint);
 
             // upper grid layer (above water features)
             RenderUpperGrid(map, renderCanvas, scrollPoint);
 
             // lower path layer
-            RenderLowerMapPaths(map, currentMapPath, renderCanvas, scrollPoint);
+            RenderLowerMapPaths(map, renderCanvas, scrollPoint);
 
             // symbol layer
             RenderSymbols(map, renderCanvas, scrollPoint);
 
             // upper path layer
-            RenderUpperMapPaths(map, currentMapPath, renderCanvas, scrollPoint);
+            RenderUpperMapPaths(map, renderCanvas, scrollPoint);
 
             // region and region overlay layers
             RenderRegions(map, renderCanvas, scrollPoint);
@@ -383,7 +381,7 @@ namespace RealmStudio
             renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
         }
 
-        internal static void RenderLandforms(RealmStudioMap map, Landform? currentLandform, SKCanvas renderCanvas, SKPoint scrollPoint)
+        internal static void RenderLandforms(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             // render landforms
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
@@ -394,8 +392,8 @@ namespace RealmStudio
             landCoastlineLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
             landformLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
-            currentLandform?.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
-            currentLandform?.RenderLandform(landformLayer.LayerSurface.Canvas);
+            MapStateMediator.CurrentLandform?.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
+            MapStateMediator.CurrentLandform?.RenderLandform(landformLayer.LayerSurface.Canvas);
 
             for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
             {
@@ -512,19 +510,18 @@ namespace RealmStudio
             }
         }
 
-        internal static void RenderLowerMapPaths(RealmStudioMap map, MapPath? currentPath, SKCanvas renderCanvas, SKPoint scrollPoint)
+        internal static void RenderLowerMapPaths(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
             if (pathLowerLayer.LayerSurface == null) return;
 
             pathLowerLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
-
             if (pathLowerLayer.LayerSurface != null && pathLowerLayer.ShowLayer)
             {
-                if (currentPath != null && !currentPath.DrawOverSymbols)
+                if (MapStateMediator.CurrentMapPath != null && !MapStateMediator.CurrentMapPath.DrawOverSymbols)
                 {
-                    currentPath.Render(pathLowerLayer.LayerSurface.Canvas);
+                    MapStateMediator.CurrentMapPath.Render(pathLowerLayer.LayerSurface.Canvas);
                 }
 
                 foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
@@ -598,7 +595,7 @@ namespace RealmStudio
             renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
         }
 
-        internal static void RenderUpperMapPaths(RealmStudioMap map, MapPath? currentPath, SKCanvas renderCanvas, SKPoint scrollPoint)
+        internal static void RenderUpperMapPaths(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             // path upper layer
             MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER);
@@ -608,9 +605,9 @@ namespace RealmStudio
 
             if (pathUpperLayer.LayerSurface != null && pathUpperLayer.ShowLayer)
             {
-                if (currentPath != null && currentPath.DrawOverSymbols)
+                if (MapStateMediator.CurrentMapPath != null && MapStateMediator.CurrentMapPath.DrawOverSymbols)
                 {
-                    currentPath.Render(pathUpperLayer.LayerSurface.Canvas);
+                    MapStateMediator.CurrentMapPath.Render(pathUpperLayer.LayerSurface.Canvas);
                 }
 
                 foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
@@ -907,7 +904,7 @@ namespace RealmStudio
             renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
         }
 
-        internal static void RenderWaterFeatures(RealmStudioMap map, WaterFeature? currentWaterFeature, River? currentRiver, SKCanvas renderCanvas, SKPoint scrollPoint)
+        internal static void RenderWaterFeatures(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             // render water features and rivers
             MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER);
@@ -920,8 +917,8 @@ namespace RealmStudio
             if (waterLayer.ShowLayer)
             {
                 // water features
-                currentRiver?.Render(waterLayer.LayerSurface.Canvas);
-                currentWaterFeature?.Render(waterLayer.LayerSurface.Canvas);
+                MapStateMediator.CurrentRiver?.Render(waterLayer.LayerSurface.Canvas);
+                MapStateMediator.CurrentWaterFeature?.Render(waterLayer.LayerSurface.Canvas);
 
                 // render rivers first, then water features (lakes, painted water features)
                 // so that water features are painted on top of rivers to make it appear that
@@ -1050,7 +1047,7 @@ namespace RealmStudio
         }
 
 
-        internal static void RenderWindroses(RealmStudioMap map, MapWindrose? currentWindrose, SKCanvas renderCanvas, SKPoint scrollPoint)
+        internal static void RenderWindroses(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             // render wind rose layer
             MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WINDROSELAYER);
@@ -1058,7 +1055,7 @@ namespace RealmStudio
 
             windroseLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
-            currentWindrose?.Render(windroseLayer.LayerSurface.Canvas);
+            MapStateMediator.CurrentWindrose?.Render(windroseLayer.LayerSurface.Canvas);
 
             windroseLayer.Render(windroseLayer.LayerSurface.Canvas);
 

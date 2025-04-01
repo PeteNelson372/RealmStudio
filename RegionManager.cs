@@ -84,40 +84,18 @@ namespace RealmStudio
 
         public static bool Delete(RealmStudioMap? map, IMapComponent? component)
         {
-            throw new NotImplementedException();
-        }
-
-        internal static MapRegion? SelectRegionAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
-        {
-            MapRegion? selectedRegion = null;
-
-            List<MapComponent> mapRegionComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONLAYER).MapLayerComponents;
-
-            for (int i = 0; i < mapRegionComponents.Count; i++)
+            if (component != null)
             {
-                if (mapRegionComponents[i] is MapRegion mapRegion)
-                {
-                    SKPath? boundaryPath = mapRegion.BoundaryPath;
+                Cmd_DeleteMapRegion cmd = new(MapStateMediator.CurrentMap, (MapRegion)component);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
 
-                    if (boundaryPath != null && boundaryPath.PointCount > 0)
-                    {
-                        if (boundaryPath.Contains(zoomedScrolledPoint.X, zoomedScrolledPoint.Y))
-                        {
-                            mapRegion.IsSelected = !mapRegion.IsSelected;
+                MapStateMediator.CurrentMapRegion = null;
 
-                            if (mapRegion.IsSelected)
-                            {
-                                selectedRegion = mapRegion;
-                            }
-                            break;
-                        }
-                    }
-                }
+                return true;
             }
 
-            RealmMapMethods.DeselectAllMapComponents(map, selectedRegion);
-
-            return selectedRegion;
+            return false;
         }
 
         public static SKPath GetLinePathFromRegionPoints(List<MapRegionPoint> points)
@@ -399,7 +377,7 @@ namespace RealmStudio
         internal static void DrawRegionOnWorkLayer(RealmStudioMap map, MapRegion mapRegion, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
         {
             MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
-            MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
             if (mapRegion.MapRegionPoints.Count > 1)
             {
@@ -408,14 +386,14 @@ namespace RealmStudio
                 mapRegion.MapRegionPoints.Add(mrp);
 
                 // render
-                mapRegion.Render(MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas);
+                mapRegion.Render(workLayer.LayerSurface?.Canvas);
 
                 // remove it
                 mapRegion.MapRegionPoints.RemoveAt(mapRegion.MapRegionPoints.Count - 1);
             }
             else
             {
-                MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawLine(previousPoint, zoomedScrolledPoint, mapRegion.RegionBorderPaint);
+                workLayer.LayerSurface?.Canvas.DrawLine(previousPoint, zoomedScrolledPoint, mapRegion.RegionBorderPaint);
             }
         }
 
@@ -577,6 +555,25 @@ namespace RealmStudio
                 MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(zoomedScrolledPoint, POINT_CIRCLE_RADIUS, PaintObjects.RegionNewPointFillPaint);
                 MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(zoomedScrolledPoint, POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
             }
+        }
+
+        internal static bool DeleteSelectedRegionPoint(MapRegion currentMapRegion)
+        {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
+
+            foreach (MapRegionPoint mrp in MapStateMediator.CurrentMapRegion.MapRegionPoints)
+            {
+                if (mrp.IsSelected)
+                {
+                    Cmd_DeleteMapRegionPoint cmd = new(MapStateMediator.CurrentMap, currentMapRegion, mrp);
+                    CommandManager.AddCommand(cmd);
+                    cmd.DoOperation();
+
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

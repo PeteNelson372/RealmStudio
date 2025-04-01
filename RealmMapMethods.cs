@@ -491,7 +491,7 @@ namespace RealmStudio
                                 newLandform.LandformRenderSurface ??= SKSurface.Create(newMapGRContext, false, lfImageInfo);
                                 newLandform.CoastlineRenderSurface ??= SKSurface.Create(newMapGRContext, false, lfImageInfo);
 
-                                LandformMethods.CreateAllPathsFromDrawnPath(newRealmMap, newLandform);
+                                LandformManager.CreateAllPathsFromDrawnPath(newRealmMap, newLandform);
                                 newRealmLandformLayer.MapLayerComponents.Add(newLandform);
 
                                 break;
@@ -1515,7 +1515,7 @@ namespace RealmStudio
         {
             OceanMethods.FinalizeOceanLayer(map);
 
-            LandformMethods.FinalizeLandforms(map, glControl);
+            LandformManager.FinalizeLandforms(map, glControl);
 
             WaterFeatureManager.FinalizeWaterFeatures(map);
 

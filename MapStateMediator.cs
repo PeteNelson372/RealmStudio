@@ -36,12 +36,17 @@ namespace RealmStudio
 
         private static BoxUIMediator? _boxUIMediator;
         private static FrameUIMediator? _frameUIMediator;
+        private static LandformUIMediator? _landformUIMediator;
         private static MapGridUIMediator? _gridUIMediator;
-        private static RegionUIMediator? _regionUIMediator;
         private static MapMeasureUIMediator? _measureUIMediator;
         private static MapScaleUIMediator? _scaleUIMediator;
         private static MapSymbolUIMediator? _symbolUIMediator;
         private static PathUIMediator? _pathUIMediator;
+        private static RegionUIMediator? _regionUIMediator;
+        private static WaterFeatureUIMediator? _waterFeatureUIMediator;
+        private static WindroseUIMediator? _windroseUIMediator;
+
+        private static TimerManager? _applicationTimerManager;
 
         // objects that are currently being created/updated/deleted/etc.
         private static Landform? _currentLandform;
@@ -66,11 +71,10 @@ namespace RealmStudio
         private static IWaterFeature? _selectedWaterFeature;
         private static MapRiverPoint? _selectedRiverPoint;
         private static ColorPaintBrush _selectedColorPaintBrush = ColorPaintBrush.SoftBrush;
-        private static GeneratedLandformType _selectedLandformType = GeneratedLandformType.NotSet;
         private static SKRect _selectedRealmArea = SKRect.Empty;
         private static SKRect _previousSelectedRealmArea = SKRect.Empty;
 
-        // TODO: how are these points related; can some be eliminated?
+        // mouse cursor points
         private static SKPoint _scrollPoint = new(0, 0);
         private static SKPoint _drawingPoint = new(0, 0);
 
@@ -117,6 +121,12 @@ namespace RealmStudio
             set { _frameUIMediator = value; }
         }
 
+        internal static LandformUIMediator? LandformMediator
+        {
+            get { return _landformUIMediator; }
+            set { _landformUIMediator = value; }
+        }
+
         internal static MapGridUIMediator? GridUIMediator
         {
             get { return _gridUIMediator; }
@@ -151,6 +161,24 @@ namespace RealmStudio
         {
             get { return _pathUIMediator; }
             set { _pathUIMediator = value; }
+        }
+
+        internal static WaterFeatureUIMediator? WaterFeatureUIMediator
+        {
+            get { return _waterFeatureUIMediator; }
+            set { _waterFeatureUIMediator = value; }
+        }
+
+        internal static WindroseUIMediator? WindroseUIMediator
+        {
+            get { return _windroseUIMediator; }
+            set { _windroseUIMediator = value; }
+        }
+
+        internal static TimerManager? ApplicationTimerManager
+        {
+            get { return _applicationTimerManager; }
+            set { _applicationTimerManager = value; }
         }
 
         // map state properties
@@ -272,12 +300,6 @@ namespace RealmStudio
             set { _selectedColorPaintBrush = value; }
         }
 
-        internal static GeneratedLandformType GeneratedLandformType
-        {
-            get { return _selectedLandformType; }
-            set { _selectedLandformType = value; }
-        }
-
         internal static SKRect SelectedRealmArea
         {
             get { return _selectedRealmArea; }
@@ -390,6 +412,125 @@ namespace RealmStudio
 
             NotifyUpdate(e.PropertyName);
         }
+
+        #endregion
+
+        #region UI Methods
+        internal static void ResetUI()
+        {
+            ArgumentNullException.ThrowIfNull(ApplicationTimerManager);
+            ArgumentNullException.ThrowIfNull(MainUIMediator);
+            ArgumentNullException.ThrowIfNull(LabelManager.LabelMediator);
+
+            // deselect selected symbols, map frames, boxes,
+            // clear any label paths that have been drawn
+            // deselect all selected objects
+            // what else?
+
+            // stop and dispose of the brush timer
+            ApplicationTimerManager.BrushTimerEnabled = false;
+
+            // stop placing symbols
+            ApplicationTimerManager.SymbolAreaBrushTimerEnabled = false;
+
+            // clear drawing mode and set brush size to 0
+            MainUIMediator.SetDrawingMode(MapDrawingMode.None, 0);
+
+            // dispose of any map label path
+            LabelManager.CurrentMapLabelPath?.Dispose();
+            LabelManager.CurrentMapLabelPath = new();
+
+            // clear other selected and current objects?
+
+            // clear the work layer
+            MapBuilder.GetMapLayerByIndex(CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+            // unselect anything selected
+            RealmMapMethods.DeselectAllMapComponents(CurrentMap, null);
+
+            // dispose of any label text box that is drawn
+            LabelManager.LabelMediator.RemoveTextBox();
+
+            // clear all selections
+            PreviousSelectedRealmArea = SKRect.Empty;
+            SelectedRealmArea = SKRect.Empty;
+            MapBuilder.GetMapLayerByIndex(CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+            MainUIMediator.ShowHideFontSelectionPanel(false);
+        }
+
+        internal static void DeleteSelectedMapObjects()
+        {
+            ArgumentNullException.ThrowIfNull(MainUIMediator);
+
+            switch (MainUIMediator.CurrentDrawingMode)
+            {
+                case MapDrawingMode.LandformSelect:
+                    if (SelectedLandform != null)
+                    {
+                        Cmd_RemoveLandform cmd = new(CurrentMap, SelectedLandform);
+                        CommandManager.AddCommand(cmd);
+                        cmd.DoOperation();
+
+                        SelectedLandform = null;
+                        CurrentMap.IsSaved = false;
+                    }
+                    break;
+                case MapDrawingMode.WaterFeatureSelect:
+                    {
+                        WaterFeatureManager.Delete(CurrentMap, (IMapComponent?)SelectedWaterFeature);
+                    }
+                    break;
+                case MapDrawingMode.RiverEdit:
+                    {
+                        WaterFeatureManager.RemoveRiverPoint();
+                    }
+                    break;
+                case MapDrawingMode.PathSelect:
+                    {
+                        PathManager.Delete(CurrentMap, SelectedMapPath);
+                    }
+                    break;
+                case MapDrawingMode.PathEdit:
+                    {
+                        PathManager.RemovePathPoint();
+                    }
+                    break;
+                case MapDrawingMode.SymbolSelect:
+                    {
+                        SymbolManager.Delete(CurrentMap, SelectedMapSymbol);
+                    }
+                    break;
+                case MapDrawingMode.LabelSelect:
+                    {
+                        if (SelectedMapLabel != null)
+                        {
+                            LabelManager.Delete(CurrentMap, SelectedMapLabel);
+                        }
+
+                        if (SelectedPlacedMapBox != null)
+                        {
+                            BoxManager.Delete(CurrentMap, SelectedPlacedMapBox);
+                        }
+                    }
+                    break;
+                case MapDrawingMode.RegionSelect:
+                    {
+                        if (CurrentMapRegion != null)
+                        {
+                            bool pointDeleted = RegionManager.DeleteSelectedRegionPoint(CurrentMapRegion);
+
+                            if (!pointDeleted)
+                            {
+                                RegionManager.Delete(CurrentMap, CurrentMapRegion);
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+
+
 
         #endregion
     }

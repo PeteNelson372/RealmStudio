@@ -38,6 +38,7 @@ namespace RealmStudio
         public MapPathInfo(RealmStudioMap map, MapPath mapPath, SKGLControl renderControl)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.PathUIMediator);
+            ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
 
             InitializeComponent();
 
@@ -56,7 +57,7 @@ namespace RealmStudio
 
             PathTextureNameLabel.Text = MapPath.PathTexture?.TextureName;
 
-            for (int i = 0; i < AssetManager.LAND_TEXTURE_LIST.Count; i++)
+            for (int i = 0; i < LandformManager.LandformMediator.LandTextureList.Count; i++)
             {
                 if (MapStateMediator.PathUIMediator.PathTextureList[i].TexturePath == MapPath.PathTexture?.TexturePath)
                 {

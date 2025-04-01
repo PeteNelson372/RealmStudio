@@ -104,7 +104,20 @@ namespace RealmStudio
 
         public static bool Delete(RealmStudioMap? map, IMapComponent? component)
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(map);
+
+            if (component != null)
+            {
+                Cmd_RemoveSymbol cmd = new(map, (MapSymbol)component);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                MapStateMediator.SelectedMapSymbol = null;
+
+                return true;
+            }
+
+            return false;
         }
 
         internal static void PlaceSymbolOnMap(RealmStudioMap map, MapSymbol? mapSymbol, SKBitmap? bitmap, SKPoint cursorPoint)

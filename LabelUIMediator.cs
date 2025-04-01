@@ -456,6 +456,15 @@ namespace RealmStudio
             }
         }
 
+        internal void RemoveTextBox()
+        {
+            if (LabelManager.LabelTextBox != null)
+            {
+                MainForm.SKGLRenderControl.Controls.Remove(LabelManager.LabelTextBox);
+                LabelManager.LabelTextBox.Dispose();
+            }
+        }
+
         #endregion
     }
 }

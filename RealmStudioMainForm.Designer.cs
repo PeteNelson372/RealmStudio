@@ -437,31 +437,6 @@
             HelpContentsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
-            WaterToolPanel = new Panel();
-            label76 = new Label();
-            WaterBrushVelocityTrack = new TrackBar();
-            WaterColorButton = new FontAwesome.Sharp.IconButton();
-            label20 = new Label();
-            WaterColorEraserSizeTrack = new TrackBar();
-            WaterCustomColor8 = new Button();
-            WaterCustomColor7 = new Button();
-            WaterCustomColor6 = new Button();
-            WaterCustomColor5 = new Button();
-            WaterCustomColor4 = new Button();
-            WaterCustomColor3 = new Button();
-            WaterCustomColor2 = new Button();
-            WaterCustomColor1 = new Button();
-            WaterHardBrushButton = new Button();
-            WaterSoftBrushButton = new Button();
-            WaterButton42718D = new Button();
-            WaterButton6BA5B9 = new Button();
-            WaterButton88B5BB = new Button();
-            WaterButton91CBB8 = new Button();
-            WaterColorEraseButton = new FontAwesome.Sharp.IconButton();
-            label61 = new Label();
-            WaterColorBrushSizeTrack = new TrackBar();
-            label62 = new Label();
-            WaterPaintColorSelectButton = new FontAwesome.Sharp.IconButton();
             LandToolPanel = new Panel();
             label75 = new Label();
             LandBrushVelocityTrack = new TrackBar();
@@ -582,6 +557,31 @@
             DottedLineRadio = new RadioButton();
             SolidLineRadio = new RadioButton();
             label51 = new Label();
+            WaterToolPanel = new Panel();
+            label76 = new Label();
+            WaterBrushVelocityTrack = new TrackBar();
+            WaterColorButton = new FontAwesome.Sharp.IconButton();
+            label20 = new Label();
+            WaterColorEraserSizeTrack = new TrackBar();
+            WaterCustomColor8 = new Button();
+            WaterCustomColor7 = new Button();
+            WaterCustomColor6 = new Button();
+            WaterCustomColor5 = new Button();
+            WaterCustomColor4 = new Button();
+            WaterCustomColor3 = new Button();
+            WaterCustomColor2 = new Button();
+            WaterCustomColor1 = new Button();
+            WaterHardBrushButton = new Button();
+            WaterSoftBrushButton = new Button();
+            WaterButton42718D = new Button();
+            WaterButton6BA5B9 = new Button();
+            WaterButton88B5BB = new Button();
+            WaterButton91CBB8 = new Button();
+            WaterColorEraseButton = new FontAwesome.Sharp.IconButton();
+            label61 = new Label();
+            WaterColorBrushSizeTrack = new TrackBar();
+            label62 = new Label();
+            WaterPaintColorSelectButton = new FontAwesome.Sharp.IconButton();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
             OceanTab = new TabPage();
@@ -695,10 +695,6 @@
             MapStatusStrip.SuspendLayout();
             ApplicationStatusStrip.SuspendLayout();
             RealmStudioMainMenuStrip.SuspendLayout();
-            WaterToolPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)WaterBrushVelocityTrack).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)WaterColorEraserSizeTrack).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)WaterColorBrushSizeTrack).BeginInit();
             LandToolPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)LandBrushVelocityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LandColorEraserSizeTrack).BeginInit();
@@ -739,6 +735,10 @@
             ((System.ComponentModel.ISupportInitialize)DashedLinePictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)DottedLinePictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SolidLinePictureBox).BeginInit();
+            WaterToolPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)WaterBrushVelocityTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WaterColorEraserSizeTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WaterColorBrushSizeTrack).BeginInit();
             SuspendLayout();
             // 
             // OceanTab
@@ -917,7 +917,7 @@
             WindroseLineWidthUpDown.TabIndex = 24;
             WindroseLineWidthUpDown.TextAlign = HorizontalAlignment.Center;
             WindroseLineWidthUpDown.Value = new decimal(new int[] { 2, 0, 0, 0 });
-            WindroseLineWidthUpDown.ValueChanged += WindroseLineWidthUpDOwn_ValueChanged;
+            WindroseLineWidthUpDown.ValueChanged += WindroseLineWidthUpDown_ValueChanged;
             // 
             // label30
             // 
@@ -5534,7 +5534,6 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(RealmStudioMainMenuStrip);
-            RealmStudioForm.Controls.Add(WaterToolPanel);
             RealmStudioForm.Controls.Add(LandToolPanel);
             RealmStudioForm.Controls.Add(OceanToolPanel);
             RealmStudioForm.Controls.Add(BackgroundToolPanel);
@@ -5544,6 +5543,7 @@
             RealmStudioForm.Controls.Add(LabelToolPanel);
             RealmStudioForm.Controls.Add(SymbolToolPanel);
             RealmStudioForm.Controls.Add(PathToolPanel);
+            RealmStudioForm.Controls.Add(WaterToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
             RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
             RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
@@ -6931,383 +6931,6 @@
             AboutToolStripMenuItem.Size = new Size(122, 22);
             AboutToolStripMenuItem.Text = "&About...";
             AboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
-            // 
-            // WaterToolPanel
-            // 
-            WaterToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            WaterToolPanel.BackColor = SystemColors.Control;
-            WaterToolPanel.Controls.Add(label76);
-            WaterToolPanel.Controls.Add(WaterBrushVelocityTrack);
-            WaterToolPanel.Controls.Add(WaterColorButton);
-            WaterToolPanel.Controls.Add(label20);
-            WaterToolPanel.Controls.Add(WaterColorEraserSizeTrack);
-            WaterToolPanel.Controls.Add(WaterCustomColor8);
-            WaterToolPanel.Controls.Add(WaterCustomColor7);
-            WaterToolPanel.Controls.Add(WaterCustomColor6);
-            WaterToolPanel.Controls.Add(WaterCustomColor5);
-            WaterToolPanel.Controls.Add(WaterCustomColor4);
-            WaterToolPanel.Controls.Add(WaterCustomColor3);
-            WaterToolPanel.Controls.Add(WaterCustomColor2);
-            WaterToolPanel.Controls.Add(WaterCustomColor1);
-            WaterToolPanel.Controls.Add(WaterHardBrushButton);
-            WaterToolPanel.Controls.Add(WaterSoftBrushButton);
-            WaterToolPanel.Controls.Add(WaterButton42718D);
-            WaterToolPanel.Controls.Add(WaterButton6BA5B9);
-            WaterToolPanel.Controls.Add(WaterButton88B5BB);
-            WaterToolPanel.Controls.Add(WaterButton91CBB8);
-            WaterToolPanel.Controls.Add(WaterColorEraseButton);
-            WaterToolPanel.Controls.Add(label61);
-            WaterToolPanel.Controls.Add(WaterColorBrushSizeTrack);
-            WaterToolPanel.Controls.Add(label62);
-            WaterToolPanel.Controls.Add(WaterPaintColorSelectButton);
-            WaterToolPanel.Location = new Point(1421, 90);
-            WaterToolPanel.Margin = new Padding(0);
-            WaterToolPanel.Name = "WaterToolPanel";
-            WaterToolPanel.Size = new Size(152, 806);
-            WaterToolPanel.TabIndex = 28;
-            // 
-            // label76
-            // 
-            label76.AutoSize = true;
-            label76.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label76.ForeColor = SystemColors.ControlDarkDark;
-            label76.Location = new Point(17, 144);
-            label76.Name = "label76";
-            label76.Size = new Size(74, 13);
-            label76.TabIndex = 89;
-            label76.Text = "Brush Velocity";
-            // 
-            // WaterBrushVelocityTrack
-            // 
-            WaterBrushVelocityTrack.AutoSize = false;
-            WaterBrushVelocityTrack.Location = new Point(14, 155);
-            WaterBrushVelocityTrack.Maximum = 100;
-            WaterBrushVelocityTrack.Minimum = 1;
-            WaterBrushVelocityTrack.Name = "WaterBrushVelocityTrack";
-            WaterBrushVelocityTrack.Size = new Size(126, 20);
-            WaterBrushVelocityTrack.TabIndex = 88;
-            WaterBrushVelocityTrack.TickStyle = TickStyle.None;
-            WaterBrushVelocityTrack.Value = 100;
-            WaterBrushVelocityTrack.ValueChanged += WaterBrushVelocityTrack_ValueChanged;
-            // 
-            // WaterColorButton
-            // 
-            WaterColorButton.BackColor = SystemColors.ControlLightLight;
-            WaterColorButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
-            WaterColorButton.FlatStyle = FlatStyle.Flat;
-            WaterColorButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterColorButton.ForeColor = SystemColors.ControlDarkDark;
-            WaterColorButton.IconChar = FontAwesome.Sharp.IconChar.Brush;
-            WaterColorButton.IconColor = Color.Black;
-            WaterColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            WaterColorButton.IconSize = 24;
-            WaterColorButton.Location = new Point(14, 248);
-            WaterColorButton.Name = "WaterColorButton";
-            WaterColorButton.Size = new Size(60, 60);
-            WaterColorButton.TabIndex = 87;
-            WaterColorButton.Text = "Color";
-            WaterColorButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            WaterColorButton.UseVisualStyleBackColor = false;
-            WaterColorButton.Click += WaterColorButton_Click;
-            // 
-            // label20
-            // 
-            label20.AutoSize = true;
-            label20.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label20.ForeColor = SystemColors.ControlDarkDark;
-            label20.Location = new Point(17, 178);
-            label20.Name = "label20";
-            label20.Size = new Size(60, 13);
-            label20.TabIndex = 84;
-            label20.Text = "Eraser Size";
-            // 
-            // WaterColorEraserSizeTrack
-            // 
-            WaterColorEraserSizeTrack.AutoSize = false;
-            WaterColorEraserSizeTrack.Location = new Point(14, 194);
-            WaterColorEraserSizeTrack.Maximum = 256;
-            WaterColorEraserSizeTrack.Minimum = 2;
-            WaterColorEraserSizeTrack.Name = "WaterColorEraserSizeTrack";
-            WaterColorEraserSizeTrack.Size = new Size(126, 20);
-            WaterColorEraserSizeTrack.TabIndex = 83;
-            WaterColorEraserSizeTrack.TickFrequency = 2;
-            WaterColorEraserSizeTrack.TickStyle = TickStyle.None;
-            WaterColorEraserSizeTrack.Value = 20;
-            WaterColorEraserSizeTrack.ValueChanged += WaterColorEraserSizeTrack_ValueChanged;
-            // 
-            // WaterCustomColor8
-            // 
-            WaterCustomColor8.BackColor = Color.White;
-            WaterCustomColor8.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            WaterCustomColor8.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterCustomColor8.ForeColor = SystemColors.ControlDark;
-            WaterCustomColor8.Location = new Point(80, 737);
-            WaterCustomColor8.Name = "WaterCustomColor8";
-            WaterCustomColor8.Size = new Size(60, 57);
-            WaterCustomColor8.TabIndex = 82;
-            WaterCustomColor8.UseVisualStyleBackColor = false;
-            WaterCustomColor8.MouseClick += WaterCustomColor8_MouseClick;
-            // 
-            // WaterCustomColor7
-            // 
-            WaterCustomColor7.BackColor = Color.White;
-            WaterCustomColor7.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            WaterCustomColor7.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor7.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterCustomColor7.ForeColor = SystemColors.ControlDark;
-            WaterCustomColor7.Location = new Point(14, 737);
-            WaterCustomColor7.Name = "WaterCustomColor7";
-            WaterCustomColor7.Size = new Size(60, 57);
-            WaterCustomColor7.TabIndex = 81;
-            WaterCustomColor7.UseVisualStyleBackColor = false;
-            WaterCustomColor7.MouseClick += WaterCustomColor7_MouseClick;
-            // 
-            // WaterCustomColor6
-            // 
-            WaterCustomColor6.BackColor = Color.White;
-            WaterCustomColor6.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            WaterCustomColor6.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor6.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterCustomColor6.ForeColor = SystemColors.ControlDark;
-            WaterCustomColor6.Location = new Point(80, 674);
-            WaterCustomColor6.Name = "WaterCustomColor6";
-            WaterCustomColor6.Size = new Size(60, 57);
-            WaterCustomColor6.TabIndex = 80;
-            WaterCustomColor6.UseVisualStyleBackColor = false;
-            WaterCustomColor6.MouseClick += WaterCustomColor6_MouseClick;
-            // 
-            // WaterCustomColor5
-            // 
-            WaterCustomColor5.BackColor = Color.White;
-            WaterCustomColor5.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            WaterCustomColor5.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor5.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterCustomColor5.ForeColor = SystemColors.ControlDark;
-            WaterCustomColor5.Location = new Point(14, 674);
-            WaterCustomColor5.Name = "WaterCustomColor5";
-            WaterCustomColor5.Size = new Size(60, 57);
-            WaterCustomColor5.TabIndex = 79;
-            WaterCustomColor5.UseVisualStyleBackColor = false;
-            WaterCustomColor5.MouseClick += WaterCustomColor5_MouseClick;
-            // 
-            // WaterCustomColor4
-            // 
-            WaterCustomColor4.BackColor = Color.White;
-            WaterCustomColor4.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            WaterCustomColor4.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor4.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterCustomColor4.ForeColor = SystemColors.ControlDark;
-            WaterCustomColor4.Location = new Point(80, 611);
-            WaterCustomColor4.Name = "WaterCustomColor4";
-            WaterCustomColor4.Size = new Size(60, 57);
-            WaterCustomColor4.TabIndex = 78;
-            WaterCustomColor4.UseVisualStyleBackColor = false;
-            WaterCustomColor4.MouseClick += WaterCustomColor4_MouseClick;
-            // 
-            // WaterCustomColor3
-            // 
-            WaterCustomColor3.BackColor = Color.White;
-            WaterCustomColor3.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            WaterCustomColor3.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor3.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterCustomColor3.ForeColor = SystemColors.ControlDark;
-            WaterCustomColor3.Location = new Point(14, 611);
-            WaterCustomColor3.Name = "WaterCustomColor3";
-            WaterCustomColor3.Size = new Size(60, 57);
-            WaterCustomColor3.TabIndex = 77;
-            WaterCustomColor3.UseVisualStyleBackColor = false;
-            WaterCustomColor3.MouseClick += WaterCustomColor3_MouseClick;
-            // 
-            // WaterCustomColor2
-            // 
-            WaterCustomColor2.BackColor = Color.White;
-            WaterCustomColor2.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            WaterCustomColor2.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor2.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterCustomColor2.ForeColor = SystemColors.ControlDark;
-            WaterCustomColor2.Location = new Point(80, 548);
-            WaterCustomColor2.Name = "WaterCustomColor2";
-            WaterCustomColor2.Size = new Size(60, 57);
-            WaterCustomColor2.TabIndex = 76;
-            WaterCustomColor2.UseVisualStyleBackColor = false;
-            WaterCustomColor2.MouseClick += WaterCustomColor2_MouseClick;
-            // 
-            // WaterCustomColor1
-            // 
-            WaterCustomColor1.BackColor = Color.White;
-            WaterCustomColor1.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            WaterCustomColor1.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor1.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterCustomColor1.ForeColor = SystemColors.ControlDark;
-            WaterCustomColor1.Location = new Point(14, 548);
-            WaterCustomColor1.Name = "WaterCustomColor1";
-            WaterCustomColor1.Size = new Size(60, 57);
-            WaterCustomColor1.TabIndex = 75;
-            WaterCustomColor1.UseVisualStyleBackColor = false;
-            WaterCustomColor1.MouseClick += WaterCustomColor1_MouseClick;
-            // 
-            // WaterHardBrushButton
-            // 
-            WaterHardBrushButton.BackColor = Color.Black;
-            WaterHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
-            WaterHardBrushButton.FlatAppearance.BorderSize = 3;
-            WaterHardBrushButton.FlatStyle = FlatStyle.Flat;
-            WaterHardBrushButton.Image = (Image)resources.GetObject("WaterHardBrushButton.Image");
-            WaterHardBrushButton.Location = new Point(80, 31);
-            WaterHardBrushButton.Name = "WaterHardBrushButton";
-            WaterHardBrushButton.Size = new Size(60, 60);
-            WaterHardBrushButton.TabIndex = 73;
-            WaterHardBrushButton.UseVisualStyleBackColor = false;
-            WaterHardBrushButton.Click += WaterHardBrushButton_Click;
-            // 
-            // WaterSoftBrushButton
-            // 
-            WaterSoftBrushButton.BackColor = Color.Black;
-            WaterSoftBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
-            WaterSoftBrushButton.FlatAppearance.BorderSize = 3;
-            WaterSoftBrushButton.FlatStyle = FlatStyle.Flat;
-            WaterSoftBrushButton.Image = (Image)resources.GetObject("WaterSoftBrushButton.Image");
-            WaterSoftBrushButton.Location = new Point(14, 31);
-            WaterSoftBrushButton.Name = "WaterSoftBrushButton";
-            WaterSoftBrushButton.Size = new Size(60, 60);
-            WaterSoftBrushButton.TabIndex = 72;
-            WaterSoftBrushButton.UseVisualStyleBackColor = false;
-            WaterSoftBrushButton.Click += WaterSoftBrushButton_Click;
-            // 
-            // WaterButton42718D
-            // 
-            WaterButton42718D.BackColor = Color.FromArgb(66, 113, 141);
-            WaterButton42718D.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            WaterButton42718D.FlatStyle = FlatStyle.Flat;
-            WaterButton42718D.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterButton42718D.ForeColor = SystemColors.ControlDark;
-            WaterButton42718D.Location = new Point(80, 485);
-            WaterButton42718D.Name = "WaterButton42718D";
-            WaterButton42718D.Size = new Size(60, 57);
-            WaterButton42718D.TabIndex = 71;
-            WaterButton42718D.Text = "#42718D";
-            WaterButton42718D.UseVisualStyleBackColor = false;
-            WaterButton42718D.Click += WaterButton42718D_Click;
-            // 
-            // WaterButton6BA5B9
-            // 
-            WaterButton6BA5B9.BackColor = Color.FromArgb(107, 165, 185);
-            WaterButton6BA5B9.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            WaterButton6BA5B9.FlatStyle = FlatStyle.Flat;
-            WaterButton6BA5B9.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterButton6BA5B9.ForeColor = SystemColors.ControlDarkDark;
-            WaterButton6BA5B9.Location = new Point(14, 485);
-            WaterButton6BA5B9.Name = "WaterButton6BA5B9";
-            WaterButton6BA5B9.Size = new Size(60, 57);
-            WaterButton6BA5B9.TabIndex = 70;
-            WaterButton6BA5B9.Text = "#6BA5B9";
-            WaterButton6BA5B9.UseVisualStyleBackColor = false;
-            WaterButton6BA5B9.Click += WaterButton6BA5B9_Click;
-            // 
-            // WaterButton88B5BB
-            // 
-            WaterButton88B5BB.BackColor = Color.FromArgb(136, 181, 187);
-            WaterButton88B5BB.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            WaterButton88B5BB.FlatStyle = FlatStyle.Flat;
-            WaterButton88B5BB.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterButton88B5BB.ForeColor = SystemColors.ControlDarkDark;
-            WaterButton88B5BB.Location = new Point(80, 422);
-            WaterButton88B5BB.Name = "WaterButton88B5BB";
-            WaterButton88B5BB.Size = new Size(60, 57);
-            WaterButton88B5BB.TabIndex = 69;
-            WaterButton88B5BB.Text = "#88B5BB";
-            WaterButton88B5BB.UseVisualStyleBackColor = false;
-            WaterButton88B5BB.Click += WaterButton88B5BB_Click;
-            // 
-            // WaterButton91CBB8
-            // 
-            WaterButton91CBB8.BackColor = Color.FromArgb(145, 203, 184);
-            WaterButton91CBB8.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            WaterButton91CBB8.FlatStyle = FlatStyle.Flat;
-            WaterButton91CBB8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterButton91CBB8.ForeColor = SystemColors.ControlDarkDark;
-            WaterButton91CBB8.Location = new Point(14, 422);
-            WaterButton91CBB8.Name = "WaterButton91CBB8";
-            WaterButton91CBB8.Size = new Size(60, 57);
-            WaterButton91CBB8.TabIndex = 68;
-            WaterButton91CBB8.Text = "#91CBB8";
-            WaterButton91CBB8.UseVisualStyleBackColor = false;
-            WaterButton91CBB8.Click += WaterButton91CBB8_Click;
-            // 
-            // WaterColorEraseButton
-            // 
-            WaterColorEraseButton.BackColor = SystemColors.ControlLightLight;
-            WaterColorEraseButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
-            WaterColorEraseButton.FlatStyle = FlatStyle.Flat;
-            WaterColorEraseButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterColorEraseButton.ForeColor = SystemColors.ControlDarkDark;
-            WaterColorEraseButton.IconChar = FontAwesome.Sharp.IconChar.Eraser;
-            WaterColorEraseButton.IconColor = Color.Black;
-            WaterColorEraseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            WaterColorEraseButton.IconSize = 24;
-            WaterColorEraseButton.Location = new Point(80, 248);
-            WaterColorEraseButton.Name = "WaterColorEraseButton";
-            WaterColorEraseButton.Size = new Size(60, 60);
-            WaterColorEraseButton.TabIndex = 67;
-            WaterColorEraseButton.Text = "Erase";
-            WaterColorEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            WaterColorEraseButton.UseVisualStyleBackColor = false;
-            WaterColorEraseButton.Click += WaterColorEraseButton_Click;
-            // 
-            // label61
-            // 
-            label61.AutoSize = true;
-            label61.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label61.ForeColor = SystemColors.ControlDarkDark;
-            label61.Location = new Point(17, 100);
-            label61.Name = "label61";
-            label61.Size = new Size(56, 13);
-            label61.TabIndex = 66;
-            label61.Text = "Brush Size";
-            // 
-            // WaterColorBrushSizeTrack
-            // 
-            WaterColorBrushSizeTrack.AutoSize = false;
-            WaterColorBrushSizeTrack.Location = new Point(14, 116);
-            WaterColorBrushSizeTrack.Maximum = 256;
-            WaterColorBrushSizeTrack.Minimum = 2;
-            WaterColorBrushSizeTrack.Name = "WaterColorBrushSizeTrack";
-            WaterColorBrushSizeTrack.Size = new Size(126, 20);
-            WaterColorBrushSizeTrack.TabIndex = 65;
-            WaterColorBrushSizeTrack.TickFrequency = 2;
-            WaterColorBrushSizeTrack.TickStyle = TickStyle.None;
-            WaterColorBrushSizeTrack.Value = 8;
-            WaterColorBrushSizeTrack.ValueChanged += WaterColorBrushSizeTrack_ValueChanged;
-            // 
-            // label62
-            // 
-            label62.AutoSize = true;
-            label62.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label62.ForeColor = SystemColors.ControlDarkDark;
-            label62.Location = new Point(16, 15);
-            label62.Name = "label62";
-            label62.Size = new Size(62, 13);
-            label62.TabIndex = 63;
-            label62.Text = "Color Brush";
-            // 
-            // WaterPaintColorSelectButton
-            // 
-            WaterPaintColorSelectButton.BackColor = Color.FromArgb(128, 145, 203, 184);
-            WaterPaintColorSelectButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
-            WaterPaintColorSelectButton.FlatStyle = FlatStyle.Flat;
-            WaterPaintColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            WaterPaintColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
-            WaterPaintColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            WaterPaintColorSelectButton.IconColor = Color.Tan;
-            WaterPaintColorSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            WaterPaintColorSelectButton.Location = new Point(14, 314);
-            WaterPaintColorSelectButton.Name = "WaterPaintColorSelectButton";
-            WaterPaintColorSelectButton.Size = new Size(126, 60);
-            WaterPaintColorSelectButton.TabIndex = 62;
-            WaterPaintColorSelectButton.Text = "Select Brush Color";
-            WaterPaintColorSelectButton.UseVisualStyleBackColor = false;
-            WaterPaintColorSelectButton.Click += WaterPaintColorSelectButton_Click;
             // 
             // LandToolPanel
             // 
@@ -8939,6 +8562,383 @@
             label51.TabIndex = 40;
             label51.Text = "Path Syle";
             // 
+            // WaterToolPanel
+            // 
+            WaterToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            WaterToolPanel.BackColor = SystemColors.Control;
+            WaterToolPanel.Controls.Add(label76);
+            WaterToolPanel.Controls.Add(WaterBrushVelocityTrack);
+            WaterToolPanel.Controls.Add(WaterColorButton);
+            WaterToolPanel.Controls.Add(label20);
+            WaterToolPanel.Controls.Add(WaterColorEraserSizeTrack);
+            WaterToolPanel.Controls.Add(WaterCustomColor8);
+            WaterToolPanel.Controls.Add(WaterCustomColor7);
+            WaterToolPanel.Controls.Add(WaterCustomColor6);
+            WaterToolPanel.Controls.Add(WaterCustomColor5);
+            WaterToolPanel.Controls.Add(WaterCustomColor4);
+            WaterToolPanel.Controls.Add(WaterCustomColor3);
+            WaterToolPanel.Controls.Add(WaterCustomColor2);
+            WaterToolPanel.Controls.Add(WaterCustomColor1);
+            WaterToolPanel.Controls.Add(WaterHardBrushButton);
+            WaterToolPanel.Controls.Add(WaterSoftBrushButton);
+            WaterToolPanel.Controls.Add(WaterButton42718D);
+            WaterToolPanel.Controls.Add(WaterButton6BA5B9);
+            WaterToolPanel.Controls.Add(WaterButton88B5BB);
+            WaterToolPanel.Controls.Add(WaterButton91CBB8);
+            WaterToolPanel.Controls.Add(WaterColorEraseButton);
+            WaterToolPanel.Controls.Add(label61);
+            WaterToolPanel.Controls.Add(WaterColorBrushSizeTrack);
+            WaterToolPanel.Controls.Add(label62);
+            WaterToolPanel.Controls.Add(WaterPaintColorSelectButton);
+            WaterToolPanel.Location = new Point(1421, 90);
+            WaterToolPanel.Margin = new Padding(0);
+            WaterToolPanel.Name = "WaterToolPanel";
+            WaterToolPanel.Size = new Size(152, 806);
+            WaterToolPanel.TabIndex = 28;
+            // 
+            // label76
+            // 
+            label76.AutoSize = true;
+            label76.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label76.ForeColor = SystemColors.ControlDarkDark;
+            label76.Location = new Point(17, 144);
+            label76.Name = "label76";
+            label76.Size = new Size(74, 13);
+            label76.TabIndex = 89;
+            label76.Text = "Brush Velocity";
+            // 
+            // WaterBrushVelocityTrack
+            // 
+            WaterBrushVelocityTrack.AutoSize = false;
+            WaterBrushVelocityTrack.Location = new Point(14, 155);
+            WaterBrushVelocityTrack.Maximum = 100;
+            WaterBrushVelocityTrack.Minimum = 1;
+            WaterBrushVelocityTrack.Name = "WaterBrushVelocityTrack";
+            WaterBrushVelocityTrack.Size = new Size(126, 20);
+            WaterBrushVelocityTrack.TabIndex = 88;
+            WaterBrushVelocityTrack.TickStyle = TickStyle.None;
+            WaterBrushVelocityTrack.Value = 100;
+            WaterBrushVelocityTrack.ValueChanged += WaterBrushVelocityTrack_ValueChanged;
+            // 
+            // WaterColorButton
+            // 
+            WaterColorButton.BackColor = SystemColors.ControlLightLight;
+            WaterColorButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
+            WaterColorButton.FlatStyle = FlatStyle.Flat;
+            WaterColorButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterColorButton.ForeColor = SystemColors.ControlDarkDark;
+            WaterColorButton.IconChar = FontAwesome.Sharp.IconChar.Brush;
+            WaterColorButton.IconColor = Color.Black;
+            WaterColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            WaterColorButton.IconSize = 24;
+            WaterColorButton.Location = new Point(14, 248);
+            WaterColorButton.Name = "WaterColorButton";
+            WaterColorButton.Size = new Size(60, 60);
+            WaterColorButton.TabIndex = 87;
+            WaterColorButton.Text = "Color";
+            WaterColorButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            WaterColorButton.UseVisualStyleBackColor = false;
+            WaterColorButton.Click += WaterColorButton_Click;
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label20.ForeColor = SystemColors.ControlDarkDark;
+            label20.Location = new Point(17, 178);
+            label20.Name = "label20";
+            label20.Size = new Size(60, 13);
+            label20.TabIndex = 84;
+            label20.Text = "Eraser Size";
+            // 
+            // WaterColorEraserSizeTrack
+            // 
+            WaterColorEraserSizeTrack.AutoSize = false;
+            WaterColorEraserSizeTrack.Location = new Point(14, 194);
+            WaterColorEraserSizeTrack.Maximum = 256;
+            WaterColorEraserSizeTrack.Minimum = 2;
+            WaterColorEraserSizeTrack.Name = "WaterColorEraserSizeTrack";
+            WaterColorEraserSizeTrack.Size = new Size(126, 20);
+            WaterColorEraserSizeTrack.TabIndex = 83;
+            WaterColorEraserSizeTrack.TickFrequency = 2;
+            WaterColorEraserSizeTrack.TickStyle = TickStyle.None;
+            WaterColorEraserSizeTrack.Value = 20;
+            WaterColorEraserSizeTrack.ValueChanged += WaterColorEraserSizeTrack_ValueChanged;
+            // 
+            // WaterCustomColor8
+            // 
+            WaterCustomColor8.BackColor = Color.White;
+            WaterCustomColor8.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            WaterCustomColor8.FlatStyle = FlatStyle.Flat;
+            WaterCustomColor8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor8.ForeColor = SystemColors.ControlDark;
+            WaterCustomColor8.Location = new Point(80, 737);
+            WaterCustomColor8.Name = "WaterCustomColor8";
+            WaterCustomColor8.Size = new Size(60, 57);
+            WaterCustomColor8.TabIndex = 82;
+            WaterCustomColor8.UseVisualStyleBackColor = false;
+            WaterCustomColor8.MouseClick += WaterCustomColor8_MouseClick;
+            // 
+            // WaterCustomColor7
+            // 
+            WaterCustomColor7.BackColor = Color.White;
+            WaterCustomColor7.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            WaterCustomColor7.FlatStyle = FlatStyle.Flat;
+            WaterCustomColor7.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor7.ForeColor = SystemColors.ControlDark;
+            WaterCustomColor7.Location = new Point(14, 737);
+            WaterCustomColor7.Name = "WaterCustomColor7";
+            WaterCustomColor7.Size = new Size(60, 57);
+            WaterCustomColor7.TabIndex = 81;
+            WaterCustomColor7.UseVisualStyleBackColor = false;
+            WaterCustomColor7.MouseClick += WaterCustomColor7_MouseClick;
+            // 
+            // WaterCustomColor6
+            // 
+            WaterCustomColor6.BackColor = Color.White;
+            WaterCustomColor6.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            WaterCustomColor6.FlatStyle = FlatStyle.Flat;
+            WaterCustomColor6.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor6.ForeColor = SystemColors.ControlDark;
+            WaterCustomColor6.Location = new Point(80, 674);
+            WaterCustomColor6.Name = "WaterCustomColor6";
+            WaterCustomColor6.Size = new Size(60, 57);
+            WaterCustomColor6.TabIndex = 80;
+            WaterCustomColor6.UseVisualStyleBackColor = false;
+            WaterCustomColor6.MouseClick += WaterCustomColor6_MouseClick;
+            // 
+            // WaterCustomColor5
+            // 
+            WaterCustomColor5.BackColor = Color.White;
+            WaterCustomColor5.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            WaterCustomColor5.FlatStyle = FlatStyle.Flat;
+            WaterCustomColor5.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor5.ForeColor = SystemColors.ControlDark;
+            WaterCustomColor5.Location = new Point(14, 674);
+            WaterCustomColor5.Name = "WaterCustomColor5";
+            WaterCustomColor5.Size = new Size(60, 57);
+            WaterCustomColor5.TabIndex = 79;
+            WaterCustomColor5.UseVisualStyleBackColor = false;
+            WaterCustomColor5.MouseClick += WaterCustomColor5_MouseClick;
+            // 
+            // WaterCustomColor4
+            // 
+            WaterCustomColor4.BackColor = Color.White;
+            WaterCustomColor4.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            WaterCustomColor4.FlatStyle = FlatStyle.Flat;
+            WaterCustomColor4.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor4.ForeColor = SystemColors.ControlDark;
+            WaterCustomColor4.Location = new Point(80, 611);
+            WaterCustomColor4.Name = "WaterCustomColor4";
+            WaterCustomColor4.Size = new Size(60, 57);
+            WaterCustomColor4.TabIndex = 78;
+            WaterCustomColor4.UseVisualStyleBackColor = false;
+            WaterCustomColor4.MouseClick += WaterCustomColor4_MouseClick;
+            // 
+            // WaterCustomColor3
+            // 
+            WaterCustomColor3.BackColor = Color.White;
+            WaterCustomColor3.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            WaterCustomColor3.FlatStyle = FlatStyle.Flat;
+            WaterCustomColor3.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor3.ForeColor = SystemColors.ControlDark;
+            WaterCustomColor3.Location = new Point(14, 611);
+            WaterCustomColor3.Name = "WaterCustomColor3";
+            WaterCustomColor3.Size = new Size(60, 57);
+            WaterCustomColor3.TabIndex = 77;
+            WaterCustomColor3.UseVisualStyleBackColor = false;
+            WaterCustomColor3.MouseClick += WaterCustomColor3_MouseClick;
+            // 
+            // WaterCustomColor2
+            // 
+            WaterCustomColor2.BackColor = Color.White;
+            WaterCustomColor2.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            WaterCustomColor2.FlatStyle = FlatStyle.Flat;
+            WaterCustomColor2.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor2.ForeColor = SystemColors.ControlDark;
+            WaterCustomColor2.Location = new Point(80, 548);
+            WaterCustomColor2.Name = "WaterCustomColor2";
+            WaterCustomColor2.Size = new Size(60, 57);
+            WaterCustomColor2.TabIndex = 76;
+            WaterCustomColor2.UseVisualStyleBackColor = false;
+            WaterCustomColor2.MouseClick += WaterCustomColor2_MouseClick;
+            // 
+            // WaterCustomColor1
+            // 
+            WaterCustomColor1.BackColor = Color.White;
+            WaterCustomColor1.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            WaterCustomColor1.FlatStyle = FlatStyle.Flat;
+            WaterCustomColor1.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor1.ForeColor = SystemColors.ControlDark;
+            WaterCustomColor1.Location = new Point(14, 548);
+            WaterCustomColor1.Name = "WaterCustomColor1";
+            WaterCustomColor1.Size = new Size(60, 57);
+            WaterCustomColor1.TabIndex = 75;
+            WaterCustomColor1.UseVisualStyleBackColor = false;
+            WaterCustomColor1.MouseClick += WaterCustomColor1_MouseClick;
+            // 
+            // WaterHardBrushButton
+            // 
+            WaterHardBrushButton.BackColor = Color.Black;
+            WaterHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+            WaterHardBrushButton.FlatAppearance.BorderSize = 3;
+            WaterHardBrushButton.FlatStyle = FlatStyle.Flat;
+            WaterHardBrushButton.Image = (Image)resources.GetObject("WaterHardBrushButton.Image");
+            WaterHardBrushButton.Location = new Point(80, 31);
+            WaterHardBrushButton.Name = "WaterHardBrushButton";
+            WaterHardBrushButton.Size = new Size(60, 60);
+            WaterHardBrushButton.TabIndex = 73;
+            WaterHardBrushButton.UseVisualStyleBackColor = false;
+            WaterHardBrushButton.Click += WaterHardBrushButton_Click;
+            // 
+            // WaterSoftBrushButton
+            // 
+            WaterSoftBrushButton.BackColor = Color.Black;
+            WaterSoftBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            WaterSoftBrushButton.FlatAppearance.BorderSize = 3;
+            WaterSoftBrushButton.FlatStyle = FlatStyle.Flat;
+            WaterSoftBrushButton.Image = (Image)resources.GetObject("WaterSoftBrushButton.Image");
+            WaterSoftBrushButton.Location = new Point(14, 31);
+            WaterSoftBrushButton.Name = "WaterSoftBrushButton";
+            WaterSoftBrushButton.Size = new Size(60, 60);
+            WaterSoftBrushButton.TabIndex = 72;
+            WaterSoftBrushButton.UseVisualStyleBackColor = false;
+            WaterSoftBrushButton.Click += WaterSoftBrushButton_Click;
+            // 
+            // WaterButton42718D
+            // 
+            WaterButton42718D.BackColor = Color.FromArgb(66, 113, 141);
+            WaterButton42718D.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            WaterButton42718D.FlatStyle = FlatStyle.Flat;
+            WaterButton42718D.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterButton42718D.ForeColor = SystemColors.ControlDark;
+            WaterButton42718D.Location = new Point(80, 485);
+            WaterButton42718D.Name = "WaterButton42718D";
+            WaterButton42718D.Size = new Size(60, 57);
+            WaterButton42718D.TabIndex = 71;
+            WaterButton42718D.Text = "#42718D";
+            WaterButton42718D.UseVisualStyleBackColor = false;
+            WaterButton42718D.Click += WaterButton42718D_Click;
+            // 
+            // WaterButton6BA5B9
+            // 
+            WaterButton6BA5B9.BackColor = Color.FromArgb(107, 165, 185);
+            WaterButton6BA5B9.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            WaterButton6BA5B9.FlatStyle = FlatStyle.Flat;
+            WaterButton6BA5B9.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterButton6BA5B9.ForeColor = SystemColors.ControlDarkDark;
+            WaterButton6BA5B9.Location = new Point(14, 485);
+            WaterButton6BA5B9.Name = "WaterButton6BA5B9";
+            WaterButton6BA5B9.Size = new Size(60, 57);
+            WaterButton6BA5B9.TabIndex = 70;
+            WaterButton6BA5B9.Text = "#6BA5B9";
+            WaterButton6BA5B9.UseVisualStyleBackColor = false;
+            WaterButton6BA5B9.Click += WaterButton6BA5B9_Click;
+            // 
+            // WaterButton88B5BB
+            // 
+            WaterButton88B5BB.BackColor = Color.FromArgb(136, 181, 187);
+            WaterButton88B5BB.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            WaterButton88B5BB.FlatStyle = FlatStyle.Flat;
+            WaterButton88B5BB.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterButton88B5BB.ForeColor = SystemColors.ControlDarkDark;
+            WaterButton88B5BB.Location = new Point(80, 422);
+            WaterButton88B5BB.Name = "WaterButton88B5BB";
+            WaterButton88B5BB.Size = new Size(60, 57);
+            WaterButton88B5BB.TabIndex = 69;
+            WaterButton88B5BB.Text = "#88B5BB";
+            WaterButton88B5BB.UseVisualStyleBackColor = false;
+            WaterButton88B5BB.Click += WaterButton88B5BB_Click;
+            // 
+            // WaterButton91CBB8
+            // 
+            WaterButton91CBB8.BackColor = Color.FromArgb(145, 203, 184);
+            WaterButton91CBB8.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            WaterButton91CBB8.FlatStyle = FlatStyle.Flat;
+            WaterButton91CBB8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterButton91CBB8.ForeColor = SystemColors.ControlDarkDark;
+            WaterButton91CBB8.Location = new Point(14, 422);
+            WaterButton91CBB8.Name = "WaterButton91CBB8";
+            WaterButton91CBB8.Size = new Size(60, 57);
+            WaterButton91CBB8.TabIndex = 68;
+            WaterButton91CBB8.Text = "#91CBB8";
+            WaterButton91CBB8.UseVisualStyleBackColor = false;
+            WaterButton91CBB8.Click += WaterButton91CBB8_Click;
+            // 
+            // WaterColorEraseButton
+            // 
+            WaterColorEraseButton.BackColor = SystemColors.ControlLightLight;
+            WaterColorEraseButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
+            WaterColorEraseButton.FlatStyle = FlatStyle.Flat;
+            WaterColorEraseButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterColorEraseButton.ForeColor = SystemColors.ControlDarkDark;
+            WaterColorEraseButton.IconChar = FontAwesome.Sharp.IconChar.Eraser;
+            WaterColorEraseButton.IconColor = Color.Black;
+            WaterColorEraseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            WaterColorEraseButton.IconSize = 24;
+            WaterColorEraseButton.Location = new Point(80, 248);
+            WaterColorEraseButton.Name = "WaterColorEraseButton";
+            WaterColorEraseButton.Size = new Size(60, 60);
+            WaterColorEraseButton.TabIndex = 67;
+            WaterColorEraseButton.Text = "Erase";
+            WaterColorEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            WaterColorEraseButton.UseVisualStyleBackColor = false;
+            WaterColorEraseButton.Click += WaterColorEraseButton_Click;
+            // 
+            // label61
+            // 
+            label61.AutoSize = true;
+            label61.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label61.ForeColor = SystemColors.ControlDarkDark;
+            label61.Location = new Point(17, 100);
+            label61.Name = "label61";
+            label61.Size = new Size(56, 13);
+            label61.TabIndex = 66;
+            label61.Text = "Brush Size";
+            // 
+            // WaterColorBrushSizeTrack
+            // 
+            WaterColorBrushSizeTrack.AutoSize = false;
+            WaterColorBrushSizeTrack.Location = new Point(14, 116);
+            WaterColorBrushSizeTrack.Maximum = 256;
+            WaterColorBrushSizeTrack.Minimum = 2;
+            WaterColorBrushSizeTrack.Name = "WaterColorBrushSizeTrack";
+            WaterColorBrushSizeTrack.Size = new Size(126, 20);
+            WaterColorBrushSizeTrack.TabIndex = 65;
+            WaterColorBrushSizeTrack.TickFrequency = 2;
+            WaterColorBrushSizeTrack.TickStyle = TickStyle.None;
+            WaterColorBrushSizeTrack.Value = 8;
+            WaterColorBrushSizeTrack.ValueChanged += WaterColorBrushSizeTrack_ValueChanged;
+            // 
+            // label62
+            // 
+            label62.AutoSize = true;
+            label62.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label62.ForeColor = SystemColors.ControlDarkDark;
+            label62.Location = new Point(16, 15);
+            label62.Name = "label62";
+            label62.Size = new Size(62, 13);
+            label62.TabIndex = 63;
+            label62.Text = "Color Brush";
+            // 
+            // WaterPaintColorSelectButton
+            // 
+            WaterPaintColorSelectButton.BackColor = Color.FromArgb(128, 145, 203, 184);
+            WaterPaintColorSelectButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
+            WaterPaintColorSelectButton.FlatStyle = FlatStyle.Flat;
+            WaterPaintColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterPaintColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            WaterPaintColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            WaterPaintColorSelectButton.IconColor = Color.Tan;
+            WaterPaintColorSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            WaterPaintColorSelectButton.Location = new Point(14, 314);
+            WaterPaintColorSelectButton.Name = "WaterPaintColorSelectButton";
+            WaterPaintColorSelectButton.Size = new Size(126, 60);
+            WaterPaintColorSelectButton.TabIndex = 62;
+            WaterPaintColorSelectButton.Text = "Select Brush Color";
+            WaterPaintColorSelectButton.UseVisualStyleBackColor = false;
+            WaterPaintColorSelectButton.Click += WaterPaintColorSelectButton_Click;
+            // 
             // materialCheckBox1
             // 
             materialCheckBox1.AutoSize = true;
@@ -9152,11 +9152,6 @@
             ApplicationStatusStrip.PerformLayout();
             RealmStudioMainMenuStrip.ResumeLayout(false);
             RealmStudioMainMenuStrip.PerformLayout();
-            WaterToolPanel.ResumeLayout(false);
-            WaterToolPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)WaterBrushVelocityTrack).EndInit();
-            ((System.ComponentModel.ISupportInitialize)WaterColorEraserSizeTrack).EndInit();
-            ((System.ComponentModel.ISupportInitialize)WaterColorBrushSizeTrack).EndInit();
             LandToolPanel.ResumeLayout(false);
             LandToolPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)LandBrushVelocityTrack).EndInit();
@@ -9203,6 +9198,11 @@
             ((System.ComponentModel.ISupportInitialize)DashedLinePictureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)DottedLinePictureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)SolidLinePictureBox).EndInit();
+            WaterToolPanel.ResumeLayout(false);
+            WaterToolPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)WaterBrushVelocityTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WaterColorEraserSizeTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WaterColorBrushSizeTrack).EndInit();
             ResumeLayout(false);
         }
 
@@ -9232,27 +9232,15 @@
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem AboutToolStripMenuItem;
         private StatusStrip MapStatusStrip;
-        private TabControl MainTab;
-        private TabPage BackgroundTab;
-        private TabPage LandTab;
-        private TabPage WaterTab;
-        private TabPage PathTab;
-        private TabPage LabelTab;
-        private TabPage OverlayTab;
-        private TabPage RegionTab;
         private StatusStrip RealmDataStatusStrip;
-        private TabPage DrawingTab;
         private Label label1;
         private ReaLTaiizor.Controls.CyberSwitch AutosaveSwitch;
         private FontAwesome.Sharp.IconButton SaveButton;
-        private TabPage SymbolTab;
         private ReaLTaiizor.Controls.CyberSwitch ShowBaseLayerSwitch;
         private Label label2;
         private ToolStripMenuItem RealmToolStripMenuItem;
         private ToolStripMenuItem ThemeToolStripMenuItem;
-        private ReaLTaiizor.Controls.CyberSwitch ShowOceanLayerSwitch;
         private Label label3;
-        private ReaLTaiizor.Controls.CyberSwitch ShowLandLayerSwitch;
         private Label label4;
         private Label label5;
         private ReaLTaiizor.Controls.CyberSwitch ShowPathLayerSwitch;
@@ -9268,11 +9256,6 @@
         private ReaLTaiizor.Controls.CyberSwitch ShowDrawingLayerSwitch;
         private Label label11;
         private GroupBox LandformValuesGroup;
-        private TrackBar LandBrushSizeTrack;
-        private FontAwesome.Sharp.IconButton LandformOutlineColorSelectButton;
-        private PictureBox LandformTexturePreviewPicture;
-        private FontAwesome.Sharp.IconButton NextLandTextureButton;
-        private FontAwesome.Sharp.IconButton PreviousLandTextureButton;
         private PictureBox LogoPictureBox;
         private ToolStripStatusLabel ApplicationHelpMessage;
         private ToolStripStatusLabel MapNameLabel;
@@ -9280,27 +9263,19 @@
         private FontAwesome.Sharp.IconButton ZoomToFitButton;
         private FontAwesome.Sharp.IconButton ResetButton;
         private ToolStripStatusLabel MapPathLabel;
-        private Label LandTextureNameLabel;
         private GroupBox CoastlineValuesGroup;
-        private FontAwesome.Sharp.IconButton CoastlineColorSelectionButton;
         private Label label14;
-        private TrackBar CoastlineEffectDistanceTrack;
         private Label label15;
-        private ListBox CoastlineStyleList;
         private Label label16;
         private GroupBox LandEraserGroup;
         private Label label17;
         private Label label19;
-        private TrackBar LandEraserSizeTrack;
         private Panel LandToolPanel;
         private Panel DrawingToolPanel;
         private Label label26;
         private Panel WaterToolPanel;
         private Panel OceanToolPanel;
         private ToolStrip LandToolStrip;
-        private FontAwesome.Sharp.IconToolStripButton LandformSelectButton;
-        private FontAwesome.Sharp.IconToolStripButton LandformPaintButton;
-        private FontAwesome.Sharp.IconToolStripButton LandformEraseButton;
         private ToolStrip WaterToolStrip;
         private ToolStrip PathToolStrip;
         private ToolStrip SymbolToolStrip;
@@ -9315,7 +9290,6 @@
         private Label BackgroundTextureNameLabel;
         private FontAwesome.Sharp.IconButton PreviousBackgroundTextureButton;
         private FontAwesome.Sharp.IconButton NextBackgroundTextureButton;
-        private TrackBar WindroseInnerCircleTrack;
         private ToolStrip BackgroundToolStrip;
         private FontAwesome.Sharp.IconToolStripButton FillBackgroundButton;
         private Label label12;
@@ -9342,32 +9316,16 @@
         private GroupBox OceanTextureGroup;
         private Label OceanTextureNameLabel;
         private Label label31;
-        private FontAwesome.Sharp.IconButton PreviousOceanTextureButton;
-        private FontAwesome.Sharp.IconButton NextOceanTextureButton;
-        private PictureBox OceanTextureBox;
         private Label label32;
-        private TrackBar OceanTextureOpacityTrack;
         private ToolStrip OceanToolStrip;
-        private FontAwesome.Sharp.IconToolStripButton OceanApplyTextureButton;
-        private FontAwesome.Sharp.IconToolStripButton OceanRemoveTextureButton;
         private GroupBox OceanColorGroup;
         private FontAwesome.Sharp.IconButton OceanColorSelectButton;
-        private FontAwesome.Sharp.IconToolStripButton OceanColorFillButton;
-        private FontAwesome.Sharp.IconToolStripButton OceanColorClearButton;
         private GroupBox WindroseGroup;
-        private FontAwesome.Sharp.IconButton WindroseColorSelectButton;
-        private FontAwesome.Sharp.IconToolStripButton WindrosePlaceButton;
-        private NumericUpDown WindroseLineWidthUpDown;
         private Label label30;
-        private NumericUpDown WindroseDirectionsUpDown;
         private Label label35;
         private Label label34;
-        private NumericUpDown WindroseOuterRadiusUpDown;
         private Label label33;
-        private NumericUpDown WindroseInnerRadiusUpDown;
         private Label label36;
-        private ReaLTaiizor.Controls.CyberSwitch WindroseFadeOutSwitch;
-        private FontAwesome.Sharp.IconToolStripButton WindroseClearButton;
         private GroupBox WaterValuesGroup;
         private Label label38;
         private Label label37;
@@ -9437,28 +9395,9 @@
         private TrackBar OceanBrushSizeTrack;
         private Label label57;
         private FontAwesome.Sharp.IconButton OceanPaintColorSelectButton;
-        private FontAwesome.Sharp.IconButton LandColorButton;
         private Label label58;
-        private TrackBar LandColorEraserSizeTrack;
-        private Button LandCustomColorButton6;
-        private Button LandCustomColorButton5;
-        private Button LandCustomColorButton4;
-        private Button LandCustomColorButton3;
-        private Button LandCustomColorButton2;
-        private Button LandCustomColorButton1;
-        private Button LandButton3D3728;
-        private Button LandHardBrushButton;
-        private Button LandSoftBrushButton;
-        private Button LandButtonAD9C7E;
-        private Button LandButtonD7C293;
-        private Button LandButtonBEBB8E;
-        private Button LandButtonD8B48F;
-        private Button LandButtonE6D0AB;
-        private FontAwesome.Sharp.IconButton LandColorEraseButton;
         private Label label59;
-        private TrackBar LandColorBrushSizeTrack;
         private Label label60;
-        private FontAwesome.Sharp.IconButton LandColorSelectionButton;
         private Label label20;
         private Label label61;
         private Label label62;
@@ -9498,7 +9437,6 @@
         private Label label72;
         private TrackBar OceanBrushVelocityTrack;
         private Label label75;
-        private TrackBar LandBrushVelocityTrack;
         private Label label76;
         private FontAwesome.Sharp.IconButton SelectColorButton;
         private FontAwesome.Sharp.IconButton AddPresetColorButton;
@@ -9518,20 +9456,10 @@
         private Label label83;
         private FontAwesome.Sharp.IconButton CreateScaleButton;
         private FontAwesome.Sharp.IconButton DeleteScaleButton;
-        private Panel FontSelectionPanel;
         private FontAwesome.Sharp.IconMenuItem ExportMapMenuItem;
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripMenuItem NameGeneratorConfigurationToolStripMenuItem;
-        private FontAwesome.Sharp.IconToolStripButton LandformFillButton;
-        private FontAwesome.Sharp.IconToolStripButton LandformClearButton;
-        private FontAwesome.Sharp.IconToolStripButton LandformGenerateButton;
         private ToolStripSplitButton LandformTypeButton;
-        private ToolStripMenuItem ContinentMenuItem;
-        private ToolStripMenuItem ArchipelagoMenuItem;
-        private ToolStripMenuItem AtollMenuItem;
-        private ToolStripMenuItem WorldMenuItem;
-        private ToolStripMenuItem RegionMenuItem;
-        private ToolStripMenuItem IslandMenuItem;
         private ToolStripMenuItem TraceToolStripMenuItem;
         private CheckBox RandomizeColorCheck;
         internal SkiaSharp.Views.Desktop.SKGLControl SKGLRenderControl;
@@ -9546,19 +9474,14 @@
         private RadioButton OvalVignetteRadio;
         private Label label88;
         private Label label86;
-        private FontAwesome.Sharp.IconButton LandformBackgroundColorSelectButton;
-        private CheckBox UseTextureForBackgroundCheck;
         private Label label13;
-        private TrackBar LandformOutlineWidthTrack;
         private FontAwesome.Sharp.IconButton FontPanelCloseButton;
         private TrackBar BackgroundTextureScaleTrack;
-        private TrackBar OceanScaleTextureTrack;
         private Label label89;
         private Label label91;
         private Label label92;
         private ReaLTaiizor.Controls.CyberSwitch MirrorBackgroundSwitch;
         private Label label93;
-        private ReaLTaiizor.Controls.CyberSwitch MirrorOceanTextureSwitch;
         private Panel HeightMapToolsPanel;
         private FontAwesome.Sharp.IconButton IncreaseHeightButton;
         private FontAwesome.Sharp.IconButton DecreaseHeightButton;
@@ -9761,5 +9684,82 @@
         internal TrackBar WaterBrushVelocityTrack;
         internal ReaLTaiizor.Controls.CyberSwitch RiverTextureSwitch;
         internal ReaLTaiizor.Controls.CyberSwitch EditRiverPointsSwitch;
+        internal Panel FontSelectionPanel;
+        internal ReaLTaiizor.Controls.CyberSwitch ShowOceanLayerSwitch;
+        internal FontAwesome.Sharp.IconButton PreviousOceanTextureButton;
+        internal FontAwesome.Sharp.IconButton NextOceanTextureButton;
+        internal PictureBox OceanTextureBox;
+        internal TrackBar OceanTextureOpacityTrack;
+        internal TrackBar WindroseInnerCircleTrack;
+        internal FontAwesome.Sharp.IconToolStripButton OceanApplyTextureButton;
+        internal FontAwesome.Sharp.IconToolStripButton OceanRemoveTextureButton;
+        internal FontAwesome.Sharp.IconToolStripButton OceanColorFillButton;
+        internal FontAwesome.Sharp.IconToolStripButton OceanColorClearButton;
+        internal FontAwesome.Sharp.IconButton WindroseColorSelectButton;
+        internal FontAwesome.Sharp.IconToolStripButton WindrosePlaceButton;
+        internal NumericUpDown WindroseLineWidthUpDown;
+        internal NumericUpDown WindroseDirectionsUpDown;
+        internal NumericUpDown WindroseOuterRadiusUpDown;
+        internal NumericUpDown WindroseInnerRadiusUpDown;
+        internal ReaLTaiizor.Controls.CyberSwitch WindroseFadeOutSwitch;
+        internal FontAwesome.Sharp.IconToolStripButton WindroseClearButton;
+        internal TrackBar OceanScaleTextureTrack;
+        internal ReaLTaiizor.Controls.CyberSwitch MirrorOceanTextureSwitch;
+        internal ReaLTaiizor.Controls.CyberSwitch ShowLandLayerSwitch;
+        internal TrackBar LandBrushSizeTrack;
+        internal FontAwesome.Sharp.IconButton LandformOutlineColorSelectButton;
+        internal PictureBox LandformTexturePreviewPicture;
+        internal FontAwesome.Sharp.IconButton NextLandTextureButton;
+        internal FontAwesome.Sharp.IconButton PreviousLandTextureButton;
+        internal FontAwesome.Sharp.IconButton CoastlineColorSelectionButton;
+        internal TrackBar CoastlineEffectDistanceTrack;
+        internal ListBox CoastlineStyleList;
+        internal TrackBar LandEraserSizeTrack;
+        internal FontAwesome.Sharp.IconToolStripButton LandformSelectButton;
+        internal FontAwesome.Sharp.IconToolStripButton LandformPaintButton;
+        internal FontAwesome.Sharp.IconToolStripButton LandformEraseButton;
+        internal FontAwesome.Sharp.IconToolStripButton LandformFillButton;
+        internal FontAwesome.Sharp.IconToolStripButton LandformClearButton;
+        internal FontAwesome.Sharp.IconToolStripButton LandformGenerateButton;
+        internal FontAwesome.Sharp.IconButton LandformBackgroundColorSelectButton;
+        internal CheckBox UseTextureForBackgroundCheck;
+        internal TrackBar LandformOutlineWidthTrack;
+        internal FontAwesome.Sharp.IconButton LandColorButton;
+        internal TrackBar LandColorEraserSizeTrack;
+        internal Button LandCustomColorButton6;
+        internal Button LandCustomColorButton5;
+        internal Button LandCustomColorButton4;
+        internal Button LandCustomColorButton3;
+        internal Button LandCustomColorButton2;
+        internal Button LandCustomColorButton1;
+        internal Button LandButton3D3728;
+        internal Button LandHardBrushButton;
+        internal Button LandSoftBrushButton;
+        internal Button LandButtonAD9C7E;
+        internal Button LandButtonD7C293;
+        internal Button LandButtonBEBB8E;
+        internal Button LandButtonD8B48F;
+        internal Button LandButtonE6D0AB;
+        protected internal FontAwesome.Sharp.IconButton LandColorEraseButton;
+        internal TrackBar LandColorBrushSizeTrack;
+        internal FontAwesome.Sharp.IconButton LandColorSelectionButton;
+        internal TrackBar LandBrushVelocityTrack;
+        internal ToolStripMenuItem ContinentMenuItem;
+        internal ToolStripMenuItem ArchipelagoMenuItem;
+        internal ToolStripMenuItem AtollMenuItem;
+        internal ToolStripMenuItem WorldMenuItem;
+        internal ToolStripMenuItem RegionMenuItem;
+        internal ToolStripMenuItem IslandMenuItem;
+        internal TabControl MainTab;
+        internal TabPage BackgroundTab;
+        internal TabPage LandTab;
+        internal TabPage WaterTab;
+        internal TabPage PathTab;
+        internal TabPage LabelTab;
+        internal TabPage OverlayTab;
+        internal TabPage RegionTab;
+        internal TabPage DrawingTab;
+        internal TabPage SymbolTab;
+        internal Label LandTextureNameLabel;
     }
 }

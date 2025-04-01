@@ -71,6 +71,19 @@ namespace RealmStudio
 
         public static bool Delete(RealmStudioMap? map, IMapComponent? component)
         {
+            ArgumentNullException.ThrowIfNull(map);
+
+            // delete water features, rivers
+            if (component != null)
+            {
+                Cmd_RemoveWaterFeature cmd = new(map, (IWaterFeature)component);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                MapStateMediator.SelectedWaterFeature = null;
+                MapStateMediator.SelectedRiverPoint = null;
+            }
+
             return true;
         }
 
@@ -1215,6 +1228,20 @@ namespace RealmStudio
                 MergeWaterFeatures(MapStateMediator.CurrentMap);
 
                 MapStateMediator.CurrentWaterFeature = null;
+            }
+        }
+
+        internal static void RemoveRiverPoint()
+        {
+            if (MapStateMediator.SelectedWaterFeature != null
+                && MapStateMediator.SelectedWaterFeature is River river
+                && MapStateMediator.SelectedRiverPoint != null)
+            {
+                Cmd_RemoveRiverPoint cmd = new(river, MapStateMediator.SelectedRiverPoint);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                MapStateMediator.SelectedRiverPoint = null;
             }
         }
     }

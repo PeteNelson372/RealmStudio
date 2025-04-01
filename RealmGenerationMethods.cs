@@ -97,7 +97,7 @@ namespace RealmStudio
                     break;
             }
 
-            LandformMethods.MergeLandforms(map);
+            LandformManager.MergeLandforms(map);
 
             map.IsSaved = false;
         }
@@ -340,7 +340,7 @@ namespace RealmStudio
 
                     mainForm.SetLandformData(newLandform);
 
-                    LandformMethods.CreateAllPathsFromDrawnPath(map, newLandform);
+                    LandformManager.CreateAllPathsFromDrawnPath(map, newLandform);
 
                     if (newLandform.ContourPath != null && newLandform.ContourPath.PointCount > minimumGeneratedLandformContourPathPoints)
                     {

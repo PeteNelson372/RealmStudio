@@ -3,15 +3,16 @@ using System.ComponentModel;
 
 namespace RealmStudio
 {
-    internal class WaterFeatureUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class WaterFeatureUIMediator : IUIMediatorObserver, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private readonly RealmStudioMainForm MainForm;
         private MapStateMediator? _mapState;
 
-
         private bool _showWaterFeatureLayers = true;
+
+        // water feature UI values
         private Color _waterColor = Color.FromArgb(168, 140, 191, 197);
         private Color _shorelineColor = Color.FromArgb(161, 144, 118);
         private int _waterFeatureBrushSize = 20;
@@ -20,8 +21,11 @@ namespace RealmStudio
         private int _waterColorBrushSize = 20;
         private int _waterColorEraserSize = 20;
 
-        private int _riverWidth = 4;
+        // river UI values
         private bool _editRiverPoints;
+        private bool _renderRiverTexture;
+        private int _riverWidth = 4;
+
 
         internal WaterFeatureUIMediator(RealmStudioMainForm mainForm)
         {
@@ -37,7 +41,7 @@ namespace RealmStudio
             set { _mapState = value; }
         }
 
-        // path UI properties
+        // Water Feature UI properties
 
         internal bool ShowWaterFeatureLayers
         {
@@ -105,17 +109,26 @@ namespace RealmStudio
             set { SetPropertyField(nameof(WaterColorEraserSize), ref _waterColorEraserSize, value); }
         }
 
+        // River property setters/getters
+        internal bool EditRiverPoints
+        {
+            get { return _editRiverPoints; }
+            set { SetPropertyField(nameof(EditRiverPoints), ref _editRiverPoints, value); }
+        }
+
+        internal bool RenderRiverTexture
+        {
+            get { return _renderRiverTexture; }
+            set { SetPropertyField(nameof(RenderRiverTexture), ref _renderRiverTexture, value); }
+        }
+
         internal int RiverWidth
         {
             get { return _riverWidth; }
             set { SetPropertyField(nameof(RiverWidth), ref _riverWidth, value); }
         }
 
-        internal bool EditRiverPoints
-        {
-            get { return _editRiverPoints; }
-            set { SetPropertyField(nameof(EditRiverPoints), ref _editRiverPoints, value); }
-        }
+
 
         #endregion
 
@@ -139,14 +152,15 @@ namespace RealmStudio
         {
             if (MapStateMediator.CurrentMap != null)
             {
-                UpdateWatureFeatureUI(changedPropertyName);
+                UpdateWatureFeatureUI();
+                UpdateRiverUI();
                 WaterFeatureManager.Update(MapStateMediator.CurrentMap, MapState, this);
 
                 MainForm.SKGLRenderControl.Invalidate();
             }
         }
 
-        internal void UpdateWatureFeatureUI(string? changedPropertyName)
+        internal void UpdateWatureFeatureUI()
         {
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
@@ -159,6 +173,15 @@ namespace RealmStudio
                 MainForm.WaterColorSelectionButton.BackColor = WaterColor;
                 MainForm.ShorelineColorSelectionButton.BackColor = ShorelineColor;
                 MainForm.WaterPaintColorSelectButton.BackColor = WaterPaintColor;
+            }));
+        }
+
+        internal void UpdateRiverUI()
+        {
+            MainForm.Invoke(new MethodInvoker(delegate ()
+            {
+                SetRiverPointsVisible();
+                SetRenderRiverTexture();
             }));
         }
 
@@ -233,6 +256,22 @@ namespace RealmStudio
 
             RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, selectedWaterFeature);
             return selectedWaterFeature;
+        }
+        private void SetRenderRiverTexture()
+        {
+            if (MapStateMediator.SelectedWaterFeature != null && MapStateMediator.SelectedWaterFeature is River river)
+            {
+                river.RenderRiverTexture = RenderRiverTexture;
+                WaterFeatureManager.ConstructRiverPaintObjects(river);
+            }
+        }
+
+        private void SetRiverPointsVisible()
+        {
+            if (MapStateMediator.SelectedWaterFeature != null && MapStateMediator.SelectedWaterFeature is River river)
+            {
+                river.ShowRiverPoints = EditRiverPoints;
+            }
         }
 
 

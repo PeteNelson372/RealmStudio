@@ -979,12 +979,13 @@ namespace RealmStudio
             else
             {
                 // texture is not set in the landform object, so use default
-                if (AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TextureBitmap == null)
+                if (LandformManager.LandformMediator.LandTextureList[LandformManager.LandformMediator.LandformTextureIndex].TextureBitmap == null)
                 {
-                    AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX].TexturePath);
+                    LandformManager.LandformMediator.LandTextureList[LandformManager.LandformMediator.LandformTextureIndex].TextureBitmap =
+                        (Bitmap?)Bitmap.FromFile(LandformManager.LandformMediator.LandTextureList[LandformManager.LandformMediator.LandformTextureIndex].TexturePath);
                 }
 
-                LandformTexture = AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_LAND_TEXTURE_INDEX];
+                LandformTexture = LandformManager.LandformMediator.LandTextureList[LandformManager.LandformMediator.LandformTextureIndex];
 
                 if (LandformTexture.TextureBitmap != null)
                 {

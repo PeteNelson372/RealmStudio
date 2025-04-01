@@ -84,13 +84,12 @@ namespace RealmStudio
 
         public static bool Delete(RealmStudioMap? map, IMapComponent? component)
         {
-            if (MapStateMediator.SelectedPlacedMapBox == null) return false;
+            if (component == null) return false;
 
-            Cmd_DeleteLabelBox cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedPlacedMapBox);
+            Cmd_DeleteLabelBox cmd = new(MapStateMediator.CurrentMap, (PlacedMapBox)component);
             CommandManager.AddCommand(cmd);
             cmd.DoOperation();
 
-            MapStateMediator.CurrentMap.IsSaved = false;
             MapStateMediator.SelectedPlacedMapBox = null;
 
             return true;

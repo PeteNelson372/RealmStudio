@@ -41,7 +41,7 @@ namespace RealmStudio
 
             FilledLandform.DrawPath.AddRect(r);
 
-            LandformMethods.CreateAllPathsFromDrawnPath(Map, FilledLandform);
+            LandformManager.CreateAllPathsFromDrawnPath(Map, FilledLandform);
 
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER);
             landformLayer.MapLayerComponents.Add(FilledLandform);

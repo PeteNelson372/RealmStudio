@@ -109,7 +109,7 @@ namespace RealmStudio
 
             if (AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TextureBitmap == null)
             {
-                AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.LAND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TexturePath);
+                AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TextureBitmap = (Bitmap?)Bitmap.FromFile(AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TexturePath);
             }
 
             return AssetManager.BACKGROUND_TEXTURE_LIST[AssetManager.SELECTED_BACKGROUND_TEXTURE_INDEX].TextureBitmap;
@@ -192,14 +192,6 @@ namespace RealmStudio
                     break;
                 }
             }
-        }
-
-        internal static void MoveWindrose(MapWindrose? windrose, SKPoint zoomedScrolledPoint)
-        {
-            if (windrose == null) return;
-
-            windrose.X = (int)zoomedScrolledPoint.X;
-            windrose.Y = (int)zoomedScrolledPoint.Y;
         }
     }
 }
