@@ -30,7 +30,7 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapScaleManager.Delete(Map, null);
+            MapScaleManager.Delete();
             MapLayer overlayLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.OVERLAYLAYER);
             overlayLayer.MapLayerComponents.Add(NewMapScale);
 
@@ -39,7 +39,7 @@ namespace RealmStudio
 
         public void UndoOperation()
         {
-            MapScaleManager.Delete(Map, null);
+            MapScaleManager.Delete();
             MapStateMediator.CurrentMapScale = null;
         }
     }

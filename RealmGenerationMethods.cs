@@ -50,12 +50,12 @@ namespace RealmStudio
                             size = new SKSize(map.MapWidth * 0.8F, map.MapHeight * 0.8F);
                         }
 
-                        CreateLandformFromGeneratedPaths(map, glControl, location, size, selectedLandformType);
+                        CreateLandformFromGeneratedPaths(map, location, size, selectedLandformType);
                     }
                     break;
                 case GeneratedLandformType.Atoll:
                     {
-                        CreateLandformFromGeneratedPaths(map, glControl, location, size, selectedLandformType);
+                        CreateLandformFromGeneratedPaths(map, location, size, selectedLandformType);
                     }
                     break;
                 case GeneratedLandformType.Continent:
@@ -65,19 +65,19 @@ namespace RealmStudio
                             size = new SKSize(map.MapWidth * 0.8F, map.MapHeight * 0.8F);
                         }
 
-                        CreateLandformFromGeneratedPaths(map, glControl, location, size, GeneratedLandformType.Island);
+                        CreateLandformFromGeneratedPaths(map, location, size, GeneratedLandformType.Island);
 
                         if (selectedArea.IsEmpty)
                         {
                             size = new SKSize(map.MapWidth - 4, map.MapHeight - 4);
                         }
 
-                        CreateLandformFromGeneratedPaths(map, glControl, location, size, GeneratedLandformType.Archipelago);
+                        CreateLandformFromGeneratedPaths(map, location, size, GeneratedLandformType.Archipelago);
                     }
                     break;
                 case GeneratedLandformType.Island:
                     {
-                        CreateLandformFromGeneratedPaths(map, glControl, location, size, selectedLandformType);
+                        CreateLandformFromGeneratedPaths(map, location, size, selectedLandformType);
                     }
                     break;
                 case GeneratedLandformType.Region:
@@ -87,7 +87,7 @@ namespace RealmStudio
                             size = new SKSize(map.MapWidth - 4, map.MapHeight - 4);
                         }
 
-                        CreateLandformFromGeneratedPaths(map, glControl, location, size, selectedLandformType);
+                        CreateLandformFromGeneratedPaths(map, location, size, selectedLandformType);
                     }
                     break;
                 case GeneratedLandformType.World:
@@ -151,7 +151,7 @@ namespace RealmStudio
 
                 SKPoint northernIcecapLocation = new(map.MapWidth / 2, 4);
 
-                CreateLandformFromGeneratedPaths(map, glControl, northernIcecapLocation, northernIcecapSize, GeneratedLandformType.Icecap, false);
+                CreateLandformFromGeneratedPaths(map, northernIcecapLocation, northernIcecapSize, GeneratedLandformType.Icecap, false);
 
                 progressPercentage += 3;
                 progressForm.SetStatusPercentage(progressPercentage);
@@ -171,7 +171,7 @@ namespace RealmStudio
 
                 SKPoint southernIcecapLocation = new(map.MapWidth / 2, map.MapHeight - southernIcecapSize.Height - 4);
 
-                CreateLandformFromGeneratedPaths(map, glControl, southernIcecapLocation, southernIcecapSize, GeneratedLandformType.Icecap, true);
+                CreateLandformFromGeneratedPaths(map, southernIcecapLocation, southernIcecapSize, GeneratedLandformType.Icecap, true);
 
                 progressPercentage += 3;
                 progressForm.SetStatusPercentage(progressPercentage);
@@ -252,7 +252,7 @@ namespace RealmStudio
                 mainForm.SetStatusText("Landform rectangles calculated");
             }
 
-            int landformCount = 1;
+            int landformCount;
 
             int progressStep = (100 - progressPercentage) / continentRects.Count;
 
@@ -295,9 +295,10 @@ namespace RealmStudio
 
                     mainForm.SetStatusText("Generating landform " + generateLandformType.ToString());
 
-                    CreateLandformFromGeneratedPaths(map, glControl, new SKPoint(rect.MidX, rect.MidY), new SKSize(rect.Width, rect.Height), generateLandformType, false);
+                    CreateLandformFromGeneratedPaths(map, new SKPoint(rect.MidX, rect.MidY), new SKSize(rect.Width, rect.Height), generateLandformType, false);
 
                     landformCount = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Count;
+                    progressForm.SetStatusPercentage(landformCount * progressStep);
                 }
             }
 
@@ -306,16 +307,12 @@ namespace RealmStudio
 
         }
 
-        internal static void CreateLandformFromGeneratedPaths(RealmStudioMap map, SKGLControl glControl, SKPoint location, SKSize size, GeneratedLandformType selectedLandformType, bool flipVertical = false)
+        internal static void CreateLandformFromGeneratedPaths(RealmStudioMap map, SKPoint location, SKSize size, GeneratedLandformType selectedLandformType, bool flipVertical = false)
         {
+            ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
+
             const int minimumGeneratedLandformContourPathPoints = 10;
 
-            // TODO: this is a hack to avoid passing the main form around
-            // and avoid major refactoring of the landform generation methods
-            // for now
-            RealmStudioMainForm? mainForm = UtilityMethods.GetMainForm();
-
-            if (mainForm == null) return;
 
             List<SKPath> generatedLandformPaths = GenerateRandomLandformPaths(location, size, selectedLandformType, flipVertical);
 
@@ -325,33 +322,23 @@ namespace RealmStudio
             {
                 if (!path.IsEmpty)
                 {
-                    Landform newLandform = new()
+                    Landform? newLandform = (Landform?)LandformManager.Create();
+
+                    if (newLandform != null)
                     {
-                        ParentMap = map,
-                        IsModified = true,
-                        DrawPath = new(path),
+                        newLandform.DrawPath = new(path);
+                        LandformManager.CreateAllPathsFromDrawnPath(map, newLandform);
 
-                        LandformRenderSurface =
-                        SKSurface.Create(glControl.GRContext, false, new SKImageInfo(map.MapWidth, map.MapHeight)),
+                        if (newLandform.ContourPath != null && newLandform.ContourPath.PointCount > minimumGeneratedLandformContourPathPoints)
+                        {
+                            newLandform.ContourPath.GetBounds(out SKRect boundsRect);
+                            newLandform.X = (int)location.X;
+                            newLandform.Y = (int)location.Y;
+                            newLandform.Width = (int)boundsRect.Width;
+                            newLandform.Height = (int)boundsRect.Height;
 
-                        CoastlineRenderSurface =
-                        SKSurface.Create(glControl.GRContext, false, new SKImageInfo(map.MapWidth, map.MapHeight))
-                    };
-
-                    mainForm.SetLandformData(newLandform);
-
-                    LandformManager.CreateAllPathsFromDrawnPath(map, newLandform);
-
-                    if (newLandform.ContourPath != null && newLandform.ContourPath.PointCount > minimumGeneratedLandformContourPathPoints)
-                    {
-
-                        newLandform.ContourPath.GetBounds(out SKRect boundsRect);
-                        newLandform.X = (int)location.X;
-                        newLandform.Y = (int)location.Y;
-                        newLandform.Width = (int)boundsRect.Width;
-                        newLandform.Height = (int)boundsRect.Height;
-
-                        landformLayer.MapLayerComponents.Add(newLandform);
+                            landformLayer.MapLayerComponents.Add(newLandform);
+                        }
                     }
                 }
             }

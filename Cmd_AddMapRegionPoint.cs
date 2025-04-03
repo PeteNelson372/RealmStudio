@@ -33,6 +33,11 @@ namespace RealmStudio
         public void DoOperation()
         {
             SelectedMapRegion.MapRegionPoints.Insert(LocationIndex, NewMapRegionPoint);
+
+            // reset
+            RegionManager.NewRegionPoint = null;
+            RegionManager.NextRegionPointIndex = -1;
+            RegionManager.PreviousRegionPointIndex = -1;
         }
 
         public void UndoOperation()

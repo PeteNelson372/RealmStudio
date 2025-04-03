@@ -32,7 +32,7 @@ namespace RealmStudio
         public void DoOperation()
         {
             StoredFrame = Frame;
-            FrameManager.Create(Map, null);
+            FrameManager.Create();
         }
 
         public void UndoOperation()
@@ -41,7 +41,7 @@ namespace RealmStudio
             {
                 Frame = StoredFrame;
 
-                FrameManager.Create(Map, null);
+                FrameManager.Create();
             }
             else
             {

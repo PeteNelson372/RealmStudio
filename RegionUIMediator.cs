@@ -109,7 +109,7 @@ namespace RealmStudio
         public void NotifyUpdate(string? changedPropertyName)
         {
             UpdateRegionUI();
-            RegionManager.Update(MapStateMediator.CurrentMap, MapState, this);
+            RegionManager.Update();
             MainForm.SKGLRenderControl.Invalidate();
         }
 

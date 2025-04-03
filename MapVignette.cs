@@ -43,7 +43,7 @@ namespace RealmStudio
         public int VignetteColor { get; set; } = ColorTranslator.FromHtml("#C9977B").ToArgb();
 
         [XmlElement]
-        public bool RectangleVignette { get; set; }
+        public VignetteShapeType VignetteShape { get; set; } = VignetteShapeType.Oval;
 
         [XmlIgnore]
         public bool IsModified { get; set; } = true;
@@ -67,7 +67,7 @@ namespace RealmStudio
             }
             else
             {
-                if (RectangleVignette)
+                if (VignetteShape == VignetteShapeType.Rectangle)
                 {
                     RenderRectangleVignette(canvas);
                 }
@@ -231,15 +231,42 @@ namespace RealmStudio
                 VignetteColor = ColorTranslator.FromHtml("#C9977B").ToArgb();
             }
 
+            XAttribute? vignetteShapeAttr = mapVignetteDoc.Root.Attribute("VignetteShape");
+            if (vignetteShapeAttr != null)
+            {
+                string vignetteShape = vignetteShapeAttr.Value;
+
+                VignetteShapeType vignetteShapeEnum = VignetteShapeType.Oval;
+
+                if (Enum.TryParse<VignetteShapeType>(vignetteShape, out vignetteShapeEnum))
+                {
+                    VignetteShape = vignetteShapeEnum;
+                }
+                else
+                {
+                    VignetteShape = VignetteShapeType.Oval;
+                }
+            }
+
+
             XAttribute? rectangleVignetteAttr = mapVignetteDoc.Root.Attribute("RectangleVignette");
             if (rectangleVignetteAttr != null)
             {
-                RectangleVignette = bool.Parse(rectangleVignetteAttr.Value);
+                bool isRectangle = bool.Parse(rectangleVignetteAttr.Value);
+                if (isRectangle)
+                {
+                    VignetteShape = VignetteShapeType.Rectangle;
+                }
+                else
+                {
+                    VignetteShape = VignetteShapeType.Oval;
+                }
             }
             else
             {
-                RectangleVignette = false;
+                VignetteShape = VignetteShapeType.Oval;
             }
+
 
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8604 // Possible null reference argument.
@@ -250,7 +277,7 @@ namespace RealmStudio
         {
             writer.WriteAttributeString("VignetteStrength", VignetteStrength.ToString());
             writer.WriteAttributeString("VignetteColor", VignetteColor.ToString());
-            writer.WriteAttributeString("RectangleVignette", RectangleVignette.ToString());
+            writer.WriteAttributeString("VignetteShape", VignetteShape.ToString());
         }
     }
 }

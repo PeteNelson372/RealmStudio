@@ -30,7 +30,7 @@ namespace RealmStudio
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        private readonly RealmStudioMainForm MainForm;
+        private readonly RealmStudioMainForm _mainForm;
         private MapDrawingMode _currentDrawingMode = MapDrawingMode.None;
         private static int _selectedBrushSize;
         private static double _currentBrushVelocity = 2.0;
@@ -40,11 +40,16 @@ namespace RealmStudio
 
         public MainFormUIMediator(RealmStudioMainForm mainForm)
         {
-            MainForm = mainForm;
+            _mainForm = mainForm;
             PropertyChanged += MainFormUIMediator_PropertyChanged;
         }
 
-        #region Poperty Setters/Getters
+        #region Property Setters/Getters
+
+        internal RealmStudioMainForm MainForm
+        {
+            get { return _mainForm; }
+        }
 
         public MapDrawingMode CurrentDrawingMode
         {
@@ -266,7 +271,7 @@ namespace RealmStudio
 
         internal void ColorPresetButtonMouseClickHandler(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.LandformMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.LandformUIMediator);
             ArgumentNullException.ThrowIfNull(MapStateMediator.WaterFeatureUIMediator);
 
             if (e.Button == MouseButtons.Left)
@@ -285,7 +290,7 @@ namespace RealmStudio
                         }
                         else if (MainForm.MainTab.SelectedTab.Text == "Land")
                         {
-                            MapStateMediator.LandformMediator.SetLandPaintColorFromCustomPresetButton((Button)sender);
+                            MapStateMediator.LandformUIMediator.SetLandPaintColorFromCustomPresetButton((Button)sender);
                         }
                         else if (MainForm.MainTab.SelectedTab.Text == "Water")
                         {

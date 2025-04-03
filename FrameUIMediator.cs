@@ -95,7 +95,7 @@ namespace RealmStudio
 
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
-            if (!EqualityComparer<T>.Default.Equals(field, newValue))
+            if (!EqualityComparer<T>.Default.Equals(field))
             {
                 field = newValue;
                 OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
@@ -105,7 +105,7 @@ namespace RealmStudio
         public void NotifyUpdate(string? changedPropertyName)
         {
             UpdateFrameUI();
-            FrameManager.Update(MapStateMediator.CurrentMap, MapState, this);
+            FrameManager.Update();
             MainForm.SKGLRenderControl.Invalidate();
         }
 
@@ -115,7 +115,7 @@ namespace RealmStudio
             {
                 MainForm.FrameTintColorSelectButton.BackColor = FrameTint;
 
-                PlacedMapFrame? pmf = (PlacedMapFrame?)FrameManager.GetComponentById(MapStateMediator.CurrentMap, Guid.Empty);
+                PlacedMapFrame? pmf = (PlacedMapFrame?)FrameManager.GetComponentById(Guid.Empty);
                 if (pmf != null)
                 {
                     pmf.FrameEnabled = FrameEnabled;

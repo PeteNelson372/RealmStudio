@@ -174,7 +174,7 @@ namespace RealmStudio
         public void NotifyUpdate(string? changedPropertyName)
         {
             UpdateMapScaleUI();
-            MapScaleManager.Update(MapStateMediator.CurrentMap, MapState, this);
+            MapScaleManager.Update();
 
             MainForm.SKGLRenderControl.Invalidate();
         }

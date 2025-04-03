@@ -36,19 +36,19 @@ namespace RealmStudio
             set { _pathMediator = value; }
         }
 
-        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        public static IMapComponent? GetComponentById(Guid componentGuid)
         {
             throw new NotImplementedException();
         }
 
-        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        public static IMapComponent? Create()
         {
             ArgumentNullException.ThrowIfNull(PathMediator);
 
             // initialize map path
             MapPath? newPath = new()
             {
-                ParentMap = map,
+                ParentMap = MapStateMediator.CurrentMap,
                 PathType = PathMediator.PathType,
                 PathColor = PathMediator.PathColor,
                 PathWidth = PathMediator.PathWidth,
@@ -62,18 +62,16 @@ namespace RealmStudio
             return newPath;
         }
 
-        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        public static bool Update()
         {
             throw new NotImplementedException();
         }
 
-        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        public static bool Delete()
         {
-            ArgumentNullException.ThrowIfNull(map);
-
-            if (component != null)
+            if (MapStateMediator.SelectedMapPath != null)
             {
-                Cmd_RemoveMapPath cmd = new(map, (MapPath)component);
+                Cmd_RemoveMapPath cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapPath);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 
@@ -738,16 +736,16 @@ namespace RealmStudio
             return null;
         }
 
-        public static void FinalizeMapPaths(RealmStudioMap map)
+        public static void FinalizeMapPaths()
         {
-            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
-            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER);
+            MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
+            MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
 
             for (int i = 0; i < pathLowerLayer.MapLayerComponents.Count; i++)
             {
                 if (pathLowerLayer.MapLayerComponents[i] is MapPath mapPath)
                 {
-                    mapPath.ParentMap = map;
+                    mapPath.ParentMap = MapStateMediator.CurrentMap;
                     ConstructPathPaint(mapPath);
 
                     if (mapPath.PathPoints.Count > 1)
@@ -776,7 +774,7 @@ namespace RealmStudio
             {
                 if (pathUpperLayer.MapLayerComponents[i] is MapPath mapPath)
                 {
-                    mapPath.ParentMap = map;
+                    mapPath.ParentMap = MapStateMediator.CurrentMap;
                     ConstructPathPaint(mapPath);
 
                     if (mapPath.PathPoints.Count > 1)
@@ -802,14 +800,14 @@ namespace RealmStudio
             }
         }
 
-        internal static MapPath? CreatePath(RealmStudioMap map, SKPoint zoomedScrolledPoint, PathType pathType, Color pathColor,
+        internal static MapPath? CreatePath(SKPoint zoomedScrolledPoint, PathType pathType, Color pathColor,
             int pathWidth, bool drawOverSymbols, MapTexture mapTexture)
         {
 
             // initialize map path
             MapPath? newPath = new()
             {
-                ParentMap = map,
+                ParentMap = MapStateMediator.CurrentMap,
                 PathType = pathType,
                 PathColor = pathColor,
                 PathWidth = pathWidth,

@@ -41,24 +41,53 @@ namespace RealmStudio
             set { _landformUIMediator = value; }
         }
 
-        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        public static IMapComponent? GetComponentById(Guid componentGuid)
         {
             throw new NotImplementedException();
         }
 
-        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        public static IMapComponent? Create()
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(LandformMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+
+            Landform newLandform = new()
+            {
+                ParentMap = MapStateMediator.CurrentMap,
+                Width = MapStateMediator.CurrentMap.MapWidth,
+                Height = MapStateMediator.CurrentMap.MapHeight,
+                IsModified = true,
+                FillWithTexture = LandformMediator.UseTextureBackground,
+                CoastlineColor = LandformMediator.CoastlineColor,
+                CoastlineEffectDistance = LandformMediator.CoastlineEffectDistance,
+                LandformBackgroundColor = LandformMediator.LandBackgroundColor,
+                LandformOutlineColor = LandformMediator.LandOutlineColor,
+                LandformOutlineWidth = LandformMediator.LandOutlineWidth,
+                LandformTexture = LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex],
+                ShorelineStyle = LandGradientDirection.LightToDark,
+                CoastlineStyleName = LandformMediator.CoastlineStyle,
+                LandformFillColor = Color.FromArgb(LandformMediator.LandOutlineColor.A / 4, LandformMediator.LandOutlineColor),      // color of the gradient around the landform
+
+                LandformRenderSurface =
+                    SKSurface.Create(MapStateMediator.MainUIMediator.MainForm.SKGLRenderControl.GRContext, false, new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight)),
+
+                CoastlineRenderSurface =
+                    SKSurface.Create(MapStateMediator.MainUIMediator.MainForm.SKGLRenderControl.GRContext, false, new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
+            };
+
+            BuildLandformTextureAndShaders(newLandform);
+
+            return newLandform;
         }
 
-        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        public static bool Update()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
-        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        public static bool Delete()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         internal static void CreateAllPathsFromDrawnPath(RealmStudioMap map, Landform landform)
@@ -95,9 +124,9 @@ namespace RealmStudio
             landform.IsModified = true;
         }
 
-        internal static void CreateInnerAndOuterPathsFromContourPoints(RealmStudioMap map, Landform landform)
+        internal static void CreateInnerAndOuterPathsFromContourPoints(Landform landform)
         {
-            if (map == null || landform == null) return;
+            if (MapStateMediator.CurrentMap == null || landform == null) return;
 
             if (landform.ContourPoints.Count == 0)
             {
@@ -231,7 +260,7 @@ namespace RealmStudio
             return pathsMerged;
         }
 
-        public static void FillMapWithLandForm(RealmStudioMap map, SKGLControl glControl)
+        public static void FillMapWithLandForm(SKGLControl glControl)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
 
@@ -258,7 +287,7 @@ namespace RealmStudio
 
                 //SetLandformData(landform);
 
-                Cmd_FillMapWithLandform cmd = new(map, landform);
+                Cmd_FillMapWithLandform cmd = new(MapStateMediator.CurrentMap, landform);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 
@@ -377,124 +406,131 @@ namespace RealmStudio
             return landformPath;
         }
 
-        internal static void FinalizeLandforms(RealmStudioMap map, SKGLControl glControl)
+        internal static void BuildLandformTextureAndShaders(Landform landform)
+        {
+            ArgumentNullException.ThrowIfNull(LandformMediator);
+
+            if (landform.LandformTexture != null)
+            {
+                if (landform.LandformTexture.TextureBitmap != null)
+                {
+                    Bitmap resizedBitmap = new(landform.LandformTexture.TextureBitmap, MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
+
+                    // create and set a shader from the texture
+                    SKShader flpShader = SKShader.CreateBitmap(Extensions.ToSKBitmap(resizedBitmap),
+                        SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+
+                    landform.LandformFillPaint.Shader = flpShader;
+                }
+                else
+                {
+                    Bitmap b = new(landform.LandformTexture.TexturePath);
+                    Bitmap resizedBitmap = new(b, MapBuilder.MAP_DEFAULT_WIDTH, MapBuilder.MAP_DEFAULT_HEIGHT);
+
+                    landform.LandformTexture.TextureBitmap = new(resizedBitmap);
+
+                    // create and set a shader from the texture
+                    SKShader flpShader = SKShader.CreateBitmap(Extensions.ToSKBitmap(resizedBitmap),
+                        SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+
+                    landform.LandformFillPaint.Shader = flpShader;
+                }
+            }
+            else
+            {
+                // texture is not set in the landform object, so use default
+                if (LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TextureBitmap == null)
+                {
+                    LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TextureBitmap =
+                        (Bitmap?)Bitmap.FromFile(LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TexturePath);
+                }
+
+                landform.LandformTexture = LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex];
+
+                if (landform.LandformTexture.TextureBitmap != null)
+                {
+                    Bitmap resizedBitmap = new(landform.LandformTexture.TextureBitmap, MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
+
+                    // create and set a shader from the texture
+                    SKShader flpShader = SKShader.CreateBitmap(Extensions.ToSKBitmap(resizedBitmap),
+                        SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+
+                    landform.LandformFillPaint.Shader = flpShader;
+                }
+            }
+
+            if (!landform.FillWithTexture || landform.LandformTexture == null || landform.LandformTexture.TextureBitmap == null)
+            {
+                landform.LandformFillPaint.Shader?.Dispose();
+                landform.LandformFillPaint.Shader = null;
+
+                SKShader flpShader = SKShader.CreateColor(landform.LandformBackgroundColor.ToSKColor());
+                landform.LandformFillPaint.Shader = flpShader;
+            }
+
+            MapTexture? dashTexture = AssetManager.HATCH_TEXTURE_LIST.Find(x => x.TextureName == "Watercolor Dashes");
+
+            if (dashTexture != null)
+            {
+                dashTexture.TextureBitmap ??= new Bitmap(dashTexture.TexturePath);
+
+                SKBitmap resizedSKBitmap = new(100, 100);
+
+                Extensions.ToSKBitmap(dashTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
+
+                landform.DashShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+            }
+
+            MapTexture? lineHatchTexture = AssetManager.HATCH_TEXTURE_LIST.Find(x => x.TextureName == "Line Hatch");
+
+            if (lineHatchTexture != null)
+            {
+                lineHatchTexture.TextureBitmap ??= new Bitmap(lineHatchTexture.TexturePath);
+
+                SKBitmap resizedSKBitmap = new(100, 100);
+
+                Extensions.ToSKBitmap(lineHatchTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
+
+                landform.LineHatchBitmapShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+            }
+        }
+
+        internal static void FinalizeLandforms(SKGLControl glControl)
         {
             ArgumentNullException.ThrowIfNull(LandformMediator);
 
             // finalize loading of landforms
-            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
-            SKImageInfo lfImageInfo = new(map.MapWidth, map.MapHeight);
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
+            SKImageInfo lfImageInfo = new(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
 
             for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
             {
                 if (landformLayer.MapLayerComponents[i] is Landform landform)
                 {
-                    landform.ParentMap = map;
+                    landform.ParentMap = MapStateMediator.CurrentMap;
                     landform.IsModified = true;
 
                     landform.LandformRenderSurface ??= SKSurface.Create(glControl.GRContext, false, lfImageInfo);
                     landform.CoastlineRenderSurface ??= SKSurface.Create(glControl.GRContext, false, lfImageInfo);
 
-                    CreateInnerAndOuterPathsFromContourPoints(map, landform);
+                    CreateInnerAndOuterPathsFromContourPoints(landform);
 
                     landform.ContourPath.GetBounds(out SKRect boundsRect);
                     landform.Width = (int)boundsRect.Width;
                     landform.Height = (int)boundsRect.Height;
 
-                    if (landform.LandformTexture != null)
-                    {
-                        if (landform.LandformTexture.TextureBitmap != null)
-                        {
-                            Bitmap resizedBitmap = new(landform.LandformTexture.TextureBitmap, map.MapWidth, map.MapHeight);
-
-                            // create and set a shader from the texture
-                            SKShader flpShader = SKShader.CreateBitmap(Extensions.ToSKBitmap(resizedBitmap),
-                                SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
-
-                            landform.LandformFillPaint.Shader = flpShader;
-                        }
-                        else
-                        {
-                            Bitmap b = new(landform.LandformTexture.TexturePath);
-                            Bitmap resizedBitmap = new(b, MapBuilder.MAP_DEFAULT_WIDTH, MapBuilder.MAP_DEFAULT_HEIGHT);
-
-                            landform.LandformTexture.TextureBitmap = new(resizedBitmap);
-
-                            // create and set a shader from the texture
-                            SKShader flpShader = SKShader.CreateBitmap(Extensions.ToSKBitmap(resizedBitmap),
-                                SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
-
-                            landform.LandformFillPaint.Shader = flpShader;
-                        }
-                    }
-                    else
-                    {
-                        // texture is not set in the landform object, so use default
-                        if (LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TextureBitmap == null)
-                        {
-                            LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TextureBitmap =
-                                (Bitmap?)Bitmap.FromFile(LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TexturePath);
-                        }
-
-                        landform.LandformTexture = LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex];
-
-                        if (landform.LandformTexture.TextureBitmap != null)
-                        {
-                            Bitmap resizedBitmap = new(landform.LandformTexture.TextureBitmap, map.MapWidth, map.MapHeight);
-
-                            // create and set a shader from the texture
-                            SKShader flpShader = SKShader.CreateBitmap(Extensions.ToSKBitmap(resizedBitmap),
-                                SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
-
-                            landform.LandformFillPaint.Shader = flpShader;
-                        }
-                    }
-
-                    if (!landform.FillWithTexture || landform.LandformTexture == null || landform.LandformTexture.TextureBitmap == null)
-                    {
-                        landform.LandformFillPaint.Shader?.Dispose();
-                        landform.LandformFillPaint.Shader = null;
-
-                        SKShader flpShader = SKShader.CreateColor(landform.LandformBackgroundColor.ToSKColor());
-                        landform.LandformFillPaint.Shader = flpShader;
-                    }
-
-                    MapTexture? dashTexture = AssetManager.HATCH_TEXTURE_LIST.Find(x => x.TextureName == "Watercolor Dashes");
-
-                    if (dashTexture != null)
-                    {
-                        dashTexture.TextureBitmap ??= new Bitmap(dashTexture.TexturePath);
-
-                        SKBitmap resizedSKBitmap = new(100, 100);
-
-                        Extensions.ToSKBitmap(dashTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
-
-                        landform.DashShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
-                    }
-
-                    MapTexture? lineHatchTexture = AssetManager.HATCH_TEXTURE_LIST.Find(x => x.TextureName == "Line Hatch");
-
-                    if (lineHatchTexture != null)
-                    {
-                        lineHatchTexture.TextureBitmap ??= new Bitmap(lineHatchTexture.TexturePath);
-
-                        SKBitmap resizedSKBitmap = new(100, 100);
-
-                        Extensions.ToSKBitmap(lineHatchTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
-
-                        landform.LineHatchBitmapShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
-                    }
+                    BuildLandformTextureAndShaders(landform);
                 }
             }
 
             // finalize loading of land drawing layer
-            MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDDRAWINGLAYER);
+            MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDDRAWINGLAYER);
 
             for (int i = 0; i < landDrawingLayer.MapLayerComponents.Count; i++)
             {
                 if (landDrawingLayer.MapLayerComponents[i] is LayerPaintStroke paintStroke)
                 {
-                    paintStroke.ParentMap = map;
+                    paintStroke.ParentMap = MapStateMediator.CurrentMap;
                     paintStroke.RenderSurface = SKSurface.Create(glControl.GRContext, false, lfImageInfo);
                     paintStroke.Rendered = false;
 
@@ -510,50 +546,44 @@ namespace RealmStudio
             }
         }
 
-        internal static Landform CreateNewLandform(RealmStudioMap map, SKPath? landformPath, SKRect realmArea, bool fillWithTexture, SKGLControl glControl)
+        internal static Landform? CreateNewLandform(RealmStudioMap map, SKPath? landformPath, SKRect realmArea)
         {
-            Landform landform = new()
-            {
-                ParentMap = map,
-                Width = map.MapWidth,
-                Height = map.MapHeight,
-                IsModified = true,
-                FillWithTexture = fillWithTexture,
-                LandformRenderSurface = SKSurface.Create(glControl.GRContext, false,
-                    new SKImageInfo(map.MapWidth, map.MapHeight)),
-                CoastlineRenderSurface = SKSurface.Create(glControl.GRContext, false,
-                    new SKImageInfo(map.MapWidth, map.MapHeight))
-            };
+            Landform? landform = (Landform?)Create();
 
-            if (landformPath != null)
+            if (landform != null)
             {
-                landform.DrawPath = new(landformPath);
+                if (landformPath != null)
+                {
+                    landform.DrawPath = new(landformPath);
+                }
+
+                if (realmArea != SKRect.Empty)
+                {
+                    landform.X = (int)realmArea.Left;
+                    landform.Y = (int)realmArea.Top;
+                }
+                else
+                {
+                    landform.X = 0;
+                    landform.Y = 0;
+                }
+
+                CreateAllPathsFromDrawnPath(map, landform);
+
+                landform.ContourPath.GetBounds(out SKRect boundsRect);
+
+                landform.Width = (int)boundsRect.Width;
+                landform.Height = (int)boundsRect.Height;
+
+                return landform;
             }
 
-            if (realmArea != SKRect.Empty)
-            {
-                landform.X = (int)realmArea.Left;
-                landform.Y = (int)realmArea.Top;
-            }
-            else
-            {
-                landform.X = 0;
-                landform.Y = 0;
-            }
-
-            CreateAllPathsFromDrawnPath(map, landform);
-
-            landform.ContourPath.GetBounds(out SKRect boundsRect);
-
-            landform.Width = (int)boundsRect.Width;
-            landform.Height = (int)boundsRect.Height;
-
-            return landform;
+            return null;
         }
 
-        internal static void RemoveLayerPaintStrokesFromLandformLayer(RealmStudioMap map)
+        internal static void RemoveLayerPaintStrokesFromLandformLayer()
         {
-            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
 
             for (int i = landformLayer.MapLayerComponents.Count - 1; i >= 0; i--)
             {
@@ -564,12 +594,12 @@ namespace RealmStudio
             }
         }
 
-        internal static Landform? GetLandformIntersectingCircle(RealmStudioMap map, SKPoint mapPoint, int circleRadius)
+        internal static Landform? GetLandformIntersectingCircle(SKPoint mapPoint, int circleRadius)
         {
             using SKPath circlePath = new();
             circlePath.AddCircle(mapPoint.X, mapPoint.Y, circleRadius);
 
-            List<MapComponent> landformComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents;
+            List<MapComponent> landformComponents = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
 
             for (int i = 0; i < landformComponents.Count; i++)
             {
@@ -590,7 +620,7 @@ namespace RealmStudio
 
         internal static void EraseFromLandform(RealmStudioMap map, SKPoint zoomedScrolledPoint, int brushRadius)
         {
-            Landform? erasedLandform = GetLandformIntersectingCircle(map, zoomedScrolledPoint, brushRadius);
+            Landform? erasedLandform = GetLandformIntersectingCircle(zoomedScrolledPoint, brushRadius);
 
             if (erasedLandform != null)
             {
@@ -605,7 +635,7 @@ namespace RealmStudio
                     MarkLandformDeleted(erasedLandform);
                 }
 
-                MergeLandforms(map);
+                MergeLandforms(MapStateMediator.CurrentMap);
             }
         }
 
@@ -614,26 +644,26 @@ namespace RealmStudio
             deletedLandform.IsDeleted = true;
         }
 
-        internal static void RemoveDeletedLandforms(RealmStudioMap map)
+        internal static void RemoveDeletedLandforms()
         {
             // TODO: what should be done about water features and other objects drawn on top of the landform?
-            for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
+            for (int i = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
-                if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents[i] is Landform l)
+                if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents[i] is Landform l)
                 {
                     if (l.IsDeleted)
                     {
-                        MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents.RemoveAt(i);
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents.RemoveAt(i);
                     }
                 }
             }
         }
 
-        internal static Landform? SelectLandformAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
+        internal static Landform? SelectLandformAtPoint(SKPoint mapClickPoint)
         {
             Landform? selectedLandform = null;
 
-            List<MapComponent> landformComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents;
+            List<MapComponent> landformComponents = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
 
             for (int i = 0; i < landformComponents.Count; i++)
             {
@@ -653,11 +683,11 @@ namespace RealmStudio
                 }
             }
 
-            RealmMapMethods.DeselectAllMapComponents(map, selectedLandform);
+            RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, selectedLandform);
             return selectedLandform;
         }
 
-        internal static void MoveLandform(Landform landform, SKPoint zoomedScrolledPoint, SKPoint previousCursorPoint)
+        internal static void MoveLandform(RealmStudioMap map, Landform landform, SKPoint zoomedScrolledPoint, SKPoint previousCursorPoint)
         {
             // move the entire selected landform with the mouse
 
@@ -675,7 +705,7 @@ namespace RealmStudio
             SKMatrix tm = SKMatrix.CreateTranslation(p.X, p.Y);
 
             landform.DrawPath.Transform(tm);
-            CreateAllPathsFromDrawnPath(landform.ParentMap, landform);
+            CreateAllPathsFromDrawnPath(map, landform);
 
             landform.X += (int)deltaX;
             landform.Y += (int)deltaY;

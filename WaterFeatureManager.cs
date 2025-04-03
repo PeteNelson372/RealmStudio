@@ -42,12 +42,12 @@ namespace RealmStudio
             set { _waterFeatureMediator = value; }
         }
 
-        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        public static IMapComponent? GetComponentById(Guid componentGuid)
         {
             throw new NotImplementedException();
         }
 
-        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        public static IMapComponent? Create()
         {
             ArgumentNullException.ThrowIfNull(WaterFeatureMediator);
 
@@ -64,27 +64,14 @@ namespace RealmStudio
             return MapStateMediator.CurrentWaterFeature;
         }
 
-        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        public static bool Update()
         {
             return true;
         }
 
-        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        public static bool Delete()
         {
-            ArgumentNullException.ThrowIfNull(map);
-
-            // delete water features, rivers
-            if (component != null)
-            {
-                Cmd_RemoveWaterFeature cmd = new(map, (IWaterFeature)component);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
-
-                MapStateMediator.SelectedWaterFeature = null;
-                MapStateMediator.SelectedRiverPoint = null;
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
 
         internal static void MergeWaterFeatures(RealmStudioMap map)
@@ -485,11 +472,13 @@ namespace RealmStudio
 
         internal static void ConstructRiverPaintObjects(River mapRiver)
         {
+            ArgumentNullException.ThrowIfNull(WaterFeatureMediator);
+
             float strokeWidth = mapRiver.RiverWidth / 2;
 
             SKShader colorShader = SKShader.CreateColor(Extensions.ToSKColor(mapRiver.RiverColor));
 
-            MapTexture? riverTexture = AssetManager.WATER_TEXTURE_LIST.Find(x => x.TextureName == "Gray Texture");
+            MapTexture? riverTexture = WaterFeatureMediator.WaterTextureList.Find(x => x.TextureName == "Gray Texture");
 
             SKShader combinedShader;
 
@@ -1032,35 +1021,35 @@ namespace RealmStudio
             }
         }
 
-        internal static void FinalizeWaterFeatures(RealmStudioMap map)
+        internal static void FinalizeWaterFeatures()
         {
             // finalize loading of water features and rivers
-            MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER);
+            MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WATERLAYER);
 
             for (int i = 0; i < waterLayer.MapLayerComponents.Count; i++)
             {
                 if (waterLayer.MapLayerComponents[i] is WaterFeature waterFeature)
                 {
-                    waterFeature.ParentMap = map;
-                    CreateInnerAndOuterPaths(map, waterFeature);
+                    waterFeature.ParentMap = MapStateMediator.CurrentMap;
+                    CreateInnerAndOuterPaths(MapStateMediator.CurrentMap, waterFeature);
                     ConstructWaterFeaturePaintObjects(waterFeature);
                 }
                 else if (waterLayer.MapLayerComponents[i] is River river)
                 {
-                    river.ParentMap = map;
+                    river.ParentMap = MapStateMediator.CurrentMap;
                     ConstructRiverPaths(river);
                     ConstructRiverPaintObjects(river);
                 }
             }
 
             // finalize loading of water drawing layer
-            MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERDRAWINGLAYER);
+            MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WATERDRAWINGLAYER);
 
             for (int i = 0; i < waterDrawingLayer.MapLayerComponents.Count; i++)
             {
                 if (waterDrawingLayer.MapLayerComponents[i] is LayerPaintStroke paintStroke)
                 {
-                    paintStroke.ParentMap = map;
+                    paintStroke.ParentMap = MapStateMediator.CurrentMap;
 
                     if (!paintStroke.Erase)
                     {
@@ -1074,15 +1063,15 @@ namespace RealmStudio
             }
         }
 
-        internal static void FinalizeWindroses(RealmStudioMap map)
+        internal static void FinalizeWindroses()
         {
             // finalize loading of wind roses
-            MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WINDROSELAYER);
+            MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WINDROSELAYER);
             for (int i = 0; i < windroseLayer.MapLayerComponents.Count; i++)
             {
                 if (windroseLayer.MapLayerComponents[i] is MapWindrose windrose)
                 {
-                    windrose.ParentMap = map;
+                    windrose.ParentMap = MapStateMediator.CurrentMap;
 
                     windrose.WindrosePaint = new()
                     {
@@ -1242,6 +1231,28 @@ namespace RealmStudio
                 cmd.DoOperation();
 
                 MapStateMediator.SelectedRiverPoint = null;
+            }
+        }
+
+        internal static void DeleteRiver(River r)
+        {
+            Cmd_RemoveWaterFeature cmd = new(MapStateMediator.CurrentMap, r);
+            CommandManager.AddCommand(cmd);
+            cmd.DoOperation();
+
+            MapStateMediator.SelectedRiverPoint = null;
+            MapStateMediator.SelectedWaterFeature = null;
+        }
+
+        internal static void DeleteWaterFeature(IWaterFeature? selectedWaterFeature)
+        {
+            if (selectedWaterFeature != null)
+            {
+                Cmd_RemoveWaterFeature cmd = new(MapStateMediator.CurrentMap, selectedWaterFeature);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                MapStateMediator.SelectedWaterFeature = null;
             }
         }
     }

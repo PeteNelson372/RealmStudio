@@ -150,7 +150,7 @@ namespace RealmStudio
         public void NotifyUpdate(string? changedPropertyName)
         {
             UpdateFrameUI(changedPropertyName);
-            FrameManager.Update(MapStateMediator.CurrentMap, MapState, this);
+            FrameManager.Update();
             MainForm.SKGLRenderControl.Invalidate();
         }
 

@@ -34,15 +34,18 @@ namespace RealmStudio
 
         private static MainFormUIMediator? _mainFormUIMediator;
 
+        private static BackgroundUIMediator? _backgroundMediator;
         private static BoxUIMediator? _boxUIMediator;
         private static FrameUIMediator? _frameUIMediator;
         private static LandformUIMediator? _landformUIMediator;
         private static MapGridUIMediator? _gridUIMediator;
         private static MapMeasureUIMediator? _measureUIMediator;
         private static MapScaleUIMediator? _scaleUIMediator;
-        private static MapSymbolUIMediator? _symbolUIMediator;
+        private static OceanUIMediator? _oceanUIMediator;
         private static PathUIMediator? _pathUIMediator;
         private static RegionUIMediator? _regionUIMediator;
+        private static SymbolUIMediator? _symbolUIMediator;
+        private static VignetteUIMediator? _vignetteUIMediator;
         private static WaterFeatureUIMediator? _waterFeatureUIMediator;
         private static WindroseUIMediator? _windroseUIMediator;
 
@@ -109,22 +112,22 @@ namespace RealmStudio
             set { _mainFormUIMediator = value; }
         }
 
-        internal static BoxUIMediator? BoxMediator
+        internal static BackgroundUIMediator? BackgroundUIMediator
+        {
+            get { return _backgroundMediator; }
+            set { _backgroundMediator = value; }
+        }
+
+        internal static BoxUIMediator? BoxUIMediator
         {
             get { return _boxUIMediator; }
             set { _boxUIMediator = value; }
         }
 
-        internal static FrameUIMediator? FrameMediator
+        internal static FrameUIMediator? FrameUIMediator
         {
             get { return _frameUIMediator; }
             set { _frameUIMediator = value; }
-        }
-
-        internal static LandformUIMediator? LandformMediator
-        {
-            get { return _landformUIMediator; }
-            set { _landformUIMediator = value; }
         }
 
         internal static MapGridUIMediator? GridUIMediator
@@ -133,10 +136,29 @@ namespace RealmStudio
             set { _gridUIMediator = value; }
         }
 
-        internal static MapSymbolUIMediator? SymbolUIMediator
+        internal static LandformUIMediator? LandformUIMediator
         {
-            get { return _symbolUIMediator; }
-            set { _symbolUIMediator = value; }
+            get { return _landformUIMediator; }
+            set { _landformUIMediator = value; }
+        }
+
+
+        internal static MapMeasureUIMediator? MeasureUIMediator
+        {
+            get { return _measureUIMediator; }
+            set { _measureUIMediator = value; }
+        }
+
+        internal static OceanUIMediator? OceanUIMediator
+        {
+            get { return _oceanUIMediator; }
+            set { _oceanUIMediator = value; }
+        }
+
+        internal static PathUIMediator? PathUIMediator
+        {
+            get { return _pathUIMediator; }
+            set { _pathUIMediator = value; }
         }
 
         internal static RegionUIMediator? RegionUIMediator
@@ -145,22 +167,22 @@ namespace RealmStudio
             set { _regionUIMediator = value; }
         }
 
-        internal static MapMeasureUIMediator? MeasureUIMediator
-        {
-            get { return _measureUIMediator; }
-            set { _measureUIMediator = value; }
-        }
-
         internal static MapScaleUIMediator? ScaleUIMediator
         {
             get { return _scaleUIMediator; }
             set { _scaleUIMediator = value; }
         }
 
-        internal static PathUIMediator? PathUIMediator
+        internal static SymbolUIMediator? SymbolUIMediator
         {
-            get { return _pathUIMediator; }
-            set { _pathUIMediator = value; }
+            get { return _symbolUIMediator; }
+            set { _symbolUIMediator = value; }
+        }
+
+        internal static VignetteUIMediator? VignetteUIMediator
+        {
+            get { return _vignetteUIMediator; }
+            set { _vignetteUIMediator = value; }
         }
 
         internal static WaterFeatureUIMediator? WaterFeatureUIMediator
@@ -478,7 +500,14 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.WaterFeatureSelect:
                     {
-                        WaterFeatureManager.Delete(CurrentMap, (IMapComponent?)SelectedWaterFeature);
+                        if (SelectedWaterFeature is River r)
+                        {
+                            WaterFeatureManager.DeleteRiver(r);
+                        }
+                        else
+                        {
+                            WaterFeatureManager.DeleteWaterFeature(SelectedWaterFeature);
+                        }
                     }
                     break;
                 case MapDrawingMode.RiverEdit:
@@ -488,7 +517,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.PathSelect:
                     {
-                        PathManager.Delete(CurrentMap, SelectedMapPath);
+                        PathManager.Delete();
                     }
                     break;
                 case MapDrawingMode.PathEdit:
@@ -498,19 +527,19 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.SymbolSelect:
                     {
-                        SymbolManager.Delete(CurrentMap, SelectedMapSymbol);
+                        SymbolManager.Delete();
                     }
                     break;
                 case MapDrawingMode.LabelSelect:
                     {
                         if (SelectedMapLabel != null)
                         {
-                            LabelManager.Delete(CurrentMap, SelectedMapLabel);
+                            LabelManager.Delete();
                         }
 
                         if (SelectedPlacedMapBox != null)
                         {
-                            BoxManager.Delete(CurrentMap, SelectedPlacedMapBox);
+                            BoxManager.Delete();
                         }
                     }
                     break;
@@ -522,7 +551,7 @@ namespace RealmStudio
 
                             if (!pointDeleted)
                             {
-                                RegionManager.Delete(CurrentMap, CurrentMapRegion);
+                                RegionManager.Delete();
                             }
                         }
                     }

@@ -36,7 +36,6 @@ namespace RealmStudio
 
         public static Cursor? EYEDROPPER_CURSOR { get; set; }
 
-        public static readonly List<MapTexture> BACKGROUND_TEXTURE_LIST = [];
         public static List<MapTexture> WATER_TEXTURE_LIST { get; set; } = [];
 
         public static List<MapTexture> HATCH_TEXTURE_LIST { get; set; } = [];
@@ -45,17 +44,15 @@ namespace RealmStudio
 
         public static List<MapFrame> MAP_FRAME_TEXTURES { get; set; } = [];
 
-
-
         public static readonly List<RealmStudioApplicationIcon> APPLICATION_ICON_LIST = [];
 
         public static readonly List<MapBrush> BRUSH_LIST = [];
         public static readonly List<MapTheme> THEME_LIST = [];
 
-        public static List<MapSymbolCollection> MAP_SYMBOL_COLLECTIONS = [];
+        public static List<MapSymbolCollection> MAP_SYMBOL_COLLECTIONS = [];  // TODO: move to SymbolManager
 
         // the symbols read from symbol collections
-        public static List<MapSymbol> MAP_SYMBOL_LIST { get; set; } = [];
+        public static List<MapSymbol> MAP_SYMBOL_LIST { get; set; } = [];   // TODO: move to SymbolManager
 
         // the tags that can be selected in the UI to filter the tags in the tag list box on the UI
         public static readonly List<string> ORIGINAL_SYMBOL_TAGS = [];
@@ -65,9 +62,6 @@ namespace RealmStudio
         public static readonly List<string> VEGETATION_SYNONYMS = [];
 
         public static MapTheme? CURRENT_THEME { get; set; }
-
-        public static int SELECTED_BACKGROUND_TEXTURE_INDEX { get; set; }
-        public static int SELECTED_OCEAN_TEXTURE_INDEX { get; set; }
 
         public static List<LandformShapingFunction> LANDFORM_SHAPING_FUNCTIONS = [];
 
@@ -173,17 +167,18 @@ namespace RealmStudio
                 if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Background"))
                 {
                     MapTexture t = new(assetName, path);
-                    BACKGROUND_TEXTURE_LIST.Add(t);
+                    BackgroundManager.BackgroundMediator.BackgroundTextureList.Add(t);
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Water"))
                 {
                     MapTexture t = new(assetName, path);
-                    WATER_TEXTURE_LIST.Add(t);
+                    OceanManager.OceanMediator.OceanTextureList.Add(t);
+                    WaterFeatureManager.WaterFeatureMediator.WaterTextureList.Add(t);
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Land"))
                 {
                     MapTexture t = new(assetName, path);
-                    MapStateMediator.LandformMediator.LandTextureList.Add(t);
+                    MapStateMediator.LandformUIMediator.LandTextureList.Add(t);
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Hatch"))
                 {
@@ -318,18 +313,23 @@ namespace RealmStudio
 
         private static void ResetAssets()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.PathUIMediator);
-            ArgumentNullException.ThrowIfNull(MapStateMediator.LandformMediator);
 
-            BACKGROUND_TEXTURE_LIST.Clear();
-            WATER_TEXTURE_LIST.Clear();
-            MapStateMediator.LandformMediator.LandTextureList.Clear();
+            ArgumentNullException.ThrowIfNull(BackgroundManager.BackgroundMediator);
+            ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
+            ArgumentNullException.ThrowIfNull(OceanManager.OceanMediator);
+            ArgumentNullException.ThrowIfNull(PathManager.PathMediator);
+
             HATCH_TEXTURE_LIST.Clear();
-            MapStateMediator.PathUIMediator.PathTextureList.Clear();
-            MapStateMediator.PathUIMediator.PathVectorList.Clear();
             BRUSH_LIST.Clear();
             APPLICATION_ICON_LIST.Clear();
             THEME_LIST.Clear();
+
+            BackgroundManager.BackgroundMediator.BackgroundTextureList.Clear();
+            LandformManager.LandformMediator.LandTextureList.Clear();
+            OceanManager.OceanMediator.OceanTextureList.Clear();
+
+            PathManager.PathMediator.PathTextureList.Clear();
+            PathManager.PathMediator.PathVectorList.Clear();
 
             LabelPresetManager.ClearLabelPresets();
 
@@ -634,7 +634,7 @@ namespace RealmStudio
 
         internal static int LoadBoxAssets()
         {
-            MAP_BOX_LIST.Clear();
+            MAP_BOX_LIST.Clear();  // TODO: move to BoxManager
 
             string boxAssetDirectory = ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Boxes" + Path.DirectorySeparatorChar;
 

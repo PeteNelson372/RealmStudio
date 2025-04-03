@@ -437,31 +437,6 @@
             HelpContentsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
-            LandToolPanel = new Panel();
-            label75 = new Label();
-            LandBrushVelocityTrack = new TrackBar();
-            LandColorButton = new FontAwesome.Sharp.IconButton();
-            label58 = new Label();
-            LandColorEraserSizeTrack = new TrackBar();
-            LandCustomColorButton6 = new Button();
-            LandCustomColorButton5 = new Button();
-            LandCustomColorButton4 = new Button();
-            LandCustomColorButton3 = new Button();
-            LandCustomColorButton2 = new Button();
-            LandCustomColorButton1 = new Button();
-            LandButton3D3728 = new Button();
-            LandHardBrushButton = new Button();
-            LandSoftBrushButton = new Button();
-            LandButtonAD9C7E = new Button();
-            LandButtonD7C293 = new Button();
-            LandButtonBEBB8E = new Button();
-            LandButtonD8B48F = new Button();
-            LandButtonE6D0AB = new Button();
-            LandColorEraseButton = new FontAwesome.Sharp.IconButton();
-            label59 = new Label();
-            LandColorBrushSizeTrack = new TrackBar();
-            label60 = new Label();
-            LandColorSelectionButton = new FontAwesome.Sharp.IconButton();
             OceanToolPanel = new Panel();
             label72 = new Label();
             OceanBrushVelocityTrack = new TrackBar();
@@ -582,6 +557,31 @@
             WaterColorBrushSizeTrack = new TrackBar();
             label62 = new Label();
             WaterPaintColorSelectButton = new FontAwesome.Sharp.IconButton();
+            LandToolPanel = new Panel();
+            label75 = new Label();
+            LandBrushVelocityTrack = new TrackBar();
+            LandColorButton = new FontAwesome.Sharp.IconButton();
+            label58 = new Label();
+            LandColorEraserSizeTrack = new TrackBar();
+            LandCustomColorButton6 = new Button();
+            LandCustomColorButton5 = new Button();
+            LandCustomColorButton4 = new Button();
+            LandCustomColorButton3 = new Button();
+            LandCustomColorButton2 = new Button();
+            LandCustomColorButton1 = new Button();
+            LandButton3D3728 = new Button();
+            LandHardBrushButton = new Button();
+            LandSoftBrushButton = new Button();
+            LandButtonAD9C7E = new Button();
+            LandButtonD7C293 = new Button();
+            LandButtonBEBB8E = new Button();
+            LandButtonD8B48F = new Button();
+            LandButtonE6D0AB = new Button();
+            LandColorEraseButton = new FontAwesome.Sharp.IconButton();
+            label59 = new Label();
+            LandColorBrushSizeTrack = new TrackBar();
+            label60 = new Label();
+            LandColorSelectionButton = new FontAwesome.Sharp.IconButton();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
             OceanTab = new TabPage();
@@ -695,10 +695,6 @@
             MapStatusStrip.SuspendLayout();
             ApplicationStatusStrip.SuspendLayout();
             RealmStudioMainMenuStrip.SuspendLayout();
-            LandToolPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)LandBrushVelocityTrack).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)LandColorEraserSizeTrack).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)LandColorBrushSizeTrack).BeginInit();
             OceanToolPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).BeginInit();
@@ -739,6 +735,10 @@
             ((System.ComponentModel.ISupportInitialize)WaterBrushVelocityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)WaterColorEraserSizeTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)WaterColorBrushSizeTrack).BeginInit();
+            LandToolPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)LandBrushVelocityTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)LandColorEraserSizeTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)LandColorBrushSizeTrack).BeginInit();
             SuspendLayout();
             // 
             // OceanTab
@@ -1056,6 +1056,7 @@
             MirrorOceanTextureSwitch.Tag = "Cyber";
             MirrorOceanTextureSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             MirrorOceanTextureSwitch.Timer_RGB = 300;
+            MirrorOceanTextureSwitch.CheckedChanged += MirrorOceanTextureSwitch_CheckedChanged;
             // 
             // label91
             // 
@@ -1536,6 +1537,7 @@
             MirrorBackgroundSwitch.Tag = "Cyber";
             MirrorBackgroundSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             MirrorBackgroundSwitch.Timer_RGB = 300;
+            MirrorBackgroundSwitch.CheckedChanged += MirrorBackgroundSwitch_CheckedChanged;
             // 
             // label89
             // 
@@ -1826,6 +1828,7 @@
             CoastlineStyleList.Name = "CoastlineStyleList";
             CoastlineStyleList.Size = new Size(136, 124);
             CoastlineStyleList.TabIndex = 23;
+            CoastlineStyleList.SelectedIndexChanged += CoastlineStyleList_SelectedIndexChanged;
             // 
             // CoastlineColorSelectionButton
             // 
@@ -2735,6 +2738,7 @@
             RiverSourceFadeInSwitch.Tag = "Cyber";
             RiverSourceFadeInSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             RiverSourceFadeInSwitch.Timer_RGB = 300;
+            RiverSourceFadeInSwitch.CheckedChanged += RiverSourceFadeInSwitch_CheckedChanged;
             // 
             // label40
             // 
@@ -5534,7 +5538,6 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(RealmStudioMainMenuStrip);
-            RealmStudioForm.Controls.Add(LandToolPanel);
             RealmStudioForm.Controls.Add(OceanToolPanel);
             RealmStudioForm.Controls.Add(BackgroundToolPanel);
             RealmStudioForm.Controls.Add(DrawingToolPanel);
@@ -5544,6 +5547,7 @@
             RealmStudioForm.Controls.Add(SymbolToolPanel);
             RealmStudioForm.Controls.Add(PathToolPanel);
             RealmStudioForm.Controls.Add(WaterToolPanel);
+            RealmStudioForm.Controls.Add(LandToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
             RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
             RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
@@ -6931,385 +6935,6 @@
             AboutToolStripMenuItem.Size = new Size(122, 22);
             AboutToolStripMenuItem.Text = "&About...";
             AboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
-            // 
-            // LandToolPanel
-            // 
-            LandToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            LandToolPanel.BackColor = SystemColors.Control;
-            LandToolPanel.Controls.Add(label75);
-            LandToolPanel.Controls.Add(LandBrushVelocityTrack);
-            LandToolPanel.Controls.Add(LandColorButton);
-            LandToolPanel.Controls.Add(label58);
-            LandToolPanel.Controls.Add(LandColorEraserSizeTrack);
-            LandToolPanel.Controls.Add(LandCustomColorButton6);
-            LandToolPanel.Controls.Add(LandCustomColorButton5);
-            LandToolPanel.Controls.Add(LandCustomColorButton4);
-            LandToolPanel.Controls.Add(LandCustomColorButton3);
-            LandToolPanel.Controls.Add(LandCustomColorButton2);
-            LandToolPanel.Controls.Add(LandCustomColorButton1);
-            LandToolPanel.Controls.Add(LandButton3D3728);
-            LandToolPanel.Controls.Add(LandHardBrushButton);
-            LandToolPanel.Controls.Add(LandSoftBrushButton);
-            LandToolPanel.Controls.Add(LandButtonAD9C7E);
-            LandToolPanel.Controls.Add(LandButtonD7C293);
-            LandToolPanel.Controls.Add(LandButtonBEBB8E);
-            LandToolPanel.Controls.Add(LandButtonD8B48F);
-            LandToolPanel.Controls.Add(LandButtonE6D0AB);
-            LandToolPanel.Controls.Add(LandColorEraseButton);
-            LandToolPanel.Controls.Add(label59);
-            LandToolPanel.Controls.Add(LandColorBrushSizeTrack);
-            LandToolPanel.Controls.Add(label60);
-            LandToolPanel.Controls.Add(LandColorSelectionButton);
-            LandToolPanel.Location = new Point(1421, 90);
-            LandToolPanel.Margin = new Padding(0);
-            LandToolPanel.Name = "LandToolPanel";
-            LandToolPanel.Size = new Size(152, 806);
-            LandToolPanel.TabIndex = 19;
-            // 
-            // label75
-            // 
-            label75.AutoSize = true;
-            label75.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label75.ForeColor = SystemColors.ControlDarkDark;
-            label75.Location = new Point(17, 139);
-            label75.Name = "label75";
-            label75.Size = new Size(74, 13);
-            label75.TabIndex = 87;
-            label75.Text = "Brush Velocity";
-            // 
-            // LandBrushVelocityTrack
-            // 
-            LandBrushVelocityTrack.AutoSize = false;
-            LandBrushVelocityTrack.Location = new Point(14, 155);
-            LandBrushVelocityTrack.Maximum = 100;
-            LandBrushVelocityTrack.Minimum = 1;
-            LandBrushVelocityTrack.Name = "LandBrushVelocityTrack";
-            LandBrushVelocityTrack.Size = new Size(126, 20);
-            LandBrushVelocityTrack.TabIndex = 86;
-            LandBrushVelocityTrack.TickStyle = TickStyle.None;
-            LandBrushVelocityTrack.Value = 100;
-            LandBrushVelocityTrack.ValueChanged += LandBrushVelocityTrack_ValueChanged;
-            // 
-            // LandColorButton
-            // 
-            LandColorButton.BackColor = SystemColors.ControlLightLight;
-            LandColorButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandColorButton.FlatStyle = FlatStyle.Flat;
-            LandColorButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandColorButton.ForeColor = SystemColors.ControlDarkDark;
-            LandColorButton.IconChar = FontAwesome.Sharp.IconChar.Brush;
-            LandColorButton.IconColor = Color.Black;
-            LandColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            LandColorButton.IconSize = 24;
-            LandColorButton.Location = new Point(14, 248);
-            LandColorButton.Name = "LandColorButton";
-            LandColorButton.Size = new Size(60, 60);
-            LandColorButton.TabIndex = 84;
-            LandColorButton.Text = "Color";
-            LandColorButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            LandColorButton.UseVisualStyleBackColor = false;
-            LandColorButton.Click += LandColorButton_Click;
-            // 
-            // label58
-            // 
-            label58.AutoSize = true;
-            label58.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label58.ForeColor = SystemColors.ControlDarkDark;
-            label58.Location = new Point(17, 181);
-            label58.Name = "label58";
-            label58.Size = new Size(60, 13);
-            label58.TabIndex = 81;
-            label58.Text = "Eraser Size";
-            // 
-            // LandColorEraserSizeTrack
-            // 
-            LandColorEraserSizeTrack.AutoSize = false;
-            LandColorEraserSizeTrack.Location = new Point(14, 194);
-            LandColorEraserSizeTrack.Maximum = 256;
-            LandColorEraserSizeTrack.Minimum = 2;
-            LandColorEraserSizeTrack.Name = "LandColorEraserSizeTrack";
-            LandColorEraserSizeTrack.Size = new Size(126, 20);
-            LandColorEraserSizeTrack.TabIndex = 80;
-            LandColorEraserSizeTrack.TickFrequency = 2;
-            LandColorEraserSizeTrack.TickStyle = TickStyle.None;
-            LandColorEraserSizeTrack.Value = 20;
-            LandColorEraserSizeTrack.ValueChanged += LandColorEraserSizeTrack_ValueChanged;
-            // 
-            // LandCustomColorButton6
-            // 
-            LandCustomColorButton6.BackColor = Color.White;
-            LandCustomColorButton6.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandCustomColorButton6.FlatStyle = FlatStyle.Flat;
-            LandCustomColorButton6.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandCustomColorButton6.ForeColor = SystemColors.ControlDark;
-            LandCustomColorButton6.Location = new Point(80, 737);
-            LandCustomColorButton6.Name = "LandCustomColorButton6";
-            LandCustomColorButton6.Size = new Size(60, 57);
-            LandCustomColorButton6.TabIndex = 79;
-            LandCustomColorButton6.UseVisualStyleBackColor = false;
-            LandCustomColorButton6.MouseClick += LandCustomColorButton6_MouseClick;
-            // 
-            // LandCustomColorButton5
-            // 
-            LandCustomColorButton5.BackColor = Color.White;
-            LandCustomColorButton5.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandCustomColorButton5.FlatStyle = FlatStyle.Flat;
-            LandCustomColorButton5.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandCustomColorButton5.ForeColor = SystemColors.ControlDark;
-            LandCustomColorButton5.Location = new Point(14, 737);
-            LandCustomColorButton5.Name = "LandCustomColorButton5";
-            LandCustomColorButton5.Size = new Size(60, 57);
-            LandCustomColorButton5.TabIndex = 78;
-            LandCustomColorButton5.UseVisualStyleBackColor = false;
-            LandCustomColorButton5.MouseClick += LandCustomColorButton5_MouseClick;
-            // 
-            // LandCustomColorButton4
-            // 
-            LandCustomColorButton4.BackColor = Color.White;
-            LandCustomColorButton4.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandCustomColorButton4.FlatStyle = FlatStyle.Flat;
-            LandCustomColorButton4.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandCustomColorButton4.ForeColor = SystemColors.ControlDark;
-            LandCustomColorButton4.Location = new Point(80, 674);
-            LandCustomColorButton4.Name = "LandCustomColorButton4";
-            LandCustomColorButton4.Size = new Size(60, 57);
-            LandCustomColorButton4.TabIndex = 77;
-            LandCustomColorButton4.UseVisualStyleBackColor = false;
-            LandCustomColorButton4.MouseClick += LandCustomColorButton4_MouseClick;
-            // 
-            // LandCustomColorButton3
-            // 
-            LandCustomColorButton3.BackColor = Color.White;
-            LandCustomColorButton3.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandCustomColorButton3.FlatStyle = FlatStyle.Flat;
-            LandCustomColorButton3.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandCustomColorButton3.ForeColor = SystemColors.ControlDark;
-            LandCustomColorButton3.Location = new Point(14, 674);
-            LandCustomColorButton3.Name = "LandCustomColorButton3";
-            LandCustomColorButton3.Size = new Size(60, 57);
-            LandCustomColorButton3.TabIndex = 76;
-            LandCustomColorButton3.UseVisualStyleBackColor = false;
-            LandCustomColorButton3.MouseClick += LandCustomColorButton3_MouseClick;
-            // 
-            // LandCustomColorButton2
-            // 
-            LandCustomColorButton2.BackColor = Color.White;
-            LandCustomColorButton2.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandCustomColorButton2.FlatStyle = FlatStyle.Flat;
-            LandCustomColorButton2.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandCustomColorButton2.ForeColor = SystemColors.ControlDark;
-            LandCustomColorButton2.Location = new Point(80, 611);
-            LandCustomColorButton2.Name = "LandCustomColorButton2";
-            LandCustomColorButton2.Size = new Size(60, 57);
-            LandCustomColorButton2.TabIndex = 75;
-            LandCustomColorButton2.UseVisualStyleBackColor = false;
-            LandCustomColorButton2.MouseClick += LandCustomColorButton2_MouseClick;
-            // 
-            // LandCustomColorButton1
-            // 
-            LandCustomColorButton1.BackColor = Color.White;
-            LandCustomColorButton1.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandCustomColorButton1.FlatStyle = FlatStyle.Flat;
-            LandCustomColorButton1.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandCustomColorButton1.ForeColor = SystemColors.ControlDark;
-            LandCustomColorButton1.Location = new Point(14, 611);
-            LandCustomColorButton1.Name = "LandCustomColorButton1";
-            LandCustomColorButton1.Size = new Size(60, 57);
-            LandCustomColorButton1.TabIndex = 74;
-            LandCustomColorButton1.UseVisualStyleBackColor = false;
-            LandCustomColorButton1.MouseClick += LandCustomColorButton1_MouseClick;
-            // 
-            // LandButton3D3728
-            // 
-            LandButton3D3728.BackColor = Color.FromArgb(61, 55, 40);
-            LandButton3D3728.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandButton3D3728.FlatStyle = FlatStyle.Flat;
-            LandButton3D3728.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandButton3D3728.ForeColor = SystemColors.ControlDark;
-            LandButton3D3728.Location = new Point(80, 548);
-            LandButton3D3728.Name = "LandButton3D3728";
-            LandButton3D3728.Size = new Size(60, 57);
-            LandButton3D3728.TabIndex = 73;
-            LandButton3D3728.Text = "#3D3728";
-            LandButton3D3728.UseVisualStyleBackColor = false;
-            LandButton3D3728.Click += LandButton3D3728_Click;
-            // 
-            // LandHardBrushButton
-            // 
-            LandHardBrushButton.BackColor = Color.Black;
-            LandHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
-            LandHardBrushButton.FlatAppearance.BorderSize = 3;
-            LandHardBrushButton.FlatStyle = FlatStyle.Flat;
-            LandHardBrushButton.Image = (Image)resources.GetObject("LandHardBrushButton.Image");
-            LandHardBrushButton.Location = new Point(80, 31);
-            LandHardBrushButton.Name = "LandHardBrushButton";
-            LandHardBrushButton.Size = new Size(60, 60);
-            LandHardBrushButton.TabIndex = 71;
-            LandHardBrushButton.UseVisualStyleBackColor = false;
-            LandHardBrushButton.Click += LandHardBrushButton_Click;
-            // 
-            // LandSoftBrushButton
-            // 
-            LandSoftBrushButton.BackColor = Color.Black;
-            LandSoftBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
-            LandSoftBrushButton.FlatAppearance.BorderSize = 3;
-            LandSoftBrushButton.FlatStyle = FlatStyle.Flat;
-            LandSoftBrushButton.Image = (Image)resources.GetObject("LandSoftBrushButton.Image");
-            LandSoftBrushButton.Location = new Point(14, 31);
-            LandSoftBrushButton.Name = "LandSoftBrushButton";
-            LandSoftBrushButton.Size = new Size(60, 60);
-            LandSoftBrushButton.TabIndex = 70;
-            LandSoftBrushButton.UseVisualStyleBackColor = false;
-            LandSoftBrushButton.Click += LandSoftBrushButton_Click;
-            // 
-            // LandButtonAD9C7E
-            // 
-            LandButtonAD9C7E.BackColor = Color.FromArgb(173, 156, 126);
-            LandButtonAD9C7E.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandButtonAD9C7E.FlatStyle = FlatStyle.Flat;
-            LandButtonAD9C7E.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandButtonAD9C7E.ForeColor = SystemColors.ControlDarkDark;
-            LandButtonAD9C7E.Location = new Point(14, 548);
-            LandButtonAD9C7E.Name = "LandButtonAD9C7E";
-            LandButtonAD9C7E.Size = new Size(60, 57);
-            LandButtonAD9C7E.TabIndex = 69;
-            LandButtonAD9C7E.Text = "#AD9C7E";
-            LandButtonAD9C7E.UseVisualStyleBackColor = false;
-            LandButtonAD9C7E.Click += LandButtonAD9C7E_Click;
-            // 
-            // LandButtonD7C293
-            // 
-            LandButtonD7C293.BackColor = Color.FromArgb(215, 194, 147);
-            LandButtonD7C293.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandButtonD7C293.FlatStyle = FlatStyle.Flat;
-            LandButtonD7C293.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandButtonD7C293.ForeColor = SystemColors.ControlDarkDark;
-            LandButtonD7C293.Location = new Point(80, 485);
-            LandButtonD7C293.Name = "LandButtonD7C293";
-            LandButtonD7C293.Size = new Size(60, 57);
-            LandButtonD7C293.TabIndex = 68;
-            LandButtonD7C293.Text = "#D7C293";
-            LandButtonD7C293.UseVisualStyleBackColor = false;
-            LandButtonD7C293.Click += LandButtonD7C293_Click;
-            // 
-            // LandButtonBEBB8E
-            // 
-            LandButtonBEBB8E.BackColor = Color.FromArgb(190, 187, 142);
-            LandButtonBEBB8E.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandButtonBEBB8E.FlatStyle = FlatStyle.Flat;
-            LandButtonBEBB8E.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandButtonBEBB8E.ForeColor = SystemColors.ControlDarkDark;
-            LandButtonBEBB8E.Location = new Point(14, 485);
-            LandButtonBEBB8E.Name = "LandButtonBEBB8E";
-            LandButtonBEBB8E.Size = new Size(60, 57);
-            LandButtonBEBB8E.TabIndex = 67;
-            LandButtonBEBB8E.Text = "#BEBB8E";
-            LandButtonBEBB8E.UseVisualStyleBackColor = false;
-            LandButtonBEBB8E.Click += LandButtonBEBB8E_Click;
-            // 
-            // LandButtonD8B48F
-            // 
-            LandButtonD8B48F.BackColor = Color.FromArgb(216, 180, 143);
-            LandButtonD8B48F.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandButtonD8B48F.FlatStyle = FlatStyle.Flat;
-            LandButtonD8B48F.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandButtonD8B48F.ForeColor = SystemColors.ControlDarkDark;
-            LandButtonD8B48F.Location = new Point(80, 422);
-            LandButtonD8B48F.Name = "LandButtonD8B48F";
-            LandButtonD8B48F.Size = new Size(60, 57);
-            LandButtonD8B48F.TabIndex = 66;
-            LandButtonD8B48F.Text = "#D8B48F";
-            LandButtonD8B48F.UseVisualStyleBackColor = false;
-            LandButtonD8B48F.Click += LandButtonD8B48F_Click;
-            // 
-            // LandButtonE6D0AB
-            // 
-            LandButtonE6D0AB.BackColor = Color.FromArgb(230, 208, 171);
-            LandButtonE6D0AB.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandButtonE6D0AB.FlatStyle = FlatStyle.Flat;
-            LandButtonE6D0AB.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandButtonE6D0AB.ForeColor = SystemColors.ControlDarkDark;
-            LandButtonE6D0AB.Location = new Point(14, 422);
-            LandButtonE6D0AB.Name = "LandButtonE6D0AB";
-            LandButtonE6D0AB.Size = new Size(60, 57);
-            LandButtonE6D0AB.TabIndex = 65;
-            LandButtonE6D0AB.Text = "#E6D0AB";
-            LandButtonE6D0AB.UseVisualStyleBackColor = false;
-            LandButtonE6D0AB.Click += LandButtonE6D0AB_Click;
-            // 
-            // LandColorEraseButton
-            // 
-            LandColorEraseButton.BackColor = SystemColors.ControlLightLight;
-            LandColorEraseButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandColorEraseButton.FlatStyle = FlatStyle.Flat;
-            LandColorEraseButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandColorEraseButton.ForeColor = SystemColors.ControlDarkDark;
-            LandColorEraseButton.IconChar = FontAwesome.Sharp.IconChar.Eraser;
-            LandColorEraseButton.IconColor = Color.Black;
-            LandColorEraseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            LandColorEraseButton.IconSize = 24;
-            LandColorEraseButton.Location = new Point(80, 248);
-            LandColorEraseButton.Name = "LandColorEraseButton";
-            LandColorEraseButton.Size = new Size(60, 60);
-            LandColorEraseButton.TabIndex = 64;
-            LandColorEraseButton.Text = "Erase";
-            LandColorEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            LandColorEraseButton.UseVisualStyleBackColor = false;
-            LandColorEraseButton.Click += LandColorEraseButton_Click;
-            // 
-            // label59
-            // 
-            label59.AutoSize = true;
-            label59.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label59.ForeColor = SystemColors.ControlDarkDark;
-            label59.Location = new Point(17, 100);
-            label59.Name = "label59";
-            label59.Size = new Size(56, 13);
-            label59.TabIndex = 63;
-            label59.Text = "Brush Size";
-            // 
-            // LandColorBrushSizeTrack
-            // 
-            LandColorBrushSizeTrack.AutoSize = false;
-            LandColorBrushSizeTrack.Location = new Point(14, 116);
-            LandColorBrushSizeTrack.Maximum = 256;
-            LandColorBrushSizeTrack.Minimum = 2;
-            LandColorBrushSizeTrack.Name = "LandColorBrushSizeTrack";
-            LandColorBrushSizeTrack.Size = new Size(126, 20);
-            LandColorBrushSizeTrack.TabIndex = 62;
-            LandColorBrushSizeTrack.TickFrequency = 2;
-            LandColorBrushSizeTrack.TickStyle = TickStyle.None;
-            LandColorBrushSizeTrack.Value = 20;
-            LandColorBrushSizeTrack.ValueChanged += LandColorBrushSizeTrack_ValueChanged;
-            // 
-            // label60
-            // 
-            label60.AutoSize = true;
-            label60.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label60.ForeColor = SystemColors.ControlDarkDark;
-            label60.Location = new Point(16, 15);
-            label60.Name = "label60";
-            label60.Size = new Size(62, 13);
-            label60.TabIndex = 60;
-            label60.Text = "Color Brush";
-            // 
-            // LandColorSelectionButton
-            // 
-            LandColorSelectionButton.BackColor = Color.FromArgb(128, 230, 208, 171);
-            LandColorSelectionButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            LandColorSelectionButton.FlatStyle = FlatStyle.Flat;
-            LandColorSelectionButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LandColorSelectionButton.ForeColor = SystemColors.ControlDarkDark;
-            LandColorSelectionButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            LandColorSelectionButton.IconColor = Color.Tan;
-            LandColorSelectionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            LandColorSelectionButton.Location = new Point(15, 314);
-            LandColorSelectionButton.Name = "LandColorSelectionButton";
-            LandColorSelectionButton.Size = new Size(125, 60);
-            LandColorSelectionButton.TabIndex = 59;
-            LandColorSelectionButton.Text = "Select Brush Color";
-            LandColorSelectionButton.UseVisualStyleBackColor = false;
-            LandColorSelectionButton.Click += LandColorSelectionButton_Click;
             // 
             // OceanToolPanel
             // 
@@ -8939,6 +8564,385 @@
             WaterPaintColorSelectButton.UseVisualStyleBackColor = false;
             WaterPaintColorSelectButton.Click += WaterPaintColorSelectButton_Click;
             // 
+            // LandToolPanel
+            // 
+            LandToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            LandToolPanel.BackColor = SystemColors.Control;
+            LandToolPanel.Controls.Add(label75);
+            LandToolPanel.Controls.Add(LandBrushVelocityTrack);
+            LandToolPanel.Controls.Add(LandColorButton);
+            LandToolPanel.Controls.Add(label58);
+            LandToolPanel.Controls.Add(LandColorEraserSizeTrack);
+            LandToolPanel.Controls.Add(LandCustomColorButton6);
+            LandToolPanel.Controls.Add(LandCustomColorButton5);
+            LandToolPanel.Controls.Add(LandCustomColorButton4);
+            LandToolPanel.Controls.Add(LandCustomColorButton3);
+            LandToolPanel.Controls.Add(LandCustomColorButton2);
+            LandToolPanel.Controls.Add(LandCustomColorButton1);
+            LandToolPanel.Controls.Add(LandButton3D3728);
+            LandToolPanel.Controls.Add(LandHardBrushButton);
+            LandToolPanel.Controls.Add(LandSoftBrushButton);
+            LandToolPanel.Controls.Add(LandButtonAD9C7E);
+            LandToolPanel.Controls.Add(LandButtonD7C293);
+            LandToolPanel.Controls.Add(LandButtonBEBB8E);
+            LandToolPanel.Controls.Add(LandButtonD8B48F);
+            LandToolPanel.Controls.Add(LandButtonE6D0AB);
+            LandToolPanel.Controls.Add(LandColorEraseButton);
+            LandToolPanel.Controls.Add(label59);
+            LandToolPanel.Controls.Add(LandColorBrushSizeTrack);
+            LandToolPanel.Controls.Add(label60);
+            LandToolPanel.Controls.Add(LandColorSelectionButton);
+            LandToolPanel.Location = new Point(1421, 90);
+            LandToolPanel.Margin = new Padding(0);
+            LandToolPanel.Name = "LandToolPanel";
+            LandToolPanel.Size = new Size(152, 806);
+            LandToolPanel.TabIndex = 19;
+            // 
+            // label75
+            // 
+            label75.AutoSize = true;
+            label75.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label75.ForeColor = SystemColors.ControlDarkDark;
+            label75.Location = new Point(17, 139);
+            label75.Name = "label75";
+            label75.Size = new Size(74, 13);
+            label75.TabIndex = 87;
+            label75.Text = "Brush Velocity";
+            // 
+            // LandBrushVelocityTrack
+            // 
+            LandBrushVelocityTrack.AutoSize = false;
+            LandBrushVelocityTrack.Location = new Point(14, 155);
+            LandBrushVelocityTrack.Maximum = 100;
+            LandBrushVelocityTrack.Minimum = 1;
+            LandBrushVelocityTrack.Name = "LandBrushVelocityTrack";
+            LandBrushVelocityTrack.Size = new Size(126, 20);
+            LandBrushVelocityTrack.TabIndex = 86;
+            LandBrushVelocityTrack.TickStyle = TickStyle.None;
+            LandBrushVelocityTrack.Value = 100;
+            LandBrushVelocityTrack.ValueChanged += LandBrushVelocityTrack_ValueChanged;
+            // 
+            // LandColorButton
+            // 
+            LandColorButton.BackColor = SystemColors.ControlLightLight;
+            LandColorButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandColorButton.FlatStyle = FlatStyle.Flat;
+            LandColorButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandColorButton.ForeColor = SystemColors.ControlDarkDark;
+            LandColorButton.IconChar = FontAwesome.Sharp.IconChar.Brush;
+            LandColorButton.IconColor = Color.Black;
+            LandColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LandColorButton.IconSize = 24;
+            LandColorButton.Location = new Point(14, 248);
+            LandColorButton.Name = "LandColorButton";
+            LandColorButton.Size = new Size(60, 60);
+            LandColorButton.TabIndex = 84;
+            LandColorButton.Text = "Color";
+            LandColorButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            LandColorButton.UseVisualStyleBackColor = false;
+            LandColorButton.Click += LandColorButton_Click;
+            // 
+            // label58
+            // 
+            label58.AutoSize = true;
+            label58.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label58.ForeColor = SystemColors.ControlDarkDark;
+            label58.Location = new Point(17, 181);
+            label58.Name = "label58";
+            label58.Size = new Size(60, 13);
+            label58.TabIndex = 81;
+            label58.Text = "Eraser Size";
+            // 
+            // LandColorEraserSizeTrack
+            // 
+            LandColorEraserSizeTrack.AutoSize = false;
+            LandColorEraserSizeTrack.Location = new Point(14, 194);
+            LandColorEraserSizeTrack.Maximum = 256;
+            LandColorEraserSizeTrack.Minimum = 2;
+            LandColorEraserSizeTrack.Name = "LandColorEraserSizeTrack";
+            LandColorEraserSizeTrack.Size = new Size(126, 20);
+            LandColorEraserSizeTrack.TabIndex = 80;
+            LandColorEraserSizeTrack.TickFrequency = 2;
+            LandColorEraserSizeTrack.TickStyle = TickStyle.None;
+            LandColorEraserSizeTrack.Value = 20;
+            LandColorEraserSizeTrack.ValueChanged += LandColorEraserSizeTrack_ValueChanged;
+            // 
+            // LandCustomColorButton6
+            // 
+            LandCustomColorButton6.BackColor = Color.White;
+            LandCustomColorButton6.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandCustomColorButton6.FlatStyle = FlatStyle.Flat;
+            LandCustomColorButton6.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandCustomColorButton6.ForeColor = SystemColors.ControlDark;
+            LandCustomColorButton6.Location = new Point(80, 737);
+            LandCustomColorButton6.Name = "LandCustomColorButton6";
+            LandCustomColorButton6.Size = new Size(60, 57);
+            LandCustomColorButton6.TabIndex = 79;
+            LandCustomColorButton6.UseVisualStyleBackColor = false;
+            LandCustomColorButton6.MouseClick += LandCustomColorButton6_MouseClick;
+            // 
+            // LandCustomColorButton5
+            // 
+            LandCustomColorButton5.BackColor = Color.White;
+            LandCustomColorButton5.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandCustomColorButton5.FlatStyle = FlatStyle.Flat;
+            LandCustomColorButton5.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandCustomColorButton5.ForeColor = SystemColors.ControlDark;
+            LandCustomColorButton5.Location = new Point(14, 737);
+            LandCustomColorButton5.Name = "LandCustomColorButton5";
+            LandCustomColorButton5.Size = new Size(60, 57);
+            LandCustomColorButton5.TabIndex = 78;
+            LandCustomColorButton5.UseVisualStyleBackColor = false;
+            LandCustomColorButton5.MouseClick += LandCustomColorButton5_MouseClick;
+            // 
+            // LandCustomColorButton4
+            // 
+            LandCustomColorButton4.BackColor = Color.White;
+            LandCustomColorButton4.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandCustomColorButton4.FlatStyle = FlatStyle.Flat;
+            LandCustomColorButton4.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandCustomColorButton4.ForeColor = SystemColors.ControlDark;
+            LandCustomColorButton4.Location = new Point(80, 674);
+            LandCustomColorButton4.Name = "LandCustomColorButton4";
+            LandCustomColorButton4.Size = new Size(60, 57);
+            LandCustomColorButton4.TabIndex = 77;
+            LandCustomColorButton4.UseVisualStyleBackColor = false;
+            LandCustomColorButton4.MouseClick += LandCustomColorButton4_MouseClick;
+            // 
+            // LandCustomColorButton3
+            // 
+            LandCustomColorButton3.BackColor = Color.White;
+            LandCustomColorButton3.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandCustomColorButton3.FlatStyle = FlatStyle.Flat;
+            LandCustomColorButton3.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandCustomColorButton3.ForeColor = SystemColors.ControlDark;
+            LandCustomColorButton3.Location = new Point(14, 674);
+            LandCustomColorButton3.Name = "LandCustomColorButton3";
+            LandCustomColorButton3.Size = new Size(60, 57);
+            LandCustomColorButton3.TabIndex = 76;
+            LandCustomColorButton3.UseVisualStyleBackColor = false;
+            LandCustomColorButton3.MouseClick += LandCustomColorButton3_MouseClick;
+            // 
+            // LandCustomColorButton2
+            // 
+            LandCustomColorButton2.BackColor = Color.White;
+            LandCustomColorButton2.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandCustomColorButton2.FlatStyle = FlatStyle.Flat;
+            LandCustomColorButton2.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandCustomColorButton2.ForeColor = SystemColors.ControlDark;
+            LandCustomColorButton2.Location = new Point(80, 611);
+            LandCustomColorButton2.Name = "LandCustomColorButton2";
+            LandCustomColorButton2.Size = new Size(60, 57);
+            LandCustomColorButton2.TabIndex = 75;
+            LandCustomColorButton2.UseVisualStyleBackColor = false;
+            LandCustomColorButton2.MouseClick += LandCustomColorButton2_MouseClick;
+            // 
+            // LandCustomColorButton1
+            // 
+            LandCustomColorButton1.BackColor = Color.White;
+            LandCustomColorButton1.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandCustomColorButton1.FlatStyle = FlatStyle.Flat;
+            LandCustomColorButton1.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandCustomColorButton1.ForeColor = SystemColors.ControlDark;
+            LandCustomColorButton1.Location = new Point(14, 611);
+            LandCustomColorButton1.Name = "LandCustomColorButton1";
+            LandCustomColorButton1.Size = new Size(60, 57);
+            LandCustomColorButton1.TabIndex = 74;
+            LandCustomColorButton1.UseVisualStyleBackColor = false;
+            LandCustomColorButton1.MouseClick += LandCustomColorButton1_MouseClick;
+            // 
+            // LandButton3D3728
+            // 
+            LandButton3D3728.BackColor = Color.FromArgb(61, 55, 40);
+            LandButton3D3728.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandButton3D3728.FlatStyle = FlatStyle.Flat;
+            LandButton3D3728.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandButton3D3728.ForeColor = SystemColors.ControlDark;
+            LandButton3D3728.Location = new Point(80, 548);
+            LandButton3D3728.Name = "LandButton3D3728";
+            LandButton3D3728.Size = new Size(60, 57);
+            LandButton3D3728.TabIndex = 73;
+            LandButton3D3728.Text = "#3D3728";
+            LandButton3D3728.UseVisualStyleBackColor = false;
+            LandButton3D3728.Click += LandButton3D3728_Click;
+            // 
+            // LandHardBrushButton
+            // 
+            LandHardBrushButton.BackColor = Color.Black;
+            LandHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+            LandHardBrushButton.FlatAppearance.BorderSize = 3;
+            LandHardBrushButton.FlatStyle = FlatStyle.Flat;
+            LandHardBrushButton.Image = (Image)resources.GetObject("LandHardBrushButton.Image");
+            LandHardBrushButton.Location = new Point(80, 31);
+            LandHardBrushButton.Name = "LandHardBrushButton";
+            LandHardBrushButton.Size = new Size(60, 60);
+            LandHardBrushButton.TabIndex = 71;
+            LandHardBrushButton.UseVisualStyleBackColor = false;
+            LandHardBrushButton.Click += LandHardBrushButton_Click;
+            // 
+            // LandSoftBrushButton
+            // 
+            LandSoftBrushButton.BackColor = Color.Black;
+            LandSoftBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            LandSoftBrushButton.FlatAppearance.BorderSize = 3;
+            LandSoftBrushButton.FlatStyle = FlatStyle.Flat;
+            LandSoftBrushButton.Image = (Image)resources.GetObject("LandSoftBrushButton.Image");
+            LandSoftBrushButton.Location = new Point(14, 31);
+            LandSoftBrushButton.Name = "LandSoftBrushButton";
+            LandSoftBrushButton.Size = new Size(60, 60);
+            LandSoftBrushButton.TabIndex = 70;
+            LandSoftBrushButton.UseVisualStyleBackColor = false;
+            LandSoftBrushButton.Click += LandSoftBrushButton_Click;
+            // 
+            // LandButtonAD9C7E
+            // 
+            LandButtonAD9C7E.BackColor = Color.FromArgb(173, 156, 126);
+            LandButtonAD9C7E.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandButtonAD9C7E.FlatStyle = FlatStyle.Flat;
+            LandButtonAD9C7E.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandButtonAD9C7E.ForeColor = SystemColors.ControlDarkDark;
+            LandButtonAD9C7E.Location = new Point(14, 548);
+            LandButtonAD9C7E.Name = "LandButtonAD9C7E";
+            LandButtonAD9C7E.Size = new Size(60, 57);
+            LandButtonAD9C7E.TabIndex = 69;
+            LandButtonAD9C7E.Text = "#AD9C7E";
+            LandButtonAD9C7E.UseVisualStyleBackColor = false;
+            LandButtonAD9C7E.Click += LandButtonAD9C7E_Click;
+            // 
+            // LandButtonD7C293
+            // 
+            LandButtonD7C293.BackColor = Color.FromArgb(215, 194, 147);
+            LandButtonD7C293.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandButtonD7C293.FlatStyle = FlatStyle.Flat;
+            LandButtonD7C293.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandButtonD7C293.ForeColor = SystemColors.ControlDarkDark;
+            LandButtonD7C293.Location = new Point(80, 485);
+            LandButtonD7C293.Name = "LandButtonD7C293";
+            LandButtonD7C293.Size = new Size(60, 57);
+            LandButtonD7C293.TabIndex = 68;
+            LandButtonD7C293.Text = "#D7C293";
+            LandButtonD7C293.UseVisualStyleBackColor = false;
+            LandButtonD7C293.Click += LandButtonD7C293_Click;
+            // 
+            // LandButtonBEBB8E
+            // 
+            LandButtonBEBB8E.BackColor = Color.FromArgb(190, 187, 142);
+            LandButtonBEBB8E.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandButtonBEBB8E.FlatStyle = FlatStyle.Flat;
+            LandButtonBEBB8E.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandButtonBEBB8E.ForeColor = SystemColors.ControlDarkDark;
+            LandButtonBEBB8E.Location = new Point(14, 485);
+            LandButtonBEBB8E.Name = "LandButtonBEBB8E";
+            LandButtonBEBB8E.Size = new Size(60, 57);
+            LandButtonBEBB8E.TabIndex = 67;
+            LandButtonBEBB8E.Text = "#BEBB8E";
+            LandButtonBEBB8E.UseVisualStyleBackColor = false;
+            LandButtonBEBB8E.Click += LandButtonBEBB8E_Click;
+            // 
+            // LandButtonD8B48F
+            // 
+            LandButtonD8B48F.BackColor = Color.FromArgb(216, 180, 143);
+            LandButtonD8B48F.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandButtonD8B48F.FlatStyle = FlatStyle.Flat;
+            LandButtonD8B48F.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandButtonD8B48F.ForeColor = SystemColors.ControlDarkDark;
+            LandButtonD8B48F.Location = new Point(80, 422);
+            LandButtonD8B48F.Name = "LandButtonD8B48F";
+            LandButtonD8B48F.Size = new Size(60, 57);
+            LandButtonD8B48F.TabIndex = 66;
+            LandButtonD8B48F.Text = "#D8B48F";
+            LandButtonD8B48F.UseVisualStyleBackColor = false;
+            LandButtonD8B48F.Click += LandButtonD8B48F_Click;
+            // 
+            // LandButtonE6D0AB
+            // 
+            LandButtonE6D0AB.BackColor = Color.FromArgb(230, 208, 171);
+            LandButtonE6D0AB.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandButtonE6D0AB.FlatStyle = FlatStyle.Flat;
+            LandButtonE6D0AB.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandButtonE6D0AB.ForeColor = SystemColors.ControlDarkDark;
+            LandButtonE6D0AB.Location = new Point(14, 422);
+            LandButtonE6D0AB.Name = "LandButtonE6D0AB";
+            LandButtonE6D0AB.Size = new Size(60, 57);
+            LandButtonE6D0AB.TabIndex = 65;
+            LandButtonE6D0AB.Text = "#E6D0AB";
+            LandButtonE6D0AB.UseVisualStyleBackColor = false;
+            LandButtonE6D0AB.Click += LandButtonE6D0AB_Click;
+            // 
+            // LandColorEraseButton
+            // 
+            LandColorEraseButton.BackColor = SystemColors.ControlLightLight;
+            LandColorEraseButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandColorEraseButton.FlatStyle = FlatStyle.Flat;
+            LandColorEraseButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandColorEraseButton.ForeColor = SystemColors.ControlDarkDark;
+            LandColorEraseButton.IconChar = FontAwesome.Sharp.IconChar.Eraser;
+            LandColorEraseButton.IconColor = Color.Black;
+            LandColorEraseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LandColorEraseButton.IconSize = 24;
+            LandColorEraseButton.Location = new Point(80, 248);
+            LandColorEraseButton.Name = "LandColorEraseButton";
+            LandColorEraseButton.Size = new Size(60, 60);
+            LandColorEraseButton.TabIndex = 64;
+            LandColorEraseButton.Text = "Erase";
+            LandColorEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            LandColorEraseButton.UseVisualStyleBackColor = false;
+            LandColorEraseButton.Click += LandColorEraseButton_Click;
+            // 
+            // label59
+            // 
+            label59.AutoSize = true;
+            label59.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label59.ForeColor = SystemColors.ControlDarkDark;
+            label59.Location = new Point(17, 100);
+            label59.Name = "label59";
+            label59.Size = new Size(56, 13);
+            label59.TabIndex = 63;
+            label59.Text = "Brush Size";
+            // 
+            // LandColorBrushSizeTrack
+            // 
+            LandColorBrushSizeTrack.AutoSize = false;
+            LandColorBrushSizeTrack.Location = new Point(14, 116);
+            LandColorBrushSizeTrack.Maximum = 256;
+            LandColorBrushSizeTrack.Minimum = 2;
+            LandColorBrushSizeTrack.Name = "LandColorBrushSizeTrack";
+            LandColorBrushSizeTrack.Size = new Size(126, 20);
+            LandColorBrushSizeTrack.TabIndex = 62;
+            LandColorBrushSizeTrack.TickFrequency = 2;
+            LandColorBrushSizeTrack.TickStyle = TickStyle.None;
+            LandColorBrushSizeTrack.Value = 20;
+            LandColorBrushSizeTrack.ValueChanged += LandColorBrushSizeTrack_ValueChanged;
+            // 
+            // label60
+            // 
+            label60.AutoSize = true;
+            label60.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label60.ForeColor = SystemColors.ControlDarkDark;
+            label60.Location = new Point(16, 15);
+            label60.Name = "label60";
+            label60.Size = new Size(62, 13);
+            label60.TabIndex = 60;
+            label60.Text = "Color Brush";
+            // 
+            // LandColorSelectionButton
+            // 
+            LandColorSelectionButton.BackColor = Color.FromArgb(128, 230, 208, 171);
+            LandColorSelectionButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            LandColorSelectionButton.FlatStyle = FlatStyle.Flat;
+            LandColorSelectionButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandColorSelectionButton.ForeColor = SystemColors.ControlDarkDark;
+            LandColorSelectionButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            LandColorSelectionButton.IconColor = Color.Tan;
+            LandColorSelectionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LandColorSelectionButton.Location = new Point(15, 314);
+            LandColorSelectionButton.Name = "LandColorSelectionButton";
+            LandColorSelectionButton.Size = new Size(125, 60);
+            LandColorSelectionButton.TabIndex = 59;
+            LandColorSelectionButton.Text = "Select Brush Color";
+            LandColorSelectionButton.UseVisualStyleBackColor = false;
+            LandColorSelectionButton.Click += LandColorSelectionButton_Click;
+            // 
             // materialCheckBox1
             // 
             materialCheckBox1.AutoSize = true;
@@ -9152,11 +9156,6 @@
             ApplicationStatusStrip.PerformLayout();
             RealmStudioMainMenuStrip.ResumeLayout(false);
             RealmStudioMainMenuStrip.PerformLayout();
-            LandToolPanel.ResumeLayout(false);
-            LandToolPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)LandBrushVelocityTrack).EndInit();
-            ((System.ComponentModel.ISupportInitialize)LandColorEraserSizeTrack).EndInit();
-            ((System.ComponentModel.ISupportInitialize)LandColorBrushSizeTrack).EndInit();
             OceanToolPanel.ResumeLayout(false);
             OceanToolPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).EndInit();
@@ -9203,6 +9202,11 @@
             ((System.ComponentModel.ISupportInitialize)WaterBrushVelocityTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)WaterColorEraserSizeTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)WaterColorBrushSizeTrack).EndInit();
+            LandToolPanel.ResumeLayout(false);
+            LandToolPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)LandBrushVelocityTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)LandColorEraserSizeTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)LandColorBrushSizeTrack).EndInit();
             ResumeLayout(false);
         }
 
@@ -9236,7 +9240,6 @@
         private Label label1;
         private ReaLTaiizor.Controls.CyberSwitch AutosaveSwitch;
         private FontAwesome.Sharp.IconButton SaveButton;
-        private ReaLTaiizor.Controls.CyberSwitch ShowBaseLayerSwitch;
         private Label label2;
         private ToolStripMenuItem RealmToolStripMenuItem;
         private ToolStripMenuItem ThemeToolStripMenuItem;
@@ -9287,17 +9290,11 @@
         private ToolStrip DrawingToolStrip;
         private FontAwesome.Sharp.IconToolStripButton iconToolStripButton8;
         private GroupBox BackgroundTextureGroup;
-        private Label BackgroundTextureNameLabel;
-        private FontAwesome.Sharp.IconButton PreviousBackgroundTextureButton;
-        private FontAwesome.Sharp.IconButton NextBackgroundTextureButton;
         private ToolStrip BackgroundToolStrip;
-        private FontAwesome.Sharp.IconToolStripButton FillBackgroundButton;
         private Label label12;
-        private FontAwesome.Sharp.IconToolStripButton ClearBackgroundButton;
         private Label label29;
         private Label label28;
         private ReaLTaiizor.Controls.CyberSwitch cyberSwitch8;
-        private PictureBox BackgroundTextureBox;
         private ToolStripMenuItem AssetsToolStripMenuItem;
         private ToolStripMenuItem CreateSymbolCollectionMenuItem;
         private ToolStripMenuItem ImportAssetsMenuItem;
@@ -9311,15 +9308,11 @@
         private ToolStripMenuItem PreferencesMenuItem;
         private GroupBox VignetteGroupBox;
         private Label label27;
-        private TrackBar VignetteStrengthTrack;
-        private FontAwesome.Sharp.IconButton VignetteColorSelectionButton;
         private GroupBox OceanTextureGroup;
-        private Label OceanTextureNameLabel;
         private Label label31;
         private Label label32;
         private ToolStrip OceanToolStrip;
         private GroupBox OceanColorGroup;
-        private FontAwesome.Sharp.IconButton OceanColorSelectButton;
         private GroupBox WindroseGroup;
         private Label label30;
         private Label label35;
@@ -9373,28 +9366,9 @@
         private GroupBox LabelPathGroup;
         private GroupBox LabelRotationGroup;
         private PictureBox TopLogoPictureBox;
-        private FontAwesome.Sharp.IconButton OceanPaintButton;
         private Label label18;
-        private TrackBar OceanEraserSizeTrack;
-        private Button OceanCustomColorButton8;
-        private Button OceanCustomColorButton7;
-        private Button OceanCustomColorButton6;
-        private Button OceanCustomColorButton5;
-        private Button OceanCustomColorButton4;
-        private Button OceanCustomColorButton3;
-        private Button OceanCustomColorButton2;
-        private Button OceanCustomColorButton1;
-        private Button OceanHardBrushButton;
-        private Button OceanSoftBrushButton;
-        private Button OceanButton42718D;
-        private Button OceanButton6BA5B9;
-        private Button OceanButton88B5BB;
-        private Button OceanButton91CBB8;
-        private FontAwesome.Sharp.IconButton OceanColorEraseButton;
         private Label label23;
-        private TrackBar OceanBrushSizeTrack;
         private Label label57;
-        private FontAwesome.Sharp.IconButton OceanPaintColorSelectButton;
         private Label label58;
         private Label label59;
         private Label label60;
@@ -9435,7 +9409,6 @@
         private Label label73;
         private RichTextBox RegionHelpRichText;
         private Label label72;
-        private TrackBar OceanBrushVelocityTrack;
         private Label label75;
         private Label label76;
         private FontAwesome.Sharp.IconButton SelectColorButton;
@@ -9470,17 +9443,13 @@
         private FontAwesome.Sharp.IconButton AreaSelectButton;
         private ToolStripMenuItem ClearSelectionToolStripMenuItem;
         private Label label87;
-        private RadioButton RectangleVignetteRadio;
-        private RadioButton OvalVignetteRadio;
         private Label label88;
         private Label label86;
         private Label label13;
         private FontAwesome.Sharp.IconButton FontPanelCloseButton;
-        private TrackBar BackgroundTextureScaleTrack;
         private Label label89;
         private Label label91;
         private Label label92;
-        private ReaLTaiizor.Controls.CyberSwitch MirrorBackgroundSwitch;
         private Label label93;
         private Panel HeightMapToolsPanel;
         private FontAwesome.Sharp.IconButton IncreaseHeightButton;
@@ -9761,5 +9730,40 @@
         internal TabPage DrawingTab;
         internal TabPage SymbolTab;
         internal Label LandTextureNameLabel;
+        internal FontAwesome.Sharp.IconButton OceanColorSelectButton;
+        internal FontAwesome.Sharp.IconButton OceanPaintButton;
+        internal TrackBar OceanEraserSizeTrack;
+        internal Button OceanCustomColorButton8;
+        internal Button OceanCustomColorButton7;
+        internal Button OceanCustomColorButton6;
+        internal Button OceanCustomColorButton5;
+        internal Button OceanCustomColorButton4;
+        internal Button OceanCustomColorButton3;
+        internal Button OceanCustomColorButton2;
+        internal Button OceanCustomColorButton1;
+        internal Button OceanHardBrushButton;
+        internal Button OceanSoftBrushButton;
+        internal Button OceanButton42718D;
+        internal Button OceanButton6BA5B9;
+        internal Button OceanButton88B5BB;
+        internal Button OceanButton91CBB8;
+        internal FontAwesome.Sharp.IconButton OceanColorEraseButton;
+        internal TrackBar OceanBrushSizeTrack;
+        internal FontAwesome.Sharp.IconButton OceanPaintColorSelectButton;
+        internal TrackBar OceanBrushVelocityTrack;
+        internal Label OceanTextureNameLabel;
+        internal ReaLTaiizor.Controls.CyberSwitch ShowBaseLayerSwitch;
+        internal FontAwesome.Sharp.IconButton PreviousBackgroundTextureButton;
+        internal FontAwesome.Sharp.IconButton NextBackgroundTextureButton;
+        internal PictureBox BackgroundTextureBox;
+        internal TrackBar VignetteStrengthTrack;
+        internal FontAwesome.Sharp.IconButton VignetteColorSelectionButton;
+        internal RadioButton RectangleVignetteRadio;
+        internal RadioButton OvalVignetteRadio;
+        internal TrackBar BackgroundTextureScaleTrack;
+        internal ReaLTaiizor.Controls.CyberSwitch MirrorBackgroundSwitch;
+        internal FontAwesome.Sharp.IconToolStripButton FillBackgroundButton;
+        internal FontAwesome.Sharp.IconToolStripButton ClearBackgroundButton;
+        internal Label BackgroundTextureNameLabel;
     }
 }

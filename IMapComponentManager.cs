@@ -25,9 +25,9 @@ namespace RealmStudio
 {
     internal interface IMapComponentManager
     {
-        static abstract IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid);
-        static abstract IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator);
-        static abstract bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator);
-        static abstract bool Delete(RealmStudioMap? map, IMapComponent? component);
+        static abstract IMapComponent? GetComponentById(Guid componentGuid);
+        static abstract IMapComponent? Create();
+        static abstract bool Update();
+        static abstract bool Delete();
     }
 }

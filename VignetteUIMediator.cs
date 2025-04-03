@@ -25,76 +25,40 @@ using System.ComponentModel;
 
 namespace RealmStudio
 {
-    internal sealed class WindroseUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal class VignetteUIMediator : IUIMediatorObserver, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private readonly RealmStudioMainForm MainForm;
-        private MapStateMediator? _mapState;
 
-        private int _innerCircleCount;
-        private int _innerCircleRadius;
-        private bool _fadeOut;
-        private int _lineWidth = 2;
-        private int _outerRadius = 1000;
-        private Color _windroseColor = Color.FromArgb(127, 61, 55, 40);
-        private int _directionCount = 16;
+        private int _vignetteStrength = 148;
+        private Color _vignetteColor = Color.FromArgb(201, 151, 123);
+        private VignetteShapeType _vignetteShape = VignetteShapeType.Oval;
 
-        public WindroseUIMediator(RealmStudioMainForm mainForm)
+        public VignetteUIMediator(RealmStudioMainForm mainForm)
         {
             MainForm = mainForm;
-            PropertyChanged += WindroseUIMediator_PropertyChanged;
+            PropertyChanged += VignetteUIMediator_PropertyChanged;
         }
-
-        public int InnerCircleCount
-        {
-            get { return _innerCircleCount; }
-            set { SetPropertyField(nameof(InnerCircleCount), ref _innerCircleCount, value); }
-        }
-
-        public int InnerCircleRadius
-        {
-            get { return _innerCircleRadius; }
-            set { SetPropertyField(nameof(InnerCircleRadius), ref _innerCircleRadius, value); }
-        }
-
-        public bool FadeOut
-        {
-            get { return _fadeOut; }
-            set { SetPropertyField(nameof(FadeOut), ref _fadeOut, value); }
-        }
-
-        public int LineWidth
-        {
-            get { return _lineWidth; }
-            set { SetPropertyField(nameof(LineWidth), ref _lineWidth, value); }
-        }
-
-        public int OuterRadius
-        {
-            get { return _outerRadius; }
-            set { SetPropertyField(nameof(OuterRadius), ref _outerRadius, value); }
-        }
-
-        public Color WindroseColor
-        {
-            get { return _windroseColor; }
-            set { SetPropertyField(nameof(WindroseColor), ref _windroseColor, value); }
-        }
-
-        internal int DirectionCount
-        {
-            get { return _directionCount; }
-            set { SetPropertyField(nameof(DirectionCount), ref _directionCount, value); }
-        }
-
 
         #region Property Setters/Getters
 
-        public MapStateMediator? MapState
+        internal int VignetteStrength
         {
-            get { return _mapState; }
-            set { _mapState = value; }
+            get { return _vignetteStrength; }
+            set { SetPropertyField(nameof(VignetteStrength), ref _vignetteStrength, value); }
+        }
+
+        internal Color VignetteColor
+        {
+            get { return _vignetteColor; }
+            set { SetPropertyField(nameof(VignetteColor), ref _vignetteColor, value); }
+        }
+
+        internal VignetteShapeType VignetteShape
+        {
+            get { return _vignetteShape; }
+            set { SetPropertyField(nameof(VignetteShape), ref _vignetteShape, value); }
         }
 
 
@@ -117,22 +81,34 @@ namespace RealmStudio
 
         public void NotifyUpdate(string? changedPropertyName)
         {
-            UpdateWindroseUI();
-            WindroseManager.Update();
+            UpdateVignetteUI(changedPropertyName);
+            VignetteManager.Update();
             MainForm.SKGLRenderControl.Invalidate();
         }
 
-        public void UpdateWindroseUI()
+        private void UpdateVignetteUI(string? changedPropertyName)
         {
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
-                MainForm.WindroseColorSelectButton.BackColor = WindroseColor;
+                MainForm.VignetteColorSelectionButton.BackColor = VignetteColor;
+
+                MainForm.RectangleVignetteRadio.Checked = VignetteShape == VignetteShapeType.Rectangle;
+                MainForm.OvalVignetteRadio.Checked = VignetteShape == VignetteShapeType.Oval;
+
+                if (!string.IsNullOrEmpty(changedPropertyName))
+                {
+                    if (changedPropertyName == "VignetteStrength")
+                    {
+                        MainForm.VignetteStrengthTrack.Value = VignetteStrength;
+                    }
+                }
             }));
         }
+
         #endregion
 
         #region Event Handlers
-        private void WindroseUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        private void VignetteUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             // this event handler is called whenever a property is set
             // using the SetPropertyField method

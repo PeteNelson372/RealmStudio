@@ -132,7 +132,7 @@ namespace RealmStudio
                                 if (r == DialogResult.Yes)
                                 {
                                     DeletingPreset = existingPreset;
-                                    bool presetDeleted = LabelPresetManager.Delete(MapStateMediator.CurrentMap, null);
+                                    bool presetDeleted = LabelPresetManager.Delete();
 
                                     if (presetDeleted)
                                     {

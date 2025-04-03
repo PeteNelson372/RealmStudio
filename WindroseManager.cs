@@ -37,17 +37,16 @@ namespace RealmStudio
             set { _windroseMediator = value; }
         }
 
-        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        public static IMapComponent? Create()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
             ArgumentNullException.ThrowIfNull(WindroseMediator);
-            ArgumentNullException.ThrowIfNull(map);
 
             if (MapStateMediator.MainUIMediator.CurrentDrawingMode == MapDrawingMode.PlaceWindrose)
             {
                 MapWindrose windrose = new()
                 {
-                    ParentMap = map,
+                    ParentMap = MapStateMediator.CurrentMap,
                     InnerCircles = WindroseMediator.InnerCircleCount,
                     InnerRadius = WindroseMediator.InnerCircleRadius,
                     FadeOut = WindroseMediator.FadeOut,
@@ -72,17 +71,17 @@ namespace RealmStudio
             return null;
         }
 
-        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        public static bool Delete()
         {
             throw new NotImplementedException();
         }
 
-        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        public static IMapComponent? GetComponentById(Guid componentGuid)
         {
             throw new NotImplementedException();
         }
 
-        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        public static bool Update()
         {
             ArgumentNullException.ThrowIfNull(WindroseMediator);
 
@@ -121,7 +120,7 @@ namespace RealmStudio
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 
-                Create(MapStateMediator.CurrentMap, WindroseMediator);
+                Create();
             }
         }
 

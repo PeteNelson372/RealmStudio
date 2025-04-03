@@ -173,7 +173,7 @@ namespace RealmStudio
             if (MapStateMediator.CurrentMap != null)
             {
                 UpdateGridUI(changedPropertyName);
-                MapGridManager.Update(MapStateMediator.CurrentMap, MapState, this);
+                MapGridManager.Update();
                 MainForm.SKGLRenderControl.Invalidate();
             }
         }

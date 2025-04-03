@@ -136,7 +136,7 @@ namespace RealmStudio
             if (MapStateMediator.CurrentMap != null)
             {
                 UpdatePathUI(changedPropertyName);
-                SymbolManager.Update(MapStateMediator.CurrentMap, MapState, this);
+                SymbolManager.Update();
 
                 MainForm.SKGLRenderControl.Invalidate();
             }

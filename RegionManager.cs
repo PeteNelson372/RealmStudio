@@ -28,12 +28,12 @@ namespace RealmStudio
 {
     internal sealed class RegionManager : IMapComponentManager
     {
-        public static int POINT_CIRCLE_RADIUS = 5;
+        private static readonly int _pointCircleRadius = 5;
 
-        public static bool EDITING_REGION;
-        public static MapRegionPoint? NEW_REGION_POINT;
-        public static int PREVIOUS_REGION_POINT_INDEX = -1;
-        public static int NEXT_REGION_POINT_INDEX = -1;
+        private static bool _editingRegion;
+        private static MapRegionPoint? _newRegionPoint;
+        private static int _previousRegionPointIndex = -1;
+        private static int _nextRegionPointIndex = -1;
 
         private static RegionUIMediator? _regionUIMediator;
 
@@ -43,12 +43,41 @@ namespace RealmStudio
             set { _regionUIMediator = value; }
         }
 
-        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        public static bool EditingRegion
+        {
+            get { return _editingRegion; }
+            set { _editingRegion = value; }
+        }
+
+        public static MapRegionPoint? NewRegionPoint
+        {
+            get { return _newRegionPoint; }
+            set { _newRegionPoint = value; }
+        }
+
+        public static int PreviousRegionPointIndex
+        {
+            get { return _previousRegionPointIndex; }
+            set { _previousRegionPointIndex = value; }
+        }
+
+        public static int NextRegionPointIndex
+        {
+            get { return _nextRegionPointIndex; }
+            set { _nextRegionPointIndex = value; }
+        }
+
+        public static int PointCircleRadius
+        {
+            get { return _pointCircleRadius; }
+        }
+
+        public static IMapComponent? GetComponentById(Guid componentGuid)
         {
             throw new NotImplementedException();
         }
 
-        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        public static IMapComponent? Create()
         {
             ArgumentNullException.ThrowIfNull(RegionUIMediator);
 
@@ -57,12 +86,12 @@ namespace RealmStudio
                 ParentMap = MapStateMediator.CurrentMap,
             };
 
-            Update(map, null, null);
+            Update();
 
             return MapStateMediator.CurrentMapRegion;
         }
 
-        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        public static bool Update()
         {
             ArgumentNullException.ThrowIfNull(RegionUIMediator);
 
@@ -82,11 +111,11 @@ namespace RealmStudio
             return true;
         }
 
-        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        public static bool Delete()
         {
-            if (component != null)
+            if (MapStateMediator.CurrentMapRegion != null)
             {
-                Cmd_DeleteMapRegion cmd = new(MapStateMediator.CurrentMap, (MapRegion)component);
+                Cmd_DeleteMapRegion cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 
@@ -185,25 +214,23 @@ namespace RealmStudio
             }
         }
 
-        internal static void MoveSelectedRegionInRenderOrder(RealmStudioMap map, MapRegion? currentRegion, ComponentMoveDirection direction)
+        internal static void MoveSelectedRegionInRenderOrder(ComponentMoveDirection direction)
         {
-            if (currentRegion != null)
+            if (MapStateMediator.CurrentMapRegion != null)
             {
                 // find the selected region in the Region Layer MapComponents
-                MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONLAYER);
+                MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.REGIONLAYER);
 
                 List<MapComponent> regionComponents = regionLayer.MapLayerComponents;
-                MapRegion? selectedRegion = null;
 
                 int selectedRegionIndex = 0;
 
                 for (int i = 0; i < regionComponents.Count; i++)
                 {
                     MapComponent regionComponent = regionComponents[i];
-                    if (regionComponent is MapRegion region && region.RegionGuid.ToString() == currentRegion.RegionGuid.ToString())
+                    if (regionComponent is MapRegion region && region.RegionGuid.ToString() == MapStateMediator.CurrentMapRegion.RegionGuid.ToString())
                     {
                         selectedRegionIndex = i;
-                        selectedRegion = region;
                         break;
                     }
                 }
@@ -211,41 +238,43 @@ namespace RealmStudio
                 if (direction == ComponentMoveDirection.Up)
                 {
                     // moving a region up in render order means increasing its index
-                    if (selectedRegion != null && selectedRegionIndex < regionComponents.Count - 1)
+                    if (MapStateMediator.CurrentMapRegion != null && selectedRegionIndex < regionComponents.Count - 1)
                     {
                         regionComponents[selectedRegionIndex] = regionComponents[selectedRegionIndex + 1];
-                        regionComponents[selectedRegionIndex + 1] = selectedRegion;
+                        regionComponents[selectedRegionIndex + 1] = MapStateMediator.CurrentMapRegion;
                     }
                 }
                 else if (direction == ComponentMoveDirection.Down)
                 {
                     // moving a region down in render order means decreasing its index
-                    if (selectedRegion != null && selectedRegionIndex > 0)
+                    if (selectedRegionIndex > 0)
                     {
                         regionComponents[selectedRegionIndex] = regionComponents[selectedRegionIndex - 1];
-                        regionComponents[selectedRegionIndex - 1] = selectedRegion;
+                        regionComponents[selectedRegionIndex - 1] = MapStateMediator.CurrentMapRegion;
                     }
                 }
             }
         }
 
-        internal static void FinalizeMapRegions(RealmStudioMap map)
+        internal static void FinalizeMapRegions()
         {
             // finalize loading of regions
-            MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONLAYER);
+            MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.REGIONLAYER);
             for (int i = 0; i < regionLayer.MapLayerComponents.Count; i++)
             {
                 if (regionLayer.MapLayerComponents[i] is MapRegion region)
                 {
-                    region.ParentMap = map;
+                    region.ParentMap = MapStateMediator.CurrentMap;
                     SKPathEffect? regionBorderEffect = ConstructRegionBorderEffect(region);
                     ConstructRegionPaintObjects(region, regionBorderEffect);
                 }
             }
         }
 
-        internal static void SnapRegionToLandformCoastline(RealmStudioMap map, MapRegion currentMapRegion, SKPoint zoomedScrolledPoint, SKPoint previousCursorPoint)
+        internal static void SnapRegionToLandformCoastline()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
+
             // find the closest point to the current point
             // on the contour path of a coastline;
             // if the nearest point on the coastline
@@ -264,7 +293,7 @@ namespace RealmStudio
 
             float currentDistance = float.MaxValue;
 
-            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
 
             // get the distance from the point the cursor was clicked to the contour points of all landforms
             foreach (Landform lf in landformLayer.MapLayerComponents.Cast<Landform>())
@@ -272,7 +301,7 @@ namespace RealmStudio
                 for (int i = 0; i < lf.ContourPoints.Count; i++)
                 {
                     SKPoint p = lf.ContourPoints[i];
-                    float distance = SKPoint.Distance(zoomedScrolledPoint, p);
+                    float distance = SKPoint.Distance(MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
 
                     if (distance < currentDistance && distance < 5)
                     {
@@ -292,11 +321,11 @@ namespace RealmStudio
             if (landform1 != null && coastlinePointIndex >= 0)
             {
                 MapRegionPoint mrp = new(landform1.ContourPoints[coastlinePointIndex]);
-                currentMapRegion.MapRegionPoints.Add(mrp);
+                MapStateMediator.CurrentMapRegion.MapRegionPoints.Add(mrp);
 
-                if (currentMapRegion.MapRegionPoints.Count > 1 && coastlinePointIndex > 1)
+                if (MapStateMediator.CurrentMapRegion.MapRegionPoints.Count > 1 && coastlinePointIndex > 1)
                 {
-                    SKPoint previousPoint = currentMapRegion.MapRegionPoints[^2].RegionPoint;
+                    SKPoint previousPoint = MapStateMediator.CurrentMapRegion.MapRegionPoints[^2].RegionPoint;
 
                     foreach (Landform lf in landformLayer.MapLayerComponents.Cast<Landform>())
                     {
@@ -322,21 +351,21 @@ namespace RealmStudio
                 && landform1.LandformGuid.ToString() == landform2.LandformGuid.ToString()
                 && coastlinePointIndex >= 0 && previousCoastlinePointIndex >= 0)
             {
-                currentMapRegion.MapRegionPoints.Clear();
+                MapStateMediator.CurrentMapRegion.MapRegionPoints.Clear();
 
-                if (zoomedScrolledPoint.Y < previousCursorPoint.Y)
+                if (MapStateMediator.CurrentCursorPoint.Y < MapStateMediator.PreviousCursorPoint.Y)
                 {
                     // drag mouse up to snap to west coast of landform
                     for (int i = previousCoastlinePointIndex; i < landform1.ContourPoints.Count - 1; i++)
                     {
                         MapRegionPoint mrp = new(landform1.ContourPoints[i]);
-                        currentMapRegion.MapRegionPoints.Add(mrp);
+                        MapStateMediator.CurrentMapRegion.MapRegionPoints.Add(mrp);
                     }
 
                     for (int i = 0; i <= coastlinePointIndex; i++)
                     {
                         MapRegionPoint mrp = new(landform1.ContourPoints[i]);
-                        currentMapRegion.MapRegionPoints.Add(mrp);
+                        MapStateMediator.CurrentMapRegion.MapRegionPoints.Add(mrp);
                     }
                 }
                 else
@@ -347,7 +376,7 @@ namespace RealmStudio
                         for (int i = previousCoastlinePointIndex; i <= coastlinePointIndex; i++)
                         {
                             MapRegionPoint mrp = new(landform1.ContourPoints[i]);
-                            currentMapRegion.MapRegionPoints.Add(mrp);
+                            MapStateMediator.CurrentMapRegion.MapRegionPoints.Add(mrp);
                         }
                     }
                     else
@@ -355,45 +384,49 @@ namespace RealmStudio
                         for (int i = coastlinePointIndex; i <= previousCoastlinePointIndex; i++)
                         {
                             MapRegionPoint mrp = new(landform1.ContourPoints[i]);
-                            currentMapRegion.MapRegionPoints.Add(mrp);
+                            MapStateMediator.CurrentMapRegion.MapRegionPoints.Add(mrp);
                         }
                     }
                 }
             }
         }
 
-        internal static void EndMapRegion(RealmStudioMap map, MapRegion mapRegion, SKPoint zoomedScrolledPoint)
+        internal static void EndMapRegion()
         {
-            MapRegionPoint mrp = new(zoomedScrolledPoint);
-            mapRegion.MapRegionPoints.Add(mrp);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
 
-            Cmd_AddMapRegion cmd = new(map, mapRegion);
+            MapRegionPoint mrp = new(MapStateMediator.CurrentCursorPoint);
+            MapStateMediator.CurrentMapRegion.MapRegionPoints.Add(mrp);
+
+            Cmd_AddMapRegion cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion);
             CommandManager.AddCommand(cmd);
             cmd.DoOperation();
 
-            mapRegion.IsSelected = false;
+            MapStateMediator.CurrentMapRegion.IsSelected = false;
         }
 
-        internal static void DrawRegionOnWorkLayer(RealmStudioMap map, MapRegion mapRegion, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
+        internal static void DrawRegionOnWorkLayer()
         {
-            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
+
+            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER);
             workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-            if (mapRegion.MapRegionPoints.Count > 1)
+            if (MapStateMediator.CurrentMapRegion.MapRegionPoints.Count > 1)
             {
                 // temporarily add the layer click point for rendering
-                MapRegionPoint mrp = new(zoomedScrolledPoint);
-                mapRegion.MapRegionPoints.Add(mrp);
+                MapRegionPoint mrp = new(MapStateMediator.CurrentCursorPoint);
+                MapStateMediator.CurrentMapRegion.MapRegionPoints.Add(mrp);
 
                 // render
-                mapRegion.Render(workLayer.LayerSurface?.Canvas);
+                MapStateMediator.CurrentMapRegion.Render(workLayer.LayerSurface?.Canvas);
 
                 // remove it
-                mapRegion.MapRegionPoints.RemoveAt(mapRegion.MapRegionPoints.Count - 1);
+                MapStateMediator.CurrentMapRegion.MapRegionPoints.RemoveAt(MapStateMediator.CurrentMapRegion.MapRegionPoints.Count - 1);
             }
             else
             {
-                workLayer.LayerSurface?.Canvas.DrawLine(previousPoint, zoomedScrolledPoint, mapRegion.RegionBorderPaint);
+                workLayer.LayerSurface?.Canvas.DrawLine(MapStateMediator.PreviousCursorPoint, MapStateMediator.CurrentCursorPoint, MapStateMediator.CurrentMapRegion.RegionBorderPaint);
             }
         }
 
@@ -426,7 +459,7 @@ namespace RealmStudio
                     // editing (moving) the selected point
                     p.IsSelected = true;
                     selectedMapRegionPoint = p;
-                    EDITING_REGION = true;
+                    _editingRegion = true;
                 }
                 else
                 {
@@ -437,7 +470,7 @@ namespace RealmStudio
             return selectedMapRegionPoint;
         }
 
-        internal static void DrawCoastlinePointOnWorkLayer(RealmStudioMap map, SKPoint zoomedScrolledPoint)
+        internal static void DrawCoastlinePointOnWorkLayer()
         {
             const int maxPointToCoastlineDistance = 5;
 
@@ -457,8 +490,8 @@ namespace RealmStudio
 
             float currentDistance = float.MaxValue;
 
-            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
-            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
+            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
+            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER);
             workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
             // get the distance from the cursor point to the contour points of all landforms
@@ -467,7 +500,7 @@ namespace RealmStudio
                 for (int i = 0; i < lf.ContourPoints.Count; i++)
                 {
                     SKPoint p = lf.ContourPoints[i];
-                    float distance = SKPoint.Distance(zoomedScrolledPoint, p);
+                    float distance = SKPoint.Distance(MapStateMediator.CurrentCursorPoint, p);
 
                     if (distance < currentDistance && distance < maxPointToCoastlineDistance)
                     {
@@ -503,7 +536,7 @@ namespace RealmStudio
                 }
                 else
                 {
-                    if (!EDITING_REGION)
+                    if (!_editingRegion)
                     {
                         p.IsSelected = false;
                     }
@@ -513,47 +546,49 @@ namespace RealmStudio
             return regionPointSelected;
         }
 
-        internal static void DrawRegionPointOnWorkLayer(RealmStudioMap map, MapRegion mapRegion, SKPoint zoomedScrolledPoint)
+        internal static void DrawRegionPointOnWorkLayer()
         {
-            MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
 
-            PREVIOUS_REGION_POINT_INDEX = -1;
-            NEXT_REGION_POINT_INDEX = -1;
-            NEW_REGION_POINT = null;
+            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+            _previousRegionPointIndex = -1;
+            _nextRegionPointIndex = -1;
+            _newRegionPoint = null;
 
             // is the cursor on a line segment between 2 region vertices? if so, draw a circle at the cursor location
-            for (int i = 0; i < mapRegion.MapRegionPoints.Count - 1; i++)
+            for (int i = 0; i < MapStateMediator.CurrentMapRegion.MapRegionPoints.Count - 1; i++)
             {
-                if (DrawingMethods.LineContainsPoint(zoomedScrolledPoint,
-                    mapRegion.MapRegionPoints[i].RegionPoint, mapRegion.MapRegionPoints[i + 1].RegionPoint))
+                if (DrawingMethods.LineContainsPoint(MapStateMediator.CurrentCursorPoint,
+                    MapStateMediator.CurrentMapRegion.MapRegionPoints[i].RegionPoint, MapStateMediator.CurrentMapRegion.MapRegionPoints[i + 1].RegionPoint))
                 {
-                    EDITING_REGION = true;
+                    _editingRegion = true;
 
-                    PREVIOUS_REGION_POINT_INDEX = i;
-                    NEXT_REGION_POINT_INDEX = i + 1;
+                    _previousRegionPointIndex = i;
+                    _nextRegionPointIndex = i + 1;
 
-                    NEW_REGION_POINT = new MapRegionPoint(zoomedScrolledPoint);
+                    _newRegionPoint = new MapRegionPoint(MapStateMediator.CurrentCursorPoint);
 
-                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(zoomedScrolledPoint, POINT_CIRCLE_RADIUS, PaintObjects.RegionNewPointFillPaint);
-                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(zoomedScrolledPoint, POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
+                    MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(MapStateMediator.CurrentCursorPoint, _pointCircleRadius, PaintObjects.RegionNewPointFillPaint);
+                    MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(MapStateMediator.CurrentCursorPoint, _pointCircleRadius, PaintObjects.RegionPointOutlinePaint);
 
                     break;
                 }
             }
 
             // is the cursor on the segment between the first and last region vertices?
-            if (DrawingMethods.LineContainsPoint(zoomedScrolledPoint, mapRegion.MapRegionPoints[0].RegionPoint,
-                mapRegion.MapRegionPoints[^1].RegionPoint))
+            if (DrawingMethods.LineContainsPoint(MapStateMediator.CurrentCursorPoint, MapStateMediator.CurrentMapRegion.MapRegionPoints[0].RegionPoint,
+                MapStateMediator.CurrentMapRegion.MapRegionPoints[^1].RegionPoint))
             {
-                EDITING_REGION = true;
+                _editingRegion = true;
 
-                PREVIOUS_REGION_POINT_INDEX = 0;
-                NEXT_REGION_POINT_INDEX = mapRegion.MapRegionPoints.Count;
+                _previousRegionPointIndex = 0;
+                _nextRegionPointIndex = MapStateMediator.CurrentMapRegion.MapRegionPoints.Count;
 
-                NEW_REGION_POINT = new MapRegionPoint(zoomedScrolledPoint);
+                _newRegionPoint = new MapRegionPoint(MapStateMediator.CurrentCursorPoint);
 
-                MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(zoomedScrolledPoint, POINT_CIRCLE_RADIUS, PaintObjects.RegionNewPointFillPaint);
-                MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(zoomedScrolledPoint, POINT_CIRCLE_RADIUS, PaintObjects.RegionPointOutlinePaint);
+                MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(MapStateMediator.CurrentCursorPoint, _pointCircleRadius, PaintObjects.RegionNewPointFillPaint);
+                MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(MapStateMediator.CurrentCursorPoint, _pointCircleRadius, PaintObjects.RegionPointOutlinePaint);
             }
         }
 

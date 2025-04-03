@@ -67,7 +67,7 @@ namespace RealmStudio
         [XmlElement(IsNullable = true)] public int? LabelGlowStrength { get; set; }
         [XmlElement(IsNullable = true)] public int? VignetteColor { get; set; } = ColorTranslator.FromHtml("#C9977B").ToArgb();
         [XmlElement(IsNullable = true)] public int? VignetteStrength { get; set; } = 148;
-        [XmlElement(IsNullable = true)] public bool? RectangleVignette { get; set; } = false;
+        [XmlElement(IsNullable = true)] public VignetteShapeType? VignetteShape { get; set; } = VignetteShapeType.Oval;
         [XmlArray(IsNullable = true)] public int?[]? SymbolCustomColors { get; set; } = [Color.Empty.ToArgb(), Color.Empty.ToArgb(), Color.Empty.ToArgb(), Color.Empty.ToArgb()];
 
     }

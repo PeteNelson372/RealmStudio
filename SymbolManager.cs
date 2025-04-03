@@ -32,7 +32,7 @@ namespace RealmStudio
 {
     internal sealed class SymbolManager : IMapComponentManager
     {
-        private static MapSymbolUIMediator? _symbolUIMediator;
+        private static SymbolUIMediator? _symbolUIMediator;
 
         private static MapSymbolType _selectedSymbolType = MapSymbolType.NotSet;
         private static string _defaultSymbolDirectory = AssetManager.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols";
@@ -41,7 +41,7 @@ namespace RealmStudio
         private static MapSymbol? _selectedSymbolTableMapSymbol;
         private static readonly List<MapSymbol> _secondarySelectedSymbols = [];
 
-        internal static MapSymbolUIMediator? SymbolUIMediator
+        internal static SymbolUIMediator? SymbolUIMediator
         {
             get { return _symbolUIMediator; }
             set { _symbolUIMediator = value; }
@@ -86,29 +86,27 @@ namespace RealmStudio
             get { return _secondarySelectedSymbols; }
         }
 
-        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        public static IMapComponent? GetComponentById(Guid componentGuid)
         {
             throw new NotImplementedException();
         }
 
-        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        public static IMapComponent? Create()
         {
             throw new NotImplementedException();
         }
 
-        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        public static bool Update()
         {
             return true;
             //throw new NotImplementedException();
         }
 
-        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        public static bool Delete()
         {
-            ArgumentNullException.ThrowIfNull(map);
-
-            if (component != null)
+            if (MapStateMediator.SelectedMapSymbol != null)
             {
-                Cmd_RemoveSymbol cmd = new(map, (MapSymbol)component);
+                Cmd_RemoveSymbol cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapSymbol);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 
@@ -124,7 +122,7 @@ namespace RealmStudio
         {
             if (mapSymbol != null && bitmap != null)
             {
-                map.IsSaved = false;
+                MapStateMediator.CurrentMap.IsSaved = false;
 
                 MapSymbol placedSymbol = new(mapSymbol)
                 {
@@ -138,17 +136,17 @@ namespace RealmStudio
 
                 placedSymbol.SetPlacedBitmap(bitmap);
 
-                Cmd_PlaceSymbol cmd = new(map, placedSymbol);
+                Cmd_PlaceSymbol cmd = new(MapStateMediator.CurrentMap, placedSymbol);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
             }
         }
 
-        internal static void PlaceVectorSymbolOnMap(RealmStudioMap map, MapSymbol? mapSymbol, SKBitmap vectorBitmap, SKPoint cursorPoint)
+        internal static void PlaceVectorSymbolOnMap(MapSymbol? mapSymbol, SKBitmap vectorBitmap, SKPoint cursorPoint)
         {
             if (mapSymbol != null)
             {
-                map.IsSaved = false;
+                MapStateMediator.CurrentMap.IsSaved = false;
                 MapSymbol placedSymbol = new(mapSymbol)
                 {
                     X = (int)cursorPoint.X,
@@ -173,7 +171,7 @@ namespace RealmStudio
 
                 placedSymbol.SymbolPaint = vectorPaint;
 
-                Cmd_PlaceSymbol cmd = new(map, placedSymbol);
+                Cmd_PlaceSymbol cmd = new(MapStateMediator.CurrentMap, placedSymbol);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
             }
@@ -181,7 +179,7 @@ namespace RealmStudio
 
         internal static void RemovePlacedSymbolsFromArea(RealmStudioMap map, SKPoint centerPoint, float eraserCircleRadius)
         {
-            Cmd_RemoveSymbolsFromArea cmd = new(map, eraserCircleRadius, centerPoint);
+            Cmd_RemoveSymbolsFromArea cmd = new(MapStateMediator.CurrentMap, eraserCircleRadius, centerPoint);
             CommandManager.AddCommand(cmd);
             cmd.DoOperation();
         }
@@ -364,7 +362,7 @@ namespace RealmStudio
 
             bool canPlace = true;
 
-            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER);
+            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER);
 
             for (int i = 0; i < symbolLayer.MapLayerComponents.Count; i++)
             {
@@ -384,7 +382,7 @@ namespace RealmStudio
 
         internal static void ColorSymbolsInArea(RealmStudioMap map, SKPoint colorCursorPoint, int colorBrushRadius, Color[] symbolColors, bool randomizeColors)
         {
-            List<MapComponent> components = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER).MapLayerComponents;
+            List<MapComponent> components = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER).MapLayerComponents;
 
             foreach (MapComponent component in components)
             {
@@ -590,10 +588,10 @@ namespace RealmStudio
             }
         }
 
-        internal static void FinalizeMapSymbols(RealmStudioMap map)
+        internal static void FinalizeMapSymbols()
         {
             // finalize loading of symbols
-            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER);
+            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER);
 
             for (int i = 0; i < symbolLayer.MapLayerComponents.Count; i++)
             {
@@ -884,7 +882,7 @@ namespace RealmStudio
                         symbolToPlace.Width = b.Width;
                         symbolToPlace.Height = b.Height;
 
-                        PlaceVectorSymbolOnMap(MapStateMediator.CurrentMap, SelectedSymbolTableMapSymbol, b, cursorPoint);
+                        PlaceVectorSymbolOnMap(SelectedSymbolTableMapSymbol, b, cursorPoint);
                     }
                 }
             }
@@ -894,7 +892,7 @@ namespace RealmStudio
         {
             if (SymbolUIMediator == null) return null;
 
-            Bitmap pbm = new(MapSymbolUIMediator.SymbolPictureBoxWidth - 2, MapSymbolUIMediator.SymbolPictureBoxHeight - 8);
+            Bitmap pbm = new(SymbolUIMediator.SymbolPictureBoxWidth - 2, SymbolUIMediator.SymbolPictureBoxHeight - 8);
 
             if (symbol.SymbolFormat != SymbolFileFormat.Vector)
             {
@@ -925,7 +923,7 @@ namespace RealmStudio
                 symbol.ColorMappedBitmap = Extensions.ToSKBitmap((Bitmap)colorMappedBitmap.Clone());
 
                 pbm = DrawingMethods.ScaleBitmap(colorMappedBitmap,
-                    MapSymbolUIMediator.SymbolPictureBoxWidth - 2, MapSymbolUIMediator.SymbolPictureBoxHeight - 8);
+                    SymbolUIMediator.SymbolPictureBoxWidth - 2, SymbolUIMediator.SymbolPictureBoxHeight - 8);
                 colorMappedBitmap.Dispose();
             }
             else
@@ -935,7 +933,7 @@ namespace RealmStudio
                 var skSvg = new SKSvg();
                 skSvg.Load(ms);
 
-                using SKBitmap b = new(new SKImageInfo(MapSymbolUIMediator.SymbolPictureBoxHeight - 8, MapSymbolUIMediator.SymbolPictureBoxHeight - 8));
+                using SKBitmap b = new(new SKImageInfo(SymbolUIMediator.SymbolPictureBoxHeight - 8, SymbolUIMediator.SymbolPictureBoxHeight - 8));
                 using SKCanvas c = new(b);
 
                 /*
@@ -952,8 +950,8 @@ namespace RealmStudio
 
                 if (skSvg.Picture != null)
                 {
-                    SKMatrix matrix = SKMatrix.CreateScale((MapSymbolUIMediator.SymbolPictureBoxHeight - 8) / skSvg.Picture.CullRect.Width,
-                        (MapSymbolUIMediator.SymbolPictureBoxHeight - 8) / skSvg.Picture.CullRect.Height);
+                    SKMatrix matrix = SKMatrix.CreateScale((SymbolUIMediator.SymbolPictureBoxHeight - 8) / skSvg.Picture.CullRect.Width,
+                        (SymbolUIMediator.SymbolPictureBoxHeight - 8) / skSvg.Picture.CullRect.Height);
 
                     c.DrawPicture(skSvg.Picture, in matrix);
 

@@ -270,4 +270,10 @@ namespace RealmStudio
         BottomRight,
         DetailMap
     }
+
+    public enum VignetteShapeType
+    {
+        Oval,
+        Rectangle
+    }
 }

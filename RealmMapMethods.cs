@@ -1513,23 +1513,23 @@ namespace RealmStudio
 
         internal static void FinalizeMap(RealmStudioMap map, SKGLControl glControl)
         {
-            OceanMethods.FinalizeOceanLayer(map);
+            OceanManager.FinalizeOceanLayer();
 
-            LandformManager.FinalizeLandforms(map, glControl);
+            LandformManager.FinalizeLandforms(glControl);
 
-            WaterFeatureManager.FinalizeWaterFeatures(map);
+            WaterFeatureManager.FinalizeWaterFeatures();
 
-            PathManager.FinalizeMapPaths(map);
+            PathManager.FinalizeMapPaths();
 
-            SymbolManager.FinalizeMapSymbols(map);
+            SymbolManager.FinalizeMapSymbols();
 
-            WaterFeatureManager.FinalizeWindroses(map);
+            WaterFeatureManager.FinalizeWindroses();
 
-            BoxManager.FinalizeMapBoxes(map);
+            BoxManager.FinalizeMapBoxes();
 
-            RegionManager.FinalizeMapRegions(map);
+            RegionManager.FinalizeMapRegions();
 
-            BackgroundMethods.FinalizeMapVignette(map, glControl);
+            VignetteManager.FinalizeMapVignette();
         }
 
         internal static void PruneOldBackupsOfMap(RealmStudioMap map, int backupCount)

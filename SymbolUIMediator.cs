@@ -27,7 +27,7 @@ using System.ComponentModel;
 
 namespace RealmStudio
 {
-    internal sealed class MapSymbolUIMediator : IUIMediatorObserver
+    internal sealed class SymbolUIMediator : IUIMediatorObserver
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -55,7 +55,7 @@ namespace RealmStudio
         private const int _pictureBoxWidth = 120;
         private const int _pictureBoxHeight = 45;
 
-        internal MapSymbolUIMediator(RealmStudioMainForm mainForm)
+        internal SymbolUIMediator(RealmStudioMainForm mainForm)
         {
             MainForm = mainForm;
             _symbolTable = mainForm.SymbolTable;
@@ -234,7 +234,7 @@ namespace RealmStudio
             if (MapStateMediator.CurrentMap != null)
             {
                 UpdateSymbolUI(changedPropertyName);
-                SymbolManager.Update(MapStateMediator.CurrentMap, MapState, this);
+                SymbolManager.Update();
 
                 MainForm.SKGLRenderControl.Invalidate();
             }

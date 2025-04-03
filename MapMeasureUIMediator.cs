@@ -96,7 +96,7 @@ namespace RealmStudio
         public void NotifyUpdate(string? changedPropertyName)
         {
             UpdateMapMeasureUI();
-            MapMeasureManager.Update(MapStateMediator.CurrentMap, MapState, this);
+            MapMeasureManager.Update();
             MainForm.SKGLRenderControl.Invalidate();
         }
 

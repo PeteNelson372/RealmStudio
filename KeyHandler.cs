@@ -60,7 +60,7 @@ namespace RealmStudio
                                 break;
                             case MapDrawingMode.RegionSelect:
                                 {
-                                    RegionManager.MoveSelectedRegionInRenderOrder(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion, ComponentMoveDirection.Up);
+                                    RegionManager.MoveSelectedRegionInRenderOrder(ComponentMoveDirection.Up);
                                 }
                                 break;
                         }
@@ -84,7 +84,7 @@ namespace RealmStudio
                                 break;
                             case MapDrawingMode.RegionSelect:
                                 {
-                                    RegionManager.MoveSelectedRegionInRenderOrder(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion, ComponentMoveDirection.Down);
+                                    RegionManager.MoveSelectedRegionInRenderOrder(ComponentMoveDirection.Down);
                                 }
                                 break;
                         }

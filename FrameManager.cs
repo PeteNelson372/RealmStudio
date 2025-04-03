@@ -36,9 +36,8 @@ namespace RealmStudio
             set { _frameMediator = value; }
         }
 
-        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        public static IMapComponent? Create()
         {
-            ArgumentNullException.ThrowIfNull(map);
             ArgumentNullException.ThrowIfNull(FrameMediator);
 
             if (FrameMediator.Frame == null || FrameMediator.Frame.FrameBitmap == null) return null;
@@ -47,8 +46,8 @@ namespace RealmStudio
             {
                 X = 0,
                 Y = 0,
-                Width = map.MapWidth,
-                Height = map.MapHeight,
+                Width = MapStateMediator.CurrentMap.MapWidth,
+                Height = MapStateMediator.CurrentMap.MapHeight,
                 FrameBitmap = FrameMediator.Frame.FrameBitmap.Copy(),
                 FrameScale = FrameMediator.FrameScale / 100.0F,
                 FrameCenterLeft = FrameMediator.Frame.FrameCenterLeft,
@@ -70,22 +69,20 @@ namespace RealmStudio
 
             CompletePlacedFrame(mapFrame);
 
-            MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents.Add(mapFrame);
+            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Add(mapFrame);
 
             return mapFrame;
         }
 
-        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        public static bool Delete()
         {
-            ArgumentNullException.ThrowIfNull(map);
-
             // there can only be one frame on the map, so remove any existing frame
-            MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents.Clear();
+            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Clear();
 
             return true;
         }
 
-        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        public static IMapComponent? GetComponentById(Guid componentGuid)
         {
             // there is only one frame, so ignore componentGuid (pass Guid.Empty to this method)
             if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Count > 0)
@@ -96,9 +93,8 @@ namespace RealmStudio
             return null;
         }
 
-        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        public static bool Update()
         {
-            ArgumentNullException.ThrowIfNull(map);
             ArgumentNullException.ThrowIfNull(FrameMediator);
 
             if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Count > 0)

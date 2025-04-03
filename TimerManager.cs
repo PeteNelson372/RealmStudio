@@ -31,7 +31,7 @@ namespace RealmStudio
         private bool disposedValue;
 
         private readonly RealmStudioMainForm MainForm = mainForm;
-        private MapSymbolUIMediator? _symbolUIMediator;
+        private SymbolUIMediator? _symbolUIMediator;
 
         private System.Timers.Timer? _autosaveTimer;
         private System.Timers.Timer? _brushTimer;
@@ -41,7 +41,7 @@ namespace RealmStudio
         private bool brushTimerEnabled;
         private bool symbolAreaBrushEnabled;
 
-        internal MapSymbolUIMediator? SymbolUIMediator
+        internal SymbolUIMediator? SymbolUIMediator
         {
             get { return _symbolUIMediator; }
             set { _symbolUIMediator = value; }

@@ -69,17 +69,17 @@ namespace RealmStudio
         }
 
 
-        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        public static IMapComponent? GetComponentById(Guid componentGuid)
         {
             throw new NotImplementedException();
         }
 
-        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        public static IMapComponent? Create()
         {
             throw new NotImplementedException();
         }
 
-        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        public static bool Update()
         {
             ArgumentNullException.ThrowIfNull(LabelMediator);
 
@@ -110,13 +110,11 @@ namespace RealmStudio
             return false;
         }
 
-        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        public static bool Delete()
         {
-            ArgumentNullException.ThrowIfNull(map);
-
-            if (component != null)
+            if (MapStateMediator.SelectedMapLabel != null)
             {
-                Cmd_DeleteLabel cmd = new(map, (MapLabel)component);
+                Cmd_DeleteLabel cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapLabel);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
 

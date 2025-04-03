@@ -30,9 +30,9 @@ namespace RealmStudio
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private readonly RealmStudioMainForm MainForm;
-        private MapStateMediator? _mapState;
 
         private readonly List<MapTexture> _landTextureList = [];
+        private int _landformTextureIndex;
 
         private bool _showLandformLayers = true;
 
@@ -44,11 +44,10 @@ namespace RealmStudio
         private Color _landOutlineColor = Color.FromArgb(62, 55, 40);
         private Color _landBackgroundColor = Color.White;
         private Color _coastlineColor = Color.FromArgb(187, 156, 195, 183);
+        private string _coastlineStyle = "Dash Pattern";
         private int _coastlineEffectDistance;
         private int _landOutlineWidth = 2;
         private bool _useTextureBackground = true;
-
-        private int _landformTextureIndex;
 
         private GeneratedLandformType _generatedLandformType = GeneratedLandformType.Region;
 
@@ -59,12 +58,6 @@ namespace RealmStudio
         }
 
         #region Property Setters/Getters
-
-        public MapStateMediator? MapState
-        {
-            get { return _mapState; }
-            set { _mapState = value; }
-        }
 
         internal bool ShowLandformLayers
         {
@@ -118,6 +111,12 @@ namespace RealmStudio
                     SetPropertyField(nameof(CoastlineColor), ref _coastlineColor, value);
                 }
             }
+        }
+
+        internal string CoastlineStyle
+        {
+            get { return _coastlineStyle; }
+            set { SetPropertyField(nameof(CoastlineStyle), ref _coastlineStyle, value); }
         }
 
         internal int LandFormBrushSize
@@ -198,7 +197,7 @@ namespace RealmStudio
         public void NotifyUpdate(string? changedPropertyName)
         {
             UpdateLandformUI(changedPropertyName);
-            LandformManager.Update(MapStateMediator.CurrentMap, MapState, this);
+            LandformManager.Update();
             MainForm.SKGLRenderControl.Invalidate();
         }
 
@@ -230,7 +229,7 @@ namespace RealmStudio
                     }
                     else if (changedPropertyName == "LandformTextureIndex")
                     {
-                        UpdateLandTextureComboBox();
+                        UpdateLandTexture();
                     }
                     else if (changedPropertyName == "LandformGenerationType")
                     {
@@ -292,7 +291,7 @@ namespace RealmStudio
 
         #region Landform UI Methods
 
-        private void UpdateLandTextureComboBox()
+        private void UpdateLandTexture()
         {
             if (LandformTextureIndex < 0)
             {

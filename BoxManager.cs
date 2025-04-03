@@ -37,9 +37,8 @@ namespace RealmStudio
             set { _boxMediator = value; }
         }
 
-        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        public static IMapComponent? Create()
         {
-            ArgumentNullException.ThrowIfNull(map);
             ArgumentNullException.ThrowIfNull(BoxMediator);
 
             if (BoxMediator.Box == null || BoxMediator.Box.BoxBitmap == null) return null;
@@ -75,18 +74,18 @@ namespace RealmStudio
 
             newPlacedMapBox.BoxPaint = PaintObjects.BoxPaint.Clone();
 
-            Cmd_AddLabelBox cmd = new(map, newPlacedMapBox);
+            Cmd_AddLabelBox cmd = new(MapStateMediator.CurrentMap, newPlacedMapBox);
             CommandManager.AddCommand(cmd);
             cmd.DoOperation();
 
             return newPlacedMapBox;
         }
 
-        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        public static bool Delete()
         {
-            if (component == null) return false;
+            if (MapStateMediator.SelectedPlacedMapBox == null) return false;
 
-            Cmd_DeleteLabelBox cmd = new(MapStateMediator.CurrentMap, (PlacedMapBox)component);
+            Cmd_DeleteLabelBox cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedPlacedMapBox);
             CommandManager.AddCommand(cmd);
             cmd.DoOperation();
 
@@ -95,11 +94,10 @@ namespace RealmStudio
             return true;
         }
 
-        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        public static IMapComponent? GetComponentById(Guid componentGuid)
         {
-            ArgumentNullException.ThrowIfNull(map);
-
-            List<MapComponent> mapLabelComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BOXLAYER).MapLayerComponents;
+            List<MapComponent> mapLabelComponents = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap,
+                MapBuilder.BOXLAYER).MapLayerComponents;
 
             for (int i = 0; i < mapLabelComponents.Count; i++)
             {
@@ -112,7 +110,7 @@ namespace RealmStudio
             return null;
         }
 
-        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        public static bool Update()
         {
             ArgumentNullException.ThrowIfNull(BoxMediator);
             if (MapStateMediator.SelectedPlacedMapBox == null) return false;
@@ -208,10 +206,10 @@ namespace RealmStudio
             return newPlacedMapBox;
         }
 
-        internal static void FinalizeMapBoxes(RealmStudioMap map)
+        internal static void FinalizeMapBoxes()
         {
             // finalize loading of placed map boxes
-            MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BOXLAYER);
+            MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BOXLAYER);
 
             // TODO: why is this here?
             for (int i = 0; i < boxLayer.MapLayerComponents.Count; i++)

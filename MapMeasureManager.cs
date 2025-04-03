@@ -37,15 +37,14 @@ namespace RealmStudio
             set { _measureUIMediator = value; }
         }
 
-        public static IMapComponent? Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        public static IMapComponent? Create()
         {
-            ArgumentNullException.ThrowIfNull(map);
             ArgumentNullException.ThrowIfNull(MeasureUIMediator);
 
             // make sure there is only one measure object
-            Delete(map, null);
+            Delete();
 
-            MapMeasure? newMapMeasure = new(map)
+            MapMeasure? newMapMeasure = new(MapStateMediator.CurrentMap)
             {
                 UseMapUnits = MeasureUIMediator.UseScaleUnits,
                 MeasureArea = MeasureUIMediator.MeasureArea,
@@ -53,25 +52,23 @@ namespace RealmStudio
             };
 
             MapStateMediator.CurrentMapMeasure = newMapMeasure;
-            MapBuilder.GetMapLayerByIndex(map, MapBuilder.MEASURELAYER).MapLayerComponents.Add(newMapMeasure);
+            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).MapLayerComponents.Add(newMapMeasure);
 
             return newMapMeasure;
         }
 
-        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        public static bool Delete()
         {
             MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).MapLayerComponents.Clear();
             MapStateMediator.CurrentMapMeasure = null;
             return true;
         }
 
-        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        public static IMapComponent? GetComponentById(Guid componentGuid)
         {
-            ArgumentNullException.ThrowIfNull(map);
-
             MapScale? component = null;
 
-            foreach (MapScale ms in MapBuilder.GetMapLayerByIndex(map, MapBuilder.MEASURELAYER).MapLayerComponents.Cast<MapScale>())
+            foreach (MapScale ms in MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).MapLayerComponents.Cast<MapScale>())
             {
                 if (ms.ScaleGuid.ToString() == componentGuid.ToString())
                 {
@@ -83,7 +80,7 @@ namespace RealmStudio
             return component;
         }
 
-        public static bool Update(RealmStudioMap? map, MapStateMediator? MapStateMediator, IUIMediatorObserver? mediator)
+        public static bool Update()
         {
             ArgumentNullException.ThrowIfNull(MeasureUIMediator);
 
@@ -121,7 +118,7 @@ namespace RealmStudio
 
         internal static void DrawMapMeasureOnWorkLayer(RealmStudioMap map, MapMeasure mapMeasure, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
         {
-            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
+            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER);
             workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
             if (mapMeasure.MeasureArea && mapMeasure.MeasurePoints.Count > 1)

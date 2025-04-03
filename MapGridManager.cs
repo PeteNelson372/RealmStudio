@@ -39,23 +39,22 @@ namespace RealmStudio
 
         // CRUD, Add and Get operations on MapGrid objects
 
-        public static IMapComponent Create(RealmStudioMap? map, IUIMediatorObserver? mediator)
+        public static IMapComponent Create()
         {
-            ArgumentNullException.ThrowIfNull(map);
             ArgumentNullException.ThrowIfNull(GridUIMediator);
 
-            Delete(map, null);
+            Delete();
 
             MapGrid newGrid = new()
             {
-                ParentMap = map,
+                ParentMap = MapStateMediator.CurrentMap,
                 GridType = GridUIMediator.GridType,
                 GridEnabled = true,
                 GridColor = GridUIMediator.GridColor,
                 GridLineWidth = GridUIMediator.GridLineWidth,
                 GridSize = GridUIMediator.GridSize,
-                Width = map.MapWidth,
-                Height = map.MapHeight,
+                Width = MapStateMediator.CurrentMap.MapWidth,
+                Height = MapStateMediator.CurrentMap.MapHeight,
                 GridLayerIndex = GridUIMediator.GridLayerIndex
             };
 
@@ -72,41 +71,39 @@ namespace RealmStudio
                 StrokeJoin = SKStrokeJoin.Bevel
             };
 
-            MapBuilder.GetMapLayerByIndex(map, newGrid.GridLayerIndex).MapLayerComponents.Add(newGrid);
+            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, newGrid.GridLayerIndex).MapLayerComponents.Add(newGrid);
             MapStateMediator.CurrentMapGrid = newGrid;
 
             return MapStateMediator.CurrentMapGrid;
         }
 
-        public static bool Delete(RealmStudioMap? map, IMapComponent? component)
+        public static bool Delete()
         {
-            ArgumentNullException.ThrowIfNull(map);
-
             // there is only one grid, so find it in the layers it could be in and delete it
 
-            for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
+            for (int i = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
-                if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents[i] is MapGrid)
+                if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents[i] is MapGrid)
                 {
-                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.RemoveAt(i);
+                    MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.RemoveAt(i);
                     break;
                 }
             }
 
-            for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
+            for (int i = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
-                if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents[i] is MapGrid)
+                if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents[i] is MapGrid)
                 {
-                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.RemoveAt(i);
+                    MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.RemoveAt(i);
                     break;
                 }
             }
 
-            for (int i = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
+            for (int i = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
-                if (MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents[i] is MapGrid)
+                if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents[i] is MapGrid)
                 {
-                    MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.RemoveAt(i);
+                    MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.RemoveAt(i);
                     break;
                 }
             }
@@ -114,13 +111,11 @@ namespace RealmStudio
             return true;
         }
 
-        public static IMapComponent? GetComponentById(RealmStudioMap? map, Guid componentGuid)
+        public static IMapComponent? GetComponentById(Guid componentGuid)
         {
-            ArgumentNullException.ThrowIfNull(map);
-
             MapGrid? component = null;
 
-            foreach (MapGrid mg in MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents)
+            foreach (MapGrid mg in MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents)
             {
                 if (mg.GridGuid.ToString() == componentGuid.ToString())
                 {
@@ -129,7 +124,7 @@ namespace RealmStudio
                 }
             }
 
-            foreach (MapGrid mg in MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents)
+            foreach (MapGrid mg in MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents)
             {
                 if (mg.GridGuid.ToString() == componentGuid.ToString())
                 {
@@ -138,7 +133,7 @@ namespace RealmStudio
                 }
             }
 
-            foreach (MapGrid mg in MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents)
+            foreach (MapGrid mg in MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents)
             {
                 if (mg.GridGuid.ToString() == componentGuid.ToString())
                 {
@@ -150,7 +145,7 @@ namespace RealmStudio
             return component;
         }
 
-        public static bool Update(RealmStudioMap? map, MapStateMediator? mapState, IUIMediatorObserver? mediator)
+        public static bool Update()
         {
             ArgumentNullException.ThrowIfNull(GridUIMediator);
 
@@ -181,12 +176,12 @@ namespace RealmStudio
             return true;
         }
 
-        internal static MapGrid? FinalizeMapGrid(RealmStudioMap map)
+        internal static MapGrid? FinalizeMapGrid()
         {
             // finalize loading of grid
             MapGrid? currentMapGrid = null;
 
-            MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.DEFAULTGRIDLAYER);
+            MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER);
             for (int i = 0; i < defaultGridLayer.MapLayerComponents.Count; i++)
             {
                 if (defaultGridLayer.MapLayerComponents[i] is MapGrid grid)
@@ -200,7 +195,7 @@ namespace RealmStudio
 
             if (currentMapGrid == null)
             {
-                MapLayer oceanGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.ABOVEOCEANGRIDLAYER);
+                MapLayer oceanGridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.ABOVEOCEANGRIDLAYER);
                 for (int i = 0; i < oceanGridLayer.MapLayerComponents.Count; i++)
                 {
                     if (oceanGridLayer.MapLayerComponents[i] is MapGrid grid)
@@ -215,7 +210,7 @@ namespace RealmStudio
 
             if (currentMapGrid == null)
             {
-                MapLayer symbolGridLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BELOWSYMBOLSGRIDLAYER);
+                MapLayer symbolGridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BELOWSYMBOLSGRIDLAYER);
                 for (int i = 0; i < symbolGridLayer.MapLayerComponents.Count; i++)
                 {
                     if (symbolGridLayer.MapLayerComponents[i] is MapGrid grid)
