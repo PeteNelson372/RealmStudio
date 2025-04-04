@@ -5,36 +5,36 @@ namespace RealmStudio
 {
     internal sealed class MapScaleManager : IMapComponentManager
     {
-        private static MapScaleUIMediator? _scaleUIMediator;
+        private static MapScaleUIMediator? _scaleMediator;
 
-        internal static MapScaleUIMediator? ScaleUIMediator
+        internal static MapScaleUIMediator? ScaleMediator
         {
-            get { return _scaleUIMediator; }
-            set { _scaleUIMediator = value; }
+            get { return _scaleMediator; }
+            set { _scaleMediator = value; }
         }
 
         public static IMapComponent? Create()
         {
-            ArgumentNullException.ThrowIfNull(ScaleUIMediator);
+            ArgumentNullException.ThrowIfNull(ScaleMediator);
 
             MapScale mapScale = new()
             {
                 X = 100,
                 Y = MapStateMediator.CurrentMap.MapHeight - 100,
-                Width = ScaleUIMediator.ScaleWidth,
-                Height = ScaleUIMediator.ScaleHeight,
-                ScaleSegmentCount = ScaleUIMediator.SegmentCount,
-                ScaleLineWidth = ScaleUIMediator.ScaleLineWidth,
-                ScaleColor1 = ScaleUIMediator.ScaleColor1,
-                ScaleColor2 = ScaleUIMediator.ScaleColor2,
-                ScaleColor3 = ScaleUIMediator.ScaleColor3,
-                ScaleDistance = ScaleUIMediator.SegmentDistance,
-                ScaleDistanceUnit = string.IsNullOrEmpty(ScaleUIMediator.ScaleUnitsText) ? "" : ScaleUIMediator.ScaleUnitsText,
-                ScaleFontColor = ScaleUIMediator.ScaleFontColor,
-                ScaleOutlineWidth = ScaleUIMediator.ScaleOutlineWidth,
-                ScaleOutlineColor = ScaleUIMediator.ScaleNumberOutlineColor,
-                ScaleFont = ScaleUIMediator.ScaleFont,
-                ScaleNumbersDisplayType = ScaleUIMediator.ScaleNumbersDisplayType,
+                Width = ScaleMediator.ScaleWidth,
+                Height = ScaleMediator.ScaleHeight,
+                ScaleSegmentCount = ScaleMediator.SegmentCount,
+                ScaleLineWidth = ScaleMediator.ScaleLineWidth,
+                ScaleColor1 = ScaleMediator.ScaleColor1,
+                ScaleColor2 = ScaleMediator.ScaleColor2,
+                ScaleColor3 = ScaleMediator.ScaleColor3,
+                ScaleDistance = ScaleMediator.SegmentDistance,
+                ScaleDistanceUnit = string.IsNullOrEmpty(ScaleMediator.ScaleUnitsText) ? "" : ScaleMediator.ScaleUnitsText,
+                ScaleFontColor = ScaleMediator.ScaleFontColor,
+                ScaleOutlineWidth = ScaleMediator.ScaleOutlineWidth,
+                ScaleOutlineColor = ScaleMediator.ScaleNumberOutlineColor,
+                ScaleFont = ScaleMediator.ScaleFont,
+                ScaleNumbersDisplayType = ScaleMediator.ScaleNumbersDisplayType,
             };
 
             Cmd_AddMapScale cmd = new(MapStateMediator.CurrentMap, mapScale);
@@ -78,7 +78,7 @@ namespace RealmStudio
 
         public static bool Update()
         {
-            ArgumentNullException.ThrowIfNull(ScaleUIMediator);
+            ArgumentNullException.ThrowIfNull(ScaleMediator);
 
             if (MapStateMediator.CurrentMapScale != null)
             {
@@ -86,20 +86,20 @@ namespace RealmStudio
 
                 if (scale != null)
                 {
-                    scale.Width = ScaleUIMediator.ScaleWidth;
-                    scale.Height = ScaleUIMediator.ScaleHeight;
-                    scale.ScaleSegmentCount = ScaleUIMediator.SegmentCount;
-                    scale.ScaleLineWidth = ScaleUIMediator.ScaleLineWidth;
-                    scale.ScaleColor1 = ScaleUIMediator.ScaleColor1;
-                    scale.ScaleColor2 = ScaleUIMediator.ScaleColor2;
-                    scale.ScaleColor3 = ScaleUIMediator.ScaleColor3;
-                    scale.ScaleDistance = ScaleUIMediator.SegmentDistance;
-                    scale.ScaleDistanceUnit = string.IsNullOrEmpty(ScaleUIMediator.ScaleUnitsText) ? "" : ScaleUIMediator.ScaleUnitsText;
-                    scale.ScaleFontColor = ScaleUIMediator.ScaleFontColor;
-                    scale.ScaleOutlineWidth = ScaleUIMediator.ScaleOutlineWidth;
-                    scale.ScaleOutlineColor = ScaleUIMediator.ScaleNumberOutlineColor;
-                    scale.ScaleFont = ScaleUIMediator.ScaleFont;
-                    scale.ScaleNumbersDisplayType = ScaleUIMediator.ScaleNumbersDisplayType;
+                    scale.Width = ScaleMediator.ScaleWidth;
+                    scale.Height = ScaleMediator.ScaleHeight;
+                    scale.ScaleSegmentCount = ScaleMediator.SegmentCount;
+                    scale.ScaleLineWidth = ScaleMediator.ScaleLineWidth;
+                    scale.ScaleColor1 = ScaleMediator.ScaleColor1;
+                    scale.ScaleColor2 = ScaleMediator.ScaleColor2;
+                    scale.ScaleColor3 = ScaleMediator.ScaleColor3;
+                    scale.ScaleDistance = ScaleMediator.SegmentDistance;
+                    scale.ScaleDistanceUnit = string.IsNullOrEmpty(ScaleMediator.ScaleUnitsText) ? "" : ScaleMediator.ScaleUnitsText;
+                    scale.ScaleFontColor = ScaleMediator.ScaleFontColor;
+                    scale.ScaleOutlineWidth = ScaleMediator.ScaleOutlineWidth;
+                    scale.ScaleOutlineColor = ScaleMediator.ScaleNumberOutlineColor;
+                    scale.ScaleFont = ScaleMediator.ScaleFont;
+                    scale.ScaleNumbersDisplayType = ScaleMediator.ScaleNumbersDisplayType;
 
                     MapStateMediator.CurrentMapScale = scale;
                 }

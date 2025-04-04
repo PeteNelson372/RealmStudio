@@ -32,7 +32,7 @@ namespace RealmStudio
 {
     internal sealed class SymbolManager : IMapComponentManager
     {
-        private static SymbolUIMediator? _symbolUIMediator;
+        private static SymbolUIMediator? _symbolMediator;
 
         private static MapSymbolType _selectedSymbolType = MapSymbolType.NotSet;
         private static string _defaultSymbolDirectory = AssetManager.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols";
@@ -41,10 +41,10 @@ namespace RealmStudio
         private static MapSymbol? _selectedSymbolTableMapSymbol;
         private static readonly List<MapSymbol> _secondarySelectedSymbols = [];
 
-        internal static SymbolUIMediator? SymbolUIMediator
+        internal static SymbolUIMediator? SymbolMediator
         {
-            get { return _symbolUIMediator; }
-            set { _symbolUIMediator = value; }
+            get { return _symbolMediator; }
+            set { _symbolMediator = value; }
         }
 
         internal static MapSymbolType SelectedSymbolType
@@ -720,7 +720,7 @@ namespace RealmStudio
 
         private static void PlaceSelectedMapSymbolAtPoint(SKPoint cursorPoint, float symbolScale, float symbolRotation)
         {
-            if (SymbolUIMediator == null) return;
+            ArgumentNullException.ThrowIfNull(SymbolMediator);
 
             MapSymbol? symbolToPlace = SelectedSymbolTableMapSymbol;
 
@@ -744,7 +744,7 @@ namespace RealmStudio
                 if (symbolBitmap != null)
                 {
                     SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleSKBitmap(symbolBitmap, symbolScale);
-                    SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateSKBitmap(scaledSymbolBitmap, symbolRotation, SymbolUIMediator.MirrorSymbol);
+                    SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateSKBitmap(scaledSymbolBitmap, symbolRotation, SymbolMediator.MirrorSymbol);
 
                     float bitmapRadius = rotatedAndScaledBitmap.Width / 2;
 
@@ -753,17 +753,17 @@ namespace RealmStudio
 
                     // decreasing this value increases the density of symbol placement on the map
                     // so high values of placement density on the placement density updown increase placement density on the map
-                    float placementDensityRadius = bitmapRadius / SymbolUIMediator.SymbolPlacementDensity;
+                    float placementDensityRadius = bitmapRadius / SymbolMediator.SymbolPlacementDensity;
 
                     bool canPlaceSymbol = CanPlaceSymbol(MapStateMediator.CurrentMap, cursorPoint, placementDensityRadius);
 
                     if (canPlaceSymbol)
                     {
-                        if (SymbolUIMediator != null)
+                        if (SymbolMediator != null)
                         {
-                            symbolToPlace.CustomSymbolColors[0] = SymbolUIMediator.SymbolColor1.ToSKColor();
-                            symbolToPlace.CustomSymbolColors[1] = SymbolUIMediator.SymbolColor2.ToSKColor();
-                            symbolToPlace.CustomSymbolColors[2] = SymbolUIMediator.SymbolColor3.ToSKColor();
+                            symbolToPlace.CustomSymbolColors[0] = SymbolMediator.SymbolColor1.ToSKColor();
+                            symbolToPlace.CustomSymbolColors[1] = SymbolMediator.SymbolColor2.ToSKColor();
+                            symbolToPlace.CustomSymbolColors[2] = SymbolMediator.SymbolColor3.ToSKColor();
                         }
                         symbolToPlace.Width = rotatedAndScaledBitmap.Width;
                         symbolToPlace.Height = rotatedAndScaledBitmap.Height;
@@ -776,22 +776,19 @@ namespace RealmStudio
 
         private static SKBitmap RotateAndScaleSymbolBitmap(SKBitmap symbolBitmap, float symbolScale, float symbolRotation)
         {
-            if (SymbolUIMediator != null)
-            {
-                SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleSKBitmap(symbolBitmap, symbolScale);
+            ArgumentNullException.ThrowIfNull(SymbolMediator);
 
-                SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateSKBitmap(scaledSymbolBitmap, symbolRotation, SymbolUIMediator.MirrorSymbol);
+            SKBitmap scaledSymbolBitmap = DrawingMethods.ScaleSKBitmap(symbolBitmap, symbolScale);
+            SKBitmap rotatedAndScaledBitmap = DrawingMethods.RotateSKBitmap(scaledSymbolBitmap, symbolRotation, SymbolMediator.MirrorSymbol);
 
-                return rotatedAndScaledBitmap;
-            }
-
-            return symbolBitmap;
+            return rotatedAndScaledBitmap;
         }
 
         internal static void PlaceSelectedSymbolInArea(SKPoint mouseCursorPoint, float symbolScale, float symbolRotation, int areaBrushSize)
         {
+            ArgumentNullException.ThrowIfNull(SymbolMediator);
 
-            if (SelectedSymbolTableMapSymbol != null && SymbolUIMediator != null)
+            if (SelectedSymbolTableMapSymbol != null)
             {
                 lock (SelectedSymbolTableMapSymbol)
                 {
@@ -806,7 +803,7 @@ namespace RealmStudio
 
                         // decreasing this value increases the density of symbol placement on the map
                         // so high values of placement density on the placement density updown increase placement density on the map
-                        float placementDensityRadius = bitmapRadius / SymbolUIMediator.SymbolPlacementDensity;
+                        float placementDensityRadius = bitmapRadius / SymbolMediator.SymbolPlacementDensity;
 
                         List<SKPoint> areaPoints = DrawingMethods.GetPointsInCircle(cursorPoint, (int)Math.Ceiling((double)areaBrushSize), (int)placementDensityRadius);
 
@@ -827,12 +824,12 @@ namespace RealmStudio
 
         internal static void PlaceSelectedSymbolAtCursor(SKPoint mouseCursorPoint)
         {
-            if (SymbolUIMediator == null) return;
+            ArgumentNullException.ThrowIfNull(SymbolMediator);
 
             if (SelectedSymbolTableMapSymbol != null)
             {
-                float symbolScale = SymbolUIMediator.SymbolScale / 100.0F;
-                float symbolRotation = SymbolUIMediator.SymbolRotation;
+                float symbolScale = SymbolMediator.SymbolScale / 100.0F;
+                float symbolRotation = SymbolMediator.SymbolRotation;
 
                 if (SelectedSymbolTableMapSymbol.SymbolFormat != SymbolFileFormat.Vector)
                 {
@@ -855,7 +852,7 @@ namespace RealmStudio
 
         private static void PlaceVectorSymbolAtPoint(SKPoint mouseCursorPoint, float symbolScale, float symbolRotation)
         {
-            if (SymbolUIMediator == null) return;
+            ArgumentNullException.ThrowIfNull(SymbolMediator);
 
             MapSymbol? symbolToPlace = SelectedSymbolTableMapSymbol;
 
@@ -867,7 +864,7 @@ namespace RealmStudio
                 if (b != null)
                 {
                     float bitmapRadius = b.Width / 2;
-                    float placementDensityRadius = bitmapRadius / SymbolUIMediator.SymbolPlacementDensity;
+                    float placementDensityRadius = bitmapRadius / SymbolMediator.SymbolPlacementDensity;
 
                     SKPoint cursorPoint = new(mouseCursorPoint.X - (b.Width / 2), mouseCursorPoint.Y - (b.Height / 2));
 
@@ -875,9 +872,9 @@ namespace RealmStudio
 
                     if (canPlaceSymbol)
                     {
-                        symbolToPlace.CustomSymbolColors[0] = SymbolUIMediator.SymbolColor1.ToSKColor();
-                        symbolToPlace.CustomSymbolColors[1] = SymbolUIMediator.SymbolColor2.ToSKColor();
-                        symbolToPlace.CustomSymbolColors[2] = SymbolUIMediator.SymbolColor3.ToSKColor();
+                        symbolToPlace.CustomSymbolColors[0] = SymbolMediator.SymbolColor1.ToSKColor();
+                        symbolToPlace.CustomSymbolColors[1] = SymbolMediator.SymbolColor2.ToSKColor();
+                        symbolToPlace.CustomSymbolColors[2] = SymbolMediator.SymbolColor3.ToSKColor();
 
                         symbolToPlace.Width = b.Width;
                         symbolToPlace.Height = b.Height;
@@ -890,7 +887,7 @@ namespace RealmStudio
 
         internal static Bitmap? GetSymbolPictureBoxBitmap(MapSymbol symbol)
         {
-            if (SymbolUIMediator == null) return null;
+            ArgumentNullException.ThrowIfNull(SymbolMediator);
 
             Bitmap pbm = new(SymbolUIMediator.SymbolPictureBoxWidth - 2, SymbolUIMediator.SymbolPictureBoxHeight - 8);
 
@@ -913,7 +910,7 @@ namespace RealmStudio
                 if (symbol.UseCustomColors)
                 {
                     MapCustomColorsToColorableBitmap(ref colorMappedBitmap,
-                        SymbolUIMediator.SymbolColor1, SymbolUIMediator.SymbolColor2, SymbolUIMediator.SymbolColor3);
+                        SymbolMediator.SymbolColor1, SymbolMediator.SymbolColor2, SymbolMediator.SymbolColor3);
                 }
                 else if (symbol.IsGrayscale)
                 {
@@ -964,7 +961,9 @@ namespace RealmStudio
 
         internal static void ColorSelectedSymbol(MapSymbol? selectedMapSymbol)
         {
-            if (selectedMapSymbol == null || SymbolUIMediator == null) return;
+            ArgumentNullException.ThrowIfNull(SymbolMediator);
+
+            if (selectedMapSymbol == null) return;
 
             // if a symbol has been selected and is grayscale or custom colored, then color it with the
             // selected custom colors
@@ -972,8 +971,8 @@ namespace RealmStudio
             if (selectedMapSymbol.IsGrayscale || selectedMapSymbol.UseCustomColors)
             {
                 Cmd_PaintSymbol cmd = new(selectedMapSymbol,
-                    SymbolUIMediator.SymbolColor1.ToSKColor(), SymbolUIMediator.SymbolColor1.ToSKColor(),
-                    SymbolUIMediator.SymbolColor2.ToSKColor(), SymbolUIMediator.SymbolColor3.ToSKColor());
+                    SymbolMediator.SymbolColor1.ToSKColor(), SymbolMediator.SymbolColor1.ToSKColor(),
+                    SymbolMediator.SymbolColor2.ToSKColor(), SymbolMediator.SymbolColor3.ToSKColor());
 
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();

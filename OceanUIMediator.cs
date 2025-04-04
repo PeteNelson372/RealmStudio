@@ -12,17 +12,26 @@ namespace RealmStudio
         private readonly List<MapTexture> _oceanTextureList = [];
         private int _oceanTextureIndex;
 
+        private bool _showOceanLayers = true;
+
         private int _oceanPaintBrushSize = 64;
         private int _oceanPaintEraserSize = 64;
 
         private float _oceanBrushVelocity = 1.0F;
         private Color _oceanPaintColor = Color.FromArgb(128, 145, 203, 184);
         private Color _oceanFillColor = Color.White;
-        private float _oceanTextureScale = 1.0F;
-        private float _oceanTextureOpacity = 1.0f;
+        private float _oceanTextureScale = 100.0F;
+        private float _oceanTextureOpacity = 100.0f;
         private bool _mirrorOceanTexture;
 
-        private bool _showOceanLayers = true;
+        private Color _customColor1 = Color.White;
+        private Color _customColor2 = Color.White;
+        private Color _customColor3 = Color.White;
+        private Color _customColor4 = Color.White;
+        private Color _customColor5 = Color.White;
+        private Color _customColor6 = Color.White;
+        private Color _customColor7 = Color.White;
+        private Color _customColor8 = Color.White;
 
         public OceanUIMediator(RealmStudioMainForm mainForm)
         {
@@ -115,6 +124,54 @@ namespace RealmStudio
             set { SetPropertyField(nameof(MirrorOceanTexture), ref _mirrorOceanTexture, value); }
         }
 
+        public Color CustomColor1
+        {
+            get { return _customColor1; }
+            set { SetPropertyField(nameof(CustomColor1), ref _customColor1, value); }
+        }
+
+        public Color CustomColor2
+        {
+            get { return _customColor2; }
+            set { SetPropertyField(nameof(CustomColor2), ref _customColor2, value); }
+        }
+
+        public Color CustomColor3
+        {
+            get { return _customColor3; }
+            set { SetPropertyField(nameof(CustomColor3), ref _customColor3, value); }
+        }
+
+        public Color CustomColor4
+        {
+            get { return _customColor4; }
+            set { SetPropertyField(nameof(CustomColor4), ref _customColor4, value); }
+        }
+
+        public Color CustomColor5
+        {
+            get { return _customColor5; }
+            set { SetPropertyField(nameof(CustomColor5), ref _customColor5, value); }
+        }
+
+        public Color CustomColor6
+        {
+            get { return _customColor6; }
+            set { SetPropertyField(nameof(CustomColor6), ref _customColor6, value); }
+        }
+
+        public Color CustomColor7
+        {
+            get { return _customColor7; }
+            set { SetPropertyField(nameof(CustomColor7), ref _customColor7, value); }
+        }
+
+        public Color CustomColor8
+        {
+            get { return _customColor8; }
+            set { SetPropertyField(nameof(CustomColor8), ref _customColor8, value); }
+        }
+
         #endregion
 
         #region Property Change Handler Methods
@@ -149,28 +206,91 @@ namespace RealmStudio
 
                 if (!string.IsNullOrEmpty(changedPropertyName))
                 {
-                    if (changedPropertyName == "ShowOceanLayers")
+                    switch (changedPropertyName)
                     {
-                        MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
-                        MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
-                        MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANDRAWINGLAYER);
+                        case "ShowOceanLayers":
+                            {
+                                MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
+                                MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
+                                MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANDRAWINGLAYER);
 
-                        oceanTextureLayer.ShowLayer = ShowOceanLayers;
-                        oceanTextureOverlayLayer.ShowLayer = ShowOceanLayers;
-                        oceanDrawingLayer.ShowLayer = ShowOceanLayers;
-                    }
-                    else if (changedPropertyName == "OceanTextureIndex")
-                    {
-                        UpdateOceanTextureComboBox();
-                    }
-                    else if (changedPropertyName == "OceanTextureOpacity")
-                    {
-                        MainForm.OceanTextureOpacityTrack.Value = (int)OceanTextureOpacity;
-                        UpdateOceanTextureComboBox();
-                    }
-                    else if (changedPropertyName == "OceanTextureScale")
-                    {
-                        MainForm.OceanScaleTextureTrack.Value = (int)OceanTextureScale;
+                                oceanTextureLayer.ShowLayer = ShowOceanLayers;
+                                oceanTextureOverlayLayer.ShowLayer = ShowOceanLayers;
+                                oceanDrawingLayer.ShowLayer = ShowOceanLayers;
+                            }
+                            break;
+                        case "OceanTextureIndex":
+                            {
+                                UpdateOceanTextureComboBox();
+                            }
+                            break;
+                        case "OceanTextureOpacity":
+                            {
+                                MainForm.OceanTextureOpacityTrack.Value = (int)OceanTextureOpacity;
+                                UpdateOceanTextureComboBox();
+                            }
+                            break;
+                        case "OceanTextureScale":
+                            {
+                                MainForm.OceanScaleTextureTrack.Value = (int)OceanTextureScale;
+                            }
+                            break;
+                        case "CustomColor1":
+                            {
+                                MainForm.OceanCustomColorButton1.BackColor = CustomColor1;
+                                MainForm.OceanCustomColorButton1.ForeColor = SystemColors.ControlDark;
+                                MainForm.OceanCustomColorButton1.Text = (CustomColor1.ToArgb() == Color.White.ToArgb()) ? "" : ColorTranslator.ToHtml(CustomColor1);
+                            }
+                            break;
+                        case "CustomColor2":
+                            {
+                                MainForm.OceanCustomColorButton2.BackColor = CustomColor2;
+                                MainForm.OceanCustomColorButton2.ForeColor = SystemColors.ControlDark;
+                                MainForm.OceanCustomColorButton2.Text = (CustomColor2.ToArgb() == Color.White.ToArgb()) ? "" : ColorTranslator.ToHtml(CustomColor2);
+                            }
+                            break;
+                        case "CustomColor3":
+                            {
+                                MainForm.OceanCustomColorButton3.BackColor = CustomColor3;
+                                MainForm.OceanCustomColorButton3.ForeColor = SystemColors.ControlDark;
+                                MainForm.OceanCustomColorButton3.Text = (CustomColor3.ToArgb() == Color.White.ToArgb()) ? "" : ColorTranslator.ToHtml(CustomColor3);
+                            }
+                            break;
+                        case "CustomColor4":
+                            {
+                                MainForm.OceanCustomColorButton4.BackColor = CustomColor4;
+                                MainForm.OceanCustomColorButton4.ForeColor = SystemColors.ControlDark;
+                                MainForm.OceanCustomColorButton4.Text = (CustomColor4.ToArgb() == Color.White.ToArgb()) ? "" : ColorTranslator.ToHtml(CustomColor4);
+                            }
+                            break;
+                        case "CustomColor5":
+                            {
+                                MainForm.OceanCustomColorButton5.BackColor = CustomColor5;
+                                MainForm.OceanCustomColorButton5.ForeColor = SystemColors.ControlDark;
+                                MainForm.OceanCustomColorButton5.Text = (CustomColor5.ToArgb() == Color.White.ToArgb()) ? "" : ColorTranslator.ToHtml(CustomColor5);
+                            }
+                            break;
+                        case "CustomColor6":
+                            {
+                                MainForm.OceanCustomColorButton6.BackColor = CustomColor6;
+                                MainForm.OceanCustomColorButton6.ForeColor = SystemColors.ControlDark;
+                                MainForm.OceanCustomColorButton6.Text = (CustomColor6.ToArgb() == Color.White.ToArgb()) ? "" : ColorTranslator.ToHtml(CustomColor6);
+                            }
+                            break;
+                        case "CustomColor7":
+                            {
+                                MainForm.OceanCustomColorButton7.BackColor = CustomColor7;
+                                MainForm.OceanCustomColorButton7.ForeColor = SystemColors.ControlDark;
+                                MainForm.OceanCustomColorButton7.Text = (CustomColor7.ToArgb() == Color.White.ToArgb()) ? "" : ColorTranslator.ToHtml(CustomColor7);
+                            }
+                            break;
+                        case "CustomColor8":
+                            {
+                                MainForm.OceanCustomColorButton8.BackColor = CustomColor8;
+                                MainForm.OceanCustomColorButton8.ForeColor = SystemColors.ControlDark;
+                                MainForm.OceanCustomColorButton8.Text = (CustomColor8.ToArgb() == Color.White.ToArgb()) ? "" : ColorTranslator.ToHtml(CustomColor8);
+                            }
+                            break;
                     }
                 }
             }));

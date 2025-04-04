@@ -269,47 +269,6 @@ namespace RealmStudio
             MainForm.FontSelectionPanel.Visible = visible;
         }
 
-        internal void ColorPresetButtonMouseClickHandler(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.LandformUIMediator);
-            ArgumentNullException.ThrowIfNull(MapStateMediator.WaterFeatureUIMediator);
-
-            if (e.Button == MouseButtons.Left)
-            {
-                if (RealmStudioMainForm.ModifierKeys == Keys.Control)
-                {
-                    ResetColorPresetButton((Button)sender);
-                }
-                else
-                {
-                    if (MainForm.MainTab.SelectedTab != null)
-                    {
-                        if (MainForm.MainTab.SelectedTab.Text == "Ocean")
-                        {
-                            //SetOceanPaintColorFromCustomPresetButton((Button)sender);
-                        }
-                        else if (MainForm.MainTab.SelectedTab.Text == "Land")
-                        {
-                            MapStateMediator.LandformUIMediator.SetLandPaintColorFromCustomPresetButton((Button)sender);
-                        }
-                        else if (MainForm.MainTab.SelectedTab.Text == "Water")
-                        {
-                            MapStateMediator.WaterFeatureUIMediator.SetWaterPaintColorFromCustomPresetButton((Button)sender);
-                        }
-
-                        ((Button)sender).Refresh();
-                    }
-                }
-            }
-        }
-
-        private static void ResetColorPresetButton(Button b)
-        {
-            b.Text = string.Empty;
-            b.BackColor = Color.White;
-            b.Refresh();
-        }
-
         #endregion
     }
 }

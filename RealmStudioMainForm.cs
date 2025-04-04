@@ -91,7 +91,7 @@ namespace RealmStudio
         private MapMeasureUIMediator MeasureMediator { get; set; }
 
         // UI mediator for MapScale
-        private MapScaleUIMediator ScaleUIMediator { get; set; }
+        private MapScaleUIMediator ScaleMediator { get; set; }
 
         // UI mediator for MapSymbols
         private SymbolUIMediator SymbolMediator { get; set; }
@@ -188,11 +188,11 @@ namespace RealmStudio
             PresetMediator = new(this);
             LabelPresetManager.PresetMediator = PresetMediator;
 
-            ScaleUIMediator = new(this);
-            MapScaleManager.ScaleUIMediator = ScaleUIMediator;
+            ScaleMediator = new(this);
+            MapScaleManager.ScaleMediator = ScaleMediator;
 
             SymbolMediator = new SymbolUIMediator(this);
-            SymbolManager.SymbolUIMediator = SymbolMediator;
+            SymbolManager.SymbolMediator = SymbolMediator;
 
             VignetteMediator = new VignetteUIMediator(this);
             VignetteManager.VignetteMediator = VignetteMediator;
@@ -224,7 +224,7 @@ namespace RealmStudio
             MapStateMediator.MeasureUIMediator = MeasureMediator;
             MapStateMediator.PathUIMediator = PathMediator;
             MapStateMediator.RegionUIMediator = RegionMediator;
-            MapStateMediator.ScaleUIMediator = ScaleUIMediator;
+            MapStateMediator.ScaleUIMediator = ScaleMediator;
             MapStateMediator.SymbolUIMediator = SymbolMediator;
             MapStateMediator.VignetteUIMediator = VignetteMediator;
             MapStateMediator.WaterFeatureUIMediator = WaterFeatureMediator;
@@ -470,51 +470,35 @@ namespace RealmStudio
 
                             if (OceanCustomColorButton1.Text == "")
                             {
-                                OceanCustomColorButton1.BackColor = oceanColor;
-                                OceanCustomColorButton1.Text = ColorTranslator.ToHtml(oceanColor);
-                                OceanCustomColorButton1.Refresh();
+                                OceanMediator.CustomColor1 = selectedColor;
                             }
                             else if (OceanCustomColorButton2.Text == "")
                             {
-                                OceanCustomColorButton2.BackColor = oceanColor;
-                                OceanCustomColorButton2.Text = ColorTranslator.ToHtml(oceanColor);
-                                OceanCustomColorButton2.Refresh();
+                                OceanMediator.CustomColor2 = selectedColor;
                             }
                             else if (OceanCustomColorButton3.Text == "")
                             {
-                                OceanCustomColorButton3.BackColor = oceanColor;
-                                OceanCustomColorButton3.Text = ColorTranslator.ToHtml(oceanColor);
-                                OceanCustomColorButton3.Refresh();
+                                OceanMediator.CustomColor3 = selectedColor;
                             }
                             else if (OceanCustomColorButton4.Text == "")
                             {
-                                OceanCustomColorButton4.BackColor = oceanColor;
-                                OceanCustomColorButton4.Text = ColorTranslator.ToHtml(oceanColor);
-                                OceanCustomColorButton4.Refresh();
+                                OceanMediator.CustomColor4 = selectedColor;
                             }
                             else if (OceanCustomColorButton5.Text == "")
                             {
-                                OceanCustomColorButton5.BackColor = oceanColor;
-                                OceanCustomColorButton5.Text = ColorTranslator.ToHtml(oceanColor);
-                                OceanCustomColorButton5.Refresh();
+                                OceanMediator.CustomColor5 = selectedColor;
                             }
                             else if (OceanCustomColorButton6.Text == "")
                             {
-                                OceanCustomColorButton6.BackColor = oceanColor;
-                                OceanCustomColorButton6.Text = ColorTranslator.ToHtml(oceanColor);
-                                OceanCustomColorButton6.Refresh();
+                                OceanMediator.CustomColor6 = selectedColor;
                             }
                             else if (OceanCustomColorButton7.Text == "")
                             {
-                                OceanCustomColorButton7.BackColor = oceanColor;
-                                OceanCustomColorButton7.Text = ColorTranslator.ToHtml(oceanColor);
-                                OceanCustomColorButton7.Refresh();
+                                OceanMediator.CustomColor7 = selectedColor;
                             }
                             else if (OceanCustomColorButton8.Text == "")
                             {
-                                OceanCustomColorButton8.BackColor = oceanColor;
-                                OceanCustomColorButton8.Text = ColorTranslator.ToHtml(oceanColor);
-                                OceanCustomColorButton8.Refresh();
+                                OceanMediator.CustomColor8 = selectedColor;
                             }
                         }
                     }
@@ -530,39 +514,27 @@ namespace RealmStudio
 
                             if (LandCustomColorButton1.Text == "")
                             {
-                                LandCustomColorButton1.BackColor = landColor;
-                                LandCustomColorButton1.Text = ColorTranslator.ToHtml(landColor);
-                                LandCustomColorButton1.Refresh();
+                                LandformMediator.CustomColor1 = selectedColor;
                             }
                             else if (LandCustomColorButton2.Text == "")
                             {
-                                LandCustomColorButton2.BackColor = landColor;
-                                LandCustomColorButton2.Text = ColorTranslator.ToHtml(landColor);
-                                LandCustomColorButton2.Refresh();
+                                LandformMediator.CustomColor2 = selectedColor;
                             }
                             else if (LandCustomColorButton3.Text == "")
                             {
-                                LandCustomColorButton3.BackColor = landColor;
-                                LandCustomColorButton3.Text = ColorTranslator.ToHtml(landColor);
-                                LandCustomColorButton3.Refresh();
+                                LandformMediator.CustomColor3 = selectedColor;
                             }
                             else if (LandCustomColorButton4.Text == "")
                             {
-                                LandCustomColorButton4.BackColor = landColor;
-                                LandCustomColorButton4.Text = ColorTranslator.ToHtml(landColor);
-                                LandCustomColorButton4.Refresh();
+                                LandformMediator.CustomColor4 = selectedColor;
                             }
                             else if (LandCustomColorButton5.Text == "")
                             {
-                                LandCustomColorButton5.BackColor = landColor;
-                                LandCustomColorButton5.Text = ColorTranslator.ToHtml(landColor);
-                                LandCustomColorButton5.Refresh();
+                                LandformMediator.CustomColor5 = selectedColor;
                             }
                             else if (LandCustomColorButton6.Text == "")
                             {
-                                LandCustomColorButton6.BackColor = landColor;
-                                LandCustomColorButton6.Text = ColorTranslator.ToHtml(landColor);
-                                LandCustomColorButton6.Refresh();
+                                LandformMediator.CustomColor6 = selectedColor;
                             }
                         }
                     }
@@ -578,51 +550,35 @@ namespace RealmStudio
 
                             if (WaterCustomColor1.Text == "")
                             {
-                                WaterCustomColor1.BackColor = waterColor;
-                                WaterCustomColor1.Text = ColorTranslator.ToHtml(waterColor);
-                                WaterCustomColor1.Refresh();
+                                WaterFeatureMediator.CustomColor1 = selectedColor;
                             }
                             else if (WaterCustomColor2.Text == "")
                             {
-                                WaterCustomColor2.BackColor = waterColor;
-                                WaterCustomColor2.Text = ColorTranslator.ToHtml(waterColor);
-                                WaterCustomColor2.Refresh();
+                                WaterFeatureMediator.CustomColor2 = selectedColor;
                             }
                             else if (WaterCustomColor3.Text == "")
                             {
-                                WaterCustomColor3.BackColor = waterColor;
-                                WaterCustomColor3.Text = ColorTranslator.ToHtml(waterColor);
-                                WaterCustomColor3.Refresh();
+                                WaterFeatureMediator.CustomColor3 = selectedColor;
                             }
                             else if (WaterCustomColor4.Text == "")
                             {
-                                WaterCustomColor4.BackColor = waterColor;
-                                WaterCustomColor4.Text = ColorTranslator.ToHtml(waterColor);
-                                WaterCustomColor4.Refresh();
+                                WaterFeatureMediator.CustomColor4 = selectedColor;
                             }
                             else if (WaterCustomColor5.Text == "")
                             {
-                                WaterCustomColor5.BackColor = waterColor;
-                                WaterCustomColor5.Text = ColorTranslator.ToHtml(waterColor);
-                                WaterCustomColor5.Refresh();
+                                WaterFeatureMediator.CustomColor5 = selectedColor;
                             }
                             else if (WaterCustomColor6.Text == "")
                             {
-                                WaterCustomColor6.BackColor = waterColor;
-                                WaterCustomColor6.Text = ColorTranslator.ToHtml(waterColor);
-                                WaterCustomColor6.Refresh();
+                                WaterFeatureMediator.CustomColor6 = selectedColor;
                             }
                             else if (WaterCustomColor7.Text == "")
                             {
-                                WaterCustomColor7.BackColor = waterColor;
-                                WaterCustomColor7.Text = ColorTranslator.ToHtml(waterColor);
-                                WaterCustomColor7.Refresh();
+                                WaterFeatureMediator.CustomColor7 = selectedColor;
                             }
                             else if (WaterCustomColor8.Text == "")
                             {
-                                WaterCustomColor8.BackColor = waterColor;
-                                WaterCustomColor8.Text = ColorTranslator.ToHtml(waterColor);
-                                WaterCustomColor8.Refresh();
+                                WaterFeatureMediator.CustomColor8 = selectedColor;
                             }
                         }
                     }
@@ -973,7 +929,7 @@ namespace RealmStudio
 
             // get the current state of the UI as a theme
             // and send it to the ThemeList dialog
-            MapTheme settingsTheme = SaveCurentSettingsToTheme();
+            MapTheme settingsTheme = ThemeManager.SaveCurentSettingsToTheme();
 
             themeList.SetThemes([.. AssetManager.THEME_LIST]);
             themeList.SettingsTheme = settingsTheme;
@@ -989,7 +945,7 @@ namespace RealmStudio
                 {
                     AssetManager.CURRENT_THEME = selectedTheme;
                     ThemeFilter themeFilter = themeList.GetThemeFilter();
-                    ApplyTheme(selectedTheme, themeFilter);
+                    ThemeManager.ApplyTheme(selectedTheme, themeFilter);
                 }
             }
         }
@@ -1036,7 +992,7 @@ namespace RealmStudio
                 MapStateMediator.CurrentMap = resizedMap;
 
                 // TODO: generalize
-                ScaleUIMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
+                ScaleMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
 
                 MAP_WIDTH = MapStateMediator.CurrentMap.MapWidth;
                 MAP_HEIGHT = MapStateMediator.CurrentMap.MapHeight;
@@ -1083,7 +1039,7 @@ namespace RealmStudio
                 MapStateMediator.CurrentMap = detailMap;
 
                 // TODO: generalize
-                ScaleUIMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
+                ScaleMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
 
                 MAP_WIDTH = MapStateMediator.CurrentMap.MapWidth;
                 MAP_HEIGHT = MapStateMediator.CurrentMap.MapHeight;
@@ -1363,7 +1319,7 @@ namespace RealmStudio
                 MapStateMediator.CurrentMap = MapBuilder.CreateMap(rcd.Map, SKGLRenderControl.GRContext);
 
                 // TODO: this should be generalized
-                ScaleUIMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
+                ScaleMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
 
                 MAP_WIDTH = MapStateMediator.CurrentMap.MapWidth;
                 MAP_HEIGHT = MapStateMediator.CurrentMap.MapHeight;
@@ -1548,7 +1504,7 @@ namespace RealmStudio
             if (AssetManager.CURRENT_THEME != null)
             {
                 ThemeFilter tf = new();
-                ApplyTheme(AssetManager.CURRENT_THEME, tf);
+                ThemeManager.ApplyTheme(AssetManager.CURRENT_THEME, tf);
             }
         }
 
@@ -2050,7 +2006,7 @@ namespace RealmStudio
 
                         // TODO: this should be generalized (when the CurrentMap is assigned,
                         // the ScaleUnitsText should automatically be updated)
-                        ScaleUIMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
+                        ScaleMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
 
                         SKImageInfo imageInfo = new(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
 
@@ -2108,7 +2064,7 @@ namespace RealmStudio
                 MapStateMediator.CurrentMap = MapBuilder.CreateMap("", "DEFAULT", MapBuilder.MAP_DEFAULT_WIDTH, MapBuilder.MAP_DEFAULT_HEIGHT, SKGLRenderControl.GRContext);
 
                 // TODO: generalize
-                ScaleUIMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
+                ScaleMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
 
                 VignetteManager.Delete();
                 VignetteManager.Create();
@@ -2393,7 +2349,7 @@ namespace RealmStudio
             {
                 case FontPanelOpener.ScaleFontButton:
                     {
-                        ScaleUIMediator.ScaleFont = FontPanelManager.FontPanelSelectedFont.SelectedFont;
+                        ScaleMediator.ScaleFont = FontPanelManager.FontPanelSelectedFont.SelectedFont;
                     }
                     break;
                 case FontPanelOpener.LabelFontButton:
@@ -2435,654 +2391,6 @@ namespace RealmStudio
         private void FontPanelCloseButton_Click(object sender, EventArgs e)
         {
             FontSelectionPanel.Visible = false;
-        }
-
-        #endregion
-
-        #region Theme Methods
-
-        private MapTheme SaveCurentSettingsToTheme()
-        {
-            // TODO: implement theme mediator and manager
-
-            MapTheme theme = new()
-            {
-                // label presets for the theme are serialized to a file at the time they are created
-                // and loaded when the theme is loaded/selected; they are not stored with the theme
-
-                // background
-                BackgroundTexture = BackgroundMediator.BackgroundTextureList[BackgroundMediator.BackgroundTextureIndex],
-                BackgroundTextureScale = BackgroundTextureScaleTrack.Value,
-                MirrorBackgroundTexture = MirrorBackgroundSwitch.Checked,
-
-                // vignette color and strength
-                VignetteColor = VignetteColorSelectionButton.BackColor.ToArgb(),
-                VignetteStrength = VignetteStrengthTrack.Value,
-                VignetteShape = (RectangleVignetteRadio.Checked) ? VignetteShapeType.Rectangle : VignetteShapeType.Oval,
-
-                // ocean
-                OceanTexture = OceanMediator.OceanTextureList[OceanMediator.OceanTextureIndex],
-
-                OceanTextureOpacity = (int?)(OceanMediator.OceanTextureOpacity * 100),
-                OceanTextureScale = OceanMediator.OceanTextureScale,
-                MirrorOceanTexture = OceanMediator.MirrorOceanTexture,
-                OceanColor = OceanMediator.OceanFillColor.ToArgb()
-            };
-
-            // save ocean custom colors
-            theme.OceanColorPalette?.Add(OceanCustomColorButton1.BackColor.ToArgb());
-            theme.OceanColorPalette?.Add(OceanCustomColorButton2.BackColor.ToArgb());
-            theme.OceanColorPalette?.Add(OceanCustomColorButton3.BackColor.ToArgb());
-            theme.OceanColorPalette?.Add(OceanCustomColorButton4.BackColor.ToArgb());
-            theme.OceanColorPalette?.Add(OceanCustomColorButton5.BackColor.ToArgb());
-            theme.OceanColorPalette?.Add(OceanCustomColorButton6.BackColor.ToArgb());
-            theme.OceanColorPalette?.Add(OceanCustomColorButton7.BackColor.ToArgb());
-            theme.OceanColorPalette?.Add(OceanCustomColorButton8.BackColor.ToArgb());
-
-            // landform
-            theme.LandformOutlineColor = LandformOutlineColorSelectButton.BackColor.ToArgb();
-            theme.LandformOutlineWidth = LandformOutlineWidthTrack.Value;
-
-            theme.LandformBackgroundColor = LandformBackgroundColorSelectButton.BackColor.ToArgb();
-            theme.FillLandformWithTexture = UseTextureForBackgroundCheck.Checked;
-
-            theme.LandformTexture = LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex];
-
-            theme.LandShorelineStyle = LandGradientDirection.None.ToString();   // light-to-dark shading vs. dark-to-light shading; not used now
-
-            theme.LandformCoastlineColor = CoastlineColorSelectionButton.BackColor.ToArgb();
-            theme.LandformCoastlineEffectDistance = CoastlineEffectDistanceTrack.Value;
-
-            if (CoastlineStyleList.SelectedIndex > -1)
-            {
-                theme.LandformCoastlineStyle = (string)CoastlineStyleList.Items[CoastlineStyleList.SelectedIndex];
-            }
-
-            // save land custom colors
-            theme.LandformColorPalette?.Add(LandCustomColorButton1.BackColor.ToArgb());
-            theme.LandformColorPalette?.Add(LandCustomColorButton2.BackColor.ToArgb());
-            theme.LandformColorPalette?.Add(LandCustomColorButton3.BackColor.ToArgb());
-            theme.LandformColorPalette?.Add(LandCustomColorButton4.BackColor.ToArgb());
-            theme.LandformColorPalette?.Add(LandCustomColorButton5.BackColor.ToArgb());
-            theme.LandformColorPalette?.Add(LandCustomColorButton6.BackColor.ToArgb());
-
-            // freshwater
-            theme.FreshwaterColor = WaterColorSelectionButton.BackColor.ToArgb();
-            theme.FreshwaterShorelineColor = ShorelineColorSelectionButton.BackColor.ToArgb();
-
-            theme.RiverWidth = RiverWidthTrack.Value;
-            theme.RiverSourceFadeIn = RiverSourceFadeInSwitch.Checked;
-
-            // save freshwater custom colors
-            theme.FreshwaterColorPalette?.Add(WaterCustomColor1.BackColor.ToArgb());
-            theme.FreshwaterColorPalette?.Add(WaterCustomColor2.BackColor.ToArgb());
-            theme.FreshwaterColorPalette?.Add(WaterCustomColor3.BackColor.ToArgb());
-            theme.FreshwaterColorPalette?.Add(WaterCustomColor4.BackColor.ToArgb());
-            theme.FreshwaterColorPalette?.Add(WaterCustomColor5.BackColor.ToArgb());
-            theme.FreshwaterColorPalette?.Add(WaterCustomColor6.BackColor.ToArgb());
-            theme.FreshwaterColorPalette?.Add(WaterCustomColor7.BackColor.ToArgb());
-            theme.FreshwaterColorPalette?.Add(WaterCustomColor8.BackColor.ToArgb());
-
-            // path
-            theme.PathColor = PathColorSelectButton.BackColor.ToArgb();
-            theme.PathWidth = PathWidthTrack.Value;
-            theme.PathStyle = PathMediator.PathType;
-
-            // label
-            FontConverter cvt = new();
-            string? fontString = cvt.ConvertToString(LabelMediator.SelectedLabelFont);
-            theme.LabelFont = fontString ?? string.Empty;
-            theme.LabelColor = FontColorSelectButton.BackColor.ToArgb();
-            theme.LabelOutlineColor = OutlineColorSelectButton.BackColor.ToArgb();
-            theme.LabelOutlineWidth = OutlineWidthTrack.Value;
-            theme.LabelGlowColor = GlowColorSelectButton.BackColor.ToArgb();
-            theme.LabelGlowStrength = GlowStrengthTrack.Value;
-
-            // symbols
-            if (theme.SymbolCustomColors != null)
-            {
-                theme.SymbolCustomColors[0] = SymbolColor1Button.BackColor.ToArgb();
-                theme.SymbolCustomColors[1] = SymbolColor2Button.BackColor.ToArgb();
-                theme.SymbolCustomColors[2] = SymbolColor3Button.BackColor.ToArgb();
-            }
-
-            return theme;
-        }
-
-
-        private void ApplyTheme(MapTheme theme, ThemeFilter themeFilter)
-        {
-            // TODO: implement theme mediator and manager
-
-            if (theme == null || themeFilter == null) return;
-
-            try
-            {
-                if (themeFilter.ApplyBackgroundSettings)
-                {
-                    if (theme.BackgroundTexture != null)
-                    {
-                        MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
-                        baseLayer.MapLayerComponents.Clear();
-
-                        float scale = BackgroundTextureScaleTrack.Value / 100F;
-
-                        if (theme.BackgroundTextureScale != null)
-                        {
-                            scale = (float)theme.BackgroundTextureScale;
-                        }
-
-                        bool mirrorBackground = MirrorBackgroundSwitch.Checked;
-
-                        if (theme.MirrorBackgroundTexture != null)
-                        {
-                            mirrorBackground = (bool)theme.MirrorBackgroundTexture;
-                        }
-
-                        BackgroundManager.ClearBackgroundTexture();
-
-                        if (scale > 0.0F)
-                        {
-                            if (theme.BackgroundTexture != null)
-                            {
-                                for (int i = 0; i < BackgroundMediator.BackgroundTextureList.Count; i++)
-                                {
-                                    if (BackgroundMediator.BackgroundTextureList[i] != null
-                                        && BackgroundMediator.BackgroundTextureList[i].TexturePath == theme.BackgroundTexture.TexturePath)
-                                    {
-                                        BackgroundMediator.BackgroundTextureIndex = i;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    BackgroundMediator.BackgroundTextureScale = (int)((theme.BackgroundTextureScale != null) ? theme.BackgroundTextureScale : 100);
-                    BackgroundMediator.MirrorBackgroundTexture = (bool)((theme.MirrorBackgroundTexture != null) ? theme.MirrorBackgroundTexture : false);
-
-                    VignetteMediator.VignetteColor = Color.FromArgb(theme.VignetteColor ?? Color.FromArgb(201, 151, 123).ToArgb());
-                    VignetteMediator.VignetteStrength = (int)((theme.VignetteStrength != null) ? theme.VignetteStrength : 148);
-                    VignetteMediator.VignetteShape = (VignetteShapeType)((theme.VignetteShape == null) ? VignetteShapeType.Oval : theme.VignetteShape);
-
-                    RectangleVignetteRadio.Checked = theme.VignetteShape == VignetteShapeType.Rectangle;
-                    OvalVignetteRadio.Checked = theme.VignetteShape == VignetteShapeType.Oval;
-                }
-
-                if (themeFilter.ApplyOceanSettings)
-                {
-                    MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
-                    oceanTextureLayer.MapLayerComponents.Clear();
-
-                    MapLayer oceanTextureOverLayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
-                    oceanTextureOverLayLayer.MapLayerComponents.Clear();
-
-                    // 0 to 100% (100% is 100% opaque)
-                    OceanMediator.OceanTextureOpacity = ((theme.OceanTextureOpacity != null) ? (float)theme.OceanTextureOpacity : 100.0F);
-                    OceanMediator.OceanTextureScale = ((theme.OceanTextureScale != null) ? (float)theme.OceanTextureScale / 100.0F : 1.0F);
-                    OceanMediator.MirrorOceanTexture = theme.MirrorOceanTexture ?? false;
-                    OceanMediator.OceanFillColor = Color.FromArgb(theme.OceanColor ?? Color.FromKnownColor(KnownColor.ControlLight).ToArgb());
-                    OceanColorSelectButton.BackColor = Color.FromArgb(theme.OceanColor ?? Color.FromKnownColor(KnownColor.ControlLight).ToArgb());
-
-                    if (theme.OceanTexture != null)
-                    {
-                        for (int i = 0; i < OceanMediator.OceanTextureList.Count; i++)
-                        {
-                            if (OceanMediator.OceanTextureList[i].TextureName == theme.OceanTexture.TextureName)
-                            {
-                                OceanMediator.OceanTextureIndex = i;
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        OceanMediator.OceanTextureIndex = 0;
-                    }
-                }
-
-                if (themeFilter.ApplyOceanColorPaletteSettings)
-                {
-                    // TODO: track ocean custom colors in OceanMediator
-                    if (theme.OceanColorPalette?.Count > 0)
-                    {
-                        OceanCustomColorButton1.BackColor = Color.FromArgb(theme.OceanColorPalette[0] ?? Color.White.ToArgb());
-                        OceanCustomColorButton1.ForeColor = SystemColors.ControlDark;
-                        OceanCustomColorButton1.Text = ColorTranslator.ToHtml(OceanCustomColorButton1.BackColor);
-
-                        OceanCustomColorButton1.Refresh();
-                    }
-
-                    if (theme.OceanColorPalette?.Count > 1)
-                    {
-                        OceanCustomColorButton2.BackColor = Color.FromArgb(theme.OceanColorPalette[1] ?? Color.White.ToArgb());
-                        OceanCustomColorButton2.ForeColor = SystemColors.ControlDark;
-                        OceanCustomColorButton2.Text = ColorTranslator.ToHtml(OceanCustomColorButton2.BackColor);
-
-                        OceanCustomColorButton2.Refresh();
-                    }
-
-                    if (theme.OceanColorPalette?.Count > 2)
-                    {
-                        OceanCustomColorButton3.BackColor = Color.FromArgb(theme.OceanColorPalette[2] ?? Color.White.ToArgb());
-                        OceanCustomColorButton3.ForeColor = SystemColors.ControlDark;
-                        OceanCustomColorButton3.Text = ColorTranslator.ToHtml(OceanCustomColorButton3.BackColor);
-
-                        OceanCustomColorButton3.Refresh();
-                    }
-
-                    if (theme.OceanColorPalette?.Count > 3)
-                    {
-                        OceanCustomColorButton4.BackColor = Color.FromArgb(theme.OceanColorPalette[3] ?? Color.White.ToArgb());
-                        OceanCustomColorButton4.ForeColor = SystemColors.ControlDark;
-                        OceanCustomColorButton4.Text = ColorTranslator.ToHtml(OceanCustomColorButton4.BackColor);
-
-                        OceanCustomColorButton4.Refresh();
-                    }
-
-                    if (theme.OceanColorPalette?.Count > 4)
-                    {
-                        OceanCustomColorButton5.BackColor = Color.FromArgb(theme.OceanColorPalette[4] ?? Color.White.ToArgb());
-                        OceanCustomColorButton5.ForeColor = SystemColors.ControlDark;
-                        OceanCustomColorButton5.Text = ColorTranslator.ToHtml(OceanCustomColorButton5.BackColor);
-
-                        OceanCustomColorButton5.Refresh();
-                    }
-
-                    if (theme.OceanColorPalette?.Count > 5)
-                    {
-                        OceanCustomColorButton6.BackColor = Color.FromArgb(theme.OceanColorPalette[5] ?? Color.White.ToArgb());
-                        OceanCustomColorButton6.ForeColor = SystemColors.ControlDark;
-                        OceanCustomColorButton6.Text = ColorTranslator.ToHtml(OceanCustomColorButton6.BackColor);
-
-                        OceanCustomColorButton6.Refresh();
-                    }
-
-                    if (theme.OceanColorPalette?.Count > 6)
-                    {
-                        OceanCustomColorButton7.BackColor = Color.FromArgb(theme.OceanColorPalette[6] ?? Color.White.ToArgb());
-                        OceanCustomColorButton7.ForeColor = SystemColors.ControlDark;
-                        OceanCustomColorButton7.Text = ColorTranslator.ToHtml(OceanCustomColorButton7.BackColor);
-
-                        OceanCustomColorButton7.Refresh();
-                    }
-
-                    if (theme.OceanColorPalette?.Count > 7)
-                    {
-                        OceanCustomColorButton8.BackColor = Color.FromArgb(theme.OceanColorPalette[7] ?? Color.White.ToArgb());
-                        OceanCustomColorButton8.ForeColor = SystemColors.ControlDark;
-                        OceanCustomColorButton8.Text = ColorTranslator.ToHtml(OceanCustomColorButton8.BackColor);
-
-                        OceanCustomColorButton8.Refresh();
-                    }
-
-                    if (OceanCustomColorButton1.BackColor.ToArgb() == Color.White.ToArgb()
-                        && OceanCustomColorButton2.BackColor.ToArgb() == Color.White.ToArgb()
-                        && OceanCustomColorButton3.BackColor.ToArgb() == Color.White.ToArgb()
-                        && OceanCustomColorButton4.BackColor.ToArgb() == Color.White.ToArgb()
-                        && OceanCustomColorButton5.BackColor.ToArgb() == Color.White.ToArgb()
-                        && OceanCustomColorButton6.BackColor.ToArgb() == Color.White.ToArgb()
-                        && OceanCustomColorButton7.BackColor.ToArgb() == Color.White.ToArgb()
-                        && OceanCustomColorButton8.BackColor.ToArgb() == Color.White.ToArgb())
-                    {
-                        OceanCustomColorButton1.Text = "";
-                        OceanCustomColorButton2.Text = "";
-                        OceanCustomColorButton3.Text = "";
-                        OceanCustomColorButton4.Text = "";
-                        OceanCustomColorButton5.Text = "";
-                        OceanCustomColorButton6.Text = "";
-                        OceanCustomColorButton7.Text = "";
-                        OceanCustomColorButton8.Text = "";
-                    }
-                }
-
-                if (themeFilter.ApplyLandSettings)
-                {
-
-                    LandformOutlineColorSelectButton.BackColor = Color.FromArgb(theme.LandformOutlineColor ?? Color.FromArgb(62, 55, 40).ToArgb());
-                    LandformOutlineColorSelectButton.Refresh();
-
-                    if (LandformMediator.LandTextureList.First().TextureBitmap == null)
-                    {
-                        LandformMediator.LandTextureList.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(LandformMediator.LandTextureList.First().TexturePath);
-                    }
-
-                    LandformTexturePreviewPicture.Image = LandformMediator.LandTextureList.First().TextureBitmap;
-                    LandTextureNameLabel.Text = LandformMediator.LandTextureList.First().TextureName;
-
-                    if (theme.LandformTexture != null)
-                    {
-                        for (int i = 0; i < LandformMediator.LandTextureList.Count; i++)
-                        {
-                            if (LandformMediator.LandTextureList[i].TextureName == theme.LandformTexture.TextureName)
-                            {
-                                LandformMediator.LandformTextureIndex = i;
-                                break;
-                            }
-                        }
-
-                        if (LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TextureBitmap == null)
-                        {
-                            LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TextureBitmap
-                                = (Bitmap?)Bitmap.FromFile(LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TexturePath);
-                        }
-                    }
-
-                    LandformTexturePreviewPicture.Refresh();
-
-                    LandformMediator.UseTextureBackground = (bool)((theme.FillLandformWithTexture != null) ? theme.FillLandformWithTexture : true);
-                    LandformMediator.CoastlineColor = Color.FromArgb(theme.LandformCoastlineColor ?? Color.FromArgb(187, 156, 195, 183).ToArgb());
-                    LandformMediator.CoastlineEffectDistance = theme.LandformCoastlineEffectDistance ?? 16;
-
-
-                    if (theme.LandformCoastlineStyle != null)
-                    {
-                        for (int i = 0; i < CoastlineStyleList.Items.Count; i++)
-                        {
-                            if (CoastlineStyleList.Items[i].ToString() == theme.LandformCoastlineStyle)
-                            {
-                                LandformMediator.CoastlineStyle = (string)CoastlineStyleList.Items[i];
-                                CoastlineStyleList.SelectedIndex = i;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (themeFilter.ApplyLandformColorPaletteSettings)
-                {
-                    if (theme.LandformColorPalette?.Count > 0)
-                    {
-                        LandCustomColorButton1.BackColor = Color.FromArgb(theme.LandformColorPalette[0] ?? Color.White.ToArgb());
-                        LandCustomColorButton1.ForeColor = SystemColors.ControlDark;
-                        LandCustomColorButton1.Text = ColorTranslator.ToHtml(LandCustomColorButton1.BackColor);
-
-                        LandCustomColorButton1.Refresh();
-                    }
-
-                    if (theme.LandformColorPalette?.Count > 1)
-                    {
-                        LandCustomColorButton2.BackColor = Color.FromArgb(theme.LandformColorPalette[1] ?? Color.White.ToArgb());
-                        LandCustomColorButton2.ForeColor = SystemColors.ControlDark;
-                        LandCustomColorButton2.Text = ColorTranslator.ToHtml(LandCustomColorButton2.BackColor);
-
-                        LandCustomColorButton2.Refresh();
-                    }
-
-                    if (theme.LandformColorPalette?.Count > 2)
-                    {
-                        LandCustomColorButton3.BackColor = Color.FromArgb(theme.LandformColorPalette[2] ?? Color.White.ToArgb());
-                        LandCustomColorButton3.ForeColor = SystemColors.ControlDark;
-                        LandCustomColorButton3.Text = ColorTranslator.ToHtml(LandCustomColorButton3.BackColor);
-
-                        LandCustomColorButton3.Refresh();
-                    }
-
-                    if (theme.LandformColorPalette?.Count > 3)
-                    {
-                        LandCustomColorButton4.BackColor = Color.FromArgb(theme.LandformColorPalette[3] ?? Color.White.ToArgb());
-                        LandCustomColorButton4.ForeColor = SystemColors.ControlDark;
-                        LandCustomColorButton4.Text = ColorTranslator.ToHtml(LandCustomColorButton4.BackColor);
-
-                        LandCustomColorButton4.Refresh();
-                    }
-
-                    if (theme.LandformColorPalette?.Count > 4)
-                    {
-                        LandCustomColorButton5.BackColor = Color.FromArgb(theme.LandformColorPalette[4] ?? Color.White.ToArgb());
-                        LandCustomColorButton5.ForeColor = SystemColors.ControlDark;
-                        LandCustomColorButton5.Text = ColorTranslator.ToHtml(LandCustomColorButton5.BackColor);
-
-                        LandCustomColorButton5.Refresh();
-                    }
-
-                    if (theme.LandformColorPalette?.Count > 5)
-                    {
-                        LandCustomColorButton6.BackColor = Color.FromArgb(theme.LandformColorPalette[5] ?? Color.White.ToArgb());
-                        LandCustomColorButton6.ForeColor = SystemColors.ControlDark;
-                        LandCustomColorButton6.Text = ColorTranslator.ToHtml(LandCustomColorButton6.BackColor);
-
-                        LandCustomColorButton6.Refresh();
-                    }
-
-                    if (LandCustomColorButton1.BackColor.ToArgb() == Color.White.ToArgb()
-                        && LandCustomColorButton2.BackColor.ToArgb() == Color.White.ToArgb()
-                        && LandCustomColorButton3.BackColor.ToArgb() == Color.White.ToArgb()
-                        && LandCustomColorButton4.BackColor.ToArgb() == Color.White.ToArgb()
-                        && LandCustomColorButton5.BackColor.ToArgb() == Color.White.ToArgb()
-                        && LandCustomColorButton6.BackColor.ToArgb() == Color.White.ToArgb())
-                    {
-                        LandCustomColorButton1.Text = "";
-                        LandCustomColorButton2.Text = "";
-                        LandCustomColorButton3.Text = "";
-                        LandCustomColorButton4.Text = "";
-                        LandCustomColorButton5.Text = "";
-                        LandCustomColorButton6.Text = "";
-                    }
-                }
-
-                if (themeFilter.ApplyFreshwaterSettings)
-                {
-                    if (theme.FreshwaterColor != Color.Empty.ToArgb())
-                    {
-                        WaterFeatureMediator.WaterColor = Color.FromArgb(theme.FreshwaterColor ?? Color.FromArgb(101, 140, 191, 197).ToArgb());
-                    }
-                    else
-                    {
-                        WaterFeatureMediator.WaterColor = WaterFeatureManager.DEFAULT_WATER_COLOR;
-                    }
-
-                    if (theme.FreshwaterShorelineColor != Color.Empty.ToArgb())
-                    {
-                        WaterFeatureMediator.ShorelineColor = Color.FromArgb(theme.FreshwaterShorelineColor ?? Color.FromArgb(161, 144, 118).ToArgb());
-                    }
-                    else
-                    {
-                        WaterFeatureMediator.ShorelineColor = WaterFeatureManager.DEFAULT_WATER_OUTLINE_COLOR;
-                    }
-
-                    WaterFeatureMediator.RiverWidth = theme.RiverWidth ?? 4;
-                    WaterFeatureMediator.RiverSourceFadeIn = theme.RiverSourceFadeIn ?? true;
-                }
-                else
-                {
-                    ShorelineColorSelectionButton.BackColor = WaterFeatureManager.DEFAULT_WATER_OUTLINE_COLOR;
-                    ShorelineColorSelectionButton.Refresh();
-
-                    WaterColorSelectionButton.BackColor = WaterFeatureManager.DEFAULT_WATER_COLOR;
-                    WaterColorSelectionButton.Refresh();
-                }
-
-                if (themeFilter.ApplyFreshwaterColorPaletteSettings)
-                {
-                    if (theme.FreshwaterColorPalette?.Count > 0)
-                    {
-                        WaterCustomColor1.BackColor = Color.FromArgb(theme.FreshwaterColorPalette[0] ?? Color.White.ToArgb());
-                        WaterCustomColor1.ForeColor = SystemColors.ControlDark;
-                        WaterCustomColor1.Text = ColorTranslator.ToHtml(WaterCustomColor1.BackColor);
-
-                        WaterCustomColor1.Refresh();
-                    }
-
-                    if (theme.FreshwaterColorPalette?.Count > 1)
-                    {
-                        WaterCustomColor2.BackColor = Color.FromArgb(theme.FreshwaterColorPalette[1] ?? Color.White.ToArgb());
-                        WaterCustomColor2.ForeColor = SystemColors.ControlDark;
-                        WaterCustomColor2.Text = ColorTranslator.ToHtml(WaterCustomColor2.BackColor);
-
-                        WaterCustomColor2.Refresh();
-                    }
-
-                    if (theme.FreshwaterColorPalette?.Count > 2)
-                    {
-                        WaterCustomColor3.BackColor = Color.FromArgb(theme.FreshwaterColorPalette[2] ?? Color.White.ToArgb());
-                        WaterCustomColor3.ForeColor = SystemColors.ControlDark;
-                        WaterCustomColor3.Text = ColorTranslator.ToHtml(WaterCustomColor3.BackColor);
-
-                        WaterCustomColor3.Refresh();
-                    }
-
-                    if (theme.FreshwaterColorPalette?.Count > 3)
-                    {
-                        WaterCustomColor4.BackColor = Color.FromArgb(theme.FreshwaterColorPalette[3] ?? Color.White.ToArgb());
-                        WaterCustomColor4.ForeColor = SystemColors.ControlDark;
-                        WaterCustomColor4.Text = ColorTranslator.ToHtml(WaterCustomColor4.BackColor);
-
-                        WaterCustomColor4.Refresh();
-                    }
-
-                    if (theme.FreshwaterColorPalette?.Count > 4)
-                    {
-                        WaterCustomColor5.BackColor = Color.FromArgb(theme.FreshwaterColorPalette[4] ?? Color.White.ToArgb());
-                        WaterCustomColor5.ForeColor = SystemColors.ControlDark;
-                        WaterCustomColor5.Text = ColorTranslator.ToHtml(WaterCustomColor5.BackColor);
-
-                        WaterCustomColor5.Refresh();
-                    }
-
-                    if (theme.FreshwaterColorPalette?.Count > 5)
-                    {
-                        WaterCustomColor6.BackColor = Color.FromArgb(theme.FreshwaterColorPalette[5] ?? Color.White.ToArgb());
-                        WaterCustomColor6.ForeColor = SystemColors.ControlDark;
-                        WaterCustomColor6.Text = ColorTranslator.ToHtml(WaterCustomColor6.BackColor);
-
-                        WaterCustomColor6.Refresh();
-                    }
-
-                    if (theme.FreshwaterColorPalette?.Count > 6)
-                    {
-                        WaterCustomColor7.BackColor = Color.FromArgb(theme.FreshwaterColorPalette[6] ?? Color.White.ToArgb());
-                        WaterCustomColor7.ForeColor = SystemColors.ControlDark;
-                        WaterCustomColor7.Text = ColorTranslator.ToHtml(WaterCustomColor7.BackColor);
-
-                        WaterCustomColor7.Refresh();
-                    }
-
-                    if (theme.FreshwaterColorPalette?.Count > 7)
-                    {
-                        WaterCustomColor8.BackColor = Color.FromArgb(theme.FreshwaterColorPalette[7] ?? Color.White.ToArgb());
-                        WaterCustomColor8.ForeColor = SystemColors.ControlDark;
-                        WaterCustomColor8.Text = ColorTranslator.ToHtml(WaterCustomColor8.BackColor);
-
-                        WaterCustomColor8.Refresh();
-                    }
-
-                    if (WaterCustomColor1.BackColor.ToArgb() == Color.White.ToArgb()
-                        && WaterCustomColor2.BackColor.ToArgb() == Color.White.ToArgb()
-                        && WaterCustomColor3.BackColor.ToArgb() == Color.White.ToArgb()
-                        && WaterCustomColor4.BackColor.ToArgb() == Color.White.ToArgb()
-                        && WaterCustomColor5.BackColor.ToArgb() == Color.White.ToArgb()
-                        && WaterCustomColor6.BackColor.ToArgb() == Color.White.ToArgb()
-                        && WaterCustomColor7.BackColor.ToArgb() == Color.White.ToArgb()
-                        && WaterCustomColor8.BackColor.ToArgb() == Color.White.ToArgb())
-                    {
-                        WaterCustomColor1.Text = "";
-                        WaterCustomColor2.Text = "";
-                        WaterCustomColor3.Text = "";
-                        WaterCustomColor4.Text = "";
-                        WaterCustomColor5.Text = "";
-                        WaterCustomColor6.Text = "";
-                        WaterCustomColor7.Text = "";
-                        WaterCustomColor8.Text = "";
-                    }
-                }
-
-                if (themeFilter.ApplyPathSetSettings)
-                {
-                    PathMediator.PathColor = Color.FromArgb(theme.PathColor ?? Color.FromArgb(75, 49, 26).ToArgb());
-                    PathMediator.PathWidth = theme.PathWidth ?? 8;
-                    PathMediator.PathType = theme.PathStyle ?? PathType.SolidLinePath;
-                }
-
-                if (themeFilter.ApplySymbolSettings && theme.SymbolCustomColors != null)
-                {
-                    SymbolMediator.SymbolColor1 = Color.FromArgb(theme.SymbolCustomColors[0] ?? Color.White.ToArgb());
-                    SymbolMediator.SymbolColor2 = Color.FromArgb(theme.SymbolCustomColors[1] ?? Color.White.ToArgb());
-                    SymbolMediator.SymbolColor3 = Color.FromArgb(theme.SymbolCustomColors[2] ?? Color.White.ToArgb());
-                }
-
-                if (themeFilter.ApplyLabelPresetSettings)
-                {
-                    LabelPresetManager.PresetMediator?.AddLabelPresets();
-                }
-
-                if (themeFilter.ApplyLabelSettings)
-                {
-
-                    if (!string.IsNullOrEmpty(theme.LabelFont))
-                    {
-                        Font? themeFont = new("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, 0);
-
-                        FontConverter cvt = new();
-                        themeFont = (Font?)cvt.ConvertFromString(theme.LabelFont);
-
-                        if (themeFont != null && !theme.LabelFont.Contains(themeFont.FontFamily.Name))
-                        {
-                            themeFont = null;
-                        }
-
-                        if (themeFont == null)
-                        {
-                            string[] fontParts = theme.LabelFont.Split(',');
-
-                            if (fontParts.Length == 2)
-                            {
-                                string ff = fontParts[0];
-                                string fs = fontParts[1];
-
-                                // remove any non-numeric characters from the font size string (but allow . and -)
-                                fs = string.Join(",", new string(
-                                    [.. fs.Where(c => char.IsBetween(c, '0', '9') || c == '.' || c == '-' || char.IsWhiteSpace(c))]).Split((char[]?)null,
-                                    StringSplitOptions.RemoveEmptyEntries));
-
-                                bool success = float.TryParse(fs, out float fontsize);
-
-                                if (!success)
-                                {
-                                    fontsize = 12.0F;
-                                }
-
-                                try
-                                {
-                                    FontFamily family = new(ff);
-                                    themeFont = new Font(family, fontsize, FontStyle.Regular, GraphicsUnit.Point);
-                                }
-                                catch
-                                {
-                                    // couldn't create the font, so try to find it in the list of embedded fonts
-                                    for (int i = 0; i < LabelManager.EMBEDDED_FONTS.Families.Length; i++)
-                                    {
-                                        if (LabelManager.EMBEDDED_FONTS.Families[i].Name == ff)
-                                        {
-                                            themeFont = new Font(LabelManager.EMBEDDED_FONTS.Families[i], fontsize, FontStyle.Regular, GraphicsUnit.Point);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        if (themeFont != null)
-                        {
-                            FontPanelManager.FontPanelSelectedFont.SelectedFont = new Font(themeFont.FontFamily, 12);
-                            FontPanelManager.FontPanelSelectedFont.FontSize = themeFont.SizeInPoints;
-                            LabelMediator.SelectedLabelFont = themeFont;
-                            SelectLabelFontButton.Font = new Font(themeFont.FontFamily, 14);
-                            SelectLabelFontButton.Refresh();
-                        }
-                    }
-
-                    LabelMediator.LabelColor = Color.FromArgb(theme.LabelColor ?? Color.FromArgb(61, 53, 30).ToArgb());
-                    LabelMediator.OutlineColor = Color.FromArgb(theme.LabelOutlineColor ?? Color.FromArgb(161, 214, 202, 171).ToArgb());
-                    LabelMediator.OutlineWidth = (int?)theme.LabelOutlineWidth ?? 0;
-                    LabelMediator.GlowColor = Color.FromArgb(theme.LabelGlowColor ?? Color.White.ToArgb());
-                    LabelMediator.GlowStrength = theme.LabelGlowStrength ?? 0;
-
-                }
-            }
-            catch
-            {
-                // error loading the theme
-            }
         }
 
         #endregion
@@ -4891,42 +4199,90 @@ namespace RealmStudio
 
         private void OceanCustomColorButton1_Click(object sender, MouseEventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                OceanMediator.CustomColor1 = Color.White;
+                return;
+            }
+
+            OceanMediator.OceanPaintColor = OceanMediator.CustomColor1;
         }
 
         private void OceanCustomColorButton2_Click(object sender, MouseEventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                OceanMediator.CustomColor2 = Color.White;
+                return;
+            }
+
+            OceanMediator.OceanPaintColor = OceanMediator.CustomColor2;
         }
 
         private void OceanCustomColorButton3_Click(object sender, MouseEventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                OceanMediator.CustomColor3 = Color.White;
+                return;
+            }
+
+            OceanMediator.OceanPaintColor = OceanMediator.CustomColor3;
         }
 
         private void OceanCustomColorButton4_Click(object sender, MouseEventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                OceanMediator.CustomColor4 = Color.White;
+                return;
+            }
+
+            OceanMediator.OceanPaintColor = OceanMediator.CustomColor4;
         }
 
         private void OceanCustomColorButton5_Click(object sender, MouseEventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                OceanMediator.CustomColor5 = Color.White;
+                return;
+            }
+
+            OceanMediator.OceanPaintColor = OceanMediator.CustomColor5;
         }
 
         private void OceanCustomColorButton6_Click(object sender, MouseEventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                OceanMediator.CustomColor6 = Color.White;
+                return;
+            }
+
+            OceanMediator.OceanPaintColor = OceanMediator.CustomColor6;
         }
 
         private void OceanCustomColorButton7_Click(object sender, MouseEventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                OceanMediator.CustomColor7 = Color.White;
+                return;
+            }
+
+            OceanMediator.OceanPaintColor = OceanMediator.CustomColor7;
         }
 
         private void OceanCustomColorButton8_Click(object sender, MouseEventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                OceanMediator.CustomColor8 = Color.White;
+                return;
+            }
+
+            OceanMediator.OceanPaintColor = OceanMediator.CustomColor8;
         }
         #endregion
 
@@ -5080,34 +4436,70 @@ namespace RealmStudio
             LandformMediator.SetLandColorFromPreset("#3D3728");
         }
 
-        private void LandCustomColorButton1_MouseClick(object sender, MouseEventArgs e)
+        private void LandCustomColorButton1_Click(object sender, EventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                LandformMediator.CustomColor1 = Color.White;
+                return;
+            }
+
+            LandformMediator.LandPaintColor = LandformMediator.CustomColor1;
         }
 
-        private void LandCustomColorButton2_MouseClick(object sender, MouseEventArgs e)
+        private void LandCustomColorButton2_Click(object sender, EventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                LandformMediator.CustomColor2 = Color.White;
+                return;
+            }
+
+            LandformMediator.LandPaintColor = LandformMediator.CustomColor2;
         }
 
-        private void LandCustomColorButton3_MouseClick(object sender, MouseEventArgs e)
+        private void LandCustomColorButton3_Click(object sender, EventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                LandformMediator.CustomColor3 = Color.White;
+                return;
+            }
+
+            LandformMediator.LandPaintColor = LandformMediator.CustomColor3;
         }
 
-        private void LandCustomColorButton4_MouseClick(object sender, MouseEventArgs e)
+        private void LandCustomColorButton4_Click(object sender, EventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                LandformMediator.CustomColor4 = Color.White;
+                return;
+            }
+
+            LandformMediator.LandPaintColor = LandformMediator.CustomColor4;
         }
 
-        private void LandCustomColorButton5_MouseClick(object sender, MouseEventArgs e)
+        private void LandCustomColorButton5_Click(object sender, EventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                LandformMediator.CustomColor5 = Color.White;
+                return;
+            }
+
+            LandformMediator.LandPaintColor = LandformMediator.CustomColor5;
         }
 
-        private void LandCustomColorButton6_MouseClick(object sender, MouseEventArgs e)
+        private void LandCustomColorButton6_Click(object sender, EventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                LandformMediator.CustomColor6 = Color.White;
+                return;
+            }
+
+            LandformMediator.LandPaintColor = LandformMediator.CustomColor6;
         }
 
         private void LandSoftBrushButton_Click(object sender, EventArgs e)
@@ -5406,44 +4798,92 @@ namespace RealmStudio
             WaterFeatureMediator.SetWaterColorFromPreset("#42718D");
         }
 
-        private void WaterCustomColor1_MouseClick(object sender, MouseEventArgs e)
+        private void WaterCustomColor1_Click(object sender, EventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                WaterFeatureMediator.CustomColor1 = Color.White;
+                return;
+            }
+
+            WaterFeatureMediator.WaterPaintColor = WaterFeatureMediator.CustomColor1;
         }
 
-        private void WaterCustomColor2_MouseClick(object sender, MouseEventArgs e)
+        private void WaterCustomColor2_Click(object sender, EventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                WaterFeatureMediator.CustomColor2 = Color.White;
+                return;
+            }
+
+            WaterFeatureMediator.WaterPaintColor = WaterFeatureMediator.CustomColor2;
         }
 
-        private void WaterCustomColor3_MouseClick(object sender, MouseEventArgs e)
+        private void WaterCustomColor3_Click(object sender, EventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                WaterFeatureMediator.CustomColor3 = Color.White;
+                return;
+            }
+
+            WaterFeatureMediator.WaterPaintColor = WaterFeatureMediator.CustomColor3;
         }
 
-        private void WaterCustomColor4_MouseClick(object sender, MouseEventArgs e)
+        private void WaterCustomColor4_Click(object sender, EventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                WaterFeatureMediator.CustomColor4 = Color.White;
+                return;
+            }
+
+            WaterFeatureMediator.WaterPaintColor = WaterFeatureMediator.CustomColor4;
         }
 
-        private void WaterCustomColor5_MouseClick(object sender, MouseEventArgs e)
+        private void WaterCustomColor5_Click(object sender, EventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                WaterFeatureMediator.CustomColor5 = Color.White;
+                return;
+            }
+
+            WaterFeatureMediator.WaterPaintColor = WaterFeatureMediator.CustomColor5;
         }
 
-        private void WaterCustomColor6_MouseClick(object sender, MouseEventArgs e)
+        private void WaterCustomColor6_Click(object sender, EventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                WaterFeatureMediator.CustomColor6 = Color.White;
+                return;
+            }
+
+            WaterFeatureMediator.WaterPaintColor = WaterFeatureMediator.CustomColor6;
         }
 
-        private void WaterCustomColor7_MouseClick(object sender, MouseEventArgs e)
+        private void WaterCustomColor7_Click(object sender, EventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                WaterFeatureMediator.CustomColor7 = Color.White;
+                return;
+            }
+
+            WaterFeatureMediator.WaterPaintColor = WaterFeatureMediator.CustomColor7;
         }
 
-        private void WaterCustomColor8_MouseClick(object sender, MouseEventArgs e)
+        private void WaterCustomColor8_Click(object sender, EventArgs e)
         {
-            MainMediator.ColorPresetButtonMouseClickHandler(sender, e);
+            if (ModifierKeys == Keys.Control)
+            {
+                WaterFeatureMediator.CustomColor8 = Color.White;
+                return;
+            }
+
+            WaterFeatureMediator.WaterPaintColor = WaterFeatureMediator.CustomColor8;
         }
 
         #endregion
@@ -5901,7 +5341,7 @@ namespace RealmStudio
 
         private void ScaleButton_Click(object sender, EventArgs e)
         {
-            ScaleUIMediator.ScalePanelVisible = !ScaleUIMediator.ScalePanelVisible;
+            ScaleMediator.ScalePanelVisible = !ScaleMediator.ScalePanelVisible;
         }
 
         private void CreateScaleButton_Click(object sender, EventArgs e)
@@ -5919,74 +5359,74 @@ namespace RealmStudio
 
         private void ScaleWidthTrack_Scroll(object sender, EventArgs e)
         {
-            ScaleUIMediator.ScaleWidth = ScaleWidthTrack.Value;
-            TOOLTIP.Show(ScaleUIMediator.ScaleWidth.ToString(), MapScaleGroupBox, new Point(ScaleWidthTrack.Right - 30, ScaleWidthTrack.Top - 20), 2000);
+            ScaleMediator.ScaleWidth = ScaleWidthTrack.Value;
+            TOOLTIP.Show(ScaleMediator.ScaleWidth.ToString(), MapScaleGroupBox, new Point(ScaleWidthTrack.Right - 30, ScaleWidthTrack.Top - 20), 2000);
         }
 
         private void ScaleHeightTrack_Scroll(object sender, EventArgs e)
         {
-            ScaleUIMediator.ScaleHeight = ScaleHeightTrack.Value;
-            TOOLTIP.Show(ScaleUIMediator.ScaleHeight.ToString(), MapScaleGroupBox, new Point(ScaleHeightTrack.Right - 30, ScaleHeightTrack.Top - 20), 2000);
+            ScaleMediator.ScaleHeight = ScaleHeightTrack.Value;
+            TOOLTIP.Show(ScaleMediator.ScaleHeight.ToString(), MapScaleGroupBox, new Point(ScaleHeightTrack.Right - 30, ScaleHeightTrack.Top - 20), 2000);
         }
 
         private void ScaleSegmentCountTrack_Scroll(object sender, EventArgs e)
         {
-            ScaleUIMediator.SegmentCount = ScaleSegmentCountTrack.Value;
-            TOOLTIP.Show(ScaleUIMediator.SegmentCount.ToString(), MapScaleGroupBox, new Point(ScaleSegmentCountTrack.Right - 30, ScaleSegmentCountTrack.Top - 20), 2000);
+            ScaleMediator.SegmentCount = ScaleSegmentCountTrack.Value;
+            TOOLTIP.Show(ScaleMediator.SegmentCount.ToString(), MapScaleGroupBox, new Point(ScaleSegmentCountTrack.Right - 30, ScaleSegmentCountTrack.Top - 20), 2000);
         }
 
         private void ScaleLineWidthTrack_Scroll(object sender, EventArgs e)
         {
-            ScaleUIMediator.ScaleLineWidth = ScaleLineWidthTrack.Value;
-            TOOLTIP.Show(ScaleUIMediator.ScaleLineWidth.ToString(), MapScaleGroupBox, new Point(ScaleLineWidthTrack.Right - 30, ScaleLineWidthTrack.Top - 20), 2000);
+            ScaleMediator.ScaleLineWidth = ScaleLineWidthTrack.Value;
+            TOOLTIP.Show(ScaleMediator.ScaleLineWidth.ToString(), MapScaleGroupBox, new Point(ScaleLineWidthTrack.Right - 30, ScaleLineWidthTrack.Top - 20), 2000);
         }
 
         private void ScaleUnitsTextBox_TextChanged(object sender, EventArgs e)
         {
-            ScaleUIMediator.ScaleUnitsText = ScaleUnitsTextBox.Text;
+            ScaleMediator.ScaleUnitsText = ScaleUnitsTextBox.Text;
         }
 
         private void ScaleNumbersNoneRadio_CheckedChanged(object sender, EventArgs e)
         {
-            ScaleUIMediator.ScaleNumbersDisplayType = ScaleNumbersDisplayLocation.None;
+            ScaleMediator.ScaleNumbersDisplayType = ScaleNumbersDisplayLocation.None;
         }
 
         private void ScaleNumbersEndsRadio_CheckedChanged(object sender, EventArgs e)
         {
-            ScaleUIMediator.ScaleNumbersDisplayType = ScaleNumbersDisplayLocation.Ends;
+            ScaleMediator.ScaleNumbersDisplayType = ScaleNumbersDisplayLocation.Ends;
         }
 
         private void ScaleNumbersEveryOtherRadio_CheckedChanged(object sender, EventArgs e)
         {
-            ScaleUIMediator.ScaleNumbersDisplayType = ScaleNumbersDisplayLocation.EveryOther;
+            ScaleMediator.ScaleNumbersDisplayType = ScaleNumbersDisplayLocation.EveryOther;
         }
 
         private void ScaleNumbersAllRadio_CheckedChanged(object sender, EventArgs e)
         {
-            ScaleUIMediator.ScaleNumbersDisplayType = ScaleNumbersDisplayLocation.All;
+            ScaleMediator.ScaleNumbersDisplayType = ScaleNumbersDisplayLocation.All;
         }
 
         private void ScaleColorsResetButton_Click(object sender, EventArgs e)
         {
-            ScaleUIMediator.ResetScaleColors();
+            ScaleMediator.ResetScaleColors();
         }
 
         private void ScaleColor1Button_Click(object sender, EventArgs e)
         {
             Color scaleColor = UtilityMethods.SelectColorFromDialog(this, ScaleColor1Button.BackColor);
-            ScaleUIMediator.ScaleColor1 = scaleColor;
+            ScaleMediator.ScaleColor1 = scaleColor;
         }
 
         private void ScaleColor2Button_Click(object sender, EventArgs e)
         {
             Color scaleColor = UtilityMethods.SelectColorFromDialog(this, ScaleColor2Button.BackColor);
-            ScaleUIMediator.ScaleColor2 = scaleColor;
+            ScaleMediator.ScaleColor2 = scaleColor;
         }
 
         private void ScaleColor3Button_Click(object sender, EventArgs e)
         {
             Color scaleColor = UtilityMethods.SelectColorFromDialog(this, ScaleColor3Button.BackColor);
-            ScaleUIMediator.ScaleColor3 = scaleColor;
+            ScaleMediator.ScaleColor3 = scaleColor;
         }
 
         private void SelectScaleFontButton_Click(object sender, EventArgs e)
@@ -5998,19 +5438,19 @@ namespace RealmStudio
         private void SelectScaleFontColorButton_Click(object sender, EventArgs e)
         {
             Color scaleColor = UtilityMethods.SelectColorFromDialog(this, SelectScaleFontColorButton.BackColor);
-            ScaleUIMediator.ScaleFontColor = scaleColor;
+            ScaleMediator.ScaleFontColor = scaleColor;
         }
 
         private void SelectScaleOutlineColorButton_Click(object sender, EventArgs e)
         {
             Color scaleColor = UtilityMethods.SelectColorFromDialog(this, SelectScaleOutlineColorButton.BackColor);
-            ScaleUIMediator.ScaleNumberOutlineColor = scaleColor;
+            ScaleMediator.ScaleNumberOutlineColor = scaleColor;
         }
 
         private void ScaleOutlineWidthTrack_Scroll(object sender, EventArgs e)
         {
-            ScaleUIMediator.ScaleOutlineWidth = ScaleOutlineWidthTrack.Value;
-            TOOLTIP.Show(ScaleUIMediator.ScaleOutlineWidth.ToString(), ScaleOutlineGroupBox, new Point(ScaleOutlineWidthTrack.Right - 30, ScaleOutlineWidthTrack.Top - 20), 2000);
+            ScaleMediator.ScaleOutlineWidth = ScaleOutlineWidthTrack.Value;
+            TOOLTIP.Show(ScaleMediator.ScaleOutlineWidth.ToString(), ScaleOutlineGroupBox, new Point(ScaleOutlineWidthTrack.Right - 30, ScaleOutlineWidthTrack.Top - 20), 2000);
         }
 
         #endregion

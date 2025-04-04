@@ -149,12 +149,12 @@ namespace RealmStudio
 
         public void NotifyUpdate(string? changedPropertyName)
         {
-            UpdateFrameUI(changedPropertyName);
+            UpdateLabelUI(changedPropertyName);
             FrameManager.Update();
             MainForm.SKGLRenderControl.Invalidate();
         }
 
-        private void UpdateFrameUI(string? changedPropertyName)
+        private void UpdateLabelUI(string? changedPropertyName)
         {
             MainForm.Invoke(new System.Windows.Forms.MethodInvoker(delegate ()
             {

@@ -53,6 +53,7 @@ namespace RealmStudio
             ArgumentNullException.ThrowIfNull(OceanMediator);
 
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
+
             Bitmap? textureBitmap = OceanMediator.OceanTextureList[OceanMediator.OceanTextureIndex].TextureBitmap;
             float scale = OceanMediator.OceanTextureScale;
             bool mirrorBackground = OceanMediator.MirrorOceanTexture;
@@ -82,6 +83,8 @@ namespace RealmStudio
                             MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
                     }
 
+                    Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, OceanMediator.OceanTextureOpacity / 100.0F);
+
                     MapImage OceanTexture = new()
                     {
                         X = 0,
@@ -89,7 +92,7 @@ namespace RealmStudio
                         Width = MapStateMediator.CurrentMap.MapWidth,
                         Height = MapStateMediator.CurrentMap.MapHeight,
                         MirrorImage = mirrorBackground,
-                        MapImageBitmap = resizedBitmap.ToSKBitmap(),
+                        MapImageBitmap = b.ToSKBitmap(),
                     };
 
                     oceanTextureLayer.MapLayerComponents[0] = OceanTexture;
@@ -145,13 +148,15 @@ namespace RealmStudio
 
                 if (textureBitmap != null && scale > 0.0F)
                 {
-                    if (scale != 1.0F)
+                    if (scale != 100.0F)
                     {
                         // resize the bitmap, but maintain aspect ratio
                         Bitmap resizedBitmap = DrawingMethods.ScaleBitmap(textureBitmap,
-                            (int)(MapStateMediator.CurrentMap.MapWidth * scale), (int)(MapStateMediator.CurrentMap.MapHeight * scale));
+                            (int)(MapStateMediator.CurrentMap.MapWidth * scale / 100.0F), (int)(MapStateMediator.CurrentMap.MapHeight * scale / 100.0F));
 
-                        Cmd_SetOceanTexture cmd = new(MapStateMediator.CurrentMap, Extensions.ToSKBitmap(resizedBitmap), mirrorBackground);
+                        Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, OceanMediator.OceanTextureOpacity / 100.0F);
+
+                        Cmd_SetOceanTexture cmd = new(MapStateMediator.CurrentMap, Extensions.ToSKBitmap(b), mirrorBackground);
                         CommandManager.AddCommand(cmd);
                         cmd.DoOperation();
                     }
@@ -159,7 +164,9 @@ namespace RealmStudio
                     {
                         Bitmap resizedBitmap = new(textureBitmap, MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
 
-                        Cmd_SetOceanTexture cmd = new(MapStateMediator.CurrentMap, Extensions.ToSKBitmap(resizedBitmap), mirrorBackground);
+                        Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, OceanMediator.OceanTextureOpacity / 100.0F);
+
+                        Cmd_SetOceanTexture cmd = new(MapStateMediator.CurrentMap, Extensions.ToSKBitmap(b), mirrorBackground);
                         CommandManager.AddCommand(cmd);
                         cmd.DoOperation();
                     }

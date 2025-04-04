@@ -49,6 +49,13 @@ namespace RealmStudio
         private int _landOutlineWidth = 2;
         private bool _useTextureBackground = true;
 
+        private Color _customColor1 = Color.White;
+        private Color _customColor2 = Color.White;
+        private Color _customColor3 = Color.White;
+        private Color _customColor4 = Color.White;
+        private Color _customColor5 = Color.White;
+        private Color _customColor6 = Color.White;
+
         private GeneratedLandformType _generatedLandformType = GeneratedLandformType.Region;
 
         public LandformUIMediator(RealmStudioMainForm mainForm)
@@ -171,10 +178,46 @@ namespace RealmStudio
             get { return _landTextureList; }
         }
 
-        public GeneratedLandformType LandformGenerationType
+        internal GeneratedLandformType LandformGenerationType
         {
             get { return _generatedLandformType; }
             set { SetPropertyField(nameof(LandformGenerationType), ref _generatedLandformType, value); }
+        }
+
+        public Color CustomColor1
+        {
+            get { return _customColor1; }
+            set { SetPropertyField(nameof(CustomColor1), ref _customColor1, value); }
+        }
+
+        public Color CustomColor2
+        {
+            get { return _customColor2; }
+            set { SetPropertyField(nameof(CustomColor2), ref _customColor2, value); }
+        }
+
+        public Color CustomColor3
+        {
+            get { return _customColor3; }
+            set { SetPropertyField(nameof(CustomColor3), ref _customColor3, value); }
+        }
+
+        public Color CustomColor4
+        {
+            get { return _customColor4; }
+            set { SetPropertyField(nameof(CustomColor4), ref _customColor4, value); }
+        }
+
+        public Color CustomColor5
+        {
+            get { return _customColor5; }
+            set { SetPropertyField(nameof(CustomColor5), ref _customColor5, value); }
+        }
+
+        public Color CustomColor6
+        {
+            get { return _customColor6; }
+            set { SetPropertyField(nameof(CustomColor6), ref _customColor6, value); }
         }
 
         #endregion
@@ -217,57 +260,117 @@ namespace RealmStudio
 
                 if (!string.IsNullOrEmpty(changedPropertyName))
                 {
-                    if (changedPropertyName == "ShowLandformLayers")
+                    switch (changedPropertyName)
                     {
-                        MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDCOASTLINELAYER);
-                        MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
-                        MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDDRAWINGLAYER);
+                        case "ShowLandformLayers":
+                            {
+                                MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDCOASTLINELAYER);
+                                MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
+                                MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDDRAWINGLAYER);
 
-                        landCoastlineLayer.ShowLayer = ShowLandformLayers;
-                        landformLayer.ShowLayer = ShowLandformLayers;
-                        landDrawingLayer.ShowLayer = ShowLandformLayers;
-                    }
-                    else if (changedPropertyName == "LandformTextureIndex")
-                    {
-                        UpdateLandTexture();
-                    }
-                    else if (changedPropertyName == "LandformGenerationType")
-                    {
-                        UncheckAllLandformTypeMenuItems();
+                                landCoastlineLayer.ShowLayer = ShowLandformLayers;
+                                landformLayer.ShowLayer = ShowLandformLayers;
+                                landDrawingLayer.ShowLayer = ShowLandformLayers;
+                            }
+                            break;
+                        case "LandformTextureIndex":
+                            {
+                                UpdateLandTexture();
+                            }
+                            break;
+                        case "LandformGenerationType":
+                            {
+                                UncheckAllLandformTypeMenuItems();
 
-                        switch (LandformGenerationType)
-                        {
-                            case GeneratedLandformType.Region:
+                                switch (LandformGenerationType)
                                 {
-                                    MainForm.RegionMenuItem.Checked = true;
+                                    case GeneratedLandformType.Region:
+                                        {
+                                            MainForm.RegionMenuItem.Checked = true;
+                                        }
+                                        break;
+                                    case GeneratedLandformType.Continent:
+                                        {
+                                            MainForm.ContinentMenuItem.Checked = true;
+                                        }
+                                        break;
+                                    case GeneratedLandformType.Archipelago:
+                                        {
+                                            MainForm.ArchipelagoMenuItem.Checked = true;
+                                        }
+                                        break;
+                                    case GeneratedLandformType.Island:
+                                        {
+                                            MainForm.IslandMenuItem.Checked = true;
+                                        }
+                                        break;
+                                    case GeneratedLandformType.Atoll:
+                                        {
+                                            MainForm.AtollMenuItem.Checked = true;
+                                        }
+                                        break;
+                                    case GeneratedLandformType.World:
+                                        {
+                                            MainForm.WorldMenuItem.Checked = true;
+                                        }
+                                        break;
                                 }
-                                break;
-                            case GeneratedLandformType.Continent:
+                            }
+                            break;
+                        case "CoastlineStyle":
+                            {
+                                for (int i = 0; i < MainForm.CoastlineStyleList.Items.Count; i++)
                                 {
-                                    MainForm.ContinentMenuItem.Checked = true;
+                                    if (MainForm.CoastlineStyleList.Items[i].ToString() == CoastlineStyle)
+                                    {
+                                        MainForm.CoastlineStyleList.SelectedIndex = i;
+                                        break;
+                                    }
                                 }
-                                break;
-                            case GeneratedLandformType.Archipelago:
-                                {
-                                    MainForm.ArchipelagoMenuItem.Checked = true;
-                                }
-                                break;
-                            case GeneratedLandformType.Island:
-                                {
-                                    MainForm.IslandMenuItem.Checked = true;
-                                }
-                                break;
-                            case GeneratedLandformType.Atoll:
-                                {
-                                    MainForm.AtollMenuItem.Checked = true;
-                                }
-                                break;
-                            case GeneratedLandformType.World:
-                                {
-                                    MainForm.WorldMenuItem.Checked = true;
-                                }
-                                break;
-                        }
+                            }
+                            break;
+                        case "CustomColor1":
+                            {
+                                MainForm.LandCustomColorButton1.BackColor = CustomColor1;
+                                MainForm.LandCustomColorButton1.ForeColor = SystemColors.ControlDark;
+                                MainForm.LandCustomColorButton1.Text = (CustomColor1.ToArgb() == Color.White.ToArgb()) ? "" : ColorTranslator.ToHtml(CustomColor1);
+                            }
+                            break;
+                        case "CustomColor2":
+                            {
+                                MainForm.LandCustomColorButton2.BackColor = CustomColor2;
+                                MainForm.LandCustomColorButton2.ForeColor = SystemColors.ControlDark;
+                                MainForm.LandCustomColorButton2.Text = (CustomColor2.ToArgb() == Color.White.ToArgb()) ? "" : ColorTranslator.ToHtml(CustomColor2);
+                            }
+                            break;
+                        case "CustomColor3":
+                            {
+                                MainForm.LandCustomColorButton3.BackColor = CustomColor3;
+                                MainForm.LandCustomColorButton3.ForeColor = SystemColors.ControlDark;
+                                MainForm.LandCustomColorButton3.Text = (CustomColor3.ToArgb() == Color.White.ToArgb()) ? "" : ColorTranslator.ToHtml(CustomColor3);
+                            }
+                            break;
+                        case "CustomColor4":
+                            {
+                                MainForm.LandCustomColorButton4.BackColor = CustomColor4;
+                                MainForm.LandCustomColorButton4.ForeColor = SystemColors.ControlDark;
+                                MainForm.LandCustomColorButton4.Text = (CustomColor4.ToArgb() == Color.White.ToArgb()) ? "" : ColorTranslator.ToHtml(CustomColor4);
+                            }
+                            break;
+                        case "CustomColor5":
+                            {
+                                MainForm.LandCustomColorButton5.BackColor = CustomColor5;
+                                MainForm.LandCustomColorButton5.ForeColor = SystemColors.ControlDark;
+                                MainForm.LandCustomColorButton5.Text = (CustomColor5.ToArgb() == Color.White.ToArgb()) ? "" : ColorTranslator.ToHtml(CustomColor5);
+                            }
+                            break;
+                        case "CustomColor6":
+                            {
+                                MainForm.LandCustomColorButton6.BackColor = CustomColor6;
+                                MainForm.LandCustomColorButton6.ForeColor = SystemColors.ControlDark;
+                                MainForm.LandCustomColorButton6.Text = (CustomColor6.ToArgb() == Color.White.ToArgb()) ? "" : ColorTranslator.ToHtml(CustomColor6);
+                            }
+                            break;
                     }
                 }
 
@@ -312,20 +415,10 @@ namespace RealmStudio
             MainForm.LandTextureNameLabel.Text = LandTextureList[LandformTextureIndex].TextureName;
         }
 
-        internal void SetLandPaintColorFromCustomPresetButton(Button b)
-        {
-            if (b.Text != "")
-            {
-                Color landColor = b.BackColor;
-                MainForm.LandColorSelectionButton.BackColor = landColor;
-            }
-        }
-
         internal void SetLandColorFromPreset(string htmlColor)
         {
             Color landColor = ColorTranslator.FromHtml(htmlColor);
-
-            MainForm.LandColorSelectionButton.BackColor = landColor;
+            LandPaintColor = landColor;
         }
 
         private void UncheckAllLandformTypeMenuItems()
