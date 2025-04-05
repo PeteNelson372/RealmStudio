@@ -463,9 +463,12 @@ namespace RealmStudio
             LabelManager.CurrentMapLabelPath = new();
 
             // clear other selected and current objects?
+            CurrentMapRegion = null;
 
-            // clear the work layer
+            // clear the work layers
             MapBuilder.GetMapLayerByIndex(CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            MapBuilder.GetMapLayerByIndex(CurrentMap, MapBuilder.WORKLAYER2).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
 
             // unselect anything selected
             RealmMapMethods.DeselectAllMapComponents(CurrentMap, null);

@@ -35,7 +35,6 @@ namespace RealmStudio
         private MapStateMediator? _mapState;
 
         bool _enabled = true;
-        bool _creatingLabel;
         float _labelRotation;
         float _glowStrength;
         Color _glowColor = Color.White;
@@ -123,12 +122,6 @@ namespace RealmStudio
             }
         }
 
-        internal bool CreatingLabel
-        {
-            get { return _creatingLabel; }
-            set { _creatingLabel = value; }
-        }
-
         #endregion
 
         #region Property Change Handler Methods
@@ -185,7 +178,7 @@ namespace RealmStudio
                             break;
                         case "Enabled":
                             {
-                                EnableDisabledLabelAndBoxLayer();
+                                EnableDisableLabelAndBoxLayer();
                             }
                             break;
                         case "OutlineWidth":
@@ -238,7 +231,7 @@ namespace RealmStudio
                 {
                     ((KeyPressEventArgs)e).Handled = false; // pass the event up
 
-                    CreatingLabel = false;
+                    LabelManager.CreatingLabel = false;
 
                     // dispose of the text box, as it isn't needed once the label text has been entered
                     MainForm.SKGLRenderControl.Controls.Remove(tb);
@@ -247,7 +240,7 @@ namespace RealmStudio
                 else if (((KeyPressEventArgs)e).KeyChar == (char)Keys.Return)
                 {
                     ((KeyPressEventArgs)e).Handled = true;
-                    CreatingLabel = false;
+                    LabelManager.CreatingLabel = false;
 
                     if (MapStateMediator.SelectedMapLabel != null)
                     {
@@ -392,7 +385,7 @@ namespace RealmStudio
         #endregion
 
         #region Label UI Methods
-        private void EnableDisabledLabelAndBoxLayer()
+        private void EnableDisableLabelAndBoxLayer()
         {
             MapLayer labellLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LABELLAYER);
             labellLayer.ShowLayer = Enabled;

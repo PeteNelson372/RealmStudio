@@ -59,8 +59,9 @@ namespace RealmStudio
         public static readonly int SELECTIONLAYER = 25;
         public static readonly int HEIGHTMAPLAYER = 26;
         public static readonly int WORKLAYER = 27;
+        public static readonly int WORKLAYER2 = 28;
 
-        public static readonly int MAP_LAYER_COUNT = WORKLAYER + 1;
+        public static readonly int MAP_LAYER_COUNT = WORKLAYER2 + 1;
 
         // layer static methods
         public static MapLayer GetMapLayerByIndex(RealmStudioMap map, int layerIndex)
@@ -240,13 +241,16 @@ namespace RealmStudio
 
             layer = ConstructMapLayer("work", (ushort)WORKLAYER, map.MapWidth, map.MapHeight, grContext);
             map.MapLayers.Add(layer);
+
+            layer = ConstructMapLayer("work2", (ushort)WORKLAYER2, map.MapWidth, map.MapHeight, grContext);
+            map.MapLayers.Add(layer);
         }
 
         public static void ConstructMissingLayersForMap(RealmStudioMap map, GRContext grContext)
         {
             List<string> allLayerNames = ["base", "oceantexture", "oceantextureoverlay", "oceandrawing", "windrose", "aboveoceangridlayer",
             "coastline","landform","landdrawing","water","waterdrawing","belowsymbolsgrid","pathlower","symbols","pathupper","region",
-            "regionoverlay", "grid","boxes","labels","overlay","frame","measures","userdrawing","vignette","selection","heightmap","work"];
+            "regionoverlay", "grid","boxes","labels","overlay","frame","measures","userdrawing","vignette","selection","heightmap","work", "work2"];
 
             List<string> mapLayerNames = [];
             for (int i = 0; i < map.MapLayers.Count; i++)

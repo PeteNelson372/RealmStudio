@@ -274,25 +274,17 @@ namespace RealmStudio
             }
             else
             {
-                Landform landform = new()
+                Landform? landform = (Landform?)Create();
+
+                if (landform != null)
                 {
-                    ParentMap = MapStateMediator.CurrentMap,
-                    Width = MapStateMediator.CurrentMap.MapWidth,
-                    Height = MapStateMediator.CurrentMap.MapHeight,
-                    LandformRenderSurface = SKSurface.Create(glControl.GRContext, false,
-                        new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight)),
-                    CoastlineRenderSurface = SKSurface.Create(glControl.GRContext, false,
-                        new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
-                };
+                    Cmd_FillMapWithLandform cmd = new(MapStateMediator.CurrentMap, landform);
+                    CommandManager.AddCommand(cmd);
+                    cmd.DoOperation();
 
-                //SetLandformData(landform);
-
-                Cmd_FillMapWithLandform cmd = new(MapStateMediator.CurrentMap, landform);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
-
-                MapStateMediator.CurrentMap.IsSaved = false;
-                glControl.Invalidate();
+                    MapStateMediator.CurrentMap.IsSaved = false;
+                    glControl.Invalidate();
+                }
             }
         }
 

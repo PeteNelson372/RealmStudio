@@ -76,6 +76,12 @@ namespace RealmStudio
             set { SetPropertyField(nameof(BackgroundTextureScale), ref _backgroundTextureScale, value); }
         }
 
+        internal float App_BackgroundTextureScale
+        {
+            get { return _backgroundTextureScale; }
+            set { SetPropertyField(nameof(App_BackgroundTextureScale), ref _backgroundTextureScale, value); }
+        }
+
         internal bool MirrorBackgroundTexture
         {
             get { return _mirrorBackgroundTexture; }
@@ -119,7 +125,7 @@ namespace RealmStudio
                     {
                         UpdateBackgroundTextureComboxBox();
                     }
-                    else if (changedPropertyName == "BackgroundTextureScale")
+                    else if (changedPropertyName == "App_BackgroundTextureScale")
                     {
                         MainForm.BackgroundTextureScaleTrack.Value = (int)BackgroundTextureScale;
                     }

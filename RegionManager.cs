@@ -28,7 +28,8 @@ namespace RealmStudio
 {
     internal sealed class RegionManager : IMapComponentManager
     {
-        private static readonly int _pointCircleRadius = 5;
+        private const int _pointCircleRadius = 5;
+        private const int _maxPointToCoastlineDistance = 5;
 
         private static bool _editingRegion;
         private static MapRegionPoint? _newRegionPoint;
@@ -301,9 +302,9 @@ namespace RealmStudio
                 for (int i = 0; i < lf.ContourPoints.Count; i++)
                 {
                     SKPoint p = lf.ContourPoints[i];
-                    float distance = SKPoint.Distance(MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
+                    float distance = SKPoint.Distance(MapStateMediator.CurrentCursorPoint, p);
 
-                    if (distance < currentDistance && distance < 5)
+                    if (distance < currentDistance && distance < _maxPointToCoastlineDistance)
                     {
                         landform1 = lf;
                         coastlinePointIndex = i;
@@ -470,10 +471,8 @@ namespace RealmStudio
             return selectedMapRegionPoint;
         }
 
-        internal static void DrawCoastlinePointOnWorkLayer()
+        internal static void DrawCoastlinePointOnWorkLayer2()
         {
-            const int maxPointToCoastlineDistance = 5;
-
             // find the closest point to the current point
             // on the contour path of a coastline;
             // if the nearest point on the coastline
@@ -491,8 +490,8 @@ namespace RealmStudio
             float currentDistance = float.MaxValue;
 
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
-            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER);
-            workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            MapLayer workLayer2 = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER2);
+            workLayer2.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
             // get the distance from the cursor point to the contour points of all landforms
             foreach (Landform lf in landformLayer.MapLayerComponents.Cast<Landform>())
@@ -502,7 +501,7 @@ namespace RealmStudio
                     SKPoint p = lf.ContourPoints[i];
                     float distance = SKPoint.Distance(MapStateMediator.CurrentCursorPoint, p);
 
-                    if (distance < currentDistance && distance < maxPointToCoastlineDistance)
+                    if (distance < currentDistance && distance < _maxPointToCoastlineDistance)
                     {
                         coastlinePointIndex = i;
                         coastlinePoint = p;
@@ -515,19 +514,18 @@ namespace RealmStudio
 
             if (coastlinePoint != SKPoint.Empty)
             {
-                workLayer.LayerSurface?.Canvas.DrawCircle(coastlinePoint, 5, PaintObjects.MapPathSelectedControlPointPaint);
+                workLayer2.LayerSurface?.Canvas.DrawCircle(coastlinePoint, _pointCircleRadius, PaintObjects.MapPathSelectedControlPointPaint);
             }
         }
 
         internal static bool IsRegionPointSelected(MapRegion mapRegion, SKPoint zoomedScrolledPoint)
         {
-            const int regionEditPointRadius = 5;
             bool regionPointSelected = false;
 
             foreach (MapRegionPoint p in mapRegion.MapRegionPoints)
             {
                 using SKPath path = new();
-                path.AddCircle(p.RegionPoint.X, p.RegionPoint.Y, regionEditPointRadius);
+                path.AddCircle(p.RegionPoint.X, p.RegionPoint.Y, _pointCircleRadius);
 
                 if (path.Contains(zoomedScrolledPoint.X, zoomedScrolledPoint.Y))
                 {

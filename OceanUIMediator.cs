@@ -120,10 +120,21 @@ namespace RealmStudio
             set { SetPropertyField(nameof(OceanTextureScale), ref _oceanTextureScale, value); }
         }
 
+        internal float App_OceanTextureScale
+        {
+            get { return _oceanTextureScale; }
+            set { SetPropertyField(nameof(App_OceanTextureScale), ref _oceanTextureScale, value); }
+        }
+
         internal float OceanTextureOpacity
         {
             get { return _oceanTextureOpacity; }
             set { SetPropertyField(nameof(OceanTextureOpacity), ref _oceanTextureOpacity, value); }
+        }
+        internal float App_OceanTextureOpacity
+        {
+            get { return _oceanTextureOpacity; }
+            set { SetPropertyField(nameof(App_OceanTextureOpacity), ref _oceanTextureOpacity, value); }
         }
 
         internal bool MirrorOceanTexture
@@ -255,13 +266,13 @@ namespace RealmStudio
                                 UpdateOceanTextureComboBox();
                             }
                             break;
-                        case "OceanTextureOpacity":
+                        case "App_OceanTextureOpacity":
                             {
                                 MainForm.OceanTextureOpacityTrack.Value = (int)OceanTextureOpacity;
                                 UpdateOceanTextureComboBox();
                             }
                             break;
-                        case "OceanTextureScale":
+                        case "App_OceanTextureScale":
                             {
                                 MainForm.OceanScaleTextureTrack.Value = (int)OceanTextureScale;
                             }

@@ -1086,8 +1086,19 @@ namespace RealmStudio
             {
                 // code that makes use of the work layer is responsible for clearing
                 // and drawing to the canvas properly; it is only rendered here
-                //workLayer.Render(workLayer.LayerSurface.Canvas);
                 renderCanvas.DrawSurface(workLayer.LayerSurface, scrollPoint);
+            }
+        }
+
+        internal static void RenderWorkLayer2(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
+        {
+            MapLayer workLayer2 = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER2);
+
+            if (workLayer2.LayerSurface != null)
+            {
+                // code that makes use of the work layer is responsible for clearing
+                // and drawing to the canvas properly; it is only rendered here
+                renderCanvas.DrawSurface(workLayer2.LayerSurface, scrollPoint);
             }
         }
     }

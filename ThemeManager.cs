@@ -158,7 +158,10 @@ namespace RealmStudio
             {
                 if (themeFilter.ApplyBackgroundSettings)
                 {
-                    BackgroundManager.BackgroundMediator.BackgroundTextureScale = (int)((theme.BackgroundTextureScale != null) ? theme.BackgroundTextureScale / 100 : 1);
+                    // if the background texture scale is set directly by the theme, when the user changes the scale trackbar,
+                    // the update is overridden by the BackgroundMediator, causing erratic behavior,
+                    // so the theme sets the scale using a different property name
+                    BackgroundManager.BackgroundMediator.App_BackgroundTextureScale = (int)((theme.BackgroundTextureScale != null) ? theme.BackgroundTextureScale / 100 : 1);
                     BackgroundManager.BackgroundMediator.MirrorBackgroundTexture = (bool)((theme.MirrorBackgroundTexture != null) ? theme.MirrorBackgroundTexture : false);
 
                     if (theme.BackgroundTexture != null)
@@ -202,8 +205,8 @@ namespace RealmStudio
                     oceanTextureOverLayLayer.MapLayerComponents.Clear();
 
                     // 0 to 100% (100% is 100% opaque)
-                    OceanManager.OceanMediator.OceanTextureOpacity = ((theme.OceanTextureOpacity != null) ? (float)theme.OceanTextureOpacity : 100.0F);
-                    OceanManager.OceanMediator.OceanTextureScale = ((theme.OceanTextureScale != null) ? (float)theme.OceanTextureScale : 100.0F);
+                    OceanManager.OceanMediator.App_OceanTextureOpacity = ((theme.OceanTextureOpacity != null) ? (float)theme.OceanTextureOpacity : 100.0F);
+                    OceanManager.OceanMediator.App_OceanTextureScale = ((theme.OceanTextureScale != null) ? (float)theme.OceanTextureScale : 100.0F);
                     OceanManager.OceanMediator.MirrorOceanTexture = theme.MirrorOceanTexture ?? false;
                     OceanManager.OceanMediator.OceanFillColor = Color.FromArgb(theme.OceanColor ?? Color.FromKnownColor(KnownColor.ControlLight).ToArgb());
 
@@ -496,9 +499,12 @@ namespace RealmStudio
                         }
                     }
 
+                    // TODO: UI values controlled by trackbars have to be set using a different property,
+                    // so that updates not done by the user don't "fight" with the mediator; updates to
+                    // trackbars done by the user cannot cause the mediator to update the trackbar
                     LabelManager.LabelMediator.LabelColor = Color.FromArgb(theme.LabelColor ?? Color.FromArgb(61, 53, 30).ToArgb());
                     LabelManager.LabelMediator.OutlineColor = Color.FromArgb(theme.LabelOutlineColor ?? Color.FromArgb(161, 214, 202, 171).ToArgb());
-                    LabelManager.LabelMediator.OutlineWidth = (int?)theme.LabelOutlineWidth ?? 0;
+                    LabelManager.LabelMediator.OutlineWidth = (int?)theme.LabelOutlineWidth / 10.0F ?? 0;
                     LabelManager.LabelMediator.GlowColor = Color.FromArgb(theme.LabelGlowColor ?? Color.White.ToArgb());
                     LabelManager.LabelMediator.GlowStrength = theme.LabelGlowStrength ?? 0;
 

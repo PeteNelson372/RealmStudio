@@ -2046,8 +2046,6 @@ namespace RealmStudio
                     throw;
                 }
 
-                MapStateMediator.CurrentMap.IsSaved = true;
-
                 MapRenderHScroll.Maximum = MapStateMediator.CurrentMap.MapWidth;
                 MapRenderVScroll.Maximum = MapStateMediator.CurrentMap.MapHeight;
 
@@ -2066,6 +2064,8 @@ namespace RealmStudio
                 SetStatusText("Loaded: " + MapStateMediator.CurrentMap.MapName);
 
                 UpdateMapNameAndSize();
+
+                MapStateMediator.CurrentMap.IsSaved = true;
 
                 SKGLRenderControl.Invalidate();
             }
@@ -2479,6 +2479,7 @@ namespace RealmStudio
 
                 // work layer
                 MapRenderMethods.RenderWorkLayer(MapStateMediator.CurrentMap, e.Surface.Canvas, MapStateMediator.ScrollPoint);
+                MapRenderMethods.RenderWorkLayer2(MapStateMediator.CurrentMap, e.Surface.Canvas, MapStateMediator.ScrollPoint);
             }
         }
 
@@ -3061,10 +3062,9 @@ namespace RealmStudio
                                 MapRegionPoint mrp = new(MapStateMediator.CurrentCursorPoint);
                                 MapStateMediator.CurrentMapRegion.MapRegionPoints.Add(mrp);
                             }
-
-                            MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
                         }
 
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -3159,6 +3159,8 @@ namespace RealmStudio
 
                         // reset everything
                         MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER2).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
                         MapStateMediator.CurrentMapRegion = null;
                         MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
                     }
@@ -3429,6 +3431,12 @@ namespace RealmStudio
                         if (MapStateMediator.CurrentMapRegion != null)
                         {
                             RegionManager.DrawRegionOnWorkLayer();
+
+                            if (ModifierKeys == Keys.Shift)
+                            {
+                                RegionManager.DrawCoastlinePointOnWorkLayer2();
+                            }
+
                             SKGLRenderControl.Invalidate();
                         }
                     }
@@ -3534,17 +3542,18 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.RegionPaint:
                     {
-                        if (MapStateMediator.CurrentMapRegion == null || MapStateMediator.CurrentMapRegion.MapRegionPoints.Count == 1)
+                        if (MapStateMediator.CurrentMapRegion != null)
                         {
-                            if (ModifierKeys == Keys.Shift)
-                            {
-                                RegionManager.DrawCoastlinePointOnWorkLayer();
-                            }
-                        }
-                        else
-                        {
+                            // draw the region on the work layer
                             RegionManager.DrawRegionOnWorkLayer();
                         }
+
+                        if (ModifierKeys == Keys.Shift)
+                        {
+                            RegionManager.DrawCoastlinePointOnWorkLayer2();
+                        }
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
                 case MapDrawingMode.RegionSelect:
