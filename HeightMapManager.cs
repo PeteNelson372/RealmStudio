@@ -131,28 +131,32 @@ namespace RealmStudio
 
             float accumulatedHeight = 0;
 
-            for (int i = -1; i < 2; i++)
+            if (x > 0 && x < heightMapBitmap.Width
+                && y > 0 && y < heightMapBitmap.Height)
             {
-                for (int j = -1; j < 2; j++)
-                {
-                    if (x + i >= 0 && x + i < heightMapBitmap.Width
-                        && y + j >= 0 && y + j < heightMapBitmap.Height)
-                    {
-                        accumulatedHeight += heightMap[x + i, y + j];
-                    }
-                }
+                accumulatedHeight += heightMap[x - 1, y - 1];
+                accumulatedHeight += heightMap[x, y - 1];
+                accumulatedHeight += heightMap[x + 1, y - 1];
+
+                accumulatedHeight += heightMap[x - 1, y];
+                accumulatedHeight += heightMap[x, y];
+                accumulatedHeight += heightMap[x + 1, y];
+
+                accumulatedHeight += heightMap[x - 1, y + 1];
+                accumulatedHeight += heightMap[x, y + 1];
+                accumulatedHeight += heightMap[x + 1, y + 1];
             }
 
-            colorValue = accumulatedHeight / 9;
+            colorValue = accumulatedHeight / 9.0F;
 
+            // constrain the color value to be between 35 and 255
             colorValue = Math.Min(255.0F, colorValue);
             colorValue = Math.Max(35.0F, colorValue);
             heightMap[x, y] = colorValue;
 
-            int r = (int)Math.Round(colorValue);
-            int g = (int)Math.Round(colorValue);
-            int b = (int)Math.Round(colorValue);
-            heightMapBitmap.SetPixel(x, y, new SKColor((byte)r, (byte)g, (byte)b));
+            int rgb = (int)Math.Round(colorValue);
+
+            heightMapBitmap.SetPixel(x, y, new SKColor((byte)rgb, (byte)rgb, (byte)rgb));
         }
 
         internal static SKBitmap? ExtractRectFromHeightMap(RealmStudioMap map, SKRect? extractRect)

@@ -1372,13 +1372,16 @@ namespace RealmStudio
             {
                 case 0:
                     BackgroundToolPanel.Visible = true;
+                    BackgroundMediator.NotifyUpdate(null);
                     break;
                 case 1:
                     OceanToolPanel.Visible = true;
+                    OceanMediator.NotifyUpdate(null);
                     BackgroundToolPanel.Visible = false;
                     break;
                 case 2:
                     BackgroundToolPanel.Visible = false;
+                    LandformMediator.NotifyUpdate(null);
 
                     if (RenderAsHeightMapMenuItem.Checked)
                     {
@@ -1399,26 +1402,35 @@ namespace RealmStudio
                     break;
                 case 3:
                     WaterToolPanel.Visible = true;
+                    WaterFeatureMediator.NotifyUpdate(null);
                     BackgroundToolPanel.Visible = false;
                     break;
                 case 4:
                     PathToolPanel.Visible = true;
+                    PathMediator.NotifyUpdate(null);
                     BackgroundToolPanel.Visible = false;
                     break;
                 case 5:
                     SymbolToolPanel.Visible = true;
+                    SymbolMediator.NotifyUpdate(null);
                     BackgroundToolPanel.Visible = false;
                     break;
                 case 6:
                     LabelToolPanel.Visible = true;
+                    LabelMediator.NotifyUpdate(null);
                     BackgroundToolPanel.Visible = false;
                     break;
                 case 7:
                     OverlayToolPanel.Visible = true;
+                    FrameMediator.NotifyUpdate(null);
+                    GridMediator.NotifyUpdate(null);
+                    ScaleMediator.NotifyUpdate(null);
+                    MeasureMediator.NotifyUpdate(null);
                     BackgroundToolPanel.Visible = false;
                     break;
                 case 8:
                     RegionToolPanel.Visible = true;
+                    RegionMediator.NotifyUpdate(null);
                     BackgroundToolPanel.Visible = false;
                     break;
                 case 9:
@@ -4146,11 +4158,13 @@ namespace RealmStudio
         private void OceanSoftBrushButton_Click(object sender, EventArgs e)
         {
             MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.SoftBrush;
+            OceanMediator.OceanPaintBrush = ColorPaintBrush.SoftBrush;
         }
 
         private void OceanHardBrushButton_Click(object sender, EventArgs e)
         {
             MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
+            OceanMediator.OceanPaintBrush = ColorPaintBrush.HardBrush;
         }
 
         private void OceanBrushSizeTrack_ValueChanged(object sender, EventArgs e)
@@ -4504,11 +4518,13 @@ namespace RealmStudio
 
         private void LandSoftBrushButton_Click(object sender, EventArgs e)
         {
+            LandformMediator.LandPaintBrush = ColorPaintBrush.SoftBrush;
             MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.SoftBrush;
         }
 
         private void LandHardBrushButton_Click(object sender, EventArgs e)
         {
+            LandformMediator.LandPaintBrush = ColorPaintBrush.HardBrush;
             MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
         }
 
@@ -4734,11 +4750,12 @@ namespace RealmStudio
 
         private void WaterSoftBrushButton_Click(object sender, EventArgs e)
         {
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.SoftBrush;
+            WaterFeatureMediator.WaterPaintBrush = ColorPaintBrush.SoftBrush;
         }
 
         private void WaterHardBrushButton_Click(object sender, EventArgs e)
         {
+            WaterFeatureMediator.WaterPaintBrush = ColorPaintBrush.HardBrush;
             MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
         }
 

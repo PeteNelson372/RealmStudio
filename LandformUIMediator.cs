@@ -36,6 +36,8 @@ namespace RealmStudio
 
         private bool _showLandformLayers = true;
 
+        private ColorPaintBrush _landPaintBrush = ColorPaintBrush.SoftBrush;
+
         private Color _landPaintColor = Color.FromArgb(128, 230, 208, 171);
         private int _landformBrushSize = 64;
         private int _landformEraserSize = 64;
@@ -70,6 +72,12 @@ namespace RealmStudio
         {
             get { return _showLandformLayers; }
             set { SetPropertyField(nameof(ShowLandformLayers), ref _showLandformLayers, value); }
+        }
+
+        internal ColorPaintBrush LandPaintBrush
+        {
+            get { return _landPaintBrush; }
+            set { SetPropertyField(nameof(LandPaintBrush), ref _landPaintBrush, value); }
         }
 
         internal Color LandPaintColor
@@ -246,12 +254,35 @@ namespace RealmStudio
 
         private void UpdateLandformUI(string? changedPropertyName)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
                 MainForm.LandColorSelectionButton.BackColor = LandPaintColor;
                 MainForm.CoastlineColorSelectionButton.BackColor = CoastlineColor;
                 MainForm.LandformBackgroundColorSelectButton.BackColor = LandBackgroundColor;
                 MainForm.LandformOutlineColorSelectButton.BackColor = LandOutlineColor;
+
+                if (LandPaintBrush == ColorPaintBrush.SoftBrush)
+                {
+                    MainForm.LandSoftBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+                    MainForm.LandSoftBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandHardBrushButton.FlatAppearance.BorderSize = 3;
+                }
+                else
+                {
+                    MainForm.LandHardBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+                    MainForm.LandHardBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandSoftBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandSoftBrushButton.FlatAppearance.BorderSize = 3;
+                }
+
+                MapStateMediator.SelectedColorPaintBrush = LandPaintBrush;
+
+                MapStateMediator.MainUIMediator.SetDrawingModeLabel();
 
                 if (MapStateMediator.CurrentLandform != null)
                 {

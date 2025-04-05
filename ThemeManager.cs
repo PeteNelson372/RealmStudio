@@ -158,7 +158,7 @@ namespace RealmStudio
             {
                 if (themeFilter.ApplyBackgroundSettings)
                 {
-                    BackgroundManager.BackgroundMediator.BackgroundTextureScale = (int)((theme.BackgroundTextureScale != null) ? theme.BackgroundTextureScale : 100);
+                    BackgroundManager.BackgroundMediator.BackgroundTextureScale = (int)((theme.BackgroundTextureScale != null) ? theme.BackgroundTextureScale / 100 : 1);
                     BackgroundManager.BackgroundMediator.MirrorBackgroundTexture = (bool)((theme.MirrorBackgroundTexture != null) ? theme.MirrorBackgroundTexture : false);
 
                     if (theme.BackgroundTexture != null)
@@ -180,6 +180,11 @@ namespace RealmStudio
                                 }
                             }
                         }
+
+                        BackgroundManager.ApplyBackgroundTexture(
+                            BackgroundManager.BackgroundMediator.BackgroundTextureList[BackgroundManager.BackgroundMediator.BackgroundTextureIndex].TextureBitmap,
+                            BackgroundManager.BackgroundMediator.BackgroundTextureScale,
+                            BackgroundManager.BackgroundMediator.MirrorBackgroundTexture);
                     }
 
 
@@ -212,11 +217,14 @@ namespace RealmStudio
                                 break;
                             }
                         }
+
                     }
                     else
                     {
                         OceanManager.OceanMediator.OceanTextureIndex = 0;
                     }
+
+                    OceanManager.ApplyOceanTexture();
                 }
 
                 if (themeFilter.ApplyOceanColorPaletteSettings)

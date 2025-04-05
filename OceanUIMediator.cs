@@ -14,6 +14,8 @@ namespace RealmStudio
 
         private bool _showOceanLayers = true;
 
+        private ColorPaintBrush _oceanPaintBrush = ColorPaintBrush.SoftBrush;
+
         private int _oceanPaintBrushSize = 64;
         private int _oceanPaintEraserSize = 64;
 
@@ -62,6 +64,12 @@ namespace RealmStudio
         internal List<MapTexture> OceanTextureList
         {
             get { return _oceanTextureList; }
+        }
+
+        internal ColorPaintBrush OceanPaintBrush
+        {
+            get { return _oceanPaintBrush; }
+            set { SetPropertyField(nameof(OceanPaintBrush), ref _oceanPaintBrush, value); }
         }
 
         internal int OceanPaintBrushSize
@@ -198,11 +206,34 @@ namespace RealmStudio
 
         private void UpdateOceanUI(string? changedPropertyName)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
                 MainForm.OceanPaintColorSelectButton.BackColor = OceanPaintColor;
                 MainForm.OceanColorSelectButton.BackColor = OceanFillColor;
                 MainForm.MirrorOceanTextureSwitch.Checked = MirrorOceanTexture;
+
+                if (OceanPaintBrush == ColorPaintBrush.SoftBrush)
+                {
+                    MainForm.OceanSoftBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+                    MainForm.OceanSoftBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.OceanHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.OceanHardBrushButton.FlatAppearance.BorderSize = 3;
+                }
+                else
+                {
+                    MainForm.OceanHardBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+                    MainForm.OceanHardBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.OceanSoftBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.OceanSoftBrushButton.FlatAppearance.BorderSize = 3;
+                }
+
+                MapStateMediator.SelectedColorPaintBrush = OceanPaintBrush;
+
+                MapStateMediator.MainUIMediator.SetDrawingModeLabel();
 
                 if (!string.IsNullOrEmpty(changedPropertyName))
                 {
@@ -335,7 +366,7 @@ namespace RealmStudio
 
                     Bitmap newB = DrawingMethods.SetBitmapOpacity(b, OceanTextureOpacity / 100.0F);
 
-                    MainForm.OceanTextureBox.Image = b;
+                    MainForm.OceanTextureBox.Image = newB;
                     MainForm.OceanTextureBox.Refresh();
 
                     MainForm.OceanTextureNameLabel.Text = OceanTextureList[OceanTextureIndex].TextureName;

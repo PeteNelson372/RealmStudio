@@ -165,10 +165,10 @@ namespace RealmStudio
         public SKPaint LandformHeightMapOutlinePaint { get; set; } = new()
         {
             Style = SKPaintStyle.Stroke,
-            StrokeWidth = 1,
+            StrokeWidth = 2,
             IsAntialias = false,
             BlendMode = SKBlendMode.Src,
-            Color = Color.FromArgb(255, 35, 35, 35).ToSKColor()
+            Color = Color.Green.ToSKColor()
         };
 
         public SKPaint CoastlinePaint { get; set; } = new()
@@ -860,8 +860,6 @@ namespace RealmStudio
         public void RenderLandformForHeightMap(SKCanvas canvas)
         {
             canvas.ClipRect(new SKRect(0, 0, ParentMap.MapWidth, ParentMap.MapHeight));
-
-            canvas.Clear(SKColors.Transparent);
 
             canvas.DrawPath(DrawPath, LandformHeightMapFillPaint);
 

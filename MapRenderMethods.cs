@@ -478,6 +478,8 @@ namespace RealmStudio
             SKPath clipPath = new();
             landformLayer.LayerSurface.Canvas.Clear(SKColors.Black);
 
+            landformLayer.LayerSurface.Canvas.DrawRect(new SKRect(1, 1, map.MapWidth, map.MapHeight), PaintObjects.LandformAreaSelectPaint);
+
             for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
             {
                 if (landformLayer.MapLayerComponents[i] is Landform l)

@@ -63,7 +63,7 @@ namespace RealmStudio
             {
                 baseLayer.ShowLayer = true;
 
-                if (baseLayer.MapLayerComponents.Count == 1 && textureBitmap != null && scale > 0.0F)
+                if (baseLayer.MapLayerComponents.Count == 1 && textureBitmap != null && scale > 0.0F && scale <= 1.0F)
                 {
                     Bitmap resizedBitmap;
 
@@ -107,7 +107,7 @@ namespace RealmStudio
         {
             MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
 
-            if (baseLayer.MapLayerComponents.Count < 1 && textureBitmap != null && scale > 0.0F)
+            if (baseLayer.MapLayerComponents.Count < 1 && textureBitmap != null && scale > 0.0F && scale <= 1.0F)
             {
                 if (scale != 1.0F)
                 {

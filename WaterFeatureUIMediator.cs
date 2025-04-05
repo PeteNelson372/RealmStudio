@@ -37,6 +37,8 @@ namespace RealmStudio
 
         private bool _showWaterFeatureLayers = true;
 
+        private ColorPaintBrush _waterPaintBrush = ColorPaintBrush.SoftBrush;
+
         // water feature UI values
         private Color _waterColor = Color.FromArgb(168, 140, 191, 197);
         private Color _shorelineColor = Color.FromArgb(161, 144, 118);
@@ -87,6 +89,12 @@ namespace RealmStudio
             set { SetPropertyField(nameof(ShowWaterFeatureLayers), ref _showWaterFeatureLayers, value); }
         }
 
+        internal ColorPaintBrush WaterPaintBrush
+        {
+            get { return _waterPaintBrush; }
+            set { SetPropertyField(nameof(WaterPaintBrush), ref _waterPaintBrush, value); }
+        }
+
         internal Color WaterColor
         {
             get { return _waterColor; }
@@ -134,6 +142,7 @@ namespace RealmStudio
                 }
             }
         }
+
 
         internal int WaterColorBrushSize
         {
@@ -251,6 +260,8 @@ namespace RealmStudio
 
         internal void UpdateWatureFeatureUI(string? changedPropertyName)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
                 MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WATERLAYER);
@@ -262,6 +273,26 @@ namespace RealmStudio
                 MainForm.WaterColorSelectionButton.BackColor = WaterColor;
                 MainForm.ShorelineColorSelectionButton.BackColor = ShorelineColor;
                 MainForm.WaterPaintColorSelectButton.BackColor = WaterPaintColor;
+
+                if (WaterPaintBrush == ColorPaintBrush.SoftBrush)
+                {
+                    MainForm.WaterSoftBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+                    MainForm.WaterSoftBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterHardBrushButton.FlatAppearance.BorderSize = 3;
+                }
+                else
+                {
+                    MainForm.WaterHardBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+                    MainForm.WaterHardBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterSoftBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterSoftBrushButton.FlatAppearance.BorderSize = 3;
+                }
+
+                MapStateMediator.SelectedColorPaintBrush = WaterPaintBrush;
+                MapStateMediator.MainUIMediator.SetDrawingModeLabel();
 
                 if (!string.IsNullOrEmpty(changedPropertyName))
                 {
