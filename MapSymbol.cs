@@ -28,7 +28,6 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using Extensions = SkiaSharp.Views.Desktop.Extensions;
 
 namespace RealmStudio
 {
@@ -82,9 +81,19 @@ namespace RealmStudio
             IsGrayscale = original.IsGrayscale;
             UseCustomColors = original.UseCustomColors;
 
-            for (int i = 0; i < CustomSymbolColors.Length; i++)
+            if (UseCustomColors)
             {
-                CustomSymbolColors[i] = original.CustomSymbolColors[i];
+                for (int i = 0; i < CustomSymbolColors.Length; i++)
+                {
+                    CustomSymbolColors[i] = original.CustomSymbolColors[i];
+                }
+            }
+            else
+            {
+                for (int i = 0; i < CustomSymbolColors.Length; i++)
+                {
+                    CustomSymbolColors[i] = SKColors.White;
+                }
             }
 
             IsSelected = original.IsSelected;
@@ -249,8 +258,23 @@ namespace RealmStudio
                 }
             }
 
+
             string? symbolGuid = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "SymbolGuid").Value).FirstOrDefault();
             SymbolGuid = Guid.Parse(symbolGuid);
+
+            IEnumerable<XElement> nameElem = mapSymbolDoc.Descendants(ns + "Name");
+            if (nameElem != null && nameElem.Any() && nameElem.First() != null)
+            {
+                string? nameValue = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "Name").Value).FirstOrDefault();
+                if (!string.IsNullOrEmpty(nameValue))
+                {
+                    Name = nameValue;
+                }
+            }
+            else
+            {
+                Name = string.Empty;
+            }
 
             string? symbolName = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "SymbolName").Value).FirstOrDefault();
             SymbolName = symbolName;
@@ -296,7 +320,14 @@ namespace RealmStudio
                     {
                         if (int.TryParse(colorString, out int colorArgb))
                         {
-                            CustomSymbolColors[0] = Color.FromArgb(colorArgb).ToSKColor();
+                            if (colorArgb == 0)
+                            {
+                                CustomSymbolColors[0] = SKColors.White;
+                            }
+                            else
+                            {
+                                CustomSymbolColors[0] = Color.FromArgb(colorArgb).ToSKColor();
+                            }
                         }
                         else
                         {
@@ -304,7 +335,6 @@ namespace RealmStudio
                         }
                     }
 
-                    CustomSymbolColors[0] = Extensions.ToSKColor(ColorTranslator.FromHtml(colorString));
 
                     colorElem = elemList[1];
                     colorString = colorElem.Value;
@@ -317,7 +347,14 @@ namespace RealmStudio
                     {
                         if (int.TryParse(colorString, out int colorArgb))
                         {
-                            CustomSymbolColors[1] = Color.FromArgb(colorArgb).ToSKColor();
+                            if (colorArgb == 0)
+                            {
+                                CustomSymbolColors[0] = SKColors.White;
+                            }
+                            else
+                            {
+                                CustomSymbolColors[1] = Color.FromArgb(colorArgb).ToSKColor();
+                            }
                         }
                         else
                         {
@@ -336,7 +373,14 @@ namespace RealmStudio
                     {
                         if (int.TryParse(colorString, out int colorArgb))
                         {
-                            CustomSymbolColors[2] = Color.FromArgb(colorArgb).ToSKColor();
+                            if (colorArgb == 0)
+                            {
+                                CustomSymbolColors[0] = SKColors.White;
+                            }
+                            else
+                            {
+                                CustomSymbolColors[2] = Color.FromArgb(colorArgb).ToSKColor();
+                            }
                         }
                         else
                         {
@@ -359,7 +403,7 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> sbmElemEnum = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "SymbolBitmap"));
-            if (sbmElemEnum.First() != null)
+            if (sbmElemEnum != null && sbmElemEnum.Any() && sbmElemEnum.First() != null)
             {
                 string? symbolBitmapBase64String = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "SymbolBitmap").Value).FirstOrDefault();
                 if (!string.IsNullOrEmpty(symbolBitmapBase64String))
@@ -374,7 +418,7 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> cmbmElemEnum = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "ColorMappedBitmap"));
-            if (cmbmElemEnum.First() != null)
+            if (cmbmElemEnum != null && cmbmElemEnum.Any() && cmbmElemEnum.First() != null)
             {
                 string? colorMappedBitmapBase64String = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "ColorMappedBitmap").Value).FirstOrDefault();
 
@@ -390,7 +434,7 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> plbmElemEnum = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "PlacedBitmap"));
-            if (plbmElemEnum.First() != null)
+            if (plbmElemEnum != null && plbmElemEnum.Any() && plbmElemEnum.First() != null)
             {
                 string? placedBitmapBase64String = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "PlacedBitmap").Value).FirstOrDefault();
 
@@ -449,7 +493,11 @@ namespace RealmStudio
             writer.WriteString(SymbolGuid.ToString());
             writer.WriteEndElement();
 
-            writer.WriteStartElement("SymbolName");
+            writer.WriteStartElement("Name");       // name user assigned to the symbol instance
+            writer.WriteString(Name);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("SymbolName"); // name of the symbol derived from the file name
             writer.WriteString(SymbolName);
             writer.WriteEndElement();
 

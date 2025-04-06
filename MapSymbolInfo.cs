@@ -49,6 +49,7 @@ namespace RealmStudio
                 }
             }
 
+            NameTextBox.Text = this.symbol.Name;
             SymbolNameLabel.Text = this.symbol.SymbolName;
             CollectionNameLabel.Text = this.symbol.CollectionName;
             SymbolPathLabel.Text = this.symbol.SymbolFilePath;
@@ -116,11 +117,6 @@ namespace RealmStudio
                 SymbolColor3Button.BackColor = this.symbol.CustomSymbolColors[2].ToDrawingColor();
                 originalColors[2] = SymbolColor3Button.BackColor;
             }
-        }
-
-        private void CloseButton_Click(object sender, EventArgs e)
-        {
-            Close();
         }
 
         private void AddTagButton_Click(object sender, EventArgs e)
@@ -203,6 +199,7 @@ namespace RealmStudio
 
         private void CloseFormButton_Click(object sender, EventArgs e)
         {
+            symbol.Name = NameTextBox.Text;
             Close();
         }
 

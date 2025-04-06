@@ -759,12 +759,6 @@ namespace RealmStudio
 
                     if (canPlaceSymbol)
                     {
-                        if (SymbolMediator != null)
-                        {
-                            symbolToPlace.CustomSymbolColors[0] = SymbolMediator.SymbolColor1.ToSKColor();
-                            symbolToPlace.CustomSymbolColors[1] = SymbolMediator.SymbolColor2.ToSKColor();
-                            symbolToPlace.CustomSymbolColors[2] = SymbolMediator.SymbolColor3.ToSKColor();
-                        }
                         symbolToPlace.Width = rotatedAndScaledBitmap.Width;
                         symbolToPlace.Height = rotatedAndScaledBitmap.Height;
 
@@ -872,10 +866,6 @@ namespace RealmStudio
 
                     if (canPlaceSymbol)
                     {
-                        symbolToPlace.CustomSymbolColors[0] = SymbolMediator.SymbolColor1.ToSKColor();
-                        symbolToPlace.CustomSymbolColors[1] = SymbolMediator.SymbolColor2.ToSKColor();
-                        symbolToPlace.CustomSymbolColors[2] = SymbolMediator.SymbolColor3.ToSKColor();
-
                         symbolToPlace.Width = b.Width;
                         symbolToPlace.Height = b.Height;
 
