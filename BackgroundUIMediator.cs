@@ -70,6 +70,12 @@ namespace RealmStudio
             set { SetPropertyField(nameof(BackgroundTextureIndex), ref _backgroundTextureIndex, value); }
         }
 
+        internal int App_BackgroundTextureIndex
+        {
+            get { return _backgroundTextureIndex; }
+            set { SetPropertyField(nameof(App_BackgroundTextureIndex), ref _backgroundTextureIndex, value); }
+        }
+
         internal float BackgroundTextureScale
         {
             get { return _backgroundTextureScale; }
@@ -86,6 +92,12 @@ namespace RealmStudio
         {
             get { return _mirrorBackgroundTexture; }
             set { SetPropertyField(nameof(MirrorBackgroundTexture), ref _mirrorBackgroundTexture, value); }
+        }
+
+        internal bool App_MirrorBackgroundTexture
+        {
+            get { return _mirrorBackgroundTexture; }
+            set { SetPropertyField(nameof(App_MirrorBackgroundTexture), ref _mirrorBackgroundTexture, value); }
         }
 
         #endregion
@@ -117,17 +129,23 @@ namespace RealmStudio
         {
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
-                MainForm.MirrorBackgroundSwitch.Checked = MirrorBackgroundTexture;
-
                 if (changedPropertyName != null)
                 {
                     if (changedPropertyName == "BackgroundTextureIndex")
                     {
                         UpdateBackgroundTextureComboxBox();
                     }
+                    else if (changedPropertyName == "App_BackgroundTextureIndex")
+                    {
+                        UpdateBackgroundTextureComboxBox();
+                    }
                     else if (changedPropertyName == "App_BackgroundTextureScale")
                     {
                         MainForm.BackgroundTextureScaleTrack.Value = (int)BackgroundTextureScale;
+                    }
+                    else if (changedPropertyName == "App_MirrorBackgroundTexture")
+                    {
+                        MainForm.MirrorBackgroundSwitch.Checked = MirrorBackgroundTexture;
                     }
                 }
 
@@ -151,6 +169,15 @@ namespace RealmStudio
         #endregion
 
         #region Background UI methods
+
+        internal void Reset()
+        {
+            BackgroundTextureIndex = 0;
+            ShowBackground = true;
+            BackgroundTextureScale = 1.0F;
+            MirrorBackgroundTexture = false;
+        }
+
         private void UpdateBackgroundTextureComboxBox()
         {
             if (BackgroundTextureIndex < 0)

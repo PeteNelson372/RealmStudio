@@ -1725,8 +1725,8 @@
             LandTab.Controls.Add(LandformValuesGroup);
             LandTab.Controls.Add(ShowLandLayerSwitch);
             LandTab.Controls.Add(label4);
-            LandTab.Controls.Add(LandToolStrip);
             LandTab.Controls.Add(HeightMapToolsPanel);
+            LandTab.Controls.Add(LandToolStrip);
             LandTab.Location = new Point(26, 4);
             LandTab.Name = "LandTab";
             LandTab.Size = new Size(230, 878);
@@ -6802,41 +6802,41 @@
             // MapPropertiesMenuItem
             // 
             MapPropertiesMenuItem.Name = "MapPropertiesMenuItem";
-            MapPropertiesMenuItem.Size = new Size(178, 22);
+            MapPropertiesMenuItem.Size = new Size(180, 22);
             MapPropertiesMenuItem.Text = "&Properties...";
             MapPropertiesMenuItem.Click += MapPropertiesMenuItem_Click;
             // 
             // ChangeMapSizeMenuItem
             // 
             ChangeMapSizeMenuItem.Name = "ChangeMapSizeMenuItem";
-            ChangeMapSizeMenuItem.Size = new Size(178, 22);
+            ChangeMapSizeMenuItem.Size = new Size(180, 22);
             ChangeMapSizeMenuItem.Text = "Change Map &Size...";
             ChangeMapSizeMenuItem.Click += ChangeMapSizeMenuItem_Click;
             // 
             // CreateDetailMapMenuItem
             // 
             CreateDetailMapMenuItem.Name = "CreateDetailMapMenuItem";
-            CreateDetailMapMenuItem.Size = new Size(178, 22);
+            CreateDetailMapMenuItem.Size = new Size(180, 22);
             CreateDetailMapMenuItem.Text = "Create &Detail Map...";
             CreateDetailMapMenuItem.Click += CreateDetailMapMenuItem_Click;
             // 
             // TraceToolStripMenuItem
             // 
             TraceToolStripMenuItem.Name = "TraceToolStripMenuItem";
-            TraceToolStripMenuItem.Size = new Size(178, 22);
+            TraceToolStripMenuItem.Size = new Size(180, 22);
             TraceToolStripMenuItem.Text = "&Trace Outline";
             TraceToolStripMenuItem.Click += TraceToolStripMenuItem_Click;
             // 
             // toolStripSeparator7
             // 
             toolStripSeparator7.Name = "toolStripSeparator7";
-            toolStripSeparator7.Size = new Size(175, 6);
+            toolStripSeparator7.Size = new Size(177, 6);
             // 
             // RenderAsHeightMapMenuItem
             // 
             RenderAsHeightMapMenuItem.CheckOnClick = true;
             RenderAsHeightMapMenuItem.Name = "RenderAsHeightMapMenuItem";
-            RenderAsHeightMapMenuItem.Size = new Size(178, 22);
+            RenderAsHeightMapMenuItem.Size = new Size(180, 22);
             RenderAsHeightMapMenuItem.Text = "Display &Height Map";
             RenderAsHeightMapMenuItem.CheckedChanged += RenderAsHeightMapMenuItem_CheckedChanged;
             // 

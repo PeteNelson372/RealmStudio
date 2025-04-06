@@ -387,6 +387,39 @@ namespace RealmStudio
 
         #region Water Feature UI methods
 
+        internal void Reset()
+        {
+            WaterTextureList.Clear();
+
+            ShowWaterFeatureLayers = true;
+
+            WaterPaintBrush = ColorPaintBrush.SoftBrush;
+
+            // water feature UI values
+            WaterColor = Color.FromArgb(168, 140, 191, 197);
+            ShorelineColor = Color.FromArgb(161, 144, 118);
+            WaterFeatureBrushSize = 20;
+            WaterFeatureEraserSize = 20;
+            WaterPaintColor = Color.FromArgb(128, 145, 203, 184);
+            WaterColorBrushSize = 20;
+            WaterColorEraserSize = 20;
+
+            // river UI values
+            EditRiverPoints = false;
+            RenderRiverTexture = false;
+            RiverWidth = 4;
+            RiverSourceFadeIn = true;
+
+            CustomColor1 = Color.White;
+            CustomColor2 = Color.White;
+            CustomColor3 = Color.White;
+            CustomColor4 = Color.White;
+            CustomColor5 = Color.White;
+            CustomColor6 = Color.White;
+            CustomColor7 = Color.White;
+            CustomColor8 = Color.White;
+        }
+
         internal MapComponent? SelectWaterFeatureAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
         {
             MapComponent? selectedWaterFeature = null;

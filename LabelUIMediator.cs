@@ -385,6 +385,19 @@ namespace RealmStudio
         #endregion
 
         #region Label UI Methods
+
+        internal void Reset()
+        {
+            Enabled = true;
+            LabelRotation = 0;
+            GlowStrength = 0;
+            GlowColor = Color.White;
+            OutlineColor = Color.FromArgb(161, 214, 202, 171);
+            OutlineWidth = 0;
+            LabelColor = Color.FromArgb(61, 53, 30);
+            SelectedLabelFont = MapStateMediator.DefaultLabelFont;
+        }
+
         private void EnableDisableLabelAndBoxLayer()
         {
             MapLayer labellLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LABELLAYER);

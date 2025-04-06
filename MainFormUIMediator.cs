@@ -150,8 +150,8 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
 
-            SKPoint cursorPoint = new((e.X / MapStateMediator.MainUIMediator.DrawingZoom) - MapStateMediator.DrawingPoint.X,
-                (e.Y / MapStateMediator.MainUIMediator.DrawingZoom) - MapStateMediator.DrawingPoint.Y);
+            SKPoint cursorPoint = new((e.X / MapStateMediator.MainUIMediator.DrawingZoom) - MapStateMediator.ScrollPoint.X,
+                (e.Y / MapStateMediator.MainUIMediator.DrawingZoom) - MapStateMediator.ScrollPoint.Y);
 
             return cursorPoint;
         }

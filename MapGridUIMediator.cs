@@ -255,5 +255,21 @@ namespace RealmStudio
         }
 
         #endregion
+
+        #region Grid UI methods
+
+        internal void Reset()
+        {
+            GridEnabled = true;
+            GridType = MapGridType.Square;
+            GridLayerIndex = MapBuilder.DEFAULTGRIDLAYER;
+            GridLayerName = "Default";
+            GridSize = 64;
+            GridLineWidth = 2;
+            GridColor = Color.FromArgb(126, 0, 0, 0);
+            ShowGridSize = true;
+        }
+
+        #endregion
     }
 }

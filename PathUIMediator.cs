@@ -209,6 +209,16 @@ namespace RealmStudio
 
         #region Path UI methods
 
+        internal void Reset()
+        {
+            PathType = PathType.SolidLinePath;
+            PathWidth = 0;
+            PathColor = Color.FromArgb(75, 49, 26);
+            EditPathPoints = false;
+            DrawOverSymbols = false;
+            SetSelectedPathType(PathType);
+        }
+
         private void SetSelectedPathType(PathType pathType)
         {
             if (pathType == PathType.SolidLinePath) { MainForm.SolidLineRadio.Checked = true; return; }

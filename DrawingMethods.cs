@@ -96,9 +96,9 @@ namespace RealmStudio
 
         public static SKPoint PointOnCircle(float radius, float angleInDegrees, SKPoint origin)
         {
+            // Convert from degrees to radians via multiplication by PI/180
             float angleInRadians = angleInDegrees * PI_OVER_180;
 
-            // Convert from degrees to radians via multiplication by PI/180        
             float x = (float)(radius * Math.Cos(angleInRadians)) + origin.X;
             float y = (float)(radius * Math.Sin(angleInRadians)) + origin.Y;
 

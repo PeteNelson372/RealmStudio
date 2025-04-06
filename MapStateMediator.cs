@@ -81,8 +81,8 @@ namespace RealmStudio
         private static SKPoint _scrollPoint = new(0, 0);
         private static SKPoint _drawingPoint = new(0, 0);
 
-        private static SKPoint _currentMouseLocation = new(0, 0);
-        private static SKPoint _previousMouseLocation = new(0, 0);
+        private static SKPoint _currentMouseLocation = SKPoint.Empty;
+        private static SKPoint _previousMouseLocation = SKPoint.Empty;
 
         private static SKPoint _currentCursorPoint = new(0, 0);
         private static SKPoint _previousCursorPoint = new(0, 0);

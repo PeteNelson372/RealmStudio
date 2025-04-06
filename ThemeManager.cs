@@ -158,11 +158,8 @@ namespace RealmStudio
             {
                 if (themeFilter.ApplyBackgroundSettings)
                 {
-                    // if the background texture scale is set directly by the theme, when the user changes the scale trackbar,
-                    // the update is overridden by the BackgroundMediator, causing erratic behavior,
-                    // so the theme sets the scale using a different property name
                     BackgroundManager.BackgroundMediator.App_BackgroundTextureScale = (int)((theme.BackgroundTextureScale != null) ? theme.BackgroundTextureScale / 100 : 1);
-                    BackgroundManager.BackgroundMediator.MirrorBackgroundTexture = (bool)((theme.MirrorBackgroundTexture != null) ? theme.MirrorBackgroundTexture : false);
+                    BackgroundManager.BackgroundMediator.App_MirrorBackgroundTexture = (bool)((theme.MirrorBackgroundTexture != null) ? theme.MirrorBackgroundTexture : false);
 
                     if (theme.BackgroundTexture != null)
                     {
@@ -178,16 +175,13 @@ namespace RealmStudio
                                 if (BackgroundManager.BackgroundMediator.BackgroundTextureList[i] != null
                                     && BackgroundManager.BackgroundMediator.BackgroundTextureList[i].TexturePath == theme.BackgroundTexture.TexturePath)
                                 {
-                                    BackgroundManager.BackgroundMediator.BackgroundTextureIndex = i;
+                                    BackgroundManager.BackgroundMediator.App_BackgroundTextureIndex = i;
                                     break;
                                 }
                             }
                         }
 
-                        BackgroundManager.ApplyBackgroundTexture(
-                            BackgroundManager.BackgroundMediator.BackgroundTextureList[BackgroundManager.BackgroundMediator.BackgroundTextureIndex].TextureBitmap,
-                            BackgroundManager.BackgroundMediator.BackgroundTextureScale,
-                            BackgroundManager.BackgroundMediator.MirrorBackgroundTexture);
+                        BackgroundManager.FillBackgroundTexture();
                     }
 
 
@@ -220,7 +214,6 @@ namespace RealmStudio
                                 break;
                             }
                         }
-
                     }
                     else
                     {
@@ -277,23 +270,12 @@ namespace RealmStudio
                 {
                     LandformManager.LandformMediator.LandOutlineColor = Color.FromArgb(theme.LandformOutlineColor ?? Color.FromArgb(62, 55, 40).ToArgb());
 
-                    if (LandformManager.LandformMediator.LandTextureList.First().TextureBitmap == null)
-                    {
-                        LandformManager.LandformMediator.LandTextureList.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(LandformManager.LandformMediator.LandTextureList.First().TexturePath);
-                    }
-
                     if (theme.LandformTexture != null)
                     {
                         for (int i = 0; i < LandformManager.LandformMediator.LandTextureList.Count; i++)
                         {
                             if (LandformManager.LandformMediator.LandTextureList[i].TextureName == theme.LandformTexture.TextureName)
                             {
-                                if (LandformManager.LandformMediator.LandTextureList[i].TextureBitmap == null)
-                                {
-                                    LandformManager.LandformMediator.LandTextureList[i].TextureBitmap
-                                        = (Bitmap?)Bitmap.FromFile(LandformManager.LandformMediator.LandTextureList[i].TexturePath);
-                                }
-
                                 LandformManager.LandformMediator.LandformTextureIndex = i;
                                 break;
                             }

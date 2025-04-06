@@ -462,17 +462,58 @@ namespace RealmStudio
 
         #region Map Symbol UI Methods
 
+        internal void Reset()
+        {
+            // reset symbol UI values to default values
+            Enabled = true;
+            SymbolScaleLocked = false;
+            SymbolScale = 100;
+            SymbolColor1 = Color.FromArgb(85, 44, 36);
+            SymbolColor2 = Color.FromArgb(53, 45, 32);
+            SymbolColor3 = Color.FromArgb(161, 214, 202, 171);
+            UseAreaBrush = false;
+            AreaBrushSize = 0;
+            MirrorSymbol = false;
+            SymbolRotation = 0.0F;
+            SymbolPlacementRate = 1.0F;
+            SymbolPlacementDensity = 1.0F;
+            ResetSymbolColorButtons();
+        }
+
         internal void ColorButtonMouseUp(object sender, MouseEventArgs e)
         {
             IconButton colorButton = (IconButton)sender;
 
             if (e.Button == MouseButtons.Left)
             {
-                Color c = UtilityMethods.SelectColorFromDialog(MainForm, colorButton.BackColor);
-                SymbolColor1 = c;
+                if (RealmStudioMainForm.ModifierKeys == Keys.None)
+                {
+                    Color c = UtilityMethods.SelectColorFromDialog(MainForm, colorButton.BackColor);
 
-                List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
-                AddSymbolsToSymbolTable(selectedSymbols);
+                    if (colorButton == MainForm.SymbolColor1Button)
+                    {
+                        SymbolColor1 = c;
+                    }
+                    else if (colorButton == MainForm.SymbolColor2Button)
+                    {
+                        SymbolColor2 = c;
+                    }
+                    else if (colorButton == MainForm.SymbolColor3Button)
+                    {
+                        SymbolColor3 = c;
+                    }
+                    else
+                    {
+                        SymbolColor1 = c;
+                    }
+
+                    List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
+                    AddSymbolsToSymbolTable(selectedSymbols);
+                }
+                else if (RealmStudioMainForm.ModifierKeys == Keys.Control)
+                {
+                    SymbolColor1 = colorButton.BackColor;
+                }
             }
             else if (e.Button == MouseButtons.Right && MapStateMediator.SelectedMapSymbol != null)
             {
@@ -480,8 +521,11 @@ namespace RealmStudio
                 {
                     // if a symbol has been selected and is grayscale or custom colored, then color it with the
                     // selected custom colors
+
+                    Color paintColor = ((Button)sender).BackColor;
+
                     Cmd_PaintSymbol cmd = new(MapStateMediator.SelectedMapSymbol,
-                        SymbolColor1.ToSKColor(), SymbolColor1.ToSKColor(), SymbolColor2.ToSKColor(), SymbolColor2.ToSKColor());
+                        paintColor.ToSKColor(), SymbolColor1.ToSKColor(), SymbolColor2.ToSKColor(), SymbolColor2.ToSKColor());
 
                     CommandManager.AddCommand(cmd);
                     cmd.DoOperation();

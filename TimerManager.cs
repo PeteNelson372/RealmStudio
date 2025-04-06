@@ -226,13 +226,16 @@ namespace RealmStudio
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
             ArgumentNullException.ThrowIfNull(SymbolUIMediator);
 
-            float symbolScale = SymbolUIMediator.SymbolScale / 100.0F;
-            float symbolRotation = SymbolUIMediator.SymbolRotation;
+            if (SymbolUIMediator.AreaBrushSize > 4.0F)
+            {
+                float symbolScale = SymbolUIMediator.SymbolScale / 100.0F;
+                float symbolRotation = SymbolUIMediator.SymbolRotation;
 
-            MapStateMediator.MainUIMediator.SelectedBrushSize = SymbolUIMediator.AreaBrushSize;
+                MapStateMediator.MainUIMediator.SelectedBrushSize = SymbolUIMediator.AreaBrushSize;
 
-            SymbolManager.PlaceSelectedSymbolInArea(MapStateMediator.CurrentCursorPoint,
-                symbolScale, symbolRotation, (int)(SymbolUIMediator.AreaBrushSize / 2.0F));
+                SymbolManager.PlaceSelectedSymbolInArea(MapStateMediator.CurrentCursorPoint,
+                    symbolScale, symbolRotation, (int)(SymbolUIMediator.AreaBrushSize / 2.0F));
+            }
         }
 
         #region IDisposable Implementation

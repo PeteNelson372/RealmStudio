@@ -189,7 +189,11 @@ namespace RealmStudio
                         {
                             canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
                         }
-                        else
+                    }
+                    break;
+                case MapDrawingMode.SymbolColor:
+                    {
+                        if (useAreaBrush)
                         {
                             canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
                         }

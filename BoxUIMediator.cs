@@ -164,6 +164,14 @@ namespace RealmStudio
 
         #region Box UI Methods
 
+        internal void Reset()
+        {
+            Box = null;
+            BoxRect = SKRect.Empty;
+            BoxTint = Color.White;
+            MapStateMediator.SelectedPlacedMapBox = null;
+        }
+
         internal void DrawBoxOnWorkLayer(SKPoint zoomedScrolledPoint, SKPoint previousPoint)
         {
             SKRect boxRect = new(previousPoint.X, previousPoint.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);

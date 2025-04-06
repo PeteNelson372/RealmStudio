@@ -437,6 +437,12 @@ namespace RealmStudio
                             map.MapLayers.Add(layer);
                         }
                         break;
+                    case "work2":
+                        {
+                            MapLayer layer = ConstructMapLayer("work2", (ushort)WORKLAYER2, map.MapWidth, map.MapHeight, grContext);
+                            map.MapLayers.Add(layer);
+                        }
+                        break;
                     default:
                         {
                             throw new Exception("Unknown map layer identifer");

@@ -119,5 +119,16 @@ namespace RealmStudio
         }
 
         #endregion
+
+        #region Vignette UI Methods
+
+        internal void Reset()
+        {
+            VignetteStrength = 148;
+            VignetteColor = Color.FromArgb(201, 151, 123);
+            VignetteShape = VignetteShapeType.Oval;
+        }
+
+        #endregion
     }
 }

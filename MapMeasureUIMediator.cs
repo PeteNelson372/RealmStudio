@@ -36,7 +36,6 @@ namespace RealmStudio
         private bool _useScaleUnits = true;
         private bool _measureArea;
 
-
         public MapMeasureUIMediator(RealmStudioMainForm mainForm)
         {
             MainForm = mainForm;
@@ -120,6 +119,17 @@ namespace RealmStudio
             // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
 
             NotifyUpdate(e.PropertyName);
+        }
+
+        #endregion
+
+        #region Map Measure UI Methods
+
+        internal void Reset()
+        {
+            MapMeasureColor = Color.FromArgb(191, 138, 26, 0);
+            UseScaleUnits = true;
+            MeasureArea = false;
         }
 
         #endregion

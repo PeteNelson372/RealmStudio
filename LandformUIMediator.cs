@@ -134,10 +134,10 @@ namespace RealmStudio
             set { SetPropertyField(nameof(CoastlineStyle), ref _coastlineStyle, value); }
         }
 
-        internal int LandFormBrushSize
+        internal int LandformBrushSize
         {
             get { return _landformBrushSize; }
-            set { SetPropertyField(nameof(LandFormBrushSize), ref _landformBrushSize, value); }
+            set { SetPropertyField(nameof(LandformBrushSize), ref _landformBrushSize, value); }
         }
 
         internal int LandformEraserSize
@@ -424,6 +424,35 @@ namespace RealmStudio
         #endregion
 
         #region Landform UI Methods
+
+        internal void Reset()
+        {
+            LandformTextureIndex = 0;
+
+            ShowLandformLayers = true;
+
+            LandPaintBrush = ColorPaintBrush.SoftBrush;
+
+            LandPaintColor = Color.FromArgb(128, 230, 208, 171);
+            LandformBrushSize = 64;
+            LandformEraserSize = 64;
+            LandPaintBrushSize = 20;
+            LandPaintEraserSize = 20;
+            LandOutlineColor = Color.FromArgb(62, 55, 40);
+            LandBackgroundColor = Color.White;
+            CoastlineColor = Color.FromArgb(187, 156, 195, 183);
+            CoastlineStyle = "Dash Pattern";
+            CoastlineEffectDistance = 16;
+            LandOutlineWidth = 2;
+            UseTextureBackground = true;
+
+            CustomColor1 = Color.White;
+            CustomColor2 = Color.White;
+            CustomColor3 = Color.White;
+            CustomColor4 = Color.White;
+            CustomColor5 = Color.White;
+            CustomColor6 = Color.White;
+        }
 
         private void UpdateLandTexture()
         {

@@ -266,6 +266,11 @@ namespace RealmStudio
                                 UpdateOceanTextureComboBox();
                             }
                             break;
+                        case "App_OceanTextureIndex":
+                            {
+                                UpdateOceanTextureComboBox();
+                            }
+                            break;
                         case "App_OceanTextureOpacity":
                             {
                                 MainForm.OceanTextureOpacityTrack.Value = (int)OceanTextureOpacity;
@@ -349,6 +354,32 @@ namespace RealmStudio
             // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
 
             NotifyUpdate(e.PropertyName);
+        }
+
+        #endregion
+
+        #region Ocean UI Methods
+
+        internal void Reset()
+        {
+            OceanTextureIndex = 0;
+            OceanPaintBrush = ColorPaintBrush.SoftBrush;
+            OceanPaintBrushSize = 64;
+            OceanPaintEraserSize = 64;
+            OceanBrushVelocity = 1.0F;
+            OceanPaintColor = Color.FromArgb(128, 145, 203, 184);
+            OceanFillColor = Color.White;
+            OceanTextureScale = 100.0F;
+            OceanTextureOpacity = 100.0f;
+            MirrorOceanTexture = false;
+            CustomColor1 = Color.White;
+            CustomColor2 = Color.White;
+            CustomColor3 = Color.White;
+            CustomColor4 = Color.White;
+            CustomColor5 = Color.White;
+            CustomColor6 = Color.White;
+            CustomColor7 = Color.White;
+            CustomColor8 = Color.White;
         }
 
         private void UpdateOceanTextureComboBox()

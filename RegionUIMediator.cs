@@ -192,6 +192,15 @@ namespace RealmStudio
 
         #region Map Region UI methods
 
+        internal void Reset()
+        {
+            RegionColor = Color.FromArgb(0, 86, 179);
+            RegionBorderWidth = 8;
+            RegionBorderSmoothing = 20;
+            RegionInnerOpacity = 64;
+            RegionBorderType = PathType.SolidLinePath;
+        }
+
         internal static MapRegion? SelectRegionAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
         {
             MapRegion? selectedRegion = null;

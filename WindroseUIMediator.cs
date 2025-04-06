@@ -143,5 +143,21 @@ namespace RealmStudio
         }
 
         #endregion
+
+        #region Windrose UI Methods
+
+        internal void Reset()
+        {
+            // Reset the Windrose UI to its default state
+            InnerCircleCount = 0;
+            InnerCircleRadius = 0;
+            FadeOut = false;
+            LineWidth = 2;
+            OuterRadius = 1000;
+            WindroseColor = Color.FromArgb(127, 61, 55, 40);
+            DirectionCount = 16;
+        }
+
+        #endregion
     }
 }

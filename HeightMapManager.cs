@@ -75,34 +75,24 @@ namespace RealmStudio
                     // for each pixel in the brush area, get its color and then change its value by adding
                     // changeAmount
 
-                    // radius of the circle squared
                     double radiusSquared = brushRadius * brushRadius;
+                    List<SKPoint> pointsInCircle = DrawingMethods.GetPointsInCircle(mapPoint, brushRadius, 1);
 
-                    for (int x = (int)mapPoint.X - brushRadius; x < (int)mapPoint.X + brushRadius; x++)
+                    foreach (SKPoint point in pointsInCircle)
                     {
-                        for (int y = (int)mapPoint.Y - brushRadius; y < (int)mapPoint.Y + brushRadius; y++)
+                        // a random value ranging from 0.0 to the radius squared
+                        double pointRandom = Random.Shared.NextDouble() * radiusSquared;
+
+                        // distance squared of the point from the center of the circle at point
+                        double distanceSquared = SKPoint.DistanceSquared(point, mapPoint);
+
+                        // if the point is inside the circle brush and the random value is greater than the
+                        // distance squared, add the point to the list of points to be increased/decreased in grayscale color
+                        // points closer to the center of the brush circle are more likely to be included,
+                        // since distance squared increases as points are further from the center point of the brush
+                        if (distanceSquared <= radiusSquared && pointRandom >= distanceSquared)
                         {
-                            if (x >= 0 && x < heightMapBitmap.Width && y >= 0 && y < heightMapBitmap.Height)
-                            {
-                                // delta x,y from the point at the center of the circle brush
-                                double dx = x - mapPoint.X;
-                                double dy = y - mapPoint.Y;
-
-                                // distance squared of the point from the center of the circle at point
-                                double distanceSquared = dx * dx + dy * dy;
-
-                                // a random value ranging from 0.0 to the radius squared
-                                double pointRandom = Random.Shared.NextDouble() * radiusSquared;
-
-                                // if the point is inside the circle brush and the random value is greater than the
-                                // distance squared, add the point to the list of points to be increased/decreased in grayscale color
-                                // points closer to the center of the brush circle are more likely to be included,
-                                // since distance squared increases as points are further from the center point of the brush
-                                if (distanceSquared <= radiusSquared && pointRandom >= distanceSquared)
-                                {
-                                    SetHeightmapPixelHeight(x, y, heightMapBitmap, heightMap, changeAmount);
-                                }
-                            }
+                            SetHeightmapPixelHeight((int)point.X, (int)point.Y, heightMapBitmap, heightMap, changeAmount);
                         }
                     }
                 }
@@ -131,8 +121,8 @@ namespace RealmStudio
 
             float accumulatedHeight = 0;
 
-            if (x > 0 && x < heightMapBitmap.Width
-                && y > 0 && y < heightMapBitmap.Height)
+            if (x > 0 && x < heightMapBitmap.Width - 1
+                && y > 0 && y < heightMapBitmap.Height - 1)
             {
                 accumulatedHeight += heightMap[x - 1, y - 1];
                 accumulatedHeight += heightMap[x, y - 1];

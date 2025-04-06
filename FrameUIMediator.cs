@@ -185,6 +185,16 @@ namespace RealmStudio
 
         #region Frame UI Methods
 
+        internal void Reset()
+        {
+            Frame = null;
+            FrameScale = 100.0F;
+            FrameTint = Color.White;
+            FrameEnabled = true;
+            MainForm.FrameStyleTable.Hide();
+            MainForm.FrameStyleTable.Controls.Clear();
+        }
+
         internal void AddMapFramesToFrameTable(List<MapFrame> mapFrames)
         {
             MainForm.FrameStyleTable.Hide();

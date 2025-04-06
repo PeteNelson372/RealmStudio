@@ -139,6 +139,7 @@ namespace RealmStudio
             MapStateMediator.CurrentMap.IsSaved = false;
 
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
+            oceanTextureLayer.MapLayerComponents.Clear();
 
             if (oceanTextureLayer.MapLayerComponents.Count < 1)
             {

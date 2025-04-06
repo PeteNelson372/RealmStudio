@@ -236,6 +236,23 @@ namespace RealmStudio
 
         #region MapScale UI methods
 
+        internal void Reset()
+        {
+            ScalePanelVisible = false;
+            ScaleWidth = 256;
+            ScaleHeight = 16;
+            SegmentCount = 5;
+            ScaleLineWidth = 3;
+            SegmentDistance = 100.0F;
+            ScaleUnitsText = string.Empty;
+            ScaleNumbersDisplayType = ScaleNumbersDisplayLocation.All;
+            ScaleFont = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ScaleFontColor = Color.Black;
+            ScaleNumberOutlineColor = Color.White;
+            ScaleOutlineWidth = 2;
+            ResetScaleColors();
+        }
+
         internal void ResetScaleColors()
         {
             ScaleColor1 = Color.Black;

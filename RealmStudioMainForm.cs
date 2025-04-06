@@ -313,12 +313,6 @@ namespace RealmStudio
             PopulateFontPanelUI();
             LoadNameGeneratorConfigurationDialog();
 
-            //if (AssetManager.CURRENT_THEME != null)
-            //{
-            //    ThemeFilter themeFilter = new();
-            //    ApplyTheme(AssetManager.CURRENT_THEME, themeFilter);
-            //}
-
             Activate();
 
             ApplicationTimerManager.StartAutosaveTimer();
@@ -466,8 +460,6 @@ namespace RealmStudio
 
                         if (selectedColor != Color.Empty)
                         {
-                            Color oceanColor = selectedColor;
-
                             if (OceanCustomColorButton1.Text == "")
                             {
                                 OceanMediator.CustomColor1 = selectedColor;
@@ -510,8 +502,6 @@ namespace RealmStudio
 
                         if (selectedColor != Color.Empty)
                         {
-                            Color landColor = selectedColor;
-
                             if (LandCustomColorButton1.Text == "")
                             {
                                 LandformMediator.CustomColor1 = selectedColor;
@@ -546,8 +536,6 @@ namespace RealmStudio
 
                         if (selectedColor != Color.Empty)
                         {
-                            Color waterColor = selectedColor;
-
                             if (WaterCustomColor1.Text == "")
                             {
                                 WaterFeatureMediator.CustomColor1 = selectedColor;
@@ -1229,15 +1217,27 @@ namespace RealmStudio
         private void PanMap(MouseEventArgs e)
         {
             // pan the map when middle button (mouse wheel) is held down and dragged
+            if (MapStateMediator.PreviousMouseLocation == SKPoint.Empty)
+            {
+                MapStateMediator.PreviousMouseLocation = e.Location.ToSKPoint();
+            }
 
             int xDelta = (int)(e.Location.X - MapStateMediator.PreviousMouseLocation.X);
             int yDelta = (int)(e.Location.Y - MapStateMediator.PreviousMouseLocation.Y);
 
-            MapStateMediator.ScrollPoint = new SKPoint(MapStateMediator.ScrollPoint.X + xDelta, MapStateMediator.ScrollPoint.Y + yDelta);
-            MapStateMediator.DrawingPoint = new SKPoint(MapStateMediator.DrawingPoint.X - xDelta, MapStateMediator.DrawingPoint.Y - yDelta);
+            SKPoint scrollPoint = MapStateMediator.ScrollPoint;
+            SKPoint drawPoint = MapStateMediator.DrawingPoint;
+
+            scrollPoint.X += xDelta;
+            scrollPoint.Y += yDelta;
+
+            drawPoint.X += -xDelta;
+            drawPoint.Y += -yDelta;
+
+            MapStateMediator.ScrollPoint = scrollPoint;
+            MapStateMediator.DrawingPoint = drawPoint;
 
             MapRenderHScroll.Value = Math.Max(0, Math.Min((int)MapStateMediator.DrawingPoint.X, MapStateMediator.CurrentMap.MapWidth));
-
             MapRenderVScroll.Value = Math.Max(0, Math.Min((int)MapStateMediator.DrawingPoint.Y, MapStateMediator.CurrentMap.MapHeight));
 
             MapStateMediator.PreviousMouseLocation = e.Location.ToSKPoint();
@@ -1258,6 +1258,21 @@ namespace RealmStudio
                 AssetManager.LOADING_STATUS_FORM.Show(this);
 
                 MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
+
+                BackgroundMediator.Reset();
+                //BoxMediator.Reset();
+                //FrameMediator.Reset();
+                //GridMediator.Reset();
+                //LabelMediator.Reset();
+                LandformMediator.Reset();
+                //MeasureMediator.Reset();
+                OceanMediator.Reset();
+                PathMediator.Reset();
+                //RegionMediator.Reset();
+                //ScaleMediator.Reset();
+                //VignetteMediator.Reset();
+                WaterFeatureMediator.Reset();
+                //WindroseMediator.Reset();
 
                 int assetCount = AssetManager.LoadAllAssets();
 
@@ -2468,8 +2483,8 @@ namespace RealmStudio
 
                     MapRenderMethods.DrawCursor(e.Surface.Canvas,
                         MainMediator.CurrentDrawingMode,
-                        new SKPoint(MapStateMediator.CurrentCursorPoint.X - MapStateMediator.ScrollPoint.X,
-                            MapStateMediator.CurrentCursorPoint.Y - MapStateMediator.ScrollPoint.Y),
+                        new SKPoint(MapStateMediator.CurrentCursorPoint.X + MapStateMediator.ScrollPoint.X,
+                            MapStateMediator.CurrentCursorPoint.Y + MapStateMediator.ScrollPoint.Y),
                         MainMediator.SelectedBrushSize,
                         symbolScale,
                         symbolRotation,
@@ -3357,12 +3372,21 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.SymbolColor:
 
-                    int colorBrushRadius = SymbolMediator.AreaBrushSize / 2;
+                    if (SymbolMediator.UseAreaBrush)
+                    {
+                        int colorBrushRadius = SymbolMediator.AreaBrushSize / 2;
 
-                    Color[] symbolColors = [SymbolColor1Button.BackColor, SymbolColor2Button.BackColor, SymbolColor3Button.BackColor];
-                    SymbolManager.ColorSymbolsInArea(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, colorBrushRadius, symbolColors, RandomizeColorCheck.Checked);
+                        Color[] symbolColors = [SymbolColor1Button.BackColor, SymbolColor2Button.BackColor, SymbolColor3Button.BackColor];
+                        SymbolManager.ColorSymbolsInArea(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, colorBrushRadius, symbolColors, RandomizeColorCheck.Checked);
+
+                    }
+                    else
+                    {
+                        SymbolManager.ColorSymbolAtPoint();
+                    }
 
                     MapStateMediator.CurrentMap.IsSaved = false;
+                    SKGLRenderControl.Invalidate();
                     break;
                 case MapDrawingMode.SymbolSelect:
                     SymbolManager.MoveSymbol(MapStateMediator.SelectedMapSymbol, MapStateMediator.CurrentCursorPoint);
@@ -3481,7 +3505,6 @@ namespace RealmStudio
                         HeightMapManager.ChangeHeightMapAreaHeight(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, MainMediator.SelectedBrushSize / 2, brushStrength);
 
                         MapStateMediator.CurrentMap.IsSaved = false;
-
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -4325,7 +4348,7 @@ namespace RealmStudio
 
         private void LandformPaintButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.LandPaint, LandformMediator.LandFormBrushSize);
+            MainMediator.SetDrawingMode(MapDrawingMode.LandPaint, LandformMediator.LandformBrushSize);
         }
 
         private void LandformEraseButton_Click(object sender, EventArgs e)
@@ -4335,10 +4358,10 @@ namespace RealmStudio
 
         private void LandBrushSizeTrack_ValueChanged(object sender, EventArgs e)
         {
-            LandformMediator.LandFormBrushSize = LandBrushSizeTrack.Value;
-            MainMediator.SelectedBrushSize = LandformMediator.LandFormBrushSize;
+            LandformMediator.LandformBrushSize = LandBrushSizeTrack.Value;
+            MainMediator.SelectedBrushSize = LandformMediator.LandformBrushSize;
 
-            TOOLTIP.Show(LandformMediator.LandFormBrushSize.ToString(), LandformValuesGroup, new Point(LandBrushSizeTrack.Right - 30, LandBrushSizeTrack.Top - 20), 2000);
+            TOOLTIP.Show(LandformMediator.LandformBrushSize.ToString(), LandformValuesGroup, new Point(LandBrushSizeTrack.Right - 30, LandBrushSizeTrack.Top - 20), 2000);
         }
 
         private void LandformOutlineColorSelectButton_Click(object sender, EventArgs e)
@@ -4609,12 +4632,12 @@ namespace RealmStudio
 
         private void HeightUpButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.MapHeightIncrease, LandformMediator.LandFormBrushSize);
+            MainMediator.SetDrawingMode(MapDrawingMode.MapHeightIncrease, LandformMediator.LandformBrushSize);
         }
 
         private void HeightDownButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.MapHeightDecrease, LandformMediator.LandFormBrushSize);
+            MainMediator.SetDrawingMode(MapDrawingMode.MapHeightDecrease, LandformMediator.LandformBrushSize);
         }
 
         private void Show3DViewButton_Click(object sender, EventArgs e)
@@ -5143,16 +5166,20 @@ namespace RealmStudio
         private void SymbolColor2Button_MouseUp(object sender, MouseEventArgs e)
         {
             SymbolMediator.ColorButtonMouseUp(sender, e);
+            SKGLRenderControl.Invalidate();
         }
 
         private void SymbolColor3Button_MouseUp(object sender, MouseEventArgs e)
         {
             SymbolMediator.ColorButtonMouseUp(sender, e);
+            SKGLRenderControl.Invalidate();
         }
 
         private void AreaBrushSwitch_CheckedChanged()
         {
             SymbolMediator.UseAreaBrush = AreaBrushSwitch.Checked;
+            MainMediator.SelectedBrushSize = AreaBrushSizeTrack.Value;
+            SKGLRenderControl.Invalidate();
         }
 
         private void AreaBrushSizeTrack_ValueChanged(object sender, EventArgs e)

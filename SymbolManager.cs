@@ -981,5 +981,25 @@ namespace RealmStudio
             selectedMapSymbol.IsSelected = false;
             MapStateMediator.SelectedMapSymbol = null;
         }
+
+        internal static void ColorSymbolAtPoint()
+        {
+            ArgumentNullException.ThrowIfNull(SymbolMediator);
+
+            MapSymbol? symbolAtPoint = SymbolUIMediator.SelectMapSymbolAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint.ToDrawingPoint());
+
+            if (symbolAtPoint != null)
+            {
+                if (symbolAtPoint.IsGrayscale)
+                {
+                    Cmd_PaintSymbol cmd = new(symbolAtPoint,
+                        SymbolMediator.SymbolColor1.ToSKColor(), SymbolMediator.SymbolColor1.ToSKColor(),
+                        SymbolMediator.SymbolColor2.ToSKColor(), SymbolMediator.SymbolColor3.ToSKColor());
+
+                    CommandManager.AddCommand(cmd);
+                    cmd.DoOperation();
+                }
+            }
+        }
     }
 }
