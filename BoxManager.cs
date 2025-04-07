@@ -216,6 +216,21 @@ namespace RealmStudio
             {
                 if (boxLayer.MapLayerComponents[i] is PlacedMapBox box && box.BoxBitmap != null)
                 {
+                    if (box.BoxTint != Color.White)
+                    {
+                        PaintObjects.BoxPaint.Dispose();
+                        PaintObjects.BoxPaint = new()
+                        {
+                            Style = SKPaintStyle.Fill,
+                            ColorFilter = SKColorFilter.CreateBlendMode(
+                                Extensions.ToSKColor(box.BoxTint),
+                                SKBlendMode.Modulate) // combine the tint with the bitmap color
+                        };
+                        box.BoxPaint = PaintObjects.BoxPaint.Clone();
+                    }
+
+
+                    /*
                     SKRectI center = new((int)box.BoxCenterLeft, (int)box.BoxCenterTop,
                         (int)(box.Width - box.BoxCenterRight), (int)(box.Height - box.BoxCenterBottom));
 
@@ -240,6 +255,7 @@ namespace RealmStudio
                     box.BoxCenterLeft = center.Left;
                     box.BoxCenterTop = center.Top;
                     box.BoxCenterRight = center.Right;
+                    */
                 }
             }
         }

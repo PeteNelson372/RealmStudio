@@ -134,6 +134,10 @@ namespace RealmStudio
                 {
                     mapScale.IsSelected = true;
                 }
+                else
+                {
+                    mapScale.IsSelected = false;
+                }
             }
 
             return mapScale;

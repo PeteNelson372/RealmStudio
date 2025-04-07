@@ -314,14 +314,7 @@ namespace RealmStudio
                     }
                     else if (int.TryParse(scaleColor1, out int n))
                     {
-                        if (n > 0)
-                        {
-                            argbValue = n;
-                        }
-                        else
-                        {
-                            argbValue = Color.Black.ToArgb();
-                        }
+                        argbValue = n;
                     }
 
                     ScaleColor1 = Color.FromArgb(argbValue);
@@ -347,14 +340,7 @@ namespace RealmStudio
                     }
                     else if (int.TryParse(scaleColor2, out int n))
                     {
-                        if (n > 0)
-                        {
-                            argbValue = n;
-                        }
-                        else
-                        {
-                            argbValue = Color.White.ToArgb();
-                        }
+                        argbValue = n;
                     }
 
                     ScaleColor2 = Color.FromArgb(argbValue);
@@ -380,14 +366,7 @@ namespace RealmStudio
                     }
                     else if (int.TryParse(scaleColor3, out int n))
                     {
-                        if (n > 0)
-                        {
-                            argbValue = n;
-                        }
-                        else
-                        {
-                            argbValue = Color.Black.ToArgb();
-                        }
+                        argbValue = n;
                     }
 
                     ScaleColor3 = Color.FromArgb(argbValue);
@@ -418,6 +397,72 @@ namespace RealmStudio
                 ScaleNumbersDisplayType = Enum.Parse<ScaleNumbersDisplayLocation>(scaleNumbersDisplayType);
             }
 
+            // font
+            IEnumerable<XElement?> scaleFontElem = mapScaleDoc.Descendants().Select(x => x.Element(ns + "ScaleFont"));
+            if (scaleFontElem != null && scaleFontElem.Any() && scaleFontElem.First() != null)
+            {
+                string? scaleFontString = mapScaleDoc.Descendants().Select(x => x.Element(ns + "ScaleFont").Value).FirstOrDefault();
+                FontConverter cvt = new();
+                Font? scaleFont = (Font?)cvt.ConvertFromString(scaleFontString) as Font;
+
+                if (scaleFont != null && !scaleFontString.Contains(scaleFont.FontFamily.Name))
+                {
+                    scaleFont = null;
+                }
+
+                if (scaleFont == null)
+                {
+                    string[] fontParts = scaleFontString.Split(',');
+
+                    if (fontParts.Length == 2)
+                    {
+                        string ff = fontParts[0];
+                        string fs = fontParts[1];
+
+                        // remove any non-numeric characters from the font size string (but allow . and -)
+                        fs = string.Join(",", new string(
+                            [.. fs.Where(c => char.IsBetween(c, '0', '9') || c == '.' || c == '-' || char.IsWhiteSpace(c))]).Split((char[]?)null,
+                            StringSplitOptions.RemoveEmptyEntries));
+
+                        bool success = float.TryParse(fs, out float fontsize);
+
+                        if (!success)
+                        {
+                            fontsize = 12.0F;
+                        }
+
+                        try
+                        {
+                            FontFamily family = new(ff);
+                            scaleFont = new Font(family, fontsize, FontStyle.Regular, GraphicsUnit.Point);
+                        }
+                        catch
+                        {
+                            // couldn't create the font, so try to find it in the list of embedded fonts
+                            for (int i = 0; i < LabelManager.EMBEDDED_FONTS.Families.Length; i++)
+                            {
+                                if (LabelManager.EMBEDDED_FONTS.Families[i].Name == ff)
+                                {
+                                    scaleFont = new Font(LabelManager.EMBEDDED_FONTS.Families[i], fontsize, FontStyle.Regular, GraphicsUnit.Point);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (scaleFont != null)
+                {
+                    ScaleFont = scaleFont;
+                }
+                else
+                {
+                    ScaleFont = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+                }
+            }
+
+
+
             IEnumerable<XElement> scaleFontColorElem = mapScaleDoc.Descendants(ns + "ScaleFontColor");
             if (scaleFontColorElem != null && scaleFontColorElem.Any() && scaleFontColorElem.First() != null)
             {
@@ -433,14 +478,7 @@ namespace RealmStudio
                     }
                     else if (int.TryParse(scaleFontColor, out int n))
                     {
-                        if (n > 0)
-                        {
-                            argbValue = n;
-                        }
-                        else
-                        {
-                            argbValue = Color.White.ToArgb();
-                        }
+                        argbValue = n;
                     }
 
                     ScaleFontColor = Color.FromArgb(argbValue);
@@ -488,14 +526,7 @@ namespace RealmStudio
                     }
                     else if (int.TryParse(scaleOutlineColor, out int n))
                     {
-                        if (n > 0)
-                        {
-                            argbValue = n;
-                        }
-                        else
-                        {
-                            argbValue = Color.Black.ToArgb();
-                        }
+                        argbValue = n;
                     }
 
                     ScaleOutlineColor = Color.FromArgb(argbValue);

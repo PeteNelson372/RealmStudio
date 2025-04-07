@@ -236,17 +236,9 @@ namespace RealmStudio
                 {
                     argbValue = ColorTranslator.FromHtml(labelColor).ToArgb();
                 }
-
-                if (int.TryParse(labelColor, out int n))
+                else if (int.TryParse(labelColor, out int n))
                 {
-                    if (n > 0)
-                    {
-                        argbValue = n;
-                    }
-                    else
-                    {
-                        argbValue = ColorTranslator.FromHtml("#3D351E").ToArgb();
-                    }
+                    argbValue = n;
                 }
 
                 LabelColor = Color.FromArgb(argbValue);
@@ -269,14 +261,7 @@ namespace RealmStudio
                 }
                 else if (int.TryParse(labelOutlineColor, out int n))
                 {
-                    if (n > 0)
-                    {
-                        argbValue = n;
-                    }
-                    else
-                    {
-                        argbValue = ColorTranslator.FromHtml("#A1D6CAAB").ToArgb();
-                    }
+                    argbValue = n;
                 }
                 else
                 {
@@ -308,17 +293,9 @@ namespace RealmStudio
                 {
                     argbValue = ColorTranslator.FromHtml(labelGlowColor).ToArgb();
                 }
-
-                if (int.TryParse(labelGlowColor, out int n))
+                else if (int.TryParse(labelGlowColor, out int n))
                 {
-                    if (n > 0)
-                    {
-                        argbValue = n;
-                    }
-                    else
-                    {
-                        argbValue = Color.White.ToArgb();
-                    }
+                    argbValue = n;
                 }
 
                 LabelGlowColor = Color.FromArgb(argbValue);
@@ -336,13 +313,66 @@ namespace RealmStudio
             }
 
             IEnumerable<XElement?> labelFontElem = mapLabelDoc.Descendants().Select(x => x.Element(ns + "LabelFont"));
-            if (labelFontElem.First() != null)
+            if (labelFontElem != null && labelFontElem.Any() && labelFontElem.First() != null)
             {
-                string? labelFont = mapLabelDoc.Descendants().Select(x => x.Element(ns + "LabelFont").Value).FirstOrDefault();
+                string? labelFontString = mapLabelDoc.Descendants().Select(x => x.Element(ns + "LabelFont").Value).FirstOrDefault();
                 FontConverter cvt = new();
-                LabelFont = cvt.ConvertFromString(labelFont) as Font;
+                Font? labelFont = (Font?)cvt.ConvertFromString(labelFontString) as Font;
 
-                LabelFont ??= new Font("Tahoma", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+                if (labelFont != null && !labelFontString.Contains(labelFont.FontFamily.Name))
+                {
+                    labelFont = null;
+                }
+
+                if (labelFont == null)
+                {
+                    string[] fontParts = labelFontString.Split(',');
+
+                    if (fontParts.Length == 2)
+                    {
+                        string ff = fontParts[0];
+                        string fs = fontParts[1];
+
+                        // remove any non-numeric characters from the font size string (but allow . and -)
+                        fs = string.Join(",", new string(
+                            [.. fs.Where(c => char.IsBetween(c, '0', '9') || c == '.' || c == '-' || char.IsWhiteSpace(c))]).Split((char[]?)null,
+                            StringSplitOptions.RemoveEmptyEntries));
+
+                        bool success = float.TryParse(fs, out float fontsize);
+
+                        if (!success)
+                        {
+                            fontsize = 12.0F;
+                        }
+
+                        try
+                        {
+                            FontFamily family = new(ff);
+                            labelFont = new Font(family, fontsize, FontStyle.Regular, GraphicsUnit.Point);
+                        }
+                        catch
+                        {
+                            // couldn't create the font, so try to find it in the list of embedded fonts
+                            for (int i = 0; i < LabelManager.EMBEDDED_FONTS.Families.Length; i++)
+                            {
+                                if (LabelManager.EMBEDDED_FONTS.Families[i].Name == ff)
+                                {
+                                    labelFont = new Font(LabelManager.EMBEDDED_FONTS.Families[i], fontsize, FontStyle.Regular, GraphicsUnit.Point);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (labelFont != null)
+                {
+                    LabelFont = labelFont;
+                }
+                else
+                {
+                    LabelFont = new Font("Tahoma", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+                }
             }
 
             IEnumerable<XElement?> labelRotationDegreesElem = mapLabelDoc.Descendants().Select(x => x.Element(ns + "LabelRotationDegrees"));

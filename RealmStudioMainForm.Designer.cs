@@ -6121,6 +6121,7 @@
             ScaleSegmentDistanceUpDown.TabIndex = 75;
             ScaleSegmentDistanceUpDown.TextAlign = HorizontalAlignment.Center;
             ScaleSegmentDistanceUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
+            ScaleSegmentDistanceUpDown.ValueChanged += ScaleSegmentDistanceUpDown_ValueChanged;
             // 
             // label80
             // 

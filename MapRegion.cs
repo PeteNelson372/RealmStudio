@@ -325,17 +325,9 @@ namespace RealmStudio
                     {
                         argbValue = ColorTranslator.FromHtml(regionBorderColor).ToArgb();
                     }
-
-                    if (int.TryParse(regionBorderColor, out int n))
+                    else if (int.TryParse(regionBorderColor, out int n))
                     {
-                        if (n > 0)
-                        {
-                            argbValue = n;
-                        }
-                        else
-                        {
-                            argbValue = ColorTranslator.FromHtml("#A1D6CAAB").ToArgb();
-                        }
+                        argbValue = n;
                     }
 
                     RegionBorderColor = Color.FromArgb(argbValue);

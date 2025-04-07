@@ -2010,6 +2010,8 @@ namespace RealmStudio
 
         private void OpenMap(string mapFilePath)
         {
+            ArgumentNullException.ThrowIfNull(FrameManager.FrameMediator);
+
             // open an existing map
             try
             {
@@ -2071,8 +2073,6 @@ namespace RealmStudio
                 {
                     MapStateMediator.CurrentMapGrid.ParentMap = MapStateMediator.CurrentMap;
                 }
-
-                ArgumentNullException.ThrowIfNull(FrameManager.FrameMediator);
 
                 MapStateMediator.CurrentMapFrame = (PlacedMapFrame?)FrameManager.GetComponentById(Guid.Empty);
 
@@ -2725,7 +2725,7 @@ namespace RealmStudio
             // has the map scale been clicked?
             MapStateMediator.SelectedMapScale = MapScaleManager.SelectMapScale(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
 
-            if (MapStateMediator.SelectedMapScale != null)
+            if (MapStateMediator.SelectedMapScale != null && MapStateMediator.SelectedMapScale.IsSelected)
             {
                 MainMediator.SetDrawingMode(MapDrawingMode.SelectMapScale, 0);
                 Cursor.Current = Cursors.SizeAll;
@@ -4663,7 +4663,15 @@ namespace RealmStudio
             MainMediator.SetDrawingMode(MainMediator.CurrentDrawingMode == MapDrawingMode.PlaceWindrose ?
                 MapDrawingMode.None : MapDrawingMode.PlaceWindrose, 0);
 
-            WindroseManager.Create();
+            if (MainMediator.CurrentDrawingMode == MapDrawingMode.PlaceWindrose)
+            {
+                WindroseManager.Create();
+            }
+            else
+            {
+                MapStateMediator.CurrentWindrose = null;
+            }
+
         }
 
         private void WindroseColorSelectButton_Click(object sender, EventArgs e)
@@ -5437,6 +5445,11 @@ namespace RealmStudio
             TOOLTIP.Show(ScaleMediator.SegmentCount.ToString(), MapScaleGroupBox, new Point(ScaleSegmentCountTrack.Right - 30, ScaleSegmentCountTrack.Top - 20), 2000);
         }
 
+        private void ScaleSegmentDistanceUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            ScaleMediator.SegmentDistance = (float)ScaleSegmentDistanceUpDown.Value;
+        }
+
         private void ScaleLineWidthTrack_Scroll(object sender, EventArgs e)
         {
             ScaleMediator.ScaleLineWidth = ScaleLineWidthTrack.Value;
@@ -5775,7 +5788,6 @@ namespace RealmStudio
         }
 
         #endregion
-
 
     }
 }

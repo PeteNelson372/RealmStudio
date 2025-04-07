@@ -471,6 +471,7 @@ namespace RealmStudio
 
             // clear other selected and current objects?
             CurrentMapRegion = null;
+            CurrentWindrose = null;
 
             // clear the work layers
             MapBuilder.GetMapLayerByIndex(CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
