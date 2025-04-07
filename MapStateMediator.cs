@@ -62,6 +62,7 @@ namespace RealmStudio
         private static MapScale? _currentMapScale;
         private static MapRegion? _currentMapRegion;
         private static LayerPaintStroke? _currentPaintStroke;
+        private static PlacedMapFrame? _currentMapFrame;
 
         // objects that are currently selected
         private static Landform? _selectedLandform;
@@ -260,6 +261,12 @@ namespace RealmStudio
         {
             get { return _currentPaintStroke; }
             set { _currentPaintStroke = value; }
+        }
+
+        internal static PlacedMapFrame? CurrentMapFrame
+        {
+            get { return _currentMapFrame; }
+            set { _currentMapFrame = value; }
         }
 
         internal static Landform? SelectedLandform

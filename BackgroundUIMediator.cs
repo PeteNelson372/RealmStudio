@@ -25,7 +25,7 @@ using System.ComponentModel;
 
 namespace RealmStudio
 {
-    internal class BackgroundUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class BackgroundUIMediator : IUIMediatorObserver, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 

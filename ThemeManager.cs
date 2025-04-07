@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class ThemeManager
+    internal sealed class ThemeManager
     {
         internal static MapTheme SaveCurentSettingsToTheme()
         {

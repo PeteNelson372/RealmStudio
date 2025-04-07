@@ -178,6 +178,8 @@ namespace RealmStudio
 
         internal static MapGrid? FinalizeMapGrid()
         {
+            ArgumentNullException.ThrowIfNull(GridUIMediator);
+
             // finalize loading of grid
             MapGrid? currentMapGrid = null;
 
@@ -221,6 +223,12 @@ namespace RealmStudio
                         break;
                     }
                 }
+            }
+
+            if (currentMapGrid != null)
+            {
+                GridUIMediator.Initialize(currentMapGrid.GridEnabled, currentMapGrid.GridType, currentMapGrid.GridLayerIndex, currentMapGrid.GridSize,
+                    currentMapGrid.GridLineWidth, currentMapGrid.GridColor, currentMapGrid.ShowGridSize);
             }
 
             return currentMapGrid;

@@ -118,7 +118,7 @@ namespace RealmStudio
             return false;
         }
 
-        internal static void PlaceSymbolOnMap(RealmStudioMap map, MapSymbol? mapSymbol, SKBitmap? bitmap, SKPoint cursorPoint)
+        internal static void PlaceSymbolOnMap(MapSymbol? mapSymbol, SKBitmap? bitmap, SKPoint cursorPoint)
         {
             if (mapSymbol != null && bitmap != null)
             {
@@ -177,7 +177,7 @@ namespace RealmStudio
             }
         }
 
-        internal static void RemovePlacedSymbolsFromArea(RealmStudioMap map, SKPoint centerPoint, float eraserCircleRadius)
+        internal static void RemovePlacedSymbolsFromArea(SKPoint centerPoint, float eraserCircleRadius)
         {
             Cmd_RemoveSymbolsFromArea cmd = new(MapStateMediator.CurrentMap, eraserCircleRadius, centerPoint);
             CommandManager.AddCommand(cmd);
@@ -356,7 +356,7 @@ namespace RealmStudio
             return typeSymbols;
         }
 
-        internal static bool CanPlaceSymbol(RealmStudioMap map, SKPoint cursorPoint, float placementDensityRadius)
+        internal static bool CanPlaceSymbol(SKPoint cursorPoint, float placementDensityRadius)
         {
             // if there are any symbols within the placementDensityRadius around the cursor point, then the symbol cannot be placed at the cursor point
 
@@ -380,7 +380,7 @@ namespace RealmStudio
             return canPlace;
         }
 
-        internal static void ColorSymbolsInArea(RealmStudioMap map, SKPoint colorCursorPoint, int colorBrushRadius, Color[] symbolColors, bool randomizeColors)
+        internal static void ColorSymbolsInArea(SKPoint colorCursorPoint, int colorBrushRadius, Color[] symbolColors, bool randomizeColors)
         {
             List<MapComponent> components = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER).MapLayerComponents;
 
@@ -755,14 +755,14 @@ namespace RealmStudio
                     // so high values of placement density on the placement density updown increase placement density on the map
                     float placementDensityRadius = bitmapRadius / SymbolMediator.SymbolPlacementDensity;
 
-                    bool canPlaceSymbol = CanPlaceSymbol(MapStateMediator.CurrentMap, cursorPoint, placementDensityRadius);
+                    bool canPlaceSymbol = CanPlaceSymbol(cursorPoint, placementDensityRadius);
 
                     if (canPlaceSymbol)
                     {
                         symbolToPlace.Width = rotatedAndScaledBitmap.Width;
                         symbolToPlace.Height = rotatedAndScaledBitmap.Height;
 
-                        PlaceSymbolOnMap(MapStateMediator.CurrentMap, symbolToPlace, rotatedAndScaledBitmap, cursorPoint);
+                        PlaceSymbolOnMap(symbolToPlace, rotatedAndScaledBitmap, cursorPoint);
                     }
                 }
             }
@@ -862,7 +862,7 @@ namespace RealmStudio
 
                     SKPoint cursorPoint = new(mouseCursorPoint.X - (b.Width / 2), mouseCursorPoint.Y - (b.Height / 2));
 
-                    bool canPlaceSymbol = CanPlaceSymbol(MapStateMediator.CurrentMap, cursorPoint, placementDensityRadius);
+                    bool canPlaceSymbol = CanPlaceSymbol(cursorPoint, placementDensityRadius);
 
                     if (canPlaceSymbol)
                     {

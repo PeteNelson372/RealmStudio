@@ -2,7 +2,7 @@
 
 namespace RealmStudio
 {
-    internal class OceanUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class OceanUIMediator : IUIMediatorObserver, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 

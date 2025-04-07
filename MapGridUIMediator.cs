@@ -184,30 +184,6 @@ namespace RealmStudio
             // based on the property that has changed
             MainForm.EnableGridSwitch.Checked = GridEnabled;
 
-            switch (GridType)
-            {
-                case MapGridType.Square:
-                    {
-                        MainForm.SquareGridRadio.Checked = true;
-                    }
-                    break;
-                case MapGridType.FlatHex:
-                    {
-                        MainForm.FlatHexGridRadio.Checked = true;
-                    }
-                    break;
-                case MapGridType.PointedHex:
-                    {
-                        MainForm.PointedHexGridRadio.Checked = true;
-                    }
-                    break;
-                default:
-                    {
-                        MainForm.SquareGridRadio.Checked = true;
-                    }
-                    break;
-            }
-
             MainForm.GridLayerUpDown.SelectedItem = GridLayerName;
             MainForm.GridColorSelectButton.BackColor = GridColor;
             MainForm.ShowGridSizeSwitch.Checked = ShowGridSize;
@@ -268,6 +244,72 @@ namespace RealmStudio
             GridLineWidth = 2;
             GridColor = Color.FromArgb(126, 0, 0, 0);
             ShowGridSize = true;
+        }
+
+        internal void Initialize(bool enabled, MapGridType gridType, int layerIndex, int gridSize, int lineWidth, Color gridColor, bool showSize)
+        {
+            // this method initializes the grid UI values without triggering a UI update in NotifyUpdate
+            // this avoids a recursive loop when the UI is updated at the time a new map is loaded or a theme is applied
+
+            _gridEnabled = enabled;
+            _gridType = gridType;
+            _gridLayerIndex = layerIndex;
+            _gridSize = gridSize;
+            _gridLineWidth = lineWidth;
+            _gridColor = gridColor;
+            _showGridSize = showSize;
+
+            MainForm.EnableGridSwitch.Checked = _gridEnabled;
+            MainForm.GridLayerUpDown.SelectedItem = _gridLayerName;
+            MainForm.GridColorSelectButton.BackColor = _gridColor;
+            MainForm.ShowGridSizeSwitch.Checked = _showGridSize;
+            MainForm.GridSizeTrack.Value = _gridSize;
+            MainForm.GridLineWidthTrack.Value = _gridLineWidth;
+
+            switch (_gridType)
+            {
+                case MapGridType.Square:
+                    {
+                        MainForm.SquareGridRadio.Checked = true;
+                    }
+                    break;
+                case MapGridType.FlatHex:
+                    {
+                        MainForm.FlatHexGridRadio.Checked = true;
+                        _gridSize *= 2;
+                    }
+                    break;
+                case MapGridType.PointedHex:
+                    {
+                        MainForm.PointedHexGridRadio.Checked = true;
+                        _gridSize *= 2;
+                    }
+                    break;
+                default:
+                    {
+                        MainForm.SquareGridRadio.Checked = true;
+                    }
+                    break;
+            }
+
+            if (_gridLayerIndex == MapBuilder.DEFAULTGRIDLAYER)
+            {
+                _gridLayerName = "Default";
+            }
+            else if (_gridLayerIndex == MapBuilder.ABOVEOCEANGRIDLAYER)
+            {
+                _gridLayerName = "Above Ocean";
+            }
+            else if (_gridLayerIndex == MapBuilder.BELOWSYMBOLSGRIDLAYER)
+            {
+                _gridLayerName = "Below Symbols";
+            }
+            else
+            {
+                _gridLayerName = "Default";
+            }
+
+            MainForm.GridLayerUpDown.SelectedItem = _gridLayerName;
         }
 
         #endregion

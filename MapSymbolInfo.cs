@@ -30,6 +30,9 @@ namespace RealmStudio
     public sealed partial class MapSymbolInfo : Form
     {
         private readonly RealmStudioMap Map;
+
+        private readonly System.Windows.Forms.ToolTip TOOLTIP = new();
+
         private readonly MapSymbol symbol;
         private readonly MapSymbolCollection? collection;
         private readonly Color[] originalColors = new Color[3];
@@ -209,7 +212,34 @@ namespace RealmStudio
 
             SymbolColor1Button.BackColor = c;
             SymbolColor1Button.Refresh();
+        }
 
+        private void SymbolColor2Button_Click(object sender, EventArgs e)
+        {
+            Color c = UtilityMethods.SelectColorFromDialog(this, SymbolColor2Button.BackColor);
+
+            SymbolColor2Button.BackColor = c;
+            SymbolColor2Button.Refresh();
+        }
+
+        private void SymbolColor3Button_Click(object sender, EventArgs e)
+        {
+            Color c = UtilityMethods.SelectColorFromDialog(this, SymbolColor3Button.BackColor);
+
+            SymbolColor3Button.BackColor = c;
+            SymbolColor3Button.Refresh();
+        }
+
+        private void ResetSymbolColorsButton_Click(object sender, EventArgs e)
+        {
+            SymbolColor1Button.BackColor = originalColors[0];
+            SymbolColor2Button.BackColor = originalColors[1];
+            SymbolColor3Button.BackColor = originalColors[2];
+
+        }
+
+        private void PaintSymbolButton_Click(object sender, EventArgs e)
+        {
             SKColor paintColor1 = SymbolColor1Button.BackColor.ToSKColor();
             SKColor paintColor2 = SymbolColor2Button.BackColor.ToSKColor();
             SKColor paintColor3 = SymbolColor3Button.BackColor.ToSKColor();
@@ -219,62 +249,9 @@ namespace RealmStudio
                 Cmd_PaintSymbol cmd = new(symbol, paintColor1, paintColor1, paintColor2, paintColor3);
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
-            }
-        }
 
-        private void SymbolColor2Button_Click(object sender, EventArgs e)
-        {
-            Color c = UtilityMethods.SelectColorFromDialog(this, SymbolColor2Button.BackColor);
+                TOOLTIP.Show("Map Symbol painted", SymbolInfoGroup, new Point(StatusLabel.Left, StatusLabel.Top), 3000);
 
-            SymbolColor2Button.BackColor = c;
-            SymbolColor2Button.Refresh();
-
-            SKColor paintColor1 = SymbolColor1Button.BackColor.ToSKColor();
-            SKColor paintColor2 = SymbolColor2Button.BackColor.ToSKColor();
-            SKColor paintColor3 = SymbolColor3Button.BackColor.ToSKColor();
-
-            if (symbol.IsGrayscale || symbol.UseCustomColors)
-            {
-                Cmd_PaintSymbol cmd = new(symbol, paintColor2, paintColor1, paintColor2, paintColor3);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
-            }
-        }
-
-        private void SymbolColor3Button_Click(object sender, EventArgs e)
-        {
-            Color c = UtilityMethods.SelectColorFromDialog(this, SymbolColor3Button.BackColor);
-
-            SymbolColor3Button.BackColor = c;
-            SymbolColor3Button.Refresh();
-
-            SKColor paintColor1 = SymbolColor1Button.BackColor.ToSKColor();
-            SKColor paintColor2 = SymbolColor2Button.BackColor.ToSKColor();
-            SKColor paintColor3 = SymbolColor3Button.BackColor.ToSKColor();
-
-            if (symbol.IsGrayscale || symbol.UseCustomColors)
-            {
-                Cmd_PaintSymbol cmd = new(symbol, paintColor3, paintColor1, paintColor2, paintColor3);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
-            }
-        }
-
-        private void ResetSymbolColorsButton_Click(object sender, EventArgs e)
-        {
-            SymbolColor1Button.BackColor = originalColors[0];
-            SymbolColor2Button.BackColor = originalColors[1];
-            SymbolColor3Button.BackColor = originalColors[2];
-
-            SKColor paintColor1 = SymbolColor1Button.BackColor.ToSKColor();
-            SKColor paintColor2 = SymbolColor2Button.BackColor.ToSKColor();
-            SKColor paintColor3 = SymbolColor3Button.BackColor.ToSKColor();
-
-            if (symbol.IsGrayscale || symbol.UseCustomColors)
-            {
-                Cmd_PaintSymbol cmd = new(symbol, paintColor3, paintColor1, paintColor2, paintColor3);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
             }
         }
     }

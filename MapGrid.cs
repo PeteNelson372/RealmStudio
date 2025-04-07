@@ -411,8 +411,7 @@ namespace RealmStudio
                 {
                     argbValue = ColorTranslator.FromHtml(gridColor).ToArgb();
                 }
-
-                if (int.TryParse(gridColor, out int n))
+                else if (int.TryParse(gridColor, out int n))
                 {
                     if (n > 0)
                     {

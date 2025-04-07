@@ -185,14 +185,21 @@ namespace RealmStudio
 
         #region Frame UI Methods
 
-        internal void Reset()
+        internal void Initialize(float frameScale, Color frameTint, bool frameEnabled)
         {
-            Frame = null;
-            FrameScale = 100.0F;
-            FrameTint = Color.White;
-            FrameEnabled = true;
-            MainForm.FrameStyleTable.Hide();
-            MainForm.FrameStyleTable.Controls.Clear();
+            _frameScale = frameScale * 100.0F;
+            _frameTint = frameTint;
+            _frameEnabled = frameEnabled;
+
+            MainForm.FrameTintColorSelectButton.BackColor = _frameTint;
+            MainForm.FrameScaleTrack.Value = (int)_frameScale;
+
+            PlacedMapFrame? pmf = (PlacedMapFrame?)FrameManager.GetComponentById(Guid.Empty);
+            if (pmf != null)
+            {
+                pmf.FrameEnabled = _frameEnabled;
+                pmf.FrameScale = _frameScale;
+            }
         }
 
         internal void AddMapFramesToFrameTable(List<MapFrame> mapFrames)

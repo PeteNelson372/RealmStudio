@@ -25,7 +25,7 @@ using System.ComponentModel;
 
 namespace RealmStudio
 {
-    internal class LandformUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class LandformUIMediator : IUIMediatorObserver, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 

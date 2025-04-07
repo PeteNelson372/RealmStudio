@@ -71,6 +71,8 @@ namespace RealmStudio
 
             MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Add(mapFrame);
 
+            MapStateMediator.CurrentMapFrame = mapFrame;
+
             return mapFrame;
         }
 

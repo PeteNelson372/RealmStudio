@@ -1999,7 +1999,6 @@ namespace RealmStudio
                             throw;
                         }
 
-
                         UpdateMapNameAndSize();
                         SKGLRenderControl.Invalidate();
                         Refresh();
@@ -2071,7 +2070,17 @@ namespace RealmStudio
                 if (MapStateMediator.CurrentMapGrid != null)
                 {
                     MapStateMediator.CurrentMapGrid.ParentMap = MapStateMediator.CurrentMap;
-                    MapGridManager.Update();
+                }
+
+                ArgumentNullException.ThrowIfNull(FrameManager.FrameMediator);
+
+                MapStateMediator.CurrentMapFrame = (PlacedMapFrame?)FrameManager.GetComponentById(Guid.Empty);
+
+                if (MapStateMediator.CurrentMapFrame != null)
+                {
+                    FrameManager.FrameMediator.Initialize(MapStateMediator.CurrentMapFrame.FrameScale,
+                        MapStateMediator.CurrentMapFrame.FrameTint,
+                        MapStateMediator.CurrentMapFrame.FrameEnabled);
                 }
 
                 HeightMapManager.ConvertMapImageToMapHeightMap(MapStateMediator.CurrentMap);
@@ -3002,7 +3011,7 @@ namespace RealmStudio
 
                     SKPoint eraserCursorPoint = new(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
 
-                    SymbolManager.RemovePlacedSymbolsFromArea(MapStateMediator.CurrentMap, eraserCursorPoint, eraserRadius);
+                    SymbolManager.RemovePlacedSymbolsFromArea(eraserCursorPoint, eraserRadius);
                     break;
                 case MapDrawingMode.DrawArcLabelPath:
                     {
@@ -3366,7 +3375,7 @@ namespace RealmStudio
                 case MapDrawingMode.SymbolErase:
                     int eraserRadius = SymbolMediator.AreaBrushSize / 2;
 
-                    SymbolManager.RemovePlacedSymbolsFromArea(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, eraserRadius);
+                    SymbolManager.RemovePlacedSymbolsFromArea(MapStateMediator.CurrentCursorPoint, eraserRadius);
 
                     MapStateMediator.CurrentMap.IsSaved = false;
                     break;
@@ -3377,7 +3386,7 @@ namespace RealmStudio
                         int colorBrushRadius = SymbolMediator.AreaBrushSize / 2;
 
                         Color[] symbolColors = [SymbolColor1Button.BackColor, SymbolColor2Button.BackColor, SymbolColor3Button.BackColor];
-                        SymbolManager.ColorSymbolsInArea(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint, colorBrushRadius, symbolColors, RandomizeColorCheck.Checked);
+                        SymbolManager.ColorSymbolsInArea(MapStateMediator.CurrentCursorPoint, colorBrushRadius, symbolColors, RandomizeColorCheck.Checked);
 
                     }
                     else

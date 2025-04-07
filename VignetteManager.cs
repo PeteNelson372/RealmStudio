@@ -26,7 +26,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class VignetteManager : IMapComponentManager
+    internal sealed class VignetteManager : IMapComponentManager
     {
         private static VignetteUIMediator? _vignetteMediator;
 

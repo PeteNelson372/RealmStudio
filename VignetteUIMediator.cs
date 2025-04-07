@@ -25,7 +25,7 @@ using System.ComponentModel;
 
 namespace RealmStudio
 {
-    internal class VignetteUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class VignetteUIMediator : IUIMediatorObserver, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 

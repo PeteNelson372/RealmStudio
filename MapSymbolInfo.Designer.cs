@@ -30,7 +30,11 @@
         {
             MapSymbolInfoOverlay = new ReaLTaiizor.Forms.DungeonForm();
             CloseFormButton = new Button();
-            OceanTextureGroup = new GroupBox();
+            SymbolInfoGroup = new GroupBox();
+            StatusLabel = new Label();
+            PaintSymbolButton = new FontAwesome.Sharp.IconButton();
+            NameTextBox = new TextBox();
+            label6 = new Label();
             MarkerRadioButton = new RadioButton();
             ResetSymbolColorsButton = new FontAwesome.Sharp.IconButton();
             SymbolColor3Button = new FontAwesome.Sharp.IconButton();
@@ -59,10 +63,8 @@
             NewTagTextBox = new TextBox();
             AddTagButton = new FontAwesome.Sharp.IconButton();
             CheckedTagsListBox = new CheckedListBox();
-            label6 = new Label();
-            NameTextBox = new TextBox();
             MapSymbolInfoOverlay.SuspendLayout();
-            OceanTextureGroup.SuspendLayout();
+            SymbolInfoGroup.SuspendLayout();
             panel1.SuspendLayout();
             groupBox14.SuspendLayout();
             SuspendLayout();
@@ -72,7 +74,7 @@
             MapSymbolInfoOverlay.BackColor = Color.FromArgb(244, 241, 243);
             MapSymbolInfoOverlay.BorderColor = Color.FromArgb(38, 38, 38);
             MapSymbolInfoOverlay.Controls.Add(CloseFormButton);
-            MapSymbolInfoOverlay.Controls.Add(OceanTextureGroup);
+            MapSymbolInfoOverlay.Controls.Add(SymbolInfoGroup);
             MapSymbolInfoOverlay.Controls.Add(groupBox14);
             MapSymbolInfoOverlay.Dock = DockStyle.Fill;
             MapSymbolInfoOverlay.FillEdgeColorA = Color.FromArgb(69, 68, 63);
@@ -105,40 +107,85 @@
             CloseFormButton.UseVisualStyleBackColor = true;
             CloseFormButton.Click += CloseFormButton_Click;
             // 
-            // OceanTextureGroup
+            // SymbolInfoGroup
             // 
-            OceanTextureGroup.BackColor = Color.Transparent;
-            OceanTextureGroup.Controls.Add(NameTextBox);
-            OceanTextureGroup.Controls.Add(label6);
-            OceanTextureGroup.Controls.Add(MarkerRadioButton);
-            OceanTextureGroup.Controls.Add(ResetSymbolColorsButton);
-            OceanTextureGroup.Controls.Add(SymbolColor3Button);
-            OceanTextureGroup.Controls.Add(SymbolColor2Button);
-            OceanTextureGroup.Controls.Add(SymbolColor1Button);
-            OceanTextureGroup.Controls.Add(SymbolFormatLabel);
-            OceanTextureGroup.Controls.Add(SymbolGuidLabel);
-            OceanTextureGroup.Controls.Add(SymbolPathLabel);
-            OceanTextureGroup.Controls.Add(CollectionNameLabel);
-            OceanTextureGroup.Controls.Add(SymbolNameLabel);
-            OceanTextureGroup.Controls.Add(panel1);
-            OceanTextureGroup.Controls.Add(OtherRadioButton);
-            OceanTextureGroup.Controls.Add(TerrainRadioButton);
-            OceanTextureGroup.Controls.Add(VegetationRadioButton);
-            OceanTextureGroup.Controls.Add(StructureRadioButton);
-            OceanTextureGroup.Controls.Add(label5);
-            OceanTextureGroup.Controls.Add(label4);
-            OceanTextureGroup.Controls.Add(label3);
-            OceanTextureGroup.Controls.Add(label2);
-            OceanTextureGroup.Controls.Add(label1);
-            OceanTextureGroup.Controls.Add(label32);
-            OceanTextureGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            OceanTextureGroup.ForeColor = SystemColors.ControlText;
-            OceanTextureGroup.Location = new Point(23, 59);
-            OceanTextureGroup.Name = "OceanTextureGroup";
-            OceanTextureGroup.Size = new Size(321, 396);
-            OceanTextureGroup.TabIndex = 34;
-            OceanTextureGroup.TabStop = false;
-            OceanTextureGroup.Text = "Symbol Data";
+            SymbolInfoGroup.BackColor = Color.Transparent;
+            SymbolInfoGroup.Controls.Add(StatusLabel);
+            SymbolInfoGroup.Controls.Add(PaintSymbolButton);
+            SymbolInfoGroup.Controls.Add(NameTextBox);
+            SymbolInfoGroup.Controls.Add(label6);
+            SymbolInfoGroup.Controls.Add(MarkerRadioButton);
+            SymbolInfoGroup.Controls.Add(ResetSymbolColorsButton);
+            SymbolInfoGroup.Controls.Add(SymbolColor3Button);
+            SymbolInfoGroup.Controls.Add(SymbolColor2Button);
+            SymbolInfoGroup.Controls.Add(SymbolColor1Button);
+            SymbolInfoGroup.Controls.Add(SymbolFormatLabel);
+            SymbolInfoGroup.Controls.Add(SymbolGuidLabel);
+            SymbolInfoGroup.Controls.Add(SymbolPathLabel);
+            SymbolInfoGroup.Controls.Add(CollectionNameLabel);
+            SymbolInfoGroup.Controls.Add(SymbolNameLabel);
+            SymbolInfoGroup.Controls.Add(panel1);
+            SymbolInfoGroup.Controls.Add(OtherRadioButton);
+            SymbolInfoGroup.Controls.Add(TerrainRadioButton);
+            SymbolInfoGroup.Controls.Add(VegetationRadioButton);
+            SymbolInfoGroup.Controls.Add(StructureRadioButton);
+            SymbolInfoGroup.Controls.Add(label5);
+            SymbolInfoGroup.Controls.Add(label4);
+            SymbolInfoGroup.Controls.Add(label3);
+            SymbolInfoGroup.Controls.Add(label2);
+            SymbolInfoGroup.Controls.Add(label1);
+            SymbolInfoGroup.Controls.Add(label32);
+            SymbolInfoGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SymbolInfoGroup.ForeColor = SystemColors.ControlText;
+            SymbolInfoGroup.Location = new Point(23, 59);
+            SymbolInfoGroup.Name = "SymbolInfoGroup";
+            SymbolInfoGroup.Size = new Size(321, 396);
+            SymbolInfoGroup.TabIndex = 34;
+            SymbolInfoGroup.TabStop = false;
+            SymbolInfoGroup.Text = "Symbol Data";
+            // 
+            // StatusLabel
+            // 
+            StatusLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            StatusLabel.Location = new Point(4, 374);
+            StatusLabel.Name = "StatusLabel";
+            StatusLabel.Size = new Size(312, 18);
+            StatusLabel.TabIndex = 64;
+            // 
+            // PaintSymbolButton
+            // 
+            PaintSymbolButton.BackColor = SystemColors.Control;
+            PaintSymbolButton.IconChar = FontAwesome.Sharp.IconChar.Paintbrush;
+            PaintSymbolButton.IconColor = Color.Black;
+            PaintSymbolButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PaintSymbolButton.IconSize = 18;
+            PaintSymbolButton.Location = new Point(185, 317);
+            PaintSymbolButton.Margin = new Padding(0);
+            PaintSymbolButton.Name = "PaintSymbolButton";
+            PaintSymbolButton.Size = new Size(46, 46);
+            PaintSymbolButton.TabIndex = 63;
+            PaintSymbolButton.UseVisualStyleBackColor = false;
+            PaintSymbolButton.Click += PaintSymbolButton_Click;
+            // 
+            // NameTextBox
+            // 
+            NameTextBox.Location = new Point(116, 25);
+            NameTextBox.Name = "NameTextBox";
+            NameTextBox.Size = new Size(182, 27);
+            NameTextBox.TabIndex = 62;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.BackColor = Color.Transparent;
+            label6.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label6.ForeColor = SystemColors.ControlDarkDark;
+            label6.Location = new Point(6, 32);
+            label6.Margin = new Padding(3);
+            label6.Name = "label6";
+            label6.Size = new Size(39, 15);
+            label6.TabIndex = 61;
+            label6.Text = "Name";
             // 
             // MarkerRadioButton
             // 
@@ -158,8 +205,8 @@
             ResetSymbolColorsButton.IconChar = FontAwesome.Sharp.IconChar.RotateBack;
             ResetSymbolColorsButton.IconColor = Color.Black;
             ResetSymbolColorsButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ResetSymbolColorsButton.IconSize = 14;
-            ResetSymbolColorsButton.Location = new Point(206, 334);
+            ResetSymbolColorsButton.IconSize = 18;
+            ResetSymbolColorsButton.Location = new Point(231, 317);
             ResetSymbolColorsButton.Margin = new Padding(0);
             ResetSymbolColorsButton.Name = "ResetSymbolColorsButton";
             ResetSymbolColorsButton.Size = new Size(46, 46);
@@ -177,7 +224,7 @@
             SymbolColor3Button.IconColor = Color.Tan;
             SymbolColor3Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
             SymbolColor3Button.IconSize = 24;
-            SymbolColor3Button.Location = new Point(157, 334);
+            SymbolColor3Button.Location = new Point(138, 318);
             SymbolColor3Button.Margin = new Padding(1, 3, 3, 3);
             SymbolColor3Button.Name = "SymbolColor3Button";
             SymbolColor3Button.Size = new Size(46, 46);
@@ -195,7 +242,7 @@
             SymbolColor2Button.IconColor = Color.Tan;
             SymbolColor2Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
             SymbolColor2Button.IconSize = 24;
-            SymbolColor2Button.Location = new Point(109, 334);
+            SymbolColor2Button.Location = new Point(90, 318);
             SymbolColor2Button.Margin = new Padding(1, 3, 1, 3);
             SymbolColor2Button.Name = "SymbolColor2Button";
             SymbolColor2Button.Size = new Size(46, 46);
@@ -213,7 +260,7 @@
             SymbolColor1Button.IconColor = Color.Tan;
             SymbolColor1Button.IconFont = FontAwesome.Sharp.IconFont.Auto;
             SymbolColor1Button.IconSize = 24;
-            SymbolColor1Button.Location = new Point(61, 334);
+            SymbolColor1Button.Location = new Point(42, 318);
             SymbolColor1Button.Margin = new Padding(1, 3, 1, 3);
             SymbolColor1Button.Name = "SymbolColor1Button";
             SymbolColor1Button.Size = new Size(46, 46);
@@ -269,7 +316,7 @@
             panel1.Controls.Add(UseCustomColorsRadio);
             panel1.Controls.Add(GrayScaleSymbolRadio);
             panel1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            panel1.Location = new Point(6, 283);
+            panel1.Location = new Point(6, 265);
             panel1.Name = "panel1";
             panel1.Size = new Size(309, 33);
             panel1.TabIndex = 50;
@@ -490,26 +537,6 @@
             CheckedTagsListBox.Size = new Size(135, 130);
             CheckedTagsListBox.TabIndex = 0;
             // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.BackColor = Color.Transparent;
-            label6.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label6.ForeColor = SystemColors.ControlDarkDark;
-            label6.Location = new Point(6, 32);
-            label6.Margin = new Padding(3);
-            label6.Name = "label6";
-            label6.Size = new Size(39, 15);
-            label6.TabIndex = 61;
-            label6.Text = "Name";
-            // 
-            // NameTextBox
-            // 
-            NameTextBox.Location = new Point(116, 25);
-            NameTextBox.Name = "NameTextBox";
-            NameTextBox.Size = new Size(182, 27);
-            NameTextBox.TabIndex = 62;
-            // 
             // MapSymbolInfo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -528,8 +555,8 @@
             Text = "Symbol Info";
             TransparencyKey = Color.Fuchsia;
             MapSymbolInfoOverlay.ResumeLayout(false);
-            OceanTextureGroup.ResumeLayout(false);
-            OceanTextureGroup.PerformLayout();
+            SymbolInfoGroup.ResumeLayout(false);
+            SymbolInfoGroup.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             groupBox14.ResumeLayout(false);
@@ -542,7 +569,7 @@
         private ReaLTaiizor.Forms.DungeonForm MapSymbolInfoOverlay;
         private GroupBox groupBox14;
         private CheckedListBox CheckedTagsListBox;
-        private GroupBox OceanTextureGroup;
+        private GroupBox SymbolInfoGroup;
         private Label label4;
         private Label label3;
         private Label label2;
@@ -572,5 +599,7 @@
         private RadioButton MarkerRadioButton;
         private TextBox NameTextBox;
         private Label label6;
+        private FontAwesome.Sharp.IconButton PaintSymbolButton;
+        private Label StatusLabel;
     }
 }
