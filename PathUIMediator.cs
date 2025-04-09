@@ -164,7 +164,7 @@ namespace RealmStudio
                     }
                     else if (changedPropertyName == "PathWidth")
                     {
-                        MainForm.PathWidthTrack.Value = PathWidth;
+                        MainForm.PathWidthTrack.Value = (PathWidth >= MainForm.PathWidthTrack.Minimum && PathWidth <= MainForm.PathWidthTrack.Maximum) ? PathWidth : MainForm.PathWidthTrack.Minimum;
                     }
                 }
             }));
