@@ -5282,12 +5282,13 @@ namespace RealmStudio
             SKGLRenderControl.Invalidate();
         }
 
-        private void AreaBrushSizeTrack_ValueChanged(object sender, EventArgs e)
+        private void AreaBrushSizeTrack_Scroll(object sender, EventArgs e)
         {
-            TOOLTIP.Show(AreaBrushSizeTrack.Value.ToString(), SymbolPlacementGroup, new Point(AreaBrushSizeTrack.Right - 30, AreaBrushSizeTrack.Top - 20), 2000);
-
             MainMediator.SelectedBrushSize = AreaBrushSizeTrack.Value;
             SymbolMediator.AreaBrushSize = MainMediator.SelectedBrushSize;
+
+            TOOLTIP.Show(SymbolMediator.AreaBrushSize.ToString(), SymbolPlacementGroup, new Point(AreaBrushSizeTrack.Right - 30, AreaBrushSizeTrack.Top - 20), 2000);
+
             SKGLRenderControl.Invalidate();
         }
 
@@ -5871,8 +5872,6 @@ namespace RealmStudio
         }
 
         #endregion
-
-
 
     }
 }

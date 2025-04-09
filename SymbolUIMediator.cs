@@ -354,11 +354,11 @@ namespace RealmStudio
             {
                 if (UseAreaBrush)
                 {
+                    AreaBrushSize = MainForm.AreaBrushSizeTrack.Value;
                     MapStateMediator.MainUIMediator.SelectedBrushSize = AreaBrushSize;
                 }
                 else
                 {
-                    AreaBrushSize = 0;
                     MapStateMediator.MainUIMediator.SelectedBrushSize = 0;
                 }
             }));

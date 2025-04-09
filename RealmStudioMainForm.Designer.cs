@@ -3538,7 +3538,7 @@
             AreaBrushSizeTrack.TabIndex = 37;
             AreaBrushSizeTrack.TickStyle = TickStyle.None;
             AreaBrushSizeTrack.Value = 64;
-            AreaBrushSizeTrack.ValueChanged += AreaBrushSizeTrack_ValueChanged;
+            AreaBrushSizeTrack.Scroll += AreaBrushSizeTrack_Scroll;
             // 
             // label50
             // 
