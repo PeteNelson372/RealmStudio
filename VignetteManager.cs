@@ -95,22 +95,23 @@ namespace RealmStudio
 
         internal static void FinalizeMapVignette()
         {
-            RealmStudioMainForm? mainForm = UtilityMethods.GetMainForm();
+            ArgumentNullException.ThrowIfNull(VignetteMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
 
-            if (mainForm != null)
+
+            // finalize loading of vignette
+            MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.VIGNETTELAYER);
+            if (vignetteLayer.MapLayerComponents.Count == 1)
             {
-                // finalize loading of vignette
-                MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.VIGNETTELAYER);
-                for (int i = 0; i < vignetteLayer.MapLayerComponents.Count; i++)
-                {
-                    if (vignetteLayer.MapLayerComponents[i] is MapVignette vignette)
-                    {
-                        vignette.ParentMap = MapStateMediator.CurrentMap;
-                        vignette.Width = MapStateMediator.CurrentMap.MapWidth;
-                        vignette.Height = MapStateMediator.CurrentMap.MapHeight;
-                        vignette.VignetteRenderSurface ??= SKSurface.Create(mainForm.SKGLRenderControl.GRContext, false, new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight));
-                    }
-                }
+                MapVignette vignette = (MapVignette)vignetteLayer.MapLayerComponents[0];
+
+                vignette.ParentMap = MapStateMediator.CurrentMap;
+                vignette.Width = MapStateMediator.CurrentMap.MapWidth;
+                vignette.Height = MapStateMediator.CurrentMap.MapHeight;
+                vignette.VignetteRenderSurface ??= SKSurface.Create(MapStateMediator.MainUIMediator.MainForm.SKGLRenderControl.GRContext, false, new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight));
+
+                VignetteMediator.Initialize(vignette.VignetteStrength, Color.FromArgb(vignette.VignetteColor), vignette.VignetteShape);
+
             }
         }
     }

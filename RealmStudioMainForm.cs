@@ -934,6 +934,7 @@ namespace RealmStudio
                     AssetManager.CURRENT_THEME = selectedTheme;
                     ThemeFilter themeFilter = themeList.GetThemeFilter();
                     ThemeManager.ApplyTheme(selectedTheme, themeFilter);
+                    MapStateMediator.CurrentMap.MapTheme = AssetManager.CURRENT_THEME.ThemeName;
                 }
             }
         }
@@ -1466,46 +1467,7 @@ namespace RealmStudio
         {
             SetStatusText("Loaded: " + assetCount + " assets.");
 
-            // background texture
-            if (BackgroundMediator.BackgroundTextureList.First().TextureBitmap == null)
-            {
-                BackgroundMediator.BackgroundTextureList.First().TextureBitmap =
-                    (Bitmap?)Bitmap.FromFile(BackgroundMediator.BackgroundTextureList.First().TexturePath);
-            }
-
-            BackgroundTextureBox.Image = BackgroundMediator.BackgroundTextureList.First().TextureBitmap;
-            BackgroundTextureNameLabel.Text = BackgroundMediator.BackgroundTextureList.First().TextureName;
-
-            // landform texture
-            if (LandformMediator.LandTextureList.First().TextureBitmap == null)
-            {
-                LandformMediator.LandTextureList.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(LandformMediator.LandTextureList.First().TexturePath);
-            }
-
-            LandformTexturePreviewPicture.Image = LandformMediator.LandTextureList.First().TextureBitmap;
-            LandTextureNameLabel.Text = LandformMediator.LandTextureList.First().TextureName;
-
-            // ocean texture
-            if (OceanMediator.OceanTextureList.First().TextureBitmap == null)
-            {
-                OceanMediator.OceanTextureList.First().TextureBitmap =
-                    (Bitmap?)Bitmap.FromFile(OceanMediator.OceanTextureList.First().TexturePath);
-            }
-
-            OceanTextureBox.Image = OceanMediator.OceanTextureList.First().TextureBitmap;
-            OceanTextureNameLabel.Text = OceanMediator.OceanTextureList.First().TextureName;
-
-            // path texture
-            if (PathMediator.PathTextureList.First().TextureBitmap == null)
-            {
-                PathMediator.PathTextureList.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(PathMediator.PathTextureList.First().TexturePath);
-            }
-
-            PathTexturePreviewPicture.Image = PathMediator.PathTextureList.First().TextureBitmap;
-            PathTextureNameLabel.Text = PathMediator.PathTextureList.First().TextureName;
-
             CoastlineStyleList.SelectedIndex = 6;  // default is dash pattern
-
 
             // symbol collections
             SymbolCollectionsListBox.Items.Clear();
@@ -1533,6 +1495,29 @@ namespace RealmStudio
                 ThemeFilter tf = new();
                 ThemeManager.ApplyTheme(AssetManager.CURRENT_THEME, tf);
             }
+
+            // background texture
+            BackgroundTextureBox.Image = BackgroundMediator.BackgroundTextureList[BackgroundMediator.BackgroundTextureIndex].TextureBitmap;
+            BackgroundTextureNameLabel.Text = BackgroundMediator.BackgroundTextureList[BackgroundMediator.BackgroundTextureIndex].TextureName;
+
+            // landform texture
+            LandformTexturePreviewPicture.Image = LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TextureBitmap;
+            LandTextureNameLabel.Text = LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TextureName;
+
+            // ocean texture
+            OceanTextureBox.Image = OceanMediator.OceanTextureList[OceanMediator.OceanTextureIndex].TextureBitmap;
+            OceanTextureNameLabel.Text = OceanMediator.OceanTextureList[OceanMediator.OceanTextureIndex].TextureName;
+
+            // path texture
+            if (PathMediator.PathTextureList.First().TextureBitmap == null)
+            {
+                PathMediator.PathTextureList.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(PathMediator.PathTextureList.First().TexturePath);
+            }
+
+            PathTexturePreviewPicture.Image = PathMediator.PathTextureList.First().TextureBitmap;
+            PathTextureNameLabel.Text = PathMediator.PathTextureList.First().TextureName;
+
+
         }
 
         public void LoadNameGeneratorConfigurationDialog()
@@ -2012,6 +1997,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(FrameManager.FrameMediator);
 
+
             // open an existing map
             try
             {
@@ -2065,15 +2051,104 @@ namespace RealmStudio
                 MapRenderHScroll.Maximum = MapStateMediator.CurrentMap.MapWidth;
                 MapRenderVScroll.Maximum = MapStateMediator.CurrentMap.MapHeight;
 
-                RealmMapMethods.FinalizeMap(MapStateMediator.CurrentMap, SKGLRenderControl);
-
-                MapStateMediator.CurrentMapGrid = MapGridManager.FinalizeMapGrid();
-
-                if (MapStateMediator.CurrentMapGrid != null)
+                if (string.IsNullOrEmpty(MapStateMediator.CurrentMap.MapTheme))
                 {
-                    MapStateMediator.CurrentMapGrid.ParentMap = MapStateMediator.CurrentMap;
+                    MapStateMediator.CurrentMap.MapTheme = AssetManager.DEFAULT_THEME_NAME;
                 }
 
+                MapTheme? theme = AssetManager.THEME_LIST.FirstOrDefault(t => t.ThemeName == MapStateMediator.CurrentMap.MapTheme);
+
+                if (theme != null)
+                {
+                    // apply the theme to the map
+                    ThemeFilter tf = new();
+                    ThemeManager.ApplyTheme(theme, tf);
+                }
+
+                // theme is applied and map is loaded, so set any values in the map that are not set when it is loaded, and then
+                // set the UI controls to match the values in the map
+
+                // maps store scale and opacity values as the scale value;
+                // mediators store them as the values used to scale and set opacity of the bitmap
+                // the mediator translates trackbar value to/from the scale and opacity values for the bitmap
+
+                // *** INITIALIZE BACKGROUND ***
+                // set background texture index from the background texture bitmap
+                // set background texture name label to match the name in the map
+                // set background texture picture to match the picture in the map,
+                // set background texture scale trackbar and background mirror switch
+
+                MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
+
+                if (baseLayer.MapLayerComponents.Count > 0)
+                {
+                    BackgroundMediator.Initialize(
+                        BackgroundMediator.BackgroundTextureIndex,
+                        ((MapImage)baseLayer.MapLayerComponents[0]).Scale,
+                        ((MapImage)baseLayer.MapLayerComponents[0]).MirrorImage);
+                }
+
+                // *** INITIALIZE OCEAN ***
+                // set ocean texture index from the ocean texture bitmap
+                // set ocean texture name label to match the name in the map (done in Initialize)
+                // set ocean texture picture to match the picture in the map (done in Initialize)
+                // set ocean texture scale trackbar, ocean opacity trackbar, and ocean mirror switch
+                // set paint objects on LayerPaointStroke objects in the ocean drawing layer
+
+                MapLayer oceanLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
+                MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANDRAWINGLAYER);
+
+                if (oceanLayer.MapLayerComponents.Count > 0)
+                {
+                    OceanMediator.Initialize(
+                        OceanMediator.OceanTextureIndex,
+                        ((MapImage)oceanLayer.MapLayerComponents[0]).Scale,
+                        ((MapImage)oceanLayer.MapLayerComponents[0]).Opacity,
+                        ((MapImage)oceanLayer.MapLayerComponents[0]).MirrorImage);
+                }
+
+                // finalize loading of ocean drawing layer
+                for (int i = 0; i < oceanDrawingLayer.MapLayerComponents.Count; i++)
+                {
+                    if (oceanDrawingLayer.MapLayerComponents[i] is LayerPaintStroke paintStroke)
+                    {
+                        paintStroke.ParentMap = MapStateMediator.CurrentMap;
+
+                        if (!paintStroke.Erase)
+                        {
+                            paintStroke.ShaderPaint = PaintObjects.OceanPaint;
+                        }
+                        else
+                        {
+                            paintStroke.ShaderPaint = PaintObjects.OceanEraserPaint;
+                        }
+                    }
+                }
+
+
+                // *** INITIALIZE LANDFORMS ***
+                // landform texture index and other UI control values come from the selected theme
+                LandformManager.FinalizeLandforms(SKGLRenderControl);
+
+                // *** INITIALIZE WATER FEATURES ***
+                // water feature UI control values come from the selected theme
+                WaterFeatureManager.FinalizeWaterFeatures();
+                WaterFeatureManager.FinalizeWindroses();
+
+                // *** INITIALIZE PATHS ***
+                // path UI control values come from the selected theme
+                PathManager.FinalizeMapPaths();
+
+                // *** INITIALIZE SYMBOLS ***
+                // symbol UI control values come from the selected theme
+                SymbolManager.FinalizeMapSymbols();
+
+                // *** INITIALIZE LABELS AND BOXES ***
+                // label UI control values come from the selected theme
+                BoxManager.FinalizeMapBoxes();
+
+                // *** INITIALIZE OVERLAYS ***
+                // *** FINALIZE MAP FRAME ***
                 MapStateMediator.CurrentMapFrame = (PlacedMapFrame?)FrameManager.GetComponentById(Guid.Empty);
 
                 if (MapStateMediator.CurrentMapFrame != null)
@@ -2082,6 +2157,15 @@ namespace RealmStudio
                         MapStateMediator.CurrentMapFrame.FrameTint,
                         MapStateMediator.CurrentMapFrame.FrameEnabled);
                 }
+
+                // *** FINALIZE MAP GRID ***
+                MapGridManager.FinalizeMapGrid();
+
+                // *** FINALIZE MAP REGIONS ***
+                RegionManager.FinalizeMapRegions();
+
+                // *** FINALIZE MAP VIGNETTE ***
+                VignetteManager.FinalizeMapVignette();
 
                 HeightMapManager.ConvertMapImageToMapHeightMap(MapStateMediator.CurrentMap);
 
@@ -2406,7 +2490,7 @@ namespace RealmStudio
                             Color glowColor = GlowColorSelectButton.BackColor;
                             int glowStrength = GlowStrengthTrack.Value;
 
-                            Cmd_ChangeLabelAttributes cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapLabel, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, newFont);
+                            Cmd_ChangeLabelAttributes cmd = new(MapStateMediator.SelectedMapLabel, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, newFont);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
@@ -3411,7 +3495,7 @@ namespace RealmStudio
                     }
                     else if (MapStateMediator.SelectedPlacedMapBox != null)
                     {
-                        LabelManager.MoveBox(MapStateMediator.SelectedPlacedMapBox, MapStateMediator.CurrentCursorPoint);
+                        BoxManager.MoveBox(MapStateMediator.SelectedPlacedMapBox, MapStateMediator.CurrentCursorPoint);
                     }
 
                     MapStateMediator.CurrentMap.IsSaved = false;
@@ -4098,7 +4182,7 @@ namespace RealmStudio
             VignetteMediator.VignetteColor = selectedColor;
         }
 
-        private void VignetteStrengthTrack_ValueChanged(object sender, EventArgs e)
+        private void VignetteStrengthTrack_Scroll(object sender, EventArgs e)
         {
             VignetteMediator.VignetteStrength = VignetteStrengthTrack.Value;
             TOOLTIP.Show(VignetteMediator.VignetteStrength.ToString(), VignetteGroupBox, new Point(VignetteStrengthTrack.Right - 30, VignetteStrengthTrack.Top - 20), 2000);
@@ -4123,12 +4207,11 @@ namespace RealmStudio
             OceanMediator.ShowOceanLayers = ShowOceanLayerSwitch.Checked;
         }
 
-        private void OceanTextureOpacityTrack_ValueChanged(object sender, EventArgs e)
+        private void OceanTextureOpacityTrack_Scroll(object sender, EventArgs e)
         {
             OceanMediator.OceanTextureOpacity = OceanTextureOpacityTrack.Value;
             TOOLTIP.Show(OceanMediator.OceanTextureOpacity.ToString(), OceanTextureGroup, new Point(OceanTextureOpacityTrack.Right - 30, OceanTextureOpacityTrack.Top - 20), 2000);
         }
-
 
         private void PreviousOceanTextureButton_Click(object sender, EventArgs e)
         {
@@ -5393,10 +5476,10 @@ namespace RealmStudio
             FrameMediator.FrameEnabled = EnableFrameSwitch.Checked;
         }
 
-        private void FrameScaleTrack_ValueChanged(object sender, EventArgs e)
+        private void FrameScaleTrack_Scroll(object sender, EventArgs e)
         {
-            FrameMediator.FrameScale = FrameScaleTrack.Value;
-            TOOLTIP.Show((FrameMediator.FrameScale / 100F).ToString(), FrameValuesGroup, new Point(FrameScaleTrack.Right - 30, FrameScaleTrack.Top - 20), 2000);
+            FrameMediator.FrameScale = FrameScaleTrack.Value / 100.0F;
+            TOOLTIP.Show(FrameMediator.FrameScale.ToString(), FrameValuesGroup, new Point(FrameScaleTrack.Right - 30, FrameScaleTrack.Top - 20), 2000);
         }
 
         private void FrameTintColorSelectButton_Click(object sender, EventArgs e)
@@ -5788,6 +5871,8 @@ namespace RealmStudio
         }
 
         #endregion
+
+
 
     }
 }

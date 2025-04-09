@@ -176,7 +176,7 @@ namespace RealmStudio
             return true;
         }
 
-        internal static MapGrid? FinalizeMapGrid()
+        internal static void FinalizeMapGrid()
         {
             ArgumentNullException.ThrowIfNull(GridUIMediator);
 
@@ -227,11 +227,13 @@ namespace RealmStudio
 
             if (currentMapGrid != null)
             {
+                currentMapGrid.ParentMap = MapStateMediator.CurrentMap;
+
                 GridUIMediator.Initialize(currentMapGrid.GridEnabled, currentMapGrid.GridType, currentMapGrid.GridLayerIndex, currentMapGrid.GridSize,
                     currentMapGrid.GridLineWidth, currentMapGrid.GridColor, currentMapGrid.ShowGridSize);
-            }
 
-            return currentMapGrid;
+                MapStateMediator.CurrentMapGrid = currentMapGrid;
+            }
         }
     }
 }

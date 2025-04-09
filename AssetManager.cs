@@ -49,6 +49,8 @@ namespace RealmStudio
         public static readonly List<MapBrush> BRUSH_LIST = [];
         public static readonly List<MapTheme> THEME_LIST = [];
 
+        public static readonly string DEFAULT_THEME_NAME = "Medieval Quest";
+
         public static List<MapSymbolCollection> MAP_SYMBOL_COLLECTIONS = [];  // TODO: move to SymbolManager
 
         // the symbols read from symbol collections
@@ -167,27 +169,57 @@ namespace RealmStudio
                 if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Background"))
                 {
                     MapTexture t = new(assetName, path);
+
+                    if (t.TexturePath != null && t.TextureBitmap == null)
+                    {
+                        t.TextureBitmap = new Bitmap(t.TexturePath);
+                    }
+
                     BackgroundManager.BackgroundMediator.BackgroundTextureList.Add(t);
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Water"))
                 {
                     MapTexture t = new(assetName, path);
+
+                    if (t.TexturePath != null && t.TextureBitmap == null)
+                    {
+                        t.TextureBitmap = new Bitmap(t.TexturePath);
+                    }
+
                     OceanManager.OceanMediator.OceanTextureList.Add(t);
                     WaterFeatureManager.WaterFeatureMediator.WaterTextureList.Add(t);
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Land"))
                 {
                     MapTexture t = new(assetName, path);
+
+                    if (t.TexturePath != null && t.TextureBitmap == null)
+                    {
+                        t.TextureBitmap = new Bitmap(t.TexturePath);
+                    }
+
                     MapStateMediator.LandformUIMediator.LandTextureList.Add(t);
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Hatch"))
                 {
                     MapTexture t = new(assetName, path);
+
+                    if (t.TexturePath != null && t.TextureBitmap == null)
+                    {
+                        t.TextureBitmap = new Bitmap(t.TexturePath);
+                    }
+
                     HATCH_TEXTURE_LIST.Add(t);
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Path"))
                 {
                     MapTexture t = new(assetName, path);
+
+                    if (t.TexturePath != null && t.TextureBitmap == null)
+                    {
+                        t.TextureBitmap = new Bitmap(t.TexturePath);
+                    }
+
                     MapStateMediator.PathUIMediator.PathTextureList.Add(t);
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Vectors\\Path"))

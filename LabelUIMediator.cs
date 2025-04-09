@@ -143,7 +143,7 @@ namespace RealmStudio
         public void NotifyUpdate(string? changedPropertyName)
         {
             UpdateLabelUI(changedPropertyName);
-            FrameManager.Update();
+            LabelManager.Update();
             MainForm.SKGLRenderControl.Invalidate();
         }
 

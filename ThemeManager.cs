@@ -158,8 +158,7 @@ namespace RealmStudio
             {
                 if (themeFilter.ApplyBackgroundSettings)
                 {
-                    BackgroundManager.BackgroundMediator.App_BackgroundTextureScale = (int)((theme.BackgroundTextureScale != null) ? theme.BackgroundTextureScale / 100 : 1);
-                    BackgroundManager.BackgroundMediator.App_MirrorBackgroundTexture = (bool)((theme.MirrorBackgroundTexture != null) ? theme.MirrorBackgroundTexture : false);
+                    int backgroundTextureIndex = -1;
 
                     if (theme.BackgroundTexture != null)
                     {
@@ -175,19 +174,27 @@ namespace RealmStudio
                                 if (BackgroundManager.BackgroundMediator.BackgroundTextureList[i] != null
                                     && BackgroundManager.BackgroundMediator.BackgroundTextureList[i].TexturePath == theme.BackgroundTexture.TexturePath)
                                 {
-                                    BackgroundManager.BackgroundMediator.App_BackgroundTextureIndex = i;
+                                    backgroundTextureIndex = i;
                                     break;
                                 }
                             }
                         }
-
-                        BackgroundManager.FillBackgroundTexture();
                     }
 
+                    backgroundTextureIndex = backgroundTextureIndex < 0 ? 0 : backgroundTextureIndex;
 
-                    VignetteManager.VignetteMediator.VignetteColor = Color.FromArgb(theme.VignetteColor ?? Color.FromArgb(201, 151, 123).ToArgb());
-                    VignetteManager.VignetteMediator.VignetteStrength = (int)((theme.VignetteStrength != null) ? theme.VignetteStrength : 148);
-                    VignetteManager.VignetteMediator.VignetteShape = (VignetteShapeType)((theme.VignetteShape == null) ? VignetteShapeType.Oval : theme.VignetteShape);
+                    BackgroundManager.BackgroundMediator.Initialize(
+                        backgroundTextureIndex,
+                        (int)((theme.BackgroundTextureScale != null) ? theme.BackgroundTextureScale / 100.0F : 1.0F),
+                        (bool)((theme.MirrorBackgroundTexture != null) ? theme.MirrorBackgroundTexture : false));
+
+                    BackgroundManager.FillBackgroundTexture();
+
+                    VignetteManager.VignetteMediator.Initialize(
+                        (int)((theme.VignetteStrength != null) ? theme.VignetteStrength : 148),
+                        Color.FromArgb(theme.VignetteColor ?? Color.FromArgb(201, 151, 123).ToArgb()),
+                        (VignetteShapeType)((theme.VignetteShape == null) ? VignetteShapeType.Oval : theme.VignetteShape));
+
                 }
 
                 if (themeFilter.ApplyOceanSettings)
@@ -198,11 +205,7 @@ namespace RealmStudio
                     MapLayer oceanTextureOverLayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
                     oceanTextureOverLayLayer.MapLayerComponents.Clear();
 
-                    // 0 to 100% (100% is 100% opaque)
-                    OceanManager.OceanMediator.App_OceanTextureOpacity = ((theme.OceanTextureOpacity != null) ? (float)theme.OceanTextureOpacity : 100.0F);
-                    OceanManager.OceanMediator.App_OceanTextureScale = ((theme.OceanTextureScale != null) ? (float)theme.OceanTextureScale : 100.0F);
-                    OceanManager.OceanMediator.MirrorOceanTexture = theme.MirrorOceanTexture ?? false;
-                    OceanManager.OceanMediator.OceanFillColor = Color.FromArgb(theme.OceanColor ?? Color.FromKnownColor(KnownColor.ControlLight).ToArgb());
+                    int oceanTextureIndex = 0;
 
                     if (theme.OceanTexture != null)
                     {
@@ -210,15 +213,17 @@ namespace RealmStudio
                         {
                             if (OceanManager.OceanMediator.OceanTextureList[i].TextureName == theme.OceanTexture.TextureName)
                             {
-                                OceanManager.OceanMediator.OceanTextureIndex = i;
+                                oceanTextureIndex = i;
                                 break;
                             }
                         }
                     }
-                    else
-                    {
-                        OceanManager.OceanMediator.OceanTextureIndex = 0;
-                    }
+
+                    OceanManager.OceanMediator.Initialize(
+                        oceanTextureIndex,
+                        (float)(theme.OceanTextureScale == null ? 1.0F : theme.OceanTextureScale),
+                        (float)(theme.OceanTextureOpacity == null ? 1.0F : (float)theme.OceanTextureOpacity),
+                        (bool)(theme.MirrorOceanTexture == null ? false : theme.MirrorOceanTexture));
 
                     OceanManager.ApplyOceanTexture();
                 }
@@ -466,6 +471,7 @@ namespace RealmStudio
                                         if (LabelManager.EMBEDDED_FONTS.Families[i].Name == ff)
                                         {
                                             themeFont = new Font(LabelManager.EMBEDDED_FONTS.Families[i], fontsize, FontStyle.Regular, GraphicsUnit.Point);
+                                            break;
                                         }
                                     }
                                 }
@@ -481,9 +487,6 @@ namespace RealmStudio
                         }
                     }
 
-                    // TODO: UI values controlled by trackbars have to be set using a different property,
-                    // so that updates not done by the user don't "fight" with the mediator; updates to
-                    // trackbars done by the user cannot cause the mediator to update the trackbar
                     LabelManager.LabelMediator.LabelColor = Color.FromArgb(theme.LabelColor ?? Color.FromArgb(61, 53, 30).ToArgb());
                     LabelManager.LabelMediator.OutlineColor = Color.FromArgb(theme.LabelOutlineColor ?? Color.FromArgb(161, 214, 202, 171).ToArgb());
                     LabelManager.LabelMediator.OutlineWidth = (int?)theme.LabelOutlineWidth / 10.0F ?? 0;

@@ -204,6 +204,7 @@ namespace RealmStudio
                         if (LabelManager.EMBEDDED_FONTS.Families[i].Name == ff)
                         {
                             LabelManager.LabelMediator.SelectedLabelFont = new Font(LabelManager.EMBEDDED_FONTS.Families[i], fontsize, FontStyle.Regular, GraphicsUnit.Point);
+                            break;
                         }
                     }
                 }
@@ -212,8 +213,6 @@ namespace RealmStudio
             {
                 LabelManager.LabelMediator.SelectedLabelFont = MapStateMediator.DefaultLabelFont;
             }
-
-            //MainForm.SelectLabelFontButton.Refresh();
 
             int selectedFontIndex = 0;
 

@@ -122,6 +122,12 @@ namespace RealmStudio
             return true;
         }
 
+        internal static void MoveBox(PlacedMapBox placedMapBox, SKPoint zoomedScrolledPoint)
+        {
+            placedMapBox.X = (int)zoomedScrolledPoint.X - (placedMapBox.Width / 2);
+            placedMapBox.Y = (int)zoomedScrolledPoint.Y - (placedMapBox.Height / 2);
+        }
+
         internal static PlacedMapBox? SelectMapBoxAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
         {
             PlacedMapBox? selectedBox = null;
@@ -211,7 +217,6 @@ namespace RealmStudio
             // finalize loading of placed map boxes
             MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BOXLAYER);
 
-            // TODO: why is this here?
             for (int i = 0; i < boxLayer.MapLayerComponents.Count; i++)
             {
                 if (boxLayer.MapLayerComponents[i] is PlacedMapBox box && box.BoxBitmap != null)
@@ -228,34 +233,6 @@ namespace RealmStudio
                         };
                         box.BoxPaint = PaintObjects.BoxPaint.Clone();
                     }
-
-
-                    /*
-                    SKRectI center = new((int)box.BoxCenterLeft, (int)box.BoxCenterTop,
-                        (int)(box.Width - box.BoxCenterRight), (int)(box.Height - box.BoxCenterBottom));
-
-                    if (center.IsEmpty || center.Left < 0 || center.Right <= 0 || center.Top < 0 || center.Bottom <= 0)
-                    {
-                    }
-                    else if (center.Width <= 0 || center.Height <= 0)
-                    {
-                        // swap 
-                        if (center.Right < center.Left)
-                        {
-                            (center.Left, center.Right) = (center.Right, center.Left);
-                        }
-
-                        if (center.Bottom < center.Top)
-                        {
-                            (center.Top, center.Bottom) = (center.Bottom, center.Top);
-                        }
-                    }
-
-                    box.BoxCenterBottom = center.Bottom;
-                    box.BoxCenterLeft = center.Left;
-                    box.BoxCenterTop = center.Top;
-                    box.BoxCenterRight = center.Right;
-                    */
                 }
             }
         }

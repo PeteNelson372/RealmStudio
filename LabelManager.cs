@@ -100,7 +100,7 @@ namespace RealmStudio
                 Font tbFont = new(LabelMediator.SelectedLabelFont.FontFamily,
                     LabelMediator.SelectedLabelFont.Size * 0.75F, LabelMediator.SelectedLabelFont.Style, GraphicsUnit.Point);
 
-                Cmd_ChangeLabelAttributes cmd2 = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapLabel, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, tbFont);
+                Cmd_ChangeLabelAttributes cmd2 = new(MapStateMediator.SelectedMapLabel, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, tbFont);
                 CommandManager.AddCommand(cmd2);
                 cmd2.DoOperation();
 
@@ -241,7 +241,6 @@ namespace RealmStudio
             Marshal.FreeCoTaskMem(fontPtr);
         }
 
-
         internal static TextBox? CreateLabelEditTextBox(SKGLControl glControl, MapLabel mapLabel, Rectangle tbRect)
         {
             TextBox? labelEditTextBox = new()
@@ -295,12 +294,6 @@ namespace RealmStudio
                 label.X = (int)zoomedScrolledPoint.X - label.Width / 2;
                 label.Y = (int)zoomedScrolledPoint.Y;
             }
-        }
-
-        internal static void MoveBox(PlacedMapBox placedMapBox, SKPoint zoomedScrolledPoint)
-        {
-            placedMapBox.X = (int)zoomedScrolledPoint.X - (placedMapBox.Width / 2);
-            placedMapBox.Y = (int)zoomedScrolledPoint.Y - (placedMapBox.Height / 2);
         }
 
         internal static void ConstructBezierPathFromPoints()

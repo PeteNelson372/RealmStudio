@@ -1511,27 +1511,6 @@ namespace RealmStudio
             heightMapLayer.MapLayerComponents.Add(heightMap);
         }
 
-        internal static void FinalizeMap(RealmStudioMap map, SKGLControl glControl)
-        {
-            OceanManager.FinalizeOceanLayer();
-
-            LandformManager.FinalizeLandforms(glControl);
-
-            WaterFeatureManager.FinalizeWaterFeatures();
-
-            PathManager.FinalizeMapPaths();
-
-            SymbolManager.FinalizeMapSymbols();
-
-            WaterFeatureManager.FinalizeWindroses();
-
-            BoxManager.FinalizeMapBoxes();
-
-            RegionManager.FinalizeMapRegions();
-
-            VignetteManager.FinalizeMapVignette();
-        }
-
         internal static void PruneOldBackupsOfMap(RealmStudioMap map, int backupCount)
         {
             // realm autosave folder (location where map backups are saved during autosave)

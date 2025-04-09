@@ -9,15 +9,15 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.97.15317</AssemblyVersion>
-    <FileVersion>1.2025.97.15317</FileVersion>
-    <Version>1.2025.0-alpha-1213</Version>
+    <AssemblyVersion>1.2025.98.36832</AssemblyVersion>
+    <FileVersion>1.2025.98.36832</FileVersion>
+    <Version>1.2025.0-alpha-1252</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>

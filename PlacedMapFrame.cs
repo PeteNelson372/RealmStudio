@@ -280,7 +280,20 @@ namespace RealmStudio
             if (frameScaleElem.First() != null)
             {
                 string? frameScale = mapFrameDoc.Descendants().Select(x => x.Element(ns + "FrameScale").Value).FirstOrDefault();
-                FrameScale = float.Parse(frameScale);
+
+                if (float.TryParse(frameScale, out float n))
+                {
+                    FrameScale = n;
+
+                    if (FrameScale > 1.0F)
+                    {
+                        FrameScale /= 100.0F;
+                    }
+                }
+                else
+                {
+                    FrameScale = 1.0F;
+                }
             }
 
             IEnumerable<XElement?> frameCenterLeftElem = mapFrameDoc.Descendants().Select(x => x.Element(ns + "FrameCenterLeft"));
@@ -311,7 +324,7 @@ namespace RealmStudio
                 FrameCenterBottom = float.Parse(frameCenterBottom);
             }
 
-            FrameManager.CompletePlacedFrame(this);
+            //FrameManager.CompletePlacedFrame(this);
 
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8604 // Possible null reference argument.

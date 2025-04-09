@@ -27,7 +27,6 @@ namespace RealmStudio
 {
     internal sealed class Cmd_ChangeLabelAttributes : IMapOperation
     {
-        private readonly RealmStudioMap Map;
         private readonly MapLabel Label;
         private readonly Color LabelColor;
         private readonly Color OutlineColor;
@@ -44,9 +43,8 @@ namespace RealmStudio
         private readonly Font StoredSelectedFont;
 
 
-        public Cmd_ChangeLabelAttributes(RealmStudioMap map, MapLabel label, Color labelColor, Color outlineColor, float outlineWidth, Color glowColor, int glowStrength, Font selectedFont)
+        public Cmd_ChangeLabelAttributes(MapLabel label, Color labelColor, Color outlineColor, float outlineWidth, Color glowColor, int glowStrength, Font selectedFont)
         {
-            Map = map;
             Label = label;
             LabelColor = labelColor;
             OutlineColor = outlineColor;

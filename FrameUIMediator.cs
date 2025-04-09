@@ -34,7 +34,7 @@ namespace RealmStudio
         private readonly RealmStudioMainForm MainForm;
         private MapStateMediator? _mapState;
 
-        private float _frameScale = 100.0F;
+        private float _frameScale = 1.0F;
         private Color _frameTint = Color.White;
         private bool _frameEnabled = true;
 
@@ -118,6 +118,7 @@ namespace RealmStudio
                 PlacedMapFrame? pmf = (PlacedMapFrame?)FrameManager.GetComponentById(Guid.Empty);
                 if (pmf != null)
                 {
+                    pmf.FrameScale = FrameScale;
                     pmf.FrameEnabled = FrameEnabled;
                 }
             }));
@@ -187,12 +188,22 @@ namespace RealmStudio
 
         internal void Initialize(float frameScale, Color frameTint, bool frameEnabled)
         {
-            _frameScale = frameScale * 100.0F;
+            _frameScale = frameScale;
             _frameTint = frameTint;
             _frameEnabled = frameEnabled;
 
             MainForm.FrameTintColorSelectButton.BackColor = _frameTint;
-            MainForm.FrameScaleTrack.Value = (int)_frameScale;
+
+            if (_frameScale * 100.0F < MainForm.FrameScaleTrack.Minimum)
+            {
+                _frameScale = MainForm.FrameScaleTrack.Minimum / 100.0F;
+            }
+            else if (_frameScale * 100.0F > MainForm.FrameScaleTrack.Maximum)
+            {
+                _frameScale = MainForm.FrameScaleTrack.Maximum / 100.0F;
+            }
+
+            MainForm.FrameScaleTrack.Value = (int)(_frameScale * 100.0F);
 
             PlacedMapFrame? pmf = (PlacedMapFrame?)FrameManager.GetComponentById(Guid.Empty);
             if (pmf != null)
@@ -200,6 +211,8 @@ namespace RealmStudio
                 pmf.FrameEnabled = _frameEnabled;
                 pmf.FrameScale = _frameScale;
             }
+
+            FrameManager.Update();
         }
 
         internal void AddMapFramesToFrameTable(List<MapFrame> mapFrames)

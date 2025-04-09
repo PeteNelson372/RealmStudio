@@ -32,9 +32,15 @@ namespace RealmStudio
 {
     public class MapImage : MapComponent, IXmlSerializable
     {
+        // when a map is loaded, the MapImageBitmap has already been scaled and its opacity is set,
+        // to the Scale and Opacity values saved with the MapImageBitmap are only used to
+        // set the UI controls to match the bitmap
+
         public SKBitmap? MapImageBitmap { get; set; }
         public bool MirrorImage { get; set; }
         public bool UseShader { get; set; } = true;
+        public float Scale { get; set; } = 1.0F;
+        public float Opacity { get; set; } = 1.0F;
 
         public MapImage() { }
 
@@ -145,6 +151,44 @@ namespace RealmStudio
                 UseShader = true;
             }
 
+            IEnumerable<XElement?> scaleElem = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "Scale"));
+            if (scaleElem != null && scaleElem.Any() && scaleElem.First() != null)
+            {
+                string? scaleElemStr = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "Scale").Value).FirstOrDefault();
+
+                if (float.TryParse(scaleElemStr, out float scale))
+                {
+                    Scale = scale;
+                }
+                else
+                {
+                    Scale = 1.0F;
+                }
+            }
+            else
+            {
+                Scale = 1.0F;
+            }
+
+            IEnumerable<XElement?> opacityElem = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "Opacity"));
+            if (opacityElem != null && opacityElem.Any() && opacityElem.First() != null)
+            {
+                string? opacityElemStr = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "Scale").Value).FirstOrDefault();
+
+                if (float.TryParse(opacityElemStr, out float opacity))
+                {
+                    Opacity = opacity;
+                }
+                else
+                {
+                    Opacity = 1.0F;
+                }
+            }
+            else
+            {
+                Opacity = 1.0F;
+            }
+
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
@@ -167,6 +211,14 @@ namespace RealmStudio
 
                 writer.WriteStartElement("UseShader");
                 writer.WriteValue(UseShader);
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("Scale");
+                writer.WriteValue(Scale);
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("Opacity");
+                writer.WriteValue(Scale);
                 writer.WriteEndElement();
             }
         }

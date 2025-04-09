@@ -111,25 +111,7 @@ namespace RealmStudio
 
         internal static void FinalizeOceanLayer()
         {
-            // finalize loading of ocean drawing layer
-            MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANDRAWINGLAYER);
 
-            for (int i = 0; i < oceanDrawingLayer.MapLayerComponents.Count; i++)
-            {
-                if (oceanDrawingLayer.MapLayerComponents[i] is LayerPaintStroke paintStroke)
-                {
-                    paintStroke.ParentMap = MapStateMediator.CurrentMap;
-
-                    if (!paintStroke.Erase)
-                    {
-                        paintStroke.ShaderPaint = PaintObjects.OceanPaint;
-                    }
-                    else
-                    {
-                        paintStroke.ShaderPaint = PaintObjects.OceanEraserPaint;
-                    }
-                }
-            }
         }
 
         internal static void ApplyOceanTexture()

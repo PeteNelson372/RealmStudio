@@ -49,7 +49,7 @@ namespace RealmStudio
                 Width = MapStateMediator.CurrentMap.MapWidth,
                 Height = MapStateMediator.CurrentMap.MapHeight,
                 FrameBitmap = FrameMediator.Frame.FrameBitmap.Copy(),
-                FrameScale = FrameMediator.FrameScale / 100.0F,
+                FrameScale = FrameMediator.FrameScale,
                 FrameCenterLeft = FrameMediator.Frame.FrameCenterLeft,
                 FrameCenterTop = FrameMediator.Frame.FrameCenterTop,
                 FrameCenterRight = FrameMediator.Frame.FrameCenterRight,
@@ -104,7 +104,7 @@ namespace RealmStudio
                 // there can only be one frame on the map, so update it
                 PlacedMapFrame placedFrame = (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents[0];
 
-                placedFrame.FrameScale = FrameMediator.FrameScale / 100F;
+                placedFrame.FrameScale = FrameMediator.FrameScale;
 
                 CompletePlacedFrame(placedFrame);
 
@@ -185,14 +185,14 @@ namespace RealmStudio
                         + (mapFrame.PatchB.Width * mapFrame.FrameScale * mapWidthScale)
                         + (mapFrame.PatchC.Width * mapFrame.FrameScale * mapWidthScale) > mapFrame.Width)
                     {
-                        mapFrame.FrameScale -= 0.1F;
+                        mapFrame.FrameScale -= 0.001F;
                     }
 
                     while ((mapFrame.PatchA.Height * mapFrame.FrameScale * mapHeightScale)
                         + (mapFrame.PatchD.Height * mapFrame.FrameScale * mapHeightScale)
                         + (mapFrame.PatchG.Height * mapFrame.FrameScale * mapHeightScale) > mapFrame.Height)
                     {
-                        mapFrame.FrameScale -= 0.1F;
+                        mapFrame.FrameScale -= 0.001F;
                     }
 
                     // scale the patches

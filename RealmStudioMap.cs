@@ -21,7 +21,6 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -76,6 +75,9 @@ namespace RealmStudio
         [XmlAttribute]
         public RealmMapType RealmType { get; set; } = RealmMapType.World;
 
+        [XmlAttribute]
+        public string MapTheme { get; set; } = string.Empty;
+
         [XmlArray("MapLayers")]
         public List<MapLayer> MapLayers { get; set; } = new(MapBuilder.MAP_LAYER_COUNT);
 
@@ -89,12 +91,6 @@ namespace RealmStudio
         [XmlIgnore]
         public float MapPixelHeight { get; set; } = 0F;
 
-        public void Render(SKCanvas canvas)
-        {
-            foreach (MapLayer mapLayer in MapLayers)
-            {
-                mapLayer.Render(canvas);
-            }
-        }
+
     }
 }

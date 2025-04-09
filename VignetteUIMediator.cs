@@ -122,11 +122,16 @@ namespace RealmStudio
 
         #region Vignette UI Methods
 
-        internal void Reset()
+        internal void Initialize(int vignetteStrength, Color vignetteColor, VignetteShapeType shapeType)
         {
-            VignetteStrength = 148;
-            VignetteColor = Color.FromArgb(201, 151, 123);
-            VignetteShape = VignetteShapeType.Oval;
+            _vignetteStrength = vignetteStrength;
+            _vignetteColor = vignetteColor;
+            _vignetteShape = shapeType;
+
+            MainForm.VignetteStrengthTrack.Value = _vignetteStrength;
+            MainForm.VignetteColorSelectionButton.BackColor = _vignetteColor;
+            MainForm.RectangleVignetteRadio.Checked = _vignetteShape == VignetteShapeType.Rectangle;
+            MainForm.OvalVignetteRadio.Checked = _vignetteShape == VignetteShapeType.Oval;
         }
 
         #endregion

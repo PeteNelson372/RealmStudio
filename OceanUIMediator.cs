@@ -120,21 +120,10 @@ namespace RealmStudio
             set { SetPropertyField(nameof(OceanTextureScale), ref _oceanTextureScale, value); }
         }
 
-        internal float App_OceanTextureScale
-        {
-            get { return _oceanTextureScale; }
-            set { SetPropertyField(nameof(App_OceanTextureScale), ref _oceanTextureScale, value); }
-        }
-
         internal float OceanTextureOpacity
         {
             get { return _oceanTextureOpacity; }
             set { SetPropertyField(nameof(OceanTextureOpacity), ref _oceanTextureOpacity, value); }
-        }
-        internal float App_OceanTextureOpacity
-        {
-            get { return _oceanTextureOpacity; }
-            set { SetPropertyField(nameof(App_OceanTextureOpacity), ref _oceanTextureOpacity, value); }
         }
 
         internal bool MirrorOceanTexture
@@ -271,17 +260,6 @@ namespace RealmStudio
                                 UpdateOceanTextureComboBox();
                             }
                             break;
-                        case "App_OceanTextureOpacity":
-                            {
-                                MainForm.OceanTextureOpacityTrack.Value = (int)OceanTextureOpacity;
-                                UpdateOceanTextureComboBox();
-                            }
-                            break;
-                        case "App_OceanTextureScale":
-                            {
-                                MainForm.OceanScaleTextureTrack.Value = (int)OceanTextureScale;
-                            }
-                            break;
                         case "CustomColor1":
                             {
                                 MainForm.OceanCustomColorButton1.BackColor = CustomColor1;
@@ -359,6 +337,20 @@ namespace RealmStudio
         #endregion
 
         #region Ocean UI Methods
+
+        internal void Initialize(int oceanTextureIndex, float textureScale, float textureOpacity, bool mirrorTexture)
+        {
+            _oceanTextureIndex = oceanTextureIndex;
+            _oceanTextureScale = textureScale;
+            _oceanTextureOpacity = textureOpacity;
+            _mirrorOceanTexture = mirrorTexture;
+
+            MainForm.OceanScaleTextureTrack.Value = (int)_oceanTextureScale;
+            MainForm.OceanTextureOpacityTrack.Value = (int)_oceanTextureOpacity;
+            MainForm.MirrorOceanTextureSwitch.Checked = _mirrorOceanTexture;
+
+            UpdateOceanTextureComboBox();
+        }
 
         internal void Reset()
         {
