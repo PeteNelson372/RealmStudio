@@ -147,6 +147,39 @@ namespace RealmStudio
             RenderVignetteForExport(map, renderCanvas);
         }
 
+        public static void RenderMapFor3DGlobeView(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            // background
+            RenderBackgroundForExport(map, renderCanvas);
+
+            // ocean layers
+            RenderOceanForExport(map, renderCanvas);
+
+            // lower grid layer (above ocean)
+            RenderLowerGridForExport(map, renderCanvas);
+
+            // landforms
+            RenderLandformsForExport(map, renderCanvas);
+
+            // water features
+            RenderWaterFeaturesForExport(map, renderCanvas);
+
+            // upper grid layer (above water features)
+            RenderUpperGridForExport(map, renderCanvas);
+
+            // lower path layer
+            RenderLowerMapPathsForExport(map, renderCanvas);
+
+            // symbol layer
+            RenderSymbolsForExport(map, renderCanvas);
+
+            // upper path layer
+            RenderUpperMapPathsForExport(map, renderCanvas);
+
+            // default grid layer
+            RenderDefaultGridForExport(map, renderCanvas);
+        }
+
         internal static void DrawCursor(SKCanvas canvas, MapDrawingMode drawingMode, SKPoint point, int brushSize, float symbolScale, float symbolRotation,
             bool mirrorSymbol, bool useAreaBrush)
         {

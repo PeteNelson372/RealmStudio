@@ -9,9 +9,9 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.99.38256</AssemblyVersion>
-    <FileVersion>1.2025.99.38256</FileVersion>
-    <Version>1.2025.0-alpha-1258</Version>
+    <AssemblyVersion>1.2025.104.11791</AssemblyVersion>
+    <FileVersion>1.2025.104.11791</FileVersion>
+    <Version>1.2025.0-alpha-1335</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
@@ -28,10 +28,27 @@
     <PackageOutputPath />
     <Title>Realm Studio</Title>
     <PackageIcon>Realm Studio Icon 128x128.png</PackageIcon>
-    <UseWPF>True</UseWPF> 
+    <UseWPF>True</UseWPF>
+    <Platforms>AnyCPU;x64</Platforms> 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyVersionSettings>
+    <UpdatePackageVersion>True</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>AssemblyVersion</InheritWinAppVersionFrom>
+    <AssemblyFileVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyFileVersionSettings>
+    <AssemblyInfoVersionSettings>None.None.None.None</AssemblyInfoVersionSettings>
+    <PackageVersionSettings>AssemblyVersion.NoneWithAutoReset.Alpha</PackageVersionSettings>
+    <IsPublishable>False</IsPublishable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ShouldCreateLogs>True</ShouldCreateLogs>
     <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
     <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
@@ -53,11 +70,26 @@
     <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
     <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
     <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
-    <AssemblyVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyVersionSettings>
+    <AssemblyVersionSettings>None.YearStamp.DayOfYearStamp.None</AssemblyVersionSettings>
     <UpdatePackageVersion>True</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>AssemblyFileVersion</InheritWinAppVersionFrom>
-    <AssemblyFileVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyFileVersionSettings>
+    <AssemblyFileVersionSettings>None.YearStamp.DayOfYearStamp.None</AssemblyFileVersionSettings>
+    <PackageVersionSettings>AssemblyVersion.NoneWithAutoReset.Alpha</PackageVersionSettings>
+    <IsPublishable>False</IsPublishable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.YearStamp.DayOfYearStamp.None</AssemblyVersionSettings>
+    <UpdatePackageVersion>True</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>AssemblyFileVersion</InheritWinAppVersionFrom>
+    <AssemblyFileVersionSettings>None.YearStamp.DayOfYearStamp.None</AssemblyFileVersionSettings>
     <PackageVersionSettings>AssemblyVersion.NoneWithAutoReset.Alpha</PackageVersionSettings>
     <IsPublishable>False</IsPublishable>
   </PropertyGroup>
@@ -139,6 +171,9 @@
     <None Update="README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
+    </None>
+    <None Update="Resources\cloud_combined_2048.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\eng.traineddata">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

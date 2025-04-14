@@ -8,40 +8,24 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{85B6671E-D32A-43B5-AA02-CF522FD748E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{85B6671E-D32A-43B5-AA02-CF522FD748E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85B6671E-D32A-43B5-AA02-CF522FD748E7}.Debug|x64.ActiveCfg = Debug|x64
+		{85B6671E-D32A-43B5-AA02-CF522FD748E7}.Debug|x64.Build.0 = Debug|x64
 		{85B6671E-D32A-43B5-AA02-CF522FD748E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85B6671E-D32A-43B5-AA02-CF522FD748E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85B6671E-D32A-43B5-AA02-CF522FD748E7}.Release|x64.ActiveCfg = Release|x64
+		{85B6671E-D32A-43B5-AA02-CF522FD748E7}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {58356546-686C-4CF1-AE67-972CB6C0D369}
-	EndGlobalSection
-	GlobalSection(AutomaticVersions) = postSolution
-		UpdateAssemblyVersion = False
-		UpdateAssemblyFileVersion = False
-		UpdateAssemblyInfoVersion = False
-		ShouldCreateLogs = True
-		AdvancedSettingsExpanded = True
-		UpdatePackageVersion = False
-		AssemblyInfoVersionType = SettingsVersion
-		InheritWinAppVersionFrom = None
-		PrimaryVersionType.Debug|Any CPU = AssemblyVersionAttribute
-		UpdateAssemblyVersion.Debug|Any CPU = True
-		UpdateAssemblyFileVersion.Debug|Any CPU = True
-		UpdateAssemblyInfoVersion.Debug|Any CPU = True
-		ShouldCreateLogs.Debug|Any CPU = True
-		AdvancedSettingsExpanded.Debug|Any CPU = True
-		AssemblyVersionSettings.Debug|Any CPU = None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight
-		AssemblyFileVersionSettings.Debug|Any CPU = None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight
-		AssemblyInfoVersionSettings.Debug|Any CPU = None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight
-		UpdatePackageVersion.Debug|Any CPU = False
-		AssemblyInfoVersionType.Debug|Any CPU = SettingsVersion
-		InheritWinAppVersionFrom.Debug|Any CPU = None
 	EndGlobalSection
 EndGlobal

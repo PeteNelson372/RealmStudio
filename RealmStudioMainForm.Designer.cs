@@ -584,6 +584,7 @@
             LandColorSelectionButton = new FontAwesome.Sharp.IconButton();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
+            DisplayWorldGlobeToolStripMenuItem = new ToolStripMenuItem();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -6632,7 +6633,7 @@
             RealmStudioMainMenuStrip.Items.AddRange(new ToolStripItem[] { FileToolStripMenuItem, EditToolStripMenuItem, RealmToolStripMenuItem, AssetsToolStripMenuItem, ThemeToolStripMenuItem, OptionsToolStripMenuItem, HelpToolStripMenuItem });
             RealmStudioMainMenuStrip.Location = new Point(20, 56);
             RealmStudioMainMenuStrip.Name = "RealmStudioMainMenuStrip";
-            RealmStudioMainMenuStrip.Size = new Size(349, 24);
+            RealmStudioMainMenuStrip.Size = new Size(469, 24);
             RealmStudioMainMenuStrip.TabIndex = 1;
             RealmStudioMainMenuStrip.Text = "menuStrip1";
             // 
@@ -6795,7 +6796,7 @@
             // 
             // RealmToolStripMenuItem
             // 
-            RealmToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { MapPropertiesMenuItem, ChangeMapSizeMenuItem, CreateDetailMapMenuItem, TraceToolStripMenuItem, toolStripSeparator7, RenderAsHeightMapMenuItem });
+            RealmToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { MapPropertiesMenuItem, ChangeMapSizeMenuItem, CreateDetailMapMenuItem, TraceToolStripMenuItem, toolStripSeparator7, RenderAsHeightMapMenuItem, DisplayWorldGlobeToolStripMenuItem });
             RealmToolStripMenuItem.Name = "RealmToolStripMenuItem";
             RealmToolStripMenuItem.Size = new Size(52, 20);
             RealmToolStripMenuItem.Text = "&Realm";
@@ -6803,41 +6804,41 @@
             // MapPropertiesMenuItem
             // 
             MapPropertiesMenuItem.Name = "MapPropertiesMenuItem";
-            MapPropertiesMenuItem.Size = new Size(178, 22);
+            MapPropertiesMenuItem.Size = new Size(181, 22);
             MapPropertiesMenuItem.Text = "&Properties...";
             MapPropertiesMenuItem.Click += MapPropertiesMenuItem_Click;
             // 
             // ChangeMapSizeMenuItem
             // 
             ChangeMapSizeMenuItem.Name = "ChangeMapSizeMenuItem";
-            ChangeMapSizeMenuItem.Size = new Size(178, 22);
+            ChangeMapSizeMenuItem.Size = new Size(181, 22);
             ChangeMapSizeMenuItem.Text = "Change Map &Size...";
             ChangeMapSizeMenuItem.Click += ChangeMapSizeMenuItem_Click;
             // 
             // CreateDetailMapMenuItem
             // 
             CreateDetailMapMenuItem.Name = "CreateDetailMapMenuItem";
-            CreateDetailMapMenuItem.Size = new Size(178, 22);
+            CreateDetailMapMenuItem.Size = new Size(181, 22);
             CreateDetailMapMenuItem.Text = "Create &Detail Map...";
             CreateDetailMapMenuItem.Click += CreateDetailMapMenuItem_Click;
             // 
             // TraceToolStripMenuItem
             // 
             TraceToolStripMenuItem.Name = "TraceToolStripMenuItem";
-            TraceToolStripMenuItem.Size = new Size(178, 22);
+            TraceToolStripMenuItem.Size = new Size(181, 22);
             TraceToolStripMenuItem.Text = "&Trace Outline";
             TraceToolStripMenuItem.Click += TraceToolStripMenuItem_Click;
             // 
             // toolStripSeparator7
             // 
             toolStripSeparator7.Name = "toolStripSeparator7";
-            toolStripSeparator7.Size = new Size(175, 6);
+            toolStripSeparator7.Size = new Size(178, 6);
             // 
             // RenderAsHeightMapMenuItem
             // 
             RenderAsHeightMapMenuItem.CheckOnClick = true;
             RenderAsHeightMapMenuItem.Name = "RenderAsHeightMapMenuItem";
-            RenderAsHeightMapMenuItem.Size = new Size(178, 22);
+            RenderAsHeightMapMenuItem.Size = new Size(181, 22);
             RenderAsHeightMapMenuItem.Text = "Display &Height Map";
             RenderAsHeightMapMenuItem.CheckedChanged += RenderAsHeightMapMenuItem_CheckedChanged;
             // 
@@ -8978,6 +8979,13 @@
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
             // 
+            // DisplayWorldGlobeToolStripMenuItem
+            // 
+            DisplayWorldGlobeToolStripMenuItem.Name = "DisplayWorldGlobeToolStripMenuItem";
+            DisplayWorldGlobeToolStripMenuItem.Size = new Size(181, 22);
+            DisplayWorldGlobeToolStripMenuItem.Text = "Display World &Globe";
+            DisplayWorldGlobeToolStripMenuItem.Click += DisplayWorldGlobeToolStripMenuItem_Click;
+            // 
             // RealmStudioMainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -9766,5 +9774,6 @@
         internal FontAwesome.Sharp.IconToolStripButton FillBackgroundButton;
         internal FontAwesome.Sharp.IconToolStripButton ClearBackgroundButton;
         internal Label BackgroundTextureNameLabel;
+        private ToolStripMenuItem DisplayWorldGlobeToolStripMenuItem;
     }
 }

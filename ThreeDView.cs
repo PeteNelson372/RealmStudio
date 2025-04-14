@@ -22,9 +22,16 @@
 *
 ***************************************************************************************************************************/
 using HelixToolkit.Wpf;
+using RealmStudio.Properties;
+using SkiaSharp;
+using SkiaSharp.Views.Desktop;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
+using System.Timers;
 using System.Windows.Forms.Integration;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 
 namespace RealmStudio
@@ -36,8 +43,19 @@ namespace RealmStudio
     {
         private readonly ThreeDViewerControl ThreeDViewer;
         private readonly List<string>? ModelUpdateQueue;
+        private string CloudTextureFileName = string.Empty;
 
         private string? LoadedModelString;
+
+        private System.Timers.Timer? _animationTimer;
+        private bool animationTimerEnabled;
+
+        private double framePerSecond = 60.0;       // frames per second
+        private double revolutionsPerMinute = 1.0;  // revolutions/minute
+
+        private int cloudTextureOpacity = 64; // 0-255
+        private double cloudRotationRate = 1.0; // percentage of world rotation rate
+
 
         private readonly ModelVisual3D GridlinesModel = new();
         private readonly GridLinesVisual3D GridLines = new()
@@ -59,6 +77,8 @@ namespace RealmStudio
 
             // construct the WPF ThreeDViewerControl UserControl
             ThreeDViewer = new();
+
+            FrameRateCombo.SelectedIndex = 4;
         }
 
         public ThreeDView(string formTitle, List<string> modelUpdateQueue)
@@ -71,6 +91,89 @@ namespace RealmStudio
 
             // construct the WPF ThreeDViewerControl UserControl
             ThreeDViewer = new();
+
+            FrameRateCombo.SelectedIndex = 4;
+        }
+
+        public bool AnimationEnabled
+        {
+            get { return animationTimerEnabled; }
+            set
+            {
+                animationTimerEnabled = value;
+
+                if (animationTimerEnabled)
+                {
+                    StartAnimationTimer();
+                }
+                else
+                {
+                    StopAnimationTimer();
+                }
+            }
+        }
+
+        internal void StartAnimationTimer()
+        {
+            // stop the animation timer
+            StopAnimationTimer();
+
+            double animationIntervalMillis = 1000.0 / framePerSecond; // 1000 ms / fps
+
+            // start the autosave timer
+            _animationTimer = new System.Timers.Timer
+            {
+                Interval = animationIntervalMillis,
+                AutoReset = true,
+                SynchronizingObject = this,
+            };
+
+            _animationTimer.Elapsed += new ElapsedEventHandler(AnimationTimerEventHandler);
+            _animationTimer.Start();
+        }
+
+        private void AnimationTimerEventHandler(object? sender, ElapsedEventArgs e)
+        {
+            double revolutionsPerSecond = revolutionsPerMinute / 60.0;
+
+            double degreesPerFrame = 360.0 / (framePerSecond / revolutionsPerSecond); // degrees per frame
+
+            SphereVisual3D worldGlobe = (SphereVisual3D)ThreeDViewer.HelixTKViewport.Children[0];
+
+            // rotate around Z axis
+            Vector3D axis = new(0, 0, 1);
+
+            // Get the matrix indicating the current transformation value
+            Matrix3D transformationMatrix = worldGlobe.Content.Transform.Value;
+
+            // rotate around the world globe center Z axis
+            transformationMatrix.RotateAt(new Quaternion(axis, degreesPerFrame), worldGlobe.Center);
+
+            // do the rotation transform
+            worldGlobe.Content.Transform = new MatrixTransform3D(transformationMatrix);
+
+            if (ThreeDViewer.HelixTKViewport.Children.Count == 2)
+            {
+                // rotate the cloud layer, if there is one
+                SphereVisual3D cloudLayer = (SphereVisual3D)ThreeDViewer.HelixTKViewport.Children[1];
+
+                // Get the matrix indicating the current transformation value
+                Matrix3D cloudTransformationMatrix = cloudLayer.Content.Transform.Value;
+
+                // rotate around the cloud layer center Z axis
+                cloudTransformationMatrix.RotateAt(new Quaternion(axis, degreesPerFrame * cloudRotationRate), cloudLayer.Center);
+
+                // do the rotation transform
+                cloudLayer.Content.Transform = new MatrixTransform3D(cloudTransformationMatrix);
+
+            }
+        }
+
+        internal void StopAnimationTimer()
+        {
+            _animationTimer?.Stop();
+            _animationTimer?.Dispose();
+            _animationTimer = null;
         }
 
         public void UpdateView()
@@ -167,6 +270,8 @@ namespace RealmStudio
 
         private void ThreeDView_FormClosing(object sender, FormClosingEventArgs e)
         {
+            StopAnimationTimer();
+
             ModelUpdateQueue?.Clear();
 
             if (ParentForm != null && HeightMapManager.CurrentHeightMapView == this)
@@ -319,6 +424,39 @@ namespace RealmStudio
             }
         }
 
+        internal void ShowWorldGlobe(SKBitmap worldTexture)
+        {
+            SphereVisual3D worldGlobe = new()
+            {
+                Center = new Point3D(0, 0, 0),
+                Radius = 1,
+                ThetaDiv = 180,
+                PhiDiv = 90
+            };
+
+            worldGlobe.SetName("WorldGlobe");
+
+            // transform the world map texture to a BitmapImage;
+            // converting the bitmap to a stream, then saving the stream to a BitmapImage
+            // is really weird, but that's the only way to do it without saving the bitmap to a file
+            BitmapImage bImage = new();
+            using MemoryStream ms = new();
+            worldTexture.ToBitmap().Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            bImage.BeginInit();
+            bImage.StreamSource = new MemoryStream(ms.ToArray());
+            bImage.EndInit();
+
+            worldGlobe.Material = new EmissiveMaterial(new ImageBrush(bImage));
+
+            ThreeDViewer.HelixTKViewport.Children.Clear();
+            ThreeDViewer.HelixTKViewport.Children.Add(worldGlobe);
+
+            ThreeDViewer.HelixTKViewport.ResetCamera();
+            ThreeDViewer.ModelCamera.UpDirection = new Vector3D(0, 0, 1);
+            ThreeDViewer.ModelCamera.LookDirection = new Vector3D(1, 0, 0);
+            ThreeDViewer.ModelCamera.Position = new Point3D(-6, 0, 0);
+        }
+
         private void ModelGroup_Changed(object? sender, EventArgs e)
         {
             //Vector3D lookedAtPoint = ThreeDViewer.ModelCamera.LookDirection;
@@ -389,6 +527,261 @@ namespace RealmStudio
             ThreeDViewer.ModelCamera.LookDirection = newDir;
 
             ThreeDViewer.HelixTKViewport.FitView(newDir, newUp);
+        }
+
+        private void EnableAnimationSwitch_CheckedChanged()
+        {
+            if (EnableAnimationSwitch.Checked)
+            {
+                AnimationEnabled = true;
+            }
+            else
+            {
+                AnimationEnabled = false;
+            }
+        }
+
+        private void LoadBackgroundButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog ofd = new()
+                {
+                    Title = "Open 3D View Background Image",
+                    DefaultExt = "png",
+                    CheckFileExists = true,
+                    RestoreDirectory = true,
+                    ShowHelp = false,           // enabling the help button causes the dialog not to display files
+                    Multiselect = false
+                };
+
+                ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+                string sep = string.Empty;
+
+                foreach (var c in codecs)
+                {
+                    if (!string.IsNullOrEmpty(c.CodecName) && !string.IsNullOrEmpty(c.FilenameExtension))
+                    {
+                        string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
+                        ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLowerInvariant());
+                        sep = "|";
+                    }
+                }
+
+                ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
+
+                if (ofd.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (ofd.FileName != "")
+                    {
+                        try
+                        {
+                            Bitmap b = (Bitmap)Bitmap.FromFile(ofd.FileName);
+
+                            // apply the bitmap to the background of the 3D view
+                            ThreeDViewer.HelixTKViewport.Background = new ImageBrush(new BitmapImage(new Uri(ofd.FileName, UriKind.Absolute)));
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.LOGGER.Error(ex);
+                            throw;
+                        }
+
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void FrameRateCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            StopAnimationTimer();
+            if (FrameRateCombo.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            string? fpsStr = (string?)FrameRateCombo.Items[FrameRateCombo.SelectedIndex];
+
+            if (fpsStr != null)
+            {
+                framePerSecond = double.Parse(fpsStr, System.Globalization.CultureInfo.CurrentCulture);
+            }
+
+            if (animationTimerEnabled)
+            {
+                StartAnimationTimer();
+            }
+        }
+
+        private void RotationRateUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            StopAnimationTimer();
+            revolutionsPerMinute = (double)RotationRateUpDown.Value;
+
+            if (animationTimerEnabled)
+            {
+                StartAnimationTimer();
+            }
+        }
+
+        private void ClearBackgroundButton_Click(object sender, EventArgs e)
+        {
+            ThreeDViewer.HelixTKViewport.Background = null;
+        }
+
+        private void EnableCloudsSwitch_CheckedChanged()
+        {
+            if (EnableCloudsSwitch.Checked)
+            {
+                ShowCloudLayer();
+            }
+            else
+            {
+                RemoveCloudLayer();
+            }
+        }
+
+        private void RemoveCloudLayer()
+        {
+            if (ThreeDViewer.HelixTKViewport.Children.Count == 2)
+            {
+                ThreeDViewer.HelixTKViewport.Children.RemoveAt(1);
+            }
+        }
+
+        private void ShowCloudLayer()
+        {
+            RemoveCloudLayer();
+
+            if (ThreeDViewer.HelixTKViewport.Children.Count == 1)
+            {
+                SphereVisual3D cloudLayer = new()
+                {
+                    Center = new Point3D(0, 0, 0),
+                    Radius = 1.05,
+                    ThetaDiv = 90,
+                    PhiDiv = 45,
+                    BackMaterial = new DiffuseMaterial(new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent))
+                };
+
+                cloudLayer.SetName("CloudLayer");
+
+                if (DefaultCloudTextureRadio.Checked)
+                {
+                    BitmapImage cloudImage = new();
+                    using MemoryStream ms = new();
+                    ms.Write(Resources.cloud_combined_2048, 0, Resources.cloud_combined_2048.Length);
+                    cloudImage.BeginInit();
+                    cloudImage.StreamSource = new MemoryStream(ms.ToArray());
+                    cloudImage.EndInit();
+
+                    cloudLayer.Material = new EmissiveMaterial(new ImageBrush(cloudImage))
+                    {
+                        Color = System.Windows.Media.Color.FromArgb((byte)cloudTextureOpacity, 255, 255, 255)
+                    };
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(CloudTextureFileName))
+                    {
+                        BitmapImage cloudImage = new();
+                        cloudImage.BeginInit();
+                        cloudImage.UriSource = new Uri(CloudTextureFileName, UriKind.Absolute);
+                        cloudImage.EndInit();
+                        cloudLayer.Material = new EmissiveMaterial(new ImageBrush(cloudImage))
+                        {
+                            Color = System.Windows.Media.Color.FromArgb((byte)cloudTextureOpacity, 255, 255, 255)
+                        };
+                    }
+                    else
+                    {
+                        MessageBox.Show("No cloud texture file selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
+                ThreeDViewer.HelixTKViewport.Children.Add(cloudLayer);
+            }
+        }
+
+        private void ShowHideCloudPanelButton_Click(object sender, EventArgs e)
+        {
+            CloudsPanel.Visible = !CloudsPanel.Visible;
+        }
+
+        private void LoadCloudTextureButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog ofd = new()
+                {
+                    Title = "Select Cloud Texture",
+                    DefaultExt = "png",
+                    CheckFileExists = true,
+                    RestoreDirectory = true,
+                    ShowHelp = false,           // enabling the help button causes the dialog not to display files
+                    Multiselect = false
+                };
+
+                ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+                string sep = string.Empty;
+
+                foreach (var c in codecs)
+                {
+                    if (!string.IsNullOrEmpty(c.CodecName) && !string.IsNullOrEmpty(c.FilenameExtension))
+                    {
+                        string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
+                        ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLowerInvariant());
+                        sep = "|";
+                    }
+                }
+
+                ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
+
+                if (ofd.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (ofd.FileName != "")
+                    {
+                        try
+                        {
+                            CloudTextureFileName = ofd.FileName;
+
+                            if (EnableCloudsSwitch.Checked)
+                            {
+                                ShowCloudLayer();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.LOGGER.Error(ex);
+                            throw;
+                        }
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void CloudTextureOpacityTrack_Scroll(object sender, EventArgs e)
+        {
+            cloudTextureOpacity = CloudTextureOpacityTrack.Value;
+            ShowCloudLayer();
+        }
+
+        private void DefaultCloudTextureRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowCloudLayer();
+        }
+
+        private void CustomCloudTextureRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowCloudLayer();
+        }
+
+        private void CloudRotationRateUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            cloudRotationRate = (double)CloudRotationRateUpDown.Value;
         }
     }
 }

@@ -21,45 +21,29 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
-
 namespace RealmStudio
 {
-    internal sealed class Cmd_SetOceanTexture(RealmStudioMap map, SKBitmap textureBitmap, bool mirrorBackground = false) : IMapOperation
+    internal sealed class Cmd_SetOceanTexture(RealmStudioMap map, MapImage oceanTexture) : IMapOperation
     {
         public RealmStudioMap Map { get; set; } = map;
-        private SKBitmap LayerBitmap { get; set; } = textureBitmap;
-        private MapImage? OceanTexture { get; set; }
-        private bool MirrorBackground { get; set; } = mirrorBackground;
+        private MapImage OceanTexture { get; set; } = oceanTexture;
+
 
         public void DoOperation()
         {
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.OCEANTEXTURELAYER);
+            oceanTextureLayer.MapLayerComponents.Clear();
+            oceanTextureLayer.MapLayerComponents.Add(OceanTexture);
 
-            if (oceanTextureLayer.MapLayerComponents.Count < 1)
-            {
-                OceanTexture = new()
-                {
-                    X = 0,
-                    Y = 0,
-                    Width = Map.MapWidth,
-                    Height = Map.MapHeight,
-                    MirrorImage = MirrorBackground,
-                    MapImageBitmap = LayerBitmap.Copy()
-                };
-
-                oceanTextureLayer.MapLayerComponents.Add(OceanTexture);
-            }
+            MapStateMediator.CurrentMap.IsSaved = false;
         }
 
         public void UndoOperation()
         {
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.OCEANTEXTURELAYER);
+            oceanTextureLayer.MapLayerComponents.Clear();
 
-            if (OceanTexture != null)
-            {
-                oceanTextureLayer.MapLayerComponents.Remove(OceanTexture);
-            }
+            MapStateMediator.CurrentMap.IsSaved = false;
         }
     }
 }

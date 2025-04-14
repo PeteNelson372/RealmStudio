@@ -184,4 +184,7 @@
   <data name="realm_studio_icon_1024x1024_g3u_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\realm_studio_icon_1024x1024_g3u_icon.ico;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="cloud_combined_2048" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cloud_combined_2048.jpg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

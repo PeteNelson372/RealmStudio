@@ -21,6 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using System.Diagnostics;
+
 namespace RealmStudio
 {
     internal sealed class ThemeManager
@@ -163,32 +165,46 @@ namespace RealmStudio
                     if (theme.BackgroundTexture != null)
                     {
                         MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
-                        baseLayer.MapLayerComponents.Clear();
 
-                        BackgroundManager.ClearBackgroundTexture();
-
-                        if (theme.BackgroundTexture != null)
+                        if (baseLayer.MapLayerComponents.Count == 0)
                         {
-                            for (int i = 0; i < BackgroundManager.BackgroundMediator.BackgroundTextureList.Count; i++)
+                            if (theme.BackgroundTexture != null)
                             {
-                                if (BackgroundManager.BackgroundMediator.BackgroundTextureList[i] != null
-                                    && BackgroundManager.BackgroundMediator.BackgroundTextureList[i].TexturePath == theme.BackgroundTexture.TexturePath)
+                                for (int i = 0; i < BackgroundManager.BackgroundMediator.BackgroundTextureList.Count; i++)
                                 {
-                                    backgroundTextureIndex = i;
-                                    break;
+                                    if (BackgroundManager.BackgroundMediator.BackgroundTextureList[i] != null
+                                        && BackgroundManager.BackgroundMediator.BackgroundTextureList[i].TexturePath == theme.BackgroundTexture.TexturePath)
+                                    {
+                                        backgroundTextureIndex = i;
+                                        break;
+                                    }
                                 }
                             }
                         }
+
+                        if (backgroundTextureIndex >= 0)
+                        {
+                            // fix the theme background texture scale if needed, and serialize the theme
+                            if (theme.BackgroundTextureScale < 0.0F)
+                            {
+                                theme.BackgroundTextureScale = 0.0F;
+                                MapFileMethods.SerializeTheme(theme);
+                            }
+
+                            if (theme.BackgroundTextureScale > 1.0F)
+                            {
+                                theme.BackgroundTextureScale = theme.BackgroundTextureScale / 100.0F;
+                                MapFileMethods.SerializeTheme(theme);
+                            }
+
+                            BackgroundManager.BackgroundMediator.Initialize(
+                                backgroundTextureIndex,
+                                (int)((theme.BackgroundTextureScale != null) ? theme.BackgroundTextureScale : 1.0F),
+                                (bool)((theme.MirrorBackgroundTexture != null) ? theme.MirrorBackgroundTexture : false));
+
+                            BackgroundManager.FillBackgroundTexture();
+                        }
                     }
-
-                    backgroundTextureIndex = backgroundTextureIndex < 0 ? 0 : backgroundTextureIndex;
-
-                    BackgroundManager.BackgroundMediator.Initialize(
-                        backgroundTextureIndex,
-                        (int)((theme.BackgroundTextureScale != null) ? theme.BackgroundTextureScale / 100.0F : 1.0F),
-                        (bool)((theme.MirrorBackgroundTexture != null) ? theme.MirrorBackgroundTexture : false));
-
-                    BackgroundManager.FillBackgroundTexture();
 
                     VignetteManager.VignetteMediator.Initialize(
                         (int)((theme.VignetteStrength != null) ? theme.VignetteStrength : 148),
@@ -200,32 +216,60 @@ namespace RealmStudio
                 if (themeFilter.ApplyOceanSettings)
                 {
                     MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
-                    oceanTextureLayer.MapLayerComponents.Clear();
 
-                    MapLayer oceanTextureOverLayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
-                    oceanTextureOverLayLayer.MapLayerComponents.Clear();
-
-                    int oceanTextureIndex = 0;
-
-                    if (theme.OceanTexture != null)
+                    if (oceanTextureLayer.MapLayerComponents.Count == 0)
                     {
-                        for (int i = 0; i < OceanManager.OceanMediator.OceanTextureList.Count; i++)
+                        int oceanTextureIndex = -1;
+
+                        if (theme.OceanTexture != null)
                         {
-                            if (OceanManager.OceanMediator.OceanTextureList[i].TextureName == theme.OceanTexture.TextureName)
+                            for (int i = 0; i < OceanManager.OceanMediator.OceanTextureList.Count; i++)
                             {
-                                oceanTextureIndex = i;
-                                break;
+                                if (OceanManager.OceanMediator.OceanTextureList[i].TextureName == theme.OceanTexture.TextureName)
+                                {
+                                    oceanTextureIndex = i;
+                                    break;
+                                }
                             }
                         }
+
+                        if (oceanTextureIndex >= 0)
+                        {
+                            // fix the theme ocean texture scale if needed, and serialize the theme
+                            if (theme.OceanTextureScale < 0.0F)
+                            {
+                                theme.OceanTextureScale = 0.0F;
+                                MapFileMethods.SerializeTheme(theme);
+                            }
+
+                            if (theme.OceanTextureScale > 1.0F)
+                            {
+                                theme.OceanTextureScale = theme.OceanTextureScale / 100.0F;
+                                MapFileMethods.SerializeTheme(theme);
+                            }
+
+                            if (theme.OceanTextureOpacity < 0.0F)
+                            {
+                                theme.OceanTextureOpacity = 0.0F;
+                                MapFileMethods.SerializeTheme(theme);
+                            }
+
+                            if (theme.OceanTextureOpacity > 1.0F)
+                            {
+                                theme.OceanTextureOpacity = theme.OceanTextureOpacity / 100.0F;
+                                MapFileMethods.SerializeTheme(theme);
+                            }
+
+                            OceanManager.OceanMediator.Initialize(
+                                oceanTextureIndex,
+                                theme.OceanTexture?.TextureName == null ? string.Empty : theme.OceanTexture.TextureName,
+                                (float)(theme.OceanTextureScale == null ? 1.0F : theme.OceanTextureScale),
+                                (float)(theme.OceanTextureOpacity == null ? 1.0F : (float)theme.OceanTextureOpacity),
+                                (bool)(theme.MirrorOceanTexture == null ? false : theme.MirrorOceanTexture));
+
+                            OceanManager.ApplyOceanTexture();
+                        }
                     }
-
-                    OceanManager.OceanMediator.Initialize(
-                        oceanTextureIndex,
-                        (float)(theme.OceanTextureScale == null ? 1.0F : theme.OceanTextureScale),
-                        (float)(theme.OceanTextureOpacity == null ? 1.0F : (float)theme.OceanTextureOpacity),
-                        (bool)(theme.MirrorOceanTexture == null ? false : theme.MirrorOceanTexture));
-
-                    OceanManager.ApplyOceanTexture();
                 }
 
                 if (themeFilter.ApplyOceanColorPaletteSettings)
@@ -495,9 +539,9 @@ namespace RealmStudio
 
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // error loading the theme
+                Debug.WriteLine($"Error applying theme: {ex.Message}");
             }
         }
     }

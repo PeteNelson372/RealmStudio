@@ -145,6 +145,11 @@ namespace RealmStudio
             _backgroundTextureIndex = backgroundTextureIndex;
             _backgroundTextureScale = backgroundTextureScale;
             _mirrorBackgroundTexture = mirrorBackground;
+
+            MainForm.BackgroundTextureScaleTrack.Value = (int)(backgroundTextureScale * 100.0F);
+            MainForm.MirrorBackgroundSwitch.Checked = mirrorBackground;
+
+            UpdateBackgroundTexturePictureBox();
         }
 
         internal void Reset()

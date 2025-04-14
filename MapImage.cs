@@ -39,6 +39,7 @@ namespace RealmStudio
         public SKBitmap? MapImageBitmap { get; set; }
         public bool MirrorImage { get; set; }
         public bool UseShader { get; set; } = true;
+        public string ImageName { get; set; } = string.Empty;
         public float Scale { get; set; } = 1.0F;
         public float Opacity { get; set; } = 1.0F;
 
@@ -159,6 +160,15 @@ namespace RealmStudio
                 if (float.TryParse(scaleElemStr, out float scale))
                 {
                     Scale = scale;
+
+                    if (Scale < 0.0F)
+                    {
+                        Scale = 0.0F;
+                    }
+                    else if (Scale > 1.0F)
+                    {
+                        Scale = 1.0F;
+                    }
                 }
                 else
                 {
@@ -170,14 +180,42 @@ namespace RealmStudio
                 Scale = 1.0F;
             }
 
+            IEnumerable<XElement?> imageNameElem = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "ImageName"));
+            if (imageNameElem != null && imageNameElem.Any() && imageNameElem.First() != null)
+            {
+                string? nameElemStr = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "ImageName").Value).FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(nameElemStr))
+                {
+                    ImageName = nameElemStr;
+                }
+                else
+                {
+                    ImageName = string.Empty;
+                }
+            }
+            else
+            {
+                ImageName = string.Empty;
+            }
+
             IEnumerable<XElement?> opacityElem = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "Opacity"));
             if (opacityElem != null && opacityElem.Any() && opacityElem.First() != null)
             {
-                string? opacityElemStr = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "Scale").Value).FirstOrDefault();
+                string? opacityElemStr = mapBitmapDoc.Descendants().Select(x => x.Element(ns + "Opacity").Value).FirstOrDefault();
 
                 if (float.TryParse(opacityElemStr, out float opacity))
                 {
                     Opacity = opacity;
+
+                    if (Opacity < 0.0F)
+                    {
+                        Opacity = 0.0F;
+                    }
+                    else if (Opacity > 1.0F)
+                    {
+                        Opacity = 1.0F;
+                    }
                 }
                 else
                 {
@@ -213,12 +251,16 @@ namespace RealmStudio
                 writer.WriteValue(UseShader);
                 writer.WriteEndElement();
 
+                writer.WriteStartElement("ImageName");
+                writer.WriteValue(ImageName);
+                writer.WriteEndElement();
+
                 writer.WriteStartElement("Scale");
                 writer.WriteValue(Scale);
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("Opacity");
-                writer.WriteValue(Scale);
+                writer.WriteValue(Opacity);
                 writer.WriteEndElement();
             }
         }

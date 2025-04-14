@@ -22,8 +22,9 @@ namespace RealmStudio
         private float _oceanBrushVelocity = 1.0F;
         private Color _oceanPaintColor = Color.FromArgb(128, 145, 203, 184);
         private Color _oceanFillColor = Color.White;
-        private float _oceanTextureScale = 100.0F;
-        private float _oceanTextureOpacity = 100.0f;
+        private string _oceanTextureName = string.Empty;
+        private float _oceanTextureScale = 1.0F;
+        private float _oceanTextureOpacity = 1.0f;
         private bool _mirrorOceanTexture;
 
         private Color _customColor1 = Color.White;
@@ -114,16 +115,32 @@ namespace RealmStudio
             }
         }
 
+        internal string OceanTextureName
+        {
+            get { return _oceanTextureName; }
+            set { SetPropertyField(nameof(OceanTextureName), ref _oceanTextureName, value); }
+        }
+
         internal float OceanTextureScale
         {
             get { return _oceanTextureScale; }
-            set { SetPropertyField(nameof(OceanTextureScale), ref _oceanTextureScale, value); }
+            set
+            {
+                ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 2.0F);
+                ArgumentOutOfRangeException.ThrowIfLessThan(value, 0.0F);
+                SetPropertyField(nameof(OceanTextureScale), ref _oceanTextureScale, value);
+            }
         }
 
         internal float OceanTextureOpacity
         {
             get { return _oceanTextureOpacity; }
-            set { SetPropertyField(nameof(OceanTextureOpacity), ref _oceanTextureOpacity, value); }
+            set
+            {
+                ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 1.0F);
+                ArgumentOutOfRangeException.ThrowIfLessThan(value, 0.0F);
+                SetPropertyField(nameof(OceanTextureOpacity), ref _oceanTextureOpacity, value);
+            }
         }
 
         internal bool MirrorOceanTexture
@@ -250,12 +267,22 @@ namespace RealmStudio
                                 oceanDrawingLayer.ShowLayer = ShowOceanLayers;
                             }
                             break;
-                        case "OceanTextureIndex":
+                        case "OceanTextureName":
                             {
-                                UpdateOceanTextureComboBox();
+                                if (_oceanTextureName != string.Empty)
+                                {
+                                    for (int i = 0; i < OceanTextureList.Count; i++)
+                                    {
+                                        if (OceanTextureList[i].TextureName == _oceanTextureName)
+                                        {
+                                            OceanTextureIndex = i;
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                             break;
-                        case "App_OceanTextureIndex":
+                        case "OceanTextureIndex":
                             {
                                 UpdateOceanTextureComboBox();
                             }
@@ -338,16 +365,28 @@ namespace RealmStudio
 
         #region Ocean UI Methods
 
-        internal void Initialize(int oceanTextureIndex, float textureScale, float textureOpacity, bool mirrorTexture)
+        internal void Initialize(int oceanTextureIndex, string imageName, float textureScale, float textureOpacity, bool mirrorTexture)
         {
             _oceanTextureIndex = oceanTextureIndex;
             _oceanTextureScale = textureScale;
             _oceanTextureOpacity = textureOpacity;
             _mirrorOceanTexture = mirrorTexture;
 
-            MainForm.OceanScaleTextureTrack.Value = (int)_oceanTextureScale;
-            MainForm.OceanTextureOpacityTrack.Value = (int)_oceanTextureOpacity;
+            MainForm.OceanScaleTextureTrack.Value = (int)(_oceanTextureScale * 100.0F);
+            MainForm.OceanTextureOpacityTrack.Value = (int)(_oceanTextureOpacity * 100.0F);
             MainForm.MirrorOceanTextureSwitch.Checked = _mirrorOceanTexture;
+
+            if (imageName != string.Empty)
+            {
+                for (int i = 0; i < OceanTextureList.Count; i++)
+                {
+                    if (OceanTextureList[i].TextureName == imageName)
+                    {
+                        OceanTextureIndex = i;
+                        break;
+                    }
+                }
+            }
 
             UpdateOceanTextureComboBox();
         }
@@ -396,15 +435,33 @@ namespace RealmStudio
                 Bitmap? textureBitmap = OceanTextureList[OceanTextureIndex].TextureBitmap;
                 if (textureBitmap != null)
                 {
-                    Bitmap b = new(textureBitmap);
+                    if (OceanTextureScale != 1.0F)
+                    {
+                        // resize the bitmap, but maintain aspect ratio
+                        using Bitmap resizedBitmap = DrawingMethods.ScaleBitmap(textureBitmap,
+                            (int)(MapStateMediator.CurrentMap.MapWidth * OceanTextureScale), (int)(MapStateMediator.CurrentMap.MapHeight * OceanTextureScale));
 
-                    Bitmap newB = DrawingMethods.SetBitmapOpacity(b, OceanTextureOpacity / 100.0F);
+                        using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, OceanTextureOpacity);
 
-                    MainForm.OceanTextureBox.Image = newB;
-                    MainForm.OceanTextureBox.Refresh();
+                        MainForm.OceanTextureBox.Image = new Bitmap(b);
 
-                    MainForm.OceanTextureNameLabel.Text = OceanTextureList[OceanTextureIndex].TextureName;
-                    MainForm.OceanTextureNameLabel.Refresh();
+                        MainForm.OceanTextureBox.Refresh();
+
+                        MainForm.OceanTextureNameLabel.Text = OceanTextureList[OceanTextureIndex].TextureName;
+                        MainForm.OceanTextureNameLabel.Refresh();
+                    }
+                    else
+                    {
+                        using Bitmap resizedBitmap = new(textureBitmap, MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
+
+                        using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, OceanTextureOpacity);
+
+                        MainForm.OceanTextureBox.Image = new Bitmap(b);
+                        MainForm.OceanTextureBox.Refresh();
+
+                        MainForm.OceanTextureNameLabel.Text = OceanTextureList[OceanTextureIndex].TextureName;
+                        MainForm.OceanTextureNameLabel.Refresh();
+                    }
                 }
             }
         }

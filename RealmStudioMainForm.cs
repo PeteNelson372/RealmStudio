@@ -878,37 +878,7 @@ namespace RealmStudio
             SKGLRenderControl.Invalidate();
         }
 
-        private void RenderAsHeightMapMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            if (RenderAsHeightMapMenuItem.Checked)
-            {
-                MainMediator.SetDrawingMode(MapDrawingMode.HeightMapPaint, 0);
 
-                // if needed, render landforms to height map layer as a map image
-                // and add a mapheightmap to the height map layer to hold the height map;
-                // as the user paints on the map, the height map image will be updated
-
-                RealmMapMethods.AddMapImagesToHeightMapLayer(MapStateMediator.CurrentMap);
-
-                // force maintab selected index change
-                MainTab.SelectedIndex = 2;  // select landform tab
-                MainTab.SelectedIndex = 0;
-                MainTab.SelectedIndex = 2;  // select landform tab
-                MainTab.Refresh();
-            }
-            else
-            {
-                MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
-
-                // force maintab selected index change
-                MainTab.SelectedIndex = 2;  // select landform tab
-                MainTab.SelectedIndex = 0;
-                MainTab.SelectedIndex = 2;  // select landform tab
-                MainTab.Refresh();
-            }
-
-            SKGLRenderControl.Invalidate();
-        }
 
         private void ThemeToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1125,6 +1095,43 @@ namespace RealmStudio
                 }
             }
             catch { }
+        }
+
+        private void RenderAsHeightMapMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (RenderAsHeightMapMenuItem.Checked)
+            {
+                MainMediator.SetDrawingMode(MapDrawingMode.HeightMapPaint, 0);
+
+                // if needed, render landforms to height map layer as a map image
+                // and add a mapheightmap to the height map layer to hold the height map;
+                // as the user paints on the map, the height map image will be updated
+
+                RealmMapMethods.AddMapImagesToHeightMapLayer(MapStateMediator.CurrentMap);
+
+                // force maintab selected index change
+                MainTab.SelectedIndex = 2;  // select landform tab
+                MainTab.SelectedIndex = 0;
+                MainTab.SelectedIndex = 2;  // select landform tab
+                MainTab.Refresh();
+            }
+            else
+            {
+                MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
+
+                // force maintab selected index change
+                MainTab.SelectedIndex = 2;  // select landform tab
+                MainTab.SelectedIndex = 0;
+                MainTab.SelectedIndex = 2;  // select landform tab
+                MainTab.Refresh();
+            }
+
+            SKGLRenderControl.Invalidate();
+        }
+
+        private void DisplayWorldGlobeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WorldGlobeManager.ShowWorldGlobe();
         }
 
         private void CreateSymbolCollectionMenuItem_Click(object sender, EventArgs e)
@@ -1996,7 +2003,7 @@ namespace RealmStudio
         private void OpenMap(string mapFilePath)
         {
             ArgumentNullException.ThrowIfNull(FrameManager.FrameMediator);
-
+            ArgumentNullException.ThrowIfNull(OceanManager.OceanMediator);
 
             // open an existing map
             try
@@ -2056,6 +2063,7 @@ namespace RealmStudio
                     MapStateMediator.CurrentMap.MapTheme = AssetManager.DEFAULT_THEME_NAME;
                 }
 
+
                 MapTheme? theme = AssetManager.THEME_LIST.FirstOrDefault(t => t.ThemeName == MapStateMediator.CurrentMap.MapTheme);
 
                 if (theme != null)
@@ -2064,6 +2072,7 @@ namespace RealmStudio
                     ThemeFilter tf = new();
                     ThemeManager.ApplyTheme(theme, tf);
                 }
+
 
                 // theme is applied and map is loaded, so set any values in the map that are not set when it is loaded, and then
                 // set the UI controls to match the values in the map
@@ -2100,8 +2109,20 @@ namespace RealmStudio
 
                 if (oceanLayer.MapLayerComponents.Count > 0)
                 {
+                    int oceanTextureIndex = 0;
+
+                    for (int i = 0; i < OceanManager.OceanMediator.OceanTextureList.Count; i++)
+                    {
+                        if (OceanManager.OceanMediator.OceanTextureList[i].TextureName == ((MapImage)oceanLayer.MapLayerComponents[0]).ImageName)
+                        {
+                            oceanTextureIndex = i;
+                            break;
+                        }
+                    }
+
                     OceanMediator.Initialize(
                         OceanMediator.OceanTextureIndex,
+                        ((MapImage)oceanLayer.MapLayerComponents[0]).ImageName,
                         ((MapImage)oceanLayer.MapLayerComponents[0]).Scale,
                         ((MapImage)oceanLayer.MapLayerComponents[0]).Opacity,
                         ((MapImage)oceanLayer.MapLayerComponents[0]).MirrorImage);
@@ -4209,7 +4230,7 @@ namespace RealmStudio
 
         private void OceanTextureOpacityTrack_Scroll(object sender, EventArgs e)
         {
-            OceanMediator.OceanTextureOpacity = OceanTextureOpacityTrack.Value;
+            OceanMediator.OceanTextureOpacity = OceanTextureOpacityTrack.Value / 100.0F;
             TOOLTIP.Show(OceanMediator.OceanTextureOpacity.ToString(), OceanTextureGroup, new Point(OceanTextureOpacityTrack.Right - 30, OceanTextureOpacityTrack.Top - 20), 2000);
         }
 
@@ -4225,7 +4246,7 @@ namespace RealmStudio
 
         private void OceanScaleTextureTrack_Scroll(object sender, EventArgs e)
         {
-            OceanMediator.OceanTextureScale = OceanScaleTextureTrack.Value;
+            OceanMediator.OceanTextureScale = OceanScaleTextureTrack.Value / 100.0F;
             TOOLTIP.Show(OceanMediator.OceanTextureScale.ToString(), OceanTextureGroup, new Point(OceanScaleTextureTrack.Right - 30, OceanScaleTextureTrack.Top - 20), 2000);
         }
 
@@ -5872,6 +5893,7 @@ namespace RealmStudio
         }
 
         #endregion
+
 
     }
 }

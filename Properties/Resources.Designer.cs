@@ -113,6 +113,16 @@ namespace RealmStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] cloud_combined_2048 {
+            get {
+                object obj = ResourceManager.GetObject("cloud_combined_2048", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] EastSeaDokdo_Regular {
             get {
                 object obj = ResourceManager.GetObject("EastSeaDokdo-Regular", resourceCulture);

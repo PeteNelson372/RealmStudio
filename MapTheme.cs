@@ -36,7 +36,7 @@ namespace RealmStudio
         [XmlElement(IsNullable = true)] public float? BackgroundTextureScale { get; set; } = 1.0F;
         [XmlElement(IsNullable = true)] public bool? MirrorBackgroundTexture { get; set; } = false;
         [XmlElement(IsNullable = true)] public MapTexture? OceanTexture { get; set; }
-        [XmlElement(IsNullable = true)] public int? OceanTextureOpacity { get; set; } = 255;
+        [XmlElement(IsNullable = true)] public float? OceanTextureOpacity { get; set; } = 1.0F;
         [XmlElement(IsNullable = true)] public float? OceanTextureScale { get; set; } = 1.0F;
         [XmlElement(IsNullable = true)] public bool? MirrorOceanTexture { get; set; } = false;
         [XmlElement(IsNullable = true)] public int? OceanColor { get; set; } = Color.White.ToArgb();
