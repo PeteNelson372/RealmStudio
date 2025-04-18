@@ -30,11 +30,14 @@
         {
             ThreeDViewOverlay = new ReaLTaiizor.Forms.DungeonForm();
             groupBox2 = new GroupBox();
+            ShowGridlinesCheck = new CheckBox();
+            ShowHideLightingPanelButton = new FontAwesome.Sharp.IconButton();
             ClearBackgroundButton = new FontAwesome.Sharp.IconButton();
             LoadBackgroundButton = new FontAwesome.Sharp.IconButton();
             AnimationGroup = new GroupBox();
+            RecordButton = new FontAwesome.Sharp.IconButton();
+            ShowHideFeaturesButton = new FontAwesome.Sharp.IconButton();
             ShowHideCloudPanelButton = new FontAwesome.Sharp.IconButton();
-            ShowHideLightingPanelButton = new FontAwesome.Sharp.IconButton();
             label3 = new Label();
             FrameRateCombo = new ComboBox();
             label2 = new Label();
@@ -47,14 +50,40 @@
             CameraGroup = new GroupBox();
             ChangeAxesButton = new FontAwesome.Sharp.IconButton();
             ResetCameraButton = new FontAwesome.Sharp.IconButton();
-            ShowGridlinesCheck = new CheckBox();
             ModelGroup = new GroupBox();
             SaveModelButton = new FontAwesome.Sharp.IconButton();
             LoadModelButton = new FontAwesome.Sharp.IconButton();
             CloseFormButton = new Button();
             TDContainerPanel = new Panel();
+            FeaturesPanel = new Panel();
+            MoonGroup = new GroupBox();
+            ExpandMoonGroup = new FontAwesome.Sharp.IconButton();
+            EffectsGroup = new GroupBox();
+            ExpandEffectsGroup = new FontAwesome.Sharp.IconButton();
+            RingGroup = new GroupBox();
+            ExpandRingGroup = new FontAwesome.Sharp.IconButton();
+            AtmosphereGroup = new GroupBox();
+            ExpandAtmosphereGroup = new FontAwesome.Sharp.IconButton();
+            LocalStarGroup = new GroupBox();
+            ExpandStarGroup = new FontAwesome.Sharp.IconButton();
+            LightingPanel = new Panel();
+            LightingGroup = new GroupBox();
+            label12 = new Label();
+            AmbientLightColorButton = new FontAwesome.Sharp.IconButton();
+            label11 = new Label();
+            EnableAmbientLightSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label10 = new Label();
+            SunlightColorButton = new FontAwesome.Sharp.IconButton();
+            label9 = new Label();
+            SunlightVerticalDirectionTrack = new TrackBar();
+            label8 = new Label();
+            SunlightHorizontalDirectionTrack = new TrackBar();
+            label7 = new Label();
+            EnableSunlightSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             CloudsPanel = new Panel();
             CloudsGroup = new GroupBox();
+            SelectCloudColorButton = new FontAwesome.Sharp.IconButton();
+            label6 = new Label();
             CloudRotationRateUpDown = new NumericUpDown();
             label32 = new Label();
             CloudTextureOpacityTrack = new TrackBar();
@@ -64,7 +93,6 @@
             DefaultCloudTextureRadio = new RadioButton();
             label4 = new Label();
             EnableCloudsSwitch = new ReaLTaiizor.Controls.CyberSwitch();
-            label6 = new Label();
             ThreeDViewOverlay.SuspendLayout();
             groupBox2.SuspendLayout();
             AnimationGroup.SuspendLayout();
@@ -72,6 +100,16 @@
             CameraGroup.SuspendLayout();
             ModelGroup.SuspendLayout();
             TDContainerPanel.SuspendLayout();
+            FeaturesPanel.SuspendLayout();
+            MoonGroup.SuspendLayout();
+            EffectsGroup.SuspendLayout();
+            RingGroup.SuspendLayout();
+            AtmosphereGroup.SuspendLayout();
+            LocalStarGroup.SuspendLayout();
+            LightingPanel.SuspendLayout();
+            LightingGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)SunlightVerticalDirectionTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SunlightHorizontalDirectionTrack).BeginInit();
             CloudsPanel.SuspendLayout();
             CloudsGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)CloudRotationRateUpDown).BeginInit();
@@ -88,7 +126,6 @@
             ThreeDViewOverlay.Controls.Add(ModelStatisticsLabel);
             ThreeDViewOverlay.Controls.Add(ThreeDViewControlBox);
             ThreeDViewOverlay.Controls.Add(CameraGroup);
-            ThreeDViewOverlay.Controls.Add(ShowGridlinesCheck);
             ThreeDViewOverlay.Controls.Add(ModelGroup);
             ThreeDViewOverlay.Controls.Add(CloseFormButton);
             ThreeDViewOverlay.Controls.Add(TDContainerPanel);
@@ -114,15 +151,47 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(ShowGridlinesCheck);
+            groupBox2.Controls.Add(ShowHideLightingPanelButton);
             groupBox2.Controls.Add(ClearBackgroundButton);
             groupBox2.Controls.Add(LoadBackgroundButton);
             groupBox2.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             groupBox2.Location = new Point(23, 275);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(153, 102);
+            groupBox2.Size = new Size(153, 190);
             groupBox2.TabIndex = 63;
             groupBox2.TabStop = false;
             groupBox2.Text = "Scene";
+            // 
+            // ShowGridlinesCheck
+            // 
+            ShowGridlinesCheck.AutoSize = true;
+            ShowGridlinesCheck.Checked = true;
+            ShowGridlinesCheck.CheckState = CheckState.Checked;
+            ShowGridlinesCheck.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ShowGridlinesCheck.ForeColor = SystemColors.ControlDarkDark;
+            ShowGridlinesCheck.Location = new Point(6, 161);
+            ShowGridlinesCheck.Name = "ShowGridlinesCheck";
+            ShowGridlinesCheck.Size = new Size(80, 19);
+            ShowGridlinesCheck.TabIndex = 70;
+            ShowGridlinesCheck.Text = "Show Grid";
+            ShowGridlinesCheck.UseVisualStyleBackColor = true;
+            ShowGridlinesCheck.CheckedChanged += ShowGridlinesCheck_CheckedChanged;
+            // 
+            // ShowHideLightingPanelButton
+            // 
+            ShowHideLightingPanelButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ShowHideLightingPanelButton.ForeColor = SystemColors.ControlDarkDark;
+            ShowHideLightingPanelButton.IconChar = FontAwesome.Sharp.IconChar.None;
+            ShowHideLightingPanelButton.IconColor = Color.Black;
+            ShowHideLightingPanelButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ShowHideLightingPanelButton.Location = new Point(6, 92);
+            ShowHideLightingPanelButton.Name = "ShowHideLightingPanelButton";
+            ShowHideLightingPanelButton.Size = new Size(60, 60);
+            ShowHideLightingPanelButton.TabIndex = 69;
+            ShowHideLightingPanelButton.Text = "Lighting";
+            ShowHideLightingPanelButton.UseVisualStyleBackColor = true;
+            ShowHideLightingPanelButton.Click += ShowHideLightingPanelButton_Click;
             // 
             // ClearBackgroundButton
             // 
@@ -156,8 +225,9 @@
             // 
             // AnimationGroup
             // 
+            AnimationGroup.Controls.Add(RecordButton);
+            AnimationGroup.Controls.Add(ShowHideFeaturesButton);
             AnimationGroup.Controls.Add(ShowHideCloudPanelButton);
-            AnimationGroup.Controls.Add(ShowHideLightingPanelButton);
             AnimationGroup.Controls.Add(label3);
             AnimationGroup.Controls.Add(FrameRateCombo);
             AnimationGroup.Controls.Add(label2);
@@ -165,13 +235,45 @@
             AnimationGroup.Controls.Add(AnimateRotationLabel);
             AnimationGroup.Controls.Add(EnableAnimationSwitch);
             AnimationGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            AnimationGroup.Location = new Point(23, 383);
+            AnimationGroup.Location = new Point(23, 476);
             AnimationGroup.Name = "AnimationGroup";
-            AnimationGroup.Size = new Size(153, 273);
+            AnimationGroup.Size = new Size(153, 256);
             AnimationGroup.TabIndex = 62;
             AnimationGroup.TabStop = false;
             AnimationGroup.Text = "World Animation";
             AnimationGroup.Visible = false;
+            // 
+            // RecordButton
+            // 
+            RecordButton.BackColor = Color.MediumSeaGreen;
+            RecordButton.Font = new Font("Segoe UI Black", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            RecordButton.ForeColor = SystemColors.Control;
+            RecordButton.IconChar = FontAwesome.Sharp.IconChar.Play;
+            RecordButton.IconColor = Color.Black;
+            RecordButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            RecordButton.IconSize = 32;
+            RecordButton.Location = new Point(6, 186);
+            RecordButton.Name = "RecordButton";
+            RecordButton.Size = new Size(60, 60);
+            RecordButton.TabIndex = 71;
+            RecordButton.Text = "Record";
+            RecordButton.UseVisualStyleBackColor = false;
+            RecordButton.Click += RecordButton_Click;
+            // 
+            // ShowHideFeaturesButton
+            // 
+            ShowHideFeaturesButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ShowHideFeaturesButton.ForeColor = SystemColors.ControlDarkDark;
+            ShowHideFeaturesButton.IconChar = FontAwesome.Sharp.IconChar.None;
+            ShowHideFeaturesButton.IconColor = Color.Black;
+            ShowHideFeaturesButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ShowHideFeaturesButton.Location = new Point(72, 120);
+            ShowHideFeaturesButton.Name = "ShowHideFeaturesButton";
+            ShowHideFeaturesButton.Size = new Size(60, 60);
+            ShowHideFeaturesButton.TabIndex = 70;
+            ShowHideFeaturesButton.Text = "Features";
+            ShowHideFeaturesButton.UseVisualStyleBackColor = true;
+            ShowHideFeaturesButton.Click += ShowHideFeaturesButton_Click;
             // 
             // ShowHideCloudPanelButton
             // 
@@ -180,27 +282,13 @@
             ShowHideCloudPanelButton.IconChar = FontAwesome.Sharp.IconChar.None;
             ShowHideCloudPanelButton.IconColor = Color.Black;
             ShowHideCloudPanelButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ShowHideCloudPanelButton.Location = new Point(72, 126);
+            ShowHideCloudPanelButton.Location = new Point(6, 120);
             ShowHideCloudPanelButton.Name = "ShowHideCloudPanelButton";
             ShowHideCloudPanelButton.Size = new Size(60, 60);
             ShowHideCloudPanelButton.TabIndex = 69;
             ShowHideCloudPanelButton.Text = "Clouds";
             ShowHideCloudPanelButton.UseVisualStyleBackColor = true;
             ShowHideCloudPanelButton.Click += ShowHideCloudPanelButton_Click;
-            // 
-            // ShowHideLightingPanelButton
-            // 
-            ShowHideLightingPanelButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            ShowHideLightingPanelButton.ForeColor = SystemColors.ControlDarkDark;
-            ShowHideLightingPanelButton.IconChar = FontAwesome.Sharp.IconChar.None;
-            ShowHideLightingPanelButton.IconColor = Color.Black;
-            ShowHideLightingPanelButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ShowHideLightingPanelButton.Location = new Point(6, 126);
-            ShowHideLightingPanelButton.Name = "ShowHideLightingPanelButton";
-            ShowHideLightingPanelButton.Size = new Size(60, 60);
-            ShowHideLightingPanelButton.TabIndex = 68;
-            ShowHideLightingPanelButton.Text = "Lighting";
-            ShowHideLightingPanelButton.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
@@ -374,20 +462,6 @@
             ResetCameraButton.UseVisualStyleBackColor = true;
             ResetCameraButton.Click += ResetCameraButton_Click;
             // 
-            // ShowGridlinesCheck
-            // 
-            ShowGridlinesCheck.AutoSize = true;
-            ShowGridlinesCheck.Checked = true;
-            ShowGridlinesCheck.CheckState = CheckState.Checked;
-            ShowGridlinesCheck.ForeColor = SystemColors.ControlDarkDark;
-            ShowGridlinesCheck.Location = new Point(46, 662);
-            ShowGridlinesCheck.Name = "ShowGridlinesCheck";
-            ShowGridlinesCheck.Size = new Size(80, 19);
-            ShowGridlinesCheck.TabIndex = 50;
-            ShowGridlinesCheck.Text = "Show Grid";
-            ShowGridlinesCheck.UseVisualStyleBackColor = true;
-            ShowGridlinesCheck.CheckedChanged += ShowGridlinesCheck_CheckedChanged;
-            // 
             // ModelGroup
             // 
             ModelGroup.Controls.Add(SaveModelButton);
@@ -446,11 +520,393 @@
             // 
             TDContainerPanel.Anchor = AnchorStyles.None;
             TDContainerPanel.BorderStyle = BorderStyle.FixedSingle;
+            TDContainerPanel.Controls.Add(FeaturesPanel);
+            TDContainerPanel.Controls.Add(LightingPanel);
             TDContainerPanel.Controls.Add(CloudsPanel);
             TDContainerPanel.Location = new Point(182, 59);
             TDContainerPanel.Name = "TDContainerPanel";
             TDContainerPanel.Size = new Size(1000, 600);
             TDContainerPanel.TabIndex = 0;
+            // 
+            // FeaturesPanel
+            // 
+            FeaturesPanel.BackColor = Color.WhiteSmoke;
+            FeaturesPanel.Controls.Add(MoonGroup);
+            FeaturesPanel.Controls.Add(EffectsGroup);
+            FeaturesPanel.Controls.Add(RingGroup);
+            FeaturesPanel.Controls.Add(AtmosphereGroup);
+            FeaturesPanel.Controls.Add(LocalStarGroup);
+            FeaturesPanel.Location = new Point(794, 307);
+            FeaturesPanel.Name = "FeaturesPanel";
+            FeaturesPanel.Size = new Size(200, 288);
+            FeaturesPanel.TabIndex = 2;
+            FeaturesPanel.Visible = false;
+            // 
+            // MoonGroup
+            // 
+            MoonGroup.Controls.Add(ExpandMoonGroup);
+            MoonGroup.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            MoonGroup.Location = new Point(3, 196);
+            MoonGroup.Name = "MoonGroup";
+            MoonGroup.Size = new Size(194, 40);
+            MoonGroup.TabIndex = 4;
+            MoonGroup.TabStop = false;
+            MoonGroup.Text = "Moon";
+            // 
+            // ExpandMoonGroup
+            // 
+            ExpandMoonGroup.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            ExpandMoonGroup.ForeColor = SystemColors.ControlDarkDark;
+            ExpandMoonGroup.IconChar = FontAwesome.Sharp.IconChar.PlusSquare;
+            ExpandMoonGroup.IconColor = Color.Black;
+            ExpandMoonGroup.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ExpandMoonGroup.IconSize = 18;
+            ExpandMoonGroup.Location = new Point(169, 11);
+            ExpandMoonGroup.Name = "ExpandMoonGroup";
+            ExpandMoonGroup.Size = new Size(23, 23);
+            ExpandMoonGroup.TabIndex = 2;
+            ExpandMoonGroup.UseVisualStyleBackColor = true;
+            ExpandMoonGroup.Click += ExpandMoonGroup_Click;
+            // 
+            // EffectsGroup
+            // 
+            EffectsGroup.Controls.Add(ExpandEffectsGroup);
+            EffectsGroup.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            EffectsGroup.Location = new Point(3, 150);
+            EffectsGroup.Name = "EffectsGroup";
+            EffectsGroup.Size = new Size(194, 40);
+            EffectsGroup.TabIndex = 3;
+            EffectsGroup.TabStop = false;
+            EffectsGroup.Text = "Effects";
+            // 
+            // ExpandEffectsGroup
+            // 
+            ExpandEffectsGroup.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            ExpandEffectsGroup.ForeColor = SystemColors.ControlDarkDark;
+            ExpandEffectsGroup.IconChar = FontAwesome.Sharp.IconChar.PlusSquare;
+            ExpandEffectsGroup.IconColor = Color.Black;
+            ExpandEffectsGroup.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ExpandEffectsGroup.IconSize = 18;
+            ExpandEffectsGroup.Location = new Point(169, 11);
+            ExpandEffectsGroup.Name = "ExpandEffectsGroup";
+            ExpandEffectsGroup.Size = new Size(23, 23);
+            ExpandEffectsGroup.TabIndex = 2;
+            ExpandEffectsGroup.UseVisualStyleBackColor = true;
+            ExpandEffectsGroup.Click += ExpandEffectsGroup_Click;
+            // 
+            // RingGroup
+            // 
+            RingGroup.Controls.Add(ExpandRingGroup);
+            RingGroup.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            RingGroup.Location = new Point(3, 104);
+            RingGroup.Name = "RingGroup";
+            RingGroup.Size = new Size(194, 40);
+            RingGroup.TabIndex = 2;
+            RingGroup.TabStop = false;
+            RingGroup.Text = "Ring";
+            // 
+            // ExpandRingGroup
+            // 
+            ExpandRingGroup.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            ExpandRingGroup.ForeColor = SystemColors.ControlDarkDark;
+            ExpandRingGroup.IconChar = FontAwesome.Sharp.IconChar.PlusSquare;
+            ExpandRingGroup.IconColor = Color.Black;
+            ExpandRingGroup.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ExpandRingGroup.IconSize = 18;
+            ExpandRingGroup.Location = new Point(169, 11);
+            ExpandRingGroup.Name = "ExpandRingGroup";
+            ExpandRingGroup.Size = new Size(23, 23);
+            ExpandRingGroup.TabIndex = 2;
+            ExpandRingGroup.UseVisualStyleBackColor = true;
+            ExpandRingGroup.Click += ExpandRingGroup_Click;
+            // 
+            // AtmosphereGroup
+            // 
+            AtmosphereGroup.Controls.Add(ExpandAtmosphereGroup);
+            AtmosphereGroup.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            AtmosphereGroup.Location = new Point(3, 58);
+            AtmosphereGroup.Name = "AtmosphereGroup";
+            AtmosphereGroup.Size = new Size(194, 40);
+            AtmosphereGroup.TabIndex = 1;
+            AtmosphereGroup.TabStop = false;
+            AtmosphereGroup.Text = "Atmosphere";
+            // 
+            // ExpandAtmosphereGroup
+            // 
+            ExpandAtmosphereGroup.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            ExpandAtmosphereGroup.ForeColor = SystemColors.ControlDarkDark;
+            ExpandAtmosphereGroup.IconChar = FontAwesome.Sharp.IconChar.PlusSquare;
+            ExpandAtmosphereGroup.IconColor = Color.Black;
+            ExpandAtmosphereGroup.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ExpandAtmosphereGroup.IconSize = 18;
+            ExpandAtmosphereGroup.Location = new Point(169, 11);
+            ExpandAtmosphereGroup.Name = "ExpandAtmosphereGroup";
+            ExpandAtmosphereGroup.Size = new Size(23, 23);
+            ExpandAtmosphereGroup.TabIndex = 2;
+            ExpandAtmosphereGroup.UseVisualStyleBackColor = true;
+            ExpandAtmosphereGroup.Click += ExpandAtmosphereGroup_Click;
+            // 
+            // LocalStarGroup
+            // 
+            LocalStarGroup.Controls.Add(ExpandStarGroup);
+            LocalStarGroup.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LocalStarGroup.Location = new Point(2, 12);
+            LocalStarGroup.Name = "LocalStarGroup";
+            LocalStarGroup.Size = new Size(194, 40);
+            LocalStarGroup.TabIndex = 0;
+            LocalStarGroup.TabStop = false;
+            LocalStarGroup.Text = "Local Star";
+            // 
+            // ExpandStarGroup
+            // 
+            ExpandStarGroup.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            ExpandStarGroup.ForeColor = SystemColors.ControlDarkDark;
+            ExpandStarGroup.IconChar = FontAwesome.Sharp.IconChar.PlusSquare;
+            ExpandStarGroup.IconColor = Color.Black;
+            ExpandStarGroup.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ExpandStarGroup.IconSize = 18;
+            ExpandStarGroup.Location = new Point(169, 11);
+            ExpandStarGroup.Name = "ExpandStarGroup";
+            ExpandStarGroup.Size = new Size(23, 23);
+            ExpandStarGroup.TabIndex = 2;
+            ExpandStarGroup.UseVisualStyleBackColor = true;
+            ExpandStarGroup.Click += ExpandStarGroup_Click;
+            // 
+            // LightingPanel
+            // 
+            LightingPanel.Controls.Add(LightingGroup);
+            LightingPanel.Location = new Point(3, 3);
+            LightingPanel.Name = "LightingPanel";
+            LightingPanel.Size = new Size(200, 364);
+            LightingPanel.TabIndex = 1;
+            LightingPanel.Visible = false;
+            // 
+            // LightingGroup
+            // 
+            LightingGroup.BackColor = Color.WhiteSmoke;
+            LightingGroup.Controls.Add(label12);
+            LightingGroup.Controls.Add(AmbientLightColorButton);
+            LightingGroup.Controls.Add(label11);
+            LightingGroup.Controls.Add(EnableAmbientLightSwitch);
+            LightingGroup.Controls.Add(label10);
+            LightingGroup.Controls.Add(SunlightColorButton);
+            LightingGroup.Controls.Add(label9);
+            LightingGroup.Controls.Add(SunlightVerticalDirectionTrack);
+            LightingGroup.Controls.Add(label8);
+            LightingGroup.Controls.Add(SunlightHorizontalDirectionTrack);
+            LightingGroup.Controls.Add(label7);
+            LightingGroup.Controls.Add(EnableSunlightSwitch);
+            LightingGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LightingGroup.Location = new Point(3, 3);
+            LightingGroup.Name = "LightingGroup";
+            LightingGroup.Size = new Size(194, 358);
+            LightingGroup.TabIndex = 0;
+            LightingGroup.TabStop = false;
+            LightingGroup.Text = "Lighting";
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label12.ForeColor = SystemColors.ControlDarkDark;
+            label12.Location = new Point(72, 305);
+            label12.Name = "label12";
+            label12.Size = new Size(115, 15);
+            label12.TabIndex = 79;
+            label12.Text = "Ambient Light Color";
+            // 
+            // AmbientLightColorButton
+            // 
+            AmbientLightColorButton.BackColor = Color.White;
+            AmbientLightColorButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            AmbientLightColorButton.ForeColor = SystemColors.ControlDarkDark;
+            AmbientLightColorButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            AmbientLightColorButton.IconColor = Color.Tan;
+            AmbientLightColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            AmbientLightColorButton.IconSize = 32;
+            AmbientLightColorButton.Location = new Point(6, 282);
+            AmbientLightColorButton.Name = "AmbientLightColorButton";
+            AmbientLightColorButton.Size = new Size(60, 60);
+            AmbientLightColorButton.TabIndex = 78;
+            AmbientLightColorButton.Text = "Select Color";
+            AmbientLightColorButton.UseVisualStyleBackColor = false;
+            AmbientLightColorButton.Click += AmbientLightColorButton_Click;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label11.ForeColor = SystemColors.ControlDarkDark;
+            label11.Location = new Point(47, 254);
+            label11.Name = "label11";
+            label11.Size = new Size(121, 15);
+            label11.TabIndex = 77;
+            label11.Text = "Enable Ambient Light";
+            // 
+            // EnableAmbientLightSwitch
+            // 
+            EnableAmbientLightSwitch.Alpha = 50;
+            EnableAmbientLightSwitch.BackColor = Color.Transparent;
+            EnableAmbientLightSwitch.Background = true;
+            EnableAmbientLightSwitch.Background_WidthPen = 2F;
+            EnableAmbientLightSwitch.BackgroundPen = false;
+            EnableAmbientLightSwitch.Checked = true;
+            EnableAmbientLightSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            EnableAmbientLightSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            EnableAmbientLightSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            EnableAmbientLightSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            EnableAmbientLightSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            EnableAmbientLightSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            EnableAmbientLightSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            EnableAmbientLightSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            EnableAmbientLightSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            EnableAmbientLightSwitch.ColorValue = Color.ForestGreen;
+            EnableAmbientLightSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            EnableAmbientLightSwitch.Font = new Font("Arial", 11F);
+            EnableAmbientLightSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            EnableAmbientLightSwitch.Lighting = true;
+            EnableAmbientLightSwitch.LinearGradient_Background = false;
+            EnableAmbientLightSwitch.LinearGradient_Value = false;
+            EnableAmbientLightSwitch.LinearGradientPen = false;
+            EnableAmbientLightSwitch.Location = new Point(6, 249);
+            EnableAmbientLightSwitch.Name = "EnableAmbientLightSwitch";
+            EnableAmbientLightSwitch.PenWidth = 10;
+            EnableAmbientLightSwitch.RGB = false;
+            EnableAmbientLightSwitch.Rounding = true;
+            EnableAmbientLightSwitch.RoundingInt = 90;
+            EnableAmbientLightSwitch.Size = new Size(35, 20);
+            EnableAmbientLightSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            EnableAmbientLightSwitch.TabIndex = 76;
+            EnableAmbientLightSwitch.Tag = "Cyber";
+            EnableAmbientLightSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            EnableAmbientLightSwitch.Timer_RGB = 300;
+            EnableAmbientLightSwitch.CheckedChanged += EnableAmbientLightSwitch_CheckedChanged;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label10.ForeColor = SystemColors.ControlDarkDark;
+            label10.Location = new Point(72, 194);
+            label10.Name = "label10";
+            label10.Size = new Size(83, 15);
+            label10.TabIndex = 75;
+            label10.Text = "Sunlight Color";
+            // 
+            // SunlightColorButton
+            // 
+            SunlightColorButton.BackColor = Color.White;
+            SunlightColorButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SunlightColorButton.ForeColor = SystemColors.ControlDarkDark;
+            SunlightColorButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SunlightColorButton.IconColor = Color.Tan;
+            SunlightColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SunlightColorButton.IconSize = 32;
+            SunlightColorButton.Location = new Point(6, 171);
+            SunlightColorButton.Name = "SunlightColorButton";
+            SunlightColorButton.Size = new Size(60, 60);
+            SunlightColorButton.TabIndex = 74;
+            SunlightColorButton.Text = "Select Color";
+            SunlightColorButton.UseVisualStyleBackColor = false;
+            SunlightColorButton.Click += SunlightColorButton_Click;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label9.ForeColor = SystemColors.ControlDarkDark;
+            label9.Location = new Point(6, 127);
+            label9.Name = "label9";
+            label9.Size = new Size(164, 15);
+            label9.TabIndex = 73;
+            label9.Text = "Sunlight Direction (Up/Down)";
+            // 
+            // SunlightVerticalDirectionTrack
+            // 
+            SunlightVerticalDirectionTrack.AutoSize = false;
+            SunlightVerticalDirectionTrack.BackColor = SystemColors.Control;
+            SunlightVerticalDirectionTrack.Location = new Point(6, 145);
+            SunlightVerticalDirectionTrack.Maximum = 359;
+            SunlightVerticalDirectionTrack.Name = "SunlightVerticalDirectionTrack";
+            SunlightVerticalDirectionTrack.RightToLeft = RightToLeft.No;
+            SunlightVerticalDirectionTrack.Size = new Size(182, 20);
+            SunlightVerticalDirectionTrack.TabIndex = 72;
+            SunlightVerticalDirectionTrack.TickStyle = TickStyle.None;
+            SunlightVerticalDirectionTrack.Scroll += SunlightVerticalDirectionTrack_Scroll;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label8.ForeColor = SystemColors.ControlDarkDark;
+            label8.Location = new Point(6, 74);
+            label8.Name = "label8";
+            label8.Size = new Size(166, 15);
+            label8.TabIndex = 71;
+            label8.Text = "Sunlight Direction (Left/Right)";
+            // 
+            // SunlightHorizontalDirectionTrack
+            // 
+            SunlightHorizontalDirectionTrack.AutoSize = false;
+            SunlightHorizontalDirectionTrack.BackColor = SystemColors.Control;
+            SunlightHorizontalDirectionTrack.Location = new Point(6, 92);
+            SunlightHorizontalDirectionTrack.Maximum = 359;
+            SunlightHorizontalDirectionTrack.Name = "SunlightHorizontalDirectionTrack";
+            SunlightHorizontalDirectionTrack.RightToLeft = RightToLeft.No;
+            SunlightHorizontalDirectionTrack.Size = new Size(182, 20);
+            SunlightHorizontalDirectionTrack.TabIndex = 70;
+            SunlightHorizontalDirectionTrack.TickStyle = TickStyle.None;
+            SunlightHorizontalDirectionTrack.Scroll += SunlightHorizontalDirectionTrack_Scroll;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label7.ForeColor = SystemColors.ControlDarkDark;
+            label7.Location = new Point(47, 34);
+            label7.Name = "label7";
+            label7.Size = new Size(89, 15);
+            label7.TabIndex = 65;
+            label7.Text = "Enable Sunlight";
+            // 
+            // EnableSunlightSwitch
+            // 
+            EnableSunlightSwitch.Alpha = 50;
+            EnableSunlightSwitch.BackColor = Color.Transparent;
+            EnableSunlightSwitch.Background = true;
+            EnableSunlightSwitch.Background_WidthPen = 2F;
+            EnableSunlightSwitch.BackgroundPen = false;
+            EnableSunlightSwitch.Checked = false;
+            EnableSunlightSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            EnableSunlightSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            EnableSunlightSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            EnableSunlightSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            EnableSunlightSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            EnableSunlightSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            EnableSunlightSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            EnableSunlightSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            EnableSunlightSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            EnableSunlightSwitch.ColorValue = Color.ForestGreen;
+            EnableSunlightSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            EnableSunlightSwitch.Font = new Font("Arial", 11F);
+            EnableSunlightSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            EnableSunlightSwitch.Lighting = true;
+            EnableSunlightSwitch.LinearGradient_Background = false;
+            EnableSunlightSwitch.LinearGradient_Value = false;
+            EnableSunlightSwitch.LinearGradientPen = false;
+            EnableSunlightSwitch.Location = new Point(6, 29);
+            EnableSunlightSwitch.Name = "EnableSunlightSwitch";
+            EnableSunlightSwitch.PenWidth = 10;
+            EnableSunlightSwitch.RGB = false;
+            EnableSunlightSwitch.Rounding = true;
+            EnableSunlightSwitch.RoundingInt = 90;
+            EnableSunlightSwitch.Size = new Size(35, 20);
+            EnableSunlightSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            EnableSunlightSwitch.TabIndex = 64;
+            EnableSunlightSwitch.Tag = "Cyber";
+            EnableSunlightSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            EnableSunlightSwitch.Timer_RGB = 300;
+            EnableSunlightSwitch.CheckedChanged += EnableSunlightSwitch_CheckedChanged;
             // 
             // CloudsPanel
             // 
@@ -458,13 +914,14 @@
             CloudsPanel.Controls.Add(CloudsGroup);
             CloudsPanel.Location = new Point(794, 3);
             CloudsPanel.Name = "CloudsPanel";
-            CloudsPanel.Size = new Size(200, 276);
+            CloudsPanel.Size = new Size(200, 298);
             CloudsPanel.TabIndex = 0;
             CloudsPanel.Visible = false;
             // 
             // CloudsGroup
             // 
             CloudsGroup.BackColor = Color.WhiteSmoke;
+            CloudsGroup.Controls.Add(SelectCloudColorButton);
             CloudsGroup.Controls.Add(label6);
             CloudsGroup.Controls.Add(CloudRotationRateUpDown);
             CloudsGroup.Controls.Add(label32);
@@ -478,17 +935,45 @@
             CloudsGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             CloudsGroup.Location = new Point(3, 3);
             CloudsGroup.Name = "CloudsGroup";
-            CloudsGroup.Size = new Size(194, 270);
+            CloudsGroup.Size = new Size(194, 292);
             CloudsGroup.TabIndex = 1;
             CloudsGroup.TabStop = false;
             CloudsGroup.Text = "Clouds";
+            // 
+            // SelectCloudColorButton
+            // 
+            SelectCloudColorButton.BackColor = Color.White;
+            SelectCloudColorButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SelectCloudColorButton.ForeColor = SystemColors.ControlDarkDark;
+            SelectCloudColorButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SelectCloudColorButton.IconColor = Color.Tan;
+            SelectCloudColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectCloudColorButton.IconSize = 32;
+            SelectCloudColorButton.Location = new Point(13, 181);
+            SelectCloudColorButton.Name = "SelectCloudColorButton";
+            SelectCloudColorButton.Size = new Size(60, 60);
+            SelectCloudColorButton.TabIndex = 73;
+            SelectCloudColorButton.Text = "Select Color";
+            SelectCloudColorButton.UseVisualStyleBackColor = false;
+            SelectCloudColorButton.Click += SelectCloudColorButton_Click;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label6.ForeColor = SystemColors.ControlDarkDark;
+            label6.Location = new Point(83, 249);
+            label6.Name = "label6";
+            label6.Size = new Size(78, 15);
+            label6.TabIndex = 72;
+            label6.Text = "Rotation Rate";
             // 
             // CloudRotationRateUpDown
             // 
             CloudRotationRateUpDown.DecimalPlaces = 2;
             CloudRotationRateUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             CloudRotationRateUpDown.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
-            CloudRotationRateUpDown.Location = new Point(9, 181);
+            CloudRotationRateUpDown.Location = new Point(13, 247);
             CloudRotationRateUpDown.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             CloudRotationRateUpDown.Name = "CloudRotationRateUpDown";
             CloudRotationRateUpDown.Size = new Size(64, 23);
@@ -627,17 +1112,6 @@
             EnableCloudsSwitch.Timer_RGB = 300;
             EnableCloudsSwitch.CheckedChanged += EnableCloudsSwitch_CheckedChanged;
             // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label6.ForeColor = SystemColors.ControlDarkDark;
-            label6.Location = new Point(79, 183);
-            label6.Name = "label6";
-            label6.Size = new Size(78, 15);
-            label6.TabIndex = 72;
-            label6.Text = "Rotation Rate";
-            // 
             // ThreeDView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -660,12 +1134,24 @@
             ThreeDViewOverlay.ResumeLayout(false);
             ThreeDViewOverlay.PerformLayout();
             groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
             AnimationGroup.ResumeLayout(false);
             AnimationGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)RotationRateUpDown).EndInit();
             CameraGroup.ResumeLayout(false);
             ModelGroup.ResumeLayout(false);
             TDContainerPanel.ResumeLayout(false);
+            FeaturesPanel.ResumeLayout(false);
+            MoonGroup.ResumeLayout(false);
+            EffectsGroup.ResumeLayout(false);
+            RingGroup.ResumeLayout(false);
+            AtmosphereGroup.ResumeLayout(false);
+            LocalStarGroup.ResumeLayout(false);
+            LightingPanel.ResumeLayout(false);
+            LightingGroup.ResumeLayout(false);
+            LightingGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)SunlightVerticalDirectionTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SunlightHorizontalDirectionTrack).EndInit();
             CloudsPanel.ResumeLayout(false);
             CloudsGroup.ResumeLayout(false);
             CloudsGroup.PerformLayout();
@@ -681,7 +1167,6 @@
         private Button CloseFormButton;
         private GroupBox ModelGroup;
         private FontAwesome.Sharp.IconButton LoadModelButton;
-        private CheckBox ShowGridlinesCheck;
         private FontAwesome.Sharp.IconButton SaveModelButton;
         private GroupBox CameraGroup;
         private FontAwesome.Sharp.IconButton ResetCameraButton;
@@ -698,7 +1183,6 @@
         private NumericUpDown RotationRateUpDown;
         private Label label3;
         private ComboBox FrameRateCombo;
-        private FontAwesome.Sharp.IconButton ShowHideLightingPanelButton;
         internal GroupBox AnimationGroup;
         private FontAwesome.Sharp.IconButton ShowHideCloudPanelButton;
         private Panel CloudsPanel;
@@ -713,5 +1197,35 @@
         internal TrackBar CloudTextureOpacityTrack;
         private NumericUpDown CloudRotationRateUpDown;
         private Label label6;
+        internal FontAwesome.Sharp.IconButton SelectCloudColorButton;
+        private FontAwesome.Sharp.IconButton ShowHideLightingPanelButton;
+        private Panel LightingPanel;
+        private GroupBox LightingGroup;
+        private Panel FeaturesPanel;
+        internal ReaLTaiizor.Controls.CyberSwitch EnableSunlightSwitch;
+        private Label label7;
+        internal FontAwesome.Sharp.IconButton SunlightColorButton;
+        private Label label9;
+        internal TrackBar SunlightVerticalDirectionTrack;
+        private Label label8;
+        internal TrackBar SunlightHorizontalDirectionTrack;
+        private Label label10;
+        private FontAwesome.Sharp.IconButton ShowHideFeaturesButton;
+        private GroupBox LocalStarGroup;
+        private FontAwesome.Sharp.IconButton ExpandStarGroup;
+        private GroupBox AtmosphereGroup;
+        private FontAwesome.Sharp.IconButton ExpandAtmosphereGroup;
+        private GroupBox MoonGroup;
+        private FontAwesome.Sharp.IconButton ExpandMoonGroup;
+        private GroupBox EffectsGroup;
+        private FontAwesome.Sharp.IconButton ExpandEffectsGroup;
+        private GroupBox RingGroup;
+        private FontAwesome.Sharp.IconButton ExpandRingGroup;
+        private Label label12;
+        internal FontAwesome.Sharp.IconButton AmbientLightColorButton;
+        private Label label11;
+        internal ReaLTaiizor.Controls.CyberSwitch EnableAmbientLightSwitch;
+        private CheckBox ShowGridlinesCheck;
+        private FontAwesome.Sharp.IconButton RecordButton;
     }
 }

@@ -168,6 +168,8 @@ namespace RealmStudio
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                 if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Background"))
                 {
+                    LOADING_STATUS_FORM.SetStatusText("Loading Background Textures");
+
                     MapTexture t = new(assetName, path);
 
                     if (t.TexturePath != null && t.TextureBitmap == null)
@@ -179,6 +181,8 @@ namespace RealmStudio
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Water"))
                 {
+                    LOADING_STATUS_FORM.SetStatusText("Loading Water Textures");
+
                     MapTexture t = new(assetName, path);
 
                     if (t.TexturePath != null && t.TextureBitmap == null)
@@ -191,6 +195,8 @@ namespace RealmStudio
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Land"))
                 {
+                    LOADING_STATUS_FORM.SetStatusText("Loading Landform Textures");
+
                     MapTexture t = new(assetName, path);
 
                     if (t.TexturePath != null && t.TextureBitmap == null)
@@ -298,6 +304,8 @@ namespace RealmStudio
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("\\Themes"))
                 {
+                    LOADING_STATUS_FORM.SetStatusText("Loading Themes");
+
                     MapTheme? t = MapFileMethods.ReadThemeFromXml(path);
 
                     if (t != null)

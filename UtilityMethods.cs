@@ -136,5 +136,37 @@ namespace RealmStudio
 
             return mainForm;
         }
+
+        internal static string GetImageFilter()
+        {
+            return
+                "All Files (*.*)|*.*" +
+                "|All Pictures (*.emf;*.wmf;*.jpg;*.jpeg;*.jfif;*.jpe;*.png;*.bmp;*.dib;*.rle;*.gif;*.emz;*.wmz;*.tif;*.tiff;*.svg;*.ico)" +
+                    "|*.emf;*.wmf;*.jpg;*.jpeg;*.jfif;*.jpe;*.png;*.bmp;*.dib;*.rle;*.gif;*.emz;*.wmz;*.tif;*.tiff;*.svg;*.ico" +
+                "|Windows Enhanced Metafile (*.emf)|*.emf" +
+                "|Windows Metafile (*.wmf)|*.wmf" +
+                "|JPEG File Interchange Format (*.jpg;*.jpeg;*.jfif;*.jpe)|*.jpg;*.jpeg;*.jfif;*.jpe" +
+                "|Portable Network Graphics (*.png)|*.png" +
+                "|Bitmap Image File (*.bmp;*.dib;*.rle)|*.bmp;*.dib;*.rle" +
+                "|Graphics Interchange Format (*.gif)|*.gif" +
+                "|Compressed Windows Enhanced Metafile (*.emz)|*.emz" +
+                "|Compressed Windows MetaFile (*.wmz)|*.wmz" +
+                "|Tag Image File Format (*.tif;*.tiff)|*.tif;*.tiff" +
+                "|Scalable Vector Graphics (*.svg)|*.svg" +
+                "|Icon (*.ico)|*.ico";
+        }
+
+        internal static string GetCommonImageFilter()
+        {
+            return
+                "All Image Files (*.jpg;*.jpeg;*.jfif;*.jpe;*.png;*.bmp;*.dib;*.rle;*.tif;*.tiff;)" +
+                    "|*.emf;*.wmf;*.jpg;*.jpeg;*.jfif;*.jpe;*.png;*.bmp;*.dib;*.rle;*.gif;*.emz;*.wmz;*.tif;*.tiff;*.svg;*.ico" +
+                "|JPEG File Interchange Format (*.jpg;*.jpeg;*.jfif;*.jpe)|*.jpg;*.jpeg;*.jfif;*.jpe" +
+                "|Portable Network Graphics (*.png)|*.png" +
+                "|Bitmap Image File (*.bmp;*.dib;*.rle)|*.bmp;*.dib;*.rle" +
+                "|Tag Image File Format (*.tif;*.tiff)|*.tif;*.tiff" +
+                "|Graphics Interchange Format (*.gif)|*.gif" +
+                "|All Files (*.*)|*.*";
+        }
     }
 }

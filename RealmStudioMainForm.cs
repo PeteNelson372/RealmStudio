@@ -24,10 +24,8 @@
 using RealmStudio.Properties;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
-using Svg.Skia;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
 using System.Timers;
@@ -1026,23 +1024,9 @@ namespace RealmStudio
                     CheckFileExists = true,
                     RestoreDirectory = true,
                     ShowHelp = false,           // enabling the help button causes the dialog not to display files
-                    Multiselect = false
+                    Multiselect = false,
+                    Filter = UtilityMethods.GetCommonImageFilter()
                 };
-
-                ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
-                string sep = string.Empty;
-
-                foreach (var c in codecs)
-                {
-                    if (!string.IsNullOrEmpty(c.CodecName) && !string.IsNullOrEmpty(c.FilenameExtension))
-                    {
-                        string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
-                        ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLowerInvariant());
-                        sep = "|";
-                    }
-                }
-
-                ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
 
                 if (ofd.ShowDialog(this) == DialogResult.OK)
                 {
@@ -1610,10 +1594,6 @@ namespace RealmStudio
             MapStatusStrip.Refresh();
         }
 
-
-
-
-
         private void ExportMapAsImage(RealmMapExportFormat exportFormat, bool upscale = false)
         {
             SaveFileDialog ofd = new()
@@ -1622,44 +1602,24 @@ namespace RealmStudio
                 DefaultExt = exportFormat.ToString().ToLowerInvariant(),
                 RestoreDirectory = true,
                 ShowHelp = true,
-                Filter = "",
                 AddExtension = true,
                 CheckPathExists = true,
                 ShowHiddenFiles = false,
                 ValidateNames = true,
+                Filter = UtilityMethods.GetCommonImageFilter()
             };
 
-            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
-            string sep = string.Empty;
-            foreach (ImageCodecInfo c in codecs)
-            {
-                if (c.CodecName != null && c.FilenameExtension != null)
-                {
-                    string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
-                    ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLowerInvariant());
-                    sep = "|";
-                }
-            }
-
-            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
-
             int filterIndex = 0;
+            string[] filterStrings = ofd.Filter.Split('|');
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-
-            for (int i = 0; i < codecs.Length; i++)
+            for (int i = 2; i < filterStrings.Length; i++)      // skip all image strings filter
             {
-                if (codecs[i].FilenameExtension != null)
+                if (filterStrings[i].Contains(exportFormat.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
-                    if (codecs[i].FilenameExtension.Contains(exportFormat.ToString(), StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        filterIndex = i + 1;
-                        break;
-                    }
+                    filterIndex = (i / 2) + 1;
+                    break;
                 }
             }
-
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             ofd.FilterIndex = filterIndex;
 
@@ -1779,44 +1739,25 @@ namespace RealmStudio
                 DefaultExt = exportFormat.ToString().ToLowerInvariant(),
                 RestoreDirectory = true,
                 ShowHelp = true,
-                Filter = "",
                 AddExtension = true,
                 CheckPathExists = true,
                 ShowHiddenFiles = false,
                 ValidateNames = true,
+                Filter = UtilityMethods.GetCommonImageFilter()
             };
 
-            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
-            string sep = string.Empty;
-            foreach (ImageCodecInfo c in codecs)
-            {
-                if (c.CodecName != null && c.FilenameExtension != null)
-                {
-                    string codecName = c.CodecName[8..].Replace("Codec", "Files").Trim();
-                    ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, codecName, c.FilenameExtension.ToLowerInvariant());
-                    sep = "|";
-                }
-            }
-
-            ofd.Filter = string.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
 
             int filterIndex = 0;
+            string[] filterStrings = ofd.Filter.Split('|');
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-
-            for (int i = 0; i < codecs.Length; i++)
+            for (int i = 2; i < filterStrings.Length; i++)      // skip all image strings filter
             {
-                if (codecs[i].FilenameExtension != null)
+                if (filterStrings[i].Contains(exportFormat.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
-                    if (codecs[i].FilenameExtension.Contains(exportFormat.ToString(), StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        filterIndex = i + 1;
-                        break;
-                    }
+                    filterIndex = (i / 2) + 1;
+                    break;
                 }
             }
-
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             ofd.FilterIndex = filterIndex;
 

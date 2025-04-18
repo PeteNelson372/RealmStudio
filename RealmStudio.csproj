@@ -9,9 +9,9 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.104.11791</AssemblyVersion>
-    <FileVersion>1.2025.104.11791</FileVersion>
-    <Version>1.2025.0-alpha-1335</Version>
+    <AssemblyVersion>1.2025.108.35113</AssemblyVersion>
+    <FileVersion>1.2025.108.35113</FileVersion>
+    <Version>1.2025.0-alpha-1480</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
@@ -29,10 +29,26 @@
     <Title>Realm Studio</Title>
     <PackageIcon>Realm Studio Icon 128x128.png</PackageIcon>
     <UseWPF>True</UseWPF>
-    <Platforms>AnyCPU;x64</Platforms> 
+    <Platforms>AnyCPU;x64;x86</Platforms> 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyVersionSettings>
+    <UpdatePackageVersion>True</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>AssemblyVersion</InheritWinAppVersionFrom>
+    <AssemblyFileVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyFileVersionSettings>
+    <AssemblyInfoVersionSettings>None.None.None.None</AssemblyInfoVersionSettings>
+    <PackageVersionSettings>AssemblyVersion.NoneWithAutoReset.Alpha</PackageVersionSettings>
+    <IsPublishable>False</IsPublishable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <ShouldCreateLogs>True</ShouldCreateLogs>
     <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
     <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
@@ -79,6 +95,21 @@
     <IsPublishable>False</IsPublishable>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.YearStamp.DayOfYearStamp.None</AssemblyVersionSettings>
+    <UpdatePackageVersion>True</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>AssemblyFileVersion</InheritWinAppVersionFrom>
+    <AssemblyFileVersionSettings>None.YearStamp.DayOfYearStamp.None</AssemblyFileVersionSettings>
+    <PackageVersionSettings>AssemblyVersion.NoneWithAutoReset.Alpha</PackageVersionSettings>
+    <IsPublishable>False</IsPublishable>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ShouldCreateLogs>True</ShouldCreateLogs>
     <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
@@ -93,6 +124,10 @@
     <PackageVersionSettings>AssemblyVersion.NoneWithAutoReset.Alpha</PackageVersionSettings>
     <IsPublishable>False</IsPublishable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Libraries\AForge.Video.FFMPEG.dll" />
+  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\realm_studio_icon_1024x1024_g3u_icon.ico">
@@ -119,7 +154,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AForge" Version="2.2.5" />
     <PackageReference Include="AForge.Imaging" Version="2.2.5" />
+    <PackageReference Include="AForge.Math" Version="2.2.5" />
     <PackageReference Include="Clipper2" Version="1.4.0" />
     <PackageReference Include="Cyotek.Windows.Forms.ColorPicker" Version="2.0.0-beta.7" />
     <PackageReference Include="Delaunator" Version="1.0.11" />
@@ -129,13 +166,14 @@
     <PackageReference Include="HelixToolkit.Wpf" Version="2.27.0" />
     <PackageReference Include="HelixToolkit.Wpf.Input" Version="2.27.0" />
     <PackageReference Include="log4net" Version="3.0.4" />
-    <PackageReference Include="ReaLTaiizor" Version="3.8.1.1" />
+    <PackageReference Include="ReaLTaiizor" Version="3.8.1.2" />
+    <PackageReference Include="SharpAvi" Version="3.0.1" />
     <PackageReference Include="SimplexNoise" Version="2.0.0" />
     <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.116.1" />
     <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.116.1" />
     <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.116.1" />
-    <PackageReference Include="Svg.Skia" Version="2.0.0.4" />
-    <PackageReference Include="System.Management" Version="9.0.3" />
+    <PackageReference Include="Svg.Skia" Version="3.0.0" />
+    <PackageReference Include="System.Management" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -181,6 +219,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Libraries\" />
     <Folder Include="Properties\DataSources\" />
   </ItemGroup>
 
@@ -189,6 +228,12 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="AForge.Video.FFMPEG">
+      <HintPath>Libraries\AForge.Video.FFMPEG.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

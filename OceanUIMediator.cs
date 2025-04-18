@@ -400,8 +400,8 @@ namespace RealmStudio
             OceanBrushVelocity = 1.0F;
             OceanPaintColor = Color.FromArgb(128, 145, 203, 184);
             OceanFillColor = Color.White;
-            OceanTextureScale = 100.0F;
-            OceanTextureOpacity = 100.0f;
+            OceanTextureScale = 1.0F;
+            OceanTextureOpacity = 1.0f;
             MirrorOceanTexture = false;
             CustomColor1 = Color.White;
             CustomColor2 = Color.White;

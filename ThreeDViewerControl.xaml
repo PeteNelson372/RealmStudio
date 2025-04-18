@@ -29,7 +29,8 @@
             </HelixToolkit:HelixViewport3D.Camera>
             
             <!-- Remember to add light to the scene -->
-            <HelixToolkit:SunLight/>
+            <HelixToolkit:DefaultLights x:Name="DefaultLights">
+            </HelixToolkit:DefaultLights>
 
             <ModelVisual3D x:Name="ModelVisual">
                 <ModelVisual3D.Content>

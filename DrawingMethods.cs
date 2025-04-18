@@ -29,7 +29,16 @@ using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Blob = AForge.Imaging.Blob;
+using Color = System.Drawing.Color;
+using Pen = System.Drawing.Pen;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
+using Point = System.Drawing.Point;
+using Size = System.Drawing.Size;
 
 namespace RealmStudio
 {
@@ -41,6 +50,85 @@ namespace RealmStudio
 
         [DllImport("msvcrt.dll")]
         private static extern int memcmp(IntPtr b1, IntPtr b2, long count);
+
+        [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool DeleteObject([In] IntPtr hObject);
+
+
+        public static byte[] ConvertBitmapSourceToByteArray(ImageSource imageSource)
+        {
+            var image = imageSource as BitmapSource;
+            byte[] data;
+            BitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
+            using (MemoryStream ms = new MemoryStream())
+            {
+                encoder.Save(ms);
+                data = ms.ToArray();
+            }
+            return data;
+        }
+
+        public static ImageSource ImageSourceFromBitmap(Bitmap bmp)
+        {
+            var handle = bmp.GetHbitmap();
+            try
+            {
+                return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            }
+            finally { DeleteObject(handle); }
+        }
+
+        public static byte[] BitmapToByteArray(Bitmap bitmap)
+        {
+
+            BitmapData? bmpdata = null;
+
+            try
+            {
+                bmpdata = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+                int numbytes = bmpdata.Stride * bitmap.Height;
+                byte[] bytedata = new byte[numbytes];
+                IntPtr ptr = bmpdata.Scan0;
+
+                Marshal.Copy(ptr, bytedata, 0, numbytes);
+
+                return bytedata;
+            }
+            finally
+            {
+                if (bmpdata != null)
+                    bitmap.UnlockBits(bmpdata);
+            }
+
+        }
+
+        public static Bitmap? BitmapSourceToBitmap(BitmapSource source)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            var pixelFormat = PixelFormat.Format32bppArgb;  //Bgr32 default
+            Bitmap bmp = new Bitmap(source.PixelWidth, source.PixelHeight, pixelFormat);
+
+            BitmapData data = bmp.LockBits(
+                new Rectangle(Point.Empty, bmp.Size),
+                ImageLockMode.WriteOnly,
+                pixelFormat);
+
+            source.CopyPixels(
+                Int32Rect.Empty,
+                data.Scan0,
+                data.Height * data.Stride,
+                data.Stride);
+
+            bmp.UnlockBits(data);
+
+            return bmp;
+        }
 
         public static bool CompareBitmaps(Bitmap b1, Bitmap b2)
         {
