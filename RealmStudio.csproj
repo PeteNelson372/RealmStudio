@@ -9,9 +9,9 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.108.35113</AssemblyVersion>
-    <FileVersion>1.2025.108.35113</FileVersion>
-    <Version>1.2025.0-alpha-1480</Version>
+    <AssemblyVersion>1.2025.109.10534</AssemblyVersion>
+    <FileVersion>1.2025.109.10534</FileVersion>
+    <Version>1.2025.0-alpha-1487</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>

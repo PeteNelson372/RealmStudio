@@ -86,6 +86,8 @@ namespace RealmStudio
             Fill = System.Windows.Media.Brushes.Gray
         };
 
+        #region Constructors
+
         public ThreeDView(string formTitle)
         {
             InitializeComponent();
@@ -110,6 +112,173 @@ namespace RealmStudio
 
             FrameRateCombo.SelectedIndex = 4;
         }
+
+        #endregion
+
+        #region Form Event Handlers
+
+        private void ThreeDView_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            StopAnimationTimer();
+
+            ModelUpdateQueue?.Clear();
+
+            if (ParentForm != null && HeightMapManager.CurrentHeightMapView == this)
+            {
+                HeightMapManager.CurrentHeightMapView = null;
+            }
+        }
+
+        private void ThreeDView_Load(object sender, EventArgs e)
+        {
+            // Create the ElementHost control for hosting the
+            // WPF ThreeDViewerControl UserControl
+            // and assign the WPF UserControl to the ElementHost control's
+            // Child property.
+            ElementHost host = new()
+            {
+                Parent = TDContainerPanel,
+                Dock = DockStyle.Fill,
+                Child = ThreeDViewer,
+            };
+
+            // add the ElementHost control to the container panel's controls.
+            TDContainerPanel.Controls.Add(host);
+
+            // add handlers for events
+            ThreeDViewer.ModelGroup.Changed += ModelGroup_Changed;
+
+            // add gridlines
+            GridlinesModel.SetName("GridLines");
+            GridlinesModel.Children.Add(GridLines);
+            ThreeDViewer.HelixTKViewport.Children.Add(GridlinesModel);
+
+            ThreeDViewer.HelixTKViewport.PanGesture = null;
+            ThreeDViewer.HelixTKViewport.PanGesture2 = new System.Windows.Input.MouseGesture(System.Windows.Input.MouseAction.LeftClick);
+
+            ThreeDViewer.HelixTKViewport.RotateGesture = null;
+            ThreeDViewer.HelixTKViewport.RotateGesture2 = null;
+            ThreeDViewer.HelixTKViewport.RotateGesture2 = new System.Windows.Input.MouseGesture(System.Windows.Input.MouseAction.RightClick);
+
+            ThreeDViewer.HelixTKViewport.ZoomSensitivity = 1.0;
+
+            ThreeDViewer.HelixTKViewport.InfiniteSpin = true;
+        }
+
+        #endregion
+
+        #region 3D Model Loading and Update
+
+        public void UpdateView()
+        {
+            // update the model from the queue
+            // this is used when the heightmap is updated and the 3D
+            // view of the heightmap is being automatically updated
+            if (ModelUpdateQueue != null && ModelUpdateQueue.Count > 0)
+            {
+                string? objModelString = ModelUpdateQueue.Last();
+
+                if (!string.IsNullOrEmpty(objModelString))
+                {
+                    LoadModelFromQueue(objModelString);
+                    ModelUpdateQueue.Clear();
+                }
+            }
+        }
+
+        private void LoadModelFromQueue(string objModelString)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(objModelString))
+                {
+                    LoadedModelString = objModelString;
+
+                    ObjReader objReader = new();
+
+                    using MemoryStream ms = new(Encoding.ASCII.GetBytes(objModelString));
+                    Model3DGroup modelGroup = objReader.Read(ms);
+
+                    int vertexCount = 0;
+                    int faceCount = 0;
+
+                    for (int i = 0; i < modelGroup.Children.Count; i++)
+                    {
+                        if (modelGroup.Children[i] is GeometryModel3D gm3d)
+                        {
+                            MeshGeometry3D mg3d = (MeshGeometry3D)gm3d.Geometry;
+                            vertexCount = mg3d.Positions.Count;
+                            faceCount = mg3d.TriangleIndices.Count / 3;
+                            break;
+                        }
+                    }
+
+                    ModelStatisticsLabel.Text = "Loaded " + vertexCount + " vertices; " + faceCount + " faces.";
+                    LoadModelGroupIntoViewer(modelGroup);
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.LOGGER.Error(ex);
+                MessageBox.Show("Error loading model: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        private void LoadModelGroupIntoViewer(Model3DGroup modelGroup)
+        {
+            // this method loads a model group into the 3D viewer;
+            // this is used when the model is loaded from a file or
+            // when the model is updated from the heightmap
+
+            // create a directional light matching the default one in the ThreeDViewerControl
+            DirectionalLight light = new()
+            {
+                Color = System.Windows.Media.Colors.White,
+                Direction = new Vector3D(3, -4, 5)
+            };
+
+            GeometryModel3D materialModel = new()
+            {
+                Material = new DiffuseMaterial()
+                {
+                    Brush = new System.Windows.Media.SolidColorBrush()
+                    {
+                        Color = System.Windows.Media.Colors.Red,
+                        Opacity = 1
+                    },
+                },
+            };
+
+            if (modelGroup != null)
+            {
+                modelGroup.SetName("DisplayedModel");
+                modelGroup.Children.Add(materialModel);
+
+                ThreeDViewer.ModelGroup.Children.Clear();
+                ThreeDViewer.ModelGroup.Children.Add(modelGroup);
+                ThreeDViewer.ModelGroup.Children.Add(light);
+                ThreeDViewer.ModelGroup.Children.Add(materialModel);
+
+                ThreeDViewer.HelixTKViewport.ResetCamera();
+                ThreeDViewer.HelixTKViewport.FitView(new Vector3D(0, 0, 1), new Vector3D(0, 1, 0));
+            }
+        }
+
+        #endregion
+
+        #region 3D Model Event Handlers
+        private void ModelGroup_Changed(object? sender, EventArgs e)
+        {
+            // no-op at this time
+        }
+
+        #endregion
+
+        #region Animation
 
         public bool AnimationEnabled
         {
@@ -194,109 +363,9 @@ namespace RealmStudio
             _animationTimer = null;
         }
 
-        public void UpdateView()
-        {
-            if (ModelUpdateQueue != null && ModelUpdateQueue.Count > 0)
-            {
-                string? objModelString = ModelUpdateQueue.Last();
+        #endregion
 
-                if (!string.IsNullOrEmpty(objModelString))
-                {
-                    LoadModelFromQueue(objModelString);
-                    ModelUpdateQueue.Clear();
-                }
-            }
-        }
-
-        private void ThreeDView_Load(object sender, EventArgs e)
-        {
-            // Create the ElementHost control for hosting the
-            // WPF ThreeDViewerControl UserControl
-            // and assign the WPF UserControl to the ElementHost control's
-            // Child property.
-            ElementHost host = new()
-            {
-                Parent = TDContainerPanel,
-                Dock = DockStyle.Fill,
-                Child = ThreeDViewer,
-            };
-
-            // add the ElementHost control to the container panel's controls.
-            TDContainerPanel.Controls.Add(host);
-
-            // add handlers for events
-            ThreeDViewer.ModelGroup.Changed += ModelGroup_Changed;
-
-            // add gridlines
-            GridlinesModel.SetName("GridLines");
-            GridlinesModel.Children.Add(GridLines);
-            ThreeDViewer.HelixTKViewport.Children.Add(GridlinesModel);
-
-            ThreeDViewer.HelixTKViewport.PanGesture = null;
-            ThreeDViewer.HelixTKViewport.PanGesture2 = new System.Windows.Input.MouseGesture(System.Windows.Input.MouseAction.LeftClick);
-
-            ThreeDViewer.HelixTKViewport.RotateGesture = null;
-            ThreeDViewer.HelixTKViewport.RotateGesture2 = null;
-            ThreeDViewer.HelixTKViewport.RotateGesture2 = new System.Windows.Input.MouseGesture(System.Windows.Input.MouseAction.RightClick);
-
-            ThreeDViewer.HelixTKViewport.ZoomSensitivity = 1.0;
-
-            ThreeDViewer.HelixTKViewport.InfiniteSpin = true;
-        }
-
-        private void LoadModelFromQueue(string objModelString)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(objModelString))
-                {
-                    LoadedModelString = objModelString;
-
-                    ObjReader objReader = new();
-
-                    using MemoryStream ms = new(Encoding.ASCII.GetBytes(objModelString));
-                    Model3DGroup modelGroup = objReader.Read(ms);
-
-                    int vertexCount = 0;
-                    int faceCount = 0;
-
-                    for (int i = 0; i < modelGroup.Children.Count; i++)
-                    {
-                        if (modelGroup.Children[i] is GeometryModel3D gm3d)
-                        {
-                            MeshGeometry3D mg3d = (MeshGeometry3D)gm3d.Geometry;
-                            vertexCount = mg3d.Positions.Count;
-                            faceCount = mg3d.TriangleIndices.Count / 3;
-                            break;
-                        }
-                    }
-
-                    ModelStatisticsLabel.Text = "Loaded " + vertexCount + " vertices; " + faceCount + " faces.";
-                    LoadModelGroupIntoViewer(modelGroup);
-                }
-            }
-            catch (Exception ex)
-            {
-                Program.LOGGER.Error(ex);
-                MessageBox.Show("Error loading model: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                Cursor.Current = Cursors.Default;
-            }
-        }
-
-        private void ThreeDView_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            StopAnimationTimer();
-
-            ModelUpdateQueue?.Clear();
-
-            if (ParentForm != null && HeightMapManager.CurrentHeightMapView == this)
-            {
-                HeightMapManager.CurrentHeightMapView = null;
-            }
-        }
+        #region Form Control Event Handlers (not World Globe specific)
 
         private void CloseFormButton_Click(object sender, EventArgs e)
         {
@@ -406,92 +475,6 @@ namespace RealmStudio
             }
         }
 
-        private void LoadModelGroupIntoViewer(Model3DGroup modelGroup)
-        {
-            // create a directional light matching the default one in the ThreeDViewerControl
-            DirectionalLight light = new()
-            {
-                Color = System.Windows.Media.Colors.White,
-                Direction = new Vector3D(3, -4, 5)
-            };
-
-            GeometryModel3D materialModel = new()
-            {
-                Material = new DiffuseMaterial()
-                {
-                    Brush = new System.Windows.Media.SolidColorBrush()
-                    {
-                        Color = System.Windows.Media.Colors.Red,
-                        Opacity = 1
-                    },
-                },
-            };
-
-            if (modelGroup != null)
-            {
-                modelGroup.SetName("DisplayedModel");
-                modelGroup.Children.Add(materialModel);
-
-                ThreeDViewer.ModelGroup.Children.Clear();
-                ThreeDViewer.ModelGroup.Children.Add(modelGroup);
-                ThreeDViewer.ModelGroup.Children.Add(light);
-                ThreeDViewer.ModelGroup.Children.Add(materialModel);
-
-                ThreeDViewer.HelixTKViewport.ResetCamera();
-                ThreeDViewer.HelixTKViewport.FitView(new Vector3D(0, 0, 1), new Vector3D(0, 1, 0));
-            }
-        }
-
-        internal void ShowWorldGlobe(SKBitmap worldTexture)
-        {
-            // change to Z-up for the camera
-
-            ThreeDViewer.ModelCamera.UpDirection = new Vector3D(0, 0, 1);
-
-            SphereVisual3D worldGlobe = new()
-            {
-                Center = new Point3D(0, 0, 0),
-                Radius = 1,
-                ThetaDiv = 180,
-                PhiDiv = 90
-            };
-
-            worldGlobe.SetName("WorldGlobe");
-
-            // transform the world map texture to a BitmapImage;
-            // converting the bitmap to a stream, then saving the stream to a BitmapImage
-            // is really weird, but that's the only way to do it without saving the bitmap to a file
-            BitmapImage bImage = new();
-            using MemoryStream ms = new();
-            worldTexture.ToBitmap().Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-            bImage.BeginInit();
-            bImage.StreamSource = new MemoryStream(ms.ToArray());
-            bImage.EndInit();
-
-            worldGlobe.Material = new DiffuseMaterial(new ImageBrush(bImage));
-
-            ThreeDViewer.HelixTKViewport.Children.Clear();
-
-            ThreeDViewer.HelixTKViewport.Children.Add(worldGlobe);
-
-            if (EnableAmbientLightSwitch.Checked)
-            {
-                ShowAmbientLight();
-            }
-
-            ThreeDViewer.HelixTKViewport.ResetCamera();
-            ThreeDViewer.ModelCamera.UpDirection = new Vector3D(0, 0, 1);
-            ThreeDViewer.ModelCamera.LookDirection = new Vector3D(1, 0, 0);
-            ThreeDViewer.ModelCamera.Position = new Point3D(-6, 0, 0);
-        }
-
-        private void ModelGroup_Changed(object? sender, EventArgs e)
-        {
-            //Vector3D lookedAtPoint = ThreeDViewer.ModelCamera.LookDirection;
-            //Point3D? cameraPosition = ThreeDViewer.ModelCamera.Position;
-
-        }
-
         private void ShowGridlinesCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (ShowGridlinesCheck.Checked)
@@ -568,6 +551,11 @@ namespace RealmStudio
                 AnimationEnabled = false;
             }
         }
+
+
+        #endregion
+
+        #region Form Control Event Handlers (World Globe specific)
 
         private void LoadBackgroundButton_Click(object sender, EventArgs e)
         {
@@ -658,75 +646,6 @@ namespace RealmStudio
             }
         }
 
-        private void RemoveCloudLayer()
-        {
-            if (ThreeDViewer.HelixTKViewport.Children.Count > 1)
-            {
-                // find and remove the cloud layer
-                for (int i = 0; i < ThreeDViewer.HelixTKViewport.Children.Count; i++)
-                {
-                    if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3d && sv3d.GetName() == "CloudLayer")
-                    {
-                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
-                        break;
-                    }
-                }
-            }
-        }
-
-        private void ShowCloudLayer()
-        {
-            RemoveCloudLayer();
-
-            SphereVisual3D cloudLayer = new()
-            {
-                Center = new Point3D(0, 0, 0),
-                Radius = 1.05,
-                ThetaDiv = 90,
-                PhiDiv = 45,
-                BackMaterial = new DiffuseMaterial(new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent))
-            };
-
-            cloudLayer.SetName("CloudLayer");
-
-            System.Windows.Media.Color materialColor = System.Windows.Media.Color.FromArgb((byte)cloudTextureOpacity, cloudColor.R, cloudColor.G, cloudColor.B);
-
-            if (DefaultCloudTextureRadio.Checked)
-            {
-                BitmapImage cloudImage = new();
-                using MemoryStream ms = new();
-                ms.Write(Resources.cloud_combined_2048, 0, Resources.cloud_combined_2048.Length);
-                cloudImage.BeginInit();
-                cloudImage.StreamSource = new MemoryStream(ms.ToArray());
-                cloudImage.EndInit();
-
-                cloudLayer.Material = new EmissiveMaterial(new ImageBrush(cloudImage))
-                {
-                    Color = materialColor
-                };
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(CloudTextureFileName))
-                {
-                    BitmapImage cloudImage = new();
-                    cloudImage.BeginInit();
-                    cloudImage.UriSource = new Uri(CloudTextureFileName, UriKind.Absolute);
-                    cloudImage.EndInit();
-                    cloudLayer.Material = new EmissiveMaterial(new ImageBrush(cloudImage))
-                    {
-                        Color = materialColor
-                    };
-                }
-                else
-                {
-                    MessageBox.Show("No cloud texture file selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-
-            ThreeDViewer.HelixTKViewport.Children.Add(cloudLayer);
-        }
-
         private void ShowHideCloudPanelButton_Click(object sender, EventArgs e)
         {
             CloudsPanel.Visible = !CloudsPanel.Visible;
@@ -813,206 +732,6 @@ namespace RealmStudio
             FeaturesPanel.Visible = !FeaturesPanel.Visible;
         }
 
-        private void ExpandStarGroup_Click(object sender, EventArgs e)
-        {
-            LocalStarGroup.Dock = LocalStarGroup.Dock == DockStyle.None ? DockStyle.Fill : DockStyle.None;
-
-            if (LocalStarGroup.Dock == DockStyle.Fill)
-            {
-                LocalStarGroup.Visible = true;
-                ExpandStarGroup.IconChar = FontAwesome.Sharp.IconChar.MinusSquare;
-
-                AtmosphereGroup.Visible = false;
-                AtmosphereGroup.Dock = DockStyle.None;
-
-                RingGroup.Visible = false;
-                RingGroup.Dock = DockStyle.None;
-
-                EffectsGroup.Visible = false;
-                EffectsGroup.Dock = DockStyle.None;
-
-                MoonGroup.Visible = false;
-                MoonGroup.Dock = DockStyle.None;
-            }
-            else
-            {
-                ExpandStarGroup.IconChar = FontAwesome.Sharp.IconChar.PlusSquare;
-                LocalStarGroup.Visible = true;
-
-                AtmosphereGroup.Visible = true;
-                AtmosphereGroup.Dock = DockStyle.None;
-
-                RingGroup.Visible = true;
-                RingGroup.Dock = DockStyle.None;
-
-                EffectsGroup.Visible = true;
-                EffectsGroup.Dock = DockStyle.None;
-
-                MoonGroup.Visible = true;
-                MoonGroup.Dock = DockStyle.None;
-            }
-        }
-
-        private void ExpandAtmosphereGroup_Click(object sender, EventArgs e)
-        {
-            AtmosphereGroup.Dock = AtmosphereGroup.Dock == DockStyle.None ? DockStyle.Fill : DockStyle.None;
-
-            if (AtmosphereGroup.Dock == DockStyle.Fill)
-            {
-                AtmosphereGroup.Visible = true;
-                ExpandAtmosphereGroup.IconChar = FontAwesome.Sharp.IconChar.MinusSquare;
-
-                LocalStarGroup.Visible = false;
-                LocalStarGroup.Dock = DockStyle.None;
-
-                RingGroup.Visible = false;
-                RingGroup.Dock = DockStyle.None;
-
-                EffectsGroup.Visible = false;
-                EffectsGroup.Dock = DockStyle.None;
-
-                MoonGroup.Visible = false;
-                MoonGroup.Dock = DockStyle.None;
-            }
-            else
-            {
-                ExpandAtmosphereGroup.IconChar = FontAwesome.Sharp.IconChar.PlusSquare;
-                AtmosphereGroup.Visible = true;
-
-                LocalStarGroup.Visible = true;
-                LocalStarGroup.Dock = DockStyle.None;
-
-                RingGroup.Visible = true;
-                RingGroup.Dock = DockStyle.None;
-
-                EffectsGroup.Visible = true;
-                EffectsGroup.Dock = DockStyle.None;
-
-                MoonGroup.Visible = true;
-                MoonGroup.Dock = DockStyle.None;
-            }
-        }
-
-        private void ExpandRingGroup_Click(object sender, EventArgs e)
-        {
-            RingGroup.Dock = RingGroup.Dock == DockStyle.None ? DockStyle.Fill : DockStyle.None;
-
-            if (RingGroup.Dock == DockStyle.Fill)
-            {
-                RingGroup.Visible = true;
-                ExpandRingGroup.IconChar = FontAwesome.Sharp.IconChar.MinusSquare;
-
-                LocalStarGroup.Visible = false;
-                LocalStarGroup.Dock = DockStyle.None;
-
-                AtmosphereGroup.Visible = false;
-                AtmosphereGroup.Dock = DockStyle.None;
-
-                EffectsGroup.Visible = false;
-                EffectsGroup.Dock = DockStyle.None;
-
-                MoonGroup.Visible = false;
-                MoonGroup.Dock = DockStyle.None;
-            }
-            else
-            {
-                RingGroup.Visible = true;
-                ExpandRingGroup.IconChar = FontAwesome.Sharp.IconChar.PlusSquare;
-
-                LocalStarGroup.Visible = true;
-                LocalStarGroup.Dock = DockStyle.None;
-
-                AtmosphereGroup.Visible = true;
-                AtmosphereGroup.Dock = DockStyle.None;
-
-                EffectsGroup.Visible = true;
-                EffectsGroup.Dock = DockStyle.None;
-
-                MoonGroup.Visible = true;
-                MoonGroup.Dock = DockStyle.None;
-            }
-        }
-
-        private void ExpandEffectsGroup_Click(object sender, EventArgs e)
-        {
-            EffectsGroup.Dock = EffectsGroup.Dock == DockStyle.None ? DockStyle.Fill : DockStyle.None;
-
-            if (EffectsGroup.Dock == DockStyle.Fill)
-            {
-                EffectsGroup.Visible = true;
-                ExpandEffectsGroup.IconChar = FontAwesome.Sharp.IconChar.MinusSquare;
-
-                LocalStarGroup.Visible = false;
-                LocalStarGroup.Dock = DockStyle.None;
-
-                AtmosphereGroup.Visible = false;
-                AtmosphereGroup.Dock = DockStyle.None;
-
-                RingGroup.Visible = false;
-                RingGroup.Dock = DockStyle.None;
-
-                MoonGroup.Visible = false;
-                MoonGroup.Dock = DockStyle.None;
-            }
-            else
-            {
-                EffectsGroup.Visible = true;
-                ExpandEffectsGroup.IconChar = FontAwesome.Sharp.IconChar.PlusSquare;
-
-                LocalStarGroup.Visible = true;
-                LocalStarGroup.Dock = DockStyle.None;
-
-                AtmosphereGroup.Visible = true;
-                AtmosphereGroup.Dock = DockStyle.None;
-
-                RingGroup.Visible = true;
-                RingGroup.Dock = DockStyle.None;
-
-                MoonGroup.Visible = true;
-                MoonGroup.Dock = DockStyle.None;
-            }
-        }
-
-        private void ExpandMoonGroup_Click(object sender, EventArgs e)
-        {
-            MoonGroup.Dock = MoonGroup.Dock == DockStyle.None ? DockStyle.Fill : DockStyle.None;
-
-            if (MoonGroup.Dock == DockStyle.Fill)
-            {
-                MoonGroup.Visible = true;
-                ExpandMoonGroup.IconChar = FontAwesome.Sharp.IconChar.MinusSquare;
-
-                LocalStarGroup.Visible = false;
-                LocalStarGroup.Dock = DockStyle.None;
-
-                AtmosphereGroup.Visible = false;
-                AtmosphereGroup.Dock = DockStyle.None;
-
-                RingGroup.Visible = false;
-                RingGroup.Dock = DockStyle.None;
-
-                EffectsGroup.Visible = false;
-                EffectsGroup.Dock = DockStyle.None;
-            }
-            else
-            {
-                MoonGroup.Visible = true;
-                ExpandMoonGroup.IconChar = FontAwesome.Sharp.IconChar.PlusSquare;
-
-                LocalStarGroup.Visible = true;
-                LocalStarGroup.Dock = DockStyle.None;
-
-                AtmosphereGroup.Visible = true;
-                AtmosphereGroup.Dock = DockStyle.None;
-
-                RingGroup.Visible = true;
-                RingGroup.Dock = DockStyle.None;
-
-                EffectsGroup.Visible = true;
-                EffectsGroup.Dock = DockStyle.None;
-            }
-        }
-
         private void EnableSunlightSwitch_CheckedChanged()
         {
             if (EnableSunlightSwitch.Checked)
@@ -1023,34 +742,6 @@ namespace RealmStudio
             {
                 RemoveSunlight();
             }
-        }
-
-        private void RemoveSunlight()
-        {
-            if (ThreeDViewer.HelixTKViewport.Children.Count > 1)
-            {
-                // find the sunlight directional light
-                for (int i = 0; i < ThreeDViewer.HelixTKViewport.Children.Count; i++)
-                {
-                    if (ThreeDViewer.HelixTKViewport.Children[i] is ModelVisual3D m3d && m3d.Content is DirectionalLight dl && dl.GetName() == "Sunlight")
-                    {
-                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
-                        break;
-                    }
-                }
-            }
-        }
-
-        private void ShowSunlight()
-        {
-            // directional light
-            // -Y is left, -Z is up
-            DirectionalLight directionalLight = new DirectionalLight(Colors.White, new Vector3D(0, -3, 0));
-            directionalLight.SetName("Sunlight");
-            ThreeDViewer.HelixTKViewport.Children.Add(new ModelVisual3D
-            {
-                Content = directionalLight
-            });
         }
 
         private void SunlightHorizontalDirectionTrack_Scroll(object sender, EventArgs e)
@@ -1130,6 +821,315 @@ namespace RealmStudio
             }
         }
 
+        private void AmbientLightColorButton_Click(object sender, EventArgs e)
+        {
+            System.Drawing.Color c = UtilityMethods.SelectColorFromDialog(this, System.Drawing.Color.FromArgb(ambientLightColor.A, ambientLightColor.R, ambientLightColor.G, ambientLightColor.B));
+            if (c != System.Drawing.Color.Empty)
+            {
+                AmbientLightColorButton.BackColor = c;
+                ambientLightColor = System.Windows.Media.Color.FromArgb(c.A, c.R, c.G, c.B);
+
+                if (ThreeDViewer.HelixTKViewport.Children.Count > 1)
+                {
+                    // find the ambient light
+                    foreach (var child in ThreeDViewer.HelixTKViewport.Children)
+                    {
+                        if (child is ModelVisual3D m3d && m3d.Content is AmbientLight al && al.GetName() == "AmbientLight")
+                        {
+                            al.Color = ambientLightColor;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void LoadWorldTextureButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog ofd = new()
+                {
+                    Title = "Open 3D View Background Image",
+                    DefaultExt = "png",
+                    CheckFileExists = true,
+                    RestoreDirectory = true,
+                    ShowHelp = false,           // enabling the help button causes the dialog not to display files
+                    Multiselect = false,
+                    Filter = UtilityMethods.GetCommonImageFilter()
+                };
+
+                if (ofd.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (ofd.FileName != "")
+                    {
+                        try
+                        {
+                            SphereVisual3D worldGlobe = new()
+                            {
+                                Center = new Point3D(0, 0, 0),
+                                Radius = 1,
+                                ThetaDiv = 180,
+                                PhiDiv = 90
+                            };
+
+                            worldGlobe.SetName("WorldGlobe");
+
+                            BitmapImage b = new();
+                            b.BeginInit();
+                            b.UriSource = new Uri(ofd.FileName, UriKind.Absolute);
+                            b.EndInit();
+
+                            worldGlobe.Material = new DiffuseMaterial(new ImageBrush(b));
+
+                            ThreeDViewer.HelixTKViewport.Children.Clear();
+
+                            ThreeDViewer.HelixTKViewport.Children.Add(worldGlobe);
+
+                            if (EnableAmbientLightSwitch.Checked)
+                            {
+                                ShowAmbientLight();
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.LOGGER.Error(ex);
+                            throw;
+                        }
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void CaptureSnapshotButton_Click(object sender, EventArgs e)
+        {
+            SKBitmap? formattedBackground = null;
+
+            if (sceneBackground != null)
+            {
+                formattedBackground = DrawingMethods.ResizeSKBitmap(sceneBackground.ToSKBitmap(),
+                    new SKSizeI((int)ThreeDViewer.HelixTKViewport.ActualWidth, (int)ThreeDViewer.HelixTKViewport.ActualHeight));
+            }
+
+            // take a snapshot of the 3D view
+            using SKBitmap frameBitmap = new((int)ThreeDViewer.HelixTKViewport.ActualWidth, (int)ThreeDViewer.HelixTKViewport.ActualHeight);
+            using SKCanvas canvas = new(frameBitmap);
+
+            RenderTargetBitmap rtb = new(
+                (int)ThreeDViewer.HelixTKViewport.Viewport.ActualWidth,
+                (int)ThreeDViewer.HelixTKViewport.Viewport.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+
+            rtb.Render(ThreeDViewer.HelixTKViewport.Viewport);
+
+            using Bitmap? b = DrawingMethods.BitmapSourceToBitmap(rtb);
+
+            if (b != null)
+            {
+                if (formattedBackground != null)
+                {
+                    // composite the background onto the frameBitmap
+                    canvas.DrawBitmap(formattedBackground, 0, 0);
+                }
+
+                canvas.DrawBitmap(b.ToSKBitmap(), 0, 0);
+            }
+
+            // save the snapshot to a file
+            SaveFileDialog sfd = new()
+            {
+                DefaultExt = "png",
+                CheckWriteAccess = true,
+                ExpandedMode = true,
+                AddExtension = true,
+                SupportMultiDottedExtensions = false,
+                AddToRecent = true,
+                Filter = UtilityMethods.GetCommonImageFilter(),
+                Title = "Save World Globe Snapshot",
+                FilterIndex = 3,
+            };
+
+            DialogResult sfdresult = sfd.ShowDialog();
+
+            if (sfdresult == DialogResult.OK)
+            {
+                FileStream fs = new(sfd.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
+
+                switch (Path.GetExtension(sfd.FileName).ToLower(System.Globalization.CultureInfo.CurrentCulture))
+                {
+                    case ".jpg":
+                    case ".jpeg":
+                    case ".jfif":
+                    case ".jpe:":
+                        frameBitmap.Encode(fs, SKEncodedImageFormat.Jpeg, 100);
+                        break;
+                    case ".png":
+                        frameBitmap.Encode(fs, SKEncodedImageFormat.Png, 100);
+                        break;
+                    case ".bmp":
+                    case ".dib":
+                    case ".rle":
+                        frameBitmap.Encode(fs, SKEncodedImageFormat.Bmp, 100);
+                        break;
+                    case ".gif":
+                        frameBitmap.Encode(fs, SKEncodedImageFormat.Gif, 100);
+                        break;
+                    default:
+                        frameBitmap.Encode(fs, SKEncodedImageFormat.Png, 100);
+                        break;
+                }
+
+                ModelStatisticsLabel.Text = "Snapshot saved: " + Path.GetFileName(sfd.FileName);
+                ModelStatisticsLabel.Refresh();
+            }
+
+        }
+
+        #endregion
+
+        #region World Globe Methods
+
+        internal void ShowWorldGlobe(SKBitmap worldTexture)
+        {
+            // change to Z-up for the camera
+
+            ThreeDViewer.ModelCamera.UpDirection = new Vector3D(0, 0, 1);
+
+            SphereVisual3D worldGlobe = new()
+            {
+                Center = new Point3D(0, 0, 0),
+                Radius = 1,
+                ThetaDiv = 180,
+                PhiDiv = 90
+            };
+
+            worldGlobe.SetName("WorldGlobe");
+
+            // transform the world map texture to a BitmapImage;
+            // converting the bitmap to a stream, then saving the stream to a BitmapImage
+            // is really weird, but that's apparently the only way to do it without saving the bitmap to a file
+            BitmapImage bImage = new();
+            using MemoryStream ms = new();
+            worldTexture.ToBitmap().Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            bImage.BeginInit();
+            bImage.StreamSource = new MemoryStream(ms.ToArray());
+            bImage.EndInit();
+
+            worldGlobe.Material = new DiffuseMaterial(new ImageBrush(bImage));
+
+            ThreeDViewer.HelixTKViewport.Children.Clear();
+
+            ThreeDViewer.HelixTKViewport.Children.Add(worldGlobe);
+
+            if (EnableAmbientLightSwitch.Checked)
+            {
+                ShowAmbientLight();
+            }
+
+            ThreeDViewer.HelixTKViewport.ResetCamera();
+            ThreeDViewer.ModelCamera.UpDirection = new Vector3D(0, 0, 1);
+            ThreeDViewer.ModelCamera.LookDirection = new Vector3D(1, 0, 0);
+            ThreeDViewer.ModelCamera.Position = new Point3D(-6, 0, 0);
+        }
+
+        private void RemoveCloudLayer()
+        {
+            if (ThreeDViewer.HelixTKViewport.Children.Count > 1)
+            {
+                // find and remove the cloud layer
+                for (int i = 0; i < ThreeDViewer.HelixTKViewport.Children.Count; i++)
+                {
+                    if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3d && sv3d.GetName() == "CloudLayer")
+                    {
+                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void ShowCloudLayer()
+        {
+            RemoveCloudLayer();
+
+            SphereVisual3D cloudLayer = new()
+            {
+                Center = new Point3D(0, 0, 0),
+                Radius = 1.05,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = new DiffuseMaterial(new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent))
+            };
+
+            cloudLayer.SetName("CloudLayer");
+
+            System.Windows.Media.Color materialColor = System.Windows.Media.Color.FromArgb((byte)cloudTextureOpacity, cloudColor.R, cloudColor.G, cloudColor.B);
+
+            if (DefaultCloudTextureRadio.Checked)
+            {
+                BitmapImage cloudImage = new();
+                using MemoryStream ms = new();
+                ms.Write(Resources.cloud_combined_2048, 0, Resources.cloud_combined_2048.Length);
+                cloudImage.BeginInit();
+                cloudImage.StreamSource = new MemoryStream(ms.ToArray());
+                cloudImage.EndInit();
+
+                cloudLayer.Material = new EmissiveMaterial(new ImageBrush(cloudImage))
+                {
+                    Color = materialColor
+                };
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(CloudTextureFileName))
+                {
+                    BitmapImage cloudImage = new();
+                    cloudImage.BeginInit();
+                    cloudImage.UriSource = new Uri(CloudTextureFileName, UriKind.Absolute);
+                    cloudImage.EndInit();
+                    cloudLayer.Material = new EmissiveMaterial(new ImageBrush(cloudImage))
+                    {
+                        Color = materialColor
+                    };
+                }
+                else
+                {
+                    MessageBox.Show("No cloud texture file selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            ThreeDViewer.HelixTKViewport.Children.Add(cloudLayer);
+        }
+
+        private void RemoveSunlight()
+        {
+            if (ThreeDViewer.HelixTKViewport.Children.Count > 1)
+            {
+                // find the sunlight directional light
+                for (int i = 0; i < ThreeDViewer.HelixTKViewport.Children.Count; i++)
+                {
+                    if (ThreeDViewer.HelixTKViewport.Children[i] is ModelVisual3D m3d && m3d.Content is DirectionalLight dl && dl.GetName() == "Sunlight")
+                    {
+                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void ShowSunlight()
+        {
+            // directional light
+            // -Y is left, -Z is up
+            DirectionalLight directionalLight = new DirectionalLight(Colors.White, new Vector3D(0, -3, 0));
+            directionalLight.SetName("Sunlight");
+            ThreeDViewer.HelixTKViewport.Children.Add(new ModelVisual3D
+            {
+                Content = directionalLight
+            });
+        }
+
         private void RemoveAmbientLight()
         {
             if (ThreeDViewer.HelixTKViewport.Children.Count > 1)
@@ -1157,28 +1157,9 @@ namespace RealmStudio
             });
         }
 
-        private void AmbientLightColorButton_Click(object sender, EventArgs e)
-        {
-            System.Drawing.Color c = UtilityMethods.SelectColorFromDialog(this, System.Drawing.Color.FromArgb(ambientLightColor.A, ambientLightColor.R, ambientLightColor.G, ambientLightColor.B));
-            if (c != System.Drawing.Color.Empty)
-            {
-                AmbientLightColorButton.BackColor = c;
-                ambientLightColor = System.Windows.Media.Color.FromArgb(c.A, c.R, c.G, c.B);
+        #endregion
 
-                if (ThreeDViewer.HelixTKViewport.Children.Count > 1)
-                {
-                    // find the ambient light
-                    foreach (var child in ThreeDViewer.HelixTKViewport.Children)
-                    {
-                        if (child is ModelVisual3D m3d && m3d.Content is AmbientLight al && al.GetName() == "AmbientLight")
-                        {
-                            al.Color = ambientLightColor;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+        #region AVI Recording
 
         private void RecordButton_Click(object sender, EventArgs e)
         {
@@ -1224,8 +1205,8 @@ namespace RealmStudio
                 SaveModelButton.Enabled = false;
                 ResetCameraButton.Enabled = false;
                 ChangeAxesButton.Enabled = false;
-                LoadBackgroundButton.Enabled = false;
-                ClearBackgroundButton.Enabled = false;
+                LoadSceneTextureButton.Enabled = false;
+                ResetSceneButton.Enabled = false;
                 ShowHideLightingPanelButton.Enabled = false;
                 ShowHideCloudPanelButton.Enabled = false;
                 ShowHideFeaturesButton.Enabled = false;
@@ -1233,9 +1214,9 @@ namespace RealmStudio
                 EnableAnimationSwitch.Enabled = false;
                 RotationRateUpDown.Enabled = false;
                 FrameRateCombo.Enabled = false;
+                LoadWorldTextureButton.Enabled = false;
                 CloseFormButton.Enabled = false;
                 ThreeDViewControlBox.Enabled = false;
-
 
                 SphereVisual3D? cloudLayer = null;
 
@@ -1306,8 +1287,8 @@ namespace RealmStudio
                 SaveModelButton.Enabled = true;
                 ResetCameraButton.Enabled = true;
                 ChangeAxesButton.Enabled = true;
-                LoadBackgroundButton.Enabled = true;
-                ClearBackgroundButton.Enabled = true;
+                LoadSceneTextureButton.Enabled = true;
+                ResetSceneButton.Enabled = true;
                 ShowHideLightingPanelButton.Enabled = true;
                 ShowHideCloudPanelButton.Enabled = true;
                 ShowHideFeaturesButton.Enabled = true;
@@ -1315,6 +1296,7 @@ namespace RealmStudio
                 EnableAnimationSwitch.Enabled = true;
                 RotationRateUpDown.Enabled = true;
                 FrameRateCombo.Enabled = true;
+                LoadWorldTextureButton.Enabled = true;
                 CloseFormButton.Enabled = true;
                 ThreeDViewControlBox.Enabled = true;
 
@@ -1322,6 +1304,9 @@ namespace RealmStudio
 
                 ModelStatisticsLabel.Text = "Video complete.";
                 ModelStatisticsLabel.Refresh();
+
+                RecordingProgressBar.Value = 0;
+                RecordingProgressBar.Refresh();
 
                 DialogResult result = DialogResult.OK;
                 if (frameCount < frames)
@@ -1397,6 +1382,9 @@ namespace RealmStudio
 
                     ModelStatisticsLabel.Text = $"Recording video: {frameCount} of {frames} frames.";
                     ModelStatisticsLabel.Refresh();
+
+                    RecordingProgressBar.Value = (int)((double)frameCount / frames * 100.0);
+                    RecordingProgressBar.Refresh();
                 }
             }
         }
@@ -1473,5 +1461,7 @@ namespace RealmStudio
                 }
             }
         }
+
+        #endregion
     }
 }
