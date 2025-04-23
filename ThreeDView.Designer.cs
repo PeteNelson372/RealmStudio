@@ -31,6 +31,7 @@
             ThreeDViewOverlay = new ReaLTaiizor.Forms.DungeonForm();
             RecordingProgressBar = new ProgressBar();
             groupBox2 = new GroupBox();
+            CaptureSnapshotButton = new FontAwesome.Sharp.IconButton();
             ShowGridlinesCheck = new CheckBox();
             ShowHideLightingPanelButton = new FontAwesome.Sharp.IconButton();
             ResetSceneButton = new FontAwesome.Sharp.IconButton();
@@ -58,6 +59,25 @@
             CloseFormButton = new Button();
             TDContainerPanel = new Panel();
             FeaturesPanel = new Panel();
+            FeaturesTab = new TabControl();
+            LocalStarPage = new TabPage();
+            label18 = new Label();
+            LocalStarLightIntensityTrack = new TrackBar();
+            LocalStarColorButton = new FontAwesome.Sharp.IconButton();
+            label17 = new Label();
+            LocalStarSizeTrack = new TrackBar();
+            label15 = new Label();
+            LocalStarLocationUDTrack = new TrackBar();
+            label16 = new Label();
+            LocalStarLocationLRTrack = new TrackBar();
+            label14 = new Label();
+            LocalStarTextureCombo = new ComboBox();
+            label13 = new Label();
+            ShowLocalStarSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            AtmospherePage = new TabPage();
+            EffectsPage = new TabPage();
+            RingPage = new TabPage();
+            MoonPage = new TabPage();
             LightingPanel = new Panel();
             LightingGroup = new GroupBox();
             label12 = new Label();
@@ -85,15 +105,6 @@
             DefaultCloudTextureRadio = new RadioButton();
             label4 = new Label();
             EnableCloudsSwitch = new ReaLTaiizor.Controls.CyberSwitch();
-            FeaturesTab = new TabControl();
-            LocalStarPage = new TabPage();
-            AtmospherePage = new TabPage();
-            EffectsPage = new TabPage();
-            RingPage = new TabPage();
-            MoonPage = new TabPage();
-            ShowLocalStarSwitch = new ReaLTaiizor.Controls.CyberSwitch();
-            label13 = new Label();
-            CaptureSnapshotButton = new FontAwesome.Sharp.IconButton();
             ThreeDViewOverlay.SuspendLayout();
             groupBox2.SuspendLayout();
             AnimationGroup.SuspendLayout();
@@ -102,6 +113,12 @@
             ModelGroup.SuspendLayout();
             TDContainerPanel.SuspendLayout();
             FeaturesPanel.SuspendLayout();
+            FeaturesTab.SuspendLayout();
+            LocalStarPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)LocalStarLightIntensityTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)LocalStarSizeTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)LocalStarLocationUDTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)LocalStarLocationLRTrack).BeginInit();
             LightingPanel.SuspendLayout();
             LightingGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SunlightVerticalDirectionTrack).BeginInit();
@@ -110,8 +127,6 @@
             CloudsGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)CloudRotationRateUpDown).BeginInit();
             ((System.ComponentModel.ISupportInitialize)CloudTextureOpacityTrack).BeginInit();
-            FeaturesTab.SuspendLayout();
-            LocalStarPage.SuspendLayout();
             SuspendLayout();
             // 
             // ThreeDViewOverlay
@@ -170,6 +185,22 @@
             groupBox2.TabIndex = 63;
             groupBox2.TabStop = false;
             groupBox2.Text = "Scene";
+            // 
+            // CaptureSnapshotButton
+            // 
+            CaptureSnapshotButton.BackColor = Color.FromArgb(244, 241, 243);
+            CaptureSnapshotButton.Font = new Font("Segoe UI Black", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            CaptureSnapshotButton.ForeColor = SystemColors.Control;
+            CaptureSnapshotButton.IconChar = FontAwesome.Sharp.IconChar.CameraAlt;
+            CaptureSnapshotButton.IconColor = Color.Black;
+            CaptureSnapshotButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            CaptureSnapshotButton.IconSize = 32;
+            CaptureSnapshotButton.Location = new Point(72, 92);
+            CaptureSnapshotButton.Name = "CaptureSnapshotButton";
+            CaptureSnapshotButton.Size = new Size(60, 60);
+            CaptureSnapshotButton.TabIndex = 72;
+            CaptureSnapshotButton.UseVisualStyleBackColor = false;
+            CaptureSnapshotButton.Click += CaptureSnapshotButton_Click;
             // 
             // ShowGridlinesCheck
             // 
@@ -561,6 +592,271 @@
             FeaturesPanel.Size = new Size(200, 302);
             FeaturesPanel.TabIndex = 2;
             FeaturesPanel.Visible = false;
+            // 
+            // FeaturesTab
+            // 
+            FeaturesTab.Alignment = TabAlignment.Left;
+            FeaturesTab.Controls.Add(LocalStarPage);
+            FeaturesTab.Controls.Add(AtmospherePage);
+            FeaturesTab.Controls.Add(EffectsPage);
+            FeaturesTab.Controls.Add(RingPage);
+            FeaturesTab.Controls.Add(MoonPage);
+            FeaturesTab.Dock = DockStyle.Fill;
+            FeaturesTab.Font = new Font("MS Reference Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FeaturesTab.Location = new Point(0, 0);
+            FeaturesTab.Multiline = true;
+            FeaturesTab.Name = "FeaturesTab";
+            FeaturesTab.SelectedIndex = 0;
+            FeaturesTab.Size = new Size(200, 302);
+            FeaturesTab.TabIndex = 0;
+            // 
+            // LocalStarPage
+            // 
+            LocalStarPage.BackColor = Color.FromArgb(244, 241, 243);
+            LocalStarPage.Controls.Add(label18);
+            LocalStarPage.Controls.Add(LocalStarLightIntensityTrack);
+            LocalStarPage.Controls.Add(LocalStarColorButton);
+            LocalStarPage.Controls.Add(label17);
+            LocalStarPage.Controls.Add(LocalStarSizeTrack);
+            LocalStarPage.Controls.Add(label15);
+            LocalStarPage.Controls.Add(LocalStarLocationUDTrack);
+            LocalStarPage.Controls.Add(label16);
+            LocalStarPage.Controls.Add(LocalStarLocationLRTrack);
+            LocalStarPage.Controls.Add(label14);
+            LocalStarPage.Controls.Add(LocalStarTextureCombo);
+            LocalStarPage.Controls.Add(label13);
+            LocalStarPage.Controls.Add(ShowLocalStarSwitch);
+            LocalStarPage.ForeColor = SystemColors.ControlDarkDark;
+            LocalStarPage.Location = new Point(24, 4);
+            LocalStarPage.Name = "LocalStarPage";
+            LocalStarPage.Padding = new Padding(3);
+            LocalStarPage.Size = new Size(172, 294);
+            LocalStarPage.TabIndex = 0;
+            LocalStarPage.Text = "Local Star";
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label18.ForeColor = SystemColors.ControlDarkDark;
+            label18.Location = new Point(81, 241);
+            label18.Name = "label18";
+            label18.Size = new Size(52, 15);
+            label18.TabIndex = 82;
+            label18.Text = "Intensity";
+            // 
+            // LocalStarLightIntensityTrack
+            // 
+            LocalStarLightIntensityTrack.AutoSize = false;
+            LocalStarLightIntensityTrack.BackColor = SystemColors.Control;
+            LocalStarLightIntensityTrack.Location = new Point(76, 259);
+            LocalStarLightIntensityTrack.Maximum = 359;
+            LocalStarLightIntensityTrack.Name = "LocalStarLightIntensityTrack";
+            LocalStarLightIntensityTrack.RightToLeft = RightToLeft.No;
+            LocalStarLightIntensityTrack.Size = new Size(90, 20);
+            LocalStarLightIntensityTrack.TabIndex = 81;
+            LocalStarLightIntensityTrack.TickStyle = TickStyle.None;
+            LocalStarLightIntensityTrack.Scroll += LocalStarLightIntensityTrack_Scroll;
+            // 
+            // LocalStarColorButton
+            // 
+            LocalStarColorButton.BackColor = Color.White;
+            LocalStarColorButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LocalStarColorButton.ForeColor = SystemColors.ControlDarkDark;
+            LocalStarColorButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            LocalStarColorButton.IconColor = Color.Tan;
+            LocalStarColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LocalStarColorButton.IconSize = 32;
+            LocalStarColorButton.Location = new Point(10, 219);
+            LocalStarColorButton.Name = "LocalStarColorButton";
+            LocalStarColorButton.Size = new Size(60, 60);
+            LocalStarColorButton.TabIndex = 80;
+            LocalStarColorButton.Text = "Select Color";
+            LocalStarColorButton.UseVisualStyleBackColor = false;
+            LocalStarColorButton.Click += LocalStarColorButton_Click;
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label17.ForeColor = SystemColors.ControlDarkDark;
+            label17.Location = new Point(6, 93);
+            label17.Name = "label17";
+            label17.Size = new Size(27, 15);
+            label17.TabIndex = 79;
+            label17.Text = "Size";
+            // 
+            // LocalStarSizeTrack
+            // 
+            LocalStarSizeTrack.AutoSize = false;
+            LocalStarSizeTrack.BackColor = SystemColors.Control;
+            LocalStarSizeTrack.Location = new Point(6, 111);
+            LocalStarSizeTrack.Maximum = 100;
+            LocalStarSizeTrack.Name = "LocalStarSizeTrack";
+            LocalStarSizeTrack.RightToLeft = RightToLeft.No;
+            LocalStarSizeTrack.Size = new Size(160, 20);
+            LocalStarSizeTrack.TabIndex = 78;
+            LocalStarSizeTrack.TickStyle = TickStyle.None;
+            LocalStarSizeTrack.Value = 15;
+            LocalStarSizeTrack.Scroll += LocalStarSizeTrack_Scroll;
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label15.ForeColor = SystemColors.ControlDarkDark;
+            label15.Location = new Point(6, 175);
+            label15.Name = "label15";
+            label15.Size = new Size(115, 15);
+            label15.TabIndex = 77;
+            label15.Text = "Location (Up/Down)";
+            // 
+            // LocalStarLocationUDTrack
+            // 
+            LocalStarLocationUDTrack.AutoSize = false;
+            LocalStarLocationUDTrack.BackColor = SystemColors.Control;
+            LocalStarLocationUDTrack.Location = new Point(6, 193);
+            LocalStarLocationUDTrack.Maximum = 359;
+            LocalStarLocationUDTrack.Name = "LocalStarLocationUDTrack";
+            LocalStarLocationUDTrack.RightToLeft = RightToLeft.No;
+            LocalStarLocationUDTrack.Size = new Size(160, 20);
+            LocalStarLocationUDTrack.TabIndex = 76;
+            LocalStarLocationUDTrack.TickStyle = TickStyle.None;
+            LocalStarLocationUDTrack.Scroll += LocalStarLocationUDTrack_Scroll;
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label16.ForeColor = SystemColors.ControlDarkDark;
+            label16.Location = new Point(10, 134);
+            label16.Name = "label16";
+            label16.Size = new Size(117, 15);
+            label16.TabIndex = 75;
+            label16.Text = "Location (Left/Right)";
+            // 
+            // LocalStarLocationLRTrack
+            // 
+            LocalStarLocationLRTrack.AutoSize = false;
+            LocalStarLocationLRTrack.BackColor = SystemColors.Control;
+            LocalStarLocationLRTrack.Location = new Point(6, 152);
+            LocalStarLocationLRTrack.Maximum = 359;
+            LocalStarLocationLRTrack.Name = "LocalStarLocationLRTrack";
+            LocalStarLocationLRTrack.RightToLeft = RightToLeft.No;
+            LocalStarLocationLRTrack.Size = new Size(160, 20);
+            LocalStarLocationLRTrack.TabIndex = 74;
+            LocalStarLocationLRTrack.TickStyle = TickStyle.None;
+            LocalStarLocationLRTrack.Scroll += LocalStarLocationLRTrack_Scroll;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label14.Location = new Point(6, 47);
+            label14.Name = "label14";
+            label14.Size = new Size(45, 15);
+            label14.TabIndex = 67;
+            label14.Text = "Texture";
+            // 
+            // LocalStarTextureCombo
+            // 
+            LocalStarTextureCombo.FormattingEnabled = true;
+            LocalStarTextureCombo.Items.AddRange(new object[] { "Sun", "Nebula", "Gas Giant", "Corona", "Black Hole" });
+            LocalStarTextureCombo.Location = new Point(6, 65);
+            LocalStarTextureCombo.Name = "LocalStarTextureCombo";
+            LocalStarTextureCombo.Size = new Size(160, 23);
+            LocalStarTextureCombo.TabIndex = 66;
+            LocalStarTextureCombo.SelectedIndexChanged += LocalStarTextureCombo_SelectedIndexChanged;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label13.Location = new Point(47, 19);
+            label13.Name = "label13";
+            label13.Size = new Size(90, 15);
+            label13.TabIndex = 65;
+            label13.Text = "Show Local Star";
+            // 
+            // ShowLocalStarSwitch
+            // 
+            ShowLocalStarSwitch.Alpha = 50;
+            ShowLocalStarSwitch.BackColor = Color.Transparent;
+            ShowLocalStarSwitch.Background = true;
+            ShowLocalStarSwitch.Background_WidthPen = 2F;
+            ShowLocalStarSwitch.BackgroundPen = false;
+            ShowLocalStarSwitch.Checked = false;
+            ShowLocalStarSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            ShowLocalStarSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            ShowLocalStarSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            ShowLocalStarSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            ShowLocalStarSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            ShowLocalStarSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            ShowLocalStarSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            ShowLocalStarSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            ShowLocalStarSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowLocalStarSwitch.ColorValue = Color.ForestGreen;
+            ShowLocalStarSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowLocalStarSwitch.Font = new Font("Arial", 11F);
+            ShowLocalStarSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowLocalStarSwitch.Lighting = true;
+            ShowLocalStarSwitch.LinearGradient_Background = false;
+            ShowLocalStarSwitch.LinearGradient_Value = false;
+            ShowLocalStarSwitch.LinearGradientPen = false;
+            ShowLocalStarSwitch.Location = new Point(6, 14);
+            ShowLocalStarSwitch.Name = "ShowLocalStarSwitch";
+            ShowLocalStarSwitch.PenWidth = 10;
+            ShowLocalStarSwitch.RGB = false;
+            ShowLocalStarSwitch.Rounding = true;
+            ShowLocalStarSwitch.RoundingInt = 90;
+            ShowLocalStarSwitch.Size = new Size(35, 20);
+            ShowLocalStarSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowLocalStarSwitch.TabIndex = 64;
+            ShowLocalStarSwitch.Tag = "Cyber";
+            ShowLocalStarSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowLocalStarSwitch.Timer_RGB = 300;
+            ShowLocalStarSwitch.CheckedChanged += ShowLocalStarSwitch_CheckedChanged;
+            // 
+            // AtmospherePage
+            // 
+            AtmospherePage.BackColor = Color.FromArgb(244, 241, 243);
+            AtmospherePage.ForeColor = SystemColors.ControlDarkDark;
+            AtmospherePage.Location = new Point(24, 4);
+            AtmospherePage.Name = "AtmospherePage";
+            AtmospherePage.Padding = new Padding(3);
+            AtmospherePage.Size = new Size(172, 294);
+            AtmospherePage.TabIndex = 1;
+            AtmospherePage.Text = "Atmosphere";
+            // 
+            // EffectsPage
+            // 
+            EffectsPage.BackColor = Color.FromArgb(244, 241, 243);
+            EffectsPage.ForeColor = SystemColors.ControlDarkDark;
+            EffectsPage.Location = new Point(24, 4);
+            EffectsPage.Name = "EffectsPage";
+            EffectsPage.Size = new Size(172, 294);
+            EffectsPage.TabIndex = 2;
+            EffectsPage.Text = "Effects";
+            // 
+            // RingPage
+            // 
+            RingPage.BackColor = Color.FromArgb(244, 241, 243);
+            RingPage.ForeColor = SystemColors.ControlDarkDark;
+            RingPage.Location = new Point(24, 4);
+            RingPage.Name = "RingPage";
+            RingPage.Size = new Size(172, 294);
+            RingPage.TabIndex = 3;
+            RingPage.Text = "Ring";
+            // 
+            // MoonPage
+            // 
+            MoonPage.BackColor = Color.FromArgb(244, 241, 243);
+            MoonPage.ForeColor = SystemColors.ControlDarkDark;
+            MoonPage.Location = new Point(24, 4);
+            MoonPage.Name = "MoonPage";
+            MoonPage.Size = new Size(172, 294);
+            MoonPage.TabIndex = 4;
+            MoonPage.Text = "Moon";
             // 
             // LightingPanel
             // 
@@ -1002,141 +1298,6 @@
             EnableCloudsSwitch.Timer_RGB = 300;
             EnableCloudsSwitch.CheckedChanged += EnableCloudsSwitch_CheckedChanged;
             // 
-            // FeaturesTab
-            // 
-            FeaturesTab.Alignment = TabAlignment.Left;
-            FeaturesTab.Controls.Add(LocalStarPage);
-            FeaturesTab.Controls.Add(AtmospherePage);
-            FeaturesTab.Controls.Add(EffectsPage);
-            FeaturesTab.Controls.Add(RingPage);
-            FeaturesTab.Controls.Add(MoonPage);
-            FeaturesTab.Dock = DockStyle.Fill;
-            FeaturesTab.Font = new Font("MS Reference Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            FeaturesTab.Location = new Point(0, 0);
-            FeaturesTab.Multiline = true;
-            FeaturesTab.Name = "FeaturesTab";
-            FeaturesTab.SelectedIndex = 0;
-            FeaturesTab.Size = new Size(200, 302);
-            FeaturesTab.TabIndex = 0;
-            // 
-            // LocalStarPage
-            // 
-            LocalStarPage.BackColor = Color.FromArgb(244, 241, 243);
-            LocalStarPage.Controls.Add(label13);
-            LocalStarPage.Controls.Add(ShowLocalStarSwitch);
-            LocalStarPage.ForeColor = SystemColors.ControlDarkDark;
-            LocalStarPage.Location = new Point(24, 4);
-            LocalStarPage.Name = "LocalStarPage";
-            LocalStarPage.Padding = new Padding(3);
-            LocalStarPage.Size = new Size(172, 294);
-            LocalStarPage.TabIndex = 0;
-            LocalStarPage.Text = "Local Star";
-            // 
-            // AtmospherePage
-            // 
-            AtmospherePage.BackColor = Color.FromArgb(244, 241, 243);
-            AtmospherePage.ForeColor = SystemColors.ControlDarkDark;
-            AtmospherePage.Location = new Point(24, 4);
-            AtmospherePage.Name = "AtmospherePage";
-            AtmospherePage.Padding = new Padding(3);
-            AtmospherePage.Size = new Size(172, 294);
-            AtmospherePage.TabIndex = 1;
-            AtmospherePage.Text = "Atmosphere";
-            // 
-            // EffectsPage
-            // 
-            EffectsPage.BackColor = Color.FromArgb(244, 241, 243);
-            EffectsPage.ForeColor = SystemColors.ControlDarkDark;
-            EffectsPage.Location = new Point(24, 4);
-            EffectsPage.Name = "EffectsPage";
-            EffectsPage.Size = new Size(172, 294);
-            EffectsPage.TabIndex = 2;
-            EffectsPage.Text = "Effects";
-            // 
-            // RingPage
-            // 
-            RingPage.BackColor = Color.FromArgb(244, 241, 243);
-            RingPage.ForeColor = SystemColors.ControlDarkDark;
-            RingPage.Location = new Point(24, 4);
-            RingPage.Name = "RingPage";
-            RingPage.Size = new Size(172, 294);
-            RingPage.TabIndex = 3;
-            RingPage.Text = "Ring";
-            // 
-            // MoonPage
-            // 
-            MoonPage.BackColor = Color.FromArgb(244, 241, 243);
-            MoonPage.ForeColor = SystemColors.ControlDarkDark;
-            MoonPage.Location = new Point(24, 4);
-            MoonPage.Name = "MoonPage";
-            MoonPage.Size = new Size(172, 294);
-            MoonPage.TabIndex = 4;
-            MoonPage.Text = "Moon";
-            // 
-            // ShowLocalStarSwitch
-            // 
-            ShowLocalStarSwitch.Alpha = 50;
-            ShowLocalStarSwitch.BackColor = Color.Transparent;
-            ShowLocalStarSwitch.Background = true;
-            ShowLocalStarSwitch.Background_WidthPen = 2F;
-            ShowLocalStarSwitch.BackgroundPen = false;
-            ShowLocalStarSwitch.Checked = false;
-            ShowLocalStarSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            ShowLocalStarSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            ShowLocalStarSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            ShowLocalStarSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            ShowLocalStarSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            ShowLocalStarSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            ShowLocalStarSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            ShowLocalStarSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            ShowLocalStarSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            ShowLocalStarSwitch.ColorValue = Color.ForestGreen;
-            ShowLocalStarSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            ShowLocalStarSwitch.Font = new Font("Arial", 11F);
-            ShowLocalStarSwitch.ForeColor = Color.FromArgb(245, 245, 245);
-            ShowLocalStarSwitch.Lighting = true;
-            ShowLocalStarSwitch.LinearGradient_Background = false;
-            ShowLocalStarSwitch.LinearGradient_Value = false;
-            ShowLocalStarSwitch.LinearGradientPen = false;
-            ShowLocalStarSwitch.Location = new Point(6, 14);
-            ShowLocalStarSwitch.Name = "ShowLocalStarSwitch";
-            ShowLocalStarSwitch.PenWidth = 10;
-            ShowLocalStarSwitch.RGB = false;
-            ShowLocalStarSwitch.Rounding = true;
-            ShowLocalStarSwitch.RoundingInt = 90;
-            ShowLocalStarSwitch.Size = new Size(35, 20);
-            ShowLocalStarSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            ShowLocalStarSwitch.TabIndex = 64;
-            ShowLocalStarSwitch.Tag = "Cyber";
-            ShowLocalStarSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            ShowLocalStarSwitch.Timer_RGB = 300;
-            // 
-            // label13
-            // 
-            label13.AutoSize = true;
-            label13.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label13.Location = new Point(47, 19);
-            label13.Name = "label13";
-            label13.Size = new Size(90, 15);
-            label13.TabIndex = 65;
-            label13.Text = "Show Local Star";
-            // 
-            // CaptureSnapshotButton
-            // 
-            CaptureSnapshotButton.BackColor = Color.FromArgb(244, 241, 243);
-            CaptureSnapshotButton.Font = new Font("Segoe UI Black", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            CaptureSnapshotButton.ForeColor = SystemColors.Control;
-            CaptureSnapshotButton.IconChar = FontAwesome.Sharp.IconChar.CameraAlt;
-            CaptureSnapshotButton.IconColor = Color.Black;
-            CaptureSnapshotButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            CaptureSnapshotButton.IconSize = 32;
-            CaptureSnapshotButton.Location = new Point(72, 92);
-            CaptureSnapshotButton.Name = "CaptureSnapshotButton";
-            CaptureSnapshotButton.Size = new Size(60, 60);
-            CaptureSnapshotButton.TabIndex = 72;
-            CaptureSnapshotButton.UseVisualStyleBackColor = false;
-            CaptureSnapshotButton.Click += CaptureSnapshotButton_Click;
-            // 
             // ThreeDView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1167,6 +1328,13 @@
             ModelGroup.ResumeLayout(false);
             TDContainerPanel.ResumeLayout(false);
             FeaturesPanel.ResumeLayout(false);
+            FeaturesTab.ResumeLayout(false);
+            LocalStarPage.ResumeLayout(false);
+            LocalStarPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)LocalStarLightIntensityTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)LocalStarSizeTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)LocalStarLocationUDTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)LocalStarLocationLRTrack).EndInit();
             LightingPanel.ResumeLayout(false);
             LightingGroup.ResumeLayout(false);
             LightingGroup.PerformLayout();
@@ -1177,9 +1345,6 @@
             CloudsGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)CloudRotationRateUpDown).EndInit();
             ((System.ComponentModel.ISupportInitialize)CloudTextureOpacityTrack).EndInit();
-            FeaturesTab.ResumeLayout(false);
-            LocalStarPage.ResumeLayout(false);
-            LocalStarPage.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1251,5 +1416,16 @@
         private Label label13;
         internal ReaLTaiizor.Controls.CyberSwitch ShowLocalStarSwitch;
         private FontAwesome.Sharp.IconButton CaptureSnapshotButton;
+        private Label label14;
+        private ComboBox LocalStarTextureCombo;
+        private Label label15;
+        internal TrackBar LocalStarLocationUDTrack;
+        private Label label16;
+        internal TrackBar LocalStarLocationLRTrack;
+        private Label label18;
+        internal TrackBar LocalStarLightIntensityTrack;
+        internal FontAwesome.Sharp.IconButton LocalStarColorButton;
+        private Label label17;
+        internal TrackBar LocalStarSizeTrack;
     }
 }

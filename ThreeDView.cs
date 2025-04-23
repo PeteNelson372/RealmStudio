@@ -44,6 +44,9 @@ namespace RealmStudio
     public partial class ThreeDView : Form
     {
         private readonly ThreeDViewerControl ThreeDViewer;
+
+        private double initialCameraDistance;
+
         private readonly List<string>? ModelUpdateQueue;
         private string CloudTextureFileName = string.Empty;
 
@@ -73,6 +76,8 @@ namespace RealmStudio
         private IAviVideoStream? videoStream;
         private Bitmap? sceneBackground;
 
+        private readonly LocalStar localStarData = new();
+
         private readonly ModelVisual3D GridlinesModel = new();
         private readonly GridLinesVisual3D GridLines = new()
         {
@@ -96,6 +101,12 @@ namespace RealmStudio
             // construct the WPF ThreeDViewerControl UserControl
             ThreeDViewer = new();
 
+            var camera = ThreeDViewer.HelixTKViewport.Camera as ProjectionCamera;
+            if (camera != null)
+            {
+                initialCameraDistance = camera.Position.ToVector3D().Length;
+            }
+
             FrameRateCombo.SelectedIndex = 4;
         }
 
@@ -109,6 +120,12 @@ namespace RealmStudio
 
             // construct the WPF ThreeDViewerControl UserControl
             ThreeDViewer = new();
+
+            var camera = ThreeDViewer.HelixTKViewport.Camera as ProjectionCamera;
+            if (camera != null)
+            {
+                initialCameraDistance = camera.Position.ToVector3D().Length;
+            }
 
             FrameRateCombo.SelectedIndex = 4;
         }
@@ -234,6 +251,8 @@ namespace RealmStudio
             // this is used when the model is loaded from a file or
             // when the model is updated from the heightmap
 
+            ThreeDViewer.HelixTKViewport.Items.Add(new DefaultLights());
+
             // create a directional light matching the default one in the ThreeDViewerControl
             DirectionalLight light = new()
             {
@@ -274,6 +293,21 @@ namespace RealmStudio
         private void ModelGroup_Changed(object? sender, EventArgs e)
         {
             // no-op at this time
+        }
+
+        #endregion
+
+        #region 3D Model Methods
+        public double GetZoomPercentage()
+        {
+            var camera = ThreeDViewer.HelixTKViewport.Camera as ProjectionCamera;
+            if (camera == null || initialCameraDistance == 0)
+                return 100;
+
+            double currentDistance = camera.Position.ToVector3D().Length;
+            double zoomPercent = (initialCameraDistance / currentDistance) * 100;
+
+            return zoomPercent;
         }
 
         #endregion
@@ -552,11 +586,6 @@ namespace RealmStudio
             }
         }
 
-
-        #endregion
-
-        #region Form Control Event Handlers (World Globe specific)
-
         private void LoadBackgroundButton_Click(object sender, EventArgs e)
         {
             try
@@ -596,6 +625,92 @@ namespace RealmStudio
             }
             catch { }
         }
+
+        private void CaptureSnapshotButton_Click(object sender, EventArgs e)
+        {
+            SKBitmap? formattedBackground = null;
+
+            if (sceneBackground != null)
+            {
+                formattedBackground = DrawingMethods.ResizeSKBitmap(sceneBackground.ToSKBitmap(),
+                    new SKSizeI((int)ThreeDViewer.HelixTKViewport.ActualWidth, (int)ThreeDViewer.HelixTKViewport.ActualHeight));
+            }
+
+            // take a snapshot of the 3D view
+            using SKBitmap frameBitmap = new((int)ThreeDViewer.HelixTKViewport.ActualWidth, (int)ThreeDViewer.HelixTKViewport.ActualHeight);
+            using SKCanvas canvas = new(frameBitmap);
+
+            RenderTargetBitmap rtb = new(
+                (int)ThreeDViewer.HelixTKViewport.Viewport.ActualWidth,
+                (int)ThreeDViewer.HelixTKViewport.Viewport.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+
+            rtb.Render(ThreeDViewer.HelixTKViewport.Viewport);
+
+            using Bitmap? b = DrawingMethods.BitmapSourceToBitmap(rtb);
+
+            if (b != null)
+            {
+                if (formattedBackground != null)
+                {
+                    // composite the background onto the frameBitmap
+                    canvas.DrawBitmap(formattedBackground, 0, 0);
+                }
+
+                canvas.DrawBitmap(b.ToSKBitmap(), 0, 0);
+            }
+
+            // save the snapshot to a file
+            SaveFileDialog sfd = new()
+            {
+                DefaultExt = "png",
+                CheckWriteAccess = true,
+                ExpandedMode = true,
+                AddExtension = true,
+                SupportMultiDottedExtensions = false,
+                AddToRecent = true,
+                Filter = UtilityMethods.GetCommonImageFilter(),
+                Title = "Save World Globe Snapshot",
+                FilterIndex = 3,
+            };
+
+            DialogResult sfdresult = sfd.ShowDialog();
+
+            if (sfdresult == DialogResult.OK)
+            {
+                FileStream fs = new(sfd.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
+
+                switch (Path.GetExtension(sfd.FileName).ToLower(System.Globalization.CultureInfo.CurrentCulture))
+                {
+                    case ".jpg":
+                    case ".jpeg":
+                    case ".jfif":
+                    case ".jpe:":
+                        frameBitmap.Encode(fs, SKEncodedImageFormat.Jpeg, 100);
+                        break;
+                    case ".png":
+                        frameBitmap.Encode(fs, SKEncodedImageFormat.Png, 100);
+                        break;
+                    case ".bmp":
+                    case ".dib":
+                    case ".rle":
+                        frameBitmap.Encode(fs, SKEncodedImageFormat.Bmp, 100);
+                        break;
+                    case ".gif":
+                        frameBitmap.Encode(fs, SKEncodedImageFormat.Gif, 100);
+                        break;
+                    default:
+                        frameBitmap.Encode(fs, SKEncodedImageFormat.Png, 100);
+                        break;
+                }
+
+                ModelStatisticsLabel.Text = "Snapshot saved: " + Path.GetFileName(sfd.FileName);
+                ModelStatisticsLabel.Refresh();
+            }
+        }
+
+        #endregion
+
+        #region Form Control Event Handlers (World Globe specific)
 
         private void FrameRateCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -703,7 +818,14 @@ namespace RealmStudio
 
         private void CustomCloudTextureRadio_CheckedChanged(object sender, EventArgs e)
         {
-            ShowCloudLayer();
+            if (!string.IsNullOrEmpty(CloudTextureFileName))
+            {
+                ShowCloudLayer();
+            }
+            else
+            {
+                CustomCloudTextureRadio.Checked = false;
+            }
         }
 
         private void CloudRotationRateUpDown_ValueChanged(object sender, EventArgs e)
@@ -823,11 +945,10 @@ namespace RealmStudio
 
         private void AmbientLightColorButton_Click(object sender, EventArgs e)
         {
-            System.Drawing.Color c = UtilityMethods.SelectColorFromDialog(this, System.Drawing.Color.FromArgb(ambientLightColor.A, ambientLightColor.R, ambientLightColor.G, ambientLightColor.B));
+            System.Drawing.Color c = UtilityMethods.SelectColorFromDialog(this, System.Drawing.Color.FromArgb(localStarData.StarColor.A, localStarData.StarColor.R, localStarData.StarColor.G, localStarData.StarColor.B));
             if (c != System.Drawing.Color.Empty)
             {
                 AmbientLightColorButton.BackColor = c;
-                ambientLightColor = System.Windows.Media.Color.FromArgb(c.A, c.R, c.G, c.B);
 
                 if (ThreeDViewer.HelixTKViewport.Children.Count > 1)
                 {
@@ -903,88 +1024,152 @@ namespace RealmStudio
             catch { }
         }
 
-        private void CaptureSnapshotButton_Click(object sender, EventArgs e)
+        #region Local Star Control Event Handlers
+
+        private void ShowLocalStarSwitch_CheckedChanged()
         {
-            SKBitmap? formattedBackground = null;
-
-            if (sceneBackground != null)
+            if (ShowLocalStarSwitch.Checked)
             {
-                formattedBackground = DrawingMethods.ResizeSKBitmap(sceneBackground.ToSKBitmap(),
-                    new SKSizeI((int)ThreeDViewer.HelixTKViewport.ActualWidth, (int)ThreeDViewer.HelixTKViewport.ActualHeight));
+                ShowLocalStar();
             }
-
-            // take a snapshot of the 3D view
-            using SKBitmap frameBitmap = new((int)ThreeDViewer.HelixTKViewport.ActualWidth, (int)ThreeDViewer.HelixTKViewport.ActualHeight);
-            using SKCanvas canvas = new(frameBitmap);
-
-            RenderTargetBitmap rtb = new(
-                (int)ThreeDViewer.HelixTKViewport.Viewport.ActualWidth,
-                (int)ThreeDViewer.HelixTKViewport.Viewport.ActualHeight, 96, 96, PixelFormats.Pbgra32);
-
-            rtb.Render(ThreeDViewer.HelixTKViewport.Viewport);
-
-            using Bitmap? b = DrawingMethods.BitmapSourceToBitmap(rtb);
-
-            if (b != null)
+            else
             {
-                if (formattedBackground != null)
-                {
-                    // composite the background onto the frameBitmap
-                    canvas.DrawBitmap(formattedBackground, 0, 0);
-                }
-
-                canvas.DrawBitmap(b.ToSKBitmap(), 0, 0);
+                RemoveLocalStar();
             }
+        }
 
-            // save the snapshot to a file
-            SaveFileDialog sfd = new()
+        private void LocalStarTextureCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LocalStarTextureCombo.SelectedIndex >= 0)
             {
-                DefaultExt = "png",
-                CheckWriteAccess = true,
-                ExpandedMode = true,
-                AddExtension = true,
-                SupportMultiDottedExtensions = false,
-                AddToRecent = true,
-                Filter = UtilityMethods.GetCommonImageFilter(),
-                Title = "Save World Globe Snapshot",
-                FilterIndex = 3,
-            };
-
-            DialogResult sfdresult = sfd.ShowDialog();
-
-            if (sfdresult == DialogResult.OK)
-            {
-                FileStream fs = new(sfd.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
-
-                switch (Path.GetExtension(sfd.FileName).ToLower(System.Globalization.CultureInfo.CurrentCulture))
+                switch (LocalStarTextureCombo.SelectedIndex)
                 {
-                    case ".jpg":
-                    case ".jpeg":
-                    case ".jfif":
-                    case ".jpe:":
-                        frameBitmap.Encode(fs, SKEncodedImageFormat.Jpeg, 100);
+                    case 0:
+                        localStarData.StarImageType = LocalStarImageType.Sun;
                         break;
-                    case ".png":
-                        frameBitmap.Encode(fs, SKEncodedImageFormat.Png, 100);
+                    case 1:
+                        localStarData.StarImageType = LocalStarImageType.Nebula;
                         break;
-                    case ".bmp":
-                    case ".dib":
-                    case ".rle":
-                        frameBitmap.Encode(fs, SKEncodedImageFormat.Bmp, 100);
+                    case 2:
+                        localStarData.StarImageType = LocalStarImageType.GasGiant;
                         break;
-                    case ".gif":
-                        frameBitmap.Encode(fs, SKEncodedImageFormat.Gif, 100);
+                    case 3:
+                        localStarData.StarImageType = LocalStarImageType.Corona;
                         break;
                     default:
-                        frameBitmap.Encode(fs, SKEncodedImageFormat.Png, 100);
+                        localStarData.StarImageType = LocalStarImageType.Sun;
                         break;
                 }
 
-                ModelStatisticsLabel.Text = "Snapshot saved: " + Path.GetFileName(sfd.FileName);
-                ModelStatisticsLabel.Refresh();
+                ShowLocalStar();
             }
-
         }
+
+        private void LocalStarSizeTrack_Scroll(object sender, EventArgs e)
+        {
+            localStarData.Radius = LocalStarSizeTrack.Value / 100.0;
+            ShowLocalStar();
+        }
+
+        private void LocalStarLocationLRTrack_Scroll(object sender, EventArgs e)
+        {
+            // rotate the local star and the local star light
+            // hangle and vangle are in degrees
+            double hangle = LocalStarLocationLRTrack.Value;
+            double vangle = LocalStarLocationUDTrack.Value;
+
+            Quaternion combinedQuaternion = Quaternion.Multiply(new Quaternion(new Vector3D(0, 0, 1), hangle), new Quaternion(new Vector3D(1, 0, 0), vangle));
+
+            // find the local star and local star light
+            for (int i = 0; i < ThreeDViewer.HelixTKViewport.Children.Count; i++)
+            {
+                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3d && sv3d.GetName() == "LocalStar")
+                {
+                    sv3d.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
+                    localStarData.LocationTransform = sv3d.Transform.Clone();
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dcorona && sv3dcorona.GetName() == "LocalStarCorona")
+                {
+                    sv3dcorona.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dcoronaoutline && sv3dcoronaoutline.GetName() == "LocalStarCoronaOutline")
+                {
+                    sv3dcoronaoutline.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is ModelVisual3D m3d && m3d.Content is PointLight pl && pl.GetName() == "LocalStarLight")
+                {
+                    pl.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is ParticleSystem ps && ps.GetName() == "LocalStarParticleSystem")
+                {
+                    ps.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
+                }
+            }
+        }
+
+        private void LocalStarLocationUDTrack_Scroll(object sender, EventArgs e)
+        {
+            // rotate the local star and the local star light
+            // hangle and vangle are in degrees
+            double hangle = LocalStarLocationLRTrack.Value;
+            double vangle = LocalStarLocationUDTrack.Value;
+
+            Quaternion combinedQuaternion = Quaternion.Multiply(new Quaternion(new Vector3D(0, 0, 1), hangle), new Quaternion(new Vector3D(1, 0, 0), vangle));
+
+            // find the local star and local star light
+            for (int i = 0; i < ThreeDViewer.HelixTKViewport.Children.Count; i++)
+            {
+                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3d && sv3d.GetName() == "LocalStar")
+                {
+                    sv3d.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
+                    localStarData.LocationTransform = sv3d.Transform.Clone();
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dcorona && sv3dcorona.GetName() == "LocalStarCorona")
+                {
+                    sv3dcorona.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dcoronaoutline && sv3dcoronaoutline.GetName() == "LocalStarCoronaOutline")
+                {
+                    sv3dcoronaoutline.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is ModelVisual3D m3d && m3d.Content is PointLight pl && pl.GetName() == "LocalStarLight")
+                {
+                    pl.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is ParticleSystem ps && ps.GetName() == "LocalStarParticleSystem")
+                {
+                    ps.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
+                }
+            }
+        }
+
+        private void LocalStarColorButton_Click(object sender, EventArgs e)
+        {
+            System.Drawing.Color c = UtilityMethods.SelectColorFromDialog(this, System.Drawing.Color.FromArgb(localStarData.StarColor.A, localStarData.StarColor.R, localStarData.StarColor.G, localStarData.StarColor.B));
+            if (c != System.Drawing.Color.Empty)
+            {
+                LocalStarColorButton.BackColor = c;
+                localStarData.StarColor = System.Windows.Media.Color.FromArgb(c.A, c.R, c.G, c.B);
+
+                ShowLocalStar();
+            }
+        }
+
+        private void LocalStarLightIntensityTrack_Scroll(object sender, EventArgs e)
+        {
+            localStarData.LightIntensity = LocalStarLightIntensityTrack.Value;
+            ShowLocalStar();
+        }
+
+        #endregion
 
         #endregion
 
@@ -1122,7 +1307,7 @@ namespace RealmStudio
         {
             // directional light
             // -Y is left, -Z is up
-            DirectionalLight directionalLight = new DirectionalLight(Colors.White, new Vector3D(0, -3, 0));
+            DirectionalLight directionalLight = new(Colors.White, new Vector3D(0, -3, 0));
             directionalLight.SetName("Sunlight");
             ThreeDViewer.HelixTKViewport.Children.Add(new ModelVisual3D
             {
@@ -1148,13 +1333,558 @@ namespace RealmStudio
 
         private void ShowAmbientLight()
         {
-            AmbientLight ambient = new AmbientLight(ambientLightColor);
+            AmbientLight ambient = new(ambientLightColor);
             ambient.SetName("AmbientLight");
 
             ThreeDViewer.HelixTKViewport.Children.Add(new ModelVisual3D
             {
                 Content = ambient
             });
+        }
+
+        private void ShowLocalStar()
+        {
+            RemoveLocalStar();
+
+            // change to Z-up for the camera
+
+            ThreeDViewer.ModelCamera.UpDirection = new Vector3D(0, 0, 1);
+
+            switch (localStarData.StarImageType)
+            {
+                case LocalStarImageType.Sun:
+                    {
+                        CreateSunLocalStar();
+                    }
+                    break;
+                case LocalStarImageType.Nebula:
+                    {
+                        CreateNebulaLocalStar();
+                    }
+                    break;
+                case LocalStarImageType.GasGiant:
+                    {
+                        CreateGasGiantLocalStar();
+                    }
+                    break;
+                case LocalStarImageType.Corona:
+                    {
+                        CreateCoronaLocalStar();
+                    }
+                    break;
+                case LocalStarImageType.BlackHole:
+                    {
+                        CreateBlackHoleLocalStar();
+                    }
+                    break;
+                default:
+                    {
+                        CreateSunLocalStar();
+                    }
+                    break;
+            }
+        }
+
+        private void CreateBlackHoleLocalStar()
+        {
+            // BLACK HOLE -----------------------------------------------------------------------
+            // create a sphere to represent the black hole
+            SphereVisual3D localStar = new()
+            {
+                Center = localStarData.Center,
+                Radius = localStarData.Radius,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = new DiffuseMaterial(new SolidColorBrush(Colors.Black))
+            };
+
+            localStar.SetName("LocalStar");
+
+            System.Windows.Media.Color materialColor = Colors.Black;
+
+            localStar.Material = new EmissiveMaterial(new SolidColorBrush(Colors.Black))
+            {
+                Color = materialColor
+            };
+
+            // BLACK HOLE ACCRETION DISK ---------------------------------------------------------------------
+        }
+
+        private void CreateCoronaLocalStar()
+        {
+            double zoomPercentage = (100.0 + LocalStarSizeTrack.Value - 15.0) / 100.0;
+
+            // STAR -----------------------------------------------------------------------
+            // create a sphere to represent the local star
+            SphereVisual3D localStar = new()
+            {
+                Center = localStarData.Center,
+                Radius = localStarData.Radius,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = new DiffuseMaterial(new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 0, 0)))
+            };
+
+            localStar.SetName("LocalStar");
+
+            System.Windows.Media.Color materialColor = Colors.Black;
+
+            localStar.Material = new EmissiveMaterial(new SolidColorBrush(Colors.Black))
+            {
+                Color = materialColor
+            };
+
+            // STAR CORONA OUTLINE ---------------------------------------------------------------------
+
+            SphereVisual3D localStarCoronaOutline = new()
+            {
+                Center = localStarData.Center,
+                Radius = localStarData.Radius * 1.03,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = new EmissiveMaterial(new SolidColorBrush(Colors.Black)),
+            };
+
+            localStarCoronaOutline.Material = new EmissiveMaterial()
+            {
+                Color = localStarData.StarColor,
+                Brush = new RadialGradientBrush()
+                {
+                    RadiusX = 0.5,
+                    RadiusY = 0.5,
+                    GradientStops =
+                    {
+                        new GradientStop(Colors.Transparent, 0),
+                        new GradientStop(Colors.Transparent, 0.5),
+                        new GradientStop(localStarData.StarColor, 1),
+                    },
+                }
+            };
+
+            localStarCoronaOutline.SetName("LocalStarCoronaOutline");
+
+            // STAR CORONA ---------------------------------------------------------------------
+
+            SphereVisual3D localStarCorona = new()
+            {
+                Center = localStarData.Center,
+                Radius = localStarData.Radius * 1.2,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = new EmissiveMaterial(new RadialGradientBrush(materialColor, System.Windows.Media.Colors.Transparent))
+                {
+                    Color = materialColor
+                }
+            };
+
+            localStarCorona.SetName("LocalStarCorona");
+
+            System.Windows.Media.Color coronaMaterialColor = System.Windows.Media.Color.FromArgb(80, localStarData.StarColor.R, localStarData.StarColor.G, localStarData.StarColor.B);
+
+            localStarCorona.Material = new EmissiveMaterial()
+            {
+                Color = coronaMaterialColor,
+                Brush = new RadialGradientBrush()
+                {
+                    RadiusX = 0.5,
+                    RadiusY = 0.5,
+                    GradientStops =
+                    {
+                        new GradientStop(System.Windows.Media.Colors.Transparent, 0),
+                        new GradientStop(Colors.Transparent, 0.5),
+                        new GradientStop(coronaMaterialColor, 1),
+                    },
+                }
+            };
+
+            byte[] smokeResource = Resources.white_particle;
+
+            BitmapImage smokeImage = new();
+            using MemoryStream sms = new();
+            sms.Write(smokeResource, 0, smokeResource.Length);
+            smokeImage.BeginInit();
+            smokeImage.StreamSource = new MemoryStream(sms.ToArray());
+            smokeImage.EndInit();
+
+
+            ImageBrush smokeImageBrush = new ImageBrush(smokeImage)
+            {
+                Opacity = 0.25
+            };
+
+
+            // STAR PARTICLE SYSTEM -------------------------------------------------------------
+
+            ParticleSystem particleSystem = new()
+            {
+                Position = localStarData.Center,
+                Texture = smokeImageBrush,
+                EmitRate = 10,
+                LifeTime = 5,
+                StartDirection = new Vector3D(1, 0, 0),
+                StartRadius = localStarCoronaOutline.Radius,
+                StartSize = 0.22 * zoomPercentage,
+                StartVelocity = 0.001,
+                StartVelocityRandomness = 0.001,
+                SizeRate = 0.025,
+                StartSpreading = 90,
+                FadeOutTime = 3,
+                //VelocityDamping = 0.999,
+                Acceleration = 0,
+                AliveParticles = 100,
+            };
+
+            particleSystem.SetName("LocalStarParticleSystem");
+
+            // STAR LIGHT ---------------------------------------------------------------------
+
+            PointLight localStarlight = new(localStarData.StarColor, localStarData.Center)
+            {
+                Range = localStarData.LightIntensity,
+            };
+
+            localStarlight.SetName("LocalStarLight");
+
+            // rotate the local star, star corona, and local star light
+            if (localStarData.LocationTransform != null)
+            {
+                localStar.Transform = localStarData.LocationTransform.Clone();
+                localStarCorona.Transform = localStarData.LocationTransform.Clone();
+                localStarCoronaOutline.Transform = localStarData.LocationTransform.Clone();
+                localStarlight.Transform = localStarData.LocationTransform.Clone();
+                particleSystem.Transform = localStarData.LocationTransform.Clone();
+            }
+
+
+            ThreeDViewer.HelixTKViewport.Children.Add(new ModelVisual3D
+            {
+                Content = localStarlight
+            });
+
+            ThreeDViewer.HelixTKViewport.Children.Add(localStarCoronaOutline);
+            ThreeDViewer.HelixTKViewport.Children.Add(localStar);
+
+            ThreeDViewer.HelixTKViewport.Children.Add(localStarCorona);
+            ThreeDViewer.HelixTKViewport.Children.Add(particleSystem);
+        }
+
+        private void CreateGasGiantLocalStar()
+        {
+            // STAR -----------------------------------------------------------------------
+            // create a sphere to represent the local star
+            SphereVisual3D localStar = new()
+            {
+                Center = localStarData.Center,
+                Radius = localStarData.Radius,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = new DiffuseMaterial(new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(192, 64, 64, 64)))
+            };
+
+            localStar.SetName("LocalStar");
+
+            System.Windows.Media.Color materialColor = localStarData.StarColor;
+
+            byte[] starImageResource = Resources.gas_giant;
+
+            BitmapImage starImage = new();
+            using MemoryStream ms = new();
+            ms.Write(starImageResource, 0, starImageResource.Length);
+            starImage.BeginInit();
+            starImage.StreamSource = new MemoryStream(ms.ToArray());
+            starImage.EndInit();
+
+            localStar.Material = new EmissiveMaterial(new ImageBrush(starImage))
+            {
+                Color = materialColor
+            };
+
+            // STAR CORONA ---------------------------------------------------------------------
+
+            SphereVisual3D localStarCorona = new()
+            {
+                Center = localStarData.Center,
+                Radius = localStarData.Radius * 1.1,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = new EmissiveMaterial(new RadialGradientBrush(materialColor, System.Windows.Media.Colors.Transparent))
+                {
+                    Color = materialColor
+                }
+            };
+
+            localStarCorona.SetName("LocalStarCorona");
+
+            System.Windows.Media.Color coronaMaterialColor = System.Windows.Media.Color.FromArgb(64, localStarData.StarColor.R, localStarData.StarColor.G, localStarData.StarColor.B);
+
+            localStarCorona.Material = new EmissiveMaterial()
+            {
+                Color = coronaMaterialColor,
+                Brush = new RadialGradientBrush(materialColor, System.Windows.Media.Colors.Transparent)
+                {
+                    RadiusX = 0.5,
+                    RadiusY = 0.5,
+                    GradientStops =
+                    {
+                        new GradientStop(coronaMaterialColor, 0),
+                        new GradientStop(System.Windows.Media.Colors.Transparent, 1)
+                    },
+                }
+            };
+
+            // STAR LIGHT ---------------------------------------------------------------------
+
+            PointLight localStarlight = new(localStarData.StarColor, localStarData.Center)
+            {
+                Range = localStarData.LightIntensity,
+            };
+
+            localStarlight.SetName("LocalStarLight");
+
+            // rotate the local star, star corona, and local star light
+            if (localStarData.LocationTransform != null)
+            {
+                localStar.Transform = localStarData.LocationTransform.Clone();
+                localStarCorona.Transform = localStarData.LocationTransform.Clone();
+
+                localStarlight.Transform = localStarData.LocationTransform.Clone();
+            }
+
+            ThreeDViewer.HelixTKViewport.Children.Add(localStar);
+            ThreeDViewer.HelixTKViewport.Children.Add(localStarCorona);
+            ThreeDViewer.HelixTKViewport.Children.Add(new ModelVisual3D
+            {
+                Content = localStarlight
+            });
+        }
+
+        private void CreateNebulaLocalStar()
+        {
+            // STAR -----------------------------------------------------------------------
+            // create a sphere to represent the local star
+            SphereVisual3D localStar = new()
+            {
+                Center = localStarData.Center,
+                Radius = localStarData.Radius,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = new DiffuseMaterial(new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(192, 64, 64, 64)))
+            };
+
+            localStar.SetName("LocalStar");
+
+            System.Windows.Media.Color materialColor = localStarData.StarColor;
+
+            byte[] starImageResource = Resources.nebula;
+
+            BitmapImage starImage = new();
+            using MemoryStream ms = new();
+            ms.Write(starImageResource, 0, starImageResource.Length);
+            starImage.BeginInit();
+            starImage.StreamSource = new MemoryStream(ms.ToArray());
+            starImage.EndInit();
+
+            localStar.Material = new EmissiveMaterial(new ImageBrush(starImage))
+            {
+                Color = materialColor
+            };
+
+            // STAR CORONA ---------------------------------------------------------------------
+
+            SphereVisual3D localStarCorona = new()
+            {
+                Center = localStarData.Center,
+                Radius = localStarData.Radius * 1.1,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = new EmissiveMaterial(new RadialGradientBrush(materialColor, System.Windows.Media.Colors.Transparent))
+                {
+                    Color = materialColor
+                }
+            };
+
+            localStarCorona.SetName("LocalStarCorona");
+
+            System.Windows.Media.Color coronaMaterialColor = System.Windows.Media.Color.FromArgb(64, localStarData.StarColor.R, localStarData.StarColor.G, localStarData.StarColor.B);
+
+            localStarCorona.Material = new EmissiveMaterial()
+            {
+                Color = coronaMaterialColor,
+                Brush = new RadialGradientBrush(materialColor, System.Windows.Media.Colors.Transparent)
+                {
+                    RadiusX = 0.5,
+                    RadiusY = 0.5,
+                    GradientStops =
+                    {
+                        new GradientStop(coronaMaterialColor, 0),
+                        new GradientStop(System.Windows.Media.Colors.Transparent, 1)
+                    },
+                }
+            };
+
+            // STAR LIGHT ---------------------------------------------------------------------
+
+            PointLight localStarlight = new(localStarData.StarColor, localStarData.Center)
+            {
+                Range = localStarData.LightIntensity,
+            };
+
+            localStarlight.SetName("LocalStarLight");
+
+            // rotate the local star, star corona, and local star light
+            if (localStarData.LocationTransform != null)
+            {
+                localStar.Transform = localStarData.LocationTransform.Clone();
+                localStarCorona.Transform = localStarData.LocationTransform.Clone();
+
+                localStarlight.Transform = localStarData.LocationTransform.Clone();
+            }
+
+            ThreeDViewer.HelixTKViewport.Children.Add(localStar);
+            ThreeDViewer.HelixTKViewport.Children.Add(localStarCorona);
+            ThreeDViewer.HelixTKViewport.Children.Add(new ModelVisual3D
+            {
+                Content = localStarlight
+            });
+        }
+
+        private void CreateSunLocalStar()
+        {
+            // STAR -----------------------------------------------------------------------
+            // create a sphere to represent the local star
+            SphereVisual3D localStar = new()
+            {
+                Center = localStarData.Center,
+                Radius = localStarData.Radius,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = new DiffuseMaterial(new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(160, 64, 64, 64)))
+            };
+
+            localStar.SetName("LocalStar");
+
+            System.Windows.Media.Color materialColor = localStarData.StarColor;
+
+            byte[] starImageResource = Resources.sun_texture;
+
+            BitmapImage starImage = new();
+            using MemoryStream ms = new();
+            ms.Write(starImageResource, 0, starImageResource.Length);
+            starImage.BeginInit();
+            starImage.StreamSource = new MemoryStream(ms.ToArray());
+            starImage.EndInit();
+
+            localStar.Material = new EmissiveMaterial(new ImageBrush(starImage))
+            {
+                Color = materialColor
+            };
+
+            // STAR CORONA ---------------------------------------------------------------------
+
+            SphereVisual3D localStarCorona = new()
+            {
+                Center = localStarData.Center,
+                Radius = localStarData.Radius * 1.1,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = new EmissiveMaterial(new RadialGradientBrush(materialColor, System.Windows.Media.Colors.Transparent))
+                {
+                    Color = materialColor
+                }
+            };
+
+            localStarCorona.SetName("LocalStarCorona");
+
+            System.Windows.Media.Color coronaMaterialColor = System.Windows.Media.Color.FromArgb(64, localStarData.StarColor.R, localStarData.StarColor.G, localStarData.StarColor.B);
+
+            localStarCorona.Material = new EmissiveMaterial()
+            {
+                Color = coronaMaterialColor,
+                Brush = new RadialGradientBrush(materialColor, System.Windows.Media.Colors.Transparent)
+                {
+                    RadiusX = 0.5,
+                    RadiusY = 0.5,
+                    GradientStops =
+                    {
+                        new GradientStop(coronaMaterialColor, 0),
+                        new GradientStop(System.Windows.Media.Colors.Transparent, 1)
+                    },
+                }
+            };
+
+            // STAR LIGHT ---------------------------------------------------------------------
+
+            PointLight localStarlight = new(localStarData.StarColor, localStarData.Center)
+            {
+                Range = localStarData.LightIntensity,
+            };
+
+            localStarlight.SetName("LocalStarLight");
+
+            // rotate the local star, star corona, and local star light
+            if (localStarData.LocationTransform != null)
+            {
+                localStar.Transform = localStarData.LocationTransform.Clone();
+                localStarCorona.Transform = localStarData.LocationTransform.Clone();
+
+                localStarlight.Transform = localStarData.LocationTransform.Clone();
+            }
+
+            ThreeDViewer.HelixTKViewport.Children.Add(localStar);
+            ThreeDViewer.HelixTKViewport.Children.Add(localStarCorona);
+            ThreeDViewer.HelixTKViewport.Children.Add(new ModelVisual3D
+            {
+                Content = localStarlight
+            });
+        }
+
+        private void RemoveLocalStar()
+        {
+            if (ThreeDViewer.HelixTKViewport.Children.Count > 1)
+            {
+                // find and remove the local star and all of the associated objects
+                for (int i = ThreeDViewer.HelixTKViewport.Children.Count - 1; i >= 0; i--)
+                {
+                    if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3d && sv3d.GetName() == "LocalStar")
+                    {
+                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                    }
+                }
+
+                for (int i = ThreeDViewer.HelixTKViewport.Children.Count - 1; i >= 0; i--)
+                {
+                    if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dcorona && sv3dcorona.GetName() == "LocalStarCorona")
+                    {
+                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                    }
+                }
+
+                for (int i = ThreeDViewer.HelixTKViewport.Children.Count - 1; i >= 0; i--)
+                {
+                    if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dcoronaOutline
+                        && sv3dcoronaOutline.GetName() == "LocalStarCoronaOutline")
+                    {
+                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                    }
+                }
+
+                for (int i = ThreeDViewer.HelixTKViewport.Children.Count - 1; i >= 0; i--)
+                {
+                    if (ThreeDViewer.HelixTKViewport.Children[i] is ModelVisual3D m3d && m3d.Content is PointLight al && al.GetName() == "LocalStarLight")
+                    {
+                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                    }
+                }
+
+
+                for (int i = ThreeDViewer.HelixTKViewport.Children.Count - 1; i >= 0; i--)
+                {
+                    if (ThreeDViewer.HelixTKViewport.Children[i] is ParticleSystem ps && ps.GetName() == "LocalStarParticleSystem")
+                    {
+                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                    }
+                }
+            }
         }
 
         #endregion
@@ -1463,5 +2193,21 @@ namespace RealmStudio
         }
 
         #endregion
+
+
     }
+
+    #region Data Structures
+
+    internal class LocalStar
+    {
+        internal Point3D Center { get; set; } = new Point3D(3, 3, 0);
+        internal double Radius { get; set; } = 0.15;
+        internal LocalStarImageType StarImageType { get; set; } = LocalStarImageType.Sun;
+        internal System.Windows.Media.Color StarColor { get; set; } = System.Windows.Media.Colors.Yellow;
+        internal int LightIntensity { get; set; } = 10;
+        internal Transform3D? LocationTransform { get; set; }
+    }
+
+    #endregion
 }

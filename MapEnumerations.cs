@@ -276,4 +276,13 @@ namespace RealmStudio
         Oval,
         Rectangle
     }
+
+    public enum LocalStarImageType
+    {
+        Sun,
+        Nebula,
+        GasGiant,
+        Corona,
+        BlackHole,
+    }
 }
