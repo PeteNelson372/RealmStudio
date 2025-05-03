@@ -107,6 +107,7 @@ namespace RealmStudio
                 initialCameraDistance = camera.Position.ToVector3D().Length;
             }
 
+            LocalStarTextureCombo.SelectedIndex = 0;
             FrameRateCombo.SelectedIndex = 4;
         }
 
@@ -127,6 +128,7 @@ namespace RealmStudio
                 initialCameraDistance = camera.Position.ToVector3D().Length;
             }
 
+            LocalStarTextureCombo.SelectedIndex = 0;
             FrameRateCombo.SelectedIndex = 4;
         }
 
@@ -528,7 +530,8 @@ namespace RealmStudio
 
         private void ThreeDView_SizeChanged(object sender, EventArgs e)
         {
-            ThreeDViewer.HelixTKViewport.FitView(new Vector3D(0, 0, 1), new Vector3D(0, 1, 0));
+            // fit to the view, but don't change current direction
+            ThreeDViewer.HelixTKViewport.FitView(ThreeDViewer.HelixTKViewport.Camera.LookDirection, ThreeDViewer.HelixTKViewport.Camera.UpDirection);
         }
 
         private void ChangeAxesButton_Click(object sender, EventArgs e)
@@ -749,6 +752,8 @@ namespace RealmStudio
             ThreeDViewer.HelixTKViewport.Background = null;
         }
 
+        #region Cloud Layer
+
         private void EnableCloudsSwitch_CheckedChanged()
         {
             if (EnableCloudsSwitch.Checked)
@@ -843,6 +848,10 @@ namespace RealmStudio
                 ShowCloudLayer();
             }
         }
+
+        #endregion
+
+        #region Lighting
 
         private void ShowHideLightingPanelButton_Click(object sender, EventArgs e)
         {
@@ -965,6 +974,10 @@ namespace RealmStudio
             }
         }
 
+        #endregion
+
+        #region World Texture
+
         private void LoadWorldTextureButton_Click(object sender, EventArgs e)
         {
             try
@@ -1024,6 +1037,8 @@ namespace RealmStudio
             catch { }
         }
 
+        #endregion
+
         #region Local Star Control Event Handlers
 
         private void ShowLocalStarSwitch_CheckedChanged()
@@ -1056,6 +1071,9 @@ namespace RealmStudio
                     case 3:
                         localStarData.StarImageType = LocalStarImageType.Corona;
                         break;
+                    case 4:
+                        localStarData.StarImageType = LocalStarImageType.BlackHole;
+                        break;
                     default:
                         localStarData.StarImageType = LocalStarImageType.Sun;
                         break;
@@ -1071,84 +1089,16 @@ namespace RealmStudio
             ShowLocalStar();
         }
 
+
+
         private void LocalStarLocationLRTrack_Scroll(object sender, EventArgs e)
         {
-            // rotate the local star and the local star light
-            // hangle and vangle are in degrees
-            double hangle = LocalStarLocationLRTrack.Value;
-            double vangle = LocalStarLocationUDTrack.Value;
-
-            Quaternion combinedQuaternion = Quaternion.Multiply(new Quaternion(new Vector3D(0, 0, 1), hangle), new Quaternion(new Vector3D(1, 0, 0), vangle));
-
-            // find the local star and local star light
-            for (int i = 0; i < ThreeDViewer.HelixTKViewport.Children.Count; i++)
-            {
-                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3d && sv3d.GetName() == "LocalStar")
-                {
-                    sv3d.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
-                    localStarData.LocationTransform = sv3d.Transform.Clone();
-                }
-
-                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dcorona && sv3dcorona.GetName() == "LocalStarCorona")
-                {
-                    sv3dcorona.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
-                }
-
-                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dcoronaoutline && sv3dcoronaoutline.GetName() == "LocalStarCoronaOutline")
-                {
-                    sv3dcoronaoutline.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
-                }
-
-                if (ThreeDViewer.HelixTKViewport.Children[i] is ModelVisual3D m3d && m3d.Content is PointLight pl && pl.GetName() == "LocalStarLight")
-                {
-                    pl.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
-                }
-
-                if (ThreeDViewer.HelixTKViewport.Children[i] is ParticleSystem ps && ps.GetName() == "LocalStarParticleSystem")
-                {
-                    ps.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
-                }
-            }
+            RotateLocalStarObjects();
         }
 
         private void LocalStarLocationUDTrack_Scroll(object sender, EventArgs e)
         {
-            // rotate the local star and the local star light
-            // hangle and vangle are in degrees
-            double hangle = LocalStarLocationLRTrack.Value;
-            double vangle = LocalStarLocationUDTrack.Value;
-
-            Quaternion combinedQuaternion = Quaternion.Multiply(new Quaternion(new Vector3D(0, 0, 1), hangle), new Quaternion(new Vector3D(1, 0, 0), vangle));
-
-            // find the local star and local star light
-            for (int i = 0; i < ThreeDViewer.HelixTKViewport.Children.Count; i++)
-            {
-                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3d && sv3d.GetName() == "LocalStar")
-                {
-                    sv3d.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
-                    localStarData.LocationTransform = sv3d.Transform.Clone();
-                }
-
-                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dcorona && sv3dcorona.GetName() == "LocalStarCorona")
-                {
-                    sv3dcorona.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
-                }
-
-                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dcoronaoutline && sv3dcoronaoutline.GetName() == "LocalStarCoronaOutline")
-                {
-                    sv3dcoronaoutline.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
-                }
-
-                if (ThreeDViewer.HelixTKViewport.Children[i] is ModelVisual3D m3d && m3d.Content is PointLight pl && pl.GetName() == "LocalStarLight")
-                {
-                    pl.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
-                }
-
-                if (ThreeDViewer.HelixTKViewport.Children[i] is ParticleSystem ps && ps.GetName() == "LocalStarParticleSystem")
-                {
-                    ps.Transform = new RotateTransform3D(new QuaternionRotation3D(combinedQuaternion));
-                }
-            }
+            RotateLocalStarObjects();
         }
 
         private void LocalStarColorButton_Click(object sender, EventArgs e)
@@ -1174,6 +1124,76 @@ namespace RealmStudio
         #endregion
 
         #region World Globe Methods
+
+        private void RotateLocalStarObjects()
+        {
+            // rotate the local star and the local star light
+            // hangle and vangle are in degrees
+            double hangle = LocalStarLocationLRTrack.Value;
+            double vangle = LocalStarLocationUDTrack.Value;
+
+            Quaternion hvQuaternion = Quaternion.Multiply(new Quaternion(new Vector3D(0, 0, 1), hangle), new Quaternion(new Vector3D(1, 0, 0), vangle));
+            Quaternion combinedQuaternion = Quaternion.Multiply(hvQuaternion, localStarData.RotationQuaternion);
+
+            RotateTransform3D rotateTransform = new(new QuaternionRotation3D(combinedQuaternion));
+            RotateTransform3D locationOnlyTransform = new(new QuaternionRotation3D(hvQuaternion));
+
+            localStarData.LocationTransform = rotateTransform;
+
+            // find the local star and local star light
+            for (int i = 0; i < ThreeDViewer.HelixTKViewport.Children.Count; i++)
+            {
+                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3d && sv3d.GetName() == "LocalStar")
+                {
+                    sv3d.Transform = localStarData.LocationTransform;
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dcorona && sv3dcorona.GetName() == "LocalStarCorona")
+                {
+                    sv3dcorona.Transform = localStarData.LocationTransform;
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dcoronaoutline && sv3dcoronaoutline.GetName() == "LocalStarCoronaOutline")
+                {
+                    sv3dcoronaoutline.Transform = localStarData.LocationTransform;
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is PieSliceVisual3D psv && psv.GetName() == "AccretionDisk1")
+                {
+                    psv.Transform = localStarData.LocationTransform;
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is PieSliceVisual3D psv2 && psv2.GetName() == "AccretionDisk2")
+                {
+                    psv2.Transform = localStarData.LocationTransform;
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is PieSliceVisual3D psv3 && psv3.GetName() == "AccretionDisk3")
+                {
+                    psv3.Transform = localStarData.LocationTransform;
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is PieSliceVisual3D psv4 && psv4.GetName() == "AccretionDisk4")
+                {
+                    psv4.Transform = localStarData.LocationTransform;
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is PieSliceVisual3D psv5 && psv5.GetName() == "AccretionDisk5")
+                {
+                    psv5.Transform = localStarData.LocationTransform;
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is ModelVisual3D m3d && m3d.Content is PointLight pl && pl.GetName() == "LocalStarLight")
+                {
+                    pl.Transform = localStarData.LocationTransform;
+                }
+
+                if (ThreeDViewer.HelixTKViewport.Children[i] is ParticleSystem ps && ps.GetName() == "LocalStarParticleSystem")
+                {
+                    ps.Transform = localStarData.LocationTransform;
+                }
+            }
+        }
 
         internal void ShowWorldGlobe(SKBitmap worldTexture)
         {
@@ -1387,6 +1407,8 @@ namespace RealmStudio
 
         private void CreateBlackHoleLocalStar()
         {
+            double zoomPercentage = (100.0 + LocalStarSizeTrack.Value - 15.0) / 100.0;
+
             // BLACK HOLE -----------------------------------------------------------------------
             // create a sphere to represent the black hole
             SphereVisual3D localStar = new()
@@ -1407,7 +1429,283 @@ namespace RealmStudio
                 Color = materialColor
             };
 
+            // STAR LIGHT ---------------------------------------------------------------------
+
+            PointLight localStarlight = new(Colors.White, localStarData.Center)
+            {
+                //Range = localStarData.LightIntensity,
+            };
+
+            localStarlight.SetName("LocalStarLight");
+            localStarlight.Color = Colors.White;
+
+            // rotate and add objects ---------------------------------------------------------------------
+            ThreeDViewer.HelixTKViewport.Children.Add(new ModelVisual3D
+            {
+                Content = localStarlight
+            });
+
+
+            // STAR CORONA OUTLINE ---------------------------------------------------------------------
+
+            SphereVisual3D localStarCoronaOutline = new()
+            {
+                Center = localStarData.Center,
+                Radius = localStarData.Radius * 1.05,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = new EmissiveMaterial(new SolidColorBrush(Colors.Black)),
+            };
+
+            localStarCoronaOutline.Material = new EmissiveMaterial()
+            {
+                Color = localStarData.StarColor,
+                Brush = new RadialGradientBrush()
+                {
+                    RadiusX = 0.5,
+                    RadiusY = 0.5,
+                    GradientStops =
+                    {
+                        new GradientStop(Colors.Transparent, 0),
+                        new GradientStop(Colors.Transparent, 0.5),
+                        new GradientStop(Colors.White, 1),
+                    },
+                }
+            };
+
+            localStarCoronaOutline.SetName("LocalStarCoronaOutline");
+
+            // STAR CORONA ---------------------------------------------------------------------
+
+            SphereVisual3D localStarCorona = new()
+            {
+                Center = localStarData.Center,
+                Radius = localStarData.Radius * 1.3,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = new EmissiveMaterial(new RadialGradientBrush(Colors.White, Colors.Transparent))
+                {
+                    Color = materialColor
+                }
+            };
+
+            localStarCorona.SetName("LocalStarCorona");
+
+            System.Windows.Media.Color coronaMaterialColor = System.Windows.Media.Color.FromArgb(80, 255, 255, 255);
+
+            localStarCorona.Material = new EmissiveMaterial()
+            {
+                Color = coronaMaterialColor,
+                Brush = new RadialGradientBrush()
+                {
+                    RadiusX = 0.5,
+                    RadiusY = 0.5,
+                    GradientStops =
+                    {
+                        new GradientStop(Colors.Transparent, 0),
+                        new GradientStop(Colors.Transparent, 0.5),
+                        new GradientStop(coronaMaterialColor, 1),
+                    },
+                }
+            };
+
+
+            // STAR PARTICLE SYSTEM -------------------------------------------------------------
+
+            byte[] particleResource = Resources.particle;
+
+            BitmapImage particleImage = new();
+            using MemoryStream sms = new();
+            sms.Write(particleResource, 0, particleResource.Length);
+            particleImage.BeginInit();
+            particleImage.StreamSource = new MemoryStream(sms.ToArray());
+            particleImage.EndInit();
+
+            ImageBrush particleImageBrush = new(particleImage)
+            {
+                Opacity = 0.8,
+            };
+
+            ParticleSystem particleSystem = new()
+            {
+                Position = localStarData.Center,
+                Texture = particleImageBrush,
+                EmitRate = 150,
+                LifeTime = 3.25,
+                StartDirection = new Vector3D(0, 0, 1),
+                StartRadius = localStarData.Radius * 1.05,
+                StartSize = 0.02,
+                StartVelocity = 0.01,
+                StartVelocityRandomness = 0.05,
+                SizeRate = 0.025,
+                StartSpreading = 180,
+                FadeOutTime = 0.25,
+                //VelocityDamping = 0.999,
+                Acceleration = 0.0,
+                AliveParticles = 100,
+            };
+
+            particleSystem.SetName("LocalStarParticleSystem");
+
+            ThreeDViewer.HelixTKViewport.Children.Add(localStarCoronaOutline);
+            ThreeDViewer.HelixTKViewport.Children.Add(localStar);
+            ThreeDViewer.HelixTKViewport.Children.Add(localStarCorona);
+
             // BLACK HOLE ACCRETION DISK ---------------------------------------------------------------------
+            localStarData.RotationQuaternion = new Quaternion(new Vector3D(-1, -1, 0), 15);
+
+            BuildAccretionDisk();
+
+            ThreeDViewer.HelixTKViewport.Children.Add(particleSystem);
+
+            // rotate the local star, star corona, and local star light to the correct position
+            RotateLocalStarObjects();
+        }
+
+        private void BuildAccretionDisk()
+        {
+            // disk 1 innermost ring of accretion disk
+            SolidColorBrush blackBrush = new(Colors.Black);
+            SolidColorBrush transparentBlackBrush = new(System.Windows.Media.Color.FromArgb(10, 0, 0, 0));
+            SolidColorBrush whiteBrush = new(System.Windows.Media.Color.FromArgb(255, 255, 255, 255));
+            SolidColorBrush transparentWhiteBrush = new(System.Windows.Media.Color.FromArgb(190, 255, 255, 255));
+            SolidColorBrush transparentWhiteBrush2 = new(System.Windows.Media.Color.FromArgb(10, 255, 255, 255));
+
+
+            // disk 1
+
+            MaterialGroup innerRingMatGroup = new();
+            innerRingMatGroup.Children.Add(new DiffuseMaterial(whiteBrush));
+            innerRingMatGroup.Children.Add(new EmissiveMaterial(whiteBrush));
+            innerRingMatGroup.Children.Add(new SpecularMaterial(transparentWhiteBrush, 100));
+
+            PieSliceVisual3D ad1 = new()
+            {
+                Center = localStarData.Center,
+                StartAngle = 0,
+                EndAngle = 360,
+                InnerRadius = localStarData.Radius,
+                OuterRadius = localStarData.Radius * 1.25,
+                ThetaDiv = 360,
+                Visible = true,
+                BackMaterial = innerRingMatGroup,
+                Material = innerRingMatGroup,
+            };
+
+            ad1.SetName("AccretionDisk1");
+
+            // disk 2
+
+            SolidColorBrush waterBlueBrush = new(System.Windows.Media.Color.FromArgb(255, 219, 243, 250))
+            {
+                Opacity = 0.9
+            };
+
+            MaterialGroup ring2MatGroup = new();
+            ring2MatGroup.Children.Add(new DiffuseMaterial(transparentBlackBrush));
+            ring2MatGroup.Children.Add(new EmissiveMaterial(waterBlueBrush));
+            ring2MatGroup.Children.Add(new SpecularMaterial(transparentWhiteBrush, 100));
+
+            PieSliceVisual3D ad2 = new()
+            {
+                Center = localStarData.Center,
+                StartAngle = 0,
+                EndAngle = 360,
+                InnerRadius = localStarData.Radius * 1.20,
+                OuterRadius = localStarData.Radius * 1.45,
+                ThetaDiv = 360,
+                Visible = true,
+                BackMaterial = ring2MatGroup,
+                Material = ring2MatGroup
+            };
+
+            ad2.SetName("AccretionDisk2");
+
+            // disk 3
+
+            SolidColorBrush ghostWhiteBrush = new(System.Windows.Media.Color.FromArgb(255, 245, 251, 255))
+            {
+                Opacity = 0.8
+            };
+
+            MaterialGroup ring3MatGroup = new();
+            ring3MatGroup.Children.Add(new DiffuseMaterial(transparentBlackBrush));
+            ring3MatGroup.Children.Add(new EmissiveMaterial(ghostWhiteBrush));
+            ring3MatGroup.Children.Add(new SpecularMaterial(transparentWhiteBrush, 100));
+
+            PieSliceVisual3D ad3 = new()
+            {
+                Center = localStarData.Center,
+                StartAngle = 0,
+                EndAngle = 360,
+                InnerRadius = localStarData.Radius * 1.40,
+                OuterRadius = localStarData.Radius * 2.0,
+                ThetaDiv = 360,
+                Visible = true,
+                BackMaterial = ring3MatGroup,
+                Material = ring3MatGroup
+            };
+
+            ad3.SetName("AccretionDisk3");
+
+            // disk 4
+
+            SolidColorBrush bubblesBlueBrush = new(System.Windows.Media.Color.FromArgb(255, 229, 243, 253))
+            {
+                Opacity = 0.7
+            };
+
+            MaterialGroup ring4MatGroup = new();
+            ring4MatGroup.Children.Add(new DiffuseMaterial(transparentBlackBrush));
+            ring4MatGroup.Children.Add(new EmissiveMaterial(bubblesBlueBrush));
+            ring4MatGroup.Children.Add(new SpecularMaterial(transparentWhiteBrush, 100));
+
+            PieSliceVisual3D ad4 = new()
+            {
+                Center = localStarData.Center,
+                StartAngle = 0,
+                EndAngle = 360,
+                InnerRadius = localStarData.Radius * 1.95,
+                OuterRadius = localStarData.Radius * 2.5,
+                ThetaDiv = 360,
+                Visible = true,
+                BackMaterial = ring4MatGroup,
+                Material = ring4MatGroup
+            };
+
+            ad4.SetName("AccretionDisk4");
+
+            // disk 5
+            SolidColorBrush azurishWhiteBrush = new(System.Windows.Media.Color.FromArgb(255, 209, 229, 244))
+            {
+                Opacity = 0.6
+            };
+
+            MaterialGroup ring5MatGroup = new();
+            ring5MatGroup.Children.Add(new DiffuseMaterial(transparentBlackBrush));
+            ring5MatGroup.Children.Add(new EmissiveMaterial(azurishWhiteBrush));
+            ring5MatGroup.Children.Add(new SpecularMaterial(transparentWhiteBrush, 100));
+
+            PieSliceVisual3D ad5 = new()
+            {
+                Center = localStarData.Center,
+                StartAngle = 0,
+                EndAngle = 360,
+                InnerRadius = localStarData.Radius * 2.4,
+                OuterRadius = localStarData.Radius * 3.0,
+                ThetaDiv = 360,
+                Visible = true,
+                BackMaterial = ring5MatGroup,
+                Material = ring5MatGroup
+            };
+
+            ad5.SetName("AccretionDisk5");
+
+            ThreeDViewer.HelixTKViewport.Children.Add(ad1);
+            ThreeDViewer.HelixTKViewport.Children.Add(ad2);
+            ThreeDViewer.HelixTKViewport.Children.Add(ad3);
+            ThreeDViewer.HelixTKViewport.Children.Add(ad4);
+            ThreeDViewer.HelixTKViewport.Children.Add(ad5);
         }
 
         private void CreateCoronaLocalStar()
@@ -1497,6 +1795,8 @@ namespace RealmStudio
                 }
             };
 
+            // STAR PARTICLE SYSTEM -------------------------------------------------------------
+
             byte[] smokeResource = Resources.white_particle;
 
             BitmapImage smokeImage = new();
@@ -1507,13 +1807,10 @@ namespace RealmStudio
             smokeImage.EndInit();
 
 
-            ImageBrush smokeImageBrush = new ImageBrush(smokeImage)
+            ImageBrush smokeImageBrush = new(smokeImage)
             {
                 Opacity = 0.25
             };
-
-
-            // STAR PARTICLE SYSTEM -------------------------------------------------------------
 
             ParticleSystem particleSystem = new()
             {
@@ -1544,6 +1841,8 @@ namespace RealmStudio
             };
 
             localStarlight.SetName("LocalStarLight");
+
+            // rotate and add objects ---------------------------------------------------------------------
 
             // rotate the local star, star corona, and local star light
             if (localStarData.LocationTransform != null)
@@ -1863,6 +2162,46 @@ namespace RealmStudio
                 {
                     if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dcoronaOutline
                         && sv3dcoronaOutline.GetName() == "LocalStarCoronaOutline")
+                    {
+                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                    }
+                }
+
+                for (int i = ThreeDViewer.HelixTKViewport.Children.Count - 1; i >= 0; i--)
+                {
+                    if (ThreeDViewer.HelixTKViewport.Children[i] is PieSliceVisual3D psv && psv.GetName() == "AccretionDisk1")
+                    {
+                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                    }
+                }
+
+                for (int i = ThreeDViewer.HelixTKViewport.Children.Count - 1; i >= 0; i--)
+                {
+                    if (ThreeDViewer.HelixTKViewport.Children[i] is PieSliceVisual3D psv && psv.GetName() == "AccretionDisk2")
+                    {
+                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                    }
+                }
+
+                for (int i = ThreeDViewer.HelixTKViewport.Children.Count - 1; i >= 0; i--)
+                {
+                    if (ThreeDViewer.HelixTKViewport.Children[i] is PieSliceVisual3D psv && psv.GetName() == "AccretionDisk3")
+                    {
+                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                    }
+                }
+
+                for (int i = ThreeDViewer.HelixTKViewport.Children.Count - 1; i >= 0; i--)
+                {
+                    if (ThreeDViewer.HelixTKViewport.Children[i] is PieSliceVisual3D psv && psv.GetName() == "AccretionDisk4")
+                    {
+                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                    }
+                }
+
+                for (int i = ThreeDViewer.HelixTKViewport.Children.Count - 1; i >= 0; i--)
+                {
+                    if (ThreeDViewer.HelixTKViewport.Children[i] is PieSliceVisual3D psv && psv.GetName() == "AccretionDisk5")
                     {
                         ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
                     }
@@ -2206,8 +2545,10 @@ namespace RealmStudio
         internal LocalStarImageType StarImageType { get; set; } = LocalStarImageType.Sun;
         internal System.Windows.Media.Color StarColor { get; set; } = System.Windows.Media.Colors.Yellow;
         internal int LightIntensity { get; set; } = 10;
-        internal Transform3D? LocationTransform { get; set; }
+        internal Transform3D LocationTransform { get; set; } = Transform3D.Identity;
+        internal Quaternion RotationQuaternion { get; set; } = Quaternion.Identity;
     }
+
 
     #endregion
 }

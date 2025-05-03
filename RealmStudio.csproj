@@ -9,9 +9,9 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.113.13294</AssemblyVersion>
-    <FileVersion>1.2025.113.13294</FileVersion>
-    <Version>1.2025.0-alpha-1695</Version>
+    <AssemblyVersion>1.2025.123.33987</AssemblyVersion>
+    <FileVersion>1.2025.123.33987</FileVersion>
+    <Version>1.2025.0-alpha-2162</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
@@ -29,7 +29,8 @@
     <Title>Realm Studio</Title>
     <PackageIcon>Realm Studio Icon 128x128.png</PackageIcon>
     <UseWPF>True</UseWPF>
-    <Platforms>AnyCPU;x64;x86</Platforms> 
+    <Platforms>AnyCPU;x64;x86</Platforms>
+    <ApplicationIcon>realm_studio_icon_1024x1024_g3u_icon.ico</ApplicationIcon> 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -130,6 +131,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="realm_studio_icon_1024x1024_g3u_icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Resources\realm_studio_icon_1024x1024_g3u_icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -169,9 +174,9 @@
     <PackageReference Include="ReaLTaiizor" Version="3.8.1.2" />
     <PackageReference Include="SharpAvi" Version="3.0.1" />
     <PackageReference Include="SimplexNoise" Version="2.0.0" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.116.1" />
-    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.116.1" />
-    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.116.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.119.0" />
     <PackageReference Include="Svg.Skia" Version="3.0.0" />
     <PackageReference Include="System.Management" Version="9.0.4" />
   </ItemGroup>

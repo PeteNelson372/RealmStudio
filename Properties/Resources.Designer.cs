@@ -63,6 +63,16 @@ namespace RealmStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] accretion_disk {
+            get {
+                object obj = ResourceManager.GetObject("accretion_disk", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] Aladin_Regular {
             get {
                 object obj = ResourceManager.GetObject("Aladin-Regular", resourceCulture);
@@ -266,6 +276,16 @@ namespace RealmStudio.Properties {
         internal static byte[] nebula {
             get {
                 object obj = ResourceManager.GetObject("nebula", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] particle {
+            get {
+                object obj = ResourceManager.GetObject("particle", resourceCulture);
                 return ((byte[])(obj));
             }
         }
