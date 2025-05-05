@@ -211,4 +211,22 @@
   <data name="particle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\particle.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="saturn_ring" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\saturnringcolor2.jpg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="blue_rings" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fh_ring__01.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tan_rings" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fh_ring__02.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="light_tan_rings" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fh_ring__03.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="green_rings" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\greenring.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="fiona_rings" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fiona-rings.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

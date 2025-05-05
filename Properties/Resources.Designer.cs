@@ -101,6 +101,16 @@ namespace RealmStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] blue_rings {
+            get {
+                object obj = ResourceManager.GetObject("blue_rings", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap brookmonte_group_logo {
@@ -147,6 +157,16 @@ namespace RealmStudio.Properties {
             get {
                 object obj = ResourceManager.GetObject("Eye Dropper", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] fiona_rings {
+            get {
+                object obj = ResourceManager.GetObject("fiona_rings", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
@@ -203,6 +223,16 @@ namespace RealmStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] green_rings {
+            get {
+                object obj = ResourceManager.GetObject("green_rings", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] IMFellDWPica_Regular {
             get {
                 object obj = ResourceManager.GetObject("IMFellDWPica-Regular", resourceCulture);
@@ -236,6 +266,16 @@ namespace RealmStudio.Properties {
         internal static byte[] Lancelot_Regular {
             get {
                 object obj = ResourceManager.GetObject("Lancelot-Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] light_tan_rings {
+            get {
+                object obj = ResourceManager.GetObject("light_tan_rings", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -303,6 +343,16 @@ namespace RealmStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] saturn_ring {
+            get {
+                object obj = ResourceManager.GetObject("saturn_ring", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] savesound2 {
             get {
                 object obj = ResourceManager.GetObject("savesound2", resourceCulture);
@@ -326,6 +376,16 @@ namespace RealmStudio.Properties {
         internal static byte[] sun_texture {
             get {
                 object obj = ResourceManager.GetObject("sun_texture", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] tan_rings {
+            get {
+                object obj = ResourceManager.GetObject("tan_rings", resourceCulture);
                 return ((byte[])(obj));
             }
         }

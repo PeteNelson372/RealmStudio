@@ -104,7 +104,36 @@ namespace RealmStudio
 
         }
 
-        public static Bitmap? BitmapSourceToBitmap(BitmapSource source)
+        internal static Bitmap BitmapImageToBitmap(BitmapImage bitmapImage)
+        {
+            using MemoryStream outStream = new();
+            BitmapEncoder enc = new BmpBitmapEncoder();
+            enc.Frames.Add(BitmapFrame.Create(bitmapImage));
+            enc.Save(outStream);
+            Bitmap bitmap = new(outStream);
+
+            return new Bitmap(bitmap);
+        }
+
+        internal static BitmapImage BitmapToBitmapImage(Bitmap bitmap)
+        {
+            using (var memory = new MemoryStream())
+            {
+                bitmap.Save(memory, ImageFormat.Png);
+                memory.Position = 0;
+
+                var bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memory;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze();
+
+                return bitmapImage;
+            }
+        }
+
+        internal static Bitmap? BitmapSourceToBitmap(BitmapSource source)
         {
             if (source == null)
             {
@@ -112,7 +141,7 @@ namespace RealmStudio
             }
 
             var pixelFormat = PixelFormat.Format32bppArgb;  //Bgr32 default
-            Bitmap bmp = new Bitmap(source.PixelWidth, source.PixelHeight, pixelFormat);
+            Bitmap bmp = new(source.PixelWidth, source.PixelHeight, pixelFormat);
 
             BitmapData data = bmp.LockBits(
                 new Rectangle(Point.Empty, bmp.Size),

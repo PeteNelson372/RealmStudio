@@ -423,6 +423,7 @@
             TraceToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator7 = new ToolStripSeparator();
             RenderAsHeightMapMenuItem = new ToolStripMenuItem();
+            DisplayWorldGlobeToolStripMenuItem = new ToolStripMenuItem();
             AssetsToolStripMenuItem = new ToolStripMenuItem();
             CreateSymbolCollectionMenuItem = new ToolStripMenuItem();
             ImportAssetsMenuItem = new ToolStripMenuItem();
@@ -584,7 +585,6 @@
             LandColorSelectionButton = new FontAwesome.Sharp.IconButton();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
-            DisplayWorldGlobeToolStripMenuItem = new ToolStripMenuItem();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -5539,16 +5539,16 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(RealmStudioMainMenuStrip);
-            RealmStudioForm.Controls.Add(OceanToolPanel);
-            RealmStudioForm.Controls.Add(BackgroundToolPanel);
-            RealmStudioForm.Controls.Add(DrawingToolPanel);
-            RealmStudioForm.Controls.Add(RegionToolPanel);
-            RealmStudioForm.Controls.Add(OverlayToolPanel);
             RealmStudioForm.Controls.Add(LabelToolPanel);
             RealmStudioForm.Controls.Add(SymbolToolPanel);
             RealmStudioForm.Controls.Add(PathToolPanel);
             RealmStudioForm.Controls.Add(WaterToolPanel);
             RealmStudioForm.Controls.Add(LandToolPanel);
+            RealmStudioForm.Controls.Add(OceanToolPanel);
+            RealmStudioForm.Controls.Add(BackgroundToolPanel);
+            RealmStudioForm.Controls.Add(DrawingToolPanel);
+            RealmStudioForm.Controls.Add(RegionToolPanel);
+            RealmStudioForm.Controls.Add(OverlayToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
             RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
             RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
@@ -6633,7 +6633,7 @@
             RealmStudioMainMenuStrip.Items.AddRange(new ToolStripItem[] { FileToolStripMenuItem, EditToolStripMenuItem, RealmToolStripMenuItem, AssetsToolStripMenuItem, ThemeToolStripMenuItem, OptionsToolStripMenuItem, HelpToolStripMenuItem });
             RealmStudioMainMenuStrip.Location = new Point(20, 56);
             RealmStudioMainMenuStrip.Name = "RealmStudioMainMenuStrip";
-            RealmStudioMainMenuStrip.Size = new Size(469, 24);
+            RealmStudioMainMenuStrip.Size = new Size(349, 24);
             RealmStudioMainMenuStrip.TabIndex = 1;
             RealmStudioMainMenuStrip.Text = "menuStrip1";
             // 
@@ -6841,6 +6841,13 @@
             RenderAsHeightMapMenuItem.Size = new Size(181, 22);
             RenderAsHeightMapMenuItem.Text = "Display &Height Map";
             RenderAsHeightMapMenuItem.CheckedChanged += RenderAsHeightMapMenuItem_CheckedChanged;
+            // 
+            // DisplayWorldGlobeToolStripMenuItem
+            // 
+            DisplayWorldGlobeToolStripMenuItem.Name = "DisplayWorldGlobeToolStripMenuItem";
+            DisplayWorldGlobeToolStripMenuItem.Size = new Size(181, 22);
+            DisplayWorldGlobeToolStripMenuItem.Text = "Display World &Globe";
+            DisplayWorldGlobeToolStripMenuItem.Click += DisplayWorldGlobeToolStripMenuItem_Click;
             // 
             // AssetsToolStripMenuItem
             // 
@@ -8978,13 +8985,6 @@
             materialCheckBox2.Text = "materialCheckBox2";
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
-            // 
-            // DisplayWorldGlobeToolStripMenuItem
-            // 
-            DisplayWorldGlobeToolStripMenuItem.Name = "DisplayWorldGlobeToolStripMenuItem";
-            DisplayWorldGlobeToolStripMenuItem.Size = new Size(181, 22);
-            DisplayWorldGlobeToolStripMenuItem.Text = "Display World &Globe";
-            DisplayWorldGlobeToolStripMenuItem.Click += DisplayWorldGlobeToolStripMenuItem_Click;
             // 
             // RealmStudioMainForm
             // 

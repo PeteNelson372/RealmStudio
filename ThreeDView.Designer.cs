@@ -77,6 +77,19 @@
             AtmospherePage = new TabPage();
             EffectsPage = new TabPage();
             RingPage = new TabPage();
+            label24 = new Label();
+            RingOpacityTrack = new TrackBar();
+            label23 = new Label();
+            RingAngleTrack = new TrackBar();
+            label22 = new Label();
+            OuterRadiusTrack = new TrackBar();
+            label21 = new Label();
+            InnerRadiusTrack = new TrackBar();
+            RingTintColorButton = new FontAwesome.Sharp.IconButton();
+            label20 = new Label();
+            RingTextureCombo = new ComboBox();
+            label19 = new Label();
+            ShowRingsSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             MoonPage = new TabPage();
             LightingPanel = new Panel();
             LightingGroup = new GroupBox();
@@ -119,6 +132,11 @@
             ((System.ComponentModel.ISupportInitialize)LocalStarSizeTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LocalStarLocationUDTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LocalStarLocationLRTrack).BeginInit();
+            RingPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)RingOpacityTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)RingAngleTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)OuterRadiusTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)InnerRadiusTrack).BeginInit();
             LightingPanel.SuspendLayout();
             LightingGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SunlightVerticalDirectionTrack).BeginInit();
@@ -639,7 +657,7 @@
             label18.AutoSize = true;
             label18.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label18.ForeColor = SystemColors.ControlDarkDark;
-            label18.Location = new Point(81, 241);
+            label18.Location = new Point(76, 241);
             label18.Name = "label18";
             label18.Size = new Size(52, 15);
             label18.TabIndex = 82;
@@ -841,12 +859,213 @@
             // RingPage
             // 
             RingPage.BackColor = Color.FromArgb(244, 241, 243);
+            RingPage.Controls.Add(label24);
+            RingPage.Controls.Add(RingOpacityTrack);
+            RingPage.Controls.Add(label23);
+            RingPage.Controls.Add(RingAngleTrack);
+            RingPage.Controls.Add(label22);
+            RingPage.Controls.Add(OuterRadiusTrack);
+            RingPage.Controls.Add(label21);
+            RingPage.Controls.Add(InnerRadiusTrack);
+            RingPage.Controls.Add(RingTintColorButton);
+            RingPage.Controls.Add(label20);
+            RingPage.Controls.Add(RingTextureCombo);
+            RingPage.Controls.Add(label19);
+            RingPage.Controls.Add(ShowRingsSwitch);
             RingPage.ForeColor = SystemColors.ControlDarkDark;
             RingPage.Location = new Point(24, 4);
             RingPage.Name = "RingPage";
             RingPage.Size = new Size(172, 294);
             RingPage.TabIndex = 3;
             RingPage.Text = "Ring";
+            // 
+            // label24
+            // 
+            label24.AutoSize = true;
+            label24.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label24.ForeColor = SystemColors.ControlDarkDark;
+            label24.Location = new Point(76, 235);
+            label24.Name = "label24";
+            label24.Size = new Size(48, 15);
+            label24.TabIndex = 84;
+            label24.Text = "Opacity";
+            // 
+            // RingOpacityTrack
+            // 
+            RingOpacityTrack.AutoSize = false;
+            RingOpacityTrack.BackColor = SystemColors.Control;
+            RingOpacityTrack.Location = new Point(76, 253);
+            RingOpacityTrack.Maximum = 100;
+            RingOpacityTrack.Name = "RingOpacityTrack";
+            RingOpacityTrack.RightToLeft = RightToLeft.No;
+            RingOpacityTrack.Size = new Size(90, 20);
+            RingOpacityTrack.TabIndex = 83;
+            RingOpacityTrack.TickStyle = TickStyle.None;
+            RingOpacityTrack.Value = 100;
+            RingOpacityTrack.Scroll += RingOpacityTrack_Scroll;
+            // 
+            // label23
+            // 
+            label23.AutoSize = true;
+            label23.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label23.Location = new Point(9, 173);
+            label23.Name = "label23";
+            label23.Size = new Size(38, 15);
+            label23.TabIndex = 76;
+            label23.Text = "Angle";
+            // 
+            // RingAngleTrack
+            // 
+            RingAngleTrack.AutoSize = false;
+            RingAngleTrack.BackColor = SystemColors.Control;
+            RingAngleTrack.Location = new Point(12, 191);
+            RingAngleTrack.Maximum = 180;
+            RingAngleTrack.Name = "RingAngleTrack";
+            RingAngleTrack.RightToLeft = RightToLeft.No;
+            RingAngleTrack.Size = new Size(160, 20);
+            RingAngleTrack.TabIndex = 75;
+            RingAngleTrack.TickStyle = TickStyle.None;
+            RingAngleTrack.Value = 90;
+            RingAngleTrack.Scroll += RingAngleTrack_Scroll;
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label22.Location = new Point(9, 132);
+            label22.Name = "label22";
+            label22.Size = new Size(75, 15);
+            label22.TabIndex = 74;
+            label22.Text = "Outer Radius";
+            // 
+            // OuterRadiusTrack
+            // 
+            OuterRadiusTrack.AutoSize = false;
+            OuterRadiusTrack.BackColor = SystemColors.Control;
+            OuterRadiusTrack.Location = new Point(6, 150);
+            OuterRadiusTrack.Maximum = 50;
+            OuterRadiusTrack.Minimum = 10;
+            OuterRadiusTrack.Name = "OuterRadiusTrack";
+            OuterRadiusTrack.RightToLeft = RightToLeft.No;
+            OuterRadiusTrack.Size = new Size(160, 20);
+            OuterRadiusTrack.TabIndex = 73;
+            OuterRadiusTrack.TickStyle = TickStyle.None;
+            OuterRadiusTrack.Value = 35;
+            OuterRadiusTrack.Scroll += OuterRadiusTrack_Scroll;
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label21.Location = new Point(7, 91);
+            label21.Name = "label21";
+            label21.Size = new Size(72, 15);
+            label21.TabIndex = 72;
+            label21.Text = "Inner Radius";
+            // 
+            // InnerRadiusTrack
+            // 
+            InnerRadiusTrack.AutoSize = false;
+            InnerRadiusTrack.BackColor = SystemColors.Control;
+            InnerRadiusTrack.Location = new Point(6, 109);
+            InnerRadiusTrack.Maximum = 50;
+            InnerRadiusTrack.Minimum = 10;
+            InnerRadiusTrack.Name = "InnerRadiusTrack";
+            InnerRadiusTrack.RightToLeft = RightToLeft.No;
+            InnerRadiusTrack.Size = new Size(160, 20);
+            InnerRadiusTrack.TabIndex = 71;
+            InnerRadiusTrack.TickStyle = TickStyle.None;
+            InnerRadiusTrack.Value = 25;
+            InnerRadiusTrack.Scroll += InnerRadiusTrack_Scroll;
+            // 
+            // RingTintColorButton
+            // 
+            RingTintColorButton.BackColor = Color.White;
+            RingTintColorButton.FlatAppearance.BorderColor = Color.Black;
+            RingTintColorButton.FlatStyle = FlatStyle.Flat;
+            RingTintColorButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            RingTintColorButton.ForeColor = SystemColors.ControlDarkDark;
+            RingTintColorButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            RingTintColorButton.IconColor = Color.Tan;
+            RingTintColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            RingTintColorButton.IconSize = 24;
+            RingTintColorButton.Location = new Point(10, 219);
+            RingTintColorButton.Margin = new Padding(1, 3, 1, 3);
+            RingTintColorButton.Name = "RingTintColorButton";
+            RingTintColorButton.Size = new Size(54, 54);
+            RingTintColorButton.TabIndex = 70;
+            RingTintColorButton.Text = "Ring Tint";
+            RingTintColorButton.UseVisualStyleBackColor = false;
+            RingTintColorButton.Click += RingTintColorButton_Click;
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label20.Location = new Point(6, 47);
+            label20.Name = "label20";
+            label20.Size = new Size(45, 15);
+            label20.TabIndex = 69;
+            label20.Text = "Texture";
+            // 
+            // RingTextureCombo
+            // 
+            RingTextureCombo.FormattingEnabled = true;
+            RingTextureCombo.Items.AddRange(new object[] { "Saturn", "Green Rings", "Tan Rings", "Light Tan Rings", "Blue Rings", "Blue-Green Rings" });
+            RingTextureCombo.Location = new Point(6, 65);
+            RingTextureCombo.Name = "RingTextureCombo";
+            RingTextureCombo.Size = new Size(160, 23);
+            RingTextureCombo.TabIndex = 68;
+            RingTextureCombo.SelectedIndexChanged += RingTextureCombo_SelectedIndexChanged;
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label19.Location = new Point(47, 19);
+            label19.Name = "label19";
+            label19.Size = new Size(120, 15);
+            label19.TabIndex = 67;
+            label19.Text = "Show Planetary Rings";
+            // 
+            // ShowRingsSwitch
+            // 
+            ShowRingsSwitch.Alpha = 50;
+            ShowRingsSwitch.BackColor = Color.Transparent;
+            ShowRingsSwitch.Background = true;
+            ShowRingsSwitch.Background_WidthPen = 2F;
+            ShowRingsSwitch.BackgroundPen = false;
+            ShowRingsSwitch.Checked = false;
+            ShowRingsSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            ShowRingsSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            ShowRingsSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            ShowRingsSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            ShowRingsSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            ShowRingsSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            ShowRingsSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            ShowRingsSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            ShowRingsSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowRingsSwitch.ColorValue = Color.ForestGreen;
+            ShowRingsSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowRingsSwitch.Font = new Font("Arial", 11F);
+            ShowRingsSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowRingsSwitch.Lighting = true;
+            ShowRingsSwitch.LinearGradient_Background = false;
+            ShowRingsSwitch.LinearGradient_Value = false;
+            ShowRingsSwitch.LinearGradientPen = false;
+            ShowRingsSwitch.Location = new Point(6, 14);
+            ShowRingsSwitch.Name = "ShowRingsSwitch";
+            ShowRingsSwitch.PenWidth = 10;
+            ShowRingsSwitch.RGB = false;
+            ShowRingsSwitch.Rounding = true;
+            ShowRingsSwitch.RoundingInt = 90;
+            ShowRingsSwitch.Size = new Size(35, 20);
+            ShowRingsSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowRingsSwitch.TabIndex = 66;
+            ShowRingsSwitch.Tag = "Cyber";
+            ShowRingsSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowRingsSwitch.Timer_RGB = 300;
+            ShowRingsSwitch.CheckedChanged += ShowRingsSwitch_CheckedChanged;
             // 
             // MoonPage
             // 
@@ -1335,6 +1554,12 @@
             ((System.ComponentModel.ISupportInitialize)LocalStarSizeTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LocalStarLocationUDTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LocalStarLocationLRTrack).EndInit();
+            RingPage.ResumeLayout(false);
+            RingPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)RingOpacityTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)RingAngleTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)OuterRadiusTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)InnerRadiusTrack).EndInit();
             LightingPanel.ResumeLayout(false);
             LightingGroup.ResumeLayout(false);
             LightingGroup.PerformLayout();
@@ -1427,5 +1652,18 @@
         internal FontAwesome.Sharp.IconButton LocalStarColorButton;
         private Label label17;
         internal TrackBar LocalStarSizeTrack;
+        private Label label20;
+        private ComboBox RingTextureCombo;
+        private Label label19;
+        internal ReaLTaiizor.Controls.CyberSwitch ShowRingsSwitch;
+        private Label label23;
+        internal TrackBar RingAngleTrack;
+        private Label label22;
+        internal TrackBar OuterRadiusTrack;
+        private Label label21;
+        internal TrackBar InnerRadiusTrack;
+        internal FontAwesome.Sharp.IconButton RingTintColorButton;
+        private Label label24;
+        internal TrackBar RingOpacityTrack;
     }
 }
