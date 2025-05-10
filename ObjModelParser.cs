@@ -21,7 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using OpenTK;
+using OpenTK.Mathematics;
 
 namespace RealmStudio
 {

@@ -32,6 +32,7 @@ using System.Text;
 using System.Timers;
 using System.Windows.Forms.Integration;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Threading;
@@ -61,9 +62,12 @@ namespace RealmStudio
         private int cloudTextureOpacity = 64; // 0-255
         private double cloudRotationRate = 1.0; // percentage of world rotation rate
 
-        private System.Windows.Media.Color cloudColor = System.Windows.Media.Colors.White;
-        private System.Windows.Media.Color sunlightColor = System.Windows.Media.Colors.White;
-        private System.Windows.Media.Color ambientLightColor = System.Windows.Media.Color.FromArgb(64, 128, 128, 128);
+        private System.Windows.Media.Color cloudColor = Colors.White;
+        private System.Windows.Media.Color sunlightColor = Colors.White;
+        private System.Windows.Media.Color ambientLightColor = Colors.White;
+
+        private double sunlightIntensity = 0.5; // 0-1
+        private double ambientLightIntensity = 0.75; // 0-1
 
         private bool recordingEnabled;
         private int frameCount;
@@ -78,6 +82,7 @@ namespace RealmStudio
 
         private readonly LocalStar localStarData = new();
         private readonly PlanetaryRing planetaryRingData = new();
+        private readonly PlanetAtmosphere atmosphereData = new();
 
         private readonly ModelVisual3D GridlinesModel = new();
         private readonly GridLinesVisual3D GridLines = new()
@@ -755,7 +760,7 @@ namespace RealmStudio
             ThreeDViewer.HelixTKViewport.Background = null;
         }
 
-        #region Cloud Layer
+        #region Cloud Layer Event Handlers
 
         private void EnableCloudsSwitch_CheckedChanged()
         {
@@ -936,7 +941,11 @@ namespace RealmStudio
                     {
                         if (child is ModelVisual3D m3d && m3d.Content is DirectionalLight dl && dl.GetName() == "Sunlight")
                         {
-                            dl.Color = sunlightColor;
+                            dl.Color = System.Windows.Media.Color.FromArgb((byte)(sunlightIntensity * 255),
+                                (byte)Math.Min(255, sunlightColor.R * sunlightIntensity),
+                                (byte)Math.Min(255, sunlightColor.G * sunlightIntensity),
+                                (byte)Math.Min(255, sunlightColor.B * sunlightIntensity));
+                            break;
                         }
                     }
                 }
@@ -957,10 +966,14 @@ namespace RealmStudio
 
         private void AmbientLightColorButton_Click(object sender, EventArgs e)
         {
-            System.Drawing.Color c = UtilityMethods.SelectColorFromDialog(this, System.Drawing.Color.FromArgb(localStarData.StarColor.A, localStarData.StarColor.R, localStarData.StarColor.G, localStarData.StarColor.B));
+            System.Drawing.Color c = UtilityMethods.SelectColorFromDialog(
+                this, System.Drawing.Color.FromArgb(localStarData.StarColor.A, localStarData.StarColor.R,
+                localStarData.StarColor.G, localStarData.StarColor.B));
+
             if (c != System.Drawing.Color.Empty)
             {
                 AmbientLightColorButton.BackColor = c;
+                ambientLightColor = System.Windows.Media.Color.FromArgb(c.A, c.R, c.G, c.B);
 
                 if (ThreeDViewer.HelixTKViewport.Children.Count > 1)
                 {
@@ -969,9 +982,61 @@ namespace RealmStudio
                     {
                         if (child is ModelVisual3D m3d && m3d.Content is AmbientLight al && al.GetName() == "AmbientLight")
                         {
-                            al.Color = ambientLightColor;
+                            al.Color = System.Windows.Media.Color.FromArgb((byte)(ambientLightIntensity * 255),
+                                (byte)Math.Min(255, ambientLightColor.R * ambientLightIntensity),
+                                (byte)Math.Min(255, ambientLightColor.G * ambientLightIntensity),
+                                (byte)Math.Min(255, ambientLightColor.B * ambientLightIntensity));
+
                             break;
                         }
+                    }
+                }
+            }
+        }
+
+        private void SunlightIntensityTrack_Scroll(object sender, EventArgs e)
+        {
+            // sunlight intensity is just the color of the light
+            // the close to white, the more "intense" the light
+
+            sunlightIntensity = SunlightIntensityTrack.Value / 100.0;
+
+            if (ThreeDViewer.HelixTKViewport.Children.Count > 1)
+            {
+                // find the sun light
+                foreach (var child in ThreeDViewer.HelixTKViewport.Children)
+                {
+                    if (child is ModelVisual3D m3d && m3d.Content is DirectionalLight dl && dl.GetName() == "Sunlight")
+                    {
+                        dl.Color = System.Windows.Media.Color.FromArgb((byte)(sunlightIntensity * 255),
+                            (byte)Math.Min(255, sunlightColor.R * sunlightIntensity),
+                            (byte)Math.Min(255, sunlightColor.G * sunlightIntensity),
+                            (byte)Math.Min(255, sunlightColor.B * sunlightIntensity));
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void AmbientLightIntensityTrack_Scroll(object sender, EventArgs e)
+        {
+            // ambient light intensity is just the color of the light
+            // the close to white, the more "intense" the light
+
+            ambientLightIntensity = AmbientLightIntensityTrack.Value / 100.0;
+
+            if (ThreeDViewer.HelixTKViewport.Children.Count > 1)
+            {
+                // find the ambient light
+                foreach (var child in ThreeDViewer.HelixTKViewport.Children)
+                {
+                    if (child is ModelVisual3D m3d && m3d.Content is AmbientLight al && al.GetName() == "AmbientLight")
+                    {
+                        al.Color = System.Windows.Media.Color.FromArgb((byte)(ambientLightIntensity * 255),
+                            (byte)Math.Min(255, ambientLightColor.R * ambientLightIntensity),
+                            (byte)Math.Min(255, ambientLightColor.G * ambientLightIntensity),
+                            (byte)Math.Min(255, ambientLightColor.B * ambientLightIntensity));
+                        break;
                     }
                 }
             }
@@ -1027,6 +1092,8 @@ namespace RealmStudio
                             {
                                 ShowAmbientLight();
                             }
+
+                            ApplyEnabledEffects();
 
                         }
                         catch (Exception ex)
@@ -1109,7 +1176,6 @@ namespace RealmStudio
 
         #endregion
 
-
         #region Planetary Ring Event Handlers
 
         private void ShowRingsSwitch_CheckedChanged()
@@ -1190,6 +1256,7 @@ namespace RealmStudio
         private void RingTintColorButton_Click(object sender, EventArgs e)
         {
             planetaryRingData.RingColor = UtilityMethods.SelectColorFromDialog(this, planetaryRingData.RingColor);
+            RingTintColorButton.BackColor = planetaryRingData.RingColor;
             ShowPlanetaryRing();
         }
 
@@ -1197,6 +1264,99 @@ namespace RealmStudio
         {
             planetaryRingData.RingBrushOpacity = RingOpacityTrack.Value / 100.0;
             ShowPlanetaryRing();
+        }
+
+        #endregion
+
+        #region Planet Atmosphere Event Handlers
+        private void ShowAtmosphereSwitch_CheckedChanged()
+        {
+            if (ShowAtmosphereSwitch.Checked)
+            {
+                ShowAtmosphere();
+            }
+            else
+            {
+                RemoveAtmosphere();
+            }
+        }
+
+        private void SelectAtmosphereColorButton_Click(object sender, EventArgs e)
+        {
+            atmosphereData.AtmosphereColor = UtilityMethods.SelectColorFromDialog(this, atmosphereData.AtmosphereColor);
+            SelectAtmosphereColorButton.BackColor = atmosphereData.AtmosphereColor;
+            ShowAtmosphere();
+        }
+
+        private void AtmosphereAltitudeTrack_Scroll(object sender, EventArgs e)
+        {
+            atmosphereData.AtmosphereRadius = AtmosphereAltitudeTrack.Value / 100.0;
+            ShowAtmosphere();
+        }
+
+        private void AtmosphereDensityTrack_Scroll(object sender, EventArgs e)
+        {
+            atmosphereData.AtmosphereOpacity = AtmosphereDensityTrack.Value / 100.0;
+            ShowAtmosphere();
+        }
+
+        #endregion
+
+        #region Scene Effect Event Handlers
+
+        private void EnableBlurSwitch_CheckedChanged()
+        {
+            ApplyEnabledEffects();
+        }
+
+        private void BlurAmountTrack_Scroll(object sender, EventArgs e)
+        {
+            ApplyEnabledEffects();
+        }
+
+        private void EnableBleachBypassSwitch_CheckedChanged()
+        {
+            ApplyEnabledEffects();
+        }
+
+        private void BleachBypassOpacityTrack_Scroll(object sender, EventArgs e)
+        {
+            ApplyEnabledEffects();
+        }
+
+        private void EnableBloomSwitch_CheckedChanged()
+        {
+            ApplyEnabledEffects();
+        }
+
+        private void SceneIntensityTrack_Scroll(object sender, EventArgs e)
+        {
+            ApplyEnabledEffects();
+        }
+
+        private void GlowIntensityTrack_Scroll(object sender, EventArgs e)
+        {
+            ApplyEnabledEffects();
+        }
+
+        private void ThresholdValueTrack_Scroll(object sender, EventArgs e)
+        {
+            ApplyEnabledEffects();
+        }
+
+        private void BlurWidthTrack_Scroll(object sender, EventArgs e)
+        {
+            ApplyEnabledEffects();
+        }
+
+        private void EnableSepiaSwitch_CheckedChanged()
+        {
+            ApplyEnabledEffects();
+        }
+
+        private void SepiaAmountTrack_Scroll(object sender, EventArgs e)
+        {
+            ApplyEnabledEffects();
         }
 
         #endregion
@@ -1242,6 +1402,11 @@ namespace RealmStudio
                 ShowAmbientLight();
             }
 
+            if (EnableSunlightSwitch.Checked)
+            {
+                ShowSunlight();
+            }
+
             ThreeDViewer.HelixTKViewport.ResetCamera();
             ThreeDViewer.ModelCamera.UpDirection = new Vector3D(0, 0, 1);
             ThreeDViewer.ModelCamera.LookDirection = new Vector3D(1, 0, 0);
@@ -1276,12 +1441,14 @@ namespace RealmStudio
                 Radius = 1.05,
                 ThetaDiv = 90,
                 PhiDiv = 45,
-                BackMaterial = new DiffuseMaterial(new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent))
+                BackMaterial = new DiffuseMaterial(new SolidColorBrush(Colors.Transparent))
             };
 
             cloudLayer.SetName("CloudLayer");
 
             System.Windows.Media.Color materialColor = System.Windows.Media.Color.FromArgb((byte)cloudTextureOpacity, cloudColor.R, cloudColor.G, cloudColor.B);
+
+            bool error = false;
 
             if (DefaultCloudTextureRadio.Checked)
             {
@@ -1312,11 +1479,15 @@ namespace RealmStudio
                 }
                 else
                 {
+                    error = true;
                     MessageBox.Show("No cloud texture file selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
-            ThreeDViewer.HelixTKViewport.Children.Add(cloudLayer);
+            if (!error)
+            {
+                ThreeDViewer.HelixTKViewport.Children.Add(cloudLayer);
+            }
         }
 
         #endregion
@@ -1343,7 +1514,13 @@ namespace RealmStudio
         {
             // directional light
             // -Y is left, -Z is up
-            DirectionalLight directionalLight = new(Colors.White, new Vector3D(0, -3, 0));
+
+            System.Windows.Media.Color sunColor = System.Windows.Media.Color.FromArgb((byte)(sunlightIntensity * 255),
+                (byte)Math.Min(255, sunlightColor.R * sunlightIntensity),
+                (byte)Math.Min(255, sunlightColor.G * sunlightIntensity),
+                (byte)Math.Min(255, sunlightColor.B * sunlightIntensity));
+
+            DirectionalLight directionalLight = new(sunColor, new Vector3D(0, -3, 0));
             directionalLight.SetName("Sunlight");
             ThreeDViewer.HelixTKViewport.Children.Add(new ModelVisual3D
             {
@@ -1373,7 +1550,12 @@ namespace RealmStudio
 
         private void ShowAmbientLight()
         {
-            AmbientLight ambient = new(ambientLightColor);
+            System.Windows.Media.Color ambientColor = System.Windows.Media.Color.FromArgb((byte)(ambientLightIntensity * 255),
+                (byte)Math.Min(255, ambientLightColor.R * ambientLightIntensity),
+                (byte)Math.Min(255, ambientLightColor.G * ambientLightIntensity),
+                (byte)Math.Min(255, ambientLightColor.B * ambientLightIntensity));
+
+            AmbientLight ambient = new(ambientColor);
             ambient.SetName("AmbientLight");
 
             ThreeDViewer.HelixTKViewport.Children.Add(new ModelVisual3D
@@ -1976,7 +2158,7 @@ namespace RealmStudio
                     RadiusY = 0.5,
                     GradientStops =
                     {
-                        new GradientStop(System.Windows.Media.Colors.Transparent, 0),
+                        new GradientStop(Colors.Transparent, 0),
                         new GradientStop(Colors.Transparent, 0.5),
                         new GradientStop(coronaMaterialColor, 1),
                     },
@@ -2376,9 +2558,9 @@ namespace RealmStudio
             Bitmap b = DrawingMethods.BitmapImageToBitmap(ringImage);
 
             SKBitmap skb = b.ToSKBitmap();
-            SKBitmap tintedBitmap = new SKBitmap(skb.Width, skb.Height);
+            SKBitmap tintedBitmap = new(skb.Width, skb.Height);
 
-            using SKCanvas canvas = new SKCanvas(tintedBitmap);
+            using SKCanvas canvas = new(tintedBitmap);
 
             SKPaint ringPaint = new()
             {
@@ -2412,12 +2594,12 @@ namespace RealmStudio
             transparentGroup.Children.Add(new DiffuseMaterial(transparentBrush));
 
             // construct the tilt angle transform
-            AxisAngleRotation3D rotation = new(new Vector3D(1, 0, 0), planetaryRingData.RingTiltAngle);
+            AxisAngleRotation3D rotation = new(new Vector3D(1, 1, 0), planetaryRingData.RingTiltAngle);
             RotateTransform3D rotationTransform = new(rotation);
 
             // the transparent ring0 is used to mask the
             // rings so that there is distance between the
-            // planet surface and the rings
+            // planet surface and the rings;
             // the order that the rings are added to the viewport
             // is important; the transparent ring0 must be added first
 
@@ -2474,6 +2656,127 @@ namespace RealmStudio
                     }
                 }
             }
+        }
+
+        #endregion
+
+        #region Atmosphere Methods
+
+        private void RemoveAtmosphere()
+        {
+            if (ThreeDViewer.HelixTKViewport.Children.Count > 1)
+            {
+                for (int i = ThreeDViewer.HelixTKViewport.Children.Count - 1; i >= 0; i--)
+                {
+                    if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dAtmosphere && sv3dAtmosphere.GetName() == "Atmosphere")
+                    {
+                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                    }
+                }
+
+                for (int i = ThreeDViewer.HelixTKViewport.Children.Count - 1; i >= 0; i--)
+                {
+                    if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3dAtmosphereOutline
+                        && sv3dAtmosphereOutline.GetName() == "AtmosphereOutline")
+                    {
+                        ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                    }
+                }
+            }
+        }
+
+        private void ShowAtmosphere()
+        {
+            RemoveAtmosphere();
+
+            System.Windows.Media.Color atmosphereMaterialColor =
+                System.Windows.Media.Color.FromArgb(255, atmosphereData.AtmosphereColor.R,
+                atmosphereData.AtmosphereColor.G, atmosphereData.AtmosphereColor.B);
+
+            DiffuseMaterial atmosphereMaterial = new()
+            {
+                AmbientColor = atmosphereMaterialColor,
+                Color = atmosphereMaterialColor,
+                Brush = new RadialGradientBrush()
+                {
+                    Opacity = atmosphereData.AtmosphereOpacity,
+                    RadiusX = 0.5,
+                    RadiusY = 0.5,
+                    GradientStops =
+                    {
+                        new GradientStop(Colors.Transparent, 0),
+                        new GradientStop(atmosphereMaterialColor, 1),
+                    },
+                }
+            };
+
+            SolidColorBrush whiteBrush = new(Colors.White)
+            {
+                Opacity = atmosphereData.AtmosphereOpacity,
+            };
+
+            MaterialGroup atmosphereMaterialGroup = new();
+            atmosphereMaterialGroup.Children.Add(atmosphereMaterial);
+            atmosphereMaterialGroup.Children.Add(new SpecularMaterial(whiteBrush, 100));
+
+
+            // ATMOSPHERE ---------------------------------------------------------------------
+
+            SphereVisual3D atmosphere = new()
+            {
+                Center = new Point3D(0, 0, 0),
+                Radius = 1.0 + atmosphereData.AtmosphereRadius,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = atmosphereMaterialGroup,
+                Material = atmosphereMaterialGroup,
+            };
+
+            atmosphere.SetName("Atmosphere");
+
+            ThreeDViewer.HelixTKViewport.Children.Add(atmosphere);
+        }
+
+        private void ApplyEnabledEffects()
+        {
+            BlurEffect blurEffect = new()
+            {
+                Radius = BlurAmountTrack.Value,
+                KernelType = KernelType.Gaussian,
+                RenderingBias = RenderingBias.Quality
+            };
+
+            // apply the blur effect to the viewport  
+            ThreeDViewer.ContentControl1.Effect = blurEffect;
+
+            // apply the bleach bypass effect to the viewport  
+            BleachBypassEffect bleachBypassEffect = new()
+            {
+                Opacity = BleachBypassOpacityTrack.Value / 100.0
+            };
+
+            ThreeDViewer.ContentControl2.Effect = EnableBleachBypassSwitch.Checked ? bleachBypassEffect : null;
+
+            BloomEffect bloomEffect = new()
+            {
+                SceneIntensity = 0.5f,
+                GlowIntensity = 0.5f,
+                HighlightThreshold = 0.9f,
+                HighlightIntensity = 0.5f,
+                BlurWidth = BlurWidthTrack.Value / 10.0f,
+            };
+
+            ThreeDViewer.ContentControl3.Effect = EnableBloomSwitch.Checked ? bloomEffect : null;
+
+            SepiaEffect sepiaEffect = new()
+            {
+                Desaturation = SepiaAmountTrack.Value / 100.0f
+            };
+
+            ThreeDViewer.ContentControl4.Effect = EnableSepiaSwitch.Checked ? sepiaEffect : null;
+
+            TDContainerPanel.Invalidate();
+
         }
 
         #endregion
@@ -2785,34 +3088,39 @@ namespace RealmStudio
 
         #endregion
 
+        #region Data Structures
+
+        internal class LocalStar
+        {
+            internal Point3D Center { get; set; } = new Point3D(3, 3, 0);
+            internal double Radius { get; set; } = 0.15;
+            internal LocalStarImageType StarImageType { get; set; } = LocalStarImageType.Sun;
+            internal System.Windows.Media.Color StarColor { get; set; } = Colors.Yellow;
+            internal int LightIntensity { get; set; } = 10;
+            internal Transform3D LocationTransform { get; set; } = Transform3D.Identity;
+            internal Quaternion RotationQuaternion { get; set; } = Quaternion.Identity;
+        }
+
+        internal class PlanetaryRing
+        {
+            internal byte[] RingImageResource = Resources.saturn_ring;
+            internal double InnerRadius { get; set; } = 1.5;
+            internal double OuterRadius { get; set; } = 2.5;
+            internal System.Drawing.Color RingColor { get; set; } = System.Drawing.Color.White;
+            internal double RingTiltAngle { get; set; }
+            internal double RingBrushOpacity { get; set; } = 100;
+
+        }
+
+        internal class PlanetAtmosphere
+        {
+            internal double AtmosphereRadius { get; set; } = 0.1;
+            internal System.Drawing.Color AtmosphereColor { get; set; } = System.Drawing.Color.FromArgb(255, 103, 137, 175);
+            internal double AtmosphereOpacity { get; set; } = 0.5;
+        }
+
+        #endregion
 
 
     }
-
-    #region Data Structures
-
-    internal class LocalStar
-    {
-        internal Point3D Center { get; set; } = new Point3D(3, 3, 0);
-        internal double Radius { get; set; } = 0.15;
-        internal LocalStarImageType StarImageType { get; set; } = LocalStarImageType.Sun;
-        internal System.Windows.Media.Color StarColor { get; set; } = System.Windows.Media.Colors.Yellow;
-        internal int LightIntensity { get; set; } = 10;
-        internal Transform3D LocationTransform { get; set; } = Transform3D.Identity;
-        internal Quaternion RotationQuaternion { get; set; } = Quaternion.Identity;
-    }
-
-    internal class PlanetaryRing
-    {
-        internal byte[] RingImageResource = Resources.saturn_ring;
-        internal double InnerRadius { get; set; } = 1.5;
-        internal double OuterRadius { get; set; } = 2.5;
-        internal System.Drawing.Color RingColor { get; set; } = System.Drawing.Color.White;
-        internal double RingTiltAngle { get; set; }
-        internal double RingBrushOpacity { get; set; } = 100;
-
-    }
-
-
-    #endregion
 }

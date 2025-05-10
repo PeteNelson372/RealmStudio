@@ -6413,14 +6413,14 @@
             // 
             SKGLRenderControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             SKGLRenderControl.BackColor = Color.White;
-            SKGLRenderControl.BorderStyle = BorderStyle.FixedSingle;
+            //SKGLRenderControl.BorderStyle = BorderStyle.FixedSingle;
             SKGLRenderControl.Location = new Point(272, 112);
             SKGLRenderControl.Margin = new Padding(0);
             SKGLRenderControl.Name = "SKGLRenderControl";
             SKGLRenderControl.Size = new Size(1128, 848);
             SKGLRenderControl.TabIndex = 5;
             SKGLRenderControl.Visible = false;
-            SKGLRenderControl.VSync = false;
+            //SKGLRenderControl.VSync = false;
             SKGLRenderControl.PaintSurface += SKGLRenderControl_PaintSurface;
             SKGLRenderControl.Enter += SKGLRenderControl_Enter;
             SKGLRenderControl.KeyDown += SKGLRenderControl_KeyDown;

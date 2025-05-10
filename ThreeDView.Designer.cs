@@ -75,7 +75,32 @@
             label13 = new Label();
             ShowLocalStarSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             AtmospherePage = new TabPage();
+            label28 = new Label();
+            AtmosphereDensityTrack = new TrackBar();
+            label27 = new Label();
+            AtmosphereAltitudeTrack = new TrackBar();
+            label26 = new Label();
+            SelectAtmosphereColorButton = new FontAwesome.Sharp.IconButton();
+            label25 = new Label();
+            ShowAtmosphereSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             EffectsPage = new TabPage();
+            panel1 = new Panel();
+            label36 = new Label();
+            SepiaAmountTrack = new TrackBar();
+            label38 = new Label();
+            EnableSepiaSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label41 = new Label();
+            BlurWidthTrack = new TrackBar();
+            label37 = new Label();
+            EnableBloomSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label35 = new Label();
+            BleachBypassOpacityTrack = new TrackBar();
+            label34 = new Label();
+            EnableBleachBypassSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label33 = new Label();
+            BlurAmountTrack = new TrackBar();
+            label31 = new Label();
+            EnableBlurSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             RingPage = new TabPage();
             label24 = new Label();
             RingOpacityTrack = new TrackBar();
@@ -93,6 +118,10 @@
             MoonPage = new TabPage();
             LightingPanel = new Panel();
             LightingGroup = new GroupBox();
+            label30 = new Label();
+            AmbientLightIntensityTrack = new TrackBar();
+            label29 = new Label();
+            SunlightIntensityTrack = new TrackBar();
             label12 = new Label();
             AmbientLightColorButton = new FontAwesome.Sharp.IconButton();
             label11 = new Label();
@@ -132,6 +161,15 @@
             ((System.ComponentModel.ISupportInitialize)LocalStarSizeTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LocalStarLocationUDTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LocalStarLocationLRTrack).BeginInit();
+            AtmospherePage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)AtmosphereDensityTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)AtmosphereAltitudeTrack).BeginInit();
+            EffectsPage.SuspendLayout();
+            panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)SepiaAmountTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)BlurWidthTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)BleachBypassOpacityTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)BlurAmountTrack).BeginInit();
             RingPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RingOpacityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RingAngleTrack).BeginInit();
@@ -139,6 +177,8 @@
             ((System.ComponentModel.ISupportInitialize)InnerRadiusTrack).BeginInit();
             LightingPanel.SuspendLayout();
             LightingGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)AmbientLightIntensityTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SunlightIntensityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SunlightVerticalDirectionTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SunlightHorizontalDirectionTrack).BeginInit();
             CloudsPanel.SuspendLayout();
@@ -604,6 +644,7 @@
             // FeaturesPanel
             // 
             FeaturesPanel.BackColor = Color.WhiteSmoke;
+            FeaturesPanel.BorderStyle = BorderStyle.FixedSingle;
             FeaturesPanel.Controls.Add(FeaturesTab);
             FeaturesPanel.Location = new Point(794, 293);
             FeaturesPanel.Name = "FeaturesPanel";
@@ -620,12 +661,12 @@
             FeaturesTab.Controls.Add(RingPage);
             FeaturesTab.Controls.Add(MoonPage);
             FeaturesTab.Dock = DockStyle.Fill;
-            FeaturesTab.Font = new Font("MS Reference Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FeaturesTab.Font = new Font("MS Reference Sans Serif", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FeaturesTab.Location = new Point(0, 0);
             FeaturesTab.Multiline = true;
             FeaturesTab.Name = "FeaturesTab";
             FeaturesTab.SelectedIndex = 0;
-            FeaturesTab.Size = new Size(200, 302);
+            FeaturesTab.Size = new Size(198, 300);
             FeaturesTab.TabIndex = 0;
             // 
             // LocalStarPage
@@ -645,10 +686,10 @@
             LocalStarPage.Controls.Add(label13);
             LocalStarPage.Controls.Add(ShowLocalStarSwitch);
             LocalStarPage.ForeColor = SystemColors.ControlDarkDark;
-            LocalStarPage.Location = new Point(24, 4);
+            LocalStarPage.Location = new Point(21, 4);
             LocalStarPage.Name = "LocalStarPage";
             LocalStarPage.Padding = new Padding(3);
-            LocalStarPage.Size = new Size(172, 294);
+            LocalStarPage.Size = new Size(173, 292);
             LocalStarPage.TabIndex = 0;
             LocalStarPage.Text = "Local Star";
             // 
@@ -782,7 +823,7 @@
             LocalStarTextureCombo.Items.AddRange(new object[] { "Sun", "Nebula", "Gas Giant", "Corona", "Black Hole" });
             LocalStarTextureCombo.Location = new Point(6, 65);
             LocalStarTextureCombo.Name = "LocalStarTextureCombo";
-            LocalStarTextureCombo.Size = new Size(160, 23);
+            LocalStarTextureCombo.Size = new Size(160, 20);
             LocalStarTextureCombo.TabIndex = 66;
             LocalStarTextureCombo.SelectedIndexChanged += LocalStarTextureCombo_SelectedIndexChanged;
             // 
@@ -838,23 +879,487 @@
             // AtmospherePage
             // 
             AtmospherePage.BackColor = Color.FromArgb(244, 241, 243);
+            AtmospherePage.Controls.Add(label28);
+            AtmospherePage.Controls.Add(AtmosphereDensityTrack);
+            AtmospherePage.Controls.Add(label27);
+            AtmospherePage.Controls.Add(AtmosphereAltitudeTrack);
+            AtmospherePage.Controls.Add(label26);
+            AtmospherePage.Controls.Add(SelectAtmosphereColorButton);
+            AtmospherePage.Controls.Add(label25);
+            AtmospherePage.Controls.Add(ShowAtmosphereSwitch);
             AtmospherePage.ForeColor = SystemColors.ControlDarkDark;
-            AtmospherePage.Location = new Point(24, 4);
+            AtmospherePage.Location = new Point(21, 4);
             AtmospherePage.Name = "AtmospherePage";
             AtmospherePage.Padding = new Padding(3);
-            AtmospherePage.Size = new Size(172, 294);
+            AtmospherePage.Size = new Size(173, 292);
             AtmospherePage.TabIndex = 1;
             AtmospherePage.Text = "Atmosphere";
+            // 
+            // label28
+            // 
+            label28.AutoSize = true;
+            label28.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label28.Location = new Point(8, 160);
+            label28.Name = "label28";
+            label28.Size = new Size(46, 15);
+            label28.TabIndex = 76;
+            label28.Text = "Density";
+            // 
+            // AtmosphereDensityTrack
+            // 
+            AtmosphereDensityTrack.AutoSize = false;
+            AtmosphereDensityTrack.BackColor = SystemColors.Control;
+            AtmosphereDensityTrack.Location = new Point(7, 178);
+            AtmosphereDensityTrack.Maximum = 100;
+            AtmosphereDensityTrack.Name = "AtmosphereDensityTrack";
+            AtmosphereDensityTrack.RightToLeft = RightToLeft.No;
+            AtmosphereDensityTrack.Size = new Size(160, 20);
+            AtmosphereDensityTrack.TabIndex = 75;
+            AtmosphereDensityTrack.TickStyle = TickStyle.None;
+            AtmosphereDensityTrack.Value = 50;
+            AtmosphereDensityTrack.Scroll += AtmosphereDensityTrack_Scroll;
+            // 
+            // label27
+            // 
+            label27.AutoSize = true;
+            label27.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label27.Location = new Point(7, 120);
+            label27.Name = "label27";
+            label27.Size = new Size(49, 15);
+            label27.TabIndex = 74;
+            label27.Text = "Altitude";
+            // 
+            // AtmosphereAltitudeTrack
+            // 
+            AtmosphereAltitudeTrack.AutoSize = false;
+            AtmosphereAltitudeTrack.BackColor = SystemColors.Control;
+            AtmosphereAltitudeTrack.Location = new Point(6, 138);
+            AtmosphereAltitudeTrack.Maximum = 150;
+            AtmosphereAltitudeTrack.Name = "AtmosphereAltitudeTrack";
+            AtmosphereAltitudeTrack.RightToLeft = RightToLeft.No;
+            AtmosphereAltitudeTrack.Size = new Size(160, 20);
+            AtmosphereAltitudeTrack.TabIndex = 73;
+            AtmosphereAltitudeTrack.TickStyle = TickStyle.None;
+            AtmosphereAltitudeTrack.Value = 5;
+            AtmosphereAltitudeTrack.Scroll += AtmosphereAltitudeTrack_Scroll;
+            // 
+            // label26
+            // 
+            label26.AutoSize = true;
+            label26.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label26.Location = new Point(64, 74);
+            label26.Name = "label26";
+            label26.Size = new Size(104, 15);
+            label26.TabIndex = 72;
+            label26.Text = "Atmosphere Color";
+            // 
+            // SelectAtmosphereColorButton
+            // 
+            SelectAtmosphereColorButton.BackColor = Color.White;
+            SelectAtmosphereColorButton.FlatAppearance.BorderColor = Color.Black;
+            SelectAtmosphereColorButton.FlatStyle = FlatStyle.Flat;
+            SelectAtmosphereColorButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SelectAtmosphereColorButton.ForeColor = SystemColors.ControlDarkDark;
+            SelectAtmosphereColorButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SelectAtmosphereColorButton.IconColor = Color.Tan;
+            SelectAtmosphereColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectAtmosphereColorButton.IconSize = 24;
+            SelectAtmosphereColorButton.Location = new Point(6, 54);
+            SelectAtmosphereColorButton.Margin = new Padding(1, 3, 1, 3);
+            SelectAtmosphereColorButton.Name = "SelectAtmosphereColorButton";
+            SelectAtmosphereColorButton.Size = new Size(54, 54);
+            SelectAtmosphereColorButton.TabIndex = 71;
+            SelectAtmosphereColorButton.Text = "Select Color";
+            SelectAtmosphereColorButton.UseVisualStyleBackColor = false;
+            SelectAtmosphereColorButton.Click += SelectAtmosphereColorButton_Click;
+            // 
+            // label25
+            // 
+            label25.AutoSize = true;
+            label25.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label25.Location = new Point(47, 15);
+            label25.Name = "label25";
+            label25.Size = new Size(104, 15);
+            label25.TabIndex = 67;
+            label25.Text = "Show Atmosphere";
+            // 
+            // ShowAtmosphereSwitch
+            // 
+            ShowAtmosphereSwitch.Alpha = 50;
+            ShowAtmosphereSwitch.BackColor = Color.Transparent;
+            ShowAtmosphereSwitch.Background = true;
+            ShowAtmosphereSwitch.Background_WidthPen = 2F;
+            ShowAtmosphereSwitch.BackgroundPen = false;
+            ShowAtmosphereSwitch.Checked = false;
+            ShowAtmosphereSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            ShowAtmosphereSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            ShowAtmosphereSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            ShowAtmosphereSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            ShowAtmosphereSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            ShowAtmosphereSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            ShowAtmosphereSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            ShowAtmosphereSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            ShowAtmosphereSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowAtmosphereSwitch.ColorValue = Color.ForestGreen;
+            ShowAtmosphereSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowAtmosphereSwitch.Font = new Font("Arial", 11F);
+            ShowAtmosphereSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowAtmosphereSwitch.Lighting = true;
+            ShowAtmosphereSwitch.LinearGradient_Background = false;
+            ShowAtmosphereSwitch.LinearGradient_Value = false;
+            ShowAtmosphereSwitch.LinearGradientPen = false;
+            ShowAtmosphereSwitch.Location = new Point(6, 14);
+            ShowAtmosphereSwitch.Name = "ShowAtmosphereSwitch";
+            ShowAtmosphereSwitch.PenWidth = 10;
+            ShowAtmosphereSwitch.RGB = false;
+            ShowAtmosphereSwitch.Rounding = true;
+            ShowAtmosphereSwitch.RoundingInt = 90;
+            ShowAtmosphereSwitch.Size = new Size(35, 20);
+            ShowAtmosphereSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowAtmosphereSwitch.TabIndex = 66;
+            ShowAtmosphereSwitch.Tag = "Cyber";
+            ShowAtmosphereSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowAtmosphereSwitch.Timer_RGB = 300;
+            ShowAtmosphereSwitch.CheckedChanged += ShowAtmosphereSwitch_CheckedChanged;
             // 
             // EffectsPage
             // 
             EffectsPage.BackColor = Color.FromArgb(244, 241, 243);
+            EffectsPage.Controls.Add(panel1);
             EffectsPage.ForeColor = SystemColors.ControlDarkDark;
-            EffectsPage.Location = new Point(24, 4);
+            EffectsPage.Location = new Point(21, 4);
             EffectsPage.Name = "EffectsPage";
-            EffectsPage.Size = new Size(172, 294);
+            EffectsPage.Size = new Size(173, 292);
             EffectsPage.TabIndex = 2;
             EffectsPage.Text = "Effects";
+            // 
+            // panel1
+            // 
+            panel1.AutoScroll = true;
+            panel1.Controls.Add(label36);
+            panel1.Controls.Add(SepiaAmountTrack);
+            panel1.Controls.Add(label38);
+            panel1.Controls.Add(EnableSepiaSwitch);
+            panel1.Controls.Add(label41);
+            panel1.Controls.Add(BlurWidthTrack);
+            panel1.Controls.Add(label37);
+            panel1.Controls.Add(EnableBloomSwitch);
+            panel1.Controls.Add(label35);
+            panel1.Controls.Add(BleachBypassOpacityTrack);
+            panel1.Controls.Add(label34);
+            panel1.Controls.Add(EnableBleachBypassSwitch);
+            panel1.Controls.Add(label33);
+            panel1.Controls.Add(BlurAmountTrack);
+            panel1.Controls.Add(label31);
+            panel1.Controls.Add(EnableBlurSwitch);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(173, 292);
+            panel1.TabIndex = 0;
+            // 
+            // label36
+            // 
+            label36.AutoSize = true;
+            label36.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label36.ForeColor = SystemColors.ControlDarkDark;
+            label36.Location = new Point(6, 181);
+            label36.Name = "label36";
+            label36.Size = new Size(51, 15);
+            label36.TabIndex = 104;
+            label36.Text = "Amount";
+            label36.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // SepiaAmountTrack
+            // 
+            SepiaAmountTrack.AutoSize = false;
+            SepiaAmountTrack.BackColor = SystemColors.Control;
+            SepiaAmountTrack.Location = new Point(56, 180);
+            SepiaAmountTrack.Maximum = 100;
+            SepiaAmountTrack.Name = "SepiaAmountTrack";
+            SepiaAmountTrack.RightToLeft = RightToLeft.No;
+            SepiaAmountTrack.Size = new Size(113, 20);
+            SepiaAmountTrack.TabIndex = 103;
+            SepiaAmountTrack.TickStyle = TickStyle.None;
+            SepiaAmountTrack.Value = 50;
+            SepiaAmountTrack.Scroll += SepiaAmountTrack_Scroll;
+            // 
+            // label38
+            // 
+            label38.AutoSize = true;
+            label38.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label38.ForeColor = SystemColors.ControlDarkDark;
+            label38.Location = new Point(47, 162);
+            label38.Name = "label38";
+            label38.Size = new Size(35, 15);
+            label38.TabIndex = 102;
+            label38.Text = "Sepia";
+            // 
+            // EnableSepiaSwitch
+            // 
+            EnableSepiaSwitch.Alpha = 50;
+            EnableSepiaSwitch.BackColor = Color.Transparent;
+            EnableSepiaSwitch.Background = true;
+            EnableSepiaSwitch.Background_WidthPen = 2F;
+            EnableSepiaSwitch.BackgroundPen = false;
+            EnableSepiaSwitch.Checked = false;
+            EnableSepiaSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            EnableSepiaSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            EnableSepiaSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            EnableSepiaSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            EnableSepiaSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            EnableSepiaSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            EnableSepiaSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            EnableSepiaSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            EnableSepiaSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            EnableSepiaSwitch.ColorValue = Color.ForestGreen;
+            EnableSepiaSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            EnableSepiaSwitch.Font = new Font("Arial", 11F);
+            EnableSepiaSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            EnableSepiaSwitch.Lighting = true;
+            EnableSepiaSwitch.LinearGradient_Background = false;
+            EnableSepiaSwitch.LinearGradient_Value = false;
+            EnableSepiaSwitch.LinearGradientPen = false;
+            EnableSepiaSwitch.Location = new Point(6, 159);
+            EnableSepiaSwitch.Name = "EnableSepiaSwitch";
+            EnableSepiaSwitch.PenWidth = 10;
+            EnableSepiaSwitch.RGB = false;
+            EnableSepiaSwitch.Rounding = true;
+            EnableSepiaSwitch.RoundingInt = 90;
+            EnableSepiaSwitch.Size = new Size(35, 20);
+            EnableSepiaSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            EnableSepiaSwitch.TabIndex = 101;
+            EnableSepiaSwitch.Tag = "Cyber";
+            EnableSepiaSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            EnableSepiaSwitch.Timer_RGB = 300;
+            EnableSepiaSwitch.CheckedChanged += EnableSepiaSwitch_CheckedChanged;
+            // 
+            // label41
+            // 
+            label41.AutoSize = true;
+            label41.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label41.ForeColor = SystemColors.ControlDarkDark;
+            label41.Location = new Point(6, 137);
+            label41.Name = "label41";
+            label41.Size = new Size(52, 15);
+            label41.TabIndex = 100;
+            label41.Text = "Strength";
+            label41.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // BlurWidthTrack
+            // 
+            BlurWidthTrack.AutoSize = false;
+            BlurWidthTrack.BackColor = SystemColors.Control;
+            BlurWidthTrack.Location = new Point(56, 136);
+            BlurWidthTrack.Maximum = 100;
+            BlurWidthTrack.Name = "BlurWidthTrack";
+            BlurWidthTrack.RightToLeft = RightToLeft.No;
+            BlurWidthTrack.Size = new Size(113, 20);
+            BlurWidthTrack.TabIndex = 99;
+            BlurWidthTrack.TickStyle = TickStyle.None;
+            BlurWidthTrack.Value = 20;
+            BlurWidthTrack.Scroll += BlurWidthTrack_Scroll;
+            // 
+            // label37
+            // 
+            label37.AutoSize = true;
+            label37.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label37.ForeColor = SystemColors.ControlDarkDark;
+            label37.Location = new Point(47, 118);
+            label37.Name = "label37";
+            label37.Size = new Size(42, 15);
+            label37.TabIndex = 90;
+            label37.Text = "Bloom";
+            // 
+            // EnableBloomSwitch
+            // 
+            EnableBloomSwitch.Alpha = 50;
+            EnableBloomSwitch.BackColor = Color.Transparent;
+            EnableBloomSwitch.Background = true;
+            EnableBloomSwitch.Background_WidthPen = 2F;
+            EnableBloomSwitch.BackgroundPen = false;
+            EnableBloomSwitch.Checked = false;
+            EnableBloomSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            EnableBloomSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            EnableBloomSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            EnableBloomSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            EnableBloomSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            EnableBloomSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            EnableBloomSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            EnableBloomSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            EnableBloomSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            EnableBloomSwitch.ColorValue = Color.ForestGreen;
+            EnableBloomSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            EnableBloomSwitch.Font = new Font("Arial", 11F);
+            EnableBloomSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            EnableBloomSwitch.Lighting = true;
+            EnableBloomSwitch.LinearGradient_Background = false;
+            EnableBloomSwitch.LinearGradient_Value = false;
+            EnableBloomSwitch.LinearGradientPen = false;
+            EnableBloomSwitch.Location = new Point(6, 115);
+            EnableBloomSwitch.Name = "EnableBloomSwitch";
+            EnableBloomSwitch.PenWidth = 10;
+            EnableBloomSwitch.RGB = false;
+            EnableBloomSwitch.Rounding = true;
+            EnableBloomSwitch.RoundingInt = 90;
+            EnableBloomSwitch.Size = new Size(35, 20);
+            EnableBloomSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            EnableBloomSwitch.TabIndex = 89;
+            EnableBloomSwitch.Tag = "Cyber";
+            EnableBloomSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            EnableBloomSwitch.Timer_RGB = 300;
+            EnableBloomSwitch.CheckedChanged += EnableBloomSwitch_CheckedChanged;
+            // 
+            // label35
+            // 
+            label35.AutoSize = true;
+            label35.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label35.ForeColor = SystemColors.ControlDarkDark;
+            label35.Location = new Point(6, 88);
+            label35.Name = "label35";
+            label35.Size = new Size(48, 15);
+            label35.TabIndex = 88;
+            label35.Text = "Opacity";
+            label35.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // BleachBypassOpacityTrack
+            // 
+            BleachBypassOpacityTrack.AutoSize = false;
+            BleachBypassOpacityTrack.BackColor = SystemColors.Control;
+            BleachBypassOpacityTrack.Location = new Point(56, 87);
+            BleachBypassOpacityTrack.Maximum = 100;
+            BleachBypassOpacityTrack.Name = "BleachBypassOpacityTrack";
+            BleachBypassOpacityTrack.RightToLeft = RightToLeft.No;
+            BleachBypassOpacityTrack.Size = new Size(113, 20);
+            BleachBypassOpacityTrack.TabIndex = 87;
+            BleachBypassOpacityTrack.TickStyle = TickStyle.None;
+            BleachBypassOpacityTrack.Scroll += BleachBypassOpacityTrack_Scroll;
+            // 
+            // label34
+            // 
+            label34.AutoSize = true;
+            label34.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label34.ForeColor = SystemColors.ControlDarkDark;
+            label34.Location = new Point(47, 62);
+            label34.Name = "label34";
+            label34.Size = new Size(81, 15);
+            label34.TabIndex = 86;
+            label34.Text = "Bleach Bypass";
+            // 
+            // EnableBleachBypassSwitch
+            // 
+            EnableBleachBypassSwitch.Alpha = 50;
+            EnableBleachBypassSwitch.BackColor = Color.Transparent;
+            EnableBleachBypassSwitch.Background = true;
+            EnableBleachBypassSwitch.Background_WidthPen = 2F;
+            EnableBleachBypassSwitch.BackgroundPen = false;
+            EnableBleachBypassSwitch.Checked = false;
+            EnableBleachBypassSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            EnableBleachBypassSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            EnableBleachBypassSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            EnableBleachBypassSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            EnableBleachBypassSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            EnableBleachBypassSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            EnableBleachBypassSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            EnableBleachBypassSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            EnableBleachBypassSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            EnableBleachBypassSwitch.ColorValue = Color.ForestGreen;
+            EnableBleachBypassSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            EnableBleachBypassSwitch.Font = new Font("Arial", 11F);
+            EnableBleachBypassSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            EnableBleachBypassSwitch.Lighting = true;
+            EnableBleachBypassSwitch.LinearGradient_Background = false;
+            EnableBleachBypassSwitch.LinearGradient_Value = false;
+            EnableBleachBypassSwitch.LinearGradientPen = false;
+            EnableBleachBypassSwitch.Location = new Point(6, 59);
+            EnableBleachBypassSwitch.Name = "EnableBleachBypassSwitch";
+            EnableBleachBypassSwitch.PenWidth = 10;
+            EnableBleachBypassSwitch.RGB = false;
+            EnableBleachBypassSwitch.Rounding = true;
+            EnableBleachBypassSwitch.RoundingInt = 90;
+            EnableBleachBypassSwitch.Size = new Size(35, 20);
+            EnableBleachBypassSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            EnableBleachBypassSwitch.TabIndex = 85;
+            EnableBleachBypassSwitch.Tag = "Cyber";
+            EnableBleachBypassSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            EnableBleachBypassSwitch.Timer_RGB = 300;
+            EnableBleachBypassSwitch.CheckedChanged += EnableBleachBypassSwitch_CheckedChanged;
+            // 
+            // label33
+            // 
+            label33.AutoSize = true;
+            label33.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label33.ForeColor = SystemColors.ControlDarkDark;
+            label33.Location = new Point(6, 32);
+            label33.Name = "label33";
+            label33.Size = new Size(51, 15);
+            label33.TabIndex = 84;
+            label33.Text = "Amount";
+            label33.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // BlurAmountTrack
+            // 
+            BlurAmountTrack.AutoSize = false;
+            BlurAmountTrack.BackColor = SystemColors.Control;
+            BlurAmountTrack.Location = new Point(56, 31);
+            BlurAmountTrack.Maximum = 20;
+            BlurAmountTrack.Name = "BlurAmountTrack";
+            BlurAmountTrack.RightToLeft = RightToLeft.No;
+            BlurAmountTrack.Size = new Size(113, 20);
+            BlurAmountTrack.TabIndex = 83;
+            BlurAmountTrack.TickStyle = TickStyle.None;
+            BlurAmountTrack.Value = 1;
+            BlurAmountTrack.Scroll += BlurAmountTrack_Scroll;
+            // 
+            // label31
+            // 
+            label31.AutoSize = true;
+            label31.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label31.ForeColor = SystemColors.ControlDarkDark;
+            label31.Location = new Point(44, 6);
+            label31.Name = "label31";
+            label31.Size = new Size(28, 15);
+            label31.TabIndex = 66;
+            label31.Text = "Blur";
+            // 
+            // EnableBlurSwitch
+            // 
+            EnableBlurSwitch.Alpha = 50;
+            EnableBlurSwitch.BackColor = Color.Transparent;
+            EnableBlurSwitch.Background = true;
+            EnableBlurSwitch.Background_WidthPen = 2F;
+            EnableBlurSwitch.BackgroundPen = false;
+            EnableBlurSwitch.Checked = false;
+            EnableBlurSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            EnableBlurSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            EnableBlurSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            EnableBlurSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            EnableBlurSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            EnableBlurSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            EnableBlurSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            EnableBlurSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            EnableBlurSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            EnableBlurSwitch.ColorValue = Color.ForestGreen;
+            EnableBlurSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            EnableBlurSwitch.Font = new Font("Arial", 11F);
+            EnableBlurSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            EnableBlurSwitch.Lighting = true;
+            EnableBlurSwitch.LinearGradient_Background = false;
+            EnableBlurSwitch.LinearGradient_Value = false;
+            EnableBlurSwitch.LinearGradientPen = false;
+            EnableBlurSwitch.Location = new Point(3, 3);
+            EnableBlurSwitch.Name = "EnableBlurSwitch";
+            EnableBlurSwitch.PenWidth = 10;
+            EnableBlurSwitch.RGB = false;
+            EnableBlurSwitch.Rounding = true;
+            EnableBlurSwitch.RoundingInt = 90;
+            EnableBlurSwitch.Size = new Size(35, 20);
+            EnableBlurSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            EnableBlurSwitch.TabIndex = 65;
+            EnableBlurSwitch.Tag = "Cyber";
+            EnableBlurSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            EnableBlurSwitch.Timer_RGB = 300;
+            EnableBlurSwitch.CheckedChanged += EnableBlurSwitch_CheckedChanged;
             // 
             // RingPage
             // 
@@ -873,9 +1378,9 @@
             RingPage.Controls.Add(label19);
             RingPage.Controls.Add(ShowRingsSwitch);
             RingPage.ForeColor = SystemColors.ControlDarkDark;
-            RingPage.Location = new Point(24, 4);
+            RingPage.Location = new Point(21, 4);
             RingPage.Name = "RingPage";
-            RingPage.Size = new Size(172, 294);
+            RingPage.Size = new Size(173, 292);
             RingPage.TabIndex = 3;
             RingPage.Text = "Ring";
             // 
@@ -1014,7 +1519,7 @@
             RingTextureCombo.Items.AddRange(new object[] { "Saturn", "Green Rings", "Tan Rings", "Light Tan Rings", "Blue Rings", "Blue-Green Rings" });
             RingTextureCombo.Location = new Point(6, 65);
             RingTextureCombo.Name = "RingTextureCombo";
-            RingTextureCombo.Size = new Size(160, 23);
+            RingTextureCombo.Size = new Size(160, 20);
             RingTextureCombo.TabIndex = 68;
             RingTextureCombo.SelectedIndexChanged += RingTextureCombo_SelectedIndexChanged;
             // 
@@ -1071,9 +1576,9 @@
             // 
             MoonPage.BackColor = Color.FromArgb(244, 241, 243);
             MoonPage.ForeColor = SystemColors.ControlDarkDark;
-            MoonPage.Location = new Point(24, 4);
+            MoonPage.Location = new Point(21, 4);
             MoonPage.Name = "MoonPage";
-            MoonPage.Size = new Size(172, 294);
+            MoonPage.Size = new Size(173, 292);
             MoonPage.TabIndex = 4;
             MoonPage.Text = "Moon";
             // 
@@ -1082,13 +1587,17 @@
             LightingPanel.Controls.Add(LightingGroup);
             LightingPanel.Location = new Point(3, 3);
             LightingPanel.Name = "LightingPanel";
-            LightingPanel.Size = new Size(200, 364);
+            LightingPanel.Size = new Size(200, 416);
             LightingPanel.TabIndex = 1;
             LightingPanel.Visible = false;
             // 
             // LightingGroup
             // 
             LightingGroup.BackColor = Color.FromArgb(244, 241, 243);
+            LightingGroup.Controls.Add(label30);
+            LightingGroup.Controls.Add(AmbientLightIntensityTrack);
+            LightingGroup.Controls.Add(label29);
+            LightingGroup.Controls.Add(SunlightIntensityTrack);
             LightingGroup.Controls.Add(label12);
             LightingGroup.Controls.Add(AmbientLightColorButton);
             LightingGroup.Controls.Add(label11);
@@ -1101,20 +1610,71 @@
             LightingGroup.Controls.Add(SunlightHorizontalDirectionTrack);
             LightingGroup.Controls.Add(label7);
             LightingGroup.Controls.Add(EnableSunlightSwitch);
+            LightingGroup.Dock = DockStyle.Fill;
             LightingGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            LightingGroup.Location = new Point(3, 3);
+            LightingGroup.Location = new Point(0, 0);
             LightingGroup.Name = "LightingGroup";
-            LightingGroup.Size = new Size(194, 358);
+            LightingGroup.Size = new Size(200, 416);
             LightingGroup.TabIndex = 0;
             LightingGroup.TabStop = false;
             LightingGroup.Text = "Lighting";
+            // 
+            // label30
+            // 
+            label30.AutoSize = true;
+            label30.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label30.ForeColor = SystemColors.ControlDarkDark;
+            label30.Location = new Point(6, 368);
+            label30.Name = "label30";
+            label30.Size = new Size(131, 15);
+            label30.TabIndex = 83;
+            label30.Text = "Ambient Light Intensity";
+            // 
+            // AmbientLightIntensityTrack
+            // 
+            AmbientLightIntensityTrack.AutoSize = false;
+            AmbientLightIntensityTrack.BackColor = SystemColors.Control;
+            AmbientLightIntensityTrack.Location = new Point(6, 386);
+            AmbientLightIntensityTrack.Maximum = 100;
+            AmbientLightIntensityTrack.Name = "AmbientLightIntensityTrack";
+            AmbientLightIntensityTrack.RightToLeft = RightToLeft.No;
+            AmbientLightIntensityTrack.Size = new Size(182, 20);
+            AmbientLightIntensityTrack.TabIndex = 82;
+            AmbientLightIntensityTrack.TickStyle = TickStyle.None;
+            AmbientLightIntensityTrack.Value = 75;
+            AmbientLightIntensityTrack.Scroll += AmbientLightIntensityTrack_Scroll;
+            // 
+            // label29
+            // 
+            label29.AutoSize = true;
+            label29.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label29.ForeColor = SystemColors.ControlDarkDark;
+            label29.Location = new Point(6, 59);
+            label29.Name = "label29";
+            label29.Size = new Size(99, 15);
+            label29.TabIndex = 81;
+            label29.Text = "Sunlight Intensity";
+            // 
+            // SunlightIntensityTrack
+            // 
+            SunlightIntensityTrack.AutoSize = false;
+            SunlightIntensityTrack.BackColor = SystemColors.Control;
+            SunlightIntensityTrack.Location = new Point(6, 77);
+            SunlightIntensityTrack.Maximum = 100;
+            SunlightIntensityTrack.Name = "SunlightIntensityTrack";
+            SunlightIntensityTrack.RightToLeft = RightToLeft.No;
+            SunlightIntensityTrack.Size = new Size(182, 20);
+            SunlightIntensityTrack.TabIndex = 80;
+            SunlightIntensityTrack.TickStyle = TickStyle.None;
+            SunlightIntensityTrack.Value = 50;
+            SunlightIntensityTrack.Scroll += SunlightIntensityTrack_Scroll;
             // 
             // label12
             // 
             label12.AutoSize = true;
             label12.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label12.ForeColor = SystemColors.ControlDarkDark;
-            label12.Location = new Point(72, 305);
+            label12.Location = new Point(72, 326);
             label12.Name = "label12";
             label12.Size = new Size(115, 15);
             label12.TabIndex = 79;
@@ -1129,7 +1689,7 @@
             AmbientLightColorButton.IconColor = Color.Tan;
             AmbientLightColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             AmbientLightColorButton.IconSize = 32;
-            AmbientLightColorButton.Location = new Point(6, 282);
+            AmbientLightColorButton.Location = new Point(6, 303);
             AmbientLightColorButton.Name = "AmbientLightColorButton";
             AmbientLightColorButton.Size = new Size(60, 60);
             AmbientLightColorButton.TabIndex = 78;
@@ -1142,7 +1702,7 @@
             label11.AutoSize = true;
             label11.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label11.ForeColor = SystemColors.ControlDarkDark;
-            label11.Location = new Point(47, 254);
+            label11.Location = new Point(47, 275);
             label11.Name = "label11";
             label11.Size = new Size(121, 15);
             label11.TabIndex = 77;
@@ -1173,7 +1733,7 @@
             EnableAmbientLightSwitch.LinearGradient_Background = false;
             EnableAmbientLightSwitch.LinearGradient_Value = false;
             EnableAmbientLightSwitch.LinearGradientPen = false;
-            EnableAmbientLightSwitch.Location = new Point(6, 249);
+            EnableAmbientLightSwitch.Location = new Point(6, 270);
             EnableAmbientLightSwitch.Name = "EnableAmbientLightSwitch";
             EnableAmbientLightSwitch.PenWidth = 10;
             EnableAmbientLightSwitch.RGB = false;
@@ -1192,7 +1752,7 @@
             label10.AutoSize = true;
             label10.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label10.ForeColor = SystemColors.ControlDarkDark;
-            label10.Location = new Point(72, 194);
+            label10.Location = new Point(72, 215);
             label10.Name = "label10";
             label10.Size = new Size(83, 15);
             label10.TabIndex = 75;
@@ -1207,7 +1767,7 @@
             SunlightColorButton.IconColor = Color.Tan;
             SunlightColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             SunlightColorButton.IconSize = 32;
-            SunlightColorButton.Location = new Point(6, 171);
+            SunlightColorButton.Location = new Point(6, 192);
             SunlightColorButton.Name = "SunlightColorButton";
             SunlightColorButton.Size = new Size(60, 60);
             SunlightColorButton.TabIndex = 74;
@@ -1220,7 +1780,7 @@
             label9.AutoSize = true;
             label9.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label9.ForeColor = SystemColors.ControlDarkDark;
-            label9.Location = new Point(6, 127);
+            label9.Location = new Point(6, 148);
             label9.Name = "label9";
             label9.Size = new Size(164, 15);
             label9.TabIndex = 73;
@@ -1230,7 +1790,7 @@
             // 
             SunlightVerticalDirectionTrack.AutoSize = false;
             SunlightVerticalDirectionTrack.BackColor = SystemColors.Control;
-            SunlightVerticalDirectionTrack.Location = new Point(6, 145);
+            SunlightVerticalDirectionTrack.Location = new Point(6, 166);
             SunlightVerticalDirectionTrack.Maximum = 359;
             SunlightVerticalDirectionTrack.Name = "SunlightVerticalDirectionTrack";
             SunlightVerticalDirectionTrack.RightToLeft = RightToLeft.No;
@@ -1244,7 +1804,7 @@
             label8.AutoSize = true;
             label8.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label8.ForeColor = SystemColors.ControlDarkDark;
-            label8.Location = new Point(6, 74);
+            label8.Location = new Point(6, 102);
             label8.Name = "label8";
             label8.Size = new Size(166, 15);
             label8.TabIndex = 71;
@@ -1254,7 +1814,7 @@
             // 
             SunlightHorizontalDirectionTrack.AutoSize = false;
             SunlightHorizontalDirectionTrack.BackColor = SystemColors.Control;
-            SunlightHorizontalDirectionTrack.Location = new Point(6, 92);
+            SunlightHorizontalDirectionTrack.Location = new Point(6, 120);
             SunlightHorizontalDirectionTrack.Maximum = 359;
             SunlightHorizontalDirectionTrack.Name = "SunlightHorizontalDirectionTrack";
             SunlightHorizontalDirectionTrack.RightToLeft = RightToLeft.No;
@@ -1554,6 +2114,17 @@
             ((System.ComponentModel.ISupportInitialize)LocalStarSizeTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LocalStarLocationUDTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LocalStarLocationLRTrack).EndInit();
+            AtmospherePage.ResumeLayout(false);
+            AtmospherePage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)AtmosphereDensityTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)AtmosphereAltitudeTrack).EndInit();
+            EffectsPage.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)SepiaAmountTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)BlurWidthTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)BleachBypassOpacityTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)BlurAmountTrack).EndInit();
             RingPage.ResumeLayout(false);
             RingPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)RingOpacityTrack).EndInit();
@@ -1563,6 +2134,8 @@
             LightingPanel.ResumeLayout(false);
             LightingGroup.ResumeLayout(false);
             LightingGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)AmbientLightIntensityTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SunlightIntensityTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)SunlightVerticalDirectionTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)SunlightHorizontalDirectionTrack).EndInit();
             CloudsPanel.ResumeLayout(false);
@@ -1665,5 +2238,34 @@
         internal FontAwesome.Sharp.IconButton RingTintColorButton;
         private Label label24;
         internal TrackBar RingOpacityTrack;
+        private Label label25;
+        internal ReaLTaiizor.Controls.CyberSwitch ShowAtmosphereSwitch;
+        internal FontAwesome.Sharp.IconButton SelectAtmosphereColorButton;
+        private Label label26;
+        private Label label28;
+        internal TrackBar AtmosphereDensityTrack;
+        private Label label27;
+        internal TrackBar AtmosphereAltitudeTrack;
+        private Label label29;
+        internal TrackBar SunlightIntensityTrack;
+        private Label label30;
+        internal TrackBar AmbientLightIntensityTrack;
+        private Panel panel1;
+        private Label label31;
+        internal ReaLTaiizor.Controls.CyberSwitch EnableBlurSwitch;
+        private Label label34;
+        internal ReaLTaiizor.Controls.CyberSwitch EnableBleachBypassSwitch;
+        private Label label33;
+        internal TrackBar BlurAmountTrack;
+        private Label label35;
+        internal TrackBar BleachBypassOpacityTrack;
+        private Label label37;
+        internal ReaLTaiizor.Controls.CyberSwitch EnableBloomSwitch;
+        private Label label41;
+        internal TrackBar BlurWidthTrack;
+        private Label label36;
+        internal TrackBar SepiaAmountTrack;
+        private Label label38;
+        internal ReaLTaiizor.Controls.CyberSwitch EnableSepiaSwitch;
     }
 }
