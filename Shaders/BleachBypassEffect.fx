@@ -64,7 +64,7 @@ int ParamID = 0x0003;		/* Used by Max to select the correct parser */
 /*****************************************************************/
 
 // shared-surface access supported in Cg version
-#include <C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\include\Quad.fxh>
+#include <include\\Quad.fxh>
 
 float Script : STANDARDSGLOBAL <
     string UIWidget = "none";

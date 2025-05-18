@@ -27,6 +27,11 @@ using System.Windows.Media.Effects;
 
 namespace RealmStudio
 {
+    // this class and other effect classes derived from ShaderEffect
+    // are based on the example from https://bursjootech.blogspot.com/2008/06/grayscale-effect-pixel-shader-effect-in.html
+    //
+    // Some HLSL shaders are here: https://developer.download.nvidia.com/shaderlibrary/webpages/hlsl_shaders.html
+    //
     internal class SepiaEffect : ShaderEffect
     {
         private static PixelShader _pixelShader = new PixelShader()
@@ -39,31 +44,31 @@ namespace RealmStudio
             PixelShader = _pixelShader;
 
             UpdateShaderValue(InputProperty);
-            UpdateShaderValue(DesaturationProperty);
+            UpdateShaderValue(GrayscaleFactorProperty);
         }
 
-        public static readonly DependencyProperty InputProperty = ShaderEffect.RegisterPixelShaderSamplerProperty("Input", typeof(SepiaEffect), 0);
+        public static readonly DependencyProperty InputProperty = SepiaEffect.RegisterPixelShaderSamplerProperty("Input", typeof(SepiaEffect), 0);
         public Brush Input
         {
             get { return (Brush)GetValue(InputProperty); }
             set { SetValue(InputProperty, value); }
         }
 
-        public static readonly DependencyProperty DesaturationProperty = DependencyProperty.Register("Desaturation", typeof(float), typeof(SepiaEffect), new UIPropertyMetadata(0.0f, PixelShaderConstantCallback(0), CoerceDesaturation));
-        public float Desaturation
+        public static readonly DependencyProperty GrayscaleFactorProperty = DependencyProperty.Register("DesaturationFactor", typeof(float), typeof(SepiaEffect), new UIPropertyMetadata(0.5f, PixelShaderConstantCallback(0), CoerceGrayscaleFactor));
+        public float GrayscaleFactor
         {
-            get { return (float)GetValue(DesaturationProperty); }
-            set { SetValue(DesaturationProperty, value); }
+            get { return (float)GetValue(GrayscaleFactorProperty); }
+            set { SetValue(GrayscaleFactorProperty, value); }
         }
 
-        private static object CoerceDesaturation(DependencyObject d, object value)
+        private static object CoerceGrayscaleFactor(DependencyObject d, object value)
         {
             SepiaEffect effect = (SepiaEffect)d;
             float newFactor = (float)value;
 
-            if (newFactor < 0.0f || newFactor > 1.0f)
+            if (newFactor < 0.0 || newFactor > 1.0)
             {
-                return effect.Desaturation;
+                return effect.GrayscaleFactor;
             }
 
             return newFactor;

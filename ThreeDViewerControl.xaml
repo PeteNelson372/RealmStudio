@@ -9,12 +9,12 @@
             Name="ThreeDModelViewerControl">
    <Grid x:Name="ThreeDViewGrid">
        <!-- the following content controls wrap the viewport to allow multiple effects to be applied to the viewport -->
-        <ContentControl x:Name="ContentControl1">
-            <ContentControl x:Name="ContentControl2">
-                <ContentControl x:Name="ContentControl3">
-                    <ContentControl x:Name="ContentControl4">
-                        <ContentControl x:Name="ContentControl5">
-                            <ContentControl x:Name="ContentControl6">
+        <Grid x:Name="G1">
+            <Grid x:Name="G2">
+                <Grid x:Name="G3">
+                    <Grid x:Name="G4">
+                        <Grid x:Name="G5">
+                            <Grid x:Name="G6">
 
                                 <HelixToolkit:HelixViewport3D ZoomExtentsWhenLoaded="False" Name="HelixTKViewport"
                                          IsMoveEnabled="True" IsPanEnabled="True" IsRotationEnabled="True"
@@ -71,11 +71,11 @@ TriangleIndices="0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 2
                                         </ModelVisual3D.Content>
                                     </ModelVisual3D>
                                 </HelixToolkit:HelixViewport3D>
-                            </ContentControl>
-                        </ContentControl>
-                    </ContentControl>
-                </ContentControl>
-            </ContentControl>
-        </ContentControl>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>

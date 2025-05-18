@@ -81,7 +81,7 @@ float4 gClearColor <
 
 float gClearDepth <string UIWidget = "none";> = 1.0;
 
-#include <C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\include\Quad.fxh>
+#include <include\\Quad.fxh>
 
 ///////////////////////////////////////////////////////////
 /////////////////////////////////////// Tweakables ////////

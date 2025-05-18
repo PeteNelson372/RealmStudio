@@ -47,6 +47,14 @@ namespace RealmStudio
             }
         }
 
+        public System.Windows.Media.Color SelectedMediaColor
+        {
+            get
+            {
+                return System.Windows.Media.Color.FromArgb(SelectedColor.A, SelectedColor.R, SelectedColor.G, SelectedColor.B);
+            }
+        }
+
         public ColorSelector()
         {
             InitializeComponent();

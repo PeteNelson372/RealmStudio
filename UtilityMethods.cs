@@ -69,6 +69,25 @@ namespace RealmStudio
             }
         }
 
+        public static System.Windows.Media.Color SelectMediaColorFromDialog(Form owner, System.Windows.Media.Color initialColor)
+        {
+            // color selector
+            using ColorSelector cs = new()
+            {
+                Owner = owner,
+                SelectedColor = Color.FromArgb(initialColor.A, initialColor.R, initialColor.G, initialColor.B)
+            };
+
+            if (cs.ShowDialog(owner) == DialogResult.OK)
+            {
+                return cs.SelectedMediaColor;
+            }
+            else
+            {
+                return System.Windows.Media.Color.FromArgb(initialColor.A, initialColor.R, initialColor.G, initialColor.B);
+            }
+        }
+
         public static void PlaySaveSound()
         {
             Stream s = new MemoryStream(Resources.savesound2);

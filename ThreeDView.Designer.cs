@@ -61,6 +61,8 @@
             FeaturesPanel = new Panel();
             FeaturesTab = new TabControl();
             LocalStarPage = new TabPage();
+            label49 = new Label();
+            LocalStarDistanceTrack = new TrackBar();
             label18 = new Label();
             LocalStarLightIntensityTrack = new TrackBar();
             LocalStarColorButton = new FontAwesome.Sharp.IconButton();
@@ -85,6 +87,10 @@
             ShowAtmosphereSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             EffectsPage = new TabPage();
             panel1 = new Panel();
+            label40 = new Label();
+            DesaturationFactorTrack = new TrackBar();
+            label39 = new Label();
+            EnableGrayscaleSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label36 = new Label();
             SepiaAmountTrack = new TrackBar();
             label38 = new Label();
@@ -116,6 +122,22 @@
             label19 = new Label();
             ShowRingsSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             MoonPage = new TabPage();
+            DeleteMoonButton = new FontAwesome.Sharp.IconButton();
+            LoadMoonTextureButton = new FontAwesome.Sharp.IconButton();
+            CreateMoonButton = new FontAwesome.Sharp.IconButton();
+            SelectMoonTintButton = new FontAwesome.Sharp.IconButton();
+            label47 = new Label();
+            MoonRotationTrack = new TrackBar();
+            label46 = new Label();
+            MoonPlaneTrack = new TrackBar();
+            label45 = new Label();
+            MoonOrbitTrack = new TrackBar();
+            label44 = new Label();
+            MoonDistanceTrack = new TrackBar();
+            label42 = new Label();
+            MoonSizeTrack = new TrackBar();
+            label43 = new Label();
+            MoonTextureCombo = new ComboBox();
             LightingPanel = new Panel();
             LightingGroup = new GroupBox();
             label30 = new Label();
@@ -157,6 +179,7 @@
             FeaturesPanel.SuspendLayout();
             FeaturesTab.SuspendLayout();
             LocalStarPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)LocalStarDistanceTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LocalStarLightIntensityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LocalStarSizeTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LocalStarLocationUDTrack).BeginInit();
@@ -166,6 +189,7 @@
             ((System.ComponentModel.ISupportInitialize)AtmosphereAltitudeTrack).BeginInit();
             EffectsPage.SuspendLayout();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)DesaturationFactorTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)SepiaAmountTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BlurWidthTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BleachBypassOpacityTrack).BeginInit();
@@ -175,6 +199,12 @@
             ((System.ComponentModel.ISupportInitialize)RingAngleTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OuterRadiusTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)InnerRadiusTrack).BeginInit();
+            MoonPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)MoonRotationTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)MoonPlaneTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)MoonOrbitTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)MoonDistanceTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)MoonSizeTrack).BeginInit();
             LightingPanel.SuspendLayout();
             LightingGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)AmbientLightIntensityTrack).BeginInit();
@@ -358,7 +388,7 @@
             // 
             // RecordButton
             // 
-            RecordButton.BackColor = Color.MediumSeaGreen;
+            RecordButton.BackColor = Color.ForestGreen;
             RecordButton.Font = new Font("Segoe UI Black", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             RecordButton.ForeColor = SystemColors.Control;
             RecordButton.IconChar = FontAwesome.Sharp.IconChar.Play;
@@ -672,6 +702,8 @@
             // LocalStarPage
             // 
             LocalStarPage.BackColor = Color.FromArgb(244, 241, 243);
+            LocalStarPage.Controls.Add(label49);
+            LocalStarPage.Controls.Add(LocalStarDistanceTrack);
             LocalStarPage.Controls.Add(label18);
             LocalStarPage.Controls.Add(LocalStarLightIntensityTrack);
             LocalStarPage.Controls.Add(LocalStarColorButton);
@@ -693,12 +725,36 @@
             LocalStarPage.TabIndex = 0;
             LocalStarPage.Text = "Local Star";
             // 
+            // label49
+            // 
+            label49.AutoSize = true;
+            label49.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label49.ForeColor = SystemColors.ControlDarkDark;
+            label49.Location = new Point(6, 117);
+            label49.Name = "label49";
+            label49.Size = new Size(52, 15);
+            label49.TabIndex = 87;
+            label49.Text = "Distance";
+            // 
+            // LocalStarDistanceTrack
+            // 
+            LocalStarDistanceTrack.AutoSize = false;
+            LocalStarDistanceTrack.BackColor = SystemColors.Control;
+            LocalStarDistanceTrack.Location = new Point(56, 117);
+            LocalStarDistanceTrack.Maximum = 100;
+            LocalStarDistanceTrack.Name = "LocalStarDistanceTrack";
+            LocalStarDistanceTrack.RightToLeft = RightToLeft.No;
+            LocalStarDistanceTrack.Size = new Size(110, 20);
+            LocalStarDistanceTrack.TabIndex = 86;
+            LocalStarDistanceTrack.TickStyle = TickStyle.None;
+            LocalStarDistanceTrack.Value = 15;
+            // 
             // label18
             // 
             label18.AutoSize = true;
             label18.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label18.ForeColor = SystemColors.ControlDarkDark;
-            label18.Location = new Point(76, 241);
+            label18.Location = new Point(72, 214);
             label18.Name = "label18";
             label18.Size = new Size(52, 15);
             label18.TabIndex = 82;
@@ -708,7 +764,7 @@
             // 
             LocalStarLightIntensityTrack.AutoSize = false;
             LocalStarLightIntensityTrack.BackColor = SystemColors.Control;
-            LocalStarLightIntensityTrack.Location = new Point(76, 259);
+            LocalStarLightIntensityTrack.Location = new Point(72, 232);
             LocalStarLightIntensityTrack.Maximum = 359;
             LocalStarLightIntensityTrack.Name = "LocalStarLightIntensityTrack";
             LocalStarLightIntensityTrack.RightToLeft = RightToLeft.No;
@@ -726,7 +782,7 @@
             LocalStarColorButton.IconColor = Color.Tan;
             LocalStarColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             LocalStarColorButton.IconSize = 32;
-            LocalStarColorButton.Location = new Point(10, 219);
+            LocalStarColorButton.Location = new Point(6, 191);
             LocalStarColorButton.Name = "LocalStarColorButton";
             LocalStarColorButton.Size = new Size(60, 60);
             LocalStarColorButton.TabIndex = 80;
@@ -749,11 +805,11 @@
             // 
             LocalStarSizeTrack.AutoSize = false;
             LocalStarSizeTrack.BackColor = SystemColors.Control;
-            LocalStarSizeTrack.Location = new Point(6, 111);
+            LocalStarSizeTrack.Location = new Point(56, 91);
             LocalStarSizeTrack.Maximum = 100;
             LocalStarSizeTrack.Name = "LocalStarSizeTrack";
             LocalStarSizeTrack.RightToLeft = RightToLeft.No;
-            LocalStarSizeTrack.Size = new Size(160, 20);
+            LocalStarSizeTrack.Size = new Size(110, 20);
             LocalStarSizeTrack.TabIndex = 78;
             LocalStarSizeTrack.TickStyle = TickStyle.None;
             LocalStarSizeTrack.Value = 15;
@@ -764,21 +820,21 @@
             label15.AutoSize = true;
             label15.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label15.ForeColor = SystemColors.ControlDarkDark;
-            label15.Location = new Point(6, 175);
+            label15.Location = new Point(6, 165);
             label15.Name = "label15";
-            label15.Size = new Size(115, 15);
+            label15.Size = new Size(36, 15);
             label15.TabIndex = 77;
-            label15.Text = "Location (Up/Down)";
+            label15.Text = "Plane";
             // 
             // LocalStarLocationUDTrack
             // 
             LocalStarLocationUDTrack.AutoSize = false;
             LocalStarLocationUDTrack.BackColor = SystemColors.Control;
-            LocalStarLocationUDTrack.Location = new Point(6, 193);
+            LocalStarLocationUDTrack.Location = new Point(56, 165);
             LocalStarLocationUDTrack.Maximum = 359;
             LocalStarLocationUDTrack.Name = "LocalStarLocationUDTrack";
             LocalStarLocationUDTrack.RightToLeft = RightToLeft.No;
-            LocalStarLocationUDTrack.Size = new Size(160, 20);
+            LocalStarLocationUDTrack.Size = new Size(110, 20);
             LocalStarLocationUDTrack.TabIndex = 76;
             LocalStarLocationUDTrack.TickStyle = TickStyle.None;
             LocalStarLocationUDTrack.Scroll += LocalStarLocationUDTrack_Scroll;
@@ -788,21 +844,21 @@
             label16.AutoSize = true;
             label16.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label16.ForeColor = SystemColors.ControlDarkDark;
-            label16.Location = new Point(10, 134);
+            label16.Location = new Point(6, 140);
             label16.Name = "label16";
-            label16.Size = new Size(117, 15);
+            label16.Size = new Size(34, 15);
             label16.TabIndex = 75;
-            label16.Text = "Location (Left/Right)";
+            label16.Text = "Orbit";
             // 
             // LocalStarLocationLRTrack
             // 
             LocalStarLocationLRTrack.AutoSize = false;
             LocalStarLocationLRTrack.BackColor = SystemColors.Control;
-            LocalStarLocationLRTrack.Location = new Point(6, 152);
+            LocalStarLocationLRTrack.Location = new Point(56, 140);
             LocalStarLocationLRTrack.Maximum = 359;
             LocalStarLocationLRTrack.Name = "LocalStarLocationLRTrack";
             LocalStarLocationLRTrack.RightToLeft = RightToLeft.No;
-            LocalStarLocationLRTrack.Size = new Size(160, 20);
+            LocalStarLocationLRTrack.Size = new Size(110, 20);
             LocalStarLocationLRTrack.TabIndex = 74;
             LocalStarLocationLRTrack.TickStyle = TickStyle.None;
             LocalStarLocationLRTrack.Scroll += LocalStarLocationLRTrack_Scroll;
@@ -1036,6 +1092,10 @@
             // panel1
             // 
             panel1.AutoScroll = true;
+            panel1.Controls.Add(label40);
+            panel1.Controls.Add(DesaturationFactorTrack);
+            panel1.Controls.Add(label39);
+            panel1.Controls.Add(EnableGrayscaleSwitch);
             panel1.Controls.Add(label36);
             panel1.Controls.Add(SepiaAmountTrack);
             panel1.Controls.Add(label38);
@@ -1057,6 +1117,82 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(173, 292);
             panel1.TabIndex = 0;
+            // 
+            // label40
+            // 
+            label40.AutoSize = true;
+            label40.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label40.ForeColor = SystemColors.ControlDarkDark;
+            label40.Location = new Point(6, 230);
+            label40.Name = "label40";
+            label40.Size = new Size(40, 15);
+            label40.TabIndex = 108;
+            label40.Text = "Factor";
+            label40.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // DesaturationFactorTrack
+            // 
+            DesaturationFactorTrack.AutoSize = false;
+            DesaturationFactorTrack.BackColor = SystemColors.Control;
+            DesaturationFactorTrack.Location = new Point(56, 229);
+            DesaturationFactorTrack.Maximum = 100;
+            DesaturationFactorTrack.Name = "DesaturationFactorTrack";
+            DesaturationFactorTrack.RightToLeft = RightToLeft.No;
+            DesaturationFactorTrack.Size = new Size(113, 20);
+            DesaturationFactorTrack.TabIndex = 107;
+            DesaturationFactorTrack.TickStyle = TickStyle.None;
+            DesaturationFactorTrack.Value = 50;
+            DesaturationFactorTrack.Scroll += DesaturationFactorTrack_Scroll;
+            // 
+            // label39
+            // 
+            label39.AutoSize = true;
+            label39.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label39.ForeColor = SystemColors.ControlDarkDark;
+            label39.Location = new Point(44, 212);
+            label39.Name = "label39";
+            label39.Size = new Size(57, 15);
+            label39.TabIndex = 106;
+            label39.Text = "Grayscale";
+            // 
+            // EnableGrayscaleSwitch
+            // 
+            EnableGrayscaleSwitch.Alpha = 50;
+            EnableGrayscaleSwitch.BackColor = Color.Transparent;
+            EnableGrayscaleSwitch.Background = true;
+            EnableGrayscaleSwitch.Background_WidthPen = 2F;
+            EnableGrayscaleSwitch.BackgroundPen = false;
+            EnableGrayscaleSwitch.Checked = false;
+            EnableGrayscaleSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            EnableGrayscaleSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            EnableGrayscaleSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            EnableGrayscaleSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            EnableGrayscaleSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            EnableGrayscaleSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            EnableGrayscaleSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            EnableGrayscaleSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            EnableGrayscaleSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            EnableGrayscaleSwitch.ColorValue = Color.ForestGreen;
+            EnableGrayscaleSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            EnableGrayscaleSwitch.Font = new Font("Arial", 11F);
+            EnableGrayscaleSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            EnableGrayscaleSwitch.Lighting = true;
+            EnableGrayscaleSwitch.LinearGradient_Background = false;
+            EnableGrayscaleSwitch.LinearGradient_Value = false;
+            EnableGrayscaleSwitch.LinearGradientPen = false;
+            EnableGrayscaleSwitch.Location = new Point(6, 207);
+            EnableGrayscaleSwitch.Name = "EnableGrayscaleSwitch";
+            EnableGrayscaleSwitch.PenWidth = 10;
+            EnableGrayscaleSwitch.RGB = false;
+            EnableGrayscaleSwitch.Rounding = true;
+            EnableGrayscaleSwitch.RoundingInt = 90;
+            EnableGrayscaleSwitch.Size = new Size(35, 20);
+            EnableGrayscaleSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            EnableGrayscaleSwitch.TabIndex = 105;
+            EnableGrayscaleSwitch.Tag = "Cyber";
+            EnableGrayscaleSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            EnableGrayscaleSwitch.Timer_RGB = 300;
+            EnableGrayscaleSwitch.CheckedChanged += EnableGrayscaleSwitch_CheckedChanged;
             // 
             // label36
             // 
@@ -1139,7 +1275,7 @@
             label41.AutoSize = true;
             label41.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label41.ForeColor = SystemColors.ControlDarkDark;
-            label41.Location = new Point(6, 137);
+            label41.Location = new Point(6, 124);
             label41.Name = "label41";
             label41.Size = new Size(52, 15);
             label41.TabIndex = 100;
@@ -1150,7 +1286,7 @@
             // 
             BlurWidthTrack.AutoSize = false;
             BlurWidthTrack.BackColor = SystemColors.Control;
-            BlurWidthTrack.Location = new Point(56, 136);
+            BlurWidthTrack.Location = new Point(56, 123);
             BlurWidthTrack.Maximum = 100;
             BlurWidthTrack.Name = "BlurWidthTrack";
             BlurWidthTrack.RightToLeft = RightToLeft.No;
@@ -1165,7 +1301,7 @@
             label37.AutoSize = true;
             label37.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label37.ForeColor = SystemColors.ControlDarkDark;
-            label37.Location = new Point(47, 118);
+            label37.Location = new Point(47, 105);
             label37.Name = "label37";
             label37.Size = new Size(42, 15);
             label37.TabIndex = 90;
@@ -1196,7 +1332,7 @@
             EnableBloomSwitch.LinearGradient_Background = false;
             EnableBloomSwitch.LinearGradient_Value = false;
             EnableBloomSwitch.LinearGradientPen = false;
-            EnableBloomSwitch.Location = new Point(6, 115);
+            EnableBloomSwitch.Location = new Point(6, 102);
             EnableBloomSwitch.Name = "EnableBloomSwitch";
             EnableBloomSwitch.PenWidth = 10;
             EnableBloomSwitch.RGB = false;
@@ -1215,7 +1351,7 @@
             label35.AutoSize = true;
             label35.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label35.ForeColor = SystemColors.ControlDarkDark;
-            label35.Location = new Point(6, 88);
+            label35.Location = new Point(6, 74);
             label35.Name = "label35";
             label35.Size = new Size(48, 15);
             label35.TabIndex = 88;
@@ -1226,7 +1362,7 @@
             // 
             BleachBypassOpacityTrack.AutoSize = false;
             BleachBypassOpacityTrack.BackColor = SystemColors.Control;
-            BleachBypassOpacityTrack.Location = new Point(56, 87);
+            BleachBypassOpacityTrack.Location = new Point(56, 73);
             BleachBypassOpacityTrack.Maximum = 100;
             BleachBypassOpacityTrack.Name = "BleachBypassOpacityTrack";
             BleachBypassOpacityTrack.RightToLeft = RightToLeft.No;
@@ -1240,7 +1376,7 @@
             label34.AutoSize = true;
             label34.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label34.ForeColor = SystemColors.ControlDarkDark;
-            label34.Location = new Point(47, 62);
+            label34.Location = new Point(47, 54);
             label34.Name = "label34";
             label34.Size = new Size(81, 15);
             label34.TabIndex = 86;
@@ -1271,7 +1407,7 @@
             EnableBleachBypassSwitch.LinearGradient_Background = false;
             EnableBleachBypassSwitch.LinearGradient_Value = false;
             EnableBleachBypassSwitch.LinearGradientPen = false;
-            EnableBleachBypassSwitch.Location = new Point(6, 59);
+            EnableBleachBypassSwitch.Location = new Point(6, 51);
             EnableBleachBypassSwitch.Name = "EnableBleachBypassSwitch";
             EnableBleachBypassSwitch.PenWidth = 10;
             EnableBleachBypassSwitch.RGB = false;
@@ -1290,7 +1426,7 @@
             label33.AutoSize = true;
             label33.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label33.ForeColor = SystemColors.ControlDarkDark;
-            label33.Location = new Point(6, 32);
+            label33.Location = new Point(7, 26);
             label33.Name = "label33";
             label33.Size = new Size(51, 15);
             label33.TabIndex = 84;
@@ -1301,7 +1437,7 @@
             // 
             BlurAmountTrack.AutoSize = false;
             BlurAmountTrack.BackColor = SystemColors.Control;
-            BlurAmountTrack.Location = new Point(56, 31);
+            BlurAmountTrack.Location = new Point(57, 25);
             BlurAmountTrack.Maximum = 20;
             BlurAmountTrack.Name = "BlurAmountTrack";
             BlurAmountTrack.RightToLeft = RightToLeft.No;
@@ -1575,12 +1711,244 @@
             // MoonPage
             // 
             MoonPage.BackColor = Color.FromArgb(244, 241, 243);
+            MoonPage.Controls.Add(DeleteMoonButton);
+            MoonPage.Controls.Add(LoadMoonTextureButton);
+            MoonPage.Controls.Add(CreateMoonButton);
+            MoonPage.Controls.Add(SelectMoonTintButton);
+            MoonPage.Controls.Add(label47);
+            MoonPage.Controls.Add(MoonRotationTrack);
+            MoonPage.Controls.Add(label46);
+            MoonPage.Controls.Add(MoonPlaneTrack);
+            MoonPage.Controls.Add(label45);
+            MoonPage.Controls.Add(MoonOrbitTrack);
+            MoonPage.Controls.Add(label44);
+            MoonPage.Controls.Add(MoonDistanceTrack);
+            MoonPage.Controls.Add(label42);
+            MoonPage.Controls.Add(MoonSizeTrack);
+            MoonPage.Controls.Add(label43);
+            MoonPage.Controls.Add(MoonTextureCombo);
             MoonPage.ForeColor = SystemColors.ControlDarkDark;
             MoonPage.Location = new Point(21, 4);
             MoonPage.Name = "MoonPage";
             MoonPage.Size = new Size(173, 292);
             MoonPage.TabIndex = 4;
             MoonPage.Text = "Moon";
+            // 
+            // DeleteMoonButton
+            // 
+            DeleteMoonButton.BackColor = Color.White;
+            DeleteMoonButton.FlatAppearance.BorderColor = Color.Black;
+            DeleteMoonButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            DeleteMoonButton.ForeColor = Color.Black;
+            DeleteMoonButton.IconChar = FontAwesome.Sharp.IconChar.TrashAlt;
+            DeleteMoonButton.IconColor = Color.OrangeRed;
+            DeleteMoonButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            DeleteMoonButton.IconSize = 24;
+            DeleteMoonButton.Location = new Point(64, 235);
+            DeleteMoonButton.Margin = new Padding(1, 3, 1, 3);
+            DeleteMoonButton.Name = "DeleteMoonButton";
+            DeleteMoonButton.Size = new Size(54, 54);
+            DeleteMoonButton.TabIndex = 96;
+            DeleteMoonButton.Text = "Delete Moon";
+            DeleteMoonButton.UseVisualStyleBackColor = false;
+            DeleteMoonButton.Click += DeleteMoonButton_Click;
+            // 
+            // LoadMoonTextureButton
+            // 
+            LoadMoonTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LoadMoonTextureButton.ForeColor = SystemColors.ControlDarkDark;
+            LoadMoonTextureButton.IconChar = FontAwesome.Sharp.IconChar.FileImage;
+            LoadMoonTextureButton.IconColor = Color.Black;
+            LoadMoonTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LoadMoonTextureButton.IconSize = 18;
+            LoadMoonTextureButton.Location = new Point(146, 26);
+            LoadMoonTextureButton.Name = "LoadMoonTextureButton";
+            LoadMoonTextureButton.Size = new Size(23, 23);
+            LoadMoonTextureButton.TabIndex = 74;
+            LoadMoonTextureButton.UseVisualStyleBackColor = true;
+            LoadMoonTextureButton.Click += LoadMoonTextureButton_Click;
+            // 
+            // CreateMoonButton
+            // 
+            CreateMoonButton.BackColor = Color.White;
+            CreateMoonButton.FlatAppearance.BorderColor = Color.Black;
+            CreateMoonButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            CreateMoonButton.ForeColor = Color.Black;
+            CreateMoonButton.IconChar = FontAwesome.Sharp.IconChar.Moon;
+            CreateMoonButton.IconColor = Color.ForestGreen;
+            CreateMoonButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            CreateMoonButton.IconSize = 24;
+            CreateMoonButton.Location = new Point(4, 235);
+            CreateMoonButton.Margin = new Padding(1, 3, 1, 3);
+            CreateMoonButton.Name = "CreateMoonButton";
+            CreateMoonButton.Size = new Size(54, 54);
+            CreateMoonButton.TabIndex = 95;
+            CreateMoonButton.Text = "Create Moon";
+            CreateMoonButton.UseVisualStyleBackColor = false;
+            CreateMoonButton.Click += CreateMoonButton_Click;
+            // 
+            // SelectMoonTintButton
+            // 
+            SelectMoonTintButton.BackColor = Color.White;
+            SelectMoonTintButton.FlatAppearance.BorderColor = Color.Black;
+            SelectMoonTintButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SelectMoonTintButton.ForeColor = SystemColors.ControlDarkDark;
+            SelectMoonTintButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SelectMoonTintButton.IconColor = Color.Tan;
+            SelectMoonTintButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectMoonTintButton.IconSize = 24;
+            SelectMoonTintButton.Location = new Point(4, 53);
+            SelectMoonTintButton.Margin = new Padding(1, 3, 1, 3);
+            SelectMoonTintButton.Name = "SelectMoonTintButton";
+            SelectMoonTintButton.Size = new Size(54, 54);
+            SelectMoonTintButton.TabIndex = 92;
+            SelectMoonTintButton.Text = "Moon Tint";
+            SelectMoonTintButton.UseVisualStyleBackColor = false;
+            SelectMoonTintButton.Click += SelectMoonTintButton_Click;
+            // 
+            // label47
+            // 
+            label47.AutoSize = true;
+            label47.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label47.ForeColor = SystemColors.ControlDarkDark;
+            label47.Location = new Point(3, 211);
+            label47.Name = "label47";
+            label47.Size = new Size(52, 15);
+            label47.TabIndex = 91;
+            label47.Text = "Rotation";
+            // 
+            // MoonRotationTrack
+            // 
+            MoonRotationTrack.AutoSize = false;
+            MoonRotationTrack.BackColor = SystemColors.Control;
+            MoonRotationTrack.Location = new Point(56, 211);
+            MoonRotationTrack.Maximum = 359;
+            MoonRotationTrack.Name = "MoonRotationTrack";
+            MoonRotationTrack.RightToLeft = RightToLeft.No;
+            MoonRotationTrack.Size = new Size(113, 20);
+            MoonRotationTrack.TabIndex = 90;
+            MoonRotationTrack.TickStyle = TickStyle.None;
+            MoonRotationTrack.Scroll += MoonRotationTrack_Scroll;
+            // 
+            // label46
+            // 
+            label46.AutoSize = true;
+            label46.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label46.ForeColor = SystemColors.ControlDarkDark;
+            label46.Location = new Point(3, 185);
+            label46.Name = "label46";
+            label46.Size = new Size(36, 15);
+            label46.TabIndex = 89;
+            label46.Text = "Plane";
+            // 
+            // MoonPlaneTrack
+            // 
+            MoonPlaneTrack.AutoSize = false;
+            MoonPlaneTrack.BackColor = SystemColors.Control;
+            MoonPlaneTrack.Location = new Point(56, 185);
+            MoonPlaneTrack.Maximum = 359;
+            MoonPlaneTrack.Name = "MoonPlaneTrack";
+            MoonPlaneTrack.RightToLeft = RightToLeft.No;
+            MoonPlaneTrack.Size = new Size(113, 20);
+            MoonPlaneTrack.TabIndex = 88;
+            MoonPlaneTrack.TickStyle = TickStyle.None;
+            MoonPlaneTrack.Scroll += MoonPlaneTrack_Scroll;
+            // 
+            // label45
+            // 
+            label45.AutoSize = true;
+            label45.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label45.ForeColor = SystemColors.ControlDarkDark;
+            label45.Location = new Point(3, 161);
+            label45.Name = "label45";
+            label45.Size = new Size(34, 15);
+            label45.TabIndex = 87;
+            label45.Text = "Orbit";
+            // 
+            // MoonOrbitTrack
+            // 
+            MoonOrbitTrack.AutoSize = false;
+            MoonOrbitTrack.BackColor = SystemColors.Control;
+            MoonOrbitTrack.Location = new Point(56, 159);
+            MoonOrbitTrack.Maximum = 359;
+            MoonOrbitTrack.Name = "MoonOrbitTrack";
+            MoonOrbitTrack.RightToLeft = RightToLeft.No;
+            MoonOrbitTrack.Size = new Size(113, 20);
+            MoonOrbitTrack.TabIndex = 86;
+            MoonOrbitTrack.TickStyle = TickStyle.None;
+            MoonOrbitTrack.Scroll += MoonOrbitTrack_Scroll;
+            // 
+            // label44
+            // 
+            label44.AutoSize = true;
+            label44.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label44.ForeColor = SystemColors.ControlDarkDark;
+            label44.Location = new Point(3, 135);
+            label44.Name = "label44";
+            label44.Size = new Size(52, 15);
+            label44.TabIndex = 85;
+            label44.Text = "Distance";
+            // 
+            // MoonDistanceTrack
+            // 
+            MoonDistanceTrack.AutoSize = false;
+            MoonDistanceTrack.BackColor = SystemColors.Control;
+            MoonDistanceTrack.Location = new Point(56, 135);
+            MoonDistanceTrack.Maximum = 500;
+            MoonDistanceTrack.Minimum = 200;
+            MoonDistanceTrack.Name = "MoonDistanceTrack";
+            MoonDistanceTrack.RightToLeft = RightToLeft.No;
+            MoonDistanceTrack.Size = new Size(113, 20);
+            MoonDistanceTrack.TabIndex = 84;
+            MoonDistanceTrack.TickStyle = TickStyle.None;
+            MoonDistanceTrack.Value = 250;
+            MoonDistanceTrack.Scroll += MoonDistanceTrack_Scroll;
+            // 
+            // label42
+            // 
+            label42.AutoSize = true;
+            label42.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label42.ForeColor = SystemColors.ControlDarkDark;
+            label42.Location = new Point(3, 112);
+            label42.Name = "label42";
+            label42.Size = new Size(27, 15);
+            label42.TabIndex = 83;
+            label42.Text = "Size";
+            // 
+            // MoonSizeTrack
+            // 
+            MoonSizeTrack.AutoSize = false;
+            MoonSizeTrack.BackColor = SystemColors.Control;
+            MoonSizeTrack.Location = new Point(56, 113);
+            MoonSizeTrack.Maximum = 200;
+            MoonSizeTrack.Minimum = 5;
+            MoonSizeTrack.Name = "MoonSizeTrack";
+            MoonSizeTrack.RightToLeft = RightToLeft.No;
+            MoonSizeTrack.Size = new Size(113, 20);
+            MoonSizeTrack.TabIndex = 82;
+            MoonSizeTrack.TickStyle = TickStyle.None;
+            MoonSizeTrack.Value = 10;
+            MoonSizeTrack.Scroll += MoonSizeTrack_Scroll;
+            // 
+            // label43
+            // 
+            label43.AutoSize = true;
+            label43.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label43.Location = new Point(3, 9);
+            label43.Name = "label43";
+            label43.Size = new Size(45, 15);
+            label43.TabIndex = 81;
+            label43.Text = "Texture";
+            // 
+            // MoonTextureCombo
+            // 
+            MoonTextureCombo.FormattingEnabled = true;
+            MoonTextureCombo.Items.AddRange(new object[] { "Mercury", "Venus Surface", "Venus Atmosphere", "Earth - Blue Marble", "Earth - Day", "Moon", "NASA Lunar ROC", "Mars", "Phobos", "Deimos", "Jupiter", "Europa", "Saturn", "Saturn - NASA Fictional", "Uranus", "Neptune", "Pluto - NASA Fictional", "Terrestrial - Alpine", "Terrestrial - Savannah", "Terrestrial - Swamp", "Terrestrial - Planet 1", "Terrestrial - Planet 2", "Terrestrial - Planet 3", "Terrestrial - Planet 4", "Terrestrial - Swamp", "Terrestrial - Tropical", "Gas Giant", "Ceres", "Eris", "Haumea", "Makemake" });
+            MoonTextureCombo.Location = new Point(4, 27);
+            MoonTextureCombo.Name = "MoonTextureCombo";
+            MoonTextureCombo.Size = new Size(138, 20);
+            MoonTextureCombo.TabIndex = 80;
+            MoonTextureCombo.SelectedIndexChanged += MoonTextureCombo_SelectedIndexChanged;
             // 
             // LightingPanel
             // 
@@ -2110,6 +2478,7 @@
             FeaturesTab.ResumeLayout(false);
             LocalStarPage.ResumeLayout(false);
             LocalStarPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)LocalStarDistanceTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LocalStarLightIntensityTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LocalStarSizeTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LocalStarLocationUDTrack).EndInit();
@@ -2121,6 +2490,7 @@
             EffectsPage.ResumeLayout(false);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)DesaturationFactorTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)SepiaAmountTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)BlurWidthTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)BleachBypassOpacityTrack).EndInit();
@@ -2131,6 +2501,13 @@
             ((System.ComponentModel.ISupportInitialize)RingAngleTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)OuterRadiusTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)InnerRadiusTrack).EndInit();
+            MoonPage.ResumeLayout(false);
+            MoonPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)MoonRotationTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)MoonPlaneTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)MoonOrbitTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)MoonDistanceTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)MoonSizeTrack).EndInit();
             LightingPanel.ResumeLayout(false);
             LightingGroup.ResumeLayout(false);
             LightingGroup.PerformLayout();
@@ -2267,5 +2644,27 @@
         internal TrackBar SepiaAmountTrack;
         private Label label38;
         internal ReaLTaiizor.Controls.CyberSwitch EnableSepiaSwitch;
+        private Label label39;
+        internal ReaLTaiizor.Controls.CyberSwitch EnableGrayscaleSwitch;
+        private Label label40;
+        internal TrackBar DesaturationFactorTrack;
+        private Label label45;
+        internal TrackBar MoonOrbitTrack;
+        private Label label44;
+        internal TrackBar MoonDistanceTrack;
+        private Label label42;
+        internal TrackBar MoonSizeTrack;
+        private Label label43;
+        private ComboBox MoonTextureCombo;
+        private Label label46;
+        internal TrackBar MoonPlaneTrack;
+        internal FontAwesome.Sharp.IconButton SelectMoonTintButton;
+        private Label label47;
+        internal TrackBar MoonRotationTrack;
+        internal FontAwesome.Sharp.IconButton CreateMoonButton;
+        private Label label49;
+        internal TrackBar LocalStarDistanceTrack;
+        private FontAwesome.Sharp.IconButton LoadMoonTextureButton;
+        internal FontAwesome.Sharp.IconButton DeleteMoonButton;
     }
 }

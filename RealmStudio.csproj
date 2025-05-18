@@ -9,9 +9,9 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.130.12258</AssemblyVersion>
-    <FileVersion>1.2025.130.12258</FileVersion>
-    <Version>1.2025.0-alpha-2362</Version>
+    <AssemblyVersion>1.2025.138.43066</AssemblyVersion>
+    <FileVersion>1.2025.138.43066</FileVersion>
+    <Version>1.2025.0-alpha-2477</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
@@ -223,6 +223,9 @@
     <None Update="Shaders\BloomEffect.ps">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Shaders\GrayscaleEffect.ps">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Shaders\SepiaEffect.ps">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -247,7 +250,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="&quot;C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x86\fxc.exe&quot; /Gec /T ps_2_0 /E bypassPS /Fo&quot;C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\BleachBypassEffect.ps&quot; &quot;C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\BleachBypassEffect.fx&quot;&#xD;&#xA;&#xD;&#xA;&quot;C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x86\fxc.exe&quot; /Gec /T ps_2_0 /E PS_Comp /Fo&quot;C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\BloomEffect.ps&quot; &quot;C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\BloomEffect.fx&quot;&#xD;&#xA;&#xD;&#xA;&quot;C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x86\fxc.exe&quot; /Gec /T ps_3_0 /E sepiaPS /Fo&quot;C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\SepiaEffect.ps&quot; &quot;C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\SepiaEffect.fx&quot;" />
+    <Exec Command="&quot;C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x86\fxc.exe&quot; /Gec /T ps_2_0 /E bypassPS /Fo&quot;C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\BleachBypassEffect.ps&quot; &quot;C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\BleachBypassEffect.fx&quot;&#xD;&#xA;&#xD;&#xA;&quot;C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x86\fxc.exe&quot; /Gec /T ps_2_0 /E PS_Comp /Fo&quot;C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\BloomEffect.ps&quot; &quot;C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\BloomEffect.fx&quot;&#xD;&#xA;&#xD;&#xA;&quot;C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x86\fxc.exe&quot; /Gec /T ps_2_0 /E main /Fo&quot;C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\SepiaEffect.ps&quot; &quot;C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\SepiaEffect.fx&quot;&#xD;&#xA;&#xD;&#xA;&quot;C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x86\fxc.exe&quot; /Gec /T ps_2_0 /E main /Fo&quot;C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\GrayscaleEffect.ps&quot; &quot;C:\Users\Pete Nelson\source\repos\RealmStudio\Shaders\GrayscaleEffect.fx&quot;" />
   </Target>
 
 </Project>

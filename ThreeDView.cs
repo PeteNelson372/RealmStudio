@@ -21,6 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using FontAwesome.Sharp;
 using HelixToolkit.Wpf;
 using RealmStudio.Properties;
 using SharpAvi.Codecs;
@@ -30,12 +31,14 @@ using SkiaSharp.Views.Desktop;
 using System.IO;
 using System.Text;
 using System.Timers;
+using System.Windows;
 using System.Windows.Forms.Integration;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Threading;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace RealmStudio
 {
@@ -84,6 +87,9 @@ namespace RealmStudio
         private readonly PlanetaryRing planetaryRingData = new();
         private readonly PlanetAtmosphere atmosphereData = new();
 
+        private readonly List<Moon> moons = [];
+        private Moon? selectedMoon;
+
         private readonly ModelVisual3D GridlinesModel = new();
         private readonly GridLinesVisual3D GridLines = new()
         {
@@ -116,6 +122,7 @@ namespace RealmStudio
             LocalStarTextureCombo.SelectedIndex = 0;
             RingTextureCombo.SelectedIndex = 0;
             FrameRateCombo.SelectedIndex = 4;
+            MoonTextureCombo.SelectedIndex = 5;
         }
 
         public ThreeDView(string formTitle, List<string> modelUpdateQueue)
@@ -138,6 +145,7 @@ namespace RealmStudio
             LocalStarTextureCombo.SelectedIndex = 0;
             RingTextureCombo.SelectedIndex = 0;
             FrameRateCombo.SelectedIndex = 4;
+            MoonTextureCombo.SelectedIndex = 5;
         }
 
         #endregion
@@ -413,6 +421,7 @@ namespace RealmStudio
 
         private void CloseFormButton_Click(object sender, EventArgs e)
         {
+            StopAnimationTimer();
             Close();
         }
 
@@ -639,6 +648,9 @@ namespace RealmStudio
 
         private void CaptureSnapshotButton_Click(object sender, EventArgs e)
         {
+            ThreeDViewer.HelixTKViewport.ShowViewCube = false;
+            ThreeDViewer.HelixTKViewport.ShowCoordinateSystem = false;
+
             SKBitmap? formattedBackground = null;
 
             if (sceneBackground != null)
@@ -652,10 +664,10 @@ namespace RealmStudio
             using SKCanvas canvas = new(frameBitmap);
 
             RenderTargetBitmap rtb = new(
-                (int)ThreeDViewer.HelixTKViewport.Viewport.ActualWidth,
-                (int)ThreeDViewer.HelixTKViewport.Viewport.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+                (int)ThreeDViewer.ThreeDViewGrid.ActualWidth,
+                (int)ThreeDViewer.ThreeDViewGrid.ActualHeight, 96, 96, PixelFormats.Pbgra32);
 
-            rtb.Render(ThreeDViewer.HelixTKViewport.Viewport);
+            rtb.Render(ThreeDViewer.ThreeDViewGrid);
 
             using Bitmap? b = DrawingMethods.BitmapSourceToBitmap(rtb);
 
@@ -717,6 +729,9 @@ namespace RealmStudio
                 ModelStatisticsLabel.Text = "Snapshot saved: " + Path.GetFileName(sfd.FileName);
                 ModelStatisticsLabel.Refresh();
             }
+
+            ThreeDViewer.HelixTKViewport.ShowViewCube = true;
+            ThreeDViewer.HelixTKViewport.ShowCoordinateSystem = true;
         }
 
         #endregion
@@ -758,6 +773,38 @@ namespace RealmStudio
         private void ClearBackgroundButton_Click(object sender, EventArgs e)
         {
             ThreeDViewer.HelixTKViewport.Background = null;
+        }
+
+        private void ThreeDViewer_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            System.Windows.Point pt = e.GetPosition((UIElement)sender);
+
+            // Perform the hit test against a given portion of the visual object tree.
+            HitTestResult result = VisualTreeHelper.HitTest(ThreeDViewer.HelixTKViewport, pt);
+
+            if (result != null)
+            {
+                // Perform action on hit visual object.
+                if (!string.IsNullOrEmpty(result.VisualHit.GetName()))
+                {
+                    if (result.VisualHit.GetName().StartsWith("Moon"))
+                    {
+                        // select the moon
+                        selectedMoon = moons.FirstOrDefault(m => m.MoonName == result.VisualHit.GetName());
+                        if (selectedMoon != null)
+                        {
+                            // update the UI with the selected moon data
+                            MoonDistanceTrack.Value = selectedMoon.MoonDistance;
+                            MoonSizeTrack.Value = (int)(selectedMoon.MoonRadius * 100.0f);
+                            MoonOrbitTrack.Value = (int)selectedMoon.MoonOrbitRotation;
+                            MoonPlaneTrack.Value = (int)selectedMoon.MoonPlaneRotation;
+                            MoonRotationTrack.Value = (int)selectedMoon.MoonAxisRotation;
+                            SelectMoonTintButton.BackColor = System.Drawing.Color.FromArgb(selectedMoon.MoonColor.A, selectedMoon.MoonColor.R, selectedMoon.MoonColor.G, selectedMoon.MoonColor.B);
+                        }
+                    }
+
+                }
+            }
         }
 
         #region Cloud Layer Event Handlers
@@ -1359,6 +1406,220 @@ namespace RealmStudio
             ApplyEnabledEffects();
         }
 
+        private void EnableGrayscaleSwitch_CheckedChanged()
+        {
+            ApplyEnabledEffects();
+        }
+
+        private void DesaturationFactorTrack_Scroll(object sender, EventArgs e)
+        {
+            ApplyEnabledEffects();
+        }
+
+        #endregion
+
+        #region Moon Event Handlers
+
+        private void MoonDistanceTrack_Scroll(object sender, EventArgs e)
+        {
+            if (selectedMoon == null)
+            {
+                return;
+            }
+
+            selectedMoon.MoonDistance = MoonDistanceTrack.Value;
+            float distance = (selectedMoon.MoonDistance / 100.0f) - 2.5f;
+
+            selectedMoon.MoonCenter = new Point3D(2, 2, 0) + new Vector3D(distance, distance, 0);
+
+            UpdateSelectedMoon();
+        }
+
+        private void MoonSizeTrack_Scroll(object sender, EventArgs e)
+        {
+            if (selectedMoon == null)
+            {
+                return;
+            }
+
+            double moonRadius = MoonSizeTrack.Value / 100.0;
+            selectedMoon.MoonRadius = moonRadius;
+
+            UpdateSelectedMoon();
+        }
+
+        private void MoonOrbitTrack_Scroll(object sender, EventArgs e)
+        {
+            if (selectedMoon == null)
+            {
+                return;
+            }
+
+            selectedMoon.MoonOrbitRotation = MoonOrbitTrack.Value;
+            UpdateSelectedMoon();
+        }
+
+        private void MoonPlaneTrack_Scroll(object sender, EventArgs e)
+        {
+            if (selectedMoon == null)
+            {
+                return;
+            }
+
+            selectedMoon.MoonPlaneRotation = MoonPlaneTrack.Value;
+            UpdateSelectedMoon();
+        }
+
+        private void MoonRotationTrack_Scroll(object sender, EventArgs e)
+        {
+            if (selectedMoon == null)
+            {
+                return;
+            }
+
+            selectedMoon.MoonAxisRotation = MoonRotationTrack.Value;
+            UpdateSelectedMoon();
+        }
+
+        private void SelectMoonTintButton_Click(object sender, EventArgs e)
+        {
+            if (selectedMoon == null)
+            {
+                return;
+            }
+
+            selectedMoon.MoonColor = UtilityMethods.SelectMediaColorFromDialog(this, selectedMoon.MoonColor);
+            SelectMoonTintButton.BackColor = System.Drawing.Color.FromArgb(selectedMoon.MoonColor.A, selectedMoon.MoonColor.R, selectedMoon.MoonColor.G, selectedMoon.MoonColor.B);
+            UpdateSelectedMoon();
+        }
+
+        private void MoonTextureCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedMoon == null)
+            {
+                return;
+            }
+
+            if (MoonTextureCombo.SelectedIndex > -1)
+            {
+                string? textureName = (string?)MoonTextureCombo.Items[MoonTextureCombo.SelectedIndex];
+
+                if (!string.IsNullOrEmpty(textureName))
+                {
+                    selectedMoon.MoonTextureName = textureName;
+                }
+                else
+                {
+                    selectedMoon.MoonTextureName = "Moon";
+                }
+            }
+
+            UpdateSelectedMoon();
+        }
+
+        private void LoadMoonTextureButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog ofd = new()
+                {
+                    Title = "Open Moon Texture",
+                    DefaultExt = "png",
+                    CheckFileExists = true,
+                    RestoreDirectory = true,
+                    ShowHelp = false,           // enabling the help button causes the dialog not to display files
+                    Multiselect = false,
+                    Filter = UtilityMethods.GetCommonImageFilter()
+                };
+
+                if (ofd.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (ofd.FileName != "")
+                    {
+                        try
+                        {
+                            if (selectedMoon != null && File.Exists(ofd.FileName))
+                            {
+                                BitmapImage moonImage = new();
+                                moonImage.BeginInit();
+                                moonImage.UriSource = new Uri(ofd.FileName, UriKind.RelativeOrAbsolute);
+                                moonImage.EndInit();
+
+                                selectedMoon.MoonTexturePath = ofd.FileName;
+                                selectedMoon.MoonTextureName = "Custom Moon Texture";
+
+                                System.Windows.Media.Color materialColor = selectedMoon.MoonColor;
+
+                                selectedMoon.moonVisual.Material = new EmissiveMaterial(new ImageBrush(moonImage))
+                                {
+                                    Color = materialColor,
+                                };
+
+                                UpdateSelectedMoon();
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.LOGGER.Error(ex);
+                        }
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void CreateMoonButton_Click(object sender, EventArgs e)
+        {
+            int moonCount = moons.Count;
+
+            Moon m = new()
+            {
+                MoonName = "Moon " + moonCount + 1,
+                MoonRadius = MoonSizeTrack.Value / 100.0,
+            };
+
+            SphereVisual3D moon = new()
+            {
+                Center = m.MoonCenter,
+                Radius = m.MoonRadius,
+                ThetaDiv = 90,
+                PhiDiv = 45,
+                BackMaterial = new DiffuseMaterial(new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 48, 48, 48)))
+            };
+
+            moon.SetName(m.MoonName);
+
+            m.moonVisual = moon;
+
+            selectedMoon = m;
+
+            ThreeDViewer.HelixTKViewport.Children.Add(moon);
+            moons.Add(m);
+
+            UpdateSelectedMoon();
+        }
+
+        private void DeleteMoonButton_Click(object sender, EventArgs e)
+        {
+            if (selectedMoon == null)
+            {
+                return;
+            }
+
+            // remove the selected moon from the list of moons and from the viewport
+            for (int i = ThreeDViewer.HelixTKViewport.Children.Count - 1; i >= 0; i--)
+            {
+                if (ThreeDViewer.HelixTKViewport.Children[i] is SphereVisual3D sv3d && sv3d.GetName() == selectedMoon.MoonName)
+                {
+                    ThreeDViewer.HelixTKViewport.Children.RemoveAt(i);
+                    break;
+                }
+            }
+
+            moons.Remove(selectedMoon);
+        }
+
         #endregion
 
         #endregion
@@ -1396,6 +1657,7 @@ namespace RealmStudio
             ThreeDViewer.HelixTKViewport.Children.Clear();
 
             ThreeDViewer.HelixTKViewport.Children.Add(worldGlobe);
+            ThreeDViewer.MouseLeftButtonDown += ThreeDViewer_MouseLeftButtonDown;
 
             if (EnableAmbientLightSwitch.Checked)
             {
@@ -1931,8 +2193,9 @@ namespace RealmStudio
 
         private void BuildAccretionDisk()
         {
+            // TODO: redo this with ellipsoid and texture
+
             // disk 1 innermost ring of accretion disk
-            SolidColorBrush blackBrush = new(Colors.Black);
             SolidColorBrush transparentBlackBrush = new(System.Windows.Media.Color.FromArgb(10, 0, 0, 0));
             SolidColorBrush whiteBrush = new(System.Windows.Media.Color.FromArgb(255, 255, 255, 255));
             SolidColorBrush transparentWhiteBrush = new(System.Windows.Media.Color.FromArgb(190, 255, 255, 255));
@@ -2251,7 +2514,7 @@ namespace RealmStudio
                 Radius = localStarData.Radius,
                 ThetaDiv = 90,
                 PhiDiv = 45,
-                BackMaterial = new DiffuseMaterial(new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(192, 64, 64, 64)))
+                BackMaterial = new DiffuseMaterial(new SolidColorBrush(System.Windows.Media.Color.FromArgb(192, 64, 64, 64)))
             };
 
             localStar.SetName("LocalStar");
@@ -2300,7 +2563,7 @@ namespace RealmStudio
                     GradientStops =
                     {
                         new GradientStop(coronaMaterialColor, 0),
-                        new GradientStop(System.Windows.Media.Colors.Transparent, 1)
+                        new GradientStop(Colors.Transparent, 1)
                     },
                 }
             };
@@ -2737,6 +3000,10 @@ namespace RealmStudio
             ThreeDViewer.HelixTKViewport.Children.Add(atmosphere);
         }
 
+        #endregion
+
+        #region Effects Methods
+
         private void ApplyEnabledEffects()
         {
             BlurEffect blurEffect = new()
@@ -2747,7 +3014,7 @@ namespace RealmStudio
             };
 
             // apply the blur effect to the viewport  
-            ThreeDViewer.ContentControl1.Effect = blurEffect;
+            ThreeDViewer.G1.Effect = EnableBlurSwitch.Checked ? blurEffect : null;
 
             // apply the bleach bypass effect to the viewport  
             BleachBypassEffect bleachBypassEffect = new()
@@ -2755,7 +3022,7 @@ namespace RealmStudio
                 Opacity = BleachBypassOpacityTrack.Value / 100.0
             };
 
-            ThreeDViewer.ContentControl2.Effect = EnableBleachBypassSwitch.Checked ? bleachBypassEffect : null;
+            ThreeDViewer.G2.Effect = EnableBleachBypassSwitch.Checked ? bleachBypassEffect : null;
 
             BloomEffect bloomEffect = new()
             {
@@ -2766,17 +3033,200 @@ namespace RealmStudio
                 BlurWidth = BlurWidthTrack.Value / 10.0f,
             };
 
-            ThreeDViewer.ContentControl3.Effect = EnableBloomSwitch.Checked ? bloomEffect : null;
+            ThreeDViewer.G3.Effect = EnableBloomSwitch.Checked ? bloomEffect : null;
 
             SepiaEffect sepiaEffect = new()
             {
-                Desaturation = SepiaAmountTrack.Value / 100.0f
+                GrayscaleFactor = SepiaAmountTrack.Value / 100.0f,
             };
 
-            ThreeDViewer.ContentControl4.Effect = EnableSepiaSwitch.Checked ? sepiaEffect : null;
+            ThreeDViewer.G4.Effect = EnableSepiaSwitch.Checked ? sepiaEffect : null;
+
+            GrayscaleEffect grayscaleEffect = new()
+            {
+                DesaturationFactor = DesaturationFactorTrack.Value / 100.0f,
+            };
+
+            ThreeDViewer.G5.Effect = EnableGrayscaleSwitch.Checked ? grayscaleEffect : null;
 
             TDContainerPanel.Invalidate();
+        }
 
+        #endregion
+
+        #region Moon Methods
+
+        private void UpdateSelectedMoon()
+        {
+            if (selectedMoon == null)
+            {
+                return;
+            }
+
+            string textureBasePath = UtilityMethods.DEFAULT_ASSETS_FOLDER + Path.DirectorySeparatorChar
+                + "Textures" + Path.DirectorySeparatorChar + "Planet" + Path.DirectorySeparatorChar;
+
+            string texturePath = textureBasePath;
+
+            switch (selectedMoon.MoonTextureName)
+            {
+                case "Mercury":
+                    texturePath += "2k_mercury.png";
+                    break;
+                case "Venus Surface":
+                    texturePath += "2k_venus_surface.png";
+                    break;
+                case "Venus Atmosphere":
+                    texturePath += "2k_venus_atmosphere.png";
+                    break;
+                case "Earth - Blue Marble":
+                    texturePath += "bluemarble-2048.png";
+                    break;
+                case "Earth - Day":
+                    texturePath += "2k_earth_daymap.png";
+                    break;
+                case "Moon":
+                    texturePath += "lroc_color_poles_2k.png";
+                    break;
+                case "NASA Lunar ROC":
+                    texturePath += "LunarROC.png";
+                    break;
+                case "Mars":
+                    texturePath += "2k_mars.png";
+                    break;
+                case "Phobos":
+                    texturePath += "nasa_phobos.png";
+                    break;
+                case "Deimos":
+                    texturePath += "deimos_texture_map.png";
+                    break;
+                case "Jupiter":
+                    texturePath += "2k_jupiter.png";
+                    break;
+                case "Europa":
+                    texturePath += "europa_texture.png";
+                    break;
+                case "Saturn":
+                    texturePath += "2k_saturn.png";
+                    break;
+                case "Saturn - NASA Fictional":
+                    texturePath += "nasa_saturn_fictional.png";
+                    break;
+                case "Uranus":
+                    texturePath += "2k_uranus.png";
+                    break;
+                case "Neptune":
+                    texturePath += "2k_neptune.png";
+                    break;
+                case "Pluto - NASA Fictional":
+                    texturePath += "nasa_pluto_fictional.png";
+                    break;
+                case "Terrestrial - Alpine":
+                    texturePath += "Alpine.png";
+                    break;
+                case "Terrestrial - Savannah":
+                    texturePath += "Savannah.png";
+                    break;
+                case "Terrestrial - Swamp":
+                    texturePath += "Swamp.png";
+                    break;
+                case "Terrestrial - Planet 1":
+                    texturePath += "Terrestrial1.png";
+                    break;
+                case "Terrestrial - Planet 2":
+                    texturePath += "Terrestrial2.png";
+                    break;
+                case "Terrestrial - Planet 3":
+                    texturePath += "Terrestrial3.png";
+                    break;
+                case "Terrestrial - Planet 4":
+                    texturePath += "Terrestrial4.png";
+                    break;
+                case "Terrestrial - Tropical":
+                    texturePath += "Tropical.png";
+                    break;
+                case "Gas Giant":
+                    texturePath += "gas giant-equirectangular-11-2048x1024.png";
+                    break;
+                case "Ceres":
+                    texturePath += "2k_ceres_fictional.png";
+                    break;
+                case "Eris":
+                    texturePath += "2k_eris_fictional.png";
+                    break;
+                case "Haumea":
+                    texturePath += "2k_haumea_fictional.png";
+                    break;
+                case "Makemake":
+                    texturePath += "2k_makemake_fictional.png";
+                    break;
+                case "Custom Moon Texture":
+                    texturePath = selectedMoon.MoonTexturePath;
+                    break;
+                default:
+                    texturePath += "lroc_color_poles_2k.png";
+                    break;
+            }
+
+            if (!File.Exists(texturePath))
+            {
+                texturePath = textureBasePath + "lroc_color_poles_2k.png";
+            }
+
+            if (File.Exists(texturePath))
+            {
+                BitmapImage moonImage = new();
+                moonImage.BeginInit();
+                moonImage.UriSource = new Uri(texturePath, UriKind.RelativeOrAbsolute);
+                moonImage.EndInit();
+
+                selectedMoon.MoonTexturePath = texturePath;
+
+                System.Windows.Media.Color materialColor = selectedMoon.MoonColor;
+
+                selectedMoon.moonVisual.Material = new EmissiveMaterial(new ImageBrush(moonImage))
+                {
+                    Color = materialColor,
+                };
+            }
+            else
+            {
+                System.Windows.Media.Color materialColor = selectedMoon.MoonColor;
+
+                selectedMoon.moonVisual.Material = new EmissiveMaterial(new SolidColorBrush(materialColor))
+                {
+                    Color = materialColor,
+                };
+            }
+
+            selectedMoon.moonVisual.Center = selectedMoon.MoonCenter;
+            selectedMoon.moonVisual.Radius = selectedMoon.MoonRadius;
+
+            // rotate the moon
+            // hangle and vangle are in degrees
+
+            // rotate around Z axis  
+            Vector3D axis = new(0, 0, 1);
+
+            // Get the matrix indicating the current transformation value  
+            Matrix3D transformationMatrix = Matrix3D.Identity;
+
+            // rotate around the moon center Z axis  
+            transformationMatrix.RotateAt(new Quaternion(axis, selectedMoon.MoonAxisRotation), selectedMoon.moonVisual.Center);
+            MatrixTransform3D zTransform = new(transformationMatrix);
+
+            double hangle = selectedMoon.MoonOrbitRotation;
+            double vangle = selectedMoon.MoonPlaneRotation;
+
+            Quaternion hvQuaternion = Quaternion.Multiply(new Quaternion(new Vector3D(0, 0, 1), hangle), new Quaternion(new Vector3D(1, 0, 0), vangle));
+            RotateTransform3D rotateTransform = new(new QuaternionRotation3D(hvQuaternion));
+
+            // add rotations to the transform group; the order matters
+            Transform3DGroup transformGroup = new();
+            transformGroup.Children.Add(zTransform);
+            transformGroup.Children.Add(rotateTransform);
+
+            selectedMoon.moonVisual.Transform = transformGroup;
         }
 
         #endregion
@@ -2821,6 +3271,9 @@ namespace RealmStudio
                 RecordButton.Refresh();
 
                 // disable all the controls in the dialog except the record button
+                ThreeDViewer.HelixTKViewport.ShowViewCube = false;
+                ThreeDViewer.HelixTKViewport.ShowCoordinateSystem = false;
+
                 LightingPanel.Visible = false;
                 CloudsPanel.Visible = false;
                 FeaturesPanel.Visible = false;
@@ -2857,14 +3310,6 @@ namespace RealmStudio
                     }
                 }
 
-                SKBitmap? formattedBackground = null;
-
-                if (sceneBackground != null)
-                {
-                    formattedBackground = DrawingMethods.ResizeSKBitmap(sceneBackground.ToSKBitmap(),
-                        new SKSizeI((int)ThreeDViewer.HelixTKViewport.ActualWidth, (int)ThreeDViewer.HelixTKViewport.ActualHeight));
-                }
-
                 // initialize AVI recording
 
                 aviTempFileName = Path.GetTempFileName();
@@ -2882,7 +3327,7 @@ namespace RealmStudio
                 recordingEnabled = true;
 
                 // record video in a separate thread so that the user can cancel the recording
-                await RecordAnimationFramesAsync(cloudLayer, formattedBackground);
+                await RecordAnimationFramesAsync(cloudLayer);
 
             }
             catch (OperationCanceledException)
@@ -2923,6 +3368,9 @@ namespace RealmStudio
                 LoadWorldTextureButton.Enabled = true;
                 CloseFormButton.Enabled = true;
                 ThreeDViewControlBox.Enabled = true;
+
+                ThreeDViewer.HelixTKViewport.ShowViewCube = true;
+                ThreeDViewer.HelixTKViewport.ShowCoordinateSystem = true;
 
                 recordingEnabled = false;
 
@@ -2975,7 +3423,7 @@ namespace RealmStudio
             }
         }
 
-        private async Task RecordAnimationFramesAsync(SphereVisual3D? cloudLayer, SKBitmap? background)
+        private async Task RecordAnimationFramesAsync(SphereVisual3D? cloudLayer)
         {
             // this code allows the UI to refresh (and handle user interaction, like clicking the Stop button)
             // while video is being recorded
@@ -3001,7 +3449,7 @@ namespace RealmStudio
                     await Task.WhenAny(idleYield(), cancellationTcs.Task);
                     cancelToken.ThrowIfCancellationRequested();
 
-                    RecordAnimationFrame(cloudLayer, background);
+                    RecordAnimationFrame(cloudLayer);
                     frameCount++;
 
                     ModelStatisticsLabel.Text = $"Recording video: {frameCount} of {frames} frames.";
@@ -3013,78 +3461,70 @@ namespace RealmStudio
             }
         }
 
-        private void RecordAnimationFrame(SphereVisual3D? cloudLayer, SKBitmap? background)
+        private void RecordAnimationFrame(SphereVisual3D? cloudLayer)
         {
-
             double revolutionsPerSecond = revolutionsPerMinute / 60.0;
-
-            double degreesPerFrame = 360.0 / (framePerSecond / revolutionsPerSecond); // degrees per frame
+            double degreesPerFrame = 360.0 / (framePerSecond / revolutionsPerSecond); // degrees per frame  
 
             SphereVisual3D worldGlobe = (SphereVisual3D)ThreeDViewer.HelixTKViewport.Children[0];
 
-            // rotate around Z axis
+            // rotate around Z axis  
             Vector3D axis = new(0, 0, 1);
 
-            // Get the matrix indicating the current transformation value
+            // Get the matrix indicating the current transformation value  
             Matrix3D transformationMatrix = worldGlobe.Content.Transform.Value;
 
-            // rotate around the world globe center Z axis
+            // rotate around the world globe center Z axis  
             transformationMatrix.RotateAt(new Quaternion(axis, degreesPerFrame), worldGlobe.Center);
 
-            // do the rotation transform
+            // do the rotation transform  
             worldGlobe.Content.Transform = new MatrixTransform3D(transformationMatrix);
 
-            // rotate the cloud layer, if there is one
+            // rotate the cloud layer, if there is one  
             if (cloudLayer != null)
             {
-                // Get the matrix indicating the current transformation value
+                // Get the matrix indicating the current transformation value  
                 Matrix3D cloudTransformationMatrix = cloudLayer.Content.Transform.Value;
 
-                // rotate around the cloud layer center Z axis
+                // rotate around the cloud layer center Z axis  
                 cloudTransformationMatrix.RotateAt(new Quaternion(axis, degreesPerFrame * cloudRotationRate), cloudLayer.Center);
 
-                // do the rotation transform
+                // do the rotation transform  
                 cloudLayer.Content.Transform = new MatrixTransform3D(cloudTransformationMatrix);
             }
 
             if (aviWriter != null && videoStream != null)
             {
-                // NOTE: when the viewport has a background (like a starfield), using Viewport3D RenderBitmap method
-                // to create the video frames results in a lot of weird visual artifacts in the video;
-                // if a background is not included in the video, the video looks fine.
-                // So, I am using RenderTargetBitmap to take a snapshot of the 3D view,
-                // which does not include the background, then compositing the background into the
-                // video frame using a Skia canvas
+                // NOTE: when the viewport has a background (like a starfield), using Viewport3D RenderBitmap method  
+                // to create the video frames results in a lot of weird visual artifacts in the video;  
+                // if a background is not included in the video, the video looks fine.  
+                // So, I am using RenderTargetBitmap to take a snapshot of the 3D view,  
 
-                // take a snapshot of the 3D view
-                using SKBitmap frameBitmap = new((int)ThreeDViewer.HelixTKViewport.ActualWidth, (int)ThreeDViewer.HelixTKViewport.ActualHeight);
+                // take a snapshot of the 3D view  
+                using SKBitmap frameBitmap = new((int)ThreeDViewer.ThreeDViewGrid.ActualWidth, (int)ThreeDViewer.HelixTKViewport.ActualHeight);
                 using SKCanvas canvas = new(frameBitmap);
 
                 RenderTargetBitmap rtb = new(
-                    (int)ThreeDViewer.HelixTKViewport.Viewport.ActualWidth,
-                    (int)ThreeDViewer.HelixTKViewport.Viewport.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+                    (int)ThreeDViewer.ThreeDViewGrid.ActualWidth,
+                    (int)ThreeDViewer.ThreeDViewGrid.ActualHeight, 96, 96, PixelFormats.Pbgra32);
 
-                rtb.Render(ThreeDViewer.HelixTKViewport.Viewport);
+                rtb.Render(ThreeDViewer.ThreeDViewGrid);
 
                 using Bitmap? b = DrawingMethods.BitmapSourceToBitmap(rtb);
 
                 if (b != null)
                 {
-                    if (background != null)
-                    {
-                        // composite the background onto the frameBitmap
-                        canvas.DrawBitmap(background, 0, 0);
-                    }
-
                     canvas.DrawBitmap(b.ToSKBitmap(), 0, 0);
 
                     byte[] bitmapData = DrawingMethods.BitmapToByteArray(b);
 
-                    // write the video frame to the file
+                    // write the video frame to the file  
                     videoStream.WriteFrame(true, frameBitmap.Bytes, 0, bitmapData.Length);
                 }
             }
         }
+
+
 
         #endregion
 
@@ -3117,6 +3557,21 @@ namespace RealmStudio
             internal double AtmosphereRadius { get; set; } = 0.1;
             internal System.Drawing.Color AtmosphereColor { get; set; } = System.Drawing.Color.FromArgb(255, 103, 137, 175);
             internal double AtmosphereOpacity { get; set; } = 0.5;
+        }
+
+        internal class Moon
+        {
+            internal SphereVisual3D moonVisual = new();
+            internal string MoonName { get; set; } = string.Empty;
+            internal Point3D MoonCenter { get; set; } = new Point3D(2, 2, 0);
+            internal double MoonRadius { get; set; } = 0.1;
+            internal string MoonTextureName { get; set; } = "Moon";
+            internal string MoonTexturePath { get; set; } = string.Empty;
+            internal System.Windows.Media.Color MoonColor { get; set; } = Colors.White;
+            internal int MoonDistance { get; set; } = 250;
+            internal double MoonOrbitRotation { get; set; }
+            internal double MoonPlaneRotation { get; set; }
+            internal double MoonAxisRotation { get; set; }
         }
 
         #endregion
