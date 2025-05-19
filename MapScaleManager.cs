@@ -114,7 +114,7 @@ namespace RealmStudio
             mapScale.Y = (int)zoomedScrolledPoint.Y - mapScale.Height / 2;
         }
 
-        internal static MapScale? SelectMapScale(RealmStudioMap map, SKPoint zoomedScrolledPoint)
+        internal static MapScale? SelectMapScale(SKPoint zoomedScrolledPoint)
         {
             MapScale? mapScale = null;
 

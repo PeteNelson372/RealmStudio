@@ -23,14 +23,13 @@
 ***************************************************************************************************************************/
 using AForge.Imaging.Filters;
 using SkiaSharp;
-using SkiaSharp.Views.Desktop;
 using System.Diagnostics;
 
 namespace RealmStudio
 {
     internal sealed class RealmGenerationMethods
     {
-        internal static void GenerateRandomLandform(RealmStudioMap map, SKGLControl glControl, SKRect selectedArea, GeneratedLandformType selectedLandformType)
+        internal static void GenerateRandomLandform(RealmStudioMap map, SKRect selectedArea, GeneratedLandformType selectedLandformType)
         {
             SKPoint location = new(map.MapWidth / 2, map.MapHeight / 2);
             SKSize size = new(map.MapWidth / 2, map.MapHeight / 2);
@@ -92,7 +91,7 @@ namespace RealmStudio
                     break;
                 case GeneratedLandformType.World:
                     {
-                        GenerateWorldLandforms(map, glControl, new SKSizeI(map.MapWidth, map.MapHeight));
+                        GenerateWorldLandforms(map, new SKSizeI(map.MapWidth, map.MapHeight));
                     }
                     break;
             }
@@ -102,7 +101,7 @@ namespace RealmStudio
             map.IsSaved = false;
         }
 
-        internal static void GenerateWorldLandforms(RealmStudioMap map, SKGLControl glControl, SKSizeI size)
+        internal static void GenerateWorldLandforms(RealmStudioMap map, SKSizeI size)
         {
             // TODO: this is a hack to avoid passing the main form around
             // and avoid major refactoring of the landform generation methods

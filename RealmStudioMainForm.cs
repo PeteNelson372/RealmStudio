@@ -2769,7 +2769,7 @@ namespace RealmStudio
         private void LeftButtonMouseDownHandler(int brushSize)
         {
             // has the map scale been clicked?
-            MapStateMediator.SelectedMapScale = MapScaleManager.SelectMapScale(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
+            MapStateMediator.SelectedMapScale = MapScaleManager.SelectMapScale(MapStateMediator.CurrentCursorPoint);
 
             if (MapStateMediator.SelectedMapScale != null && MapStateMediator.SelectedMapScale.IsSelected)
             {
@@ -3499,7 +3499,7 @@ namespace RealmStudio
                     {
                         if (MapStateMediator.CurrentMapMeasure != null)
                         {
-                            MapMeasureManager.DrawMapMeasureOnWorkLayer(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapMeasure,
+                            MapMeasureManager.DrawMapMeasureOnWorkLayer(MapStateMediator.CurrentMapMeasure,
                                 MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
                             SKGLRenderControl.Invalidate();
                         }
@@ -4641,7 +4641,7 @@ namespace RealmStudio
 
         private void LandformGenerateButton_Click(object sender, EventArgs e)
         {
-            LandformManager.GenerateRandomLandform(SKGLRenderControl);
+            LandformManager.GenerateRandomLandform();
             SKGLRenderControl.Invalidate();
         }
 

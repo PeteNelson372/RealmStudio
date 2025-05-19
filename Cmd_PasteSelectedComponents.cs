@@ -183,8 +183,6 @@ namespace RealmStudio
                     }
                 }
             }
-
-            //selectedMapComponents.Clear();
         }
 
         public void UndoOperation()
@@ -192,7 +190,6 @@ namespace RealmStudio
             MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.SYMBOLLAYER);
             MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHLOWERLAYER);
             MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHUPPERLAYER);
-            MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WATERLAYER);
 
             foreach (MapComponent mc in StoredComponents)
             {

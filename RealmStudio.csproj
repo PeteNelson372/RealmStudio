@@ -11,7 +11,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <AssemblyVersion>1.2025.139.43066</AssemblyVersion>
     <FileVersion>1.2025.139.43066</FileVersion>
-    <Version>1.2025.0-alpha-2479</Version>
+    <Version>1.2025.0-alpha-2481</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>

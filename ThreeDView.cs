@@ -49,7 +49,7 @@ namespace RealmStudio
     {
         private readonly ThreeDViewerControl ThreeDViewer;
 
-        private double initialCameraDistance;
+        private readonly double initialCameraDistance;
 
         private readonly List<string>? ModelUpdateQueue;
         private string CloudTextureFileName = string.Empty;
@@ -2037,7 +2037,6 @@ namespace RealmStudio
         private void CreateBlackHoleLocalStar()
         {
             // TODO: refactor to use ellipsoid like planetary ring
-            double zoomPercentage = (100.0 + LocalStarSizeTrack.Value - 15.0) / 100.0;
 
             // BLACK HOLE -----------------------------------------------------------------------
             // create a sphere to represent the black hole
@@ -2199,8 +2198,6 @@ namespace RealmStudio
             SolidColorBrush transparentBlackBrush = new(System.Windows.Media.Color.FromArgb(10, 0, 0, 0));
             SolidColorBrush whiteBrush = new(System.Windows.Media.Color.FromArgb(255, 255, 255, 255));
             SolidColorBrush transparentWhiteBrush = new(System.Windows.Media.Color.FromArgb(190, 255, 255, 255));
-            SolidColorBrush transparentWhiteBrush2 = new(System.Windows.Media.Color.FromArgb(10, 255, 255, 255));
-
 
             // disk 1
 

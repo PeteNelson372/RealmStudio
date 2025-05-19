@@ -116,7 +116,7 @@ namespace RealmStudio
             }
         }
 
-        internal static void DrawMapMeasureOnWorkLayer(RealmStudioMap map, MapMeasure mapMeasure, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
+        internal static void DrawMapMeasureOnWorkLayer(MapMeasure mapMeasure, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
         {
             MapLayer workLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER);
             workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);

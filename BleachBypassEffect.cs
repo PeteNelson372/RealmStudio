@@ -27,9 +27,9 @@ using System.Windows.Media.Effects;
 
 namespace RealmStudio
 {
-    internal class BleachBypassEffect : ShaderEffect
+    internal sealed class BleachBypassEffect : ShaderEffect
     {
-        private static PixelShader _pixelShader = new PixelShader()
+        private static readonly PixelShader _pixelShader = new()
         {
             UriSource = new Uri(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "Shaders" + Path.DirectorySeparatorChar + "BleachBypassEffect.ps")
         };

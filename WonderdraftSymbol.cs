@@ -25,7 +25,9 @@ namespace RealmStudio
 {
     internal sealed class WonderdraftSymbol
     {
+#pragma warning disable IDE1006 // Naming Styles
         public string? name { get; set; }
         public string? draw_mode { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
     }
 }

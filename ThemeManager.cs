@@ -193,7 +193,7 @@ namespace RealmStudio
 
                             if (theme.BackgroundTextureScale > 1.0F)
                             {
-                                theme.BackgroundTextureScale = theme.BackgroundTextureScale / 100.0F;
+                                theme.BackgroundTextureScale /= 100.0F;
                                 MapFileMethods.SerializeTheme(theme);
                             }
 
@@ -244,7 +244,7 @@ namespace RealmStudio
 
                             if (theme.OceanTextureScale > 1.0F)
                             {
-                                theme.OceanTextureScale = theme.OceanTextureScale / 100.0F;
+                                theme.OceanTextureScale /= 100.0F;
                                 MapFileMethods.SerializeTheme(theme);
                             }
 
@@ -256,7 +256,7 @@ namespace RealmStudio
 
                             if (theme.OceanTextureOpacity > 1.0F)
                             {
-                                theme.OceanTextureOpacity = theme.OceanTextureOpacity / 100.0F;
+                                theme.OceanTextureOpacity /= 100.0F;
                                 MapFileMethods.SerializeTheme(theme);
                             }
 

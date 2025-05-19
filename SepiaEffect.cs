@@ -34,7 +34,7 @@ namespace RealmStudio
     //
     internal class SepiaEffect : ShaderEffect
     {
-        private static PixelShader _pixelShader = new PixelShader()
+        private static readonly PixelShader _pixelShader = new()
         {
             UriSource = new Uri(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "Shaders" + Path.DirectorySeparatorChar + "SepiaEffect.ps")
         };

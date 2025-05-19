@@ -191,10 +191,7 @@ namespace RealmStudio
         public void ReadXml(XmlReader reader)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8601 // Possible null reference assignment
 
-            XNamespace ns = "RealmStudio";
             string content = reader.ReadOuterXml();
             XDocument mapVignetteDoc = XDocument.Parse(content);
 
@@ -236,9 +233,7 @@ namespace RealmStudio
             {
                 string vignetteShape = vignetteShapeAttr.Value;
 
-                VignetteShapeType vignetteShapeEnum = VignetteShapeType.Oval;
-
-                if (Enum.TryParse<VignetteShapeType>(vignetteShape, out vignetteShapeEnum))
+                if (Enum.TryParse<VignetteShapeType>(vignetteShape, out VignetteShapeType vignetteShapeEnum))
                 {
                     VignetteShape = vignetteShapeEnum;
                 }
@@ -267,9 +262,6 @@ namespace RealmStudio
                 VignetteShape = VignetteShapeType.Oval;
             }
 
-
-#pragma warning restore CS8601 // Possible null reference assignment.
-#pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 

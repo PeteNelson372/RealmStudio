@@ -703,7 +703,7 @@ namespace RealmStudio
             landform.Y += (int)deltaY;
         }
 
-        internal static void GenerateRandomLandform(SKGLControl glControl)
+        internal static void GenerateRandomLandform()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
             ArgumentNullException.ThrowIfNull(LandformMediator);
@@ -714,7 +714,7 @@ namespace RealmStudio
 
             MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-            RealmGenerationMethods.GenerateRandomLandform(MapStateMediator.CurrentMap, glControl, MapStateMediator.SelectedRealmArea, LandformMediator.LandformGenerationType);
+            RealmGenerationMethods.GenerateRandomLandform(MapStateMediator.CurrentMap, MapStateMediator.SelectedRealmArea, LandformMediator.LandformGenerationType);
 
             MapStateMediator.SelectedRealmArea = SKRect.Empty;
 

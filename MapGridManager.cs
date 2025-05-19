@@ -115,7 +115,7 @@ namespace RealmStudio
         {
             MapGrid? component = null;
 
-            foreach (MapGrid mg in MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents)
+            foreach (MapGrid mg in MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.Cast<MapGrid>())
             {
                 if (mg.GridGuid.ToString() == componentGuid.ToString())
                 {
@@ -124,7 +124,7 @@ namespace RealmStudio
                 }
             }
 
-            foreach (MapGrid mg in MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents)
+            foreach (MapGrid mg in MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.Cast<MapGrid>())
             {
                 if (mg.GridGuid.ToString() == componentGuid.ToString())
                 {
@@ -133,7 +133,7 @@ namespace RealmStudio
                 }
             }
 
-            foreach (MapGrid mg in MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents)
+            foreach (MapGrid mg in MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.Cast<MapGrid>())
             {
                 if (mg.GridGuid.ToString() == componentGuid.ToString())
                 {

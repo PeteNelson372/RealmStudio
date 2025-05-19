@@ -48,13 +48,14 @@ namespace RealmStudio
         private const float D180_OVER_PI = (float)((float)180.0F / Math.PI);
         private const double SELECTION_FUZZINESS = 4;
 
+#pragma warning disable SYSLIB1054
         [DllImport("msvcrt.dll")]
         private static extern int memcmp(IntPtr b1, IntPtr b2, long count);
 
         [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool DeleteObject([In] IntPtr hObject);
-
+#pragma warning restore SYSLIB1054
 
         public static byte[] ConvertBitmapSourceToByteArray(ImageSource imageSource)
         {
@@ -62,7 +63,7 @@ namespace RealmStudio
             byte[] data;
             BitmapEncoder encoder = new JpegBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(image));
-            using (MemoryStream ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
                 encoder.Save(ms);
                 data = ms.ToArray();
@@ -117,20 +118,18 @@ namespace RealmStudio
 
         internal static BitmapImage BitmapToBitmapImage(Bitmap bitmap)
         {
-            using (var memory = new MemoryStream())
-            {
-                bitmap.Save(memory, ImageFormat.Png);
-                memory.Position = 0;
+            using var memory = new MemoryStream();
+            bitmap.Save(memory, ImageFormat.Png);
+            memory.Position = 0;
 
-                var bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.StreamSource = memory;
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.EndInit();
-                bitmapImage.Freeze();
+            var bitmapImage = new BitmapImage();
+            bitmapImage.BeginInit();
+            bitmapImage.StreamSource = memory;
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapImage.EndInit();
+            bitmapImage.Freeze();
 
-                return bitmapImage;
-            }
+            return bitmapImage;
         }
 
         internal static Bitmap? BitmapSourceToBitmap(BitmapSource source)
