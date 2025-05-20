@@ -61,12 +61,16 @@ namespace RealmStudio
             set { SetValue(GrayscaleFactorProperty, value); }
         }
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CA1859 // Use concrete types when possible for improved performance
         private static object CoerceGrayscaleFactor(DependencyObject d, object value)
+
+
         {
             SepiaEffect effect = (SepiaEffect)d;
             float newFactor = (float)value;
 
-            if (newFactor < 0.0 || newFactor > 1.0)
+            if (newFactor < 0.0f || newFactor > 1.0f)
             {
                 return effect.GrayscaleFactor;
             }
@@ -74,5 +78,7 @@ namespace RealmStudio
             return newFactor;
         }
     }
+#pragma warning restore CA1859 // Use concrete types when possible for improved performance
+#pragma warning restore IDE0079 // Remove unnecessary suppression
 }
 

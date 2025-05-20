@@ -11,7 +11,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <AssemblyVersion>1.2025.140.43066</AssemblyVersion>
     <FileVersion>1.2025.140.43066</FileVersion>
-    <Version>1.2025.0-alpha-2504</Version>
+    <Version>1.2025.0-alpha-2509</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
@@ -170,12 +170,12 @@
     <PackageReference Include="ReaLTaiizor" Version="3.8.1.2" />
     <PackageReference Include="SharpAvi" Version="3.0.1" />
     <PackageReference Include="SimplexNoise" Version="2.0.0" />
-    <PackageReference Include="SkiaSharp" Version="3.116.1" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.116.1" />
-    <PackageReference Include="SkiaSharp.Views" Version="3.116.1" />
-    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.116.1" />
-    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.116.1" />
-    <PackageReference Include="SkiaSharp.Views.WPF" Version="3.116.1" />
+    <PackageReference Include="SkiaSharp" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp.Views" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp.Views.WPF" Version="3.119.0" />
     <PackageReference Include="Svg.Skia" Version="3.0.2" />
     <PackageReference Include="System.Management" Version="9.0.5" />
   </ItemGroup>

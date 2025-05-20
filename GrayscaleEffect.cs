@@ -33,6 +33,9 @@ namespace RealmStudio
             set { SetValue(DesaturationFactorProperty, value); }
         }
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CA1859 // Use concrete types when possible for improved performance
+
         private static object CoerceDesaturationFactor(DependencyObject d, object value)
         {
             GrayscaleEffect effect = (GrayscaleEffect)d;
@@ -45,5 +48,8 @@ namespace RealmStudio
 
             return newFactor;
         }
+
+#pragma warning restore CA1859 // Use concrete types when possible for improved performance
+#pragma warning restore IDE0079 // Remove unnecessary suppression
     }
 }

@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class WorldGlobeManager
+    internal sealed class WorldGlobeManager
     {
         public static ThreeDView? CurrentWorldGlobeMapView { get; set; }
 
@@ -40,8 +40,7 @@ namespace RealmStudio
             // -- don't render map scale
             // -- don't render regions
             // -- don't render vignette
-            // can/should the map be automatically changed (background, landform texture) temporarily
-            // to look like a world viewed from space?
+
             MapRenderMethods.RenderMapFor3DGlobeView(MapStateMediator.CurrentMap, canvas);
 
             // fix map edges so that there are no seams or gaps on the globe
@@ -55,15 +54,15 @@ namespace RealmStudio
             // resize the cropped texture to the original size
             SKBitmap resizedBitmap = croppedWorldTexture.Resize(new SKImageInfo(worldTexture.Width, worldTexture.Height), SKSamplingOptions.Default);
 
-            ThreeDView td = new("World Globe");
-            CurrentWorldGlobeMapView = td;
+            ThreeDView tdv = new("World Globe");
+            CurrentWorldGlobeMapView = tdv;
 
             // show animation controls and button to load background texture (stars, etc.)
-            td.AnimationGroup.Visible = true;
+            tdv.AnimationGroup.Visible = true;
 
 
-            td.Show();
-            td.ShowWorldGlobe(resizedBitmap);
+            tdv.Show();
+            tdv.ShowWorldGlobe(resizedBitmap);
         }
     }
 }

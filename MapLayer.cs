@@ -30,7 +30,7 @@ namespace RealmStudio
     [XmlType("MapLayer")]
     public class MapLayer : MapComponent
     {
-        private ushort mapLayerOrder;
+        private int mapLayerOrder;
 
         [XmlAttribute]
         public Guid MapLayerGuid { get; set; } = Guid.NewGuid();
@@ -39,7 +39,7 @@ namespace RealmStudio
         public string MapLayerName { get; set; } = "";
 
         [XmlAttribute]
-        public ushort MapLayerOrder { get => mapLayerOrder; set => mapLayerOrder = value; }
+        public int MapLayerOrder { get => mapLayerOrder; set => mapLayerOrder = value; }
 
         [XmlIgnore]
         public SKSurface? LayerSurface { get; set; } = null;
