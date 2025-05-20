@@ -373,6 +373,13 @@ namespace RealmStudio
             }
         }
 
+        private void RealmStudioMainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            KeyHandler.HandleKey(e.KeyCode);
+            e.Handled = true;
+            SKGLRenderControl.Invalidate();
+        }
+
         private void AutosaveSwitch_CheckedChanged()
         {
             Settings.Default.RealmAutosave = AutosaveSwitch.Checked;
@@ -421,14 +428,6 @@ namespace RealmStudio
             MapRenderVScroll.Value = 0;
 
             SKGLRenderControl.Invalidate();
-        }
-
-        private void MainTab_KeyDown(object sender, KeyEventArgs e)
-        {
-            // why was this set to true?
-            // setting e.SuppressKeyPress prevents controls (like trackbars)
-            // from responding to key presses
-            //e.SuppressKeyPress = true;
         }
 
         private void Open3DViewButton_Click(object sender, EventArgs e)
@@ -875,8 +874,6 @@ namespace RealmStudio
             CutCopyPasteManager.ClearComponentSelection();
             SKGLRenderControl.Invalidate();
         }
-
-
 
         private void ThemeToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -4084,12 +4081,15 @@ namespace RealmStudio
         #endregion
 
         #region SKGLRenderControl KeyDown Handler
-        private void SKGLRenderControl_KeyDown(object sender, KeyEventArgs e)
-        {
-            KeyHandler.HandleKey(e.KeyCode);
-            e.Handled = true;
-            SKGLRenderControl.Invalidate();
-        }
+        //private void SKGLRenderControl_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    -- for some unknown reason, this method was not being called when a key
+        //    -- is pressed in the SKGLRenderControl, when it was before.
+        //    -- key presses are now handled in the RealmStudioMainForm keydown event handler.
+        //    KeyHandler.HandleKey(e.KeyCode);
+        //    e.Handled = true;
+        //    SKGLRenderControl.Invalidate();
+        //}
         #endregion
 
         #region Background Tab Event Handlers
