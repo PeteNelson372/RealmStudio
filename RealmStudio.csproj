@@ -7,11 +7,11 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
-    <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
+    <ForceDesignerDpiUnaware>false</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.140.43066</AssemblyVersion>
-    <FileVersion>1.2025.140.43066</FileVersion>
-    <Version>1.2025.0-alpha-2509</Version>
+    <AssemblyVersion>1.2025.141.43066</AssemblyVersion>
+    <FileVersion>1.2025.141.43066</FileVersion>
+    <Version>1.2025.0-alpha-2510</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
