@@ -53,7 +53,9 @@ namespace RealmStudio
                 PathColor = PathMediator.PathColor,
                 PathWidth = PathMediator.PathWidth,
                 DrawOverSymbols = PathMediator.DrawOverSymbols,
-                PathTexture = PathMediator.PathTextureList[PathMediator.PathTextureIndex]
+                PathTexture = PathMediator.PathTextureList[PathMediator.PathTextureIndex],
+                PathTextureOpacity = PathMediator.PathTextureOpacity,
+                PathTextureScale = PathMediator.PathTextureScale,
             };
 
             ConstructPathPaint(newPath);
@@ -64,7 +66,22 @@ namespace RealmStudio
 
         public static bool Update()
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(PathMediator);
+
+            if (MapStateMediator.SelectedMapPath != null)
+            {
+                MapStateMediator.SelectedMapPath.PathType = PathMediator.PathType;
+                MapStateMediator.SelectedMapPath.PathColor = PathMediator.PathColor;
+                MapStateMediator.SelectedMapPath.PathWidth = PathMediator.PathWidth;
+                MapStateMediator.SelectedMapPath.DrawOverSymbols = PathMediator.DrawOverSymbols;
+                MapStateMediator.SelectedMapPath.PathTexture = PathMediator.PathTextureList[PathMediator.PathTextureIndex];
+                MapStateMediator.SelectedMapPath.PathTextureOpacity = PathMediator.PathTextureOpacity;
+                MapStateMediator.SelectedMapPath.PathTextureScale = PathMediator.PathTextureScale;
+
+                ConstructPathPaint(MapStateMediator.SelectedMapPath);
+            }
+
+            return true;
         }
 
         public static bool Delete()
@@ -108,6 +125,12 @@ namespace RealmStudio
                 IsAntialias = true,
             };
 
+            // load the texture bitmap if needed
+            if (mapPath.PathTexture != null && !string.IsNullOrEmpty(mapPath.PathTexture.TexturePath) && mapPath.PathTexture.TextureBitmap == null)
+            {
+                mapPath.PathTexture.TextureBitmap = (Bitmap?)Bitmap.FromFile(mapPath.PathTexture.TexturePath);
+            }
+
             SKPathEffect? pathLineEffect = ConstructPathLineEffect(mapPath.PathType, mapPath.PathWidth * 2);
 
             if (pathLineEffect != null)
@@ -123,10 +146,17 @@ namespace RealmStudio
                     pathPaint.StrokeCap = SKStrokeCap.Butt;
                     break;
                 case PathType.TexturedPath:
-                    if (mapPath.PathTexture != null)
+                    if (mapPath.PathTexture != null && mapPath.PathTexture.TextureBitmap != null)
                     {
+                        // scale and set opacity of the texture
+                        // resize the bitmap, but maintain aspect ratio
+                        using Bitmap resizedBitmap = DrawingMethods.ScaleBitmap(mapPath.PathTexture.TextureBitmap,
+                            (int)(MapStateMediator.CurrentMap.MapWidth * mapPath.PathTextureScale), (int)(MapStateMediator.CurrentMap.MapHeight * mapPath.PathTextureScale));
+
+                        using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, mapPath.PathTextureOpacity / 255.0F);
+
                         // construct a shader from the selected path texture
-                        pathPaint.Shader = SKShader.CreateBitmap(mapPath.PathTexture.TextureBitmap.ToSKBitmap(), SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                        pathPaint.Shader = SKShader.CreateBitmap(b.ToSKBitmap(), SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
                     }
 
                     pathPaint.Style = SKPaintStyle.Stroke;
@@ -134,11 +164,19 @@ namespace RealmStudio
                 case PathType.BorderAndTexturePath:
                     pathPaint.StrokeCap = SKStrokeCap.Round;
 
-                    if (mapPath.PathTexture != null)
+                    if (mapPath.PathTexture != null && mapPath.PathTexture.TextureBitmap != null)
                     {
+                        // scale and set opacity of the texture
+                        // resize the bitmap, but maintain aspect ratio
+                        using Bitmap resizedBitmap = DrawingMethods.ScaleBitmap(mapPath.PathTexture.TextureBitmap,
+                            (int)(MapStateMediator.CurrentMap.MapWidth * mapPath.PathTextureScale), (int)(MapStateMediator.CurrentMap.MapHeight * mapPath.PathTextureScale));
+
+                        using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, mapPath.PathTextureOpacity / 255.0F);
+
                         // construct a shader from the selected path texture
-                        pathPaint.Shader = SKShader.CreateBitmap(mapPath.PathTexture.TextureBitmap.ToSKBitmap(), SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                        pathPaint.Shader = SKShader.CreateBitmap(b.ToSKBitmap(), SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
                     }
+
                     pathPaint.Style = SKPaintStyle.Stroke;
                     break;
             }

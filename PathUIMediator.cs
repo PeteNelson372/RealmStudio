@@ -23,6 +23,7 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using System.ComponentModel;
+using System.IO;
 
 namespace RealmStudio
 {
@@ -42,6 +43,8 @@ namespace RealmStudio
         private Color _pathColor = Color.FromArgb(75, 49, 26);
         private bool _editPathPoints;
         private bool _drawOverSymbols;
+        private int _pathTextureOpacity = 255;
+        private float _pathTextureScale = 1.0f;
 
         private int _pathTextureIndex;
 
@@ -113,6 +116,28 @@ namespace RealmStudio
             set { SetPropertyField(nameof(PathTextureIndex), ref _pathTextureIndex, value); }
         }
 
+        internal int PathTextureOpacity
+        {
+            get { return _pathTextureOpacity; }
+            set
+            {
+                ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 255);
+                ArgumentOutOfRangeException.ThrowIfLessThan(value, 0);
+                SetPropertyField(nameof(PathTextureOpacity), ref _pathTextureOpacity, value);
+            }
+        }
+
+        internal float PathTextureScale
+        {
+            get { return _pathTextureScale; }
+            set
+            {
+                ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 2.0F);
+                ArgumentOutOfRangeException.ThrowIfLessThan(value, 0.0F);
+                SetPropertyField(nameof(PathTextureScale), ref _pathTextureScale, value);
+            }
+        }
+
         #endregion
 
         #region Property Change Handler Methods
@@ -136,7 +161,7 @@ namespace RealmStudio
             if (MapStateMediator.CurrentMap != null)
             {
                 UpdatePathUI(changedPropertyName);
-                SymbolManager.Update();
+                PathManager.Update();
 
                 MainForm.SKGLRenderControl.Invalidate();
             }
@@ -164,7 +189,22 @@ namespace RealmStudio
                     }
                     else if (changedPropertyName == "PathWidth")
                     {
+                        // TODO: maybe shouldn't update trackbar here, since user is changing it in the UI
                         MainForm.PathWidthTrack.Value = (PathWidth >= MainForm.PathWidthTrack.Minimum && PathWidth <= MainForm.PathWidthTrack.Maximum) ? PathWidth : MainForm.PathWidthTrack.Minimum;
+                    }
+                    else if (changedPropertyName == "PathTextureOpacity")
+                    {
+                        // TODO: maybe shouldn't update trackbar here, since user is changing it in the UI
+                        // selected path texture opacity should be changed in the UI
+                        MainForm.PathTextureOpacityTrack.Value = (PathTextureOpacity >= MainForm.PathTextureOpacityTrack.Minimum && PathTextureOpacity <= MainForm.PathTextureOpacityTrack.Maximum) ? PathTextureOpacity : MainForm.PathTextureOpacityTrack.Minimum;
+                        UpdatePathTextureComboBox();
+                    }
+                    else if (changedPropertyName == "PathTextureScale")
+                    {
+                        // TODO: maybe shouldn't update trackbar here, since user is changing it in the UI
+                        // selected path texture scale should be changed in the UI
+                        MainForm.PathTextureScaleTrack.Value = (int)(PathTextureScale * 100.0f);
+                        UpdatePathTextureComboBox();
                     }
                 }
             }));
@@ -184,11 +224,41 @@ namespace RealmStudio
 
             if (PathTextureList[PathTextureIndex].TextureBitmap == null)
             {
-                PathTextureList[PathTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(PathTextureList[PathTextureIndex].TexturePath);
+                if (File.Exists(PathTextureList[PathTextureIndex].TexturePath))
+                {
+                    PathTextureList[PathTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(PathTextureList[PathTextureIndex].TexturePath);
+                }
             }
 
-            MainForm.PathTexturePreviewPicture.Image = PathTextureList[PathTextureIndex].TextureBitmap;
-            MainForm.PathTextureNameLabel.Text = PathTextureList[PathTextureIndex].TextureName;
+            Bitmap? textureBitmap = PathTextureList[PathTextureIndex].TextureBitmap;
+
+            if (textureBitmap != null)
+            {
+                if (PathTextureScale > 0.0F && PathTextureScale != 1.0F)
+                {
+                    // resize the bitmap, but maintain aspect ratio
+                    using Bitmap resizedBitmap = DrawingMethods.ScaleBitmap(textureBitmap,
+                        (int)(MapStateMediator.CurrentMap.MapWidth * PathTextureScale), (int)(MapStateMediator.CurrentMap.MapHeight * PathTextureScale));
+
+                    using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, PathTextureOpacity / 255.0F);
+
+                    MainForm.PathTexturePreviewPicture.Image = b;
+                    MainForm.PathTexturePreviewPicture.Refresh();
+                    MainForm.PathTextureNameLabel.Text = PathTextureList[PathTextureIndex].TextureName;
+                    MainForm.PathTextureNameLabel.Refresh();
+                }
+                else
+                {
+                    using Bitmap resizedBitmap = new(textureBitmap, MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
+
+                    using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, PathTextureOpacity / 255.0F);
+
+                    MainForm.PathTexturePreviewPicture.Image = b;
+                    MainForm.PathTexturePreviewPicture.Refresh();
+                    MainForm.PathTextureNameLabel.Text = PathTextureList[PathTextureIndex].TextureName;
+                    MainForm.PathTextureNameLabel.Refresh();
+                }
+            }
         }
 
         #endregion
@@ -217,6 +287,8 @@ namespace RealmStudio
             EditPathPoints = false;
             DrawOverSymbols = false;
             SetSelectedPathType(PathType);
+            PathTextureOpacity = 255;
+            PathTextureScale = 1.0f;
         }
 
         private void SetSelectedPathType(PathType pathType)

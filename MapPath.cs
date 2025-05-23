@@ -41,6 +41,8 @@ namespace RealmStudio
         public Color PathColor { get; set; } = ColorTranslator.FromHtml("#4B311A");
         public float PathWidth { get; set; } = 4;
         public MapTexture? PathTexture { get; set; }
+        public int PathTextureOpacity { get; set; } = 255;
+        public float PathTextureScale { get; set; } = 1.0F;
         public bool DrawOverSymbols { get; set; }
         public bool ShowPathPoints { get; set; }
         public bool IsSelected { get; set; }
@@ -67,6 +69,8 @@ namespace RealmStudio
             PathType = original.PathType;
             PathWidth = original.PathWidth;
             ShowPathPoints = original.ShowPathPoints;
+            PathTextureOpacity = original.PathTextureOpacity;
+            PathTextureScale = original.PathTextureScale;
         }
 
 
@@ -358,6 +362,99 @@ namespace RealmStudio
                 DrawOverSymbols = bool.Parse(drawOverSymbols);
             }
 
+            IEnumerable<XElement?> pathTextureElem = mapPathDoc.Descendants().Select(x => x.Element(ns + "PathTexture"));
+            if (pathTextureElem != null && pathTextureElem.Any() && pathTextureElem.First() != null)
+            {
+                string? pathTextureName = null;
+                string? pathTexturePath = null;
+
+                List<XNode> textureNodes = pathTextureElem.Nodes().ToList();
+                if (textureNodes.Count == 2)
+                {
+                    pathTextureName = ((XElement)textureNodes[0]).Value;
+                    pathTexturePath = ((XElement)textureNodes[1]).Value;
+                }
+
+                if (!string.IsNullOrEmpty(pathTextureName) && !string.IsNullOrEmpty(pathTexturePath))
+                {
+                    PathTexture = new MapTexture(pathTextureName, pathTexturePath);
+                }
+                else
+                {
+                    PathTexture = null;
+                }
+            }
+            else
+            {
+                PathTexture = null;
+            }
+
+            IEnumerable<XElement> pathTextureOpacityElem = mapPathDoc.Descendants(ns + "PathTextureOpacity");
+            if (pathTextureOpacityElem != null && pathTextureOpacityElem.Any() && pathTextureOpacityElem.First() != null)
+            {
+                string? pathTextureOpacity = mapPathDoc.Descendants().Select(x => x.Element(ns + "PathTextureOpacity").Value).FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(pathTextureOpacity))
+                {
+                    int pathTextureOpacityValue = 255;
+
+                    if (int.TryParse(pathTextureOpacity, out int n))
+                    {
+                        if (n > 0)
+                        {
+                            pathTextureOpacityValue = n;
+                        }
+                        else
+                        {
+                            pathTextureOpacityValue = 255;
+                        }
+                    }
+
+                    PathTextureOpacity = pathTextureOpacityValue;
+                }
+                else
+                {
+                    PathTextureOpacity = 255;
+                }
+            }
+            else
+            {
+                PathTextureOpacity = 255;
+            }
+
+            IEnumerable<XElement> pathTextureScaleElem = mapPathDoc.Descendants(ns + "PathTextureScale");
+            if (pathTextureScaleElem != null && pathTextureScaleElem.Any() && pathTextureScaleElem.First() != null)
+            {
+                string? pathTextureScale = mapPathDoc.Descendants().Select(x => x.Element(ns + "PathTextureScale").Value).FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(pathTextureScale))
+                {
+                    float pathTextureScaleValue = 1.0F;
+
+                    if (float.TryParse(pathTextureScale, out float n))
+                    {
+                        if (n > 0.0F && n < 2.0F)
+                        {
+                            pathTextureScaleValue = n;
+                        }
+                        else
+                        {
+                            pathTextureScaleValue = 1.0F;
+                        }
+                    }
+
+                    PathTextureScale = pathTextureScaleValue;
+                }
+                else
+                {
+                    PathTextureScale = 1.0F;
+                }
+            }
+            else
+            {
+                PathTextureScale = 1.0F;
+            }
+
             IEnumerable<XElement> pathPointElem = mapPathDoc.Descendants(ns + "PathPoint");
             if (pathPointElem.First() != null)
             {
@@ -423,6 +520,26 @@ namespace RealmStudio
             writer.WriteStartElement("DrawOverSymbols");
             writer.WriteValue(DrawOverSymbols);
             writer.WriteEndElement();
+
+            writer.WriteStartElement("PathTextureOpacity");
+            writer.WriteValue(PathTextureOpacity);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("PathTextureScale");
+            writer.WriteValue(PathTextureScale);
+            writer.WriteEndElement();
+
+            if (PathTexture != null)
+            {
+                writer.WriteStartElement("PathTexture");
+                writer.WriteStartElement("TextureName");
+                writer.WriteString(PathTexture.TextureName);
+                writer.WriteEndElement();
+                writer.WriteStartElement("TexturePath");
+                writer.WriteString(PathTexture.TexturePath);
+                writer.WriteEndElement();
+                writer.WriteEndElement();
+            }
         }
     }
 }

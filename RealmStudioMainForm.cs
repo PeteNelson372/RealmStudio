@@ -5053,6 +5053,16 @@ namespace RealmStudio
             PathMediator.PathTextureIndex++;
         }
 
+        private void PathTextureOpacityTrack_Scroll(object sender, EventArgs e)
+        {
+            PathMediator.PathTextureOpacity = PathTextureOpacityTrack.Value;
+        }
+
+        private void PathTextureScaleTrack_Scroll(object sender, EventArgs e)
+        {
+            PathMediator.PathTextureScale = PathTextureScaleTrack.Value / 100.0f;
+        }
+
         private void PathTypeRadio_CheckedChanged(object sender, EventArgs e)
         {
             RadioButton pathTypeButton = (RadioButton)sender;
@@ -5834,6 +5844,7 @@ namespace RealmStudio
         }
 
         #endregion
+
 
 
     }

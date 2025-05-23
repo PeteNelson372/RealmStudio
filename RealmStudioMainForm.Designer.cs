@@ -173,6 +173,10 @@
             label5 = new Label();
             PathTab = new TabPage();
             MapPathValuesGroup = new GroupBox();
+            label98 = new Label();
+            PathTextureScaleTrack = new TrackBar();
+            label99 = new Label();
+            PathTextureOpacityTrack = new TrackBar();
             label48 = new Label();
             EditPathPointSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label47 = new Label();
@@ -629,6 +633,8 @@
             WaterToolStrip.SuspendLayout();
             PathTab.SuspendLayout();
             MapPathValuesGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)PathTextureScaleTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)PathTextureOpacityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)PathTexturePreviewPicture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)PathWidthTrack).BeginInit();
             PathToolStrip.SuspendLayout();
@@ -3035,6 +3041,10 @@
             // MapPathValuesGroup
             // 
             MapPathValuesGroup.BackColor = Color.Transparent;
+            MapPathValuesGroup.Controls.Add(label98);
+            MapPathValuesGroup.Controls.Add(PathTextureScaleTrack);
+            MapPathValuesGroup.Controls.Add(label99);
+            MapPathValuesGroup.Controls.Add(PathTextureOpacityTrack);
             MapPathValuesGroup.Controls.Add(label48);
             MapPathValuesGroup.Controls.Add(EditPathPointSwitch);
             MapPathValuesGroup.Controls.Add(label47);
@@ -3051,10 +3061,59 @@
             MapPathValuesGroup.ForeColor = SystemColors.ControlText;
             MapPathValuesGroup.Location = new Point(6, 32);
             MapPathValuesGroup.Name = "MapPathValuesGroup";
-            MapPathValuesGroup.Size = new Size(148, 417);
+            MapPathValuesGroup.Size = new Size(148, 512);
             MapPathValuesGroup.TabIndex = 18;
             MapPathValuesGroup.TabStop = false;
             MapPathValuesGroup.Text = "Path";
+            // 
+            // label98
+            // 
+            label98.AutoSize = true;
+            label98.BackColor = Color.Transparent;
+            label98.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label98.ForeColor = SystemColors.ControlDarkDark;
+            label98.Location = new Point(10, 454);
+            label98.Name = "label98";
+            label98.Size = new Size(34, 15);
+            label98.TabIndex = 32;
+            label98.Text = "Scale";
+            // 
+            // PathTextureScaleTrack
+            // 
+            PathTextureScaleTrack.AutoSize = false;
+            PathTextureScaleTrack.Location = new Point(6, 477);
+            PathTextureScaleTrack.Maximum = 200;
+            PathTextureScaleTrack.Name = "PathTextureScaleTrack";
+            PathTextureScaleTrack.Size = new Size(136, 20);
+            PathTextureScaleTrack.TabIndex = 31;
+            PathTextureScaleTrack.TickStyle = TickStyle.None;
+            PathTextureScaleTrack.Value = 100;
+            PathTextureScaleTrack.Scroll += PathTextureScaleTrack_Scroll;
+            // 
+            // label99
+            // 
+            label99.AutoSize = true;
+            label99.BackColor = Color.Transparent;
+            label99.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label99.ForeColor = SystemColors.ControlDarkDark;
+            label99.Location = new Point(6, 411);
+            label99.Name = "label99";
+            label99.Size = new Size(48, 15);
+            label99.TabIndex = 30;
+            label99.Text = "Opacity";
+            // 
+            // PathTextureOpacityTrack
+            // 
+            PathTextureOpacityTrack.AutoSize = false;
+            PathTextureOpacityTrack.BackColor = SystemColors.Control;
+            PathTextureOpacityTrack.Location = new Point(6, 429);
+            PathTextureOpacityTrack.Maximum = 255;
+            PathTextureOpacityTrack.Name = "PathTextureOpacityTrack";
+            PathTextureOpacityTrack.Size = new Size(136, 20);
+            PathTextureOpacityTrack.TabIndex = 29;
+            PathTextureOpacityTrack.TickStyle = TickStyle.None;
+            PathTextureOpacityTrack.Value = 255;
+            PathTextureOpacityTrack.Scroll += PathTextureOpacityTrack_Scroll;
             // 
             // label48
             // 
@@ -3216,6 +3275,7 @@
             PathTexturePreviewPicture.Location = new Point(6, 260);
             PathTexturePreviewPicture.Name = "PathTexturePreviewPicture";
             PathTexturePreviewPicture.Size = new Size(136, 136);
+            PathTexturePreviewPicture.SizeMode = PictureBoxSizeMode.CenterImage;
             PathTexturePreviewPicture.TabIndex = 20;
             PathTexturePreviewPicture.TabStop = false;
             // 
@@ -9073,6 +9133,8 @@
             PathTab.PerformLayout();
             MapPathValuesGroup.ResumeLayout(false);
             MapPathValuesGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)PathTextureScaleTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)PathTextureOpacityTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)PathTexturePreviewPicture).EndInit();
             ((System.ComponentModel.ISupportInitialize)PathWidthTrack).EndInit();
             PathToolStrip.ResumeLayout(false);
@@ -9777,5 +9839,9 @@
         internal FontAwesome.Sharp.IconToolStripButton ClearBackgroundButton;
         internal Label BackgroundTextureNameLabel;
         private ToolStripMenuItem DisplayWorldGlobeToolStripMenuItem;
+        private Label label98;
+        internal TrackBar PathTextureScaleTrack;
+        private Label label99;
+        internal TrackBar PathTextureOpacityTrack;
     }
 }
