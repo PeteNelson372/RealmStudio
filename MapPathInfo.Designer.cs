@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapPathInfo));
             MapPathInfoOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            PathDescriptionButton = new FontAwesome.Sharp.IconButton();
+            StatusMessageLabel = new Label();
             PathTextureNameLabel = new Label();
             CloseRiverFeatureDataButton = new Button();
             ApplyChangesButton = new Button();
@@ -83,7 +85,6 @@
             label2 = new Label();
             NameTextbox = new TextBox();
             label1 = new Label();
-            StatusMessageLabel = new Label();
             MapPathInfoOverlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RailroadTracksPictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)FootPrintsPictureBox).BeginInit();
@@ -110,6 +111,7 @@
             // 
             MapPathInfoOverlay.BackColor = Color.FromArgb(244, 241, 243);
             MapPathInfoOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            MapPathInfoOverlay.Controls.Add(PathDescriptionButton);
             MapPathInfoOverlay.Controls.Add(StatusMessageLabel);
             MapPathInfoOverlay.Controls.Add(PathTextureNameLabel);
             MapPathInfoOverlay.Controls.Add(CloseRiverFeatureDataButton);
@@ -183,6 +185,27 @@
             MapPathInfoOverlay.TabIndex = 0;
             MapPathInfoOverlay.Text = "Path Info";
             MapPathInfoOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // PathDescriptionButton
+            // 
+            PathDescriptionButton.IconChar = FontAwesome.Sharp.IconChar.FileText;
+            PathDescriptionButton.IconColor = Color.Black;
+            PathDescriptionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PathDescriptionButton.IconSize = 20;
+            PathDescriptionButton.Location = new Point(344, 12);
+            PathDescriptionButton.Name = "PathDescriptionButton";
+            PathDescriptionButton.Size = new Size(30, 30);
+            PathDescriptionButton.TabIndex = 96;
+            PathDescriptionButton.UseVisualStyleBackColor = true;
+            PathDescriptionButton.Click += PathDescriptionButton_Click;
+            PathDescriptionButton.MouseHover += PathDescriptionButton_MouseHover;
+            // 
+            // StatusMessageLabel
+            // 
+            StatusMessageLabel.Location = new Point(227, 527);
+            StatusMessageLabel.Name = "StatusMessageLabel";
+            StatusMessageLabel.Size = new Size(64, 22);
+            StatusMessageLabel.TabIndex = 160;
             // 
             // PathTextureNameLabel
             // 
@@ -808,13 +831,6 @@
             label1.Text = "Identifier";
             label1.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // StatusMessageLabel
-            // 
-            StatusMessageLabel.Location = new Point(227, 527);
-            StatusMessageLabel.Name = "StatusMessageLabel";
-            StatusMessageLabel.Size = new Size(64, 22);
-            StatusMessageLabel.TabIndex = 160;
-            // 
             // MapPathInfo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -908,5 +924,6 @@
         private Button ApplyChangesButton;
         private Label PathTextureNameLabel;
         private Label StatusMessageLabel;
+        private FontAwesome.Sharp.IconButton PathDescriptionButton;
     }
 }

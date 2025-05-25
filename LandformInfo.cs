@@ -309,5 +309,23 @@ namespace RealmStudio
                 Landform.IsModified = true;
             }
         }
+
+        private void LandformDescriptionButton_Click(object sender, EventArgs e)
+        {
+            DescriptionEditor descriptionEditor = new();
+            descriptionEditor.DescrptionEditorOverlay.Text = "Landform Description Editor";
+            descriptionEditor.DescriptionText = Landform.LandformDescription ?? string.Empty;
+            DialogResult r = descriptionEditor.ShowDialog(this);
+
+            if (r == DialogResult.OK)
+            {
+                Landform.LandformDescription = descriptionEditor.DescriptionText;
+            }
+        }
+
+        private void LandformDescriptionButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Edit Landform Description", this, new Point(LandformDescriptionButton.Left, LandformDescriptionButton.Top - 20), 3000);
+        }
     }
 }

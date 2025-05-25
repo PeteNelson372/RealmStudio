@@ -169,5 +169,23 @@ namespace RealmStudio
         {
             RegionBorderedLightSolidRadio.Checked = !RegionBorderedLightSolidRadio.Checked;
         }
+
+        private void RegionDescriptionButton_Click(object sender, EventArgs e)
+        {
+            DescriptionEditor descriptionEditor = new();
+            descriptionEditor.DescrptionEditorOverlay.Text = "Region Description Editor";
+            descriptionEditor.DescriptionText = MapRegion.RegionDescription ?? string.Empty;
+            DialogResult r = descriptionEditor.ShowDialog(this);
+
+            if (r == DialogResult.OK)
+            {
+                MapRegion.RegionDescription = descriptionEditor.DescriptionText;
+            }
+        }
+
+        private void RegionDescriptionButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Edit Region Description", this, new Point(RegionDescriptionButton.Left, RegionDescriptionButton.Top - 20), 3000);
+        }
     }
 }

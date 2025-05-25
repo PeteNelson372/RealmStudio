@@ -310,5 +310,23 @@ namespace RealmStudio
         {
             RailroadTracksRadio.Checked = !RailroadTracksRadio.Checked;
         }
+
+        private void PathDescriptionButton_Click(object sender, EventArgs e)
+        {
+            DescriptionEditor descriptionEditor = new();
+            descriptionEditor.DescrptionEditorOverlay.Text = "Path Description Editor";
+            descriptionEditor.DescriptionText = MapPath.MapPathDescription ?? string.Empty;
+            DialogResult r = descriptionEditor.ShowDialog(this);
+
+            if (r == DialogResult.OK)
+            {
+                MapPath.MapPathDescription = descriptionEditor.DescriptionText;
+            }
+        }
+
+        private void PathDescriptionButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Edit Path Description", this, new Point(PathDescriptionButton.Left, PathDescriptionButton.Top - 20), 3000);
+        }
     }
 }

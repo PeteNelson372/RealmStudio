@@ -254,5 +254,23 @@ namespace RealmStudio
 
             }
         }
+
+        private void MapSymbolDescriptionButton_Click(object sender, EventArgs e)
+        {
+            DescriptionEditor descriptionEditor = new();
+            descriptionEditor.DescrptionEditorOverlay.Text = "Map Symbol Description Editor";
+            descriptionEditor.DescriptionText = symbol.SymbolDescription ?? string.Empty;
+            DialogResult r = descriptionEditor.ShowDialog(this);
+
+            if (r == DialogResult.OK)
+            {
+                symbol.SymbolDescription = descriptionEditor.DescriptionText;
+            }
+        }
+
+        private void MapSymbolDescriptionButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Edit Map Symbol Description", this, new Point(MapSymbolDescriptionButton.Left, MapSymbolDescriptionButton.Top - 20), 3000);
+        }
     }
 }

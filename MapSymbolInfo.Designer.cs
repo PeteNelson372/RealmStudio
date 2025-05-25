@@ -63,6 +63,7 @@
             NewTagTextBox = new TextBox();
             AddTagButton = new FontAwesome.Sharp.IconButton();
             CheckedTagsListBox = new CheckedListBox();
+            MapSymbolDescriptionButton = new FontAwesome.Sharp.IconButton();
             MapSymbolInfoOverlay.SuspendLayout();
             SymbolInfoGroup.SuspendLayout();
             panel1.SuspendLayout();
@@ -73,6 +74,7 @@
             // 
             MapSymbolInfoOverlay.BackColor = Color.FromArgb(244, 241, 243);
             MapSymbolInfoOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            MapSymbolInfoOverlay.Controls.Add(MapSymbolDescriptionButton);
             MapSymbolInfoOverlay.Controls.Add(CloseFormButton);
             MapSymbolInfoOverlay.Controls.Add(SymbolInfoGroup);
             MapSymbolInfoOverlay.Controls.Add(groupBox14);
@@ -537,6 +539,20 @@
             CheckedTagsListBox.Size = new Size(135, 130);
             CheckedTagsListBox.TabIndex = 0;
             // 
+            // MapSymbolDescriptionButton
+            // 
+            MapSymbolDescriptionButton.IconChar = FontAwesome.Sharp.IconChar.FileText;
+            MapSymbolDescriptionButton.IconColor = Color.Black;
+            MapSymbolDescriptionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            MapSymbolDescriptionButton.IconSize = 20;
+            MapSymbolDescriptionButton.Location = new Point(479, 12);
+            MapSymbolDescriptionButton.Name = "MapSymbolDescriptionButton";
+            MapSymbolDescriptionButton.Size = new Size(30, 30);
+            MapSymbolDescriptionButton.TabIndex = 96;
+            MapSymbolDescriptionButton.UseVisualStyleBackColor = true;
+            MapSymbolDescriptionButton.Click += MapSymbolDescriptionButton_Click;
+            MapSymbolDescriptionButton.MouseHover += MapSymbolDescriptionButton_MouseHover;
+            // 
             // MapSymbolInfo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -601,5 +617,6 @@
         private Label label6;
         private FontAwesome.Sharp.IconButton PaintSymbolButton;
         private Label StatusLabel;
+        private FontAwesome.Sharp.IconButton MapSymbolDescriptionButton;
     }
 }

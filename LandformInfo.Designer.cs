@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             LandformDataPanel = new ReaLTaiizor.Forms.DungeonForm();
+            LandformDescriptionButton = new FontAwesome.Sharp.IconButton();
+            label3 = new Label();
+            ApplyThemeSettingsButton = new FontAwesome.Sharp.IconButton();
             CloseLandformDataButton = new Button();
             ApplyChangesButton = new Button();
             StatusMessageLabel = new Label();
@@ -54,8 +57,6 @@
             NameTextbox = new TextBox();
             GuidLabel = new Label();
             label1 = new Label();
-            ApplyThemeSettingsButton = new FontAwesome.Sharp.IconButton();
-            label3 = new Label();
             LandformDataPanel.SuspendLayout();
             CoastlineGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)CoastlineEffectDistanceTrack).BeginInit();
@@ -68,6 +69,7 @@
             // 
             LandformDataPanel.BackColor = Color.FromArgb(244, 241, 243);
             LandformDataPanel.BorderColor = Color.FromArgb(38, 38, 38);
+            LandformDataPanel.Controls.Add(LandformDescriptionButton);
             LandformDataPanel.Controls.Add(label3);
             LandformDataPanel.Controls.Add(ApplyThemeSettingsButton);
             LandformDataPanel.Controls.Add(CloseLandformDataButton);
@@ -98,6 +100,43 @@
             LandformDataPanel.TabIndex = 0;
             LandformDataPanel.Text = "Landform Data";
             LandformDataPanel.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // LandformDescriptionButton
+            // 
+            LandformDescriptionButton.IconChar = FontAwesome.Sharp.IconChar.FileText;
+            LandformDescriptionButton.IconColor = Color.Black;
+            LandformDescriptionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LandformDescriptionButton.IconSize = 20;
+            LandformDescriptionButton.Location = new Point(317, 10);
+            LandformDescriptionButton.Name = "LandformDescriptionButton";
+            LandformDescriptionButton.Size = new Size(30, 30);
+            LandformDescriptionButton.TabIndex = 95;
+            LandformDescriptionButton.UseVisualStyleBackColor = true;
+            LandformDescriptionButton.Click += LandformDescriptionButton_Click;
+            LandformDescriptionButton.MouseHover += LandformDescriptionButton_MouseHover;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.ForeColor = SystemColors.ControlDarkDark;
+            label3.Location = new Point(222, 417);
+            label3.Name = "label3";
+            label3.Size = new Size(78, 15);
+            label3.TabIndex = 94;
+            label3.Text = "Apply Theme";
+            // 
+            // ApplyThemeSettingsButton
+            // 
+            ApplyThemeSettingsButton.IconChar = FontAwesome.Sharp.IconChar.ListSquares;
+            ApplyThemeSettingsButton.IconColor = Color.Black;
+            ApplyThemeSettingsButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ApplyThemeSettingsButton.IconSize = 20;
+            ApplyThemeSettingsButton.Location = new Point(186, 409);
+            ApplyThemeSettingsButton.Name = "ApplyThemeSettingsButton";
+            ApplyThemeSettingsButton.Size = new Size(30, 30);
+            ApplyThemeSettingsButton.TabIndex = 93;
+            ApplyThemeSettingsButton.UseVisualStyleBackColor = true;
+            ApplyThemeSettingsButton.Click += ApplyThemeSettingsButton_Click;
             // 
             // CloseLandformDataButton
             // 
@@ -376,7 +415,7 @@
             // 
             label2.AutoSize = true;
             label2.ForeColor = SystemColors.ControlDarkDark;
-            label2.Location = new Point(38, 75);
+            label2.Location = new Point(23, 75);
             label2.Name = "label2";
             label2.Size = new Size(39, 15);
             label2.TabIndex = 3;
@@ -385,7 +424,7 @@
             // 
             // NameTextbox
             // 
-            NameTextbox.Location = new Point(83, 72);
+            NameTextbox.Location = new Point(68, 72);
             NameTextbox.Name = "NameTextbox";
             NameTextbox.Size = new Size(251, 23);
             NameTextbox.TabIndex = 2;
@@ -411,29 +450,6 @@
             label1.Text = "Identifier";
             label1.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // ApplyThemeSettingsButton
-            // 
-            ApplyThemeSettingsButton.IconChar = FontAwesome.Sharp.IconChar.ListSquares;
-            ApplyThemeSettingsButton.IconColor = Color.Black;
-            ApplyThemeSettingsButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ApplyThemeSettingsButton.IconSize = 20;
-            ApplyThemeSettingsButton.Location = new Point(186, 409);
-            ApplyThemeSettingsButton.Name = "ApplyThemeSettingsButton";
-            ApplyThemeSettingsButton.Size = new Size(30, 30);
-            ApplyThemeSettingsButton.TabIndex = 93;
-            ApplyThemeSettingsButton.UseVisualStyleBackColor = true;
-            ApplyThemeSettingsButton.Click += ApplyThemeSettingsButton_Click;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.ForeColor = SystemColors.ControlDarkDark;
-            label3.Location = new Point(222, 417);
-            label3.Name = "label3";
-            label3.Size = new Size(78, 15);
-            label3.TabIndex = 94;
-            label3.Text = "Apply Theme";
-            // 
             // LandformInfo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -445,7 +461,6 @@
             Name = "LandformInfo";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Landform Data";
-            TopMost = true;
             TransparencyKey = Color.Fuchsia;
             LandformDataPanel.ResumeLayout(false);
             LandformDataPanel.PerformLayout();
@@ -489,5 +504,6 @@
         private FontAwesome.Sharp.IconButton LandformBackgroundColorSelectButton;
         private FontAwesome.Sharp.IconButton ApplyThemeSettingsButton;
         private Label label3;
+        private FontAwesome.Sharp.IconButton LandformDescriptionButton;
     }
 }

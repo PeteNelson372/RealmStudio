@@ -36,6 +36,7 @@ namespace RealmStudio
         public RealmStudioMap? ParentMap { get; set; }
         public string WaterFeatureName { get; set; } = String.Empty;
         public Guid WaterFeatureGuid { get; set; } = Guid.NewGuid();
+        public string WaterFeatureDescription { get; set; } = string.Empty;
         public WaterFeatureType WaterFeatureType { get; set; } = WaterFeatureType.NotSet;
         public Color WaterFeatureColor { get; set; } = ColorTranslator.FromHtml("#658CBFC5");
         public Color WaterFeatureShorelineColor { get; set; } = ColorTranslator.FromHtml("#A19076");
@@ -245,6 +246,17 @@ namespace RealmStudio
                 WaterFeatureGuid = Guid.Parse(mapGuid);
             }
 
+            IEnumerable<XElement?> descrElemEnum = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureDescription"));
+            if (descrElemEnum != null && descrElemEnum.Any() && descrElemEnum.First() != null)
+            {
+                string? description = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureDescription").Value).FirstOrDefault();
+                WaterFeatureDescription = description;
+            }
+            else
+            {
+                WaterFeatureDescription = string.Empty;
+            }
+
             IEnumerable<XElement?> typeElemEnum = mapWaterFeatureDoc.Descendants().Select(x => x.Element(ns + "WaterFeatureType"));
             if (typeElemEnum.First() != null)
             {
@@ -336,6 +348,11 @@ namespace RealmStudio
             // water feature GUID
             writer.WriteStartElement("WaterFeatureGuid");
             writer.WriteString(WaterFeatureGuid.ToString());
+            writer.WriteEndElement();
+
+            // water feature description
+            writer.WriteStartElement("WaterFeatureDescription");
+            writer.WriteString(WaterFeatureDescription);
             writer.WriteEndElement();
 
             // water feature type

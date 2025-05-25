@@ -88,5 +88,23 @@ namespace RealmStudio
 
             RenderControl.Invalidate();
         }
+
+        private void WaterFeatureDescriptionButton_Click(object sender, EventArgs e)
+        {
+            DescriptionEditor descriptionEditor = new();
+            descriptionEditor.DescrptionEditorOverlay.Text = "Water Feature Description Editor";
+            descriptionEditor.DescriptionText = WaterFeature.WaterFeatureDescription ?? string.Empty;
+            DialogResult r = descriptionEditor.ShowDialog(this);
+
+            if (r == DialogResult.OK)
+            {
+                WaterFeature.WaterFeatureDescription = descriptionEditor.DescriptionText;
+            }
+        }
+
+        private void WaterFeatureDescriptionButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Edit Water Feature Description", this, new Point(WaterFeatureDescriptionButton.Left, WaterFeatureDescriptionButton.Top - 20), 3000);
+        }
     }
 }

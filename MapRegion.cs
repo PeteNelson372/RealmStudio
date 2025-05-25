@@ -38,7 +38,7 @@ namespace RealmStudio
 
         public string RegionName { get; set; } = string.Empty;
         public Guid RegionGuid { get; set; } = Guid.NewGuid();
-
+        public string RegionDescription { get; set; } = string.Empty;
         public List<MapRegionPoint> MapRegionPoints { get; set; } = [];
         public Color RegionBorderColor { get; set; } = ColorTranslator.FromHtml("#0056B3");
         public int RegionBorderWidth { get; set; } = 10;
@@ -277,10 +277,14 @@ namespace RealmStudio
             XDocument mapRegionDoc = XDocument.Parse(content);
 
             IEnumerable<XElement?> nameElemEnum = mapRegionDoc.Descendants().Select(x => x.Element(ns + "RegionName"));
-            if (nameElemEnum.First() != null)
+            if (nameElemEnum != null && nameElemEnum.Any() && nameElemEnum.First() != null)
             {
                 string? regionName = mapRegionDoc.Descendants().Select(x => x.Element(ns + "RegionName").Value).FirstOrDefault();
                 RegionName = regionName;
+            }
+            else
+            {
+                RegionName = string.Empty;
             }
 
             IEnumerable<XElement?> guidElemEnum = mapRegionDoc.Descendants().Select(x => x.Element(ns + "RegionGuid"));
@@ -288,6 +292,17 @@ namespace RealmStudio
             {
                 string? regionGuid = mapRegionDoc.Descendants().Select(x => x.Element(ns + "RegionGuid").Value).FirstOrDefault();
                 RegionGuid = Guid.Parse(regionGuid);
+            }
+
+            IEnumerable<XElement?> descrElemEnum = mapRegionDoc.Descendants().Select(x => x.Element(ns + "RegionDescription"));
+            if (descrElemEnum != null && descrElemEnum.Any() && descrElemEnum.First() != null)
+            {
+                string? description = mapRegionDoc.Descendants().Select(x => x.Element(ns + "RegionDescription").Value).FirstOrDefault();
+                RegionDescription = description;
+            }
+            else
+            {
+                RegionDescription = string.Empty;
             }
 
             IEnumerable<XElement> regionPointElem = mapRegionDoc.Descendants(ns + "MapRegionPoint");
@@ -379,6 +394,10 @@ namespace RealmStudio
 
             writer.WriteStartElement("RegionGuid");
             writer.WriteString(RegionGuid.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("RegionDescription");
+            writer.WriteString(RegionDescription);
             writer.WriteEndElement();
 
             writer.WriteStartElement("MapRegionPoints");

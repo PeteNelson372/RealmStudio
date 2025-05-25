@@ -37,6 +37,8 @@ namespace RealmStudio
 
         public Guid SymbolGuid { get; set; } = Guid.NewGuid();
 
+        public string SymbolDescription { get; set; } = string.Empty;
+
         public int SymbolWidth { get; set; }
 
         public int SymbolHeight { get; set; }
@@ -279,6 +281,17 @@ namespace RealmStudio
             string? symbolName = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "SymbolName").Value).FirstOrDefault();
             SymbolName = symbolName;
 
+            IEnumerable<XElement?> descrElemEnum = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "SymbolDescription"));
+            if (descrElemEnum != null && descrElemEnum.Any() && descrElemEnum.First() != null)
+            {
+                string? description = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "SymbolDescription").Value).FirstOrDefault();
+                SymbolDescription = description;
+            }
+            else
+            {
+                SymbolDescription = string.Empty;
+            }
+
             string? collectionName = mapSymbolDoc.Descendants().Select(x => x.Element(ns + "CollectionName").Value).FirstOrDefault();
             CollectionName = collectionName;
 
@@ -499,6 +512,10 @@ namespace RealmStudio
 
             writer.WriteStartElement("SymbolName"); // name of the symbol derived from the file name
             writer.WriteString(SymbolName);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("SymbolDescription");       // description of the symbol set in the description editor
+            writer.WriteString(SymbolDescription);
             writer.WriteEndElement();
 
             writer.WriteStartElement("CollectionName");

@@ -36,6 +36,7 @@ namespace RealmStudio
         public RealmStudioMap? ParentMap { get; set; }
         public Guid MapPathGuid { get; set; } = Guid.NewGuid();
         public string MapPathName { get; set; } = "";
+        public string MapPathDescription { get; set; } = string.Empty;
         public List<MapPathPoint> PathPoints { get; set; } = [];
         public PathType PathType { get; set; } = PathType.SolidLinePath;
         public Color PathColor { get; set; } = ColorTranslator.FromHtml("#4B311A");
@@ -292,10 +293,14 @@ namespace RealmStudio
             XDocument mapPathDoc = XDocument.Parse(content);
 
             IEnumerable<XElement?> nameElemEnum = mapPathDoc.Descendants().Select(x => x.Element(ns + "MapPathName"));
-            if (nameElemEnum.First() != null)
+            if (nameElemEnum.First() != null && nameElemEnum.Any() && nameElemEnum.First() != null)
             {
                 string? mapPathName = mapPathDoc.Descendants().Select(x => x.Element(ns + "MapPathName").Value).FirstOrDefault();
                 MapPathName = mapPathName;
+            }
+            else
+            {
+                MapPathName = string.Empty;
             }
 
             IEnumerable<XElement?> guidElemEnum = mapPathDoc.Descendants().Select(x => x.Element(ns + "MapPathGuid"));
@@ -303,6 +308,17 @@ namespace RealmStudio
             {
                 string? mapGuid = mapPathDoc.Descendants().Select(x => x.Element(ns + "MapPathGuid").Value).FirstOrDefault();
                 MapPathGuid = Guid.Parse(mapGuid);
+            }
+
+            IEnumerable<XElement?> descrElemEnum = mapPathDoc.Descendants().Select(x => x.Element(ns + "MapPathDescription"));
+            if (descrElemEnum != null && descrElemEnum.Any() && descrElemEnum.First() != null)
+            {
+                string? description = mapPathDoc.Descendants().Select(x => x.Element(ns + "MapPathDescription").Value).FirstOrDefault();
+                MapPathDescription = description;
+            }
+            else
+            {
+                MapPathDescription = string.Empty;
             }
 
             IEnumerable<XElement?> typeElemEnum = mapPathDoc.Descendants().Select(x => x.Element(ns + "MapPathType"));
@@ -488,6 +504,11 @@ namespace RealmStudio
             // map path name
             writer.WriteStartElement("MapPathName");
             writer.WriteString(MapPathName);
+            writer.WriteEndElement();
+
+            // map path description
+            writer.WriteStartElement("MapPathDescription");
+            writer.WriteString(MapPathDescription);
             writer.WriteEndElement();
 
             // map path GUID

@@ -38,6 +38,8 @@ namespace RealmStudio
 
         public string LandformName { get; set; } = string.Empty;
 
+        public string LandformDescription { get; set; } = string.Empty;
+
         public Guid LandformGuid { get; set; } = Guid.NewGuid();
 
         public SKPath ContourPath { get; set; } = new SKPath();
@@ -921,6 +923,17 @@ namespace RealmStudio
                 LandformGuid = Guid.NewGuid();
             }
 
+            IEnumerable<XElement?> descrElemEnum = mapLandformDoc.Descendants().Select(x => x.Element(ns + "LandformDescription"));
+            if (descrElemEnum != null && descrElemEnum.Any() && descrElemEnum.First() != null)
+            {
+                string? description = mapLandformDoc.Descendants().Select(x => x.Element(ns + "LandformDescription").Value).FirstOrDefault();
+                LandformDescription = description;
+            }
+            else
+            {
+                LandformDescription = string.Empty;
+            }
+
             IEnumerable<XElement?> fillWithTextureElem = mapLandformDoc.Descendants().Select(x => x.Element(ns + "FillWithTexture"));
             if (fillWithTextureElem != null && fillWithTextureElem.Any() && fillWithTextureElem.First() != null)
             {
@@ -1237,6 +1250,10 @@ namespace RealmStudio
             // landform name
             writer.WriteStartElement("LandformName");
             writer.WriteString(LandformName);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("LandformDescription");
+            writer.WriteString(LandformDescription);
             writer.WriteEndElement();
 
             // landform GUID

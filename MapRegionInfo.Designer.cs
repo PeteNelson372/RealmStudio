@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapRegionInfo));
             RegionInfoOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            StatusMessageLabel = new Label();
             label90 = new Label();
             LightSolidRegionBorderPicture = new PictureBox();
             GradientRegionBorderPicture = new PictureBox();
@@ -62,7 +63,7 @@
             RegionBorderWidthTrack = new TrackBar();
             label25 = new Label();
             RegionColorSelectButton = new FontAwesome.Sharp.IconButton();
-            StatusMessageLabel = new Label();
+            RegionDescriptionButton = new FontAwesome.Sharp.IconButton();
             RegionInfoOverlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).BeginInit();
@@ -82,6 +83,7 @@
             // 
             RegionInfoOverlay.BackColor = Color.FromArgb(244, 241, 243);
             RegionInfoOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            RegionInfoOverlay.Controls.Add(RegionDescriptionButton);
             RegionInfoOverlay.Controls.Add(StatusMessageLabel);
             RegionInfoOverlay.Controls.Add(label90);
             RegionInfoOverlay.Controls.Add(LightSolidRegionBorderPicture);
@@ -134,6 +136,13 @@
             RegionInfoOverlay.TabIndex = 8;
             RegionInfoOverlay.Text = "Region Info";
             RegionInfoOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // StatusMessageLabel
+            // 
+            StatusMessageLabel.Location = new Point(23, 385);
+            StatusMessageLabel.Name = "StatusMessageLabel";
+            StatusMessageLabel.Size = new Size(64, 22);
+            StatusMessageLabel.TabIndex = 159;
             // 
             // label90
             // 
@@ -497,12 +506,19 @@
             RegionColorSelectButton.UseVisualStyleBackColor = false;
             RegionColorSelectButton.Click += RegionColorSelectButton_Click;
             // 
-            // StatusMessageLabel
+            // RegionDescriptionButton
             // 
-            StatusMessageLabel.Location = new Point(23, 385);
-            StatusMessageLabel.Name = "StatusMessageLabel";
-            StatusMessageLabel.Size = new Size(64, 22);
-            StatusMessageLabel.TabIndex = 159;
+            RegionDescriptionButton.IconChar = FontAwesome.Sharp.IconChar.FileText;
+            RegionDescriptionButton.IconColor = Color.Black;
+            RegionDescriptionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            RegionDescriptionButton.IconSize = 20;
+            RegionDescriptionButton.Location = new Point(348, 12);
+            RegionDescriptionButton.Name = "RegionDescriptionButton";
+            RegionDescriptionButton.Size = new Size(30, 30);
+            RegionDescriptionButton.TabIndex = 160;
+            RegionDescriptionButton.UseVisualStyleBackColor = true;
+            RegionDescriptionButton.Click += RegionDescriptionButton_Click;
+            RegionDescriptionButton.MouseHover += RegionDescriptionButton_MouseHover;
             // 
             // MapRegionInfo
             // 
@@ -569,5 +585,6 @@
         private RadioButton RegionDottedBorderRadio;
         private RadioButton RegionSolidBorderRadio;
         private Label StatusMessageLabel;
+        private FontAwesome.Sharp.IconButton RegionDescriptionButton;
     }
 }

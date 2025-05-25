@@ -39,6 +39,8 @@ namespace RealmStudio
 
         public string MapRiverName { get; set; } = "";
 
+        public string MapRiverDescription { get; set; } = string.Empty;
+
         public List<MapRiverPoint> RiverPoints { get; set; } = [];
 
         public Color RiverColor { get; set; } = ColorTranslator.FromHtml("#839690");
@@ -209,6 +211,17 @@ namespace RealmStudio
                 MapRiverGuid = Guid.Parse(mapGuid);
             }
 
+            IEnumerable<XElement?> descrElemEnum = mapRiverDoc.Descendants().Select(x => x.Element(ns + "MapRiverDescription"));
+            if (descrElemEnum != null && descrElemEnum.Any() && descrElemEnum.First() != null)
+            {
+                string? description = mapRiverDoc.Descendants().Select(x => x.Element(ns + "MapRiverDescription").Value).FirstOrDefault();
+                MapRiverDescription = description;
+            }
+            else
+            {
+                MapRiverDescription = string.Empty;
+            }
+
             IEnumerable<XElement?> riverColorElem = mapRiverDoc.Descendants().Select(x => x.Element(ns + "RiverColor"));
             if (riverColorElem != null && riverColorElem.Any() && riverColorElem.First() != null)
             {
@@ -333,6 +346,11 @@ namespace RealmStudio
             // water feature GUID
             writer.WriteStartElement("MapRiverGuid");
             writer.WriteString(MapRiverGuid.ToString());
+            writer.WriteEndElement();
+
+            // water feature description
+            writer.WriteStartElement("MapRiverDescription");
+            writer.WriteString(MapRiverDescription);
             writer.WriteEndElement();
 
             // water feature color

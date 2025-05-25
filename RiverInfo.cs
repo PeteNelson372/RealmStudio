@@ -99,5 +99,23 @@ namespace RealmStudio
         {
             Close();
         }
+
+        private void RiverDescriptionButton_Click(object sender, EventArgs e)
+        {
+            DescriptionEditor descriptionEditor = new();
+            descriptionEditor.DescrptionEditorOverlay.Text = "River Description Editor";
+            descriptionEditor.DescriptionText = River.MapRiverDescription ?? string.Empty;
+            DialogResult r = descriptionEditor.ShowDialog(this);
+
+            if (r == DialogResult.OK)
+            {
+                River.MapRiverDescription = descriptionEditor.DescriptionText;
+            }
+        }
+
+        private void RiverDescriptionButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Edit River Description", this, new Point(RiverDescriptionButton.Left, RiverDescriptionButton.Top - 20), 3000);
+        }
     }
 }
