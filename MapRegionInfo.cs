@@ -187,5 +187,17 @@ namespace RealmStudio
         {
             TOOLTIP.Show("Edit Region Description", this, new Point(RegionDescriptionButton.Left, RegionDescriptionButton.Top - 20), 3000);
         }
+
+        private void GenerateRegionNameButton_Click(object sender, EventArgs e)
+        {
+            List<INameGenerator> generators = RealmStudioMainForm.NAME_GENERATOR_CONFIG.GetSelectedNameGenerators();
+            string generatedName = MapToolMethods.GenerateRandomPlaceName(generators);
+            NameTextbox.Text = generatedName;
+        }
+
+        private void GenerateRegionNameButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Generate Region Name", this, new Point(GenerateRegionNameButton.Left, GenerateRegionNameButton.Top - 20), 3000);
+        }
     }
 }

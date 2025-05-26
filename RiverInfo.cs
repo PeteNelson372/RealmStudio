@@ -117,5 +117,16 @@ namespace RealmStudio
         {
             TOOLTIP.Show("Edit River Description", this, new Point(RiverDescriptionButton.Left, RiverDescriptionButton.Top - 20), 3000);
         }
+
+        private void GenerateRiverNameButton_Click(object sender, EventArgs e)
+        {
+            string generatedName = MapToolMethods.GenerateRandomWaterFeatureName();
+            NameTextbox.Text = generatedName;
+        }
+
+        private void GenerateRiverNameButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Generate River Name", this, new Point(GenerateRiverNameButton.Left, GenerateRiverNameButton.Top - 20), 3000);
+        }
     }
 }

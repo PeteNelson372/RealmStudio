@@ -57,6 +57,7 @@
             NameTextbox = new TextBox();
             GuidLabel = new Label();
             label1 = new Label();
+            GenerateLandformNameButton = new FontAwesome.Sharp.IconButton();
             LandformDataPanel.SuspendLayout();
             CoastlineGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)CoastlineEffectDistanceTrack).BeginInit();
@@ -69,6 +70,7 @@
             // 
             LandformDataPanel.BackColor = Color.FromArgb(244, 241, 243);
             LandformDataPanel.BorderColor = Color.FromArgb(38, 38, 38);
+            LandformDataPanel.Controls.Add(GenerateLandformNameButton);
             LandformDataPanel.Controls.Add(LandformDescriptionButton);
             LandformDataPanel.Controls.Add(label3);
             LandformDataPanel.Controls.Add(ApplyThemeSettingsButton);
@@ -98,7 +100,7 @@
             LandformDataPanel.SmartBounds = true;
             LandformDataPanel.StartPosition = FormStartPosition.CenterParent;
             LandformDataPanel.TabIndex = 0;
-            LandformDataPanel.Text = "Landform Data";
+            LandformDataPanel.Text = "Landform Info";
             LandformDataPanel.TitleColor = Color.FromArgb(223, 219, 210);
             // 
             // LandformDescriptionButton
@@ -426,7 +428,7 @@
             // 
             NameTextbox.Location = new Point(68, 72);
             NameTextbox.Name = "NameTextbox";
-            NameTextbox.Size = new Size(251, 23);
+            NameTextbox.Size = new Size(232, 23);
             NameTextbox.TabIndex = 2;
             // 
             // GuidLabel
@@ -450,6 +452,20 @@
             label1.Text = "Identifier";
             label1.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // GenerateLandformNameButton
+            // 
+            GenerateLandformNameButton.IconChar = FontAwesome.Sharp.IconChar.FileSignature;
+            GenerateLandformNameButton.IconColor = Color.Black;
+            GenerateLandformNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            GenerateLandformNameButton.IconSize = 20;
+            GenerateLandformNameButton.Location = new Point(306, 67);
+            GenerateLandformNameButton.Name = "GenerateLandformNameButton";
+            GenerateLandformNameButton.Size = new Size(30, 30);
+            GenerateLandformNameButton.TabIndex = 112;
+            GenerateLandformNameButton.UseVisualStyleBackColor = true;
+            GenerateLandformNameButton.Click += GenerateLandformNameButton_Click;
+            GenerateLandformNameButton.MouseHover += GenerateLandformNameButton_MouseHover;
+            // 
             // LandformInfo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -460,7 +476,7 @@
             MinimumSize = new Size(261, 65);
             Name = "LandformInfo";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "Landform Data";
+            Text = "Landform Info";
             TransparencyKey = Color.Fuchsia;
             LandformDataPanel.ResumeLayout(false);
             LandformDataPanel.PerformLayout();
@@ -505,5 +521,6 @@
         private FontAwesome.Sharp.IconButton ApplyThemeSettingsButton;
         private Label label3;
         private FontAwesome.Sharp.IconButton LandformDescriptionButton;
+        private FontAwesome.Sharp.IconButton GenerateLandformNameButton;
     }
 }

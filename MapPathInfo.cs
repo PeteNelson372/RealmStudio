@@ -328,5 +328,18 @@ namespace RealmStudio
         {
             TOOLTIP.Show("Edit Path Description", this, new Point(PathDescriptionButton.Left, PathDescriptionButton.Top - 20), 3000);
         }
+
+        private void GeneratePathNameButton_Click(object sender, EventArgs e)
+        {
+            List<INameGenerator> generators = RealmStudioMainForm.NAME_GENERATOR_CONFIG.GetSelectedNameGenerators();
+            string generatedName = MapToolMethods.GenerateRandomPlaceName(generators);
+            NameTextbox.Text = generatedName;
+        }
+
+        private void GeneratePathNameButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Generate Path Name", this, new Point(GeneratePathNameButton.Left, GeneratePathNameButton.Top - 20), 3000);
+
+        }
     }
 }

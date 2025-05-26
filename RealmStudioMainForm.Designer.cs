@@ -1731,8 +1731,8 @@
             LandTab.Controls.Add(LandformValuesGroup);
             LandTab.Controls.Add(ShowLandLayerSwitch);
             LandTab.Controls.Add(label4);
-            LandTab.Controls.Add(HeightMapToolsPanel);
             LandTab.Controls.Add(LandToolStrip);
+            LandTab.Controls.Add(HeightMapToolsPanel);
             LandTab.Location = new Point(26, 4);
             LandTab.Name = "LandTab";
             LandTab.Size = new Size(230, 878);

@@ -66,6 +66,41 @@ namespace RealmStudio
             return generatedName;
         }
 
+        public static string GenerateRandomWaterFeatureName()
+        {
+            string generatedName = string.Empty;
+            List<INameGenerator> generators = [];
+            NameGenerator? nameGen = null;
+
+            foreach (NameGenerator ng in NameGenerators)
+            {
+                if (ng.NameGeneratorName.Contains("Bodies of Water"))
+                {
+                    nameGen = ng;
+                }
+            }
+
+            foreach (NameBase nameBase in NameBases)
+            {
+                if (nameBase.IsNameBaseSelected)
+                {
+                    foreach (NameBaseLanguage language in nameBase.Languages)
+                    {
+                        if (language.IsLanguageSelected)
+                        {
+                            generators.Add(language);
+                        }
+                    }
+                }
+            }
+
+            if (nameGen != null)
+            {
+                generatedName = GenerateName(nameGen, generators);
+            }
+            return generatedName;
+        }
+
         private static string GenerateRandomNameBaseName()
         {
             string generatedName = string.Empty;

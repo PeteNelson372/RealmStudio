@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapRegionInfo));
             RegionInfoOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            RegionDescriptionButton = new FontAwesome.Sharp.IconButton();
             StatusMessageLabel = new Label();
             label90 = new Label();
             LightSolidRegionBorderPicture = new PictureBox();
@@ -63,7 +64,7 @@
             RegionBorderWidthTrack = new TrackBar();
             label25 = new Label();
             RegionColorSelectButton = new FontAwesome.Sharp.IconButton();
-            RegionDescriptionButton = new FontAwesome.Sharp.IconButton();
+            GenerateRegionNameButton = new FontAwesome.Sharp.IconButton();
             RegionInfoOverlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).BeginInit();
@@ -83,6 +84,7 @@
             // 
             RegionInfoOverlay.BackColor = Color.FromArgb(244, 241, 243);
             RegionInfoOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            RegionInfoOverlay.Controls.Add(GenerateRegionNameButton);
             RegionInfoOverlay.Controls.Add(RegionDescriptionButton);
             RegionInfoOverlay.Controls.Add(StatusMessageLabel);
             RegionInfoOverlay.Controls.Add(label90);
@@ -136,6 +138,20 @@
             RegionInfoOverlay.TabIndex = 8;
             RegionInfoOverlay.Text = "Region Info";
             RegionInfoOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // RegionDescriptionButton
+            // 
+            RegionDescriptionButton.IconChar = FontAwesome.Sharp.IconChar.FileText;
+            RegionDescriptionButton.IconColor = Color.Black;
+            RegionDescriptionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            RegionDescriptionButton.IconSize = 20;
+            RegionDescriptionButton.Location = new Point(348, 12);
+            RegionDescriptionButton.Name = "RegionDescriptionButton";
+            RegionDescriptionButton.Size = new Size(30, 30);
+            RegionDescriptionButton.TabIndex = 160;
+            RegionDescriptionButton.UseVisualStyleBackColor = true;
+            RegionDescriptionButton.Click += RegionDescriptionButton_Click;
+            RegionDescriptionButton.MouseHover += RegionDescriptionButton_MouseHover;
             // 
             // StatusMessageLabel
             // 
@@ -395,7 +411,7 @@
             // 
             NameTextbox.Location = new Point(79, 72);
             NameTextbox.Name = "NameTextbox";
-            NameTextbox.Size = new Size(286, 23);
+            NameTextbox.Size = new Size(250, 23);
             NameTextbox.TabIndex = 104;
             // 
             // GuidLabel
@@ -506,19 +522,19 @@
             RegionColorSelectButton.UseVisualStyleBackColor = false;
             RegionColorSelectButton.Click += RegionColorSelectButton_Click;
             // 
-            // RegionDescriptionButton
+            // GenerateRegionNameButton
             // 
-            RegionDescriptionButton.IconChar = FontAwesome.Sharp.IconChar.FileText;
-            RegionDescriptionButton.IconColor = Color.Black;
-            RegionDescriptionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            RegionDescriptionButton.IconSize = 20;
-            RegionDescriptionButton.Location = new Point(348, 12);
-            RegionDescriptionButton.Name = "RegionDescriptionButton";
-            RegionDescriptionButton.Size = new Size(30, 30);
-            RegionDescriptionButton.TabIndex = 160;
-            RegionDescriptionButton.UseVisualStyleBackColor = true;
-            RegionDescriptionButton.Click += RegionDescriptionButton_Click;
-            RegionDescriptionButton.MouseHover += RegionDescriptionButton_MouseHover;
+            GenerateRegionNameButton.IconChar = FontAwesome.Sharp.IconChar.FileSignature;
+            GenerateRegionNameButton.IconColor = Color.Black;
+            GenerateRegionNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            GenerateRegionNameButton.IconSize = 20;
+            GenerateRegionNameButton.Location = new Point(335, 67);
+            GenerateRegionNameButton.Name = "GenerateRegionNameButton";
+            GenerateRegionNameButton.Size = new Size(30, 30);
+            GenerateRegionNameButton.TabIndex = 161;
+            GenerateRegionNameButton.UseVisualStyleBackColor = true;
+            GenerateRegionNameButton.Click += GenerateRegionNameButton_Click;
+            GenerateRegionNameButton.MouseHover += GenerateRegionNameButton_MouseHover;
             // 
             // MapRegionInfo
             // 
@@ -586,5 +602,6 @@
         private RadioButton RegionSolidBorderRadio;
         private Label StatusMessageLabel;
         private FontAwesome.Sharp.IconButton RegionDescriptionButton;
+        private FontAwesome.Sharp.IconButton GenerateRegionNameButton;
     }
 }

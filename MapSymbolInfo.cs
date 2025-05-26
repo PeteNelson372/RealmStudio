@@ -272,5 +272,17 @@ namespace RealmStudio
         {
             TOOLTIP.Show("Edit Map Symbol Description", this, new Point(MapSymbolDescriptionButton.Left, MapSymbolDescriptionButton.Top - 20), 3000);
         }
+
+        private void GenerateSymbolNameButton_Click(object sender, EventArgs e)
+        {
+            List<INameGenerator> generators = RealmStudioMainForm.NAME_GENERATOR_CONFIG.GetSelectedNameGenerators();
+            string generatedName = MapToolMethods.GenerateRandomPlaceName(generators);
+            NameTextBox.Text = generatedName;
+        }
+
+        private void GenerateSymbolNameButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Generate Map Symbol Name", this, new Point(GenerateSymbolNameButton.Left, GenerateSymbolNameButton.Top - 20), 3000);
+        }
     }
 }

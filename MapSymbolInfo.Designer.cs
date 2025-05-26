@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             MapSymbolInfoOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            MapSymbolDescriptionButton = new FontAwesome.Sharp.IconButton();
             CloseFormButton = new Button();
             SymbolInfoGroup = new GroupBox();
             StatusLabel = new Label();
@@ -63,7 +64,7 @@
             NewTagTextBox = new TextBox();
             AddTagButton = new FontAwesome.Sharp.IconButton();
             CheckedTagsListBox = new CheckedListBox();
-            MapSymbolDescriptionButton = new FontAwesome.Sharp.IconButton();
+            GenerateSymbolNameButton = new FontAwesome.Sharp.IconButton();
             MapSymbolInfoOverlay.SuspendLayout();
             SymbolInfoGroup.SuspendLayout();
             panel1.SuspendLayout();
@@ -98,6 +99,20 @@
             MapSymbolInfoOverlay.Text = "Symbol Info";
             MapSymbolInfoOverlay.TitleColor = Color.FromArgb(223, 219, 210);
             // 
+            // MapSymbolDescriptionButton
+            // 
+            MapSymbolDescriptionButton.IconChar = FontAwesome.Sharp.IconChar.FileText;
+            MapSymbolDescriptionButton.IconColor = Color.Black;
+            MapSymbolDescriptionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            MapSymbolDescriptionButton.IconSize = 20;
+            MapSymbolDescriptionButton.Location = new Point(479, 12);
+            MapSymbolDescriptionButton.Name = "MapSymbolDescriptionButton";
+            MapSymbolDescriptionButton.Size = new Size(30, 30);
+            MapSymbolDescriptionButton.TabIndex = 96;
+            MapSymbolDescriptionButton.UseVisualStyleBackColor = true;
+            MapSymbolDescriptionButton.Click += MapSymbolDescriptionButton_Click;
+            MapSymbolDescriptionButton.MouseHover += MapSymbolDescriptionButton_MouseHover;
+            // 
             // CloseFormButton
             // 
             CloseFormButton.ForeColor = SystemColors.ControlDarkDark;
@@ -112,6 +127,7 @@
             // SymbolInfoGroup
             // 
             SymbolInfoGroup.BackColor = Color.Transparent;
+            SymbolInfoGroup.Controls.Add(GenerateSymbolNameButton);
             SymbolInfoGroup.Controls.Add(StatusLabel);
             SymbolInfoGroup.Controls.Add(PaintSymbolButton);
             SymbolInfoGroup.Controls.Add(NameTextBox);
@@ -173,7 +189,7 @@
             // 
             NameTextBox.Location = new Point(116, 25);
             NameTextBox.Name = "NameTextBox";
-            NameTextBox.Size = new Size(182, 27);
+            NameTextBox.Size = new Size(161, 27);
             NameTextBox.TabIndex = 62;
             // 
             // label6
@@ -539,19 +555,19 @@
             CheckedTagsListBox.Size = new Size(135, 130);
             CheckedTagsListBox.TabIndex = 0;
             // 
-            // MapSymbolDescriptionButton
+            // GenerateSymbolNameButton
             // 
-            MapSymbolDescriptionButton.IconChar = FontAwesome.Sharp.IconChar.FileText;
-            MapSymbolDescriptionButton.IconColor = Color.Black;
-            MapSymbolDescriptionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            MapSymbolDescriptionButton.IconSize = 20;
-            MapSymbolDescriptionButton.Location = new Point(479, 12);
-            MapSymbolDescriptionButton.Name = "MapSymbolDescriptionButton";
-            MapSymbolDescriptionButton.Size = new Size(30, 30);
-            MapSymbolDescriptionButton.TabIndex = 96;
-            MapSymbolDescriptionButton.UseVisualStyleBackColor = true;
-            MapSymbolDescriptionButton.Click += MapSymbolDescriptionButton_Click;
-            MapSymbolDescriptionButton.MouseHover += MapSymbolDescriptionButton_MouseHover;
+            GenerateSymbolNameButton.IconChar = FontAwesome.Sharp.IconChar.FileSignature;
+            GenerateSymbolNameButton.IconColor = Color.Black;
+            GenerateSymbolNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            GenerateSymbolNameButton.IconSize = 20;
+            GenerateSymbolNameButton.Location = new Point(283, 23);
+            GenerateSymbolNameButton.Name = "GenerateSymbolNameButton";
+            GenerateSymbolNameButton.Size = new Size(30, 30);
+            GenerateSymbolNameButton.TabIndex = 111;
+            GenerateSymbolNameButton.UseVisualStyleBackColor = true;
+            GenerateSymbolNameButton.Click += GenerateSymbolNameButton_Click;
+            GenerateSymbolNameButton.MouseHover += GenerateSymbolNameButton_MouseHover;
             // 
             // MapSymbolInfo
             // 
@@ -618,5 +634,6 @@
         private FontAwesome.Sharp.IconButton PaintSymbolButton;
         private Label StatusLabel;
         private FontAwesome.Sharp.IconButton MapSymbolDescriptionButton;
+        private FontAwesome.Sharp.IconButton GenerateSymbolNameButton;
     }
 }

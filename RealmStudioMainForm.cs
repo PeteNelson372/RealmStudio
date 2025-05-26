@@ -42,7 +42,7 @@ namespace RealmStudio
 
         private static System.Timers.Timer? LOCATION_UPDATE_TIMER;
 
-        internal static readonly System.Windows.Forms.ToolTip TOOLTIP = new();
+        internal static readonly ToolTip TOOLTIP = new();
 
         public static readonly NameGeneratorConfiguration NAME_GENERATOR_CONFIG = new();
 

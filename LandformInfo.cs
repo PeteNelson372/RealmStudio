@@ -327,5 +327,17 @@ namespace RealmStudio
         {
             TOOLTIP.Show("Edit Landform Description", this, new Point(LandformDescriptionButton.Left, LandformDescriptionButton.Top - 20), 3000);
         }
+
+        private void GenerateLandformNameButton_Click(object sender, EventArgs e)
+        {
+            List<INameGenerator> generators = RealmStudioMainForm.NAME_GENERATOR_CONFIG.GetSelectedNameGenerators();
+            string generatedName = MapToolMethods.GenerateRandomPlaceName(generators);
+            NameTextbox.Text = generatedName;
+        }
+
+        private void GenerateLandformNameButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Generate Landform Name", this, new Point(GenerateLandformNameButton.Left, GenerateLandformNameButton.Top - 20), 3000);
+        }
     }
 }

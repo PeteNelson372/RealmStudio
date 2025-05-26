@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             RiverInfoOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            RiverDescriptionButton = new FontAwesome.Sharp.IconButton();
             StatusMessageLabel = new Label();
             label41 = new Label();
             RiverSourceFadeInSwitch = new ReaLTaiizor.Controls.CyberSwitch();
@@ -42,7 +43,7 @@
             label1 = new Label();
             ShorelineColorSelectionButton = new FontAwesome.Sharp.IconButton();
             WaterColorSelectionButton = new FontAwesome.Sharp.IconButton();
-            RiverDescriptionButton = new FontAwesome.Sharp.IconButton();
+            GenerateRiverNameButton = new FontAwesome.Sharp.IconButton();
             RiverInfoOverlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RiverWidthTrack).BeginInit();
             SuspendLayout();
@@ -51,6 +52,7 @@
             // 
             RiverInfoOverlay.BackColor = Color.FromArgb(244, 241, 243);
             RiverInfoOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            RiverInfoOverlay.Controls.Add(GenerateRiverNameButton);
             RiverInfoOverlay.Controls.Add(RiverDescriptionButton);
             RiverInfoOverlay.Controls.Add(StatusMessageLabel);
             RiverInfoOverlay.Controls.Add(label41);
@@ -84,6 +86,20 @@
             RiverInfoOverlay.TabIndex = 0;
             RiverInfoOverlay.Text = "River Info";
             RiverInfoOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // RiverDescriptionButton
+            // 
+            RiverDescriptionButton.IconChar = FontAwesome.Sharp.IconChar.FileText;
+            RiverDescriptionButton.IconColor = Color.Black;
+            RiverDescriptionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            RiverDescriptionButton.IconSize = 20;
+            RiverDescriptionButton.Location = new Point(352, 12);
+            RiverDescriptionButton.Name = "RiverDescriptionButton";
+            RiverDescriptionButton.Size = new Size(30, 30);
+            RiverDescriptionButton.TabIndex = 108;
+            RiverDescriptionButton.UseVisualStyleBackColor = true;
+            RiverDescriptionButton.Click += RiverDescriptionButton_Click;
+            RiverDescriptionButton.MouseHover += RiverDescriptionButton_MouseHover;
             // 
             // StatusMessageLabel
             // 
@@ -205,7 +221,7 @@
             // 
             NameTextbox.Location = new Point(83, 72);
             NameTextbox.Name = "NameTextbox";
-            NameTextbox.Size = new Size(286, 23);
+            NameTextbox.Size = new Size(253, 23);
             NameTextbox.TabIndex = 99;
             // 
             // GuidLabel
@@ -261,19 +277,19 @@
             WaterColorSelectionButton.UseVisualStyleBackColor = false;
             WaterColorSelectionButton.Click += WaterColorSelectionButton_Click;
             // 
-            // RiverDescriptionButton
+            // GenerateRiverNameButton
             // 
-            RiverDescriptionButton.IconChar = FontAwesome.Sharp.IconChar.FileText;
-            RiverDescriptionButton.IconColor = Color.Black;
-            RiverDescriptionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            RiverDescriptionButton.IconSize = 20;
-            RiverDescriptionButton.Location = new Point(352, 12);
-            RiverDescriptionButton.Name = "RiverDescriptionButton";
-            RiverDescriptionButton.Size = new Size(30, 30);
-            RiverDescriptionButton.TabIndex = 108;
-            RiverDescriptionButton.UseVisualStyleBackColor = true;
-            RiverDescriptionButton.Click += RiverDescriptionButton_Click;
-            RiverDescriptionButton.MouseHover += RiverDescriptionButton_MouseHover;
+            GenerateRiverNameButton.IconChar = FontAwesome.Sharp.IconChar.FileSignature;
+            GenerateRiverNameButton.IconColor = Color.Black;
+            GenerateRiverNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            GenerateRiverNameButton.IconSize = 20;
+            GenerateRiverNameButton.Location = new Point(341, 67);
+            GenerateRiverNameButton.Name = "GenerateRiverNameButton";
+            GenerateRiverNameButton.Size = new Size(30, 30);
+            GenerateRiverNameButton.TabIndex = 111;
+            GenerateRiverNameButton.UseVisualStyleBackColor = true;
+            GenerateRiverNameButton.Click += GenerateRiverNameButton_Click;
+            GenerateRiverNameButton.MouseHover += GenerateRiverNameButton_MouseHover;
             // 
             // RiverInfo
             // 
@@ -309,5 +325,6 @@
         private TrackBar RiverWidthTrack;
         private Label StatusMessageLabel;
         private FontAwesome.Sharp.IconButton RiverDescriptionButton;
+        private FontAwesome.Sharp.IconButton GenerateRiverNameButton;
     }
 }

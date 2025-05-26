@@ -106,5 +106,16 @@ namespace RealmStudio
         {
             TOOLTIP.Show("Edit Water Feature Description", this, new Point(WaterFeatureDescriptionButton.Left, WaterFeatureDescriptionButton.Top - 20), 3000);
         }
+
+        private void GenerateWaterFeatureNameButton_Click(object sender, EventArgs e)
+        {
+            string generatedName = MapToolMethods.GenerateRandomWaterFeatureName();
+            NameTextbox.Text = generatedName;
+        }
+
+        private void GenerateWaterFeatureNameButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Generate Water Feature Name", this, new Point(GenerateWaterFeatureNameButton.Left, GenerateWaterFeatureNameButton.Top - 20), 3000);
+        }
     }
 }
