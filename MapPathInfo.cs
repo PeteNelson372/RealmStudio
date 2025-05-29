@@ -32,6 +32,7 @@ namespace RealmStudio
         private readonly RealmStudioMap Map;
         private readonly MapPath MapPath;
         private readonly SKGLControl RenderControl;
+        private bool NameLocked;
 
         private int SelectedPathTextureIndex;
 
@@ -313,9 +314,9 @@ namespace RealmStudio
 
         private void PathDescriptionButton_Click(object sender, EventArgs e)
         {
-            DescriptionEditor descriptionEditor = new();
-            descriptionEditor.DescrptionEditorOverlay.Text = "Path Description Editor";
-            descriptionEditor.DescriptionText = MapPath.MapPathDescription ?? string.Empty;
+            DescriptionEditor descriptionEditor = new(typeof(MapPath), NameTextbox.Text, MapPath.MapPathDescription);
+            descriptionEditor.DescriptionEditorOverlay.Text = "Path Description Editor";
+
             DialogResult r = descriptionEditor.ShowDialog(this);
 
             if (r == DialogResult.OK)
@@ -331,15 +332,33 @@ namespace RealmStudio
 
         private void GeneratePathNameButton_Click(object sender, EventArgs e)
         {
+            if (NameLocked)
+            {
+                return; // Do not generate a new name if the name is locked
+            }
+
             List<INameGenerator> generators = RealmStudioMainForm.NAME_GENERATOR_CONFIG.GetSelectedNameGenerators();
             string generatedName = MapToolMethods.GenerateRandomPlaceName(generators);
             NameTextbox.Text = generatedName;
+            MapPath.MapPathName = generatedName;
         }
 
         private void GeneratePathNameButton_MouseHover(object sender, EventArgs e)
         {
             TOOLTIP.Show("Generate Path Name", this, new Point(GeneratePathNameButton.Left, GeneratePathNameButton.Top - 20), 3000);
+        }
 
+        private void LockNameButton_Click(object sender, EventArgs e)
+        {
+            NameLocked = !NameLocked;
+            if (NameLocked)
+            {
+                LockNameButton.IconChar = FontAwesome.Sharp.IconChar.Lock;
+            }
+            else
+            {
+                LockNameButton.IconChar = FontAwesome.Sharp.IconChar.LockOpen;
+            }
         }
     }
 }

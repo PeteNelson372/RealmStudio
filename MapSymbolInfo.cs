@@ -31,11 +31,12 @@ namespace RealmStudio
     {
         private readonly RealmStudioMap Map;
 
-        private readonly System.Windows.Forms.ToolTip TOOLTIP = new();
+        private readonly ToolTip TOOLTIP = new();
 
         private readonly MapSymbol symbol;
         private readonly MapSymbolCollection? collection;
         private readonly Color[] originalColors = new Color[3];
+        private bool NameLocked;
 
         public MapSymbolInfo(RealmStudioMap map, MapSymbol symbol)
         {
@@ -257,9 +258,9 @@ namespace RealmStudio
 
         private void MapSymbolDescriptionButton_Click(object sender, EventArgs e)
         {
-            DescriptionEditor descriptionEditor = new();
-            descriptionEditor.DescrptionEditorOverlay.Text = "Map Symbol Description Editor";
-            descriptionEditor.DescriptionText = symbol.SymbolDescription ?? string.Empty;
+            DescriptionEditor descriptionEditor = new(typeof(MapSymbol), NameTextBox.Text, symbol.SymbolDescription);
+            descriptionEditor.DescriptionEditorOverlay.Text = "Map Symbol Description Editor";
+
             DialogResult r = descriptionEditor.ShowDialog(this);
 
             if (r == DialogResult.OK)
@@ -275,14 +276,33 @@ namespace RealmStudio
 
         private void GenerateSymbolNameButton_Click(object sender, EventArgs e)
         {
+            if (NameLocked)
+            {
+                return;
+            }
+
             List<INameGenerator> generators = RealmStudioMainForm.NAME_GENERATOR_CONFIG.GetSelectedNameGenerators();
             string generatedName = MapToolMethods.GenerateRandomPlaceName(generators);
             NameTextBox.Text = generatedName;
+            symbol.SymbolName = generatedName;
         }
 
         private void GenerateSymbolNameButton_MouseHover(object sender, EventArgs e)
         {
             TOOLTIP.Show("Generate Map Symbol Name", this, new Point(GenerateSymbolNameButton.Left, GenerateSymbolNameButton.Top - 20), 3000);
+        }
+
+        private void LockNameButton_Click(object sender, EventArgs e)
+        {
+            NameLocked = !NameLocked;
+            if (NameLocked)
+            {
+                LockNameButton.IconChar = FontAwesome.Sharp.IconChar.Lock;
+            }
+            else
+            {
+                LockNameButton.IconChar = FontAwesome.Sharp.IconChar.LockOpen;
+            }
         }
     }
 }

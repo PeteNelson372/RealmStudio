@@ -33,6 +33,7 @@ namespace RealmStudio
         private readonly RealmStudioMap Map;
         private readonly MapRegion MapRegion;
         private readonly SKGLControl RenderControl;
+        private bool NameLocked;
 
         public MapRegionInfo(RealmStudioMap map, MapRegion mapRegion, SKGLControl renderControl)
         {
@@ -172,9 +173,9 @@ namespace RealmStudio
 
         private void RegionDescriptionButton_Click(object sender, EventArgs e)
         {
-            DescriptionEditor descriptionEditor = new();
-            descriptionEditor.DescrptionEditorOverlay.Text = "Region Description Editor";
-            descriptionEditor.DescriptionText = MapRegion.RegionDescription ?? string.Empty;
+            DescriptionEditor descriptionEditor = new(typeof(MapRegion), NameTextbox.Text, MapRegion.RegionDescription);
+            descriptionEditor.DescriptionEditorOverlay.Text = "Region Description Editor";
+
             DialogResult r = descriptionEditor.ShowDialog(this);
 
             if (r == DialogResult.OK)
@@ -190,14 +191,33 @@ namespace RealmStudio
 
         private void GenerateRegionNameButton_Click(object sender, EventArgs e)
         {
+            if (NameLocked)
+            {
+                return;
+            }
+
             List<INameGenerator> generators = RealmStudioMainForm.NAME_GENERATOR_CONFIG.GetSelectedNameGenerators();
             string generatedName = MapToolMethods.GenerateRandomPlaceName(generators);
             NameTextbox.Text = generatedName;
+            MapRegion.RegionName = generatedName;
         }
 
         private void GenerateRegionNameButton_MouseHover(object sender, EventArgs e)
         {
             TOOLTIP.Show("Generate Region Name", this, new Point(GenerateRegionNameButton.Left, GenerateRegionNameButton.Top - 20), 3000);
+        }
+
+        private void LockNameButton_Click(object sender, EventArgs e)
+        {
+            NameLocked = !NameLocked;
+            if (NameLocked)
+            {
+                LockNameButton.IconChar = FontAwesome.Sharp.IconChar.Lock;
+            }
+            else
+            {
+                LockNameButton.IconChar = FontAwesome.Sharp.IconChar.LockOpen;
+            }
         }
     }
 }

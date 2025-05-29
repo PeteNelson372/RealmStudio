@@ -28,49 +28,83 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DescrptionEditorOverlay = new ReaLTaiizor.Forms.DungeonForm();
-            CloseDescriptionButton = new Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DescriptionEditor));
+            DescriptionEditorOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            CharacteristicsLabel = new Label();
+            MapObjectDetailButton = new FontAwesome.Sharp.IconButton();
+            DescriptionAIButton = new FontAwesome.Sharp.IconButton();
             DescriptionTextbox = new TextBox();
-            DescrptionEditorOverlay.SuspendLayout();
+            CloseDescriptionButton = new Button();
+            DescriptionEditorOverlay.SuspendLayout();
             SuspendLayout();
             // 
-            // DescrptionEditorOverlay
+            // DescriptionEditorOverlay
             // 
-            DescrptionEditorOverlay.BackColor = Color.FromArgb(244, 241, 243);
-            DescrptionEditorOverlay.BorderColor = Color.FromArgb(38, 38, 38);
-            DescrptionEditorOverlay.Controls.Add(DescriptionTextbox);
-            DescrptionEditorOverlay.Controls.Add(CloseDescriptionButton);
-            DescrptionEditorOverlay.Dock = DockStyle.Fill;
-            DescrptionEditorOverlay.FillEdgeColorA = Color.FromArgb(69, 68, 63);
-            DescrptionEditorOverlay.FillEdgeColorB = Color.FromArgb(69, 68, 63);
-            DescrptionEditorOverlay.Font = new Font("Segoe UI", 9F);
-            DescrptionEditorOverlay.FooterEdgeColor = Color.FromArgb(69, 68, 63);
-            DescrptionEditorOverlay.ForeColor = Color.FromArgb(223, 219, 210);
-            DescrptionEditorOverlay.HeaderEdgeColorA = Color.FromArgb(87, 85, 77);
-            DescrptionEditorOverlay.HeaderEdgeColorB = Color.FromArgb(69, 68, 63);
-            DescrptionEditorOverlay.Location = new Point(0, 0);
-            DescrptionEditorOverlay.Name = "DescrptionEditorOverlay";
-            DescrptionEditorOverlay.Padding = new Padding(20, 56, 20, 16);
-            DescrptionEditorOverlay.RoundCorners = true;
-            DescrptionEditorOverlay.Sizable = true;
-            DescrptionEditorOverlay.Size = new Size(598, 430);
-            DescrptionEditorOverlay.SmartBounds = true;
-            DescrptionEditorOverlay.StartPosition = FormStartPosition.WindowsDefaultLocation;
-            DescrptionEditorOverlay.TabIndex = 0;
-            DescrptionEditorOverlay.Text = "Description";
-            DescrptionEditorOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            DescriptionEditorOverlay.BackColor = Color.FromArgb(244, 241, 243);
+            DescriptionEditorOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            DescriptionEditorOverlay.Controls.Add(CharacteristicsLabel);
+            DescriptionEditorOverlay.Controls.Add(MapObjectDetailButton);
+            DescriptionEditorOverlay.Controls.Add(DescriptionAIButton);
+            DescriptionEditorOverlay.Controls.Add(DescriptionTextbox);
+            DescriptionEditorOverlay.Controls.Add(CloseDescriptionButton);
+            DescriptionEditorOverlay.Dock = DockStyle.Fill;
+            DescriptionEditorOverlay.FillEdgeColorA = Color.FromArgb(69, 68, 63);
+            DescriptionEditorOverlay.FillEdgeColorB = Color.FromArgb(69, 68, 63);
+            DescriptionEditorOverlay.Font = new Font("Segoe UI", 9F);
+            DescriptionEditorOverlay.FooterEdgeColor = Color.FromArgb(69, 68, 63);
+            DescriptionEditorOverlay.ForeColor = Color.FromArgb(223, 219, 210);
+            DescriptionEditorOverlay.HeaderEdgeColorA = Color.FromArgb(87, 85, 77);
+            DescriptionEditorOverlay.HeaderEdgeColorB = Color.FromArgb(69, 68, 63);
+            DescriptionEditorOverlay.Location = new Point(0, 0);
+            DescriptionEditorOverlay.Name = "DescriptionEditorOverlay";
+            DescriptionEditorOverlay.Padding = new Padding(20, 56, 20, 16);
+            DescriptionEditorOverlay.RoundCorners = true;
+            DescriptionEditorOverlay.Sizable = true;
+            DescriptionEditorOverlay.Size = new Size(598, 430);
+            DescriptionEditorOverlay.SmartBounds = true;
+            DescriptionEditorOverlay.StartPosition = FormStartPosition.WindowsDefaultLocation;
+            DescriptionEditorOverlay.TabIndex = 0;
+            DescriptionEditorOverlay.Text = "Description";
+            DescriptionEditorOverlay.TitleColor = Color.FromArgb(223, 219, 210);
             // 
-            // CloseDescriptionButton
+            // CharacteristicsLabel
             // 
-            CloseDescriptionButton.DialogResult = DialogResult.OK;
-            CloseDescriptionButton.ForeColor = SystemColors.ControlDarkDark;
-            CloseDescriptionButton.Location = new Point(515, 351);
-            CloseDescriptionButton.Name = "CloseDescriptionButton";
-            CloseDescriptionButton.Size = new Size(60, 60);
-            CloseDescriptionButton.TabIndex = 93;
-            CloseDescriptionButton.Text = "&Close";
-            CloseDescriptionButton.UseVisualStyleBackColor = true;
-            CloseDescriptionButton.Click += CloseDescriptionButton_Click;
+            CharacteristicsLabel.AutoEllipsis = true;
+            CharacteristicsLabel.ForeColor = SystemColors.ControlDarkDark;
+            CharacteristicsLabel.Location = new Point(155, 351);
+            CharacteristicsLabel.Name = "CharacteristicsLabel";
+            CharacteristicsLabel.Size = new Size(323, 23);
+            CharacteristicsLabel.TabIndex = 97;
+            CharacteristicsLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // MapObjectDetailButton
+            // 
+            MapObjectDetailButton.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
+            MapObjectDetailButton.IconColor = Color.Black;
+            MapObjectDetailButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            MapObjectDetailButton.IconSize = 36;
+            MapObjectDetailButton.Location = new Point(89, 351);
+            MapObjectDetailButton.Name = "MapObjectDetailButton";
+            MapObjectDetailButton.Size = new Size(60, 60);
+            MapObjectDetailButton.TabIndex = 96;
+            MapObjectDetailButton.UseVisualStyleBackColor = true;
+            MapObjectDetailButton.Click += MapObjectDetailButton_Click;
+            MapObjectDetailButton.MouseHover += MapObjectDetailButton_MouseHover;
+            // 
+            // DescriptionAIButton
+            // 
+            DescriptionAIButton.BackgroundImage = (Image)resources.GetObject("DescriptionAIButton.BackgroundImage");
+            DescriptionAIButton.BackgroundImageLayout = ImageLayout.Zoom;
+            DescriptionAIButton.IconChar = FontAwesome.Sharp.IconChar.None;
+            DescriptionAIButton.IconColor = Color.Black;
+            DescriptionAIButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            DescriptionAIButton.Location = new Point(23, 351);
+            DescriptionAIButton.Name = "DescriptionAIButton";
+            DescriptionAIButton.Size = new Size(60, 60);
+            DescriptionAIButton.TabIndex = 95;
+            DescriptionAIButton.UseVisualStyleBackColor = true;
+            DescriptionAIButton.Click += DescriptionAIButton_Click;
+            DescriptionAIButton.MouseHover += DescriptionAIButton_MouseHover;
             // 
             // DescriptionTextbox
             // 
@@ -85,25 +119,40 @@
             DescriptionTextbox.Size = new Size(552, 286);
             DescriptionTextbox.TabIndex = 94;
             // 
+            // CloseDescriptionButton
+            // 
+            CloseDescriptionButton.DialogResult = DialogResult.OK;
+            CloseDescriptionButton.ForeColor = SystemColors.ControlDarkDark;
+            CloseDescriptionButton.Location = new Point(515, 351);
+            CloseDescriptionButton.Name = "CloseDescriptionButton";
+            CloseDescriptionButton.Size = new Size(60, 60);
+            CloseDescriptionButton.TabIndex = 93;
+            CloseDescriptionButton.Text = "&Close";
+            CloseDescriptionButton.UseVisualStyleBackColor = true;
+            CloseDescriptionButton.Click += CloseDescriptionButton_Click;
+            // 
             // DescriptionEditor
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(598, 430);
-            Controls.Add(DescrptionEditorOverlay);
+            Controls.Add(DescriptionEditorOverlay);
             FormBorderStyle = FormBorderStyle.None;
             MinimumSize = new Size(261, 65);
             Name = "DescriptionEditor";
             Text = "Description";
             TransparencyKey = Color.Fuchsia;
-            DescrptionEditorOverlay.ResumeLayout(false);
-            DescrptionEditorOverlay.PerformLayout();
+            DescriptionEditorOverlay.ResumeLayout(false);
+            DescriptionEditorOverlay.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
         private Button CloseDescriptionButton;
-        internal ReaLTaiizor.Forms.DungeonForm DescrptionEditorOverlay;
+        internal ReaLTaiizor.Forms.DungeonForm DescriptionEditorOverlay;
         internal TextBox DescriptionTextbox;
+        private FontAwesome.Sharp.IconButton DescriptionAIButton;
+        private FontAwesome.Sharp.IconButton MapObjectDetailButton;
+        private Label CharacteristicsLabel;
     }
 }

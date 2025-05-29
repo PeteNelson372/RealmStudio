@@ -32,6 +32,7 @@
             MapSymbolDescriptionButton = new FontAwesome.Sharp.IconButton();
             CloseFormButton = new Button();
             SymbolInfoGroup = new GroupBox();
+            GenerateSymbolNameButton = new FontAwesome.Sharp.IconButton();
             StatusLabel = new Label();
             PaintSymbolButton = new FontAwesome.Sharp.IconButton();
             NameTextBox = new TextBox();
@@ -64,7 +65,7 @@
             NewTagTextBox = new TextBox();
             AddTagButton = new FontAwesome.Sharp.IconButton();
             CheckedTagsListBox = new CheckedListBox();
-            GenerateSymbolNameButton = new FontAwesome.Sharp.IconButton();
+            LockNameButton = new FontAwesome.Sharp.IconButton();
             MapSymbolInfoOverlay.SuspendLayout();
             SymbolInfoGroup.SuspendLayout();
             panel1.SuspendLayout();
@@ -127,6 +128,7 @@
             // SymbolInfoGroup
             // 
             SymbolInfoGroup.BackColor = Color.Transparent;
+            SymbolInfoGroup.Controls.Add(LockNameButton);
             SymbolInfoGroup.Controls.Add(GenerateSymbolNameButton);
             SymbolInfoGroup.Controls.Add(StatusLabel);
             SymbolInfoGroup.Controls.Add(PaintSymbolButton);
@@ -162,6 +164,20 @@
             SymbolInfoGroup.TabStop = false;
             SymbolInfoGroup.Text = "Symbol Data";
             // 
+            // GenerateSymbolNameButton
+            // 
+            GenerateSymbolNameButton.IconChar = FontAwesome.Sharp.IconChar.FileSignature;
+            GenerateSymbolNameButton.IconColor = Color.Black;
+            GenerateSymbolNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            GenerateSymbolNameButton.IconSize = 20;
+            GenerateSymbolNameButton.Location = new Point(252, 23);
+            GenerateSymbolNameButton.Name = "GenerateSymbolNameButton";
+            GenerateSymbolNameButton.Size = new Size(30, 30);
+            GenerateSymbolNameButton.TabIndex = 111;
+            GenerateSymbolNameButton.UseVisualStyleBackColor = true;
+            GenerateSymbolNameButton.Click += GenerateSymbolNameButton_Click;
+            GenerateSymbolNameButton.MouseHover += GenerateSymbolNameButton_MouseHover;
+            // 
             // StatusLabel
             // 
             StatusLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -187,9 +203,9 @@
             // 
             // NameTextBox
             // 
-            NameTextBox.Location = new Point(116, 25);
+            NameTextBox.Location = new Point(51, 25);
             NameTextBox.Name = "NameTextBox";
-            NameTextBox.Size = new Size(161, 27);
+            NameTextBox.Size = new Size(195, 27);
             NameTextBox.TabIndex = 62;
             // 
             // label6
@@ -555,19 +571,19 @@
             CheckedTagsListBox.Size = new Size(135, 130);
             CheckedTagsListBox.TabIndex = 0;
             // 
-            // GenerateSymbolNameButton
+            // LockNameButton
             // 
-            GenerateSymbolNameButton.IconChar = FontAwesome.Sharp.IconChar.FileSignature;
-            GenerateSymbolNameButton.IconColor = Color.Black;
-            GenerateSymbolNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            GenerateSymbolNameButton.IconSize = 20;
-            GenerateSymbolNameButton.Location = new Point(283, 23);
-            GenerateSymbolNameButton.Name = "GenerateSymbolNameButton";
-            GenerateSymbolNameButton.Size = new Size(30, 30);
-            GenerateSymbolNameButton.TabIndex = 111;
-            GenerateSymbolNameButton.UseVisualStyleBackColor = true;
-            GenerateSymbolNameButton.Click += GenerateSymbolNameButton_Click;
-            GenerateSymbolNameButton.MouseHover += GenerateSymbolNameButton_MouseHover;
+            LockNameButton.IconChar = FontAwesome.Sharp.IconChar.LockOpen;
+            LockNameButton.IconColor = SystemColors.ControlDarkDark;
+            LockNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LockNameButton.IconSize = 14;
+            LockNameButton.Location = new Point(285, 25);
+            LockNameButton.Margin = new Padding(0);
+            LockNameButton.Name = "LockNameButton";
+            LockNameButton.Size = new Size(30, 28);
+            LockNameButton.TabIndex = 113;
+            LockNameButton.UseVisualStyleBackColor = true;
+            LockNameButton.Click += LockNameButton_Click;
             // 
             // MapSymbolInfo
             // 
@@ -635,5 +651,6 @@
         private Label StatusLabel;
         private FontAwesome.Sharp.IconButton MapSymbolDescriptionButton;
         private FontAwesome.Sharp.IconButton GenerateSymbolNameButton;
+        internal FontAwesome.Sharp.IconButton LockNameButton;
     }
 }

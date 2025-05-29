@@ -32,6 +32,7 @@ namespace RealmStudio
         private readonly RealmStudioMap Map;
         private readonly WaterFeature WaterFeature;
         private readonly SKGLControl RenderControl;
+        private bool NameLocked;
 
         public WaterFeatureInfo(RealmStudioMap map, WaterFeature waterFeature, SKGLControl renderControl)
         {
@@ -91,9 +92,9 @@ namespace RealmStudio
 
         private void WaterFeatureDescriptionButton_Click(object sender, EventArgs e)
         {
-            DescriptionEditor descriptionEditor = new();
-            descriptionEditor.DescrptionEditorOverlay.Text = "Water Feature Description Editor";
-            descriptionEditor.DescriptionText = WaterFeature.WaterFeatureDescription ?? string.Empty;
+            DescriptionEditor descriptionEditor = new(typeof(WaterFeature), NameTextbox.Text, WaterFeature.WaterFeatureDescription);
+            descriptionEditor.DescriptionEditorOverlay.Text = "Water Feature Description Editor";
+
             DialogResult r = descriptionEditor.ShowDialog(this);
 
             if (r == DialogResult.OK)
@@ -109,13 +110,32 @@ namespace RealmStudio
 
         private void GenerateWaterFeatureNameButton_Click(object sender, EventArgs e)
         {
+            if (NameLocked)
+            {
+                return; // Do not generate a new name if the name is locked
+            }
+
             string generatedName = MapToolMethods.GenerateRandomWaterFeatureName();
             NameTextbox.Text = generatedName;
+            WaterFeature.WaterFeatureName = generatedName;
         }
 
         private void GenerateWaterFeatureNameButton_MouseHover(object sender, EventArgs e)
         {
             TOOLTIP.Show("Generate Water Feature Name", this, new Point(GenerateWaterFeatureNameButton.Left, GenerateWaterFeatureNameButton.Top - 20), 3000);
+        }
+
+        private void LockNameButton_Click(object sender, EventArgs e)
+        {
+            NameLocked = !NameLocked;
+            if (NameLocked)
+            {
+                LockNameButton.IconChar = FontAwesome.Sharp.IconChar.Lock;
+            }
+            else
+            {
+                LockNameButton.IconChar = FontAwesome.Sharp.IconChar.LockOpen;
+            }
         }
     }
 }

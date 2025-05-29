@@ -32,6 +32,7 @@ namespace RealmStudio
         private readonly RealmStudioMap Map;
         private readonly River River;
         private readonly SKGLControl RenderControl;
+        private bool NameLocked;
 
         public RiverInfo(RealmStudioMap map, River river, SKGLControl renderControl)
         {
@@ -102,9 +103,9 @@ namespace RealmStudio
 
         private void RiverDescriptionButton_Click(object sender, EventArgs e)
         {
-            DescriptionEditor descriptionEditor = new();
-            descriptionEditor.DescrptionEditorOverlay.Text = "River Description Editor";
-            descriptionEditor.DescriptionText = River.MapRiverDescription ?? string.Empty;
+            DescriptionEditor descriptionEditor = new(typeof(River), NameTextbox.Text, River.MapRiverDescription);
+            descriptionEditor.DescriptionEditorOverlay.Text = "River Description Editor";
+
             DialogResult r = descriptionEditor.ShowDialog(this);
 
             if (r == DialogResult.OK)
@@ -120,13 +121,32 @@ namespace RealmStudio
 
         private void GenerateRiverNameButton_Click(object sender, EventArgs e)
         {
+            if (NameLocked)
+            {
+                return;
+            }
+
             string generatedName = MapToolMethods.GenerateRandomWaterFeatureName();
             NameTextbox.Text = generatedName;
+            River.MapRiverName = generatedName;
         }
 
         private void GenerateRiverNameButton_MouseHover(object sender, EventArgs e)
         {
             TOOLTIP.Show("Generate River Name", this, new Point(GenerateRiverNameButton.Left, GenerateRiverNameButton.Top - 20), 3000);
+        }
+
+        private void LockNameButton_Click(object sender, EventArgs e)
+        {
+            NameLocked = !NameLocked;
+            if (NameLocked)
+            {
+                LockNameButton.IconChar = FontAwesome.Sharp.IconChar.Lock;
+            }
+            else
+            {
+                LockNameButton.IconChar = FontAwesome.Sharp.IconChar.LockOpen;
+            }
         }
     }
 }

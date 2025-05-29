@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             WaterFeatureInfoOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            LockNameButton = new FontAwesome.Sharp.IconButton();
+            GenerateWaterFeatureNameButton = new FontAwesome.Sharp.IconButton();
             WaterFeatureDescriptionButton = new FontAwesome.Sharp.IconButton();
             StatusMessageLabel = new Label();
             CloseWaterFeatureDataButton = new Button();
@@ -39,7 +41,6 @@
             label1 = new Label();
             ShorelineColorSelectionButton = new FontAwesome.Sharp.IconButton();
             WaterColorSelectionButton = new FontAwesome.Sharp.IconButton();
-            GenerateWaterFeatureNameButton = new FontAwesome.Sharp.IconButton();
             WaterFeatureInfoOverlay.SuspendLayout();
             SuspendLayout();
             // 
@@ -47,6 +48,7 @@
             // 
             WaterFeatureInfoOverlay.BackColor = Color.FromArgb(244, 241, 243);
             WaterFeatureInfoOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            WaterFeatureInfoOverlay.Controls.Add(LockNameButton);
             WaterFeatureInfoOverlay.Controls.Add(GenerateWaterFeatureNameButton);
             WaterFeatureInfoOverlay.Controls.Add(WaterFeatureDescriptionButton);
             WaterFeatureInfoOverlay.Controls.Add(StatusMessageLabel);
@@ -77,6 +79,34 @@
             WaterFeatureInfoOverlay.TabIndex = 0;
             WaterFeatureInfoOverlay.Text = "Water Feature Info";
             WaterFeatureInfoOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // LockNameButton
+            // 
+            LockNameButton.IconChar = FontAwesome.Sharp.IconChar.LockOpen;
+            LockNameButton.IconColor = SystemColors.ControlDarkDark;
+            LockNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LockNameButton.IconSize = 14;
+            LockNameButton.Location = new Point(336, 69);
+            LockNameButton.Margin = new Padding(0);
+            LockNameButton.Name = "LockNameButton";
+            LockNameButton.Size = new Size(30, 28);
+            LockNameButton.TabIndex = 111;
+            LockNameButton.UseVisualStyleBackColor = true;
+            LockNameButton.Click += LockNameButton_Click;
+            // 
+            // GenerateWaterFeatureNameButton
+            // 
+            GenerateWaterFeatureNameButton.IconChar = FontAwesome.Sharp.IconChar.FileSignature;
+            GenerateWaterFeatureNameButton.IconColor = Color.Black;
+            GenerateWaterFeatureNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            GenerateWaterFeatureNameButton.IconSize = 20;
+            GenerateWaterFeatureNameButton.Location = new Point(303, 67);
+            GenerateWaterFeatureNameButton.Name = "GenerateWaterFeatureNameButton";
+            GenerateWaterFeatureNameButton.Size = new Size(30, 30);
+            GenerateWaterFeatureNameButton.TabIndex = 110;
+            GenerateWaterFeatureNameButton.UseVisualStyleBackColor = true;
+            GenerateWaterFeatureNameButton.Click += GenerateWaterFeatureNameButton_Click;
+            GenerateWaterFeatureNameButton.MouseHover += GenerateWaterFeatureNameButton_MouseHover;
             // 
             // WaterFeatureDescriptionButton
             // 
@@ -136,7 +166,7 @@
             // 
             NameTextbox.Location = new Point(83, 72);
             NameTextbox.Name = "NameTextbox";
-            NameTextbox.Size = new Size(248, 23);
+            NameTextbox.Size = new Size(214, 23);
             NameTextbox.TabIndex = 26;
             // 
             // GuidLabel
@@ -192,20 +222,6 @@
             WaterColorSelectionButton.UseVisualStyleBackColor = false;
             WaterColorSelectionButton.Click += WaterColorSelectionButton_Click;
             // 
-            // GenerateWaterFeatureNameButton
-            // 
-            GenerateWaterFeatureNameButton.IconChar = FontAwesome.Sharp.IconChar.FileSignature;
-            GenerateWaterFeatureNameButton.IconColor = Color.Black;
-            GenerateWaterFeatureNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            GenerateWaterFeatureNameButton.IconSize = 20;
-            GenerateWaterFeatureNameButton.Location = new Point(336, 67);
-            GenerateWaterFeatureNameButton.Name = "GenerateWaterFeatureNameButton";
-            GenerateWaterFeatureNameButton.Size = new Size(30, 30);
-            GenerateWaterFeatureNameButton.TabIndex = 110;
-            GenerateWaterFeatureNameButton.UseVisualStyleBackColor = true;
-            GenerateWaterFeatureNameButton.Click += GenerateWaterFeatureNameButton_Click;
-            GenerateWaterFeatureNameButton.MouseHover += GenerateWaterFeatureNameButton_MouseHover;
-            // 
             // WaterFeatureInfo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -237,5 +253,6 @@
         private Label StatusMessageLabel;
         private FontAwesome.Sharp.IconButton WaterFeatureDescriptionButton;
         private FontAwesome.Sharp.IconButton GenerateWaterFeatureNameButton;
+        internal FontAwesome.Sharp.IconButton LockNameButton;
     }
 }

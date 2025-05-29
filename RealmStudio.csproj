@@ -9,9 +9,7 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>false</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>1.2025.146.43066</AssemblyVersion>
-    <FileVersion>1.2025.146.43066</FileVersion>
-    <Version>1.2025.0-alpha-2545</Version>
+    <Version>1.2025.0-alpha-2607</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
@@ -30,7 +28,9 @@
     <PackageIcon>Realm Studio Icon 128x128.png</PackageIcon>
     <UseWPF>True</UseWPF>
     <Platforms>AnyCPU;x64;x86</Platforms>
-    <ApplicationIcon>realm_studio_icon_1024x1024_g3u_icon.ico</ApplicationIcon> 
+    <ApplicationIcon>realm_studio_icon_1024x1024_g3u_icon.ico</ApplicationIcon>
+    <AssemblyVersion>1.2025.149.0</AssemblyVersion>
+    <FileVersion>1.2025.149.0</FileVersion> 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -83,15 +83,15 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <ShouldCreateLogs>True</ShouldCreateLogs>
-    <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
     <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
     <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
     <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
-    <AssemblyVersionSettings>None.YearStamp.DayOfYearStamp.None</AssemblyVersionSettings>
+    <AssemblyVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyVersionSettings>
     <UpdatePackageVersion>True</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>AssemblyFileVersion</InheritWinAppVersionFrom>
-    <AssemblyFileVersionSettings>None.YearStamp.DayOfYearStamp.None</AssemblyFileVersionSettings>
+    <AssemblyFileVersionSettings>None.YearStamp.DayOfYearStamp.HalfOfSecondsSinceMidnight</AssemblyFileVersionSettings>
     <PackageVersionSettings>AssemblyVersion.NoneWithAutoReset.Alpha</PackageVersionSettings>
     <IsPublishable>False</IsPublishable>
   </PropertyGroup>
@@ -176,7 +176,7 @@
     <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.0" />
     <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.119.0" />
     <PackageReference Include="SkiaSharp.Views.WPF" Version="3.119.0" />
-    <PackageReference Include="Svg.Skia" Version="3.0.2" />
+    <PackageReference Include="Svg.Skia" Version="3.0.3" />
     <PackageReference Include="System.Management" Version="9.0.5" />
   </ItemGroup>
 

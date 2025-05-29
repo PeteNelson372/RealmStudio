@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapPathInfo));
             MapPathInfoOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            GeneratePathNameButton = new FontAwesome.Sharp.IconButton();
             PathDescriptionButton = new FontAwesome.Sharp.IconButton();
             StatusMessageLabel = new Label();
             PathTextureNameLabel = new Label();
@@ -85,7 +86,7 @@
             label2 = new Label();
             NameTextbox = new TextBox();
             label1 = new Label();
-            GeneratePathNameButton = new FontAwesome.Sharp.IconButton();
+            LockNameButton = new FontAwesome.Sharp.IconButton();
             MapPathInfoOverlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RailroadTracksPictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)FootPrintsPictureBox).BeginInit();
@@ -112,6 +113,7 @@
             // 
             MapPathInfoOverlay.BackColor = Color.FromArgb(244, 241, 243);
             MapPathInfoOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            MapPathInfoOverlay.Controls.Add(LockNameButton);
             MapPathInfoOverlay.Controls.Add(GeneratePathNameButton);
             MapPathInfoOverlay.Controls.Add(PathDescriptionButton);
             MapPathInfoOverlay.Controls.Add(StatusMessageLabel);
@@ -187,6 +189,20 @@
             MapPathInfoOverlay.TabIndex = 0;
             MapPathInfoOverlay.Text = "Path Info";
             MapPathInfoOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // GeneratePathNameButton
+            // 
+            GeneratePathNameButton.IconChar = FontAwesome.Sharp.IconChar.FileSignature;
+            GeneratePathNameButton.IconColor = Color.Black;
+            GeneratePathNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            GeneratePathNameButton.IconSize = 20;
+            GeneratePathNameButton.Location = new Point(300, 69);
+            GeneratePathNameButton.Name = "GeneratePathNameButton";
+            GeneratePathNameButton.Size = new Size(30, 30);
+            GeneratePathNameButton.TabIndex = 162;
+            GeneratePathNameButton.UseVisualStyleBackColor = true;
+            GeneratePathNameButton.Click += GeneratePathNameButton_Click;
+            GeneratePathNameButton.MouseHover += GeneratePathNameButton_MouseHover;
             // 
             // PathDescriptionButton
             // 
@@ -818,7 +834,7 @@
             // 
             NameTextbox.Location = new Point(77, 74);
             NameTextbox.Name = "NameTextbox";
-            NameTextbox.Size = new Size(250, 23);
+            NameTextbox.Size = new Size(217, 23);
             NameTextbox.TabIndex = 114;
             // 
             // label1
@@ -833,19 +849,19 @@
             label1.Text = "Identifier";
             label1.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // GeneratePathNameButton
+            // LockNameButton
             // 
-            GeneratePathNameButton.IconChar = FontAwesome.Sharp.IconChar.FileSignature;
-            GeneratePathNameButton.IconColor = Color.Black;
-            GeneratePathNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            GeneratePathNameButton.IconSize = 20;
-            GeneratePathNameButton.Location = new Point(333, 69);
-            GeneratePathNameButton.Name = "GeneratePathNameButton";
-            GeneratePathNameButton.Size = new Size(30, 30);
-            GeneratePathNameButton.TabIndex = 162;
-            GeneratePathNameButton.UseVisualStyleBackColor = true;
-            GeneratePathNameButton.Click += GeneratePathNameButton_Click;
-            GeneratePathNameButton.MouseHover += GeneratePathNameButton_MouseHover;
+            LockNameButton.IconChar = FontAwesome.Sharp.IconChar.LockOpen;
+            LockNameButton.IconColor = SystemColors.ControlDarkDark;
+            LockNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LockNameButton.IconSize = 14;
+            LockNameButton.Location = new Point(333, 70);
+            LockNameButton.Margin = new Padding(0);
+            LockNameButton.Name = "LockNameButton";
+            LockNameButton.Size = new Size(30, 28);
+            LockNameButton.TabIndex = 163;
+            LockNameButton.UseVisualStyleBackColor = true;
+            LockNameButton.Click += LockNameButton_Click;
             // 
             // MapPathInfo
             // 
@@ -942,5 +958,6 @@
         private Label StatusMessageLabel;
         private FontAwesome.Sharp.IconButton PathDescriptionButton;
         private FontAwesome.Sharp.IconButton GeneratePathNameButton;
+        internal FontAwesome.Sharp.IconButton LockNameButton;
     }
 }
