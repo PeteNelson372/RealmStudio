@@ -47,7 +47,7 @@ namespace RealmStudio
         public const int SYMBOLLAYER = 13;
         public const int PATHUPPERLAYER = 14;
         public const int REGIONLAYER = 15;
-        public const int REGIONOVERLAYLAYER = 16;     // TODO: not used?
+        public const int REGIONOVERLAYLAYER = 16;
         public const int DEFAULTGRIDLAYER = 17;
         public const int BOXLAYER = 18;
         public const int LABELLAYER = 19;
