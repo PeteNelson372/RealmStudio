@@ -46,6 +46,9 @@ namespace RealmStudio
         private int _pathTextureOpacity = 255;
         private float _pathTextureScale = 1.0f;
 
+        private float _pathTowerDistance = 10.0f;
+        private float _pathTowerSize = 1.2f;
+
         private int _pathTextureIndex;
 
         internal PathUIMediator(RealmStudioMainForm mainForm)
@@ -135,6 +138,28 @@ namespace RealmStudio
                 ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 2.0F);
                 ArgumentOutOfRangeException.ThrowIfLessThan(value, 0.0F);
                 SetPropertyField(nameof(PathTextureScale), ref _pathTextureScale, value);
+            }
+        }
+
+        internal float PathTowerDistance
+        {
+            get { return _pathTowerDistance; }
+            set
+            {
+                ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 100.0F);
+                ArgumentOutOfRangeException.ThrowIfLessThan(value, 0.0F);
+                SetPropertyField(nameof(PathTowerDistance), ref _pathTowerDistance, value);
+            }
+        }
+
+        internal float PathTowerSize
+        {
+            get { return _pathTowerSize; }
+            set
+            {
+                ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 10.0F);
+                ArgumentOutOfRangeException.ThrowIfLessThan(value, 0.1F);
+                SetPropertyField(nameof(PathTowerSize), ref _pathTowerSize, value);
             }
         }
 
@@ -312,6 +337,8 @@ namespace RealmStudio
             if (pathType == PathType.RailroadTracksPath) { MainForm.RailroadTracksRadio.Checked = true; return; }
             if (pathType == PathType.TexturedPath) { MainForm.TexturePathRadio.Checked = true; return; }
             if (pathType == PathType.BorderAndTexturePath) { MainForm.BorderTexturePathRadio.Checked = true; return; }
+            if (pathType == PathType.RoundTowerWall) { MainForm.RoundTowerWallPathRadio.Checked = true; return; }
+            if (pathType == PathType.SquareTowerWall) { MainForm.SquareTowerWallPathRadio.Checked = true; return; }
         }
 
         internal void SetPathTypeFromButtonName(string buttonname)
@@ -337,6 +364,8 @@ namespace RealmStudio
                 "RailroadTracksRadio" => PathType.RailroadTracksPath,
                 "TexturePathRadio" => PathType.TexturedPath,
                 "BorderTexturePathRadio" => PathType.BorderAndTexturePath,
+                "RoundTowerWallPathRadio" => PathType.RoundTowerWall,
+                "SquareTowerWallPathRadio" => PathType.SquareTowerWall,
                 _ => PathType.SolidLinePath,
             };
         }
@@ -497,6 +526,7 @@ namespace RealmStudio
                     }
                     else
                     {
+                        // if the map path has no points, remove it from the upper layer
                         mapPathUpperComponents.Remove(mapPath);
                     }
                 }
@@ -526,6 +556,7 @@ namespace RealmStudio
                     }
                     else
                     {
+                        // if the map path has no points, remove it from the lower layer
                         mapPathLowerComponents.Remove(mapPath);
                     }
                 }

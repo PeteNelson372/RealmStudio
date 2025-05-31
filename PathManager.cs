@@ -56,6 +56,8 @@ namespace RealmStudio
                 PathTexture = PathMediator.PathTextureList[PathMediator.PathTextureIndex],
                 PathTextureOpacity = PathMediator.PathTextureOpacity,
                 PathTextureScale = PathMediator.PathTextureScale,
+                PathTowerDistance = PathMediator.PathTowerDistance,
+                PathTowerSize = PathMediator.PathTowerSize,
             };
 
             ConstructPathPaint(newPath);
@@ -77,6 +79,8 @@ namespace RealmStudio
                 MapStateMediator.SelectedMapPath.PathTexture = PathMediator.PathTextureList[PathMediator.PathTextureIndex];
                 MapStateMediator.SelectedMapPath.PathTextureOpacity = PathMediator.PathTextureOpacity;
                 MapStateMediator.SelectedMapPath.PathTextureScale = PathMediator.PathTextureScale;
+                MapStateMediator.SelectedMapPath.PathTowerDistance = PathMediator.PathTowerDistance;
+                MapStateMediator.SelectedMapPath.PathTowerSize = PathMediator.PathTowerSize;
 
                 ConstructPathPaint(MapStateMediator.SelectedMapPath);
             }
@@ -162,6 +166,42 @@ namespace RealmStudio
                     pathPaint.Style = SKPaintStyle.Stroke;
                     break;
                 case PathType.BorderAndTexturePath:
+                    pathPaint.StrokeCap = SKStrokeCap.Round;
+
+                    if (mapPath.PathTexture != null && mapPath.PathTexture.TextureBitmap != null)
+                    {
+                        // scale and set opacity of the texture
+                        // resize the bitmap, but maintain aspect ratio
+                        using Bitmap resizedBitmap = DrawingMethods.ScaleBitmap(mapPath.PathTexture.TextureBitmap,
+                            (int)(MapStateMediator.CurrentMap.MapWidth * mapPath.PathTextureScale), (int)(MapStateMediator.CurrentMap.MapHeight * mapPath.PathTextureScale));
+
+                        using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, mapPath.PathTextureOpacity / 255.0F);
+
+                        // construct a shader from the selected path texture
+                        pathPaint.Shader = SKShader.CreateBitmap(b.ToSKBitmap(), SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                    }
+
+                    pathPaint.Style = SKPaintStyle.Stroke;
+                    break;
+                case PathType.RoundTowerWall:
+                    pathPaint.StrokeCap = SKStrokeCap.Round;
+
+                    if (mapPath.PathTexture != null && mapPath.PathTexture.TextureBitmap != null)
+                    {
+                        // scale and set opacity of the texture
+                        // resize the bitmap, but maintain aspect ratio
+                        using Bitmap resizedBitmap = DrawingMethods.ScaleBitmap(mapPath.PathTexture.TextureBitmap,
+                            (int)(MapStateMediator.CurrentMap.MapWidth * mapPath.PathTextureScale), (int)(MapStateMediator.CurrentMap.MapHeight * mapPath.PathTextureScale));
+
+                        using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, mapPath.PathTextureOpacity / 255.0F);
+
+                        // construct a shader from the selected path texture
+                        pathPaint.Shader = SKShader.CreateBitmap(b.ToSKBitmap(), SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                    }
+
+                    pathPaint.Style = SKPaintStyle.Stroke;
+                    break;
+                case PathType.SquareTowerWall:
                     pathPaint.StrokeCap = SKStrokeCap.Round;
 
                     if (mapPath.PathTexture != null && mapPath.PathTexture.TextureBitmap != null)
@@ -628,6 +668,21 @@ namespace RealmStudio
             {
                 path.CubicTo(points[j].MapPoint, points[j + 1].MapPoint, points[j + 2].MapPoint);
             }
+
+            path.GetBounds(out SKRect pathBounds);
+
+            if (pathBounds.Width < 5.0F)
+            {
+                pathBounds.Inflate(5.0F, 0);
+            }
+
+            if (pathBounds.Height < 5.0F)
+            {
+                pathBounds.Inflate(0, 5.0F);
+            }
+
+            path.Reset();
+            path.AddRect(pathBounds, SKPathDirection.Clockwise);
 
             return path;
         }

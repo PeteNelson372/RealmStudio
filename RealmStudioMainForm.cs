@@ -5158,6 +5158,16 @@ namespace RealmStudio
             RailroadTracksRadio.Checked = !RailroadTracksRadio.Checked;
         }
 
+        private void TowerDistanceUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            PathMediator.PathTowerDistance = (float)TowerDistanceUpDown.Value;
+        }
+
+        private void TowerSizeUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            PathMediator.PathTowerSize = (float)TowerSizeUpDown.Value;
+        }
+
         #endregion
 
         #region Symbol Tab Event Handlers
@@ -5844,6 +5854,7 @@ namespace RealmStudio
         }
 
         #endregion
+
 
 
 

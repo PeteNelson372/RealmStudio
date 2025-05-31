@@ -110,7 +110,9 @@ namespace RealmStudio
         FootprintsPath,
         RailroadTracksPath,
         TexturedPath,
-        BorderAndTexturePath
+        BorderAndTexturePath,
+        RoundTowerWall,
+        SquareTowerWall,
     }
 
     public enum ParallelDirection

@@ -41,6 +41,8 @@ namespace RealmStudio
         public PathType PathType { get; set; } = PathType.SolidLinePath;
         public Color PathColor { get; set; } = ColorTranslator.FromHtml("#4B311A");
         public float PathWidth { get; set; } = 4;
+        public float PathTowerDistance { get; set; } = 10.0F;
+        public float PathTowerSize { get; set; } = 1.2F;
         public MapTexture? PathTexture { get; set; }
         public int PathTextureOpacity { get; set; } = 255;
         public float PathTextureScale { get; set; } = 1.0F;
@@ -250,6 +252,152 @@ namespace RealmStudio
 
                                 List<MapPathPoint> crossTiePoints = PathManager.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.4F, ParallelDirection.Above);
                                 PathManager.DrawLineFromPoints(canvas, crossTiePoints, trackPaint);
+                            }
+                            break;
+                        case PathType.RoundTowerWall:
+                            {
+                                if (distinctPathPoints.Count < 2) return;
+
+                                using SKPaint borderPaint = new()
+                                {
+                                    Color = Extensions.ToSKColor(PathColor),
+                                    StrokeWidth = PathPaint.StrokeWidth * 0.25F,
+                                    Style = SKPaintStyle.Stroke,
+                                    StrokeCap = SKStrokeCap.Round,
+                                    StrokeJoin = SKStrokeJoin.Round,
+                                    StrokeMiter = 1.0F,
+                                    IsAntialias = true,
+                                };
+
+                                List<MapPathPoint> aboveParallelPoints = PathManager.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.5F, ParallelDirection.Above);
+                                List<MapPathPoint> belowParallelPoints = PathManager.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.5F, ParallelDirection.Below);
+
+                                canvas.DrawCircle(distinctPathPoints[0].MapPoint, PathWidth * PathTowerSize, PathPaint);
+                                canvas.DrawCircle(distinctPathPoints[0].MapPoint, PathWidth * PathTowerSize * 1.01F, borderPaint);
+
+                                PathPaint.Style = SKPaintStyle.Fill;
+                                SKPoint towerPoint = distinctPathPoints[0].MapPoint;
+
+                                float distance = 0.0f;
+
+                                for (int i = 1; i < distinctPathPoints.Count - 1; i++)
+                                {
+                                    distance += SKPoint.Distance(distinctPathPoints[i - 1].MapPoint, distinctPathPoints[i].MapPoint);
+
+                                    canvas.DrawLine(distinctPathPoints[i - 1].MapPoint, distinctPathPoints[i].MapPoint, PathPaint);
+
+                                    if (i > 0 && i < aboveParallelPoints.Count - 1
+                                        && i < belowParallelPoints.Count - 1
+                                        && aboveParallelPoints.Count > 2
+                                        && belowParallelPoints.Count > 2)
+                                    {
+                                        canvas.DrawLine(aboveParallelPoints[i - 1].MapPoint, aboveParallelPoints[i].MapPoint, borderPaint);
+                                        canvas.DrawLine(belowParallelPoints[i - 1].MapPoint, belowParallelPoints[i].MapPoint, borderPaint);
+                                    }
+
+                                    if (towerPoint != SKPoint.Empty)
+                                    {
+                                        canvas.DrawCircle(towerPoint, PathWidth * PathTowerSize, PathPaint);
+                                        canvas.DrawCircle(towerPoint, PathWidth * PathTowerSize * 1.01F, borderPaint);
+                                    }
+
+                                    if (distance > PathWidth * PathTowerDistance)
+                                    {
+                                        towerPoint = distinctPathPoints[i].MapPoint;
+
+                                        canvas.DrawCircle(distinctPathPoints[i].MapPoint, PathWidth * PathTowerSize, PathPaint);
+                                        canvas.DrawCircle(distinctPathPoints[i].MapPoint, PathWidth * PathTowerSize * 1.01F, borderPaint);
+
+                                        distance = 0.0f;
+                                    }
+                                }
+                            }
+                            break;
+                        case PathType.SquareTowerWall:
+                            {
+                                if (distinctPathPoints.Count < 2) return;
+
+                                using SKPaint borderPaint = new()
+                                {
+                                    Color = Extensions.ToSKColor(PathColor),
+                                    StrokeWidth = PathPaint.StrokeWidth * 0.25F,
+                                    Style = SKPaintStyle.Stroke,
+                                    StrokeCap = SKStrokeCap.Round,
+                                    StrokeJoin = SKStrokeJoin.Round,
+                                    StrokeMiter = 1.0F,
+                                    IsAntialias = true,
+                                };
+
+                                List<MapPathPoint> aboveParallelPoints = PathManager.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.5F, ParallelDirection.Above);
+                                List<MapPathPoint> belowParallelPoints = PathManager.GetParallelPathPoints(distinctPathPoints, PathPaint.StrokeWidth * 0.5F, ParallelDirection.Below);
+
+                                float lineAngle = DrawingMethods.CalculateAngleBetweenPoints(distinctPathPoints[0].MapPoint, distinctPathPoints[1].MapPoint, true);
+
+                                SKMatrix translateMatrix = SKMatrix.CreateTranslation(-PathWidth * PathTowerSize, -PathWidth * PathTowerSize);
+                                SKMatrix m = SKMatrix.CreateRotationDegrees(lineAngle, distinctPathPoints[0].MapPoint.X, distinctPathPoints[0].MapPoint.Y);
+
+                                m = m.PreConcat(translateMatrix);
+
+                                canvas.SetMatrix(m);
+
+                                canvas.DrawRect(distinctPathPoints[0].MapPoint.X, distinctPathPoints[0].MapPoint.Y, PathWidth * PathTowerSize * 2, PathWidth * PathTowerSize * 2, PathPaint);
+                                canvas.DrawRect(distinctPathPoints[0].MapPoint.X, distinctPathPoints[0].MapPoint.Y, PathWidth * PathTowerSize * 2.02F, PathWidth * PathTowerSize * 2.02F, borderPaint);
+
+                                canvas.ResetMatrix();
+
+                                PathPaint.Style = SKPaintStyle.Fill;
+
+                                float distance = 0.0f;
+                                SKPoint towerPoint = distinctPathPoints[0].MapPoint;
+                                float towerLineAngle = lineAngle;
+
+                                for (int i = 1; i < distinctPathPoints.Count - 1; i++)
+                                {
+                                    distance += SKPoint.Distance(distinctPathPoints[i - 1].MapPoint, distinctPathPoints[i].MapPoint);
+
+                                    canvas.DrawLine(distinctPathPoints[i - 1].MapPoint, distinctPathPoints[i].MapPoint, PathPaint);
+
+                                    if (i > 0 && i < aboveParallelPoints.Count - 1
+                                        && i < belowParallelPoints.Count - 1
+                                        && aboveParallelPoints.Count > 2
+                                        && belowParallelPoints.Count > 2)
+                                    {
+                                        canvas.DrawLine(aboveParallelPoints[i - 1].MapPoint, aboveParallelPoints[i].MapPoint, borderPaint);
+                                        canvas.DrawLine(belowParallelPoints[i - 1].MapPoint, belowParallelPoints[i].MapPoint, borderPaint);
+                                    }
+
+                                    if (towerPoint != SKPoint.Empty)
+                                    {
+                                        m = SKMatrix.CreateRotationDegrees(lineAngle, towerPoint.X, towerPoint.Y);
+                                        m = m.PreConcat(translateMatrix);
+
+                                        canvas.SetMatrix(m);
+
+                                        canvas.DrawRect(towerPoint.X, towerPoint.Y, PathWidth * PathTowerSize * 2, PathWidth * PathTowerSize * 2, PathPaint);
+                                        canvas.DrawRect(towerPoint.X, towerPoint.Y, PathWidth * PathTowerSize * 2.02F, PathWidth * PathTowerSize * 2.02F, borderPaint);
+
+                                        canvas.ResetMatrix();
+                                    }
+
+                                    if (distance > PathWidth * PathTowerDistance)
+                                    {
+                                        lineAngle = DrawingMethods.CalculateAngleBetweenPoints(distinctPathPoints[i - 1].MapPoint, distinctPathPoints[i].MapPoint, true);
+                                        towerLineAngle = lineAngle;
+                                        towerPoint = distinctPathPoints[i].MapPoint;
+
+                                        m = SKMatrix.CreateRotationDegrees(lineAngle, distinctPathPoints[i].MapPoint.X, distinctPathPoints[i].MapPoint.Y);
+                                        m = m.PreConcat(translateMatrix);
+
+                                        canvas.SetMatrix(m);
+
+                                        canvas.DrawRect(distinctPathPoints[i].MapPoint.X, distinctPathPoints[i].MapPoint.Y, PathWidth * PathTowerSize * 2, PathWidth * PathTowerSize * 2, PathPaint);
+                                        canvas.DrawRect(distinctPathPoints[i].MapPoint.X, distinctPathPoints[i].MapPoint.Y, PathWidth * PathTowerSize * 2.02F, PathWidth * PathTowerSize * 2.02F, borderPaint);
+
+                                        canvas.ResetMatrix();
+
+                                        distance = 0.0f;
+                                    }
+                                }
                             }
                             break;
                         default:
