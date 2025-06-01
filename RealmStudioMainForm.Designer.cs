@@ -7077,7 +7077,7 @@
             groupBox1.Size = new Size(147, 182);
             groupBox1.TabIndex = 83;
             groupBox1.TabStop = false;
-            groupBox1.Text = "Towers";
+            groupBox1.Text = "Walls and Towers";
             // 
             // label101
             // 
