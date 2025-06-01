@@ -6484,12 +6484,12 @@
             SKGLRenderControl.API = OpenTK.Windowing.Common.ContextAPI.OpenGL;
             SKGLRenderControl.APIVersion = new Version(3, 3, 0, 0);
             SKGLRenderControl.BackColor = Color.White;
-            SKGLRenderControl.Flags = OpenTK.Windowing.Common.ContextFlags.ForwardCompatible;
+            SKGLRenderControl.Flags = OpenTK.Windowing.Common.ContextFlags.Default;
             SKGLRenderControl.IsEventDriven = true;
             SKGLRenderControl.Location = new Point(272, 112);
             SKGLRenderControl.Margin = new Padding(0);
             SKGLRenderControl.Name = "SKGLRenderControl";
-            SKGLRenderControl.Profile = OpenTK.Windowing.Common.ContextProfile.Compatability;
+            SKGLRenderControl.Profile = OpenTK.Windowing.Common.ContextProfile.Any;
             SKGLRenderControl.SharedContext = null;
             SKGLRenderControl.Size = new Size(1128, 848);
             SKGLRenderControl.TabIndex = 5;

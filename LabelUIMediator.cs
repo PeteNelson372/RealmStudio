@@ -216,6 +216,10 @@ namespace RealmStudio
                 MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LABELLAYER);
 
                 TextBox tb = (TextBox)sender;
+                tb.BringToFront();
+                tb.Focus();
+                tb.Enabled = true;
+                tb.Show();
 
                 Font labelFont = tb.Font;
                 Color labelColor = LabelColor;
@@ -377,8 +381,6 @@ namespace RealmStudio
                     float lblWidth = paintFont.MeasureText(tb.Text, labelPaint);
                     int tbWidth = (int)Math.Max(lblWidth, tb.Width);
                     tb.Width = tbWidth;
-
-                    MainForm.SKGLRenderControl.Refresh();
                 }
             }
         }

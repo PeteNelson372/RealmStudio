@@ -375,6 +375,11 @@ namespace RealmStudio
 
         private void RealmStudioMainForm_KeyDown(object sender, KeyEventArgs e)
         {
+            if (LabelManager.CreatingLabel)
+            {
+                return; // do not handle key presses if creating a label
+            }
+
             KeyHandler.HandleKey(e.KeyCode);
             e.Handled = true;
             SKGLRenderControl.Invalidate();
@@ -2552,6 +2557,11 @@ namespace RealmStudio
 
         private void SKGLRenderControl_MouseDown(object sender, MouseEventArgs e)
         {
+            if (LabelManager.CreatingLabel)
+            {
+                return; // do not handle mouse move if creating a label
+            }
+
             MapStateMediator.CurrentMouseLocation = e.Location.ToSKPoint();
             MapStateMediator.CurrentCursorPoint = MainFormUIMediator.CalculateCursorPoint(e);
 
@@ -2575,6 +2585,11 @@ namespace RealmStudio
             if (MainMediator.CurrentDrawingMode == MapDrawingMode.ColorSelect)
             {
                 Cursor = AssetManager.EYEDROPPER_CURSOR;
+            }
+
+            if (LabelManager.CreatingLabel)
+            {
+                return; // do not handle mouse move if creating a label
             }
 
             MapStateMediator.CurrentMouseLocation = e.Location.ToSKPoint();
@@ -2603,6 +2618,11 @@ namespace RealmStudio
 
         private void SKGLRenderControl_MouseUp(object sender, MouseEventArgs e)
         {
+            if (LabelManager.CreatingLabel)
+            {
+                return; // do not handle mouse move if creating a label
+            }
+
             MapStateMediator.CurrentMouseLocation = e.Location.ToSKPoint();
             MapStateMediator.CurrentCursorPoint = MainFormUIMediator.CalculateCursorPoint(e);
 
@@ -3807,12 +3827,18 @@ namespace RealmStudio
 
                             SKGLRenderControl.Controls.Add(LabelManager.LabelTextBox);
 
-                            SKGLRenderControl.Refresh();
-
                             LabelManager.LabelTextBox.BringToFront();
                             LabelManager.LabelTextBox.Select(LabelManager.LabelTextBox.Text.Length, 0);
                             LabelManager.LabelTextBox.Focus();
                             LabelManager.LabelTextBox.ScrollToCaret();
+                        }
+                    }
+                    else
+                    {
+                        if (LabelManager.LabelTextBox != null)
+                        {
+                            LabelManager.LabelTextBox.BringToFront();
+                            LabelManager.LabelTextBox.Focus();
                         }
                     }
                     break;

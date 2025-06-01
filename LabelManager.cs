@@ -262,6 +262,7 @@ namespace RealmStudio
                 Multiline = false,
                 TextAlign = HorizontalAlignment.Left,
                 Text = mapLabel.LabelText,
+                Enabled = true,
             };
 
             return labelEditTextBox;
@@ -376,6 +377,7 @@ namespace RealmStudio
                 Multiline = false,
                 TextAlign = HorizontalAlignment.Center,
                 Text = "...Label...",
+                Enabled = true,
             };
 
             return labelTextBox;
