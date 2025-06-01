@@ -3071,7 +3071,7 @@
             MapPathValuesGroup.ForeColor = SystemColors.ControlText;
             MapPathValuesGroup.Location = new Point(6, 32);
             MapPathValuesGroup.Name = "MapPathValuesGroup";
-            MapPathValuesGroup.Size = new Size(148, 512);
+            MapPathValuesGroup.Size = new Size(148, 546);
             MapPathValuesGroup.TabIndex = 18;
             MapPathValuesGroup.TabStop = false;
             MapPathValuesGroup.Text = "Path";
@@ -3082,7 +3082,7 @@
             label98.BackColor = Color.Transparent;
             label98.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label98.ForeColor = SystemColors.ControlDarkDark;
-            label98.Location = new Point(10, 454);
+            label98.Location = new Point(10, 470);
             label98.Name = "label98";
             label98.Size = new Size(34, 15);
             label98.TabIndex = 32;
@@ -3091,7 +3091,7 @@
             // PathTextureScaleTrack
             // 
             PathTextureScaleTrack.AutoSize = false;
-            PathTextureScaleTrack.Location = new Point(6, 477);
+            PathTextureScaleTrack.Location = new Point(6, 493);
             PathTextureScaleTrack.Maximum = 200;
             PathTextureScaleTrack.Name = "PathTextureScaleTrack";
             PathTextureScaleTrack.Size = new Size(136, 20);
@@ -3106,7 +3106,7 @@
             label99.BackColor = Color.Transparent;
             label99.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label99.ForeColor = SystemColors.ControlDarkDark;
-            label99.Location = new Point(6, 411);
+            label99.Location = new Point(6, 427);
             label99.Name = "label99";
             label99.Size = new Size(48, 15);
             label99.TabIndex = 30;
@@ -3116,7 +3116,7 @@
             // 
             PathTextureOpacityTrack.AutoSize = false;
             PathTextureOpacityTrack.BackColor = SystemColors.Control;
-            PathTextureOpacityTrack.Location = new Point(6, 429);
+            PathTextureOpacityTrack.Location = new Point(6, 445);
             PathTextureOpacityTrack.Maximum = 255;
             PathTextureOpacityTrack.Name = "PathTextureOpacityTrack";
             PathTextureOpacityTrack.Size = new Size(136, 20);
