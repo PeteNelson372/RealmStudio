@@ -126,5 +126,65 @@ namespace RealmStudio
             }
             catch { }
         }
+
+        private void PrivacyPolicyLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "https://brookmonte.com/downloadable/RealmStudio/RealmStudioPrivacyPolicy.txt",
+                UseShellExecute = true
+            };
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch { }
+        }
+
+        private void RealmStudioLatestReleaseLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "https://github.com/PeteNelson372/RealmStudio/releases/latest",
+                UseShellExecute = true
+            };
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch { }
+        }
+
+        private void BrookmoneWebsiteLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "https://brookmonte.com",
+                UseShellExecute = true
+            };
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch { }
+        }
+
+        private void BrookmontePictureBox_Click(object sender, EventArgs e)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "https://brookmonte.com",
+                UseShellExecute = true
+            };
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch { }
+        }
     }
 }

@@ -317,6 +317,11 @@ namespace RealmStudio
 
             StartLocationUpdateTimer();
 
+            if (Settings.Default.AutoCheckForUpdates)
+            {
+                ApplicationTimerManager.StartVersionCheckTimer();
+            }
+
             SKGLRenderControl.Invalidate();
             Refresh();
 
@@ -402,6 +407,26 @@ namespace RealmStudio
         {
             // open a map
             OpenExistingMap();
+        }
+
+        private void NewVersionButton_Click(object sender, EventArgs e)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "https://github.com/PeteNelson372/RealmStudio/releases/latest",
+                UseShellExecute = true
+            };
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch { }
+        }
+
+        private void NewVersionButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("A new version of Realm Studio is available. Click to go to Github to download it.", RealmStudioForm, new Point(NewVersionButton.Left, NewVersionButton.Top + 30), 3000);
         }
 
         private void ResetButton_Click(object sender, EventArgs e)
@@ -1200,6 +1225,27 @@ namespace RealmStudio
             }
 
             aboutRealmStudio.ShowDialog();
+        }
+
+        private void CheckForNewReleaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ReleaseChecker.FetchRealmStudioGithubReleasesAsync().ContinueWith(releasesTask =>
+            {
+                List<(string, string)> releases = releasesTask.Result;
+
+                string? newReleaseVersion = ReleaseChecker.HasNewRelease(releases, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "Unknown");
+
+                if (newReleaseVersion != null)
+                {
+                    string message = $"Realm Studio version {newReleaseVersion} is available for download from Github.\n\nThe About dialog has a link to the latest version.";
+                    MessageBox.Show(message, "New Version Available", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    string message = "You are using the latest version of Realm Studio.";
+                    MessageBox.Show(message, "No New Version Available", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            });
         }
         #endregion
 
@@ -5880,9 +5926,6 @@ namespace RealmStudio
         }
 
         #endregion
-
-
-
 
     }
 }

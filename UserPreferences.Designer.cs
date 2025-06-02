@@ -74,6 +74,8 @@
             WH1024x768Radio = new RadioButton();
             label1 = new Label();
             MeasurementUnitsCombo = new ComboBox();
+            AutocheckUpdatesSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label12 = new Label();
             PreferencesFormOverlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)AutosaveIntervalTrack).BeginInit();
             groupBox2.SuspendLayout();
@@ -83,6 +85,8 @@
             // 
             PreferencesFormOverlay.BackColor = Color.FromArgb(244, 241, 243);
             PreferencesFormOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            PreferencesFormOverlay.Controls.Add(label12);
+            PreferencesFormOverlay.Controls.Add(AutocheckUpdatesSwitch);
             PreferencesFormOverlay.Controls.Add(ClipColoringTooltipButton);
             PreferencesFormOverlay.Controls.Add(label11);
             PreferencesFormOverlay.Controls.Add(ClipColoringToLandformSwitch);
@@ -125,7 +129,7 @@
             PreferencesFormOverlay.Padding = new Padding(20, 56, 20, 16);
             PreferencesFormOverlay.RoundCorners = true;
             PreferencesFormOverlay.Sizable = false;
-            PreferencesFormOverlay.Size = new Size(557, 802);
+            PreferencesFormOverlay.Size = new Size(557, 836);
             PreferencesFormOverlay.SmartBounds = true;
             PreferencesFormOverlay.StartPosition = FormStartPosition.CenterParent;
             PreferencesFormOverlay.TabIndex = 0;
@@ -199,7 +203,7 @@
             // 
             ClosePreferencesButton.DialogResult = DialogResult.Cancel;
             ClosePreferencesButton.ForeColor = SystemColors.ControlDarkDark;
-            ClosePreferencesButton.Location = new Point(474, 718);
+            ClosePreferencesButton.Location = new Point(474, 757);
             ClosePreferencesButton.Name = "ClosePreferencesButton";
             ClosePreferencesButton.Size = new Size(60, 60);
             ClosePreferencesButton.TabIndex = 61;
@@ -336,7 +340,7 @@
             // 
             label9.AutoSize = true;
             label9.ForeColor = SystemColors.ControlDarkDark;
-            label9.Location = new Point(99, 353);
+            label9.Location = new Point(99, 392);
             label9.Name = "label9";
             label9.Size = new Size(95, 15);
             label9.TabIndex = 51;
@@ -407,7 +411,7 @@
             label6.ForeColor = SystemColors.ControlDarkDark;
             label6.Location = new Point(74, 260);
             label6.Name = "label6";
-            label6.Size = new Size(123, 15);
+            label6.Size = new Size(122, 15);
             label6.TabIndex = 46;
             label6.Text = "Default Export Format";
             // 
@@ -546,7 +550,7 @@
             groupBox2.Controls.Add(WH1600x1200Radio);
             groupBox2.Controls.Add(WH1280x1024Radio);
             groupBox2.Controls.Add(WH1024x768Radio);
-            groupBox2.Location = new Point(203, 353);
+            groupBox2.Location = new Point(203, 392);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(205, 425);
             groupBox2.TabIndex = 11;
@@ -559,7 +563,7 @@
             WH7680x4320Radio.ForeColor = SystemColors.ControlDarkDark;
             WH7680x4320Radio.Location = new Point(6, 397);
             WH7680x4320Radio.Name = "WH7680x4320Radio";
-            WH7680x4320Radio.Size = new Size(137, 19);
+            WH7680x4320Radio.Size = new Size(136, 19);
             WH7680x4320Radio.TabIndex = 17;
             WH7680x4320Radio.Text = "7680 x 4320 (8K UHD)";
             WH7680x4320Radio.UseVisualStyleBackColor = true;
@@ -571,7 +575,7 @@
             WH7016x4960Radio.ForeColor = SystemColors.ControlDarkDark;
             WH7016x4960Radio.Location = new Point(6, 372);
             WH7016x4960Radio.Name = "WH7016x4960Radio";
-            WH7016x4960Radio.Size = new Size(152, 19);
+            WH7016x4960Radio.Size = new Size(151, 19);
             WH7016x4960Radio.TabIndex = 16;
             WH7016x4960Radio.Text = "7016 x 4960 (A2 300 DPI)";
             WH7016x4960Radio.UseVisualStyleBackColor = true;
@@ -583,7 +587,7 @@
             WH4960x3508Radio.ForeColor = SystemColors.ControlDarkDark;
             WH4960x3508Radio.Location = new Point(6, 347);
             WH4960x3508Radio.Name = "WH4960x3508Radio";
-            WH4960x3508Radio.Size = new Size(152, 19);
+            WH4960x3508Radio.Size = new Size(151, 19);
             WH4960x3508Radio.TabIndex = 15;
             WH4960x3508Radio.Text = "4960 x 3508 (A3 300 DPI)";
             WH4960x3508Radio.UseVisualStyleBackColor = true;
@@ -595,7 +599,7 @@
             WH3508x2480Radio.ForeColor = SystemColors.ControlDarkDark;
             WH3508x2480Radio.Location = new Point(6, 322);
             WH3508x2480Radio.Name = "WH3508x2480Radio";
-            WH3508x2480Radio.Size = new Size(152, 19);
+            WH3508x2480Radio.Size = new Size(151, 19);
             WH3508x2480Radio.TabIndex = 14;
             WH3508x2480Radio.Text = "3508 x 2480 (A4 300 DPI)";
             WH3508x2480Radio.UseVisualStyleBackColor = true;
@@ -607,7 +611,7 @@
             WH2480x1754Radio.ForeColor = SystemColors.ControlDarkDark;
             WH2480x1754Radio.Location = new Point(6, 297);
             WH2480x1754Radio.Name = "WH2480x1754Radio";
-            WH2480x1754Radio.Size = new Size(152, 19);
+            WH2480x1754Radio.Size = new Size(151, 19);
             WH2480x1754Radio.TabIndex = 13;
             WH2480x1754Radio.Text = "2480 x 1754 (A5 300 DPI)";
             WH2480x1754Radio.UseVisualStyleBackColor = true;
@@ -619,7 +623,7 @@
             WH1754x1240Radio.ForeColor = SystemColors.ControlDarkDark;
             WH1754x1240Radio.Location = new Point(6, 272);
             WH1754x1240Radio.Name = "WH1754x1240Radio";
-            WH1754x1240Radio.Size = new Size(152, 19);
+            WH1754x1240Radio.Size = new Size(151, 19);
             WH1754x1240Radio.TabIndex = 12;
             WH1754x1240Radio.Text = "1754 x 1240 (A6 300 DPI)";
             WH1754x1240Radio.UseVisualStyleBackColor = true;
@@ -631,7 +635,7 @@
             WH3300x2250Radio.ForeColor = SystemColors.ControlDarkDark;
             WH3300x2250Radio.Location = new Point(6, 247);
             WH3300x2250Radio.Name = "WH3300x2250Radio";
-            WH3300x2250Radio.Size = new Size(185, 19);
+            WH3300x2250Radio.Size = new Size(184, 19);
             WH3300x2250Radio.TabIndex = 11;
             WH3300x2250Radio.Text = "3300 x 2250 (US Letter 300 DPI)";
             WH3300x2250Radio.UseVisualStyleBackColor = true;
@@ -643,7 +647,7 @@
             WH1280x720Radio.ForeColor = SystemColors.ControlDarkDark;
             WH1280x720Radio.Location = new Point(6, 47);
             WH1280x720Radio.Name = "WH1280x720Radio";
-            WH1280x720Radio.Size = new Size(115, 19);
+            WH1280x720Radio.Size = new Size(114, 19);
             WH1280x720Radio.TabIndex = 10;
             WH1280x720Radio.Text = "1280 x 720 (720P)";
             WH1280x720Radio.UseVisualStyleBackColor = true;
@@ -655,7 +659,7 @@
             WH4096x2048Radio.ForeColor = SystemColors.ControlDarkDark;
             WH4096x2048Radio.Location = new Point(6, 222);
             WH4096x2048Radio.Name = "WH4096x2048Radio";
-            WH4096x2048Radio.Size = new Size(195, 19);
+            WH4096x2048Radio.Size = new Size(194, 19);
             WH4096x2048Radio.TabIndex = 9;
             WH4096x2048Radio.Text = "4096 x 2048 (Equirectangular 4K)";
             WH4096x2048Radio.UseVisualStyleBackColor = true;
@@ -667,7 +671,7 @@
             WH3840x2160Radio.ForeColor = SystemColors.ControlDarkDark;
             WH3840x2160Radio.Location = new Point(6, 197);
             WH3840x2160Radio.Name = "WH3840x2160Radio";
-            WH3840x2160Radio.Size = new Size(157, 19);
+            WH3840x2160Radio.Size = new Size(156, 19);
             WH3840x2160Radio.TabIndex = 8;
             WH3840x2160Radio.Text = "3840 x 2160 (4K Ultra HD)";
             WH3840x2160Radio.UseVisualStyleBackColor = true;
@@ -679,7 +683,7 @@
             WH2048x1024Radio.ForeColor = SystemColors.ControlDarkDark;
             WH2048x1024Radio.Location = new Point(6, 172);
             WH2048x1024Radio.Name = "WH2048x1024Radio";
-            WH2048x1024Radio.Size = new Size(194, 19);
+            WH2048x1024Radio.Size = new Size(193, 19);
             WH2048x1024Radio.TabIndex = 7;
             WH2048x1024Radio.Text = "2048 x 1024 (Equirectangular 2k)";
             WH2048x1024Radio.UseVisualStyleBackColor = true;
@@ -691,7 +695,7 @@
             WH2560x1080Radio.ForeColor = SystemColors.ControlDarkDark;
             WH2560x1080Radio.Location = new Point(6, 147);
             WH2560x1080Radio.Name = "WH2560x1080Radio";
-            WH2560x1080Radio.Size = new Size(109, 19);
+            WH2560x1080Radio.Size = new Size(108, 19);
             WH2560x1080Radio.TabIndex = 6;
             WH2560x1080Radio.Text = "2560 x 1080 (2K)";
             WH2560x1080Radio.UseVisualStyleBackColor = true;
@@ -704,7 +708,7 @@
             WH1920x1080Radio.ForeColor = SystemColors.ControlDarkDark;
             WH1920x1080Radio.Location = new Point(6, 122);
             WH1920x1080Radio.Name = "WH1920x1080Radio";
-            WH1920x1080Radio.Size = new Size(169, 19);
+            WH1920x1080Radio.Size = new Size(168, 19);
             WH1920x1080Radio.TabIndex = 5;
             WH1920x1080Radio.TabStop = true;
             WH1920x1080Radio.Text = "1920 x 1080 (1080P Full HD)";
@@ -717,7 +721,7 @@
             WH1600x1200Radio.ForeColor = SystemColors.ControlDarkDark;
             WH1600x1200Radio.Location = new Point(6, 97);
             WH1600x1200Radio.Name = "WH1600x1200Radio";
-            WH1600x1200Radio.Size = new Size(127, 19);
+            WH1600x1200Radio.Size = new Size(126, 19);
             WH1600x1200Radio.TabIndex = 4;
             WH1600x1200Radio.Text = "1600 x 1200 (UXGA)";
             WH1600x1200Radio.UseVisualStyleBackColor = true;
@@ -729,7 +733,7 @@
             WH1280x1024Radio.ForeColor = SystemColors.ControlDarkDark;
             WH1280x1024Radio.Location = new Point(6, 72);
             WH1280x1024Radio.Name = "WH1280x1024Radio";
-            WH1280x1024Radio.Size = new Size(125, 19);
+            WH1280x1024Radio.Size = new Size(124, 19);
             WH1280x1024Radio.TabIndex = 3;
             WH1280x1024Radio.Text = "1280 x 1024 (SXGA)";
             WH1280x1024Radio.UseVisualStyleBackColor = true;
@@ -741,7 +745,7 @@
             WH1024x768Radio.ForeColor = SystemColors.ControlDarkDark;
             WH1024x768Radio.Location = new Point(6, 22);
             WH1024x768Radio.Name = "WH1024x768Radio";
-            WH1024x768Radio.Size = new Size(113, 19);
+            WH1024x768Radio.Size = new Size(112, 19);
             WH1024x768Radio.TabIndex = 2;
             WH1024x768Radio.Text = "1024 x 768 (XGA)";
             WH1024x768Radio.UseVisualStyleBackColor = true;
@@ -768,11 +772,60 @@
             MeasurementUnitsCombo.TabIndex = 0;
             MeasurementUnitsCombo.SelectionChangeCommitted += MeasurementUnitsCombo_SelectionChangeCommitted;
             // 
+            // AutocheckUpdatesSwitch
+            // 
+            AutocheckUpdatesSwitch.Alpha = 50;
+            AutocheckUpdatesSwitch.BackColor = Color.Transparent;
+            AutocheckUpdatesSwitch.Background = true;
+            AutocheckUpdatesSwitch.Background_WidthPen = 2F;
+            AutocheckUpdatesSwitch.BackgroundPen = false;
+            AutocheckUpdatesSwitch.Checked = true;
+            AutocheckUpdatesSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            AutocheckUpdatesSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            AutocheckUpdatesSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            AutocheckUpdatesSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            AutocheckUpdatesSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            AutocheckUpdatesSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            AutocheckUpdatesSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            AutocheckUpdatesSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            AutocheckUpdatesSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            AutocheckUpdatesSwitch.ColorValue = Color.ForestGreen;
+            AutocheckUpdatesSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            AutocheckUpdatesSwitch.Font = new Font("Arial", 11F);
+            AutocheckUpdatesSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            AutocheckUpdatesSwitch.Lighting = true;
+            AutocheckUpdatesSwitch.LinearGradient_Background = false;
+            AutocheckUpdatesSwitch.LinearGradient_Value = false;
+            AutocheckUpdatesSwitch.LinearGradientPen = false;
+            AutocheckUpdatesSwitch.Location = new Point(203, 338);
+            AutocheckUpdatesSwitch.Name = "AutocheckUpdatesSwitch";
+            AutocheckUpdatesSwitch.PenWidth = 10;
+            AutocheckUpdatesSwitch.RGB = false;
+            AutocheckUpdatesSwitch.Rounding = true;
+            AutocheckUpdatesSwitch.RoundingInt = 90;
+            AutocheckUpdatesSwitch.Size = new Size(41, 20);
+            AutocheckUpdatesSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            AutocheckUpdatesSwitch.TabIndex = 65;
+            AutocheckUpdatesSwitch.Tag = "Cyber";
+            AutocheckUpdatesSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            AutocheckUpdatesSwitch.Timer_RGB = 300;
+            AutocheckUpdatesSwitch.CheckedChanged += AutocheckUpdatesSwitch_CheckedChanged;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.ForeColor = SystemColors.ControlDarkDark;
+            label12.Location = new Point(16, 343);
+            label12.Name = "label12";
+            label12.Size = new Size(181, 15);
+            label12.TabIndex = 66;
+            label12.Text = "Automatically Check for Updates";
+            // 
             // UserPreferences
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(557, 802);
+            ClientSize = new Size(557, 836);
             Controls.Add(PreferencesFormOverlay);
             FormBorderStyle = FormBorderStyle.None;
             MinimumSize = new Size(261, 65);
@@ -836,5 +889,7 @@
         private FontAwesome.Sharp.IconButton ClipColoringTooltipButton;
         private Label label11;
         private ReaLTaiizor.Controls.CyberSwitch ClipColoringToLandformSwitch;
+        private Label label12;
+        private ReaLTaiizor.Controls.CyberSwitch AutocheckUpdatesSwitch;
     }
 }

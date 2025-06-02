@@ -99,6 +99,8 @@ namespace RealmStudio
 
             ClipColoringToLandformSwitch.Checked = Settings.Default.ClipLandformColoring;
 
+            AutocheckUpdatesSwitch.Checked = Settings.Default.AutoCheckForUpdates;
+
             Size defaultMapSize = Settings.Default.DefaultMapSize;
 
             SelectDefaultMapSizeRadioFromSize(defaultMapSize);
@@ -443,6 +445,10 @@ namespace RealmStudio
             Settings.Default.Save();
         }
 
-
+        private void AutocheckUpdatesSwitch_CheckedChanged()
+        {
+            Settings.Default.AutoCheckForUpdates = AutocheckUpdatesSwitch.Checked;
+            Settings.Default.Save();
+        }
     }
 }

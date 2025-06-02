@@ -36,10 +36,12 @@ namespace RealmStudio
         private System.Timers.Timer? _autosaveTimer;
         private System.Timers.Timer? _brushTimer;
         private System.Timers.Timer? _symbolAreaBrushTimer;
+        private System.Timers.Timer? _versionCheckTimer;
 
-        private bool autosaveEnabled;
-        private bool brushTimerEnabled;
-        private bool symbolAreaBrushEnabled;
+        private bool _autosaveEnabled;
+        private bool _brushTimerEnabled;
+        private bool _symbolAreaBrushEnabled;
+        private bool _versionCheckEnabled = true;
 
         internal SymbolUIMediator? SymbolUIMediator
         {
@@ -49,12 +51,12 @@ namespace RealmStudio
 
         public bool AutosaveEnabled
         {
-            get { return autosaveEnabled; }
+            get { return _autosaveEnabled; }
             set
             {
-                autosaveEnabled = value && Settings.Default.RealmAutosave && autosaveEnabled;
+                _autosaveEnabled = value && Settings.Default.RealmAutosave && _autosaveEnabled;
 
-                if (autosaveEnabled)
+                if (_autosaveEnabled)
                 {
                     StartAutosaveTimer();
                 }
@@ -67,12 +69,12 @@ namespace RealmStudio
 
         internal bool BrushTimerEnabled
         {
-            get { return brushTimerEnabled; }
+            get { return _brushTimerEnabled; }
             set
             {
-                brushTimerEnabled = value;
+                _brushTimerEnabled = value;
 
-                if (brushTimerEnabled)
+                if (_brushTimerEnabled)
                 {
                     StartBrushTimer();
                 }
@@ -85,12 +87,12 @@ namespace RealmStudio
 
         internal bool SymbolAreaBrushTimerEnabled
         {
-            get { return symbolAreaBrushEnabled; }
+            get { return _symbolAreaBrushEnabled; }
             set
             {
-                symbolAreaBrushEnabled = value;
+                _symbolAreaBrushEnabled = value;
 
-                if (symbolAreaBrushEnabled)
+                if (_symbolAreaBrushEnabled)
                 {
                     StartSymbolAreaBrushTimer();
                 }
@@ -98,6 +100,15 @@ namespace RealmStudio
                 {
                     StopSymbolAreaBrushTimer();
                 }
+            }
+        }
+
+        internal bool VersionCheckEnabled
+        {
+            get { return _versionCheckEnabled; }
+            set
+            {
+                _versionCheckEnabled = value;
             }
         }
 
@@ -237,6 +248,55 @@ namespace RealmStudio
                     symbolScale, symbolRotation, (int)(SymbolUIMediator.AreaBrushSize / 2.0F));
             }
         }
+
+        internal void StopVersionCheckTimer()
+        {
+            _versionCheckTimer?.Stop();
+            _versionCheckTimer?.Dispose();
+            _versionCheckTimer = null;
+        }
+
+        internal void StartVersionCheckTimer()
+        {
+            // stop the version check timer if it is running
+            StopVersionCheckTimer();
+            // start the version check timer
+            _versionCheckTimer = new System.Timers.Timer
+            {
+                Interval = 2 * 60 * 1000, // 2 minutes in milliseconds
+                AutoReset = false,
+                SynchronizingObject = MainForm,
+            };
+            _versionCheckTimer.Elapsed += new ElapsedEventHandler(VersionCheckTimerEventHandler);
+            _versionCheckTimer.Start();
+        }
+
+        private void VersionCheckTimerEventHandler(object? sender, ElapsedEventArgs e)
+        {
+            ReleaseChecker.FetchRealmStudioGithubReleasesAsync().ContinueWith(releasesTask =>
+            {
+                List<(string, string)> releases = releasesTask.Result;
+
+                string? newReleaseVersion = ReleaseChecker.HasNewRelease(releases, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "Unknown");
+
+                if (newReleaseVersion != null)
+                {
+                    MainForm.Invoke(new Action(() =>
+                    {
+                        MainForm.NewVersionButton.Visible = true;
+                    }));
+                }
+                else
+                {
+                    MainForm.Invoke(new Action(() =>
+                    {
+                        MainForm.NewVersionButton.Visible = false;
+                    }));
+                }
+            });
+        }
+
+
 
         #region IDisposable Implementation
         internal void Dispose(bool disposing)

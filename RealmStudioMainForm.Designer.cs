@@ -324,6 +324,7 @@
             ShowDrawingLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label11 = new Label();
             RealmStudioForm = new ReaLTaiizor.Forms.DungeonForm();
+            NewVersionButton = new FontAwesome.Sharp.IconButton();
             Open3DViewButton = new FontAwesome.Sharp.IconButton();
             AreaSelectButton = new FontAwesome.Sharp.IconButton();
             FontSelectionPanel = new Panel();
@@ -436,11 +437,14 @@
             ReloadAllAssetsMenuItem = new ToolStripMenuItem();
             ThemeToolStripMenuItem = new ToolStripMenuItem();
             OptionsToolStripMenuItem = new ToolStripMenuItem();
-            PreferencesMenuItem = new ToolStripMenuItem();
             NameGeneratorConfigurationToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator9 = new ToolStripSeparator();
+            PreferencesMenuItem = new ToolStripMenuItem();
             HelpToolStripMenuItem = new ToolStripMenuItem();
             HelpContentsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
+            CheckForNewReleaseToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator8 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
             PathToolPanel = new Panel();
             groupBox1 = new GroupBox();
@@ -756,7 +760,7 @@
             OverlayToolPanel.SuspendLayout();
             LabelToolPanel.SuspendLayout();
             SymbolToolPanel.SuspendLayout();
-            SuspendLayout();
+            this.SuspendLayout();
             // 
             // OceanTab
             // 
@@ -767,7 +771,7 @@
             OceanTab.Controls.Add(OceanToolStrip);
             OceanTab.Controls.Add(ShowOceanLayerSwitch);
             OceanTab.Controls.Add(label3);
-            OceanTab.ForeColor = Color.FromArgb(223, 219, 210);
+            OceanTab.ForeColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             OceanTab.Location = new Point(26, 4);
             OceanTab.Name = "OceanTab";
             OceanTab.Padding = new Padding(3);
@@ -791,7 +795,7 @@
             WindroseGroup.Controls.Add(label30);
             WindroseGroup.Controls.Add(WindroseDirectionsUpDown);
             WindroseGroup.Controls.Add(WindroseColorSelectButton);
-            WindroseGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            WindroseGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             WindroseGroup.ForeColor = SystemColors.ControlText;
             WindroseGroup.Location = new Point(6, 510);
             WindroseGroup.Name = "WindroseGroup";
@@ -803,7 +807,7 @@
             // label36
             // 
             label36.AutoSize = true;
-            label36.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label36.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label36.Location = new Point(27, 248);
             label36.Name = "label36";
             label36.Size = new Size(55, 15);
@@ -818,19 +822,19 @@
             WindroseFadeOutSwitch.Background_WidthPen = 2F;
             WindroseFadeOutSwitch.BackgroundPen = false;
             WindroseFadeOutSwitch.Checked = false;
-            WindroseFadeOutSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            WindroseFadeOutSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            WindroseFadeOutSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            WindroseFadeOutSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            WindroseFadeOutSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            WindroseFadeOutSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            WindroseFadeOutSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            WindroseFadeOutSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            WindroseFadeOutSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            WindroseFadeOutSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            WindroseFadeOutSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            WindroseFadeOutSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            WindroseFadeOutSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            WindroseFadeOutSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            WindroseFadeOutSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            WindroseFadeOutSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            WindroseFadeOutSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            WindroseFadeOutSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             WindroseFadeOutSwitch.ColorValue = Color.ForestGreen;
             WindroseFadeOutSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             WindroseFadeOutSwitch.Font = new Font("Arial", 11F);
-            WindroseFadeOutSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            WindroseFadeOutSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             WindroseFadeOutSwitch.Lighting = true;
             WindroseFadeOutSwitch.LinearGradient_Background = false;
             WindroseFadeOutSwitch.LinearGradient_Value = false;
@@ -847,12 +851,12 @@
             WindroseFadeOutSwitch.Tag = "Cyber";
             WindroseFadeOutSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             WindroseFadeOutSwitch.Timer_RGB = 300;
-            WindroseFadeOutSwitch.CheckedChanged += WindroseFadeOutSwitch_CheckedChanged;
+            WindroseFadeOutSwitch.CheckedChanged += (this.WindroseFadeOutSwitch_CheckedChanged);
             // 
             // label35
             // 
             label35.AutoSize = true;
-            label35.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label35.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label35.Location = new Point(10, 217);
             label35.Name = "label35";
             label35.Size = new Size(72, 15);
@@ -868,12 +872,12 @@
             WindroseInnerCircleTrack.Name = "WindroseInnerCircleTrack";
             WindroseInnerCircleTrack.Size = new Size(54, 20);
             WindroseInnerCircleTrack.TabIndex = 30;
-            WindroseInnerCircleTrack.ValueChanged += WindroseInnerCircleTrack_ValueChanged;
+            WindroseInnerCircleTrack.ValueChanged += (this.WindroseInnerCircleTrack_ValueChanged);
             // 
             // label34
             // 
             label34.AutoSize = true;
-            label34.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label34.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label34.Location = new Point(10, 190);
             label34.Name = "label34";
             label34.Size = new Size(75, 15);
@@ -882,7 +886,7 @@
             // 
             // WindroseOuterRadiusUpDown
             // 
-            WindroseOuterRadiusUpDown.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            WindroseOuterRadiusUpDown.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             WindroseOuterRadiusUpDown.Location = new Point(88, 188);
             WindroseOuterRadiusUpDown.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
             WindroseOuterRadiusUpDown.Name = "WindroseOuterRadiusUpDown";
@@ -890,12 +894,12 @@
             WindroseOuterRadiusUpDown.TabIndex = 28;
             WindroseOuterRadiusUpDown.TextAlign = HorizontalAlignment.Center;
             WindroseOuterRadiusUpDown.Value = new decimal(new int[] { 1000, 0, 0, 0 });
-            WindroseOuterRadiusUpDown.VisibleChanged += WindroseOuterRadiusUpDown_VisibleChanged;
+            WindroseOuterRadiusUpDown.VisibleChanged += (this.WindroseOuterRadiusUpDown_VisibleChanged);
             // 
             // label33
             // 
             label33.AutoSize = true;
-            label33.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label33.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label33.Location = new Point(10, 161);
             label33.Name = "label33";
             label33.Size = new Size(72, 15);
@@ -904,19 +908,19 @@
             // 
             // WindroseInnerRadiusUpDown
             // 
-            WindroseInnerRadiusUpDown.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            WindroseInnerRadiusUpDown.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             WindroseInnerRadiusUpDown.Location = new Point(88, 159);
             WindroseInnerRadiusUpDown.Maximum = new decimal(new int[] { 1024, 0, 0, 0 });
             WindroseInnerRadiusUpDown.Name = "WindroseInnerRadiusUpDown";
             WindroseInnerRadiusUpDown.Size = new Size(54, 23);
             WindroseInnerRadiusUpDown.TabIndex = 26;
             WindroseInnerRadiusUpDown.TextAlign = HorizontalAlignment.Center;
-            WindroseInnerRadiusUpDown.ValueChanged += WindroseInnerRadiusUpDown_ValueChanged;
+            WindroseInnerRadiusUpDown.ValueChanged += (this.WindroseInnerRadiusUpDown_ValueChanged);
             // 
             // label31
             // 
             label31.AutoSize = true;
-            label31.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label31.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label31.Location = new Point(18, 132);
             label31.Name = "label31";
             label31.Size = new Size(64, 15);
@@ -925,7 +929,7 @@
             // 
             // WindroseLineWidthUpDown
             // 
-            WindroseLineWidthUpDown.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            WindroseLineWidthUpDown.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             WindroseLineWidthUpDown.Location = new Point(88, 130);
             WindroseLineWidthUpDown.Maximum = new decimal(new int[] { 16, 0, 0, 0 });
             WindroseLineWidthUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -934,12 +938,12 @@
             WindroseLineWidthUpDown.TabIndex = 24;
             WindroseLineWidthUpDown.TextAlign = HorizontalAlignment.Center;
             WindroseLineWidthUpDown.Value = new decimal(new int[] { 2, 0, 0, 0 });
-            WindroseLineWidthUpDown.ValueChanged += WindroseLineWidthUpDown_ValueChanged;
+            WindroseLineWidthUpDown.ValueChanged += (this.WindroseLineWidthUpDown_ValueChanged);
             // 
             // label30
             // 
             label30.AutoSize = true;
-            label30.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label30.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label30.Location = new Point(22, 103);
             label30.Name = "label30";
             label30.Size = new Size(60, 15);
@@ -948,7 +952,7 @@
             // 
             // WindroseDirectionsUpDown
             // 
-            WindroseDirectionsUpDown.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            WindroseDirectionsUpDown.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             WindroseDirectionsUpDown.Location = new Point(88, 101);
             WindroseDirectionsUpDown.Maximum = new decimal(new int[] { 32, 0, 0, 0 });
             WindroseDirectionsUpDown.Minimum = new decimal(new int[] { 4, 0, 0, 0 });
@@ -957,12 +961,12 @@
             WindroseDirectionsUpDown.TabIndex = 22;
             WindroseDirectionsUpDown.TextAlign = HorizontalAlignment.Center;
             WindroseDirectionsUpDown.Value = new decimal(new int[] { 16, 0, 0, 0 });
-            WindroseDirectionsUpDown.ValueChanged += WindroseDirectionsUpDown_ValueChanged;
+            WindroseDirectionsUpDown.ValueChanged += (this.WindroseDirectionsUpDown_ValueChanged);
             // 
             // WindroseColorSelectButton
             // 
-            WindroseColorSelectButton.BackColor = Color.FromArgb(127, 61, 55, 40);
-            WindroseColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WindroseColorSelectButton.BackColor = Color.FromArgb((int)(byte)127, (int)(byte)61, (int)(byte)55, (int)(byte)40);
+            WindroseColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WindroseColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
             WindroseColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             WindroseColorSelectButton.IconColor = Color.Tan;
@@ -973,13 +977,13 @@
             WindroseColorSelectButton.TabIndex = 21;
             WindroseColorSelectButton.Text = "Click to Select";
             WindroseColorSelectButton.UseVisualStyleBackColor = false;
-            WindroseColorSelectButton.Click += WindroseColorSelectButton_Click;
+            WindroseColorSelectButton.Click += (this.WindroseColorSelectButton_Click);
             // 
             // OceanColorGroup
             // 
             OceanColorGroup.BackColor = Color.Transparent;
             OceanColorGroup.Controls.Add(OceanColorSelectButton);
-            OceanColorGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            OceanColorGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             OceanColorGroup.ForeColor = SystemColors.ControlText;
             OceanColorGroup.Location = new Point(6, 389);
             OceanColorGroup.Name = "OceanColorGroup";
@@ -991,7 +995,7 @@
             // OceanColorSelectButton
             // 
             OceanColorSelectButton.BackColor = Color.White;
-            OceanColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
             OceanColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             OceanColorSelectButton.IconColor = Color.Tan;
@@ -1002,7 +1006,7 @@
             OceanColorSelectButton.TabIndex = 21;
             OceanColorSelectButton.Text = "Click to Select";
             OceanColorSelectButton.UseVisualStyleBackColor = false;
-            OceanColorSelectButton.Click += OceanColorSelectButton_Click;
+            OceanColorSelectButton.Click += (this.OceanColorSelectButton_Click);
             // 
             // OceanTextureGroup
             // 
@@ -1017,7 +1021,7 @@
             OceanTextureGroup.Controls.Add(OceanTextureBox);
             OceanTextureGroup.Controls.Add(label32);
             OceanTextureGroup.Controls.Add(OceanTextureOpacityTrack);
-            OceanTextureGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            OceanTextureGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             OceanTextureGroup.ForeColor = SystemColors.ControlText;
             OceanTextureGroup.Location = new Point(6, 32);
             OceanTextureGroup.Name = "OceanTextureGroup";
@@ -1029,7 +1033,7 @@
             // label93
             // 
             label93.AutoSize = true;
-            label93.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label93.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label93.Location = new Point(55, 302);
             label93.Name = "label93";
             label93.Size = new Size(40, 15);
@@ -1044,19 +1048,19 @@
             MirrorOceanTextureSwitch.Background_WidthPen = 2F;
             MirrorOceanTextureSwitch.BackgroundPen = false;
             MirrorOceanTextureSwitch.Checked = false;
-            MirrorOceanTextureSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            MirrorOceanTextureSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            MirrorOceanTextureSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            MirrorOceanTextureSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            MirrorOceanTextureSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            MirrorOceanTextureSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            MirrorOceanTextureSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            MirrorOceanTextureSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            MirrorOceanTextureSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            MirrorOceanTextureSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorOceanTextureSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            MirrorOceanTextureSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            MirrorOceanTextureSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorOceanTextureSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorOceanTextureSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorOceanTextureSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorOceanTextureSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            MirrorOceanTextureSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             MirrorOceanTextureSwitch.ColorValue = Color.ForestGreen;
             MirrorOceanTextureSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             MirrorOceanTextureSwitch.Font = new Font("Arial", 11F);
-            MirrorOceanTextureSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            MirrorOceanTextureSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             MirrorOceanTextureSwitch.Lighting = true;
             MirrorOceanTextureSwitch.LinearGradient_Background = false;
             MirrorOceanTextureSwitch.LinearGradient_Value = false;
@@ -1073,13 +1077,13 @@
             MirrorOceanTextureSwitch.Tag = "Cyber";
             MirrorOceanTextureSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             MirrorOceanTextureSwitch.Timer_RGB = 300;
-            MirrorOceanTextureSwitch.CheckedChanged += MirrorOceanTextureSwitch_CheckedChanged;
+            MirrorOceanTextureSwitch.CheckedChanged += (this.MirrorOceanTextureSwitch_CheckedChanged);
             // 
             // label91
             // 
             label91.AutoSize = true;
             label91.BackColor = Color.Transparent;
-            label91.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label91.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label91.ForeColor = SystemColors.ControlDarkDark;
             label91.Location = new Point(10, 253);
             label91.Name = "label91";
@@ -1097,11 +1101,11 @@
             OceanScaleTextureTrack.TabIndex = 27;
             OceanScaleTextureTrack.TickStyle = TickStyle.None;
             OceanScaleTextureTrack.Value = 100;
-            OceanScaleTextureTrack.Scroll += OceanScaleTextureTrack_Scroll;
+            OceanScaleTextureTrack.Scroll += (this.OceanScaleTextureTrack_Scroll);
             // 
             // OceanTextureNameLabel
             // 
-            OceanTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanTextureNameLabel.Location = new Point(6, 175);
             OceanTextureNameLabel.Name = "OceanTextureNameLabel";
             OceanTextureNameLabel.Size = new Size(136, 15);
@@ -1111,7 +1115,7 @@
             // PreviousOceanTextureButton
             // 
             PreviousOceanTextureButton.FlatStyle = FlatStyle.Flat;
-            PreviousOceanTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            PreviousOceanTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             PreviousOceanTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleLeft;
             PreviousOceanTextureButton.IconColor = Color.Black;
             PreviousOceanTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -1122,12 +1126,12 @@
             PreviousOceanTextureButton.TabIndex = 22;
             PreviousOceanTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
             PreviousOceanTextureButton.UseVisualStyleBackColor = true;
-            PreviousOceanTextureButton.Click += PreviousOceanTextureButton_Click;
+            PreviousOceanTextureButton.Click += (this.PreviousOceanTextureButton_Click);
             // 
             // NextOceanTextureButton
             // 
             NextOceanTextureButton.FlatStyle = FlatStyle.Flat;
-            NextOceanTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NextOceanTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             NextOceanTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleRight;
             NextOceanTextureButton.IconColor = Color.Black;
             NextOceanTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -1138,7 +1142,7 @@
             NextOceanTextureButton.TabIndex = 21;
             NextOceanTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
             NextOceanTextureButton.UseVisualStyleBackColor = true;
-            NextOceanTextureButton.Click += NextOceanTextureButton_Click;
+            NextOceanTextureButton.Click += (this.NextOceanTextureButton_Click);
             // 
             // OceanTextureBox
             // 
@@ -1152,7 +1156,7 @@
             // 
             label32.AutoSize = true;
             label32.BackColor = Color.Transparent;
-            label32.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label32.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label32.ForeColor = SystemColors.ControlDarkDark;
             label32.Location = new Point(6, 210);
             label32.Name = "label32";
@@ -1171,16 +1175,16 @@
             OceanTextureOpacityTrack.TabIndex = 0;
             OceanTextureOpacityTrack.TickStyle = TickStyle.None;
             OceanTextureOpacityTrack.Value = 100;
-            OceanTextureOpacityTrack.Scroll += OceanTextureOpacityTrack_Scroll;
+            OceanTextureOpacityTrack.Scroll += (this.OceanTextureOpacityTrack_Scroll);
             // 
             // OceanToolStrip
             // 
             OceanToolStrip.AllowMerge = false;
-            OceanToolStrip.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            OceanToolStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
             OceanToolStrip.AutoSize = false;
             OceanToolStrip.BackColor = SystemColors.Control;
             OceanToolStrip.Dock = DockStyle.None;
-            OceanToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             OceanToolStrip.Items.AddRange(new ToolStripItem[] { OceanApplyTextureButton, OceanRemoveTextureButton, OceanColorFillButton, OceanColorClearButton, WindrosePlaceButton, WindroseClearButton });
             OceanToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
@@ -1193,7 +1197,7 @@
             // OceanApplyTextureButton
             // 
             OceanApplyTextureButton.AutoSize = false;
-            OceanApplyTextureButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanApplyTextureButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanApplyTextureButton.ForeColor = SystemColors.ControlDarkDark;
             OceanApplyTextureButton.IconChar = FontAwesome.Sharp.IconChar.PaintRoller;
             OceanApplyTextureButton.IconColor = Color.Black;
@@ -1207,7 +1211,7 @@
             OceanApplyTextureButton.Text = "Apply";
             OceanApplyTextureButton.TextImageRelation = TextImageRelation.TextAboveImage;
             OceanApplyTextureButton.ToolTipText = "Apply Texture";
-            OceanApplyTextureButton.Click += OceanApplyTextureButton_Click;
+            OceanApplyTextureButton.Click += (this.OceanApplyTextureButton_Click);
             // 
             // OceanRemoveTextureButton
             // 
@@ -1225,7 +1229,7 @@
             OceanRemoveTextureButton.Text = "Remove";
             OceanRemoveTextureButton.TextImageRelation = TextImageRelation.TextAboveImage;
             OceanRemoveTextureButton.ToolTipText = "Remove Texture";
-            OceanRemoveTextureButton.Click += OceanRemoveTextureButton_Click;
+            OceanRemoveTextureButton.Click += (this.OceanRemoveTextureButton_Click);
             // 
             // OceanColorFillButton
             // 
@@ -1242,7 +1246,7 @@
             OceanColorFillButton.Size = new Size(60, 60);
             OceanColorFillButton.Text = "Fill";
             OceanColorFillButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            OceanColorFillButton.Click += OceanColorFillButton_Click;
+            OceanColorFillButton.Click += (this.OceanColorFillButton_Click);
             // 
             // OceanColorClearButton
             // 
@@ -1259,7 +1263,7 @@
             OceanColorClearButton.Size = new Size(60, 60);
             OceanColorClearButton.Text = "Clear";
             OceanColorClearButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            OceanColorClearButton.Click += OceanColorClearButton_Click;
+            OceanColorClearButton.Click += (this.OceanColorClearButton_Click);
             // 
             // WindrosePlaceButton
             // 
@@ -1276,7 +1280,7 @@
             WindrosePlaceButton.Size = new Size(60, 60);
             WindrosePlaceButton.Text = "Windrose";
             WindrosePlaceButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            WindrosePlaceButton.Click += WindrosePlaceButton_Click;
+            WindrosePlaceButton.Click += (this.WindrosePlaceButton_Click);
             // 
             // WindroseClearButton
             // 
@@ -1294,7 +1298,7 @@
             WindroseClearButton.Text = "Remove";
             WindroseClearButton.TextImageRelation = TextImageRelation.TextAboveImage;
             WindroseClearButton.ToolTipText = "Remove all Wind Roses";
-            WindroseClearButton.Click += WindroseClearButton_Click;
+            WindroseClearButton.Click += (this.WindroseClearButton_Click);
             // 
             // ShowOceanLayerSwitch
             // 
@@ -1304,19 +1308,19 @@
             ShowOceanLayerSwitch.Background_WidthPen = 2F;
             ShowOceanLayerSwitch.BackgroundPen = false;
             ShowOceanLayerSwitch.Checked = true;
-            ShowOceanLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            ShowOceanLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            ShowOceanLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            ShowOceanLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            ShowOceanLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            ShowOceanLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            ShowOceanLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            ShowOceanLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            ShowOceanLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowOceanLayerSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowOceanLayerSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowOceanLayerSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowOceanLayerSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowOceanLayerSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowOceanLayerSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowOceanLayerSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowOceanLayerSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowOceanLayerSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             ShowOceanLayerSwitch.ColorValue = Color.ForestGreen;
             ShowOceanLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             ShowOceanLayerSwitch.Font = new Font("Arial", 11F);
-            ShowOceanLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowOceanLayerSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             ShowOceanLayerSwitch.Lighting = true;
             ShowOceanLayerSwitch.LinearGradient_Background = false;
             ShowOceanLayerSwitch.LinearGradient_Value = false;
@@ -1333,7 +1337,7 @@
             ShowOceanLayerSwitch.Tag = "Cyber";
             ShowOceanLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowOceanLayerSwitch.Timer_RGB = 300;
-            ShowOceanLayerSwitch.CheckedChanged += ShowOceanLayerSwitch_CheckedChanged;
+            ShowOceanLayerSwitch.CheckedChanged += (this.ShowOceanLayerSwitch_CheckedChanged);
             // 
             // label3
             // 
@@ -1349,7 +1353,7 @@
             // MainTab
             // 
             MainTab.Alignment = TabAlignment.Left;
-            MainTab.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            MainTab.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
             MainTab.Controls.Add(BackgroundTab);
             MainTab.Controls.Add(OceanTab);
             MainTab.Controls.Add(LandTab);
@@ -1360,7 +1364,7 @@
             MainTab.Controls.Add(OverlayTab);
             MainTab.Controls.Add(RegionTab);
             MainTab.Controls.Add(DrawingTab);
-            MainTab.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            MainTab.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             MainTab.ItemSize = new Size(84, 22);
             MainTab.Location = new Point(12, 90);
             MainTab.Margin = new Padding(0);
@@ -1370,7 +1374,7 @@
             MainTab.Size = new Size(260, 886);
             MainTab.SizeMode = TabSizeMode.Fixed;
             MainTab.TabIndex = 4;
-            MainTab.SelectedIndexChanged += MainTabControl_SelectedIndexChanged;
+            MainTab.SelectedIndexChanged += (this.MainTabControl_SelectedIndexChanged);
             // 
             // BackgroundTab
             // 
@@ -1380,7 +1384,7 @@
             BackgroundTab.Controls.Add(BackgroundToolStrip);
             BackgroundTab.Controls.Add(ShowBaseLayerSwitch);
             BackgroundTab.Controls.Add(label2);
-            BackgroundTab.ForeColor = Color.FromArgb(223, 219, 210);
+            BackgroundTab.ForeColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             BackgroundTab.Location = new Point(26, 4);
             BackgroundTab.Name = "BackgroundTab";
             BackgroundTab.Padding = new Padding(3);
@@ -1397,7 +1401,7 @@
             VignetteGroupBox.Controls.Add(VignetteColorSelectionButton);
             VignetteGroupBox.Controls.Add(label27);
             VignetteGroupBox.Controls.Add(VignetteStrengthTrack);
-            VignetteGroupBox.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            VignetteGroupBox.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             VignetteGroupBox.ForeColor = SystemColors.ControlText;
             VignetteGroupBox.Location = new Point(6, 342);
             VignetteGroupBox.Name = "VignetteGroupBox";
@@ -1409,7 +1413,7 @@
             // label87
             // 
             label87.AutoSize = true;
-            label87.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label87.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label87.ForeColor = SystemColors.ControlDarkDark;
             label87.Location = new Point(6, 77);
             label87.Name = "label87";
@@ -1420,7 +1424,7 @@
             // RectangleVignetteRadio
             // 
             RectangleVignetteRadio.AutoSize = true;
-            RectangleVignetteRadio.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            RectangleVignetteRadio.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             RectangleVignetteRadio.ForeColor = SystemColors.ControlDarkDark;
             RectangleVignetteRadio.Location = new Point(15, 121);
             RectangleVignetteRadio.Name = "RectangleVignetteRadio";
@@ -1428,13 +1432,13 @@
             RectangleVignetteRadio.TabIndex = 23;
             RectangleVignetteRadio.Text = "Rectangle";
             RectangleVignetteRadio.UseVisualStyleBackColor = true;
-            RectangleVignetteRadio.CheckedChanged += RectangleVignetteRadio_CheckedChanged;
+            RectangleVignetteRadio.CheckedChanged += (this.RectangleVignetteRadio_CheckedChanged);
             // 
             // OvalVignetteRadio
             // 
             OvalVignetteRadio.AutoSize = true;
             OvalVignetteRadio.Checked = true;
-            OvalVignetteRadio.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OvalVignetteRadio.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OvalVignetteRadio.ForeColor = SystemColors.ControlDarkDark;
             OvalVignetteRadio.Location = new Point(15, 96);
             OvalVignetteRadio.Name = "OvalVignetteRadio";
@@ -1443,12 +1447,12 @@
             OvalVignetteRadio.TabStop = true;
             OvalVignetteRadio.Text = "Oval";
             OvalVignetteRadio.UseVisualStyleBackColor = true;
-            OvalVignetteRadio.CheckedChanged += OvalVignetteRadio_CheckedChanged;
+            OvalVignetteRadio.CheckedChanged += (this.OvalVignetteRadio_CheckedChanged);
             // 
             // VignetteColorSelectionButton
             // 
-            VignetteColorSelectionButton.BackColor = Color.FromArgb(201, 151, 123);
-            VignetteColorSelectionButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            VignetteColorSelectionButton.BackColor = Color.FromArgb((int)(byte)201, (int)(byte)151, (int)(byte)123);
+            VignetteColorSelectionButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             VignetteColorSelectionButton.ForeColor = SystemColors.HighlightText;
             VignetteColorSelectionButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             VignetteColorSelectionButton.IconColor = Color.Tan;
@@ -1459,13 +1463,13 @@
             VignetteColorSelectionButton.TabIndex = 21;
             VignetteColorSelectionButton.Text = "Click to Select";
             VignetteColorSelectionButton.UseVisualStyleBackColor = false;
-            VignetteColorSelectionButton.Click += VignetteColorSelectionButton_Click;
+            VignetteColorSelectionButton.Click += (this.VignetteColorSelectionButton_Click);
             // 
             // label27
             // 
             label27.AutoSize = true;
             label27.BackColor = Color.Transparent;
-            label27.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label27.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label27.ForeColor = SystemColors.ControlDarkDark;
             label27.Location = new Point(6, 29);
             label27.Name = "label27";
@@ -1484,7 +1488,7 @@
             VignetteStrengthTrack.TabIndex = 19;
             VignetteStrengthTrack.TickStyle = TickStyle.None;
             VignetteStrengthTrack.Value = 148;
-            VignetteStrengthTrack.Scroll += VignetteStrengthTrack_Scroll;
+            VignetteStrengthTrack.Scroll += (this.VignetteStrengthTrack_Scroll);
             // 
             // BackgroundTextureGroup
             // 
@@ -1497,7 +1501,7 @@
             BackgroundTextureGroup.Controls.Add(PreviousBackgroundTextureButton);
             BackgroundTextureGroup.Controls.Add(NextBackgroundTextureButton);
             BackgroundTextureGroup.Controls.Add(BackgroundTextureBox);
-            BackgroundTextureGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            BackgroundTextureGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             BackgroundTextureGroup.ForeColor = SystemColors.ControlText;
             BackgroundTextureGroup.Location = new Point(6, 32);
             BackgroundTextureGroup.Name = "BackgroundTextureGroup";
@@ -1509,7 +1513,7 @@
             // label92
             // 
             label92.AutoSize = true;
-            label92.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label92.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label92.Location = new Point(61, 250);
             label92.Name = "label92";
             label92.Size = new Size(40, 15);
@@ -1524,19 +1528,19 @@
             MirrorBackgroundSwitch.Background_WidthPen = 2F;
             MirrorBackgroundSwitch.BackgroundPen = false;
             MirrorBackgroundSwitch.Checked = false;
-            MirrorBackgroundSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            MirrorBackgroundSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            MirrorBackgroundSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            MirrorBackgroundSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            MirrorBackgroundSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            MirrorBackgroundSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            MirrorBackgroundSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            MirrorBackgroundSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            MirrorBackgroundSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            MirrorBackgroundSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorBackgroundSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            MirrorBackgroundSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            MirrorBackgroundSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorBackgroundSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorBackgroundSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorBackgroundSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorBackgroundSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            MirrorBackgroundSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             MirrorBackgroundSwitch.ColorValue = Color.ForestGreen;
             MirrorBackgroundSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             MirrorBackgroundSwitch.Font = new Font("Arial", 11F);
-            MirrorBackgroundSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            MirrorBackgroundSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             MirrorBackgroundSwitch.Lighting = true;
             MirrorBackgroundSwitch.LinearGradient_Background = false;
             MirrorBackgroundSwitch.LinearGradient_Value = false;
@@ -1553,13 +1557,13 @@
             MirrorBackgroundSwitch.Tag = "Cyber";
             MirrorBackgroundSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             MirrorBackgroundSwitch.Timer_RGB = 300;
-            MirrorBackgroundSwitch.CheckedChanged += MirrorBackgroundSwitch_CheckedChanged;
+            MirrorBackgroundSwitch.CheckedChanged += (this.MirrorBackgroundSwitch_CheckedChanged);
             // 
             // label89
             // 
             label89.AutoSize = true;
             label89.BackColor = Color.Transparent;
-            label89.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label89.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label89.ForeColor = SystemColors.ControlDarkDark;
             label89.Location = new Point(6, 201);
             label89.Name = "label89";
@@ -1577,11 +1581,11 @@
             BackgroundTextureScaleTrack.TabIndex = 26;
             BackgroundTextureScaleTrack.TickStyle = TickStyle.None;
             BackgroundTextureScaleTrack.Value = 100;
-            BackgroundTextureScaleTrack.Scroll += BackgroundTextureScaleTrack_Scroll;
+            BackgroundTextureScaleTrack.Scroll += (this.BackgroundTextureScaleTrack_Scroll);
             // 
             // BackgroundTextureNameLabel
             // 
-            BackgroundTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            BackgroundTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             BackgroundTextureNameLabel.Location = new Point(6, 172);
             BackgroundTextureNameLabel.Name = "BackgroundTextureNameLabel";
             BackgroundTextureNameLabel.Size = new Size(136, 15);
@@ -1591,7 +1595,7 @@
             // PreviousBackgroundTextureButton
             // 
             PreviousBackgroundTextureButton.FlatStyle = FlatStyle.Flat;
-            PreviousBackgroundTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            PreviousBackgroundTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             PreviousBackgroundTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleLeft;
             PreviousBackgroundTextureButton.IconColor = Color.Black;
             PreviousBackgroundTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -1602,12 +1606,12 @@
             PreviousBackgroundTextureButton.TabIndex = 22;
             PreviousBackgroundTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
             PreviousBackgroundTextureButton.UseVisualStyleBackColor = true;
-            PreviousBackgroundTextureButton.Click += PreviousBackgroundTextureButton_Click;
+            PreviousBackgroundTextureButton.Click += (this.PreviousBackgroundTextureButton_Click);
             // 
             // NextBackgroundTextureButton
             // 
             NextBackgroundTextureButton.FlatStyle = FlatStyle.Flat;
-            NextBackgroundTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NextBackgroundTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             NextBackgroundTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleRight;
             NextBackgroundTextureButton.IconColor = Color.Black;
             NextBackgroundTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -1618,7 +1622,7 @@
             NextBackgroundTextureButton.TabIndex = 21;
             NextBackgroundTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
             NextBackgroundTextureButton.UseVisualStyleBackColor = true;
-            NextBackgroundTextureButton.Click += NextBackgroundTextureButton_Click;
+            NextBackgroundTextureButton.Click += (this.NextBackgroundTextureButton_Click);
             // 
             // BackgroundTextureBox
             // 
@@ -1631,11 +1635,11 @@
             // BackgroundToolStrip
             // 
             BackgroundToolStrip.AllowMerge = false;
-            BackgroundToolStrip.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            BackgroundToolStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
             BackgroundToolStrip.AutoSize = false;
             BackgroundToolStrip.BackColor = SystemColors.Control;
             BackgroundToolStrip.Dock = DockStyle.None;
-            BackgroundToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            BackgroundToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             BackgroundToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             BackgroundToolStrip.Items.AddRange(new ToolStripItem[] { FillBackgroundButton, ClearBackgroundButton });
             BackgroundToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
@@ -1648,7 +1652,7 @@
             // FillBackgroundButton
             // 
             FillBackgroundButton.AutoSize = false;
-            FillBackgroundButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FillBackgroundButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             FillBackgroundButton.ForeColor = SystemColors.ControlDarkDark;
             FillBackgroundButton.IconChar = FontAwesome.Sharp.IconChar.Fill;
             FillBackgroundButton.IconColor = Color.Black;
@@ -1661,12 +1665,12 @@
             FillBackgroundButton.Size = new Size(60, 60);
             FillBackgroundButton.Text = "Fill";
             FillBackgroundButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            FillBackgroundButton.Click += FillBackgroundButton_Click;
+            FillBackgroundButton.Click += (this.FillBackgroundButton_Click);
             // 
             // ClearBackgroundButton
             // 
             ClearBackgroundButton.AutoSize = false;
-            ClearBackgroundButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ClearBackgroundButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             ClearBackgroundButton.ForeColor = SystemColors.ControlDarkDark;
             ClearBackgroundButton.IconChar = FontAwesome.Sharp.IconChar.Square;
             ClearBackgroundButton.IconColor = Color.Black;
@@ -1680,7 +1684,7 @@
             ClearBackgroundButton.Text = "Clear";
             ClearBackgroundButton.TextImageRelation = TextImageRelation.TextAboveImage;
             ClearBackgroundButton.ToolTipText = "Clear";
-            ClearBackgroundButton.Click += ClearBackgroundButton_Click;
+            ClearBackgroundButton.Click += (this.ClearBackgroundButton_Click);
             // 
             // ShowBaseLayerSwitch
             // 
@@ -1690,19 +1694,19 @@
             ShowBaseLayerSwitch.Background_WidthPen = 2F;
             ShowBaseLayerSwitch.BackgroundPen = false;
             ShowBaseLayerSwitch.Checked = true;
-            ShowBaseLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            ShowBaseLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            ShowBaseLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            ShowBaseLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            ShowBaseLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            ShowBaseLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            ShowBaseLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            ShowBaseLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            ShowBaseLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowBaseLayerSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowBaseLayerSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowBaseLayerSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowBaseLayerSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowBaseLayerSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowBaseLayerSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowBaseLayerSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowBaseLayerSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowBaseLayerSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             ShowBaseLayerSwitch.ColorValue = Color.ForestGreen;
             ShowBaseLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             ShowBaseLayerSwitch.Font = new Font("Arial", 11F);
-            ShowBaseLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowBaseLayerSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             ShowBaseLayerSwitch.Lighting = true;
             ShowBaseLayerSwitch.LinearGradient_Background = false;
             ShowBaseLayerSwitch.LinearGradient_Value = false;
@@ -1720,7 +1724,7 @@
             ShowBaseLayerSwitch.Tag = "Cyber";
             ShowBaseLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowBaseLayerSwitch.Timer_RGB = 300;
-            ShowBaseLayerSwitch.CheckedChanged += ShowBaseLayerSwitch_CheckedChanged;
+            ShowBaseLayerSwitch.CheckedChanged += (this.ShowBaseLayerSwitch_CheckedChanged);
             // 
             // label2
             // 
@@ -1754,7 +1758,7 @@
             LandEraserGroup.Controls.Add(label17);
             LandEraserGroup.Controls.Add(label19);
             LandEraserGroup.Controls.Add(LandEraserSizeTrack);
-            LandEraserGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LandEraserGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             LandEraserGroup.Location = new Point(6, 788);
             LandEraserGroup.Name = "LandEraserGroup";
             LandEraserGroup.Size = new Size(148, 82);
@@ -1764,7 +1768,7 @@
             // 
             // label17
             // 
-            label17.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label17.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label17.Location = new Point(6, 397);
             label17.Name = "label17";
             label17.Size = new Size(136, 15);
@@ -1775,7 +1779,7 @@
             // 
             label19.AutoSize = true;
             label19.BackColor = Color.Transparent;
-            label19.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label19.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label19.ForeColor = SystemColors.ControlDarkDark;
             label19.Location = new Point(6, 27);
             label19.Name = "label19";
@@ -1795,7 +1799,7 @@
             LandEraserSizeTrack.TabIndex = 20;
             LandEraserSizeTrack.TickStyle = TickStyle.None;
             LandEraserSizeTrack.Value = 64;
-            LandEraserSizeTrack.ValueChanged += LandEraserSizeTrack_ValueChanged;
+            LandEraserSizeTrack.ValueChanged += (this.LandEraserSizeTrack_ValueChanged);
             // 
             // CoastlineValuesGroup
             // 
@@ -1805,7 +1809,7 @@
             CoastlineValuesGroup.Controls.Add(CoastlineColorSelectionButton);
             CoastlineValuesGroup.Controls.Add(label14);
             CoastlineValuesGroup.Controls.Add(CoastlineEffectDistanceTrack);
-            CoastlineValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            CoastlineValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             CoastlineValuesGroup.Location = new Point(6, 497);
             CoastlineValuesGroup.Name = "CoastlineValuesGroup";
             CoastlineValuesGroup.Size = new Size(148, 287);
@@ -1815,7 +1819,7 @@
             // 
             // label16
             // 
-            label16.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label16.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label16.Location = new Point(6, 397);
             label16.Name = "label16";
             label16.Size = new Size(136, 15);
@@ -1826,7 +1830,7 @@
             // 
             label15.AutoSize = true;
             label15.BackColor = Color.Transparent;
-            label15.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label15.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label15.ForeColor = SystemColors.ControlDarkDark;
             label15.Location = new Point(6, 133);
             label15.Name = "label15";
@@ -1836,7 +1840,7 @@
             // 
             // CoastlineStyleList
             // 
-            CoastlineStyleList.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            CoastlineStyleList.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             CoastlineStyleList.FormattingEnabled = true;
             CoastlineStyleList.ItemHeight = 15;
             CoastlineStyleList.Items.AddRange(new object[] { "None", "Uniform Band", "Uniform Blend", "Uniform Outline", "Three-Tiered", "Circular Pattern", "Dash Pattern", "Hatch Pattern" });
@@ -1844,12 +1848,12 @@
             CoastlineStyleList.Name = "CoastlineStyleList";
             CoastlineStyleList.Size = new Size(136, 124);
             CoastlineStyleList.TabIndex = 23;
-            CoastlineStyleList.SelectedIndexChanged += CoastlineStyleList_SelectedIndexChanged;
+            CoastlineStyleList.SelectedIndexChanged += (this.CoastlineStyleList_SelectedIndexChanged);
             // 
             // CoastlineColorSelectionButton
             // 
-            CoastlineColorSelectionButton.BackColor = Color.FromArgb(187, 156, 195, 183);
-            CoastlineColorSelectionButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            CoastlineColorSelectionButton.BackColor = Color.FromArgb((int)(byte)187, (int)(byte)156, (int)(byte)195, (int)(byte)183);
+            CoastlineColorSelectionButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             CoastlineColorSelectionButton.ForeColor = SystemColors.HighlightText;
             CoastlineColorSelectionButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             CoastlineColorSelectionButton.IconColor = Color.Tan;
@@ -1860,13 +1864,13 @@
             CoastlineColorSelectionButton.TabIndex = 22;
             CoastlineColorSelectionButton.Text = "Click to Select";
             CoastlineColorSelectionButton.UseVisualStyleBackColor = false;
-            CoastlineColorSelectionButton.Click += CoastlineColorSelectionButton_Click;
+            CoastlineColorSelectionButton.Click += (this.CoastlineColorSelectionButton_Click);
             // 
             // label14
             // 
             label14.AutoSize = true;
             label14.BackColor = Color.Transparent;
-            label14.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label14.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label14.ForeColor = SystemColors.ControlDarkDark;
             label14.Location = new Point(6, 22);
             label14.Name = "label14";
@@ -1885,7 +1889,7 @@
             CoastlineEffectDistanceTrack.TabIndex = 20;
             CoastlineEffectDistanceTrack.TickStyle = TickStyle.None;
             CoastlineEffectDistanceTrack.Value = 16;
-            CoastlineEffectDistanceTrack.ValueChanged += CoastlineEffectDistanceTrack_ValueChanged;
+            CoastlineEffectDistanceTrack.ValueChanged += (this.CoastlineEffectDistanceTrack_ValueChanged);
             // 
             // LandformValuesGroup
             // 
@@ -1903,7 +1907,7 @@
             LandformValuesGroup.Controls.Add(LandformOutlineColorSelectButton);
             LandformValuesGroup.Controls.Add(label12);
             LandformValuesGroup.Controls.Add(LandBrushSizeTrack);
-            LandformValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LandformValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             LandformValuesGroup.ForeColor = SystemColors.ControlText;
             LandformValuesGroup.Location = new Point(6, 32);
             LandformValuesGroup.Name = "LandformValuesGroup";
@@ -1916,7 +1920,7 @@
             // 
             label13.AutoSize = true;
             label13.BackColor = Color.Transparent;
-            label13.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label13.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label13.ForeColor = SystemColors.ControlDarkDark;
             label13.Location = new Point(6, 145);
             label13.Name = "label13";
@@ -1936,14 +1940,14 @@
             LandformOutlineWidthTrack.TabIndex = 29;
             LandformOutlineWidthTrack.TickStyle = TickStyle.None;
             LandformOutlineWidthTrack.Value = 2;
-            LandformOutlineWidthTrack.ValueChanged += LandformOutlineWidthTrack_ValueChanged;
+            LandformOutlineWidthTrack.ValueChanged += (this.LandformOutlineWidthTrack_ValueChanged);
             // 
             // UseTextureForBackgroundCheck
             // 
             UseTextureForBackgroundCheck.AutoSize = true;
             UseTextureForBackgroundCheck.Checked = true;
             UseTextureForBackgroundCheck.CheckState = CheckState.Checked;
-            UseTextureForBackgroundCheck.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            UseTextureForBackgroundCheck.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             UseTextureForBackgroundCheck.ForeColor = SystemColors.ControlDarkDark;
             UseTextureForBackgroundCheck.Location = new Point(9, 276);
             UseTextureForBackgroundCheck.Name = "UseTextureForBackgroundCheck";
@@ -1951,13 +1955,13 @@
             UseTextureForBackgroundCheck.TabIndex = 28;
             UseTextureForBackgroundCheck.Text = "Texture Fill";
             UseTextureForBackgroundCheck.UseVisualStyleBackColor = true;
-            UseTextureForBackgroundCheck.CheckedChanged += UseTextureForBackgroundCheck_CheckedChanged;
+            UseTextureForBackgroundCheck.CheckedChanged += (this.UseTextureForBackgroundCheck_CheckedChanged);
             // 
             // label88
             // 
             label88.AutoSize = true;
             label88.BackColor = Color.Transparent;
-            label88.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label88.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label88.ForeColor = SystemColors.ControlDarkDark;
             label88.Location = new Point(6, 189);
             label88.Name = "label88";
@@ -1969,7 +1973,7 @@
             // 
             label86.AutoSize = true;
             label86.BackColor = Color.Transparent;
-            label86.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label86.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label86.ForeColor = SystemColors.ControlDarkDark;
             label86.Location = new Point(9, 67);
             label86.Name = "label86";
@@ -1980,7 +1984,7 @@
             // LandformBackgroundColorSelectButton
             // 
             LandformBackgroundColorSelectButton.BackColor = Color.White;
-            LandformBackgroundColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandformBackgroundColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandformBackgroundColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
             LandformBackgroundColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             LandformBackgroundColorSelectButton.IconColor = Color.Tan;
@@ -1991,11 +1995,11 @@
             LandformBackgroundColorSelectButton.TabIndex = 25;
             LandformBackgroundColorSelectButton.Text = "Click to Select";
             LandformBackgroundColorSelectButton.UseVisualStyleBackColor = false;
-            LandformBackgroundColorSelectButton.Click += LandformBackgroundColorSelectButton_Click;
+            LandformBackgroundColorSelectButton.Click += (this.LandformBackgroundColorSelectButton_Click);
             // 
             // LandTextureNameLabel
             // 
-            LandTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandTextureNameLabel.Location = new Point(6, 436);
             LandTextureNameLabel.Name = "LandTextureNameLabel";
             LandTextureNameLabel.Size = new Size(136, 15);
@@ -2005,7 +2009,7 @@
             // PreviousLandTextureButton
             // 
             PreviousLandTextureButton.FlatStyle = FlatStyle.Flat;
-            PreviousLandTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            PreviousLandTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             PreviousLandTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleLeft;
             PreviousLandTextureButton.IconColor = Color.Black;
             PreviousLandTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -2016,12 +2020,12 @@
             PreviousLandTextureButton.TabIndex = 22;
             PreviousLandTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
             PreviousLandTextureButton.UseVisualStyleBackColor = true;
-            PreviousLandTextureButton.Click += PreviousTextureButton_Click;
+            PreviousLandTextureButton.Click += (this.PreviousTextureButton_Click);
             // 
             // NextLandTextureButton
             // 
             NextLandTextureButton.FlatStyle = FlatStyle.Flat;
-            NextLandTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NextLandTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             NextLandTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleRight;
             NextLandTextureButton.IconColor = Color.Black;
             NextLandTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -2032,7 +2036,7 @@
             NextLandTextureButton.TabIndex = 21;
             NextLandTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
             NextLandTextureButton.UseVisualStyleBackColor = true;
-            NextLandTextureButton.Click += NextTextureButton_Click;
+            NextLandTextureButton.Click += (this.NextTextureButton_Click);
             // 
             // LandformTexturePreviewPicture
             // 
@@ -2044,8 +2048,8 @@
             // 
             // LandformOutlineColorSelectButton
             // 
-            LandformOutlineColorSelectButton.BackColor = Color.FromArgb(62, 55, 40);
-            LandformOutlineColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandformOutlineColorSelectButton.BackColor = Color.FromArgb((int)(byte)62, (int)(byte)55, (int)(byte)40);
+            LandformOutlineColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandformOutlineColorSelectButton.ForeColor = SystemColors.HighlightText;
             LandformOutlineColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             LandformOutlineColorSelectButton.IconColor = Color.Tan;
@@ -2056,13 +2060,13 @@
             LandformOutlineColorSelectButton.TabIndex = 19;
             LandformOutlineColorSelectButton.Text = "Click to Select";
             LandformOutlineColorSelectButton.UseVisualStyleBackColor = false;
-            LandformOutlineColorSelectButton.Click += LandformOutlineColorSelectButton_Click;
+            LandformOutlineColorSelectButton.Click += (this.LandformOutlineColorSelectButton_Click);
             // 
             // label12
             // 
             label12.AutoSize = true;
             label12.BackColor = Color.Transparent;
-            label12.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label12.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label12.ForeColor = SystemColors.ControlDarkDark;
             label12.Location = new Point(6, 23);
             label12.Name = "label12";
@@ -2082,7 +2086,7 @@
             LandBrushSizeTrack.TabIndex = 0;
             LandBrushSizeTrack.TickStyle = TickStyle.None;
             LandBrushSizeTrack.Value = 64;
-            LandBrushSizeTrack.ValueChanged += LandBrushSizeTrack_ValueChanged;
+            LandBrushSizeTrack.ValueChanged += (this.LandBrushSizeTrack_ValueChanged);
             // 
             // ShowLandLayerSwitch
             // 
@@ -2092,19 +2096,19 @@
             ShowLandLayerSwitch.Background_WidthPen = 2F;
             ShowLandLayerSwitch.BackgroundPen = false;
             ShowLandLayerSwitch.Checked = true;
-            ShowLandLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            ShowLandLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            ShowLandLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            ShowLandLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            ShowLandLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            ShowLandLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            ShowLandLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            ShowLandLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            ShowLandLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowLandLayerSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowLandLayerSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowLandLayerSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowLandLayerSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowLandLayerSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowLandLayerSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowLandLayerSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowLandLayerSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowLandLayerSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             ShowLandLayerSwitch.ColorValue = Color.ForestGreen;
             ShowLandLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             ShowLandLayerSwitch.Font = new Font("Arial", 11F);
-            ShowLandLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowLandLayerSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             ShowLandLayerSwitch.Lighting = true;
             ShowLandLayerSwitch.LinearGradient_Background = false;
             ShowLandLayerSwitch.LinearGradient_Value = false;
@@ -2121,7 +2125,7 @@
             ShowLandLayerSwitch.Tag = "Cyber";
             ShowLandLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowLandLayerSwitch.Timer_RGB = 300;
-            ShowLandLayerSwitch.CheckedChanged += ShowLandLayerSwitch_CheckedChanged;
+            ShowLandLayerSwitch.CheckedChanged += (this.ShowLandLayerSwitch_CheckedChanged);
             // 
             // label4
             // 
@@ -2137,11 +2141,11 @@
             // LandToolStrip
             // 
             LandToolStrip.AllowMerge = false;
-            LandToolStrip.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            LandToolStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
             LandToolStrip.AutoSize = false;
             LandToolStrip.BackColor = SystemColors.Control;
             LandToolStrip.Dock = DockStyle.None;
-            LandToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             LandToolStrip.Items.AddRange(new ToolStripItem[] { LandformSelectButton, LandformPaintButton, LandformEraseButton, LandformFillButton, LandformClearButton, LandformGenerateButton, LandformTypeButton });
             LandToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
@@ -2154,7 +2158,7 @@
             // LandformSelectButton
             // 
             LandformSelectButton.AutoSize = false;
-            LandformSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandformSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandformSelectButton.ForeColor = SystemColors.ControlDarkDark;
             LandformSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
             LandformSelectButton.IconColor = Color.Black;
@@ -2167,12 +2171,12 @@
             LandformSelectButton.Size = new Size(60, 60);
             LandformSelectButton.Text = "Select";
             LandformSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            LandformSelectButton.Click += LandformSelectButton_Click;
+            LandformSelectButton.Click += (this.LandformSelectButton_Click);
             // 
             // LandformPaintButton
             // 
             LandformPaintButton.AutoSize = false;
-            LandformPaintButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandformPaintButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandformPaintButton.ForeColor = SystemColors.ControlDarkDark;
             LandformPaintButton.IconChar = FontAwesome.Sharp.IconChar.Paintbrush;
             LandformPaintButton.IconColor = Color.Black;
@@ -2185,7 +2189,7 @@
             LandformPaintButton.Size = new Size(60, 60);
             LandformPaintButton.Text = "Paint";
             LandformPaintButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            LandformPaintButton.Click += LandformPaintButton_Click;
+            LandformPaintButton.Click += (this.LandformPaintButton_Click);
             // 
             // LandformEraseButton
             // 
@@ -2202,7 +2206,7 @@
             LandformEraseButton.Size = new Size(60, 60);
             LandformEraseButton.Text = "Erase";
             LandformEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            LandformEraseButton.Click += LandformEraseButton_Click;
+            LandformEraseButton.Click += (this.LandformEraseButton_Click);
             // 
             // LandformFillButton
             // 
@@ -2219,7 +2223,7 @@
             LandformFillButton.Size = new Size(60, 60);
             LandformFillButton.Text = "Fill";
             LandformFillButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            LandformFillButton.Click += LandformFillButton_Click;
+            LandformFillButton.Click += (this.LandformFillButton_Click);
             // 
             // LandformClearButton
             // 
@@ -2235,7 +2239,7 @@
             LandformClearButton.Size = new Size(60, 60);
             LandformClearButton.Text = "Clear";
             LandformClearButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            LandformClearButton.Click += LandformClearButton_Click;
+            LandformClearButton.Click += (this.LandformClearButton_Click);
             // 
             // LandformGenerateButton
             // 
@@ -2252,7 +2256,7 @@
             LandformGenerateButton.Size = new Size(60, 60);
             LandformGenerateButton.Text = "Generate";
             LandformGenerateButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            LandformGenerateButton.Click += LandformGenerateButton_Click;
+            LandformGenerateButton.Click += (this.LandformGenerateButton_Click);
             // 
             // LandformTypeButton
             // 
@@ -2277,7 +2281,7 @@
             RegionMenuItem.Size = new Size(146, 22);
             RegionMenuItem.Text = "&Region";
             RegionMenuItem.TextImageRelation = TextImageRelation.Overlay;
-            RegionMenuItem.Click += RegionMenuItem_Click;
+            RegionMenuItem.Click += (this.RegionMenuItem_Click);
             // 
             // ContinentMenuItem
             // 
@@ -2286,7 +2290,7 @@
             ContinentMenuItem.Name = "ContinentMenuItem";
             ContinentMenuItem.Size = new Size(146, 22);
             ContinentMenuItem.Text = "&Continent";
-            ContinentMenuItem.Click += ContinentMenuItem_Click;
+            ContinentMenuItem.Click += (this.ContinentMenuItem_Click);
             // 
             // IslandMenuItem
             // 
@@ -2295,7 +2299,7 @@
             IslandMenuItem.Name = "IslandMenuItem";
             IslandMenuItem.Size = new Size(146, 22);
             IslandMenuItem.Text = "&Island";
-            IslandMenuItem.Click += IslandMenuItem_Click;
+            IslandMenuItem.Click += (this.IslandMenuItem_Click);
             // 
             // ArchipelagoMenuItem
             // 
@@ -2305,7 +2309,7 @@
             ArchipelagoMenuItem.Size = new Size(146, 22);
             ArchipelagoMenuItem.Text = "A&rchipelago";
             ArchipelagoMenuItem.TextImageRelation = TextImageRelation.Overlay;
-            ArchipelagoMenuItem.Click += ArchipelagoMenuItem_Click;
+            ArchipelagoMenuItem.Click += (this.ArchipelagoMenuItem_Click);
             // 
             // AtollMenuItem
             // 
@@ -2315,7 +2319,7 @@
             AtollMenuItem.Size = new Size(146, 22);
             AtollMenuItem.Text = "A&toll";
             AtollMenuItem.TextImageRelation = TextImageRelation.Overlay;
-            AtollMenuItem.Click += AtollMenuItem_Click;
+            AtollMenuItem.Click += (this.AtollMenuItem_Click);
             // 
             // WorldMenuItem
             // 
@@ -2325,11 +2329,11 @@
             WorldMenuItem.Size = new Size(146, 22);
             WorldMenuItem.Text = "&World";
             WorldMenuItem.TextImageRelation = TextImageRelation.Overlay;
-            WorldMenuItem.Click += WorldMenuItem_Click;
+            WorldMenuItem.Click += (this.WorldMenuItem_Click);
             // 
             // HeightMapToolsPanel
             // 
-            HeightMapToolsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            HeightMapToolsPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
             HeightMapToolsPanel.Controls.Add(HeightMapLandformSelectButton);
             HeightMapToolsPanel.Controls.Add(label96);
             HeightMapToolsPanel.Controls.Add(label97);
@@ -2349,7 +2353,7 @@
             // 
             HeightMapLandformSelectButton.FlatAppearance.BorderSize = 0;
             HeightMapLandformSelectButton.FlatStyle = FlatStyle.Flat;
-            HeightMapLandformSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            HeightMapLandformSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             HeightMapLandformSelectButton.ForeColor = SystemColors.ControlDarkDark;
             HeightMapLandformSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
             HeightMapLandformSelectButton.IconColor = Color.Black;
@@ -2362,12 +2366,12 @@
             HeightMapLandformSelectButton.Text = "Select";
             HeightMapLandformSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
             HeightMapLandformSelectButton.UseVisualStyleBackColor = true;
-            HeightMapLandformSelectButton.Click += HeightMapLandformSelectButton_Click;
+            HeightMapLandformSelectButton.Click += (this.HeightMapLandformSelectButton_Click);
             // 
             // label96
             // 
             label96.AutoSize = true;
-            label96.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label96.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label96.ForeColor = SystemColors.ControlDarkDark;
             label96.Location = new Point(12, 462);
             label96.Name = "label96";
@@ -2378,7 +2382,7 @@
             // label97
             // 
             label97.AutoSize = true;
-            label97.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label97.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label97.ForeColor = SystemColors.ControlDarkDark;
             label97.Location = new Point(14, 446);
             label97.Name = "label97";
@@ -2394,19 +2398,19 @@
             Update3DViewSwitch.Background_WidthPen = 2F;
             Update3DViewSwitch.BackgroundPen = false;
             Update3DViewSwitch.Checked = true;
-            Update3DViewSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            Update3DViewSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            Update3DViewSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            Update3DViewSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            Update3DViewSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            Update3DViewSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            Update3DViewSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            Update3DViewSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            Update3DViewSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            Update3DViewSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            Update3DViewSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            Update3DViewSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            Update3DViewSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            Update3DViewSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            Update3DViewSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            Update3DViewSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            Update3DViewSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            Update3DViewSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             Update3DViewSwitch.ColorValue = Color.ForestGreen;
             Update3DViewSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             Update3DViewSwitch.Font = new Font("Arial", 11F);
-            Update3DViewSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            Update3DViewSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             Update3DViewSwitch.Lighting = true;
             Update3DViewSwitch.LinearGradient_Background = false;
             Update3DViewSwitch.LinearGradient_Value = false;
@@ -2429,7 +2433,7 @@
             ShowHeightMap3DView.FlatAppearance.BorderColor = SystemColors.Control;
             ShowHeightMap3DView.FlatAppearance.BorderSize = 0;
             ShowHeightMap3DView.FlatStyle = FlatStyle.Flat;
-            ShowHeightMap3DView.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ShowHeightMap3DView.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             ShowHeightMap3DView.ForeColor = SystemColors.ControlDarkDark;
             ShowHeightMap3DView.IconChar = FontAwesome.Sharp.IconChar.Cubes;
             ShowHeightMap3DView.IconColor = Color.Black;
@@ -2442,7 +2446,7 @@
             ShowHeightMap3DView.Text = "3D View";
             ShowHeightMap3DView.TextImageRelation = TextImageRelation.TextAboveImage;
             ShowHeightMap3DView.UseVisualStyleBackColor = true;
-            ShowHeightMap3DView.Click += Show3DViewButton_Click;
+            ShowHeightMap3DView.Click += (this.Show3DViewButton_Click);
             // 
             // BrushStrengthUpDown
             // 
@@ -2460,7 +2464,7 @@
             // label95
             // 
             label95.AutoSize = true;
-            label95.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label95.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label95.ForeColor = SystemColors.ControlDarkDark;
             label95.Location = new Point(12, 295);
             label95.Name = "label95";
@@ -2471,7 +2475,7 @@
             // label94
             // 
             label94.AutoSize = true;
-            label94.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label94.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label94.ForeColor = SystemColors.ControlDarkDark;
             label94.Location = new Point(19, 280);
             label94.Name = "label94";
@@ -2484,7 +2488,7 @@
             DecreaseHeightButton.FlatAppearance.BorderColor = SystemColors.Control;
             DecreaseHeightButton.FlatAppearance.BorderSize = 0;
             DecreaseHeightButton.FlatStyle = FlatStyle.Flat;
-            DecreaseHeightButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            DecreaseHeightButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             DecreaseHeightButton.ForeColor = SystemColors.ControlDarkDark;
             DecreaseHeightButton.IconChar = FontAwesome.Sharp.IconChar.ArrowUpShortWide;
             DecreaseHeightButton.IconColor = Color.Black;
@@ -2499,14 +2503,14 @@
             DecreaseHeightButton.Text = "Decrease";
             DecreaseHeightButton.TextImageRelation = TextImageRelation.TextAboveImage;
             DecreaseHeightButton.UseVisualStyleBackColor = true;
-            DecreaseHeightButton.Click += HeightDownButton_Click;
+            DecreaseHeightButton.Click += (this.HeightDownButton_Click);
             // 
             // IncreaseHeightButton
             // 
             IncreaseHeightButton.FlatAppearance.BorderColor = SystemColors.Control;
             IncreaseHeightButton.FlatAppearance.BorderSize = 0;
             IncreaseHeightButton.FlatStyle = FlatStyle.Flat;
-            IncreaseHeightButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            IncreaseHeightButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             IncreaseHeightButton.ForeColor = SystemColors.ControlDarkDark;
             IncreaseHeightButton.IconChar = FontAwesome.Sharp.IconChar.ArrowUpShortWide;
             IncreaseHeightButton.IconColor = Color.Black;
@@ -2520,7 +2524,7 @@
             IncreaseHeightButton.Text = "Increase";
             IncreaseHeightButton.TextImageRelation = TextImageRelation.TextAboveImage;
             IncreaseHeightButton.UseVisualStyleBackColor = true;
-            IncreaseHeightButton.Click += HeightUpButton_Click;
+            IncreaseHeightButton.Click += (this.HeightUpButton_Click);
             // 
             // WaterTab
             // 
@@ -2542,7 +2546,7 @@
             WaterEraserGroup.Controls.Add(label42);
             WaterEraserGroup.Controls.Add(label43);
             WaterEraserGroup.Controls.Add(WaterEraserSizeTrack);
-            WaterEraserGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            WaterEraserGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             WaterEraserGroup.Location = new Point(6, 482);
             WaterEraserGroup.Name = "WaterEraserGroup";
             WaterEraserGroup.Size = new Size(148, 82);
@@ -2552,7 +2556,7 @@
             // 
             // label42
             // 
-            label42.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label42.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label42.Location = new Point(6, 397);
             label42.Name = "label42";
             label42.Size = new Size(136, 15);
@@ -2563,7 +2567,7 @@
             // 
             label43.AutoSize = true;
             label43.BackColor = Color.Transparent;
-            label43.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label43.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label43.ForeColor = SystemColors.ControlDarkDark;
             label43.Location = new Point(6, 27);
             label43.Name = "label43";
@@ -2583,7 +2587,7 @@
             WaterEraserSizeTrack.TabIndex = 20;
             WaterEraserSizeTrack.TickStyle = TickStyle.None;
             WaterEraserSizeTrack.Value = 20;
-            WaterEraserSizeTrack.ValueChanged += WaterEraseSizeTrack_ValueChanged;
+            WaterEraserSizeTrack.ValueChanged += (this.WaterEraseSizeTrack_ValueChanged);
             // 
             // RiverValuesGroup
             // 
@@ -2595,7 +2599,7 @@
             RiverValuesGroup.Controls.Add(RiverSourceFadeInSwitch);
             RiverValuesGroup.Controls.Add(label40);
             RiverValuesGroup.Controls.Add(RiverWidthTrack);
-            RiverValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            RiverValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             RiverValuesGroup.Location = new Point(6, 305);
             RiverValuesGroup.Name = "RiverValuesGroup";
             RiverValuesGroup.Size = new Size(148, 158);
@@ -2607,7 +2611,7 @@
             // 
             label85.AutoSize = true;
             label85.BackColor = Color.Transparent;
-            label85.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label85.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label85.ForeColor = SystemColors.ControlDarkDark;
             label85.Location = new Point(51, 126);
             label85.Name = "label85";
@@ -2623,19 +2627,19 @@
             EditRiverPointsSwitch.Background_WidthPen = 2F;
             EditRiverPointsSwitch.BackgroundPen = false;
             EditRiverPointsSwitch.Checked = false;
-            EditRiverPointsSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            EditRiverPointsSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            EditRiverPointsSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            EditRiverPointsSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            EditRiverPointsSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            EditRiverPointsSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            EditRiverPointsSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            EditRiverPointsSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            EditRiverPointsSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            EditRiverPointsSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EditRiverPointsSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            EditRiverPointsSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            EditRiverPointsSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EditRiverPointsSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EditRiverPointsSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EditRiverPointsSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EditRiverPointsSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            EditRiverPointsSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             EditRiverPointsSwitch.ColorValue = Color.ForestGreen;
             EditRiverPointsSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             EditRiverPointsSwitch.Font = new Font("Arial", 11F);
-            EditRiverPointsSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            EditRiverPointsSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             EditRiverPointsSwitch.Lighting = true;
             EditRiverPointsSwitch.LinearGradient_Background = false;
             EditRiverPointsSwitch.LinearGradient_Value = false;
@@ -2652,13 +2656,13 @@
             EditRiverPointsSwitch.Tag = "Cyber";
             EditRiverPointsSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             EditRiverPointsSwitch.Timer_RGB = 300;
-            EditRiverPointsSwitch.CheckedChanged += EditRiverPointsSwitch_CheckedChanged;
+            EditRiverPointsSwitch.CheckedChanged += (this.EditRiverPointsSwitch_CheckedChanged);
             // 
             // label84
             // 
             label84.AutoSize = true;
             label84.BackColor = Color.Transparent;
-            label84.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label84.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label84.ForeColor = SystemColors.ControlDarkDark;
             label84.Location = new Point(51, 100);
             label84.Name = "label84";
@@ -2674,19 +2678,19 @@
             RiverTextureSwitch.Background_WidthPen = 2F;
             RiverTextureSwitch.BackgroundPen = false;
             RiverTextureSwitch.Checked = true;
-            RiverTextureSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            RiverTextureSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            RiverTextureSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            RiverTextureSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            RiverTextureSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            RiverTextureSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            RiverTextureSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            RiverTextureSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            RiverTextureSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            RiverTextureSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            RiverTextureSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            RiverTextureSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            RiverTextureSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            RiverTextureSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            RiverTextureSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            RiverTextureSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            RiverTextureSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            RiverTextureSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             RiverTextureSwitch.ColorValue = Color.ForestGreen;
             RiverTextureSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             RiverTextureSwitch.Font = new Font("Arial", 11F);
-            RiverTextureSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            RiverTextureSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             RiverTextureSwitch.Lighting = true;
             RiverTextureSwitch.LinearGradient_Background = false;
             RiverTextureSwitch.LinearGradient_Value = false;
@@ -2703,13 +2707,13 @@
             RiverTextureSwitch.Tag = "Cyber";
             RiverTextureSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             RiverTextureSwitch.Timer_RGB = 300;
-            RiverTextureSwitch.CheckedChanged += RiverTextureSwitch_CheckedChanged;
+            RiverTextureSwitch.CheckedChanged += (this.RiverTextureSwitch_CheckedChanged);
             // 
             // label41
             // 
             label41.AutoSize = true;
             label41.BackColor = Color.Transparent;
-            label41.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label41.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label41.ForeColor = SystemColors.ControlDarkDark;
             label41.Location = new Point(51, 74);
             label41.Name = "label41";
@@ -2725,19 +2729,19 @@
             RiverSourceFadeInSwitch.Background_WidthPen = 2F;
             RiverSourceFadeInSwitch.BackgroundPen = false;
             RiverSourceFadeInSwitch.Checked = true;
-            RiverSourceFadeInSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            RiverSourceFadeInSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            RiverSourceFadeInSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            RiverSourceFadeInSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            RiverSourceFadeInSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            RiverSourceFadeInSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            RiverSourceFadeInSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            RiverSourceFadeInSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            RiverSourceFadeInSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            RiverSourceFadeInSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            RiverSourceFadeInSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            RiverSourceFadeInSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            RiverSourceFadeInSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            RiverSourceFadeInSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            RiverSourceFadeInSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            RiverSourceFadeInSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            RiverSourceFadeInSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            RiverSourceFadeInSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             RiverSourceFadeInSwitch.ColorValue = Color.ForestGreen;
             RiverSourceFadeInSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             RiverSourceFadeInSwitch.Font = new Font("Arial", 11F);
-            RiverSourceFadeInSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            RiverSourceFadeInSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             RiverSourceFadeInSwitch.Lighting = true;
             RiverSourceFadeInSwitch.LinearGradient_Background = false;
             RiverSourceFadeInSwitch.LinearGradient_Value = false;
@@ -2754,13 +2758,13 @@
             RiverSourceFadeInSwitch.Tag = "Cyber";
             RiverSourceFadeInSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             RiverSourceFadeInSwitch.Timer_RGB = 300;
-            RiverSourceFadeInSwitch.CheckedChanged += RiverSourceFadeInSwitch_CheckedChanged;
+            RiverSourceFadeInSwitch.CheckedChanged += (this.RiverSourceFadeInSwitch_CheckedChanged);
             // 
             // label40
             // 
             label40.AutoSize = true;
             label40.BackColor = Color.Transparent;
-            label40.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label40.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label40.ForeColor = SystemColors.ControlDarkDark;
             label40.Location = new Point(6, 26);
             label40.Name = "label40";
@@ -2780,7 +2784,7 @@
             RiverWidthTrack.TabIndex = 19;
             RiverWidthTrack.TickStyle = TickStyle.None;
             RiverWidthTrack.Value = 4;
-            RiverWidthTrack.ValueChanged += RiverWidthTrack_ValueChanged;
+            RiverWidthTrack.ValueChanged += (this.RiverWidthTrack_ValueChanged);
             // 
             // WaterValuesGroup
             // 
@@ -2791,7 +2795,7 @@
             WaterValuesGroup.Controls.Add(WaterColorSelectionButton);
             WaterValuesGroup.Controls.Add(label39);
             WaterValuesGroup.Controls.Add(WaterBrushSizeTrack);
-            WaterValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            WaterValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             WaterValuesGroup.ForeColor = SystemColors.ControlText;
             WaterValuesGroup.Location = new Point(6, 32);
             WaterValuesGroup.Name = "WaterValuesGroup";
@@ -2804,7 +2808,7 @@
             // 
             label38.AutoSize = true;
             label38.BackColor = Color.Transparent;
-            label38.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label38.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label38.ForeColor = SystemColors.ControlDarkDark;
             label38.Location = new Point(6, 165);
             label38.Name = "label38";
@@ -2814,8 +2818,8 @@
             // 
             // ShorelineColorSelectionButton
             // 
-            ShorelineColorSelectionButton.BackColor = Color.FromArgb(161, 144, 118);
-            ShorelineColorSelectionButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ShorelineColorSelectionButton.BackColor = Color.FromArgb((int)(byte)161, (int)(byte)144, (int)(byte)118);
+            ShorelineColorSelectionButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             ShorelineColorSelectionButton.ForeColor = SystemColors.HighlightText;
             ShorelineColorSelectionButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             ShorelineColorSelectionButton.IconColor = Color.Tan;
@@ -2826,13 +2830,13 @@
             ShorelineColorSelectionButton.TabIndex = 21;
             ShorelineColorSelectionButton.Text = "Click to Select";
             ShorelineColorSelectionButton.UseVisualStyleBackColor = false;
-            ShorelineColorSelectionButton.Click += ShorelineColorSelectionButton_Click;
+            ShorelineColorSelectionButton.Click += (this.ShorelineColorSelectionButton_Click);
             // 
             // label37
             // 
             label37.AutoSize = true;
             label37.BackColor = Color.Transparent;
-            label37.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label37.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label37.ForeColor = SystemColors.ControlDarkDark;
             label37.Location = new Point(6, 72);
             label37.Name = "label37";
@@ -2842,8 +2846,8 @@
             // 
             // WaterColorSelectionButton
             // 
-            WaterColorSelectionButton.BackColor = Color.FromArgb(168, 140, 191, 197);
-            WaterColorSelectionButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterColorSelectionButton.BackColor = Color.FromArgb((int)(byte)168, (int)(byte)140, (int)(byte)191, (int)(byte)197);
+            WaterColorSelectionButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterColorSelectionButton.ForeColor = SystemColors.HighlightText;
             WaterColorSelectionButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             WaterColorSelectionButton.IconColor = Color.Tan;
@@ -2854,13 +2858,13 @@
             WaterColorSelectionButton.TabIndex = 19;
             WaterColorSelectionButton.Text = "Click to Select";
             WaterColorSelectionButton.UseVisualStyleBackColor = false;
-            WaterColorSelectionButton.Click += WaterColorSelectionButton_Click;
+            WaterColorSelectionButton.Click += (this.WaterColorSelectionButton_Click);
             // 
             // label39
             // 
             label39.AutoSize = true;
             label39.BackColor = Color.Transparent;
-            label39.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label39.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label39.ForeColor = SystemColors.ControlDarkDark;
             label39.Location = new Point(6, 23);
             label39.Name = "label39";
@@ -2880,16 +2884,16 @@
             WaterBrushSizeTrack.TabIndex = 0;
             WaterBrushSizeTrack.TickStyle = TickStyle.None;
             WaterBrushSizeTrack.Value = 20;
-            WaterBrushSizeTrack.ValueChanged += WaterBrushSizeTrack_ValueChanged;
+            WaterBrushSizeTrack.ValueChanged += (this.WaterBrushSizeTrack_ValueChanged);
             // 
             // WaterToolStrip
             // 
             WaterToolStrip.AllowMerge = false;
-            WaterToolStrip.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            WaterToolStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
             WaterToolStrip.AutoSize = false;
             WaterToolStrip.BackColor = SystemColors.Control;
             WaterToolStrip.Dock = DockStyle.None;
-            WaterToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             WaterToolStrip.Items.AddRange(new ToolStripItem[] { WaterFeatureSelectButton, WaterFeaturePaintButton, WaterFeatureLakeButton, WaterFeatureRiverButton, WaterFeatureEraseButton });
             WaterToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
@@ -2902,7 +2906,7 @@
             // WaterFeatureSelectButton
             // 
             WaterFeatureSelectButton.AutoSize = false;
-            WaterFeatureSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterFeatureSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterFeatureSelectButton.ForeColor = SystemColors.ControlDarkDark;
             WaterFeatureSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
             WaterFeatureSelectButton.IconColor = Color.Black;
@@ -2915,7 +2919,7 @@
             WaterFeatureSelectButton.Size = new Size(60, 60);
             WaterFeatureSelectButton.Text = "Select";
             WaterFeatureSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            WaterFeatureSelectButton.Click += WaterFeatureSelectButton_Click;
+            WaterFeatureSelectButton.Click += (this.WaterFeatureSelectButton_Click);
             // 
             // WaterFeaturePaintButton
             // 
@@ -2932,7 +2936,7 @@
             WaterFeaturePaintButton.Size = new Size(60, 60);
             WaterFeaturePaintButton.Text = "Paint";
             WaterFeaturePaintButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            WaterFeaturePaintButton.Click += WaterFeaturePaintButton_Click;
+            WaterFeaturePaintButton.Click += (this.WaterFeaturePaintButton_Click);
             // 
             // WaterFeatureLakeButton
             // 
@@ -2949,7 +2953,7 @@
             WaterFeatureLakeButton.Size = new Size(60, 60);
             WaterFeatureLakeButton.Text = "Lake";
             WaterFeatureLakeButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            WaterFeatureLakeButton.Click += WaterFeatureLakeButton_Click;
+            WaterFeatureLakeButton.Click += (this.WaterFeatureLakeButton_Click);
             // 
             // WaterFeatureRiverButton
             // 
@@ -2966,7 +2970,7 @@
             WaterFeatureRiverButton.Size = new Size(60, 60);
             WaterFeatureRiverButton.Text = "River";
             WaterFeatureRiverButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            WaterFeatureRiverButton.Click += WaterFeatureRiverButton_Click;
+            WaterFeatureRiverButton.Click += (this.WaterFeatureRiverButton_Click);
             // 
             // WaterFeatureEraseButton
             // 
@@ -2983,7 +2987,7 @@
             WaterFeatureEraseButton.Size = new Size(60, 60);
             WaterFeatureEraseButton.Text = "Erase";
             WaterFeatureEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            WaterFeatureEraseButton.Click += WaterFeatureEraseButton_Click;
+            WaterFeatureEraseButton.Click += (this.WaterFeatureEraseButton_Click);
             // 
             // ShowWaterLayerSwitch
             // 
@@ -2993,19 +2997,19 @@
             ShowWaterLayerSwitch.Background_WidthPen = 2F;
             ShowWaterLayerSwitch.BackgroundPen = false;
             ShowWaterLayerSwitch.Checked = true;
-            ShowWaterLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            ShowWaterLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            ShowWaterLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            ShowWaterLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            ShowWaterLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            ShowWaterLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            ShowWaterLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            ShowWaterLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            ShowWaterLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowWaterLayerSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowWaterLayerSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowWaterLayerSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowWaterLayerSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowWaterLayerSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowWaterLayerSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowWaterLayerSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowWaterLayerSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowWaterLayerSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             ShowWaterLayerSwitch.ColorValue = Color.ForestGreen;
             ShowWaterLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             ShowWaterLayerSwitch.Font = new Font("Arial", 11F);
-            ShowWaterLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowWaterLayerSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             ShowWaterLayerSwitch.Lighting = true;
             ShowWaterLayerSwitch.LinearGradient_Background = false;
             ShowWaterLayerSwitch.LinearGradient_Value = false;
@@ -3022,7 +3026,7 @@
             ShowWaterLayerSwitch.Tag = "Cyber";
             ShowWaterLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowWaterLayerSwitch.Timer_RGB = 300;
-            ShowWaterLayerSwitch.CheckedChanged += ShowWaterLayerSwitch_CheckedChanged;
+            ShowWaterLayerSwitch.CheckedChanged += (this.ShowWaterLayerSwitch_CheckedChanged);
             // 
             // label5
             // 
@@ -3067,7 +3071,7 @@
             MapPathValuesGroup.Controls.Add(PathColorSelectButton);
             MapPathValuesGroup.Controls.Add(label46);
             MapPathValuesGroup.Controls.Add(PathWidthTrack);
-            MapPathValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            MapPathValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             MapPathValuesGroup.ForeColor = SystemColors.ControlText;
             MapPathValuesGroup.Location = new Point(6, 32);
             MapPathValuesGroup.Name = "MapPathValuesGroup";
@@ -3080,7 +3084,7 @@
             // 
             label98.AutoSize = true;
             label98.BackColor = Color.Transparent;
-            label98.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label98.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label98.ForeColor = SystemColors.ControlDarkDark;
             label98.Location = new Point(10, 470);
             label98.Name = "label98";
@@ -3098,13 +3102,13 @@
             PathTextureScaleTrack.TabIndex = 31;
             PathTextureScaleTrack.TickStyle = TickStyle.None;
             PathTextureScaleTrack.Value = 100;
-            PathTextureScaleTrack.Scroll += PathTextureScaleTrack_Scroll;
+            PathTextureScaleTrack.Scroll += (this.PathTextureScaleTrack_Scroll);
             // 
             // label99
             // 
             label99.AutoSize = true;
             label99.BackColor = Color.Transparent;
-            label99.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label99.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label99.ForeColor = SystemColors.ControlDarkDark;
             label99.Location = new Point(6, 427);
             label99.Name = "label99";
@@ -3123,13 +3127,13 @@
             PathTextureOpacityTrack.TabIndex = 29;
             PathTextureOpacityTrack.TickStyle = TickStyle.None;
             PathTextureOpacityTrack.Value = 255;
-            PathTextureOpacityTrack.Scroll += PathTextureOpacityTrack_Scroll;
+            PathTextureOpacityTrack.Scroll += (this.PathTextureOpacityTrack_Scroll);
             // 
             // label48
             // 
             label48.AutoSize = true;
             label48.BackColor = Color.Transparent;
-            label48.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label48.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label48.ForeColor = SystemColors.ControlDarkDark;
             label48.Location = new Point(6, 191);
             label48.Name = "label48";
@@ -3145,19 +3149,19 @@
             EditPathPointSwitch.Background_WidthPen = 2F;
             EditPathPointSwitch.BackgroundPen = false;
             EditPathPointSwitch.Checked = false;
-            EditPathPointSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            EditPathPointSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            EditPathPointSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            EditPathPointSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            EditPathPointSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            EditPathPointSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            EditPathPointSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            EditPathPointSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            EditPathPointSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            EditPathPointSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EditPathPointSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            EditPathPointSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            EditPathPointSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EditPathPointSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EditPathPointSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EditPathPointSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EditPathPointSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            EditPathPointSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             EditPathPointSwitch.ColorValue = Color.ForestGreen;
             EditPathPointSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             EditPathPointSwitch.Font = new Font("Arial", 11F);
-            EditPathPointSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            EditPathPointSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             EditPathPointSwitch.Lighting = true;
             EditPathPointSwitch.LinearGradient_Background = false;
             EditPathPointSwitch.LinearGradient_Value = false;
@@ -3174,13 +3178,13 @@
             EditPathPointSwitch.Tag = "Cyber";
             EditPathPointSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             EditPathPointSwitch.Timer_RGB = 300;
-            EditPathPointSwitch.CheckedChanged += EditPathPointSwitch_CheckedChanged;
+            EditPathPointSwitch.CheckedChanged += (this.EditPathPointSwitch_CheckedChanged);
             // 
             // label47
             // 
             label47.AutoSize = true;
             label47.BackColor = Color.Transparent;
-            label47.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label47.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label47.ForeColor = SystemColors.ControlDarkDark;
             label47.Location = new Point(6, 140);
             label47.Name = "label47";
@@ -3196,19 +3200,19 @@
             DrawOverSymbolsSwitch.Background_WidthPen = 2F;
             DrawOverSymbolsSwitch.BackgroundPen = false;
             DrawOverSymbolsSwitch.Checked = false;
-            DrawOverSymbolsSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            DrawOverSymbolsSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            DrawOverSymbolsSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            DrawOverSymbolsSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            DrawOverSymbolsSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            DrawOverSymbolsSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            DrawOverSymbolsSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            DrawOverSymbolsSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            DrawOverSymbolsSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            DrawOverSymbolsSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            DrawOverSymbolsSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            DrawOverSymbolsSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            DrawOverSymbolsSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            DrawOverSymbolsSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            DrawOverSymbolsSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            DrawOverSymbolsSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            DrawOverSymbolsSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            DrawOverSymbolsSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             DrawOverSymbolsSwitch.ColorValue = Color.ForestGreen;
             DrawOverSymbolsSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             DrawOverSymbolsSwitch.Font = new Font("Arial", 11F);
-            DrawOverSymbolsSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            DrawOverSymbolsSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             DrawOverSymbolsSwitch.Lighting = true;
             DrawOverSymbolsSwitch.LinearGradient_Background = false;
             DrawOverSymbolsSwitch.LinearGradient_Value = false;
@@ -3225,11 +3229,11 @@
             DrawOverSymbolsSwitch.Tag = "Cyber";
             DrawOverSymbolsSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             DrawOverSymbolsSwitch.Timer_RGB = 300;
-            DrawOverSymbolsSwitch.CheckedChanged += DrawOverSymbolsSwitch_CheckedChanged;
+            DrawOverSymbolsSwitch.CheckedChanged += (this.DrawOverSymbolsSwitch_CheckedChanged);
             // 
             // PathTextureNameLabel
             // 
-            PathTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            PathTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             PathTextureNameLabel.Location = new Point(6, 399);
             PathTextureNameLabel.Name = "PathTextureNameLabel";
             PathTextureNameLabel.Size = new Size(136, 15);
@@ -3240,7 +3244,7 @@
             // 
             label45.AutoSize = true;
             label45.BackColor = Color.Transparent;
-            label45.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label45.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label45.ForeColor = SystemColors.ControlDarkDark;
             label45.Location = new Point(6, 242);
             label45.Name = "label45";
@@ -3251,7 +3255,7 @@
             // PreviousPathTextureButton
             // 
             PreviousPathTextureButton.FlatStyle = FlatStyle.Flat;
-            PreviousPathTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            PreviousPathTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             PreviousPathTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleLeft;
             PreviousPathTextureButton.IconColor = Color.Black;
             PreviousPathTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -3262,12 +3266,12 @@
             PreviousPathTextureButton.TabIndex = 22;
             PreviousPathTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
             PreviousPathTextureButton.UseVisualStyleBackColor = true;
-            PreviousPathTextureButton.Click += PreviousPathTextureButton_Click;
+            PreviousPathTextureButton.Click += (this.PreviousPathTextureButton_Click);
             // 
             // NextPathTextureButton
             // 
             NextPathTextureButton.FlatStyle = FlatStyle.Flat;
-            NextPathTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NextPathTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             NextPathTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleRight;
             NextPathTextureButton.IconColor = Color.Black;
             NextPathTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -3278,7 +3282,7 @@
             NextPathTextureButton.TabIndex = 21;
             NextPathTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
             NextPathTextureButton.UseVisualStyleBackColor = true;
-            NextPathTextureButton.Click += NextPathTextureButton_Click;
+            NextPathTextureButton.Click += (this.NextPathTextureButton_Click);
             // 
             // PathTexturePreviewPicture
             // 
@@ -3291,8 +3295,8 @@
             // 
             // PathColorSelectButton
             // 
-            PathColorSelectButton.BackColor = Color.FromArgb(75, 49, 26);
-            PathColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            PathColorSelectButton.BackColor = Color.FromArgb((int)(byte)75, (int)(byte)49, (int)(byte)26);
+            PathColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             PathColorSelectButton.ForeColor = SystemColors.HighlightText;
             PathColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             PathColorSelectButton.IconColor = Color.Tan;
@@ -3303,13 +3307,13 @@
             PathColorSelectButton.TabIndex = 19;
             PathColorSelectButton.Text = "Click to Select";
             PathColorSelectButton.UseVisualStyleBackColor = false;
-            PathColorSelectButton.Click += PathColorSelectButton_Click;
+            PathColorSelectButton.Click += (this.PathColorSelectButton_Click);
             // 
             // label46
             // 
             label46.AutoSize = true;
             label46.BackColor = Color.Transparent;
-            label46.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label46.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label46.ForeColor = SystemColors.ControlDarkDark;
             label46.Location = new Point(6, 23);
             label46.Name = "label46";
@@ -3329,16 +3333,16 @@
             PathWidthTrack.TabIndex = 0;
             PathWidthTrack.TickStyle = TickStyle.None;
             PathWidthTrack.Value = 8;
-            PathWidthTrack.ValueChanged += PathWidthTrack_ValueChanged;
+            PathWidthTrack.ValueChanged += (this.PathWidthTrack_ValueChanged);
             // 
             // PathToolStrip
             // 
             PathToolStrip.AllowMerge = false;
-            PathToolStrip.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            PathToolStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
             PathToolStrip.AutoSize = false;
             PathToolStrip.BackColor = SystemColors.Control;
             PathToolStrip.Dock = DockStyle.None;
-            PathToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            PathToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             PathToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             PathToolStrip.Items.AddRange(new ToolStripItem[] { PathSelectButton, DrawPathButton });
             PathToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
@@ -3351,7 +3355,7 @@
             // PathSelectButton
             // 
             PathSelectButton.AutoSize = false;
-            PathSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            PathSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             PathSelectButton.ForeColor = SystemColors.ControlDarkDark;
             PathSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
             PathSelectButton.IconColor = Color.Black;
@@ -3364,7 +3368,7 @@
             PathSelectButton.Size = new Size(60, 60);
             PathSelectButton.Text = "Select";
             PathSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            PathSelectButton.Click += PathSelectButton_Click;
+            PathSelectButton.Click += (this.PathSelectButton_Click);
             // 
             // DrawPathButton
             // 
@@ -3381,7 +3385,7 @@
             DrawPathButton.Size = new Size(60, 60);
             DrawPathButton.Text = "Draw";
             DrawPathButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            DrawPathButton.Click += DrawPathButton_Click;
+            DrawPathButton.Click += (this.DrawPathButton_Click);
             // 
             // ShowPathLayerSwitch
             // 
@@ -3391,19 +3395,19 @@
             ShowPathLayerSwitch.Background_WidthPen = 2F;
             ShowPathLayerSwitch.BackgroundPen = false;
             ShowPathLayerSwitch.Checked = true;
-            ShowPathLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            ShowPathLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            ShowPathLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            ShowPathLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            ShowPathLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            ShowPathLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            ShowPathLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            ShowPathLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            ShowPathLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowPathLayerSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowPathLayerSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowPathLayerSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowPathLayerSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowPathLayerSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowPathLayerSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowPathLayerSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowPathLayerSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowPathLayerSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             ShowPathLayerSwitch.ColorValue = Color.ForestGreen;
             ShowPathLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             ShowPathLayerSwitch.Font = new Font("Arial", 11F);
-            ShowPathLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowPathLayerSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             ShowPathLayerSwitch.Lighting = true;
             ShowPathLayerSwitch.LinearGradient_Background = false;
             ShowPathLayerSwitch.LinearGradient_Value = false;
@@ -3420,7 +3424,7 @@
             ShowPathLayerSwitch.Tag = "Cyber";
             ShowPathLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowPathLayerSwitch.Timer_RGB = 300;
-            ShowPathLayerSwitch.CheckedChanged += ShowPathLayerSwitch_CheckedChanged;
+            ShowPathLayerSwitch.CheckedChanged += (this.ShowPathLayerSwitch_CheckedChanged);
             // 
             // label6
             // 
@@ -3453,7 +3457,7 @@
             // groupBox14
             // 
             groupBox14.Controls.Add(SymbolTagsListBox);
-            groupBox14.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox14.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             groupBox14.Location = new Point(7, 674);
             groupBox14.Name = "groupBox14";
             groupBox14.Size = new Size(148, 174);
@@ -3464,19 +3468,19 @@
             // SymbolTagsListBox
             // 
             SymbolTagsListBox.CheckOnClick = true;
-            SymbolTagsListBox.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolTagsListBox.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SymbolTagsListBox.ForeColor = SystemColors.ControlDarkDark;
             SymbolTagsListBox.FormattingEnabled = true;
             SymbolTagsListBox.Location = new Point(6, 28);
             SymbolTagsListBox.Name = "SymbolTagsListBox";
             SymbolTagsListBox.Size = new Size(135, 130);
             SymbolTagsListBox.TabIndex = 0;
-            SymbolTagsListBox.ItemCheck += SymbolTagsListBox_ItemCheck;
+            SymbolTagsListBox.ItemCheck += (this.SymbolTagsListBox_ItemCheck);
             // 
             // groupBox13
             // 
             groupBox13.Controls.Add(SymbolCollectionsListBox);
-            groupBox13.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox13.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             groupBox13.Location = new Point(9, 492);
             groupBox13.Name = "groupBox13";
             groupBox13.Size = new Size(148, 170);
@@ -3487,14 +3491,14 @@
             // SymbolCollectionsListBox
             // 
             SymbolCollectionsListBox.CheckOnClick = true;
-            SymbolCollectionsListBox.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolCollectionsListBox.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SymbolCollectionsListBox.ForeColor = SystemColors.ControlDarkDark;
             SymbolCollectionsListBox.FormattingEnabled = true;
             SymbolCollectionsListBox.Location = new Point(6, 28);
             SymbolCollectionsListBox.Name = "SymbolCollectionsListBox";
             SymbolCollectionsListBox.Size = new Size(135, 130);
             SymbolCollectionsListBox.TabIndex = 0;
-            SymbolCollectionsListBox.ItemCheck += SymbolCollectionsListBox_ItemCheck;
+            SymbolCollectionsListBox.ItemCheck += (this.SymbolCollectionsListBox_ItemCheck);
             // 
             // SymbolPlacementGroup
             // 
@@ -3513,7 +3517,7 @@
             SymbolPlacementGroup.Controls.Add(SymbolRotationTrack);
             SymbolPlacementGroup.Controls.Add(label44);
             SymbolPlacementGroup.Controls.Add(MirrorSymbolSwitch);
-            SymbolPlacementGroup.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SymbolPlacementGroup.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             SymbolPlacementGroup.Location = new Point(9, 234);
             SymbolPlacementGroup.Name = "SymbolPlacementGroup";
             SymbolPlacementGroup.Size = new Size(148, 246);
@@ -3523,20 +3527,20 @@
             // 
             // SymbolRotationUpDown
             // 
-            SymbolRotationUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolRotationUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SymbolRotationUpDown.Location = new Point(100, 148);
             SymbolRotationUpDown.Maximum = new decimal(new int[] { 359, 0, 0, 0 });
             SymbolRotationUpDown.Name = "SymbolRotationUpDown";
             SymbolRotationUpDown.Size = new Size(43, 23);
             SymbolRotationUpDown.TabIndex = 41;
             SymbolRotationUpDown.TextAlign = HorizontalAlignment.Center;
-            SymbolRotationUpDown.ValueChanged += SymbolRotationUpDown_ValueChanged;
+            SymbolRotationUpDown.ValueChanged += (this.SymbolRotationUpDown_ValueChanged);
             // 
             // label53
             // 
             label53.AutoSize = true;
             label53.BackColor = Color.Transparent;
-            label53.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label53.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label53.ForeColor = SystemColors.ControlDarkDark;
             label53.Location = new Point(58, 28);
             label53.Name = "label53";
@@ -3552,20 +3556,20 @@
             AreaBrushSwitch.Background_WidthPen = 2F;
             AreaBrushSwitch.BackgroundPen = false;
             AreaBrushSwitch.Checked = false;
-            AreaBrushSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            AreaBrushSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            AreaBrushSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            AreaBrushSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            AreaBrushSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            AreaBrushSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            AreaBrushSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            AreaBrushSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            AreaBrushSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            AreaBrushSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AreaBrushSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            AreaBrushSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            AreaBrushSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AreaBrushSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AreaBrushSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AreaBrushSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AreaBrushSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            AreaBrushSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             AreaBrushSwitch.ColorValue = Color.ForestGreen;
             AreaBrushSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             AreaBrushSwitch.Enabled = false;
             AreaBrushSwitch.Font = new Font("Arial", 11F);
-            AreaBrushSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            AreaBrushSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             AreaBrushSwitch.Lighting = true;
             AreaBrushSwitch.LinearGradient_Background = false;
             AreaBrushSwitch.LinearGradient_Value = false;
@@ -3582,13 +3586,13 @@
             AreaBrushSwitch.Tag = "Cyber";
             AreaBrushSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             AreaBrushSwitch.Timer_RGB = 300;
-            AreaBrushSwitch.CheckedChanged += AreaBrushSwitch_CheckedChanged;
+            AreaBrushSwitch.CheckedChanged += (this.AreaBrushSwitch_CheckedChanged);
             // 
             // label52
             // 
             label52.AutoSize = true;
             label52.BackColor = Color.Transparent;
-            label52.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label52.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label52.ForeColor = SystemColors.ControlDarkDark;
             label52.Location = new Point(6, 54);
             label52.Name = "label52";
@@ -3608,13 +3612,13 @@
             AreaBrushSizeTrack.TabIndex = 37;
             AreaBrushSizeTrack.TickStyle = TickStyle.None;
             AreaBrushSizeTrack.Value = 64;
-            AreaBrushSizeTrack.Scroll += AreaBrushSizeTrack_Scroll;
+            AreaBrushSizeTrack.Scroll += (this.AreaBrushSizeTrack_Scroll);
             // 
             // label50
             // 
             label50.AutoSize = true;
             label50.BackColor = Color.Transparent;
-            label50.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label50.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label50.ForeColor = SystemColors.ControlDarkDark;
             label50.Location = new Point(18, 210);
             label50.Name = "label50";
@@ -3635,12 +3639,12 @@
             ResetSymbolPlacementDensityButton.Size = new Size(24, 24);
             ResetSymbolPlacementDensityButton.TabIndex = 35;
             ResetSymbolPlacementDensityButton.UseVisualStyleBackColor = false;
-            ResetSymbolPlacementDensityButton.Click += ResetSymbolPlacementDensityButton_Click;
+            ResetSymbolPlacementDensityButton.Click += (this.ResetSymbolPlacementDensityButton_Click);
             // 
             // SymbolPlacementDensityUpDown
             // 
             SymbolPlacementDensityUpDown.DecimalPlaces = 2;
-            SymbolPlacementDensityUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolPlacementDensityUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SymbolPlacementDensityUpDown.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
             SymbolPlacementDensityUpDown.Location = new Point(70, 208);
             SymbolPlacementDensityUpDown.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
@@ -3650,13 +3654,13 @@
             SymbolPlacementDensityUpDown.TabIndex = 34;
             SymbolPlacementDensityUpDown.TextAlign = HorizontalAlignment.Center;
             SymbolPlacementDensityUpDown.Value = new decimal(new int[] { 10, 0, 0, 65536 });
-            SymbolPlacementDensityUpDown.ValueChanged += SymbolPlacementDensityUpDown_ValueChanged;
+            SymbolPlacementDensityUpDown.ValueChanged += (this.SymbolPlacementDensityUpDown_ValueChanged);
             // 
             // label49
             // 
             label49.AutoSize = true;
             label49.BackColor = Color.Transparent;
-            label49.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label49.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label49.ForeColor = SystemColors.ControlDarkDark;
             label49.Location = new Point(34, 182);
             label49.Name = "label49";
@@ -3677,12 +3681,12 @@
             ResetSymbolPlacementRateButton.Size = new Size(24, 24);
             ResetSymbolPlacementRateButton.TabIndex = 32;
             ResetSymbolPlacementRateButton.UseVisualStyleBackColor = false;
-            ResetSymbolPlacementRateButton.Click += ResetSymbolPlacementRateButton_Click;
+            ResetSymbolPlacementRateButton.Click += (this.ResetSymbolPlacementRateButton_Click);
             // 
             // SymbolPlacementRateUpDown
             // 
             SymbolPlacementRateUpDown.DecimalPlaces = 2;
-            SymbolPlacementRateUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolPlacementRateUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SymbolPlacementRateUpDown.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
             SymbolPlacementRateUpDown.Location = new Point(70, 177);
             SymbolPlacementRateUpDown.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
@@ -3692,13 +3696,13 @@
             SymbolPlacementRateUpDown.TabIndex = 31;
             SymbolPlacementRateUpDown.TextAlign = HorizontalAlignment.Center;
             SymbolPlacementRateUpDown.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            SymbolPlacementRateUpDown.ValueChanged += SymbolPlacementRateUpDown_ValueChanged;
+            SymbolPlacementRateUpDown.ValueChanged += (this.SymbolPlacementRateUpDown_ValueChanged);
             // 
             // label21
             // 
             label21.AutoSize = true;
             label21.BackColor = Color.Transparent;
-            label21.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label21.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label21.ForeColor = SystemColors.ControlDarkDark;
             label21.Location = new Point(6, 133);
             label21.Name = "label21";
@@ -3716,13 +3720,13 @@
             SymbolRotationTrack.Size = new Size(95, 20);
             SymbolRotationTrack.TabIndex = 29;
             SymbolRotationTrack.TickStyle = TickStyle.None;
-            SymbolRotationTrack.Scroll += SymbolRotationTrack_Scroll;
+            SymbolRotationTrack.Scroll += (this.SymbolRotationTrack_Scroll);
             // 
             // label44
             // 
             label44.AutoSize = true;
             label44.BackColor = Color.Transparent;
-            label44.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label44.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label44.ForeColor = SystemColors.ControlDarkDark;
             label44.Location = new Point(51, 103);
             label44.Name = "label44";
@@ -3738,19 +3742,19 @@
             MirrorSymbolSwitch.Background_WidthPen = 2F;
             MirrorSymbolSwitch.BackgroundPen = false;
             MirrorSymbolSwitch.Checked = false;
-            MirrorSymbolSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            MirrorSymbolSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            MirrorSymbolSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            MirrorSymbolSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            MirrorSymbolSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            MirrorSymbolSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            MirrorSymbolSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            MirrorSymbolSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            MirrorSymbolSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            MirrorSymbolSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorSymbolSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            MirrorSymbolSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            MirrorSymbolSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorSymbolSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorSymbolSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorSymbolSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MirrorSymbolSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            MirrorSymbolSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             MirrorSymbolSwitch.ColorValue = Color.ForestGreen;
             MirrorSymbolSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             MirrorSymbolSwitch.Font = new Font("Arial", 11F);
-            MirrorSymbolSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            MirrorSymbolSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             MirrorSymbolSwitch.Lighting = true;
             MirrorSymbolSwitch.LinearGradient_Background = false;
             MirrorSymbolSwitch.LinearGradient_Value = false;
@@ -3775,7 +3779,7 @@
             SymbolColorGroup.Controls.Add(SymbolColor3Button);
             SymbolColorGroup.Controls.Add(SymbolColor2Button);
             SymbolColorGroup.Controls.Add(SymbolColor1Button);
-            SymbolColorGroup.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SymbolColorGroup.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             SymbolColorGroup.Location = new Point(7, 116);
             SymbolColorGroup.Name = "SymbolColorGroup";
             SymbolColorGroup.Size = new Size(148, 116);
@@ -3786,7 +3790,7 @@
             // RandomizeColorCheck
             // 
             RandomizeColorCheck.AutoSize = true;
-            RandomizeColorCheck.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            RandomizeColorCheck.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             RandomizeColorCheck.ForeColor = SystemColors.ControlDarkDark;
             RandomizeColorCheck.Location = new Point(6, 33);
             RandomizeColorCheck.Name = "RandomizeColorCheck";
@@ -3808,13 +3812,13 @@
             ResetSymbolColorsButton.Size = new Size(24, 24);
             ResetSymbolColorsButton.TabIndex = 29;
             ResetSymbolColorsButton.UseVisualStyleBackColor = false;
-            ResetSymbolColorsButton.Click += ResetSymbolColorsButton_Click;
+            ResetSymbolColorsButton.Click += (this.ResetSymbolColorsButton_Click);
             // 
             // SymbolColor3Button
             // 
-            SymbolColor3Button.BackColor = Color.FromArgb(161, 214, 202, 171);
+            SymbolColor3Button.BackColor = Color.FromArgb((int)(byte)161, (int)(byte)214, (int)(byte)202, (int)(byte)171);
             SymbolColor3Button.FlatStyle = FlatStyle.Flat;
-            SymbolColor3Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolColor3Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SymbolColor3Button.ForeColor = SystemColors.HighlightText;
             SymbolColor3Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
             SymbolColor3Button.IconColor = Color.Tan;
@@ -3826,13 +3830,13 @@
             SymbolColor3Button.Size = new Size(46, 46);
             SymbolColor3Button.TabIndex = 27;
             SymbolColor3Button.UseVisualStyleBackColor = false;
-            SymbolColor3Button.MouseUp += SymbolColor3Button_MouseUp;
+            SymbolColor3Button.MouseUp += (this.SymbolColor3Button_MouseUp);
             // 
             // SymbolColor2Button
             // 
-            SymbolColor2Button.BackColor = Color.FromArgb(53, 45, 32);
+            SymbolColor2Button.BackColor = Color.FromArgb((int)(byte)53, (int)(byte)45, (int)(byte)32);
             SymbolColor2Button.FlatStyle = FlatStyle.Flat;
-            SymbolColor2Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolColor2Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SymbolColor2Button.ForeColor = SystemColors.HighlightText;
             SymbolColor2Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
             SymbolColor2Button.IconColor = Color.Tan;
@@ -3844,13 +3848,13 @@
             SymbolColor2Button.Size = new Size(46, 46);
             SymbolColor2Button.TabIndex = 26;
             SymbolColor2Button.UseVisualStyleBackColor = false;
-            SymbolColor2Button.MouseUp += SymbolColor2Button_MouseUp;
+            SymbolColor2Button.MouseUp += (this.SymbolColor2Button_MouseUp);
             // 
             // SymbolColor1Button
             // 
-            SymbolColor1Button.BackColor = Color.FromArgb(85, 44, 36);
+            SymbolColor1Button.BackColor = Color.FromArgb((int)(byte)85, (int)(byte)44, (int)(byte)36);
             SymbolColor1Button.FlatStyle = FlatStyle.Flat;
-            SymbolColor1Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolColor1Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SymbolColor1Button.ForeColor = SystemColors.HighlightText;
             SymbolColor1Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
             SymbolColor1Button.IconColor = Color.Tan;
@@ -3862,14 +3866,14 @@
             SymbolColor1Button.Size = new Size(46, 46);
             SymbolColor1Button.TabIndex = 25;
             SymbolColor1Button.UseVisualStyleBackColor = false;
-            SymbolColor1Button.MouseUp += SymbolColor1Button_MouseUp;
+            SymbolColor1Button.MouseUp += (this.SymbolColor1Button_MouseUp);
             // 
             // SymbolScaleGroup
             // 
             SymbolScaleGroup.Controls.Add(SymbolScaleUpDown);
             SymbolScaleGroup.Controls.Add(LockSymbolScaleButton);
             SymbolScaleGroup.Controls.Add(SymbolScaleTrack);
-            SymbolScaleGroup.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SymbolScaleGroup.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             SymbolScaleGroup.Location = new Point(6, 32);
             SymbolScaleGroup.Name = "SymbolScaleGroup";
             SymbolScaleGroup.Size = new Size(148, 75);
@@ -3879,7 +3883,7 @@
             // 
             // SymbolScaleUpDown
             // 
-            SymbolScaleUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolScaleUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SymbolScaleUpDown.Location = new Point(100, 43);
             SymbolScaleUpDown.Maximum = new decimal(new int[] { 200, 0, 0, 0 });
             SymbolScaleUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -3888,7 +3892,7 @@
             SymbolScaleUpDown.TabIndex = 6;
             SymbolScaleUpDown.TextAlign = HorizontalAlignment.Center;
             SymbolScaleUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
-            SymbolScaleUpDown.ValueChanged += SymbolScaleUpDown_ValueChanged;
+            SymbolScaleUpDown.ValueChanged += (this.SymbolScaleUpDown_ValueChanged);
             // 
             // LockSymbolScaleButton
             // 
@@ -3903,7 +3907,7 @@
             LockSymbolScaleButton.Size = new Size(24, 24);
             LockSymbolScaleButton.TabIndex = 5;
             LockSymbolScaleButton.UseVisualStyleBackColor = true;
-            LockSymbolScaleButton.Click += LockSymbolScaleButton_Click;
+            LockSymbolScaleButton.Click += (this.LockSymbolScaleButton_Click);
             // 
             // SymbolScaleTrack
             // 
@@ -3917,16 +3921,16 @@
             SymbolScaleTrack.TabIndex = 1;
             SymbolScaleTrack.TickStyle = TickStyle.None;
             SymbolScaleTrack.Value = 100;
-            SymbolScaleTrack.Scroll += SymbolScaleTrack_Scroll;
+            SymbolScaleTrack.Scroll += (this.SymbolScaleTrack_Scroll);
             // 
             // SymbolToolStrip
             // 
             SymbolToolStrip.AllowMerge = false;
-            SymbolToolStrip.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            SymbolToolStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
             SymbolToolStrip.AutoSize = false;
             SymbolToolStrip.BackColor = SystemColors.Control;
             SymbolToolStrip.Dock = DockStyle.None;
-            SymbolToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SymbolToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             SymbolToolStrip.Items.AddRange(new ToolStripItem[] { SymbolSelectButton, EraseSymbolsButton, ColorSymbolsButton, toolStripSeparator4, StructuresSymbolButton, VegetationSymbolsButton, TerrainSymbolsButton, MarkerSymbolsButton, OtherSymbolsButton });
             SymbolToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
@@ -3939,7 +3943,7 @@
             // SymbolSelectButton
             // 
             SymbolSelectButton.AutoSize = false;
-            SymbolSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SymbolSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SymbolSelectButton.ForeColor = SystemColors.ControlDarkDark;
             SymbolSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
             SymbolSelectButton.IconColor = Color.Black;
@@ -3952,7 +3956,7 @@
             SymbolSelectButton.Size = new Size(60, 60);
             SymbolSelectButton.Text = "Select";
             SymbolSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            SymbolSelectButton.Click += SymbolSelectButton_Click;
+            SymbolSelectButton.Click += (this.SymbolSelectButton_Click);
             // 
             // EraseSymbolsButton
             // 
@@ -3968,7 +3972,7 @@
             EraseSymbolsButton.Size = new Size(60, 60);
             EraseSymbolsButton.Text = "Erase";
             EraseSymbolsButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            EraseSymbolsButton.Click += EraseSymbolsButton_Click;
+            EraseSymbolsButton.Click += (this.EraseSymbolsButton_Click);
             // 
             // ColorSymbolsButton
             // 
@@ -3985,7 +3989,7 @@
             ColorSymbolsButton.Size = new Size(60, 60);
             ColorSymbolsButton.Text = "Paint";
             ColorSymbolsButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            ColorSymbolsButton.Click += ColorSymbolsButton_Click;
+            ColorSymbolsButton.Click += (this.ColorSymbolsButton_Click);
             // 
             // toolStripSeparator4
             // 
@@ -3997,7 +4001,7 @@
             // 
             StructuresSymbolButton.AutoSize = false;
             StructuresSymbolButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            StructuresSymbolButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            StructuresSymbolButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             StructuresSymbolButton.ForeColor = SystemColors.ControlDarkDark;
             StructuresSymbolButton.IconChar = FontAwesome.Sharp.IconChar.FortAwesome;
             StructuresSymbolButton.IconColor = Color.Black;
@@ -4011,13 +4015,13 @@
             StructuresSymbolButton.Text = "Structures";
             StructuresSymbolButton.TextImageRelation = TextImageRelation.TextAboveImage;
             StructuresSymbolButton.ToolTipText = "Structures Symbols";
-            StructuresSymbolButton.Click += StructuresSymbolButton_Click;
+            StructuresSymbolButton.Click += (this.StructuresSymbolButton_Click);
             // 
             // VegetationSymbolsButton
             // 
             VegetationSymbolsButton.AutoSize = false;
             VegetationSymbolsButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            VegetationSymbolsButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            VegetationSymbolsButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             VegetationSymbolsButton.ForeColor = SystemColors.ControlDarkDark;
             VegetationSymbolsButton.IconChar = FontAwesome.Sharp.IconChar.Tree;
             VegetationSymbolsButton.IconColor = Color.Black;
@@ -4029,7 +4033,7 @@
             VegetationSymbolsButton.Name = "VegetationSymbolsButton";
             VegetationSymbolsButton.Size = new Size(60, 60);
             VegetationSymbolsButton.ToolTipText = "Trees and Vegetation Symbols";
-            VegetationSymbolsButton.Click += VegetationSymbolsButton_Click;
+            VegetationSymbolsButton.Click += (this.VegetationSymbolsButton_Click);
             // 
             // TerrainSymbolsButton
             // 
@@ -4045,7 +4049,7 @@
             TerrainSymbolsButton.Name = "TerrainSymbolsButton";
             TerrainSymbolsButton.Size = new Size(60, 60);
             TerrainSymbolsButton.ToolTipText = "Mountains and Terrain Symbols";
-            TerrainSymbolsButton.Click += TerrainSymbolsButton_Click;
+            TerrainSymbolsButton.Click += (this.TerrainSymbolsButton_Click);
             // 
             // MarkerSymbolsButton
             // 
@@ -4060,7 +4064,7 @@
             MarkerSymbolsButton.Name = "MarkerSymbolsButton";
             MarkerSymbolsButton.Size = new Size(70, 40);
             MarkerSymbolsButton.TextImageRelation = TextImageRelation.Overlay;
-            MarkerSymbolsButton.Click += MarkerSymbolsButton_Click;
+            MarkerSymbolsButton.Click += (this.MarkerSymbolsButton_Click);
             // 
             // OtherSymbolsButton
             // 
@@ -4076,7 +4080,7 @@
             OtherSymbolsButton.Name = "OtherSymbolsButton";
             OtherSymbolsButton.Size = new Size(60, 60);
             OtherSymbolsButton.ToolTipText = "Other Symbols";
-            OtherSymbolsButton.Click += OtherSymbolsButton_Click;
+            OtherSymbolsButton.Click += (this.OtherSymbolsButton_Click);
             // 
             // ShowSymbolLayerSwitch
             // 
@@ -4086,19 +4090,19 @@
             ShowSymbolLayerSwitch.Background_WidthPen = 2F;
             ShowSymbolLayerSwitch.BackgroundPen = false;
             ShowSymbolLayerSwitch.Checked = true;
-            ShowSymbolLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            ShowSymbolLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            ShowSymbolLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            ShowSymbolLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            ShowSymbolLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            ShowSymbolLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            ShowSymbolLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            ShowSymbolLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            ShowSymbolLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowSymbolLayerSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowSymbolLayerSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowSymbolLayerSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowSymbolLayerSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowSymbolLayerSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowSymbolLayerSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowSymbolLayerSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowSymbolLayerSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowSymbolLayerSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             ShowSymbolLayerSwitch.ColorValue = Color.ForestGreen;
             ShowSymbolLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             ShowSymbolLayerSwitch.Font = new Font("Arial", 11F);
-            ShowSymbolLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowSymbolLayerSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             ShowSymbolLayerSwitch.Lighting = true;
             ShowSymbolLayerSwitch.LinearGradient_Background = false;
             ShowSymbolLayerSwitch.LinearGradient_Value = false;
@@ -4115,7 +4119,7 @@
             ShowSymbolLayerSwitch.Tag = "Cyber";
             ShowSymbolLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowSymbolLayerSwitch.Timer_RGB = 300;
-            ShowSymbolLayerSwitch.CheckedChanged += ShowSymbolLayerSwitch_CheckedChanged;
+            ShowSymbolLayerSwitch.CheckedChanged += (this.ShowSymbolLayerSwitch_CheckedChanged);
             // 
             // label7
             // 
@@ -4150,7 +4154,7 @@
             // 
             LabelPathGroup.Controls.Add(BezierTextPathButton);
             LabelPathGroup.Controls.Add(CircleTextPathButton);
-            LabelPathGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LabelPathGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             LabelPathGroup.Location = new Point(7, 733);
             LabelPathGroup.Name = "LabelPathGroup";
             LabelPathGroup.Size = new Size(148, 106);
@@ -4163,7 +4167,7 @@
             BezierTextPathButton.BackColor = SystemColors.ControlLightLight;
             BezierTextPathButton.FlatAppearance.BorderColor = Color.LightGray;
             BezierTextPathButton.FlatStyle = FlatStyle.Flat;
-            BezierTextPathButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            BezierTextPathButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             BezierTextPathButton.ForeColor = SystemColors.ControlDarkDark;
             BezierTextPathButton.IconChar = FontAwesome.Sharp.IconChar.BezierCurve;
             BezierTextPathButton.IconColor = Color.Black;
@@ -4176,14 +4180,14 @@
             BezierTextPathButton.Text = "Curve";
             BezierTextPathButton.TextImageRelation = TextImageRelation.TextAboveImage;
             BezierTextPathButton.UseVisualStyleBackColor = false;
-            BezierTextPathButton.Click += BezierTextPathButton_Click;
+            BezierTextPathButton.Click += (this.BezierTextPathButton_Click);
             // 
             // CircleTextPathButton
             // 
             CircleTextPathButton.BackColor = SystemColors.ControlLightLight;
             CircleTextPathButton.FlatAppearance.BorderColor = Color.LightGray;
             CircleTextPathButton.FlatStyle = FlatStyle.Flat;
-            CircleTextPathButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            CircleTextPathButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             CircleTextPathButton.ForeColor = SystemColors.ControlDarkDark;
             CircleTextPathButton.IconChar = FontAwesome.Sharp.IconChar.Circle;
             CircleTextPathButton.IconColor = Color.Black;
@@ -4196,13 +4200,13 @@
             CircleTextPathButton.Text = "Arc";
             CircleTextPathButton.TextImageRelation = TextImageRelation.TextAboveImage;
             CircleTextPathButton.UseVisualStyleBackColor = false;
-            CircleTextPathButton.Click += CircleTextPathButton_Click;
+            CircleTextPathButton.Click += (this.CircleTextPathButton_Click);
             // 
             // LabelRotationGroup
             // 
             LabelRotationGroup.Controls.Add(LabelRotationUpDown);
             LabelRotationGroup.Controls.Add(LabelRotationTrack);
-            LabelRotationGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LabelRotationGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             LabelRotationGroup.Location = new Point(6, 663);
             LabelRotationGroup.Name = "LabelRotationGroup";
             LabelRotationGroup.Size = new Size(148, 60);
@@ -4212,14 +4216,14 @@
             // 
             // LabelRotationUpDown
             // 
-            LabelRotationUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LabelRotationUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LabelRotationUpDown.Location = new Point(96, 23);
             LabelRotationUpDown.Maximum = new decimal(new int[] { 359, 0, 0, 0 });
             LabelRotationUpDown.Name = "LabelRotationUpDown";
             LabelRotationUpDown.Size = new Size(43, 23);
             LabelRotationUpDown.TabIndex = 31;
             LabelRotationUpDown.TextAlign = HorizontalAlignment.Center;
-            LabelRotationUpDown.ValueChanged += LabelRotationUpDown_ValueChanged;
+            LabelRotationUpDown.ValueChanged += (this.LabelRotationUpDown_ValueChanged);
             // 
             // LabelRotationTrack
             // 
@@ -4232,14 +4236,14 @@
             LabelRotationTrack.TabIndex = 30;
             LabelRotationTrack.TickFrequency = 0;
             LabelRotationTrack.TickStyle = TickStyle.None;
-            LabelRotationTrack.Scroll += LabelRotationTrack_Scroll;
+            LabelRotationTrack.Scroll += (this.LabelRotationTrack_Scroll);
             // 
             // LabelGlowGroup
             // 
             LabelGlowGroup.Controls.Add(label56);
             LabelGlowGroup.Controls.Add(GlowStrengthTrack);
             LabelGlowGroup.Controls.Add(GlowColorSelectButton);
-            LabelGlowGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LabelGlowGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             LabelGlowGroup.Location = new Point(7, 528);
             LabelGlowGroup.Name = "LabelGlowGroup";
             LabelGlowGroup.Size = new Size(148, 124);
@@ -4251,7 +4255,7 @@
             // 
             label56.AutoSize = true;
             label56.BackColor = Color.Transparent;
-            label56.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label56.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label56.ForeColor = SystemColors.ControlDarkDark;
             label56.Location = new Point(0, 92);
             label56.Name = "label56";
@@ -4269,12 +4273,12 @@
             GlowStrengthTrack.Size = new Size(91, 20);
             GlowStrengthTrack.TabIndex = 30;
             GlowStrengthTrack.TickStyle = TickStyle.None;
-            GlowStrengthTrack.ValueChanged += GlowWidthTrack_ValueChanged;
+            GlowStrengthTrack.ValueChanged += (this.GlowWidthTrack_ValueChanged);
             // 
             // GlowColorSelectButton
             // 
             GlowColorSelectButton.BackColor = Color.White;
-            GlowColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            GlowColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             GlowColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
             GlowColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             GlowColorSelectButton.IconColor = Color.Tan;
@@ -4285,14 +4289,14 @@
             GlowColorSelectButton.TabIndex = 20;
             GlowColorSelectButton.Text = "Select Color";
             GlowColorSelectButton.UseVisualStyleBackColor = false;
-            GlowColorSelectButton.Click += GlowColorSelectButton_Click;
+            GlowColorSelectButton.Click += (this.GlowColorSelectButton_Click);
             // 
             // LabelOutlineGroup
             // 
             LabelOutlineGroup.Controls.Add(label55);
             LabelOutlineGroup.Controls.Add(OutlineWidthTrack);
             LabelOutlineGroup.Controls.Add(OutlineColorSelectButton);
-            LabelOutlineGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LabelOutlineGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             LabelOutlineGroup.Location = new Point(7, 395);
             LabelOutlineGroup.Name = "LabelOutlineGroup";
             LabelOutlineGroup.Size = new Size(148, 124);
@@ -4304,7 +4308,7 @@
             // 
             label55.AutoSize = true;
             label55.BackColor = Color.Transparent;
-            label55.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label55.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label55.ForeColor = SystemColors.ControlDarkDark;
             label55.Location = new Point(12, 94);
             label55.Name = "label55";
@@ -4322,12 +4326,12 @@
             OutlineWidthTrack.Size = new Size(91, 20);
             OutlineWidthTrack.TabIndex = 30;
             OutlineWidthTrack.TickStyle = TickStyle.None;
-            OutlineWidthTrack.ValueChanged += OutlineWidthTrack_ValueChanged;
+            OutlineWidthTrack.ValueChanged += (this.OutlineWidthTrack_ValueChanged);
             // 
             // OutlineColorSelectButton
             // 
-            OutlineColorSelectButton.BackColor = Color.FromArgb(161, 214, 202, 171);
-            OutlineColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OutlineColorSelectButton.BackColor = Color.FromArgb((int)(byte)161, (int)(byte)214, (int)(byte)202, (int)(byte)171);
+            OutlineColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OutlineColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
             OutlineColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             OutlineColorSelectButton.IconColor = Color.Tan;
@@ -4338,13 +4342,13 @@
             OutlineColorSelectButton.TabIndex = 20;
             OutlineColorSelectButton.Text = "Select Color";
             OutlineColorSelectButton.UseVisualStyleBackColor = false;
-            OutlineColorSelectButton.Click += OutlineColorSelectButton_Click;
+            OutlineColorSelectButton.Click += (this.OutlineColorSelectButton_Click);
             // 
             // LabelFontGroup
             // 
             LabelFontGroup.Controls.Add(SelectLabelFontButton);
             LabelFontGroup.Controls.Add(FontColorSelectButton);
-            LabelFontGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LabelFontGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             LabelFontGroup.Location = new Point(7, 214);
             LabelFontGroup.Name = "LabelFontGroup";
             LabelFontGroup.Size = new Size(148, 169);
@@ -4355,7 +4359,7 @@
             // SelectLabelFontButton
             // 
             SelectLabelFontButton.BackColor = SystemColors.ControlLightLight;
-            SelectLabelFontButton.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SelectLabelFontButton.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SelectLabelFontButton.ForeColor = SystemColors.ControlDarkDark;
             SelectLabelFontButton.IconChar = FontAwesome.Sharp.IconChar.Font;
             SelectLabelFontButton.IconColor = Color.Tan;
@@ -4366,12 +4370,12 @@
             SelectLabelFontButton.TabIndex = 21;
             SelectLabelFontButton.Text = "Select Font";
             SelectLabelFontButton.UseVisualStyleBackColor = false;
-            SelectLabelFontButton.Click += SelectLabelFontButton_Click;
+            SelectLabelFontButton.Click += (this.SelectLabelFontButton_Click);
             // 
             // FontColorSelectButton
             // 
-            FontColorSelectButton.BackColor = Color.FromArgb(61, 53, 30);
-            FontColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FontColorSelectButton.BackColor = Color.FromArgb((int)(byte)61, (int)(byte)53, (int)(byte)30);
+            FontColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             FontColorSelectButton.ForeColor = SystemColors.HighlightText;
             FontColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             FontColorSelectButton.IconColor = Color.Tan;
@@ -4382,7 +4386,7 @@
             FontColorSelectButton.TabIndex = 20;
             FontColorSelectButton.Text = "Select Color";
             FontColorSelectButton.UseVisualStyleBackColor = false;
-            FontColorSelectButton.Click += FontColorSelectButton_Click;
+            FontColorSelectButton.Click += (this.FontColorSelectButton_Click);
             // 
             // LabelPresetGroup
             // 
@@ -4390,7 +4394,7 @@
             LabelPresetGroup.Controls.Add(AddPresetButton);
             LabelPresetGroup.Controls.Add(label54);
             LabelPresetGroup.Controls.Add(LabelPresetsListBox);
-            LabelPresetGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LabelPresetGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             LabelPresetGroup.Location = new Point(6, 32);
             LabelPresetGroup.Name = "LabelPresetGroup";
             LabelPresetGroup.Size = new Size(148, 169);
@@ -4403,7 +4407,7 @@
             RemovePresetButton.BackColor = SystemColors.ControlLightLight;
             RemovePresetButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
             RemovePresetButton.FlatStyle = FlatStyle.Flat;
-            RemovePresetButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            RemovePresetButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             RemovePresetButton.ForeColor = SystemColors.HighlightText;
             RemovePresetButton.IconChar = FontAwesome.Sharp.IconChar.Subtract;
             RemovePresetButton.IconColor = SystemColors.ControlDarkDark;
@@ -4415,14 +4419,14 @@
             RemovePresetButton.Size = new Size(46, 46);
             RemovePresetButton.TabIndex = 31;
             RemovePresetButton.UseVisualStyleBackColor = false;
-            RemovePresetButton.Click += RemovePresetButton_Click;
+            RemovePresetButton.Click += (this.RemovePresetButton_Click);
             // 
             // AddPresetButton
             // 
             AddPresetButton.BackColor = SystemColors.ControlLightLight;
             AddPresetButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
             AddPresetButton.FlatStyle = FlatStyle.Flat;
-            AddPresetButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            AddPresetButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             AddPresetButton.ForeColor = SystemColors.HighlightText;
             AddPresetButton.IconChar = FontAwesome.Sharp.IconChar.Add;
             AddPresetButton.IconColor = SystemColors.ControlDarkDark;
@@ -4434,11 +4438,11 @@
             AddPresetButton.Size = new Size(46, 46);
             AddPresetButton.TabIndex = 30;
             AddPresetButton.UseVisualStyleBackColor = false;
-            AddPresetButton.Click += AddPresetButton_Click;
+            AddPresetButton.Click += (this.AddPresetButton_Click);
             // 
             // label54
             // 
-            label54.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label54.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label54.Location = new Point(6, 397);
             label54.Name = "label54";
             label54.Size = new Size(136, 15);
@@ -4448,23 +4452,23 @@
             // LabelPresetsListBox
             // 
             LabelPresetsListBox.DisplayMember = "LabelPresetName";
-            LabelPresetsListBox.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LabelPresetsListBox.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LabelPresetsListBox.ItemHeight = 15;
             LabelPresetsListBox.Location = new Point(6, 26);
             LabelPresetsListBox.Name = "LabelPresetsListBox";
             LabelPresetsListBox.Size = new Size(136, 79);
             LabelPresetsListBox.TabIndex = 23;
             LabelPresetsListBox.ValueMember = "LabelPresetName";
-            LabelPresetsListBox.SelectedIndexChanged += LabelPresetsListBox_SelectedIndexChanged;
+            LabelPresetsListBox.SelectedIndexChanged += (this.LabelPresetsListBox_SelectedIndexChanged);
             // 
             // LabelToolStrip
             // 
             LabelToolStrip.AllowMerge = false;
-            LabelToolStrip.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            LabelToolStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
             LabelToolStrip.AutoSize = false;
             LabelToolStrip.BackColor = SystemColors.Control;
             LabelToolStrip.Dock = DockStyle.None;
-            LabelToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LabelToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LabelToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             LabelToolStrip.Items.AddRange(new ToolStripItem[] { LabelSelectButton, PlaceLabelButton, CreateBoxButton, GenerateNameButton });
             LabelToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
@@ -4477,7 +4481,7 @@
             // LabelSelectButton
             // 
             LabelSelectButton.AutoSize = false;
-            LabelSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LabelSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LabelSelectButton.ForeColor = SystemColors.ControlDarkDark;
             LabelSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
             LabelSelectButton.IconColor = Color.Black;
@@ -4490,7 +4494,7 @@
             LabelSelectButton.Size = new Size(60, 60);
             LabelSelectButton.Text = "Select";
             LabelSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            LabelSelectButton.Click += LabelSelectButton_Click;
+            LabelSelectButton.Click += (this.LabelSelectButton_Click);
             // 
             // PlaceLabelButton
             // 
@@ -4507,7 +4511,7 @@
             PlaceLabelButton.Size = new Size(60, 60);
             PlaceLabelButton.Text = "Label";
             PlaceLabelButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            PlaceLabelButton.Click += PlaceLabelButton_Click;
+            PlaceLabelButton.Click += (this.PlaceLabelButton_Click);
             // 
             // CreateBoxButton
             // 
@@ -4525,7 +4529,7 @@
             CreateBoxButton.Text = "Box";
             CreateBoxButton.TextImageRelation = TextImageRelation.TextAboveImage;
             CreateBoxButton.ToolTipText = "Create Box";
-            CreateBoxButton.Click += CreateBoxButton_Click;
+            CreateBoxButton.Click += (this.CreateBoxButton_Click);
             // 
             // GenerateNameButton
             // 
@@ -4542,7 +4546,7 @@
             GenerateNameButton.Size = new Size(60, 60);
             GenerateNameButton.Text = "Name";
             GenerateNameButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            GenerateNameButton.Click += GenerateNameButton_Click;
+            GenerateNameButton.Click += (this.GenerateNameButton_Click);
             // 
             // ShowLabelLayerSwitch
             // 
@@ -4552,19 +4556,19 @@
             ShowLabelLayerSwitch.Background_WidthPen = 2F;
             ShowLabelLayerSwitch.BackgroundPen = false;
             ShowLabelLayerSwitch.Checked = true;
-            ShowLabelLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            ShowLabelLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            ShowLabelLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            ShowLabelLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            ShowLabelLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            ShowLabelLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            ShowLabelLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            ShowLabelLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            ShowLabelLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowLabelLayerSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowLabelLayerSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowLabelLayerSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowLabelLayerSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowLabelLayerSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowLabelLayerSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowLabelLayerSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowLabelLayerSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowLabelLayerSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             ShowLabelLayerSwitch.ColorValue = Color.ForestGreen;
             ShowLabelLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             ShowLabelLayerSwitch.Font = new Font("Arial", 11F);
-            ShowLabelLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowLabelLayerSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             ShowLabelLayerSwitch.Lighting = true;
             ShowLabelLayerSwitch.LinearGradient_Background = false;
             ShowLabelLayerSwitch.LinearGradient_Value = false;
@@ -4581,7 +4585,7 @@
             ShowLabelLayerSwitch.Tag = "Cyber";
             ShowLabelLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowLabelLayerSwitch.Timer_RGB = 300;
-            ShowLabelLayerSwitch.CheckedChanged += ShowLabelLayerSwitch_CheckedChanged;
+            ShowLabelLayerSwitch.CheckedChanged += (this.ShowLabelLayerSwitch_CheckedChanged);
             // 
             // label8
             // 
@@ -4617,7 +4621,7 @@
             MeasureValuesGroup.Controls.Add(label70);
             MeasureValuesGroup.Controls.Add(UseScaleUnitsSwitch);
             MeasureValuesGroup.Controls.Add(SelectMeasureColorButton);
-            MeasureValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            MeasureValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             MeasureValuesGroup.Location = new Point(12, 664);
             MeasureValuesGroup.Name = "MeasureValuesGroup";
             MeasureValuesGroup.Size = new Size(148, 202);
@@ -4627,7 +4631,7 @@
             // 
             // ClearMeasureButton
             // 
-            ClearMeasureButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ClearMeasureButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             ClearMeasureButton.ForeColor = SystemColors.ControlDarkDark;
             ClearMeasureButton.IconChar = FontAwesome.Sharp.IconChar.Close;
             ClearMeasureButton.IconColor = Color.Black;
@@ -4640,12 +4644,12 @@
             ClearMeasureButton.Text = "Clear";
             ClearMeasureButton.TextImageRelation = TextImageRelation.ImageBeforeText;
             ClearMeasureButton.UseVisualStyleBackColor = true;
-            ClearMeasureButton.Click += ClearMeasureButton_Click;
+            ClearMeasureButton.Click += (this.ClearMeasureButton_Click);
             // 
             // label71
             // 
             label71.AutoSize = true;
-            label71.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label71.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label71.ForeColor = SystemColors.ControlDarkDark;
             label71.Location = new Point(47, 126);
             label71.Name = "label71";
@@ -4661,19 +4665,19 @@
             MeasureAreaSwitch.Background_WidthPen = 2F;
             MeasureAreaSwitch.BackgroundPen = false;
             MeasureAreaSwitch.Checked = false;
-            MeasureAreaSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            MeasureAreaSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            MeasureAreaSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            MeasureAreaSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            MeasureAreaSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            MeasureAreaSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            MeasureAreaSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            MeasureAreaSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            MeasureAreaSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            MeasureAreaSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MeasureAreaSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            MeasureAreaSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            MeasureAreaSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MeasureAreaSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MeasureAreaSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MeasureAreaSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            MeasureAreaSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            MeasureAreaSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             MeasureAreaSwitch.ColorValue = Color.ForestGreen;
             MeasureAreaSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             MeasureAreaSwitch.Font = new Font("Arial", 11F);
-            MeasureAreaSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            MeasureAreaSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             MeasureAreaSwitch.Lighting = true;
             MeasureAreaSwitch.LinearGradient_Background = false;
             MeasureAreaSwitch.LinearGradient_Value = false;
@@ -4690,12 +4694,12 @@
             MeasureAreaSwitch.Tag = "Cyber";
             MeasureAreaSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             MeasureAreaSwitch.Timer_RGB = 300;
-            MeasureAreaSwitch.CheckedChanged += MeasureAreaSwitch_CheckedChanged;
+            MeasureAreaSwitch.CheckedChanged += (this.MeasureAreaSwitch_CheckedChanged);
             // 
             // label70
             // 
             label70.AutoSize = true;
-            label70.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label70.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label70.ForeColor = SystemColors.ControlDarkDark;
             label70.Location = new Point(47, 97);
             label70.Name = "label70";
@@ -4711,19 +4715,19 @@
             UseScaleUnitsSwitch.Background_WidthPen = 2F;
             UseScaleUnitsSwitch.BackgroundPen = false;
             UseScaleUnitsSwitch.Checked = true;
-            UseScaleUnitsSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            UseScaleUnitsSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            UseScaleUnitsSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            UseScaleUnitsSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            UseScaleUnitsSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            UseScaleUnitsSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            UseScaleUnitsSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            UseScaleUnitsSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            UseScaleUnitsSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            UseScaleUnitsSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            UseScaleUnitsSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            UseScaleUnitsSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            UseScaleUnitsSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            UseScaleUnitsSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            UseScaleUnitsSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            UseScaleUnitsSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            UseScaleUnitsSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            UseScaleUnitsSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             UseScaleUnitsSwitch.ColorValue = Color.ForestGreen;
             UseScaleUnitsSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             UseScaleUnitsSwitch.Font = new Font("Arial", 11F);
-            UseScaleUnitsSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            UseScaleUnitsSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             UseScaleUnitsSwitch.Lighting = true;
             UseScaleUnitsSwitch.LinearGradient_Background = false;
             UseScaleUnitsSwitch.LinearGradient_Value = false;
@@ -4740,12 +4744,12 @@
             UseScaleUnitsSwitch.Tag = "Cyber";
             UseScaleUnitsSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             UseScaleUnitsSwitch.Timer_RGB = 300;
-            UseScaleUnitsSwitch.CheckedChanged += UseScaleUnitsSwitch_CheckedChanged;
+            UseScaleUnitsSwitch.CheckedChanged += (this.UseScaleUnitsSwitch_CheckedChanged);
             // 
             // SelectMeasureColorButton
             // 
-            SelectMeasureColorButton.BackColor = Color.FromArgb(191, 138, 26, 0);
-            SelectMeasureColorButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SelectMeasureColorButton.BackColor = Color.FromArgb((int)(byte)191, (int)(byte)138, (int)(byte)26, (int)(byte)0);
+            SelectMeasureColorButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SelectMeasureColorButton.ForeColor = SystemColors.ButtonShadow;
             SelectMeasureColorButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             SelectMeasureColorButton.IconColor = Color.Tan;
@@ -4756,7 +4760,7 @@
             SelectMeasureColorButton.TabIndex = 23;
             SelectMeasureColorButton.Text = "Select Measure Color";
             SelectMeasureColorButton.UseVisualStyleBackColor = false;
-            SelectMeasureColorButton.Click += SelectMeasureColorButton_Click;
+            SelectMeasureColorButton.Click += (this.SelectMeasureColorButton_Click);
             // 
             // GridValuesGroup
             // 
@@ -4775,7 +4779,7 @@
             GridValuesGroup.Controls.Add(GridColorSelectButton);
             GridValuesGroup.Controls.Add(label65);
             GridValuesGroup.Controls.Add(EnableGridSwitch);
-            GridValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            GridValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             GridValuesGroup.Location = new Point(12, 219);
             GridValuesGroup.Name = "GridValuesGroup";
             GridValuesGroup.Size = new Size(148, 422);
@@ -4786,7 +4790,7 @@
             // label69
             // 
             label69.AutoSize = true;
-            label69.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label69.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             label69.ForeColor = SystemColors.ControlDarkDark;
             label69.Location = new Point(6, 158);
             label69.Name = "label69";
@@ -4796,7 +4800,7 @@
             // 
             // GridLayerUpDown
             // 
-            GridLayerUpDown.Font = new Font("Tahoma", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            GridLayerUpDown.Font = new Font("Tahoma", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             GridLayerUpDown.ForeColor = SystemColors.ControlDarkDark;
             GridLayerUpDown.Items.Add("Default");
             GridLayerUpDown.Items.Add("Above Ocean");
@@ -4807,12 +4811,12 @@
             GridLayerUpDown.TabIndex = 99;
             GridLayerUpDown.Text = "Default";
             GridLayerUpDown.TextAlign = HorizontalAlignment.Center;
-            GridLayerUpDown.SelectedItemChanged += GridLayerUpDown_SelectedItemChanged;
+            GridLayerUpDown.SelectedItemChanged += (this.GridLayerUpDown_SelectedItemChanged);
             // 
             // label68
             // 
             label68.AutoSize = true;
-            label68.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label68.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             label68.ForeColor = SystemColors.ControlDarkDark;
             label68.Location = new Point(6, 58);
             label68.Name = "label68";
@@ -4823,7 +4827,7 @@
             // PointedHexGridRadio
             // 
             PointedHexGridRadio.AutoSize = true;
-            PointedHexGridRadio.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            PointedHexGridRadio.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             PointedHexGridRadio.ForeColor = SystemColors.ControlDarkDark;
             PointedHexGridRadio.Location = new Point(6, 131);
             PointedHexGridRadio.Name = "PointedHexGridRadio";
@@ -4831,12 +4835,12 @@
             PointedHexGridRadio.TabIndex = 97;
             PointedHexGridRadio.Text = "Pointed Hex";
             PointedHexGridRadio.UseVisualStyleBackColor = true;
-            PointedHexGridRadio.CheckedChanged += PointedHexGridRadio_CheckedChanged;
+            PointedHexGridRadio.CheckedChanged += (this.PointedHexGridRadio_CheckedChanged);
             // 
             // FlatHexGridRadio
             // 
             FlatHexGridRadio.AutoSize = true;
-            FlatHexGridRadio.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FlatHexGridRadio.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             FlatHexGridRadio.ForeColor = SystemColors.ControlDarkDark;
             FlatHexGridRadio.Location = new Point(5, 106);
             FlatHexGridRadio.Name = "FlatHexGridRadio";
@@ -4844,13 +4848,13 @@
             FlatHexGridRadio.TabIndex = 96;
             FlatHexGridRadio.Text = "Flat Hex";
             FlatHexGridRadio.UseVisualStyleBackColor = true;
-            FlatHexGridRadio.CheckedChanged += FlatHexGridRadio_CheckedChanged;
+            FlatHexGridRadio.CheckedChanged += (this.FlatHexGridRadio_CheckedChanged);
             // 
             // SquareGridRadio
             // 
             SquareGridRadio.AutoSize = true;
             SquareGridRadio.Checked = true;
-            SquareGridRadio.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SquareGridRadio.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SquareGridRadio.ForeColor = SystemColors.ControlDarkDark;
             SquareGridRadio.Location = new Point(5, 81);
             SquareGridRadio.Name = "SquareGridRadio";
@@ -4859,7 +4863,7 @@
             SquareGridRadio.TabStop = true;
             SquareGridRadio.Text = "Square";
             SquareGridRadio.UseVisualStyleBackColor = true;
-            SquareGridRadio.CheckedChanged += SquareGridRadio_CheckedChanged;
+            SquareGridRadio.CheckedChanged += (this.SquareGridRadio_CheckedChanged);
             // 
             // GridLineWidthTrack
             // 
@@ -4871,12 +4875,12 @@
             GridLineWidthTrack.TabIndex = 94;
             GridLineWidthTrack.TickStyle = TickStyle.None;
             GridLineWidthTrack.Value = 2;
-            GridLineWidthTrack.ValueChanged += GridLineWidthTrack_ValueChanged;
+            GridLineWidthTrack.ValueChanged += (this.GridLineWidthTrack_ValueChanged);
             // 
             // label67
             // 
             label67.AutoSize = true;
-            label67.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label67.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label67.ForeColor = SystemColors.ControlDarkDark;
             label67.Location = new Point(11, 263);
             label67.Name = "label67";
@@ -4887,7 +4891,7 @@
             // label66
             // 
             label66.AutoSize = true;
-            label66.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label66.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label66.ForeColor = SystemColors.ControlDarkDark;
             label66.Location = new Point(46, 382);
             label66.Name = "label66";
@@ -4903,19 +4907,19 @@
             ShowGridSizeSwitch.Background_WidthPen = 2F;
             ShowGridSizeSwitch.BackgroundPen = false;
             ShowGridSizeSwitch.Checked = true;
-            ShowGridSizeSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            ShowGridSizeSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            ShowGridSizeSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            ShowGridSizeSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            ShowGridSizeSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            ShowGridSizeSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            ShowGridSizeSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            ShowGridSizeSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            ShowGridSizeSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowGridSizeSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowGridSizeSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowGridSizeSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowGridSizeSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowGridSizeSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowGridSizeSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowGridSizeSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowGridSizeSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowGridSizeSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             ShowGridSizeSwitch.ColorValue = Color.ForestGreen;
             ShowGridSizeSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             ShowGridSizeSwitch.Font = new Font("Arial", 11F);
-            ShowGridSizeSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowGridSizeSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             ShowGridSizeSwitch.Lighting = true;
             ShowGridSizeSwitch.LinearGradient_Background = false;
             ShowGridSizeSwitch.LinearGradient_Value = false;
@@ -4932,7 +4936,7 @@
             ShowGridSizeSwitch.Tag = "Cyber";
             ShowGridSizeSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowGridSizeSwitch.Timer_RGB = 300;
-            ShowGridSizeSwitch.CheckedChanged += ShowGridSizeSwitch_CheckedChanged;
+            ShowGridSizeSwitch.CheckedChanged += (this.ShowGridSizeSwitch_CheckedChanged);
             // 
             // GridSizeTrack
             // 
@@ -4945,12 +4949,12 @@
             GridSizeTrack.TabIndex = 90;
             GridSizeTrack.TickStyle = TickStyle.None;
             GridSizeTrack.Value = 64;
-            GridSizeTrack.ValueChanged += GridSizeTrack_ValueChanged;
+            GridSizeTrack.ValueChanged += (this.GridSizeTrack_ValueChanged);
             // 
             // label64
             // 
             label64.AutoSize = true;
-            label64.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label64.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label64.ForeColor = SystemColors.ControlDarkDark;
             label64.Location = new Point(13, 219);
             label64.Name = "label64";
@@ -4960,8 +4964,8 @@
             // 
             // GridColorSelectButton
             // 
-            GridColorSelectButton.BackColor = Color.FromArgb(126, 0, 0, 0);
-            GridColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            GridColorSelectButton.BackColor = Color.FromArgb((int)(byte)126, (int)(byte)0, (int)(byte)0, (int)(byte)0);
+            GridColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             GridColorSelectButton.ForeColor = SystemColors.ButtonShadow;
             GridColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             GridColorSelectButton.IconColor = Color.Tan;
@@ -4972,12 +4976,12 @@
             GridColorSelectButton.TabIndex = 23;
             GridColorSelectButton.Text = "Select Grid Color";
             GridColorSelectButton.UseVisualStyleBackColor = false;
-            GridColorSelectButton.Click += GridColorSelectButton_Click;
+            GridColorSelectButton.Click += (this.GridColorSelectButton_Click);
             // 
             // label65
             // 
             label65.AutoSize = true;
-            label65.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label65.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label65.ForeColor = SystemColors.ControlDarkDark;
             label65.Location = new Point(46, 31);
             label65.Name = "label65";
@@ -4993,19 +4997,19 @@
             EnableGridSwitch.Background_WidthPen = 2F;
             EnableGridSwitch.BackgroundPen = false;
             EnableGridSwitch.Checked = true;
-            EnableGridSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            EnableGridSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            EnableGridSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            EnableGridSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            EnableGridSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            EnableGridSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            EnableGridSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            EnableGridSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            EnableGridSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            EnableGridSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EnableGridSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            EnableGridSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            EnableGridSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EnableGridSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EnableGridSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EnableGridSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EnableGridSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            EnableGridSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             EnableGridSwitch.ColorValue = Color.ForestGreen;
             EnableGridSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             EnableGridSwitch.Font = new Font("Arial", 11F);
-            EnableGridSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            EnableGridSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             EnableGridSwitch.Lighting = true;
             EnableGridSwitch.LinearGradient_Background = false;
             EnableGridSwitch.LinearGradient_Value = false;
@@ -5022,7 +5026,7 @@
             EnableGridSwitch.Tag = "Cyber";
             EnableGridSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             EnableGridSwitch.Timer_RGB = 300;
-            EnableGridSwitch.CheckedChanged += EnableGridSwitch_CheckedChanged;
+            EnableGridSwitch.CheckedChanged += (this.EnableGridSwitch_CheckedChanged);
             // 
             // FrameValuesGroup
             // 
@@ -5031,7 +5035,7 @@
             FrameValuesGroup.Controls.Add(FrameTintColorSelectButton);
             FrameValuesGroup.Controls.Add(label24);
             FrameValuesGroup.Controls.Add(EnableFrameSwitch);
-            FrameValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            FrameValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             FrameValuesGroup.Location = new Point(6, 32);
             FrameValuesGroup.Name = "FrameValuesGroup";
             FrameValuesGroup.Size = new Size(148, 168);
@@ -5050,12 +5054,12 @@
             FrameScaleTrack.TabIndex = 90;
             FrameScaleTrack.TickStyle = TickStyle.None;
             FrameScaleTrack.Value = 100;
-            FrameScaleTrack.Scroll += FrameScaleTrack_Scroll;
+            FrameScaleTrack.Scroll += (this.FrameScaleTrack_Scroll);
             // 
             // label63
             // 
             label63.AutoSize = true;
-            label63.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label63.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label63.ForeColor = SystemColors.ControlDarkDark;
             label63.Location = new Point(12, 132);
             label63.Name = "label63";
@@ -5066,7 +5070,7 @@
             // FrameTintColorSelectButton
             // 
             FrameTintColorSelectButton.BackColor = Color.White;
-            FrameTintColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FrameTintColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             FrameTintColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
             FrameTintColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             FrameTintColorSelectButton.IconColor = Color.Tan;
@@ -5077,12 +5081,12 @@
             FrameTintColorSelectButton.TabIndex = 23;
             FrameTintColorSelectButton.Text = "Select Frame Tint";
             FrameTintColorSelectButton.UseVisualStyleBackColor = false;
-            FrameTintColorSelectButton.Click += FrameTintColorSelectButton_Click;
+            FrameTintColorSelectButton.Click += (this.FrameTintColorSelectButton_Click);
             // 
             // label24
             // 
             label24.AutoSize = true;
-            label24.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label24.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label24.ForeColor = SystemColors.ControlDarkDark;
             label24.Location = new Point(47, 39);
             label24.Name = "label24";
@@ -5098,19 +5102,19 @@
             EnableFrameSwitch.Background_WidthPen = 2F;
             EnableFrameSwitch.BackgroundPen = false;
             EnableFrameSwitch.Checked = true;
-            EnableFrameSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            EnableFrameSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            EnableFrameSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            EnableFrameSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            EnableFrameSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            EnableFrameSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            EnableFrameSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            EnableFrameSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            EnableFrameSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            EnableFrameSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EnableFrameSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            EnableFrameSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            EnableFrameSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EnableFrameSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EnableFrameSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EnableFrameSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            EnableFrameSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            EnableFrameSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             EnableFrameSwitch.ColorValue = Color.ForestGreen;
             EnableFrameSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             EnableFrameSwitch.Font = new Font("Arial", 11F);
-            EnableFrameSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            EnableFrameSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             EnableFrameSwitch.Lighting = true;
             EnableFrameSwitch.LinearGradient_Background = false;
             EnableFrameSwitch.LinearGradient_Value = false;
@@ -5127,16 +5131,16 @@
             EnableFrameSwitch.Tag = "Cyber";
             EnableFrameSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             EnableFrameSwitch.Timer_RGB = 300;
-            EnableFrameSwitch.CheckedChanged += EnableFrameSwitch_CheckedChanged;
+            EnableFrameSwitch.CheckedChanged += (this.EnableFrameSwitch_CheckedChanged);
             // 
             // OverlayToolStrip
             // 
             OverlayToolStrip.AllowMerge = false;
-            OverlayToolStrip.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            OverlayToolStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
             OverlayToolStrip.AutoSize = false;
             OverlayToolStrip.BackColor = SystemColors.Control;
             OverlayToolStrip.Dock = DockStyle.None;
-            OverlayToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OverlayToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OverlayToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             OverlayToolStrip.Items.AddRange(new ToolStripItem[] { ScaleButton, GridButton, MeasureButton });
             OverlayToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
@@ -5149,7 +5153,7 @@
             // ScaleButton
             // 
             ScaleButton.AutoSize = false;
-            ScaleButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ScaleButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             ScaleButton.ForeColor = SystemColors.ControlDarkDark;
             ScaleButton.IconChar = FontAwesome.Sharp.IconChar.RulerHorizontal;
             ScaleButton.IconColor = Color.Black;
@@ -5162,7 +5166,7 @@
             ScaleButton.Size = new Size(60, 60);
             ScaleButton.Text = "Scale";
             ScaleButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            ScaleButton.Click += ScaleButton_Click;
+            ScaleButton.Click += (this.ScaleButton_Click);
             // 
             // GridButton
             // 
@@ -5179,7 +5183,7 @@
             GridButton.Size = new Size(60, 60);
             GridButton.Text = "Grid";
             GridButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            GridButton.Click += GridButton_Click;
+            GridButton.Click += (this.GridButton_Click);
             // 
             // MeasureButton
             // 
@@ -5196,7 +5200,7 @@
             MeasureButton.Size = new Size(60, 60);
             MeasureButton.Text = "Measure";
             MeasureButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            MeasureButton.Click += MeasureButton_Click;
+            MeasureButton.Click += (this.MeasureButton_Click);
             // 
             // ShowOverlayLayerSwitch
             // 
@@ -5206,19 +5210,19 @@
             ShowOverlayLayerSwitch.Background_WidthPen = 2F;
             ShowOverlayLayerSwitch.BackgroundPen = false;
             ShowOverlayLayerSwitch.Checked = true;
-            ShowOverlayLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            ShowOverlayLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            ShowOverlayLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            ShowOverlayLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            ShowOverlayLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            ShowOverlayLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            ShowOverlayLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            ShowOverlayLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            ShowOverlayLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowOverlayLayerSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowOverlayLayerSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowOverlayLayerSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowOverlayLayerSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowOverlayLayerSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowOverlayLayerSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowOverlayLayerSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowOverlayLayerSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowOverlayLayerSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             ShowOverlayLayerSwitch.ColorValue = Color.ForestGreen;
             ShowOverlayLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             ShowOverlayLayerSwitch.Font = new Font("Arial", 11F);
-            ShowOverlayLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowOverlayLayerSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             ShowOverlayLayerSwitch.Lighting = true;
             ShowOverlayLayerSwitch.LinearGradient_Background = false;
             ShowOverlayLayerSwitch.LinearGradient_Value = false;
@@ -5235,7 +5239,7 @@
             ShowOverlayLayerSwitch.Tag = "Cyber";
             ShowOverlayLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowOverlayLayerSwitch.Timer_RGB = 300;
-            ShowOverlayLayerSwitch.CheckedChanged += ShowOverlayLayerSwitch_CheckedChanged;
+            ShowOverlayLayerSwitch.CheckedChanged += (this.ShowOverlayLayerSwitch_CheckedChanged);
             // 
             // label9
             // 
@@ -5265,7 +5269,7 @@
             // RegionHelpRichText
             // 
             RegionHelpRichText.BorderStyle = BorderStyle.None;
-            RegionHelpRichText.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            RegionHelpRichText.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             RegionHelpRichText.ForeColor = SystemColors.ControlDarkDark;
             RegionHelpRichText.Location = new Point(12, 299);
             RegionHelpRichText.Name = "RegionHelpRichText";
@@ -5284,7 +5288,7 @@
             RegionValuesGroup.Controls.Add(RegionBorderWidthTrack);
             RegionValuesGroup.Controls.Add(label25);
             RegionValuesGroup.Controls.Add(RegionColorSelectButton);
-            RegionValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            RegionValuesGroup.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             RegionValuesGroup.Location = new Point(6, 32);
             RegionValuesGroup.Name = "RegionValuesGroup";
             RegionValuesGroup.Size = new Size(148, 241);
@@ -5302,12 +5306,12 @@
             RegionOpacityTrack.TabIndex = 94;
             RegionOpacityTrack.TickStyle = TickStyle.None;
             RegionOpacityTrack.Value = 64;
-            RegionOpacityTrack.ValueChanged += RegionOpacityTrack_ValueChanged;
+            RegionOpacityTrack.ValueChanged += (this.RegionOpacityTrack_ValueChanged);
             // 
             // label74
             // 
             label74.AutoSize = true;
-            label74.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label74.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label74.ForeColor = SystemColors.ControlDarkDark;
             label74.Location = new Point(12, 184);
             label74.Name = "label74";
@@ -5326,12 +5330,12 @@
             RegionBorderSmoothingTrack.TabIndex = 92;
             RegionBorderSmoothingTrack.TickStyle = TickStyle.None;
             RegionBorderSmoothingTrack.Value = 20;
-            RegionBorderSmoothingTrack.ValueChanged += RegionBorderSmoothingTrack_ValueChanged;
+            RegionBorderSmoothingTrack.ValueChanged += (this.RegionBorderSmoothingTrack_ValueChanged);
             // 
             // label73
             // 
             label73.AutoSize = true;
-            label73.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label73.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label73.ForeColor = SystemColors.ControlDarkDark;
             label73.Location = new Point(12, 140);
             label73.Name = "label73";
@@ -5350,12 +5354,12 @@
             RegionBorderWidthTrack.TabIndex = 90;
             RegionBorderWidthTrack.TickStyle = TickStyle.None;
             RegionBorderWidthTrack.Value = 8;
-            RegionBorderWidthTrack.ValueChanged += RegionBorderWidthTrack_ValueChanged;
+            RegionBorderWidthTrack.ValueChanged += (this.RegionBorderWidthTrack_ValueChanged);
             // 
             // label25
             // 
             label25.AutoSize = true;
-            label25.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label25.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label25.ForeColor = SystemColors.ControlDarkDark;
             label25.Location = new Point(12, 99);
             label25.Name = "label25";
@@ -5365,8 +5369,8 @@
             // 
             // RegionColorSelectButton
             // 
-            RegionColorSelectButton.BackColor = Color.FromArgb(0, 86, 179);
-            RegionColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            RegionColorSelectButton.BackColor = Color.FromArgb((int)(byte)0, (int)(byte)86, (int)(byte)179);
+            RegionColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             RegionColorSelectButton.ForeColor = SystemColors.Control;
             RegionColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             RegionColorSelectButton.IconColor = Color.Tan;
@@ -5377,16 +5381,16 @@
             RegionColorSelectButton.TabIndex = 23;
             RegionColorSelectButton.Text = "Select Border Color";
             RegionColorSelectButton.UseVisualStyleBackColor = false;
-            RegionColorSelectButton.Click += RegionColorSelectButton_Click;
+            RegionColorSelectButton.Click += (this.RegionColorSelectButton_Click);
             // 
             // RegionToolStrip
             // 
             RegionToolStrip.AllowMerge = false;
-            RegionToolStrip.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            RegionToolStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
             RegionToolStrip.AutoSize = false;
             RegionToolStrip.BackColor = SystemColors.Control;
             RegionToolStrip.Dock = DockStyle.None;
-            RegionToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            RegionToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             RegionToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             RegionToolStrip.Items.AddRange(new ToolStripItem[] { SelectRegionButton, CreateRegionButton });
             RegionToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
@@ -5399,7 +5403,7 @@
             // SelectRegionButton
             // 
             SelectRegionButton.AutoSize = false;
-            SelectRegionButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SelectRegionButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SelectRegionButton.ForeColor = SystemColors.ControlDarkDark;
             SelectRegionButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
             SelectRegionButton.IconColor = Color.Black;
@@ -5412,7 +5416,7 @@
             SelectRegionButton.Size = new Size(60, 60);
             SelectRegionButton.Text = "Select";
             SelectRegionButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            SelectRegionButton.Click += SelectRegionButton_Click;
+            SelectRegionButton.Click += (this.SelectRegionButton_Click);
             // 
             // CreateRegionButton
             // 
@@ -5429,7 +5433,7 @@
             CreateRegionButton.Size = new Size(60, 60);
             CreateRegionButton.Text = "Create";
             CreateRegionButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            CreateRegionButton.Click += CreateRegionButton_Click;
+            CreateRegionButton.Click += (this.CreateRegionButton_Click);
             // 
             // ShowRegionLayerSwitch
             // 
@@ -5439,19 +5443,19 @@
             ShowRegionLayerSwitch.Background_WidthPen = 2F;
             ShowRegionLayerSwitch.BackgroundPen = false;
             ShowRegionLayerSwitch.Checked = true;
-            ShowRegionLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            ShowRegionLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            ShowRegionLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            ShowRegionLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            ShowRegionLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            ShowRegionLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            ShowRegionLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            ShowRegionLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            ShowRegionLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowRegionLayerSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowRegionLayerSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowRegionLayerSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowRegionLayerSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowRegionLayerSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowRegionLayerSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowRegionLayerSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowRegionLayerSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowRegionLayerSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             ShowRegionLayerSwitch.ColorValue = Color.ForestGreen;
             ShowRegionLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             ShowRegionLayerSwitch.Font = new Font("Arial", 11F);
-            ShowRegionLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowRegionLayerSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             ShowRegionLayerSwitch.Lighting = true;
             ShowRegionLayerSwitch.LinearGradient_Background = false;
             ShowRegionLayerSwitch.LinearGradient_Value = false;
@@ -5468,7 +5472,7 @@
             ShowRegionLayerSwitch.Tag = "Cyber";
             ShowRegionLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowRegionLayerSwitch.Timer_RGB = 300;
-            ShowRegionLayerSwitch.CheckedChanged += ShowRegionLayerSwitch_CheckedChanged;
+            ShowRegionLayerSwitch.CheckedChanged += (this.ShowRegionLayerSwitch_CheckedChanged);
             // 
             // label10
             // 
@@ -5496,11 +5500,11 @@
             // DrawingToolStrip
             // 
             DrawingToolStrip.AllowMerge = false;
-            DrawingToolStrip.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            DrawingToolStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
             DrawingToolStrip.AutoSize = false;
             DrawingToolStrip.BackColor = SystemColors.Control;
             DrawingToolStrip.Dock = DockStyle.None;
-            DrawingToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            DrawingToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             DrawingToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             DrawingToolStrip.Items.AddRange(new ToolStripItem[] { iconToolStripButton8 });
             DrawingToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
@@ -5513,7 +5517,7 @@
             // iconToolStripButton8
             // 
             iconToolStripButton8.AutoSize = false;
-            iconToolStripButton8.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            iconToolStripButton8.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             iconToolStripButton8.ForeColor = SystemColors.ControlDarkDark;
             iconToolStripButton8.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
             iconToolStripButton8.IconColor = Color.Black;
@@ -5535,19 +5539,19 @@
             ShowDrawingLayerSwitch.Background_WidthPen = 2F;
             ShowDrawingLayerSwitch.BackgroundPen = false;
             ShowDrawingLayerSwitch.Checked = true;
-            ShowDrawingLayerSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            ShowDrawingLayerSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            ShowDrawingLayerSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            ShowDrawingLayerSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            ShowDrawingLayerSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            ShowDrawingLayerSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            ShowDrawingLayerSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            ShowDrawingLayerSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            ShowDrawingLayerSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            ShowDrawingLayerSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowDrawingLayerSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowDrawingLayerSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowDrawingLayerSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowDrawingLayerSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowDrawingLayerSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowDrawingLayerSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowDrawingLayerSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowDrawingLayerSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             ShowDrawingLayerSwitch.ColorValue = Color.ForestGreen;
             ShowDrawingLayerSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             ShowDrawingLayerSwitch.Font = new Font("Arial", 11F);
-            ShowDrawingLayerSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            ShowDrawingLayerSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             ShowDrawingLayerSwitch.Lighting = true;
             ShowDrawingLayerSwitch.LinearGradient_Background = false;
             ShowDrawingLayerSwitch.LinearGradient_Value = false;
@@ -5578,9 +5582,10 @@
             // 
             // RealmStudioForm
             // 
-            RealmStudioForm.BackColor = Color.FromArgb(223, 219, 210);
-            RealmStudioForm.BorderColor = Color.FromArgb(38, 38, 38);
+            RealmStudioForm.BackColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            RealmStudioForm.BorderColor = Color.FromArgb((int)(byte)38, (int)(byte)38, (int)(byte)38);
             RealmStudioForm.CausesValidation = false;
+            RealmStudioForm.Controls.Add(NewVersionButton);
             RealmStudioForm.Controls.Add(Open3DViewButton);
             RealmStudioForm.Controls.Add(AreaSelectButton);
             RealmStudioForm.Controls.Add(FontSelectionPanel);
@@ -5619,13 +5624,13 @@
             RealmStudioForm.Controls.Add(LabelToolPanel);
             RealmStudioForm.Controls.Add(SymbolToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
-            RealmStudioForm.FillEdgeColorA = Color.FromArgb(69, 68, 63);
-            RealmStudioForm.FillEdgeColorB = Color.FromArgb(69, 68, 63);
+            RealmStudioForm.FillEdgeColorA = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
+            RealmStudioForm.FillEdgeColorB = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
             RealmStudioForm.Font = new Font("Segoe UI", 9F);
-            RealmStudioForm.FooterEdgeColor = Color.FromArgb(69, 68, 63);
-            RealmStudioForm.ForeColor = Color.FromArgb(223, 219, 210);
-            RealmStudioForm.HeaderEdgeColorA = Color.FromArgb(87, 85, 77);
-            RealmStudioForm.HeaderEdgeColorB = Color.FromArgb(69, 68, 63);
+            RealmStudioForm.FooterEdgeColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
+            RealmStudioForm.ForeColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            RealmStudioForm.HeaderEdgeColorA = Color.FromArgb((int)(byte)87, (int)(byte)85, (int)(byte)77);
+            RealmStudioForm.HeaderEdgeColorB = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
             RealmStudioForm.Location = new Point(0, 0);
             RealmStudioForm.Name = "RealmStudioForm";
             RealmStudioForm.Padding = new Padding(20, 56, 20, 16);
@@ -5637,13 +5642,34 @@
             RealmStudioForm.TabIndex = 3;
             RealmStudioForm.TabStop = false;
             RealmStudioForm.Text = "Realm Studio";
-            RealmStudioForm.TitleColor = Color.FromArgb(223, 219, 210);
+            RealmStudioForm.TitleColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            // 
+            // NewVersionButton
+            // 
+            NewVersionButton.BackColor = Color.Transparent;
+            NewVersionButton.FlatAppearance.BorderSize = 0;
+            NewVersionButton.FlatAppearance.MouseDownBackColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
+            NewVersionButton.FlatAppearance.MouseOverBackColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
+            NewVersionButton.FlatStyle = FlatStyle.Flat;
+            NewVersionButton.ForeColor = Color.Transparent;
+            NewVersionButton.IconChar = FontAwesome.Sharp.IconChar.Warning;
+            NewVersionButton.IconColor = Color.OrangeRed;
+            NewVersionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            NewVersionButton.IconSize = 30;
+            NewVersionButton.Location = new Point(271, 12);
+            NewVersionButton.Name = "NewVersionButton";
+            NewVersionButton.Size = new Size(30, 30);
+            NewVersionButton.TabIndex = 42;
+            NewVersionButton.UseVisualStyleBackColor = false;
+            NewVersionButton.Visible = false;
+            NewVersionButton.Click += (this.NewVersionButton_Click);
+            NewVersionButton.MouseHover += (this.NewVersionButton_MouseHover);
             // 
             // Open3DViewButton
             // 
-            Open3DViewButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            Open3DViewButton.Anchor = (AnchorStyles)(AnchorStyles.Top) | (AnchorStyles.Right);
             Open3DViewButton.FlatStyle = FlatStyle.Flat;
-            Open3DViewButton.ForeColor = Color.FromArgb(223, 219, 210);
+            Open3DViewButton.ForeColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             Open3DViewButton.IconChar = FontAwesome.Sharp.IconChar.Cubes;
             Open3DViewButton.IconColor = Color.DarkGoldenrod;
             Open3DViewButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -5654,11 +5680,11 @@
             Open3DViewButton.TabIndex = 41;
             Open3DViewButton.Text = "iconButton1";
             Open3DViewButton.UseVisualStyleBackColor = true;
-            Open3DViewButton.Click += Open3DViewButton_Click;
+            Open3DViewButton.Click += (this.Open3DViewButton_Click);
             // 
             // AreaSelectButton
             // 
-            AreaSelectButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            AreaSelectButton.Anchor = (AnchorStyles)(AnchorStyles.Top) | (AnchorStyles.Right);
             AreaSelectButton.FlatStyle = FlatStyle.Flat;
             AreaSelectButton.IconChar = FontAwesome.Sharp.IconChar.ObjectGroup;
             AreaSelectButton.IconColor = Color.Green;
@@ -5669,8 +5695,8 @@
             AreaSelectButton.Size = new Size(32, 32);
             AreaSelectButton.TabIndex = 40;
             AreaSelectButton.UseVisualStyleBackColor = true;
-            AreaSelectButton.Click += AreaSelectButton_Click;
-            AreaSelectButton.MouseHover += AreaSelectButton_MouseHover;
+            AreaSelectButton.Click += (this.AreaSelectButton_Click);
+            AreaSelectButton.MouseHover += (this.AreaSelectButton_MouseHover);
             // 
             // FontSelectionPanel
             // 
@@ -5693,7 +5719,7 @@
             groupBox5.Controls.Add(IncreaseFontSizeButton);
             groupBox5.Controls.Add(FontFamilyCombo);
             groupBox5.Controls.Add(FontSizeCombo);
-            groupBox5.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox5.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             groupBox5.Location = new Point(3, 3);
             groupBox5.Name = "groupBox5";
             groupBox5.Size = new Size(453, 138);
@@ -5714,12 +5740,12 @@
             FontPanelCloseButton.TabIndex = 49;
             FontPanelCloseButton.Text = "iconButton2";
             FontPanelCloseButton.UseVisualStyleBackColor = true;
-            FontPanelCloseButton.Click += FontPanelCloseButton_Click;
+            FontPanelCloseButton.Click += (this.FontPanelCloseButton_Click);
             // 
             // FontPanelOKButton
             // 
             FontPanelOKButton.DialogResult = DialogResult.OK;
-            FontPanelOKButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FontPanelOKButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             FontPanelOKButton.ForeColor = SystemColors.ControlDarkDark;
             FontPanelOKButton.Location = new Point(393, 82);
             FontPanelOKButton.Name = "FontPanelOKButton";
@@ -5727,7 +5753,7 @@
             FontPanelOKButton.TabIndex = 47;
             FontPanelOKButton.Text = "O&K";
             FontPanelOKButton.UseVisualStyleBackColor = true;
-            FontPanelOKButton.Click += FontPanelOKButton_Click;
+            FontPanelOKButton.Click += (this.FontPanelOKButton_Click);
             // 
             // ExampleTextLabel
             // 
@@ -5752,7 +5778,7 @@
             SetItalicFontButton.Size = new Size(24, 24);
             SetItalicFontButton.TabIndex = 45;
             SetItalicFontButton.UseVisualStyleBackColor = true;
-            SetItalicFontButton.Click += SetItalicFontButton_Click;
+            SetItalicFontButton.Click += (this.SetItalicFontButton_Click);
             // 
             // SetBoldFontButton
             // 
@@ -5767,7 +5793,7 @@
             SetBoldFontButton.Size = new Size(24, 24);
             SetBoldFontButton.TabIndex = 44;
             SetBoldFontButton.UseVisualStyleBackColor = true;
-            SetBoldFontButton.Click += SetBoldFontButton_Click;
+            SetBoldFontButton.Click += (this.SetBoldFontButton_Click);
             // 
             // DecreaseFontSizeButton
             // 
@@ -5782,7 +5808,7 @@
             DecreaseFontSizeButton.Size = new Size(24, 24);
             DecreaseFontSizeButton.TabIndex = 43;
             DecreaseFontSizeButton.UseVisualStyleBackColor = true;
-            DecreaseFontSizeButton.Click += DecreaseFontSizeButton_Click;
+            DecreaseFontSizeButton.Click += (this.DecreaseFontSizeButton_Click);
             // 
             // IncreaseFontSizeButton
             // 
@@ -5797,33 +5823,33 @@
             IncreaseFontSizeButton.Size = new Size(24, 24);
             IncreaseFontSizeButton.TabIndex = 42;
             IncreaseFontSizeButton.UseVisualStyleBackColor = true;
-            IncreaseFontSizeButton.Click += IncreaseFontSizeButton_Click;
+            IncreaseFontSizeButton.Click += (this.IncreaseFontSizeButton_Click);
             // 
             // FontFamilyCombo
             // 
             FontFamilyCombo.DrawMode = DrawMode.OwnerDrawFixed;
-            FontFamilyCombo.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FontFamilyCombo.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             FontFamilyCombo.Location = new Point(6, 25);
             FontFamilyCombo.MaxDropDownItems = 20;
             FontFamilyCombo.Name = "FontFamilyCombo";
             FontFamilyCombo.Size = new Size(231, 30);
             FontFamilyCombo.TabIndex = 41;
-            FontFamilyCombo.SelectedIndexChanged += FontFamilyCombo_SelectedIndexChanged;
+            FontFamilyCombo.SelectedIndexChanged += (this.FontFamilyCombo_SelectedIndexChanged);
             // 
             // FontSizeCombo
             // 
-            FontSizeCombo.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FontSizeCombo.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             FontSizeCombo.ForeColor = SystemColors.ControlDarkDark;
             FontSizeCombo.Items.AddRange(new object[] { "5", "6", "7", "8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30", "32", "34", "36", "42", "48", "56", "64", "72", "80", "96", "120", "144" });
             FontSizeCombo.Location = new Point(243, 26);
             FontSizeCombo.Name = "FontSizeCombo";
             FontSizeCombo.Size = new Size(77, 29);
             FontSizeCombo.TabIndex = 40;
-            FontSizeCombo.SelectedIndexChanged += FontSizeCombo_SelectedIndexChanged;
+            FontSizeCombo.SelectedIndexChanged += (this.FontSizeCombo_SelectedIndexChanged);
             // 
             // MapScaleCreatorPanel
             // 
-            MapScaleCreatorPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            MapScaleCreatorPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             MapScaleCreatorPanel.Controls.Add(MapScaleGroupBox);
             MapScaleCreatorPanel.Location = new Point(1199, 112);
             MapScaleCreatorPanel.Name = "MapScaleCreatorPanel";
@@ -5851,7 +5877,7 @@
             MapScaleGroupBox.Controls.Add(ScaleHeightTrack);
             MapScaleGroupBox.Controls.Add(label77);
             MapScaleGroupBox.Controls.Add(ScaleWidthTrack);
-            MapScaleGroupBox.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            MapScaleGroupBox.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             MapScaleGroupBox.Location = new Point(10, 14);
             MapScaleGroupBox.Margin = new Padding(10, 3, 10, 3);
             MapScaleGroupBox.Name = "MapScaleGroupBox";
@@ -5862,7 +5888,7 @@
             // 
             // DeleteScaleButton
             // 
-            DeleteScaleButton.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            DeleteScaleButton.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             DeleteScaleButton.ForeColor = SystemColors.ControlDarkDark;
             DeleteScaleButton.IconChar = FontAwesome.Sharp.IconChar.Cancel;
             DeleteScaleButton.IconColor = Color.Black;
@@ -5875,11 +5901,11 @@
             DeleteScaleButton.Text = "Delete";
             DeleteScaleButton.TextImageRelation = TextImageRelation.TextAboveImage;
             DeleteScaleButton.UseVisualStyleBackColor = true;
-            DeleteScaleButton.Click += DeleteScaleButton_Click;
+            DeleteScaleButton.Click += (this.DeleteScaleButton_Click);
             // 
             // CreateScaleButton
             // 
-            CreateScaleButton.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            CreateScaleButton.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             CreateScaleButton.ForeColor = SystemColors.ControlDarkDark;
             CreateScaleButton.IconChar = FontAwesome.Sharp.IconChar.RulerHorizontal;
             CreateScaleButton.IconColor = Color.Black;
@@ -5893,14 +5919,14 @@
             CreateScaleButton.TextAlign = ContentAlignment.BottomCenter;
             CreateScaleButton.TextImageRelation = TextImageRelation.TextAboveImage;
             CreateScaleButton.UseVisualStyleBackColor = true;
-            CreateScaleButton.Click += CreateScaleButton_Click;
+            CreateScaleButton.Click += (this.CreateScaleButton_Click);
             // 
             // ScaleOutlineGroupBox
             // 
             ScaleOutlineGroupBox.Controls.Add(label83);
             ScaleOutlineGroupBox.Controls.Add(ScaleOutlineWidthTrack);
             ScaleOutlineGroupBox.Controls.Add(SelectScaleOutlineColorButton);
-            ScaleOutlineGroupBox.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ScaleOutlineGroupBox.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             ScaleOutlineGroupBox.Location = new Point(3, 635);
             ScaleOutlineGroupBox.Name = "ScaleOutlineGroupBox";
             ScaleOutlineGroupBox.Size = new Size(177, 93);
@@ -5911,7 +5937,7 @@
             // label83
             // 
             label83.AutoSize = true;
-            label83.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label83.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label83.ForeColor = SystemColors.ControlDarkDark;
             label83.Location = new Point(69, 39);
             label83.Name = "label83";
@@ -5929,12 +5955,12 @@
             ScaleOutlineWidthTrack.TabIndex = 75;
             ScaleOutlineWidthTrack.TickStyle = TickStyle.None;
             ScaleOutlineWidthTrack.Value = 2;
-            ScaleOutlineWidthTrack.Scroll += ScaleOutlineWidthTrack_Scroll;
+            ScaleOutlineWidthTrack.Scroll += (this.ScaleOutlineWidthTrack_Scroll);
             // 
             // SelectScaleOutlineColorButton
             // 
             SelectScaleOutlineColorButton.BackColor = Color.WhiteSmoke;
-            SelectScaleOutlineColorButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SelectScaleOutlineColorButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             SelectScaleOutlineColorButton.ForeColor = SystemColors.ControlDarkDark;
             SelectScaleOutlineColorButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             SelectScaleOutlineColorButton.IconColor = Color.Tan;
@@ -5946,7 +5972,7 @@
             SelectScaleOutlineColorButton.TabIndex = 22;
             SelectScaleOutlineColorButton.Text = "Select Color";
             SelectScaleOutlineColorButton.UseVisualStyleBackColor = false;
-            SelectScaleOutlineColorButton.Click += SelectScaleOutlineColorButton_Click;
+            SelectScaleOutlineColorButton.Click += (this.SelectScaleOutlineColorButton_Click);
             // 
             // ScaleSegmentColorsGroupBox
             // 
@@ -5954,7 +5980,7 @@
             ScaleSegmentColorsGroupBox.Controls.Add(ScaleColor3Button);
             ScaleSegmentColorsGroupBox.Controls.Add(ScaleColor2Button);
             ScaleSegmentColorsGroupBox.Controls.Add(ScaleColor1Button);
-            ScaleSegmentColorsGroupBox.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ScaleSegmentColorsGroupBox.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             ScaleSegmentColorsGroupBox.Location = new Point(0, 206);
             ScaleSegmentColorsGroupBox.Name = "ScaleSegmentColorsGroupBox";
             ScaleSegmentColorsGroupBox.Size = new Size(180, 99);
@@ -5975,14 +6001,14 @@
             ScaleColorsResetButton.Size = new Size(24, 24);
             ScaleColorsResetButton.TabIndex = 29;
             ScaleColorsResetButton.UseVisualStyleBackColor = false;
-            ScaleColorsResetButton.Click += ScaleColorsResetButton_Click;
+            ScaleColorsResetButton.Click += (this.ScaleColorsResetButton_Click);
             // 
             // ScaleColor3Button
             // 
             ScaleColor3Button.BackColor = Color.Black;
             ScaleColor3Button.FlatAppearance.BorderColor = Color.Black;
             ScaleColor3Button.FlatStyle = FlatStyle.Flat;
-            ScaleColor3Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ScaleColor3Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             ScaleColor3Button.ForeColor = SystemColors.HighlightText;
             ScaleColor3Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
             ScaleColor3Button.IconColor = Color.Tan;
@@ -5995,14 +6021,14 @@
             ScaleColor3Button.TabIndex = 27;
             ScaleColor3Button.Text = "Select Color";
             ScaleColor3Button.UseVisualStyleBackColor = false;
-            ScaleColor3Button.Click += ScaleColor3Button_Click;
+            ScaleColor3Button.Click += (this.ScaleColor3Button_Click);
             // 
             // ScaleColor2Button
             // 
             ScaleColor2Button.BackColor = Color.White;
             ScaleColor2Button.FlatAppearance.BorderColor = Color.Black;
             ScaleColor2Button.FlatStyle = FlatStyle.Flat;
-            ScaleColor2Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ScaleColor2Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             ScaleColor2Button.ForeColor = SystemColors.ControlDarkDark;
             ScaleColor2Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
             ScaleColor2Button.IconColor = Color.Tan;
@@ -6015,14 +6041,14 @@
             ScaleColor2Button.TabIndex = 26;
             ScaleColor2Button.Text = "Select Color";
             ScaleColor2Button.UseVisualStyleBackColor = false;
-            ScaleColor2Button.Click += ScaleColor2Button_Click;
+            ScaleColor2Button.Click += (this.ScaleColor2Button_Click);
             // 
             // ScaleColor1Button
             // 
             ScaleColor1Button.BackColor = Color.Black;
             ScaleColor1Button.FlatAppearance.BorderColor = Color.Black;
             ScaleColor1Button.FlatStyle = FlatStyle.Flat;
-            ScaleColor1Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ScaleColor1Button.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             ScaleColor1Button.ForeColor = SystemColors.HighlightText;
             ScaleColor1Button.IconChar = FontAwesome.Sharp.IconChar.Palette;
             ScaleColor1Button.IconColor = Color.Tan;
@@ -6035,13 +6061,13 @@
             ScaleColor1Button.TabIndex = 25;
             ScaleColor1Button.Text = "Select Color";
             ScaleColor1Button.UseVisualStyleBackColor = false;
-            ScaleColor1Button.Click += ScaleColor1Button_Click;
+            ScaleColor1Button.Click += (this.ScaleColor1Button_Click);
             // 
             // ScaleFontGroupBox
             // 
             ScaleFontGroupBox.Controls.Add(SelectScaleFontButton);
             ScaleFontGroupBox.Controls.Add(SelectScaleFontColorButton);
-            ScaleFontGroupBox.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ScaleFontGroupBox.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             ScaleFontGroupBox.Location = new Point(3, 536);
             ScaleFontGroupBox.Name = "ScaleFontGroupBox";
             ScaleFontGroupBox.Size = new Size(177, 93);
@@ -6052,7 +6078,7 @@
             // SelectScaleFontButton
             // 
             SelectScaleFontButton.BackColor = SystemColors.ControlLightLight;
-            SelectScaleFontButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SelectScaleFontButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             SelectScaleFontButton.ForeColor = SystemColors.ControlDarkDark;
             SelectScaleFontButton.IconChar = FontAwesome.Sharp.IconChar.Font;
             SelectScaleFontButton.IconColor = Color.Tan;
@@ -6064,12 +6090,12 @@
             SelectScaleFontButton.TabIndex = 23;
             SelectScaleFontButton.Text = "Select Font";
             SelectScaleFontButton.UseVisualStyleBackColor = false;
-            SelectScaleFontButton.Click += SelectScaleFontButton_Click;
+            SelectScaleFontButton.Click += (this.SelectScaleFontButton_Click);
             // 
             // SelectScaleFontColorButton
             // 
             SelectScaleFontColorButton.BackColor = Color.Black;
-            SelectScaleFontColorButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SelectScaleFontColorButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             SelectScaleFontColorButton.ForeColor = SystemColors.ButtonFace;
             SelectScaleFontColorButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             SelectScaleFontColorButton.IconColor = Color.Tan;
@@ -6081,7 +6107,7 @@
             SelectScaleFontColorButton.TabIndex = 22;
             SelectScaleFontColorButton.Text = "Select Color";
             SelectScaleFontColorButton.UseVisualStyleBackColor = false;
-            SelectScaleFontColorButton.Click += SelectScaleFontColorButton_Click;
+            SelectScaleFontColorButton.Click += (this.SelectScaleFontColorButton_Click);
             // 
             // ScaleNumbersDisplayGroupBox
             // 
@@ -6089,7 +6115,7 @@
             ScaleNumbersDisplayGroupBox.Controls.Add(ScaleNumbersEveryOtherRadio);
             ScaleNumbersDisplayGroupBox.Controls.Add(ScaleNumbersEndsRadio);
             ScaleNumbersDisplayGroupBox.Controls.Add(ScaleNumbersNoneRadio);
-            ScaleNumbersDisplayGroupBox.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ScaleNumbersDisplayGroupBox.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             ScaleNumbersDisplayGroupBox.Location = new Point(3, 405);
             ScaleNumbersDisplayGroupBox.Name = "ScaleNumbersDisplayGroupBox";
             ScaleNumbersDisplayGroupBox.Size = new Size(177, 125);
@@ -6109,7 +6135,7 @@
             ScaleNumbersAllRadio.TabStop = true;
             ScaleNumbersAllRadio.Text = "All";
             ScaleNumbersAllRadio.UseVisualStyleBackColor = true;
-            ScaleNumbersAllRadio.CheckedChanged += ScaleNumbersAllRadio_CheckedChanged;
+            ScaleNumbersAllRadio.CheckedChanged += (this.ScaleNumbersAllRadio_CheckedChanged);
             // 
             // ScaleNumbersEveryOtherRadio
             // 
@@ -6121,7 +6147,7 @@
             ScaleNumbersEveryOtherRadio.TabIndex = 2;
             ScaleNumbersEveryOtherRadio.Text = "Every Other";
             ScaleNumbersEveryOtherRadio.UseVisualStyleBackColor = true;
-            ScaleNumbersEveryOtherRadio.CheckedChanged += ScaleNumbersEveryOtherRadio_CheckedChanged;
+            ScaleNumbersEveryOtherRadio.CheckedChanged += (this.ScaleNumbersEveryOtherRadio_CheckedChanged);
             // 
             // ScaleNumbersEndsRadio
             // 
@@ -6133,7 +6159,7 @@
             ScaleNumbersEndsRadio.TabIndex = 1;
             ScaleNumbersEndsRadio.Text = "Ends";
             ScaleNumbersEndsRadio.UseVisualStyleBackColor = true;
-            ScaleNumbersEndsRadio.CheckedChanged += ScaleNumbersEndsRadio_CheckedChanged;
+            ScaleNumbersEndsRadio.CheckedChanged += (this.ScaleNumbersEndsRadio_CheckedChanged);
             // 
             // ScaleNumbersNoneRadio
             // 
@@ -6145,12 +6171,12 @@
             ScaleNumbersNoneRadio.TabIndex = 0;
             ScaleNumbersNoneRadio.Text = "None";
             ScaleNumbersNoneRadio.UseVisualStyleBackColor = true;
-            ScaleNumbersNoneRadio.CheckedChanged += ScaleNumbersNoneRadio_CheckedChanged;
+            ScaleNumbersNoneRadio.CheckedChanged += (this.ScaleNumbersNoneRadio_CheckedChanged);
             // 
             // label82
             // 
             label82.AutoSize = true;
-            label82.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label82.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label82.ForeColor = SystemColors.ControlDarkDark;
             label82.Location = new Point(6, 343);
             label82.Name = "label82";
@@ -6165,12 +6191,12 @@
             ScaleUnitsTextBox.Name = "ScaleUnitsTextBox";
             ScaleUnitsTextBox.Size = new Size(169, 27);
             ScaleUnitsTextBox.TabIndex = 77;
-            ScaleUnitsTextBox.TextChanged += ScaleUnitsTextBox_TextChanged;
+            ScaleUnitsTextBox.TextChanged += (this.ScaleUnitsTextBox_TextChanged);
             // 
             // label81
             // 
             label81.AutoSize = true;
-            label81.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label81.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label81.ForeColor = SystemColors.ControlDarkDark;
             label81.Location = new Point(91, 318);
             label81.Name = "label81";
@@ -6191,12 +6217,12 @@
             ScaleSegmentDistanceUpDown.TabIndex = 75;
             ScaleSegmentDistanceUpDown.TextAlign = HorizontalAlignment.Center;
             ScaleSegmentDistanceUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
-            ScaleSegmentDistanceUpDown.ValueChanged += ScaleSegmentDistanceUpDown_ValueChanged;
+            ScaleSegmentDistanceUpDown.ValueChanged += (this.ScaleSegmentDistanceUpDown_ValueChanged);
             // 
             // label80
             // 
             label80.AutoSize = true;
-            label80.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label80.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label80.ForeColor = SystemColors.ControlDarkDark;
             label80.Location = new Point(6, 164);
             label80.Name = "label80";
@@ -6215,12 +6241,12 @@
             ScaleLineWidthTrack.TabIndex = 73;
             ScaleLineWidthTrack.TickStyle = TickStyle.None;
             ScaleLineWidthTrack.Value = 3;
-            ScaleLineWidthTrack.Scroll += ScaleLineWidthTrack_Scroll;
+            ScaleLineWidthTrack.Scroll += (this.ScaleLineWidthTrack_Scroll);
             // 
             // label79
             // 
             label79.AutoSize = true;
-            label79.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label79.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label79.ForeColor = SystemColors.ControlDarkDark;
             label79.Location = new Point(0, 120);
             label79.Name = "label79";
@@ -6239,12 +6265,12 @@
             ScaleSegmentCountTrack.TabIndex = 71;
             ScaleSegmentCountTrack.TickStyle = TickStyle.None;
             ScaleSegmentCountTrack.Value = 5;
-            ScaleSegmentCountTrack.Scroll += ScaleSegmentCountTrack_Scroll;
+            ScaleSegmentCountTrack.Scroll += (this.ScaleSegmentCountTrack_Scroll);
             // 
             // label78
             // 
             label78.AutoSize = true;
-            label78.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label78.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label78.ForeColor = SystemColors.ControlDarkDark;
             label78.Location = new Point(6, 76);
             label78.Name = "label78";
@@ -6263,12 +6289,12 @@
             ScaleHeightTrack.TabIndex = 69;
             ScaleHeightTrack.TickStyle = TickStyle.None;
             ScaleHeightTrack.Value = 16;
-            ScaleHeightTrack.Scroll += ScaleHeightTrack_Scroll;
+            ScaleHeightTrack.Scroll += (this.ScaleHeightTrack_Scroll);
             // 
             // label77
             // 
             label77.AutoSize = true;
-            label77.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label77.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label77.ForeColor = SystemColors.ControlDarkDark;
             label77.Location = new Point(3, 32);
             label77.Name = "label77";
@@ -6287,11 +6313,11 @@
             ScaleWidthTrack.TabIndex = 67;
             ScaleWidthTrack.TickStyle = TickStyle.None;
             ScaleWidthTrack.Value = 256;
-            ScaleWidthTrack.Scroll += ScaleWidthTrack_Scroll;
+            ScaleWidthTrack.Scroll += (this.ScaleWidthTrack_Scroll);
             // 
             // ZoomLevelTrack
             // 
-            ZoomLevelTrack.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            ZoomLevelTrack.Anchor = (AnchorStyles)(AnchorStyles.Bottom) | (AnchorStyles.Right);
             ZoomLevelTrack.AutoSize = false;
             ZoomLevelTrack.Location = new Point(1422, 901);
             ZoomLevelTrack.Maximum = 80;
@@ -6301,11 +6327,11 @@
             ZoomLevelTrack.TabIndex = 37;
             ZoomLevelTrack.TickStyle = TickStyle.None;
             ZoomLevelTrack.Value = 10;
-            ZoomLevelTrack.Scroll += ZoomLevelTrack_Scroll;
+            ZoomLevelTrack.Scroll += (this.ZoomLevelTrack_Scroll);
             // 
             // AddPresetColorButton
             // 
-            AddPresetColorButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            AddPresetColorButton.Anchor = (AnchorStyles)(AnchorStyles.Top) | (AnchorStyles.Right);
             AddPresetColorButton.FlatStyle = FlatStyle.Flat;
             AddPresetColorButton.IconChar = FontAwesome.Sharp.IconChar.Add;
             AddPresetColorButton.IconColor = Color.Black;
@@ -6316,12 +6342,12 @@
             AddPresetColorButton.Size = new Size(24, 24);
             AddPresetColorButton.TabIndex = 36;
             AddPresetColorButton.UseVisualStyleBackColor = true;
-            AddPresetColorButton.Click += AddPresetColorButton_Click;
-            AddPresetColorButton.MouseHover += AddPresetColorButton_MouseHover;
+            AddPresetColorButton.Click += (this.AddPresetColorButton_Click);
+            AddPresetColorButton.MouseHover += (this.AddPresetColorButton_MouseHover);
             // 
             // SelectColorButton
             // 
-            SelectColorButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            SelectColorButton.Anchor = (AnchorStyles)(AnchorStyles.Top) | (AnchorStyles.Right);
             SelectColorButton.FlatStyle = FlatStyle.Flat;
             SelectColorButton.IconChar = FontAwesome.Sharp.IconChar.EyeDropperEmpty;
             SelectColorButton.IconColor = Color.Black;
@@ -6332,13 +6358,15 @@
             SelectColorButton.Size = new Size(24, 24);
             SelectColorButton.TabIndex = 24;
             SelectColorButton.UseVisualStyleBackColor = true;
-            SelectColorButton.Click += SelectColorButton_Click;
-            SelectColorButton.MouseHover += SelectColorButton_MouseHover;
+            SelectColorButton.Click += (this.SelectColorButton_Click);
+            SelectColorButton.MouseHover += (this.SelectColorButton_MouseHover);
             // 
             // OpenButton
             // 
             OpenButton.BackColor = Color.Transparent;
             OpenButton.FlatAppearance.BorderSize = 0;
+            OpenButton.FlatAppearance.MouseDownBackColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
+            OpenButton.FlatAppearance.MouseOverBackColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
             OpenButton.FlatStyle = FlatStyle.Flat;
             OpenButton.ForeColor = Color.LightGoldenrodYellow;
             OpenButton.IconChar = FontAwesome.Sharp.IconChar.FolderOpen;
@@ -6350,31 +6378,31 @@
             OpenButton.Size = new Size(30, 30);
             OpenButton.TabIndex = 35;
             OpenButton.UseVisualStyleBackColor = false;
-            OpenButton.Click += OpenButton_Click;
+            OpenButton.Click += (this.OpenButton_Click);
             // 
             // MapRenderHScroll
             // 
-            MapRenderHScroll.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            MapRenderHScroll.Anchor = (AnchorStyles)((AnchorStyles.Bottom) | (AnchorStyles.Left)) | (AnchorStyles.Right);
             MapRenderHScroll.Location = new Point(272, 960);
             MapRenderHScroll.Name = "MapRenderHScroll";
             MapRenderHScroll.Size = new Size(1128, 17);
             MapRenderHScroll.TabIndex = 34;
-            MapRenderHScroll.Scroll += MapRenderHScroll_Scroll;
+            MapRenderHScroll.Scroll += (this.MapRenderHScroll_Scroll);
             // 
             // MapRenderVScroll
             // 
-            MapRenderVScroll.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            MapRenderVScroll.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             MapRenderVScroll.Location = new Point(1403, 112);
             MapRenderVScroll.Name = "MapRenderVScroll";
             MapRenderVScroll.Size = new Size(17, 848);
             MapRenderVScroll.TabIndex = 33;
-            MapRenderVScroll.Scroll += MapRenderVScroll_Scroll;
+            MapRenderVScroll.Scroll += (this.MapRenderVScroll_Scroll);
             // 
             // label29
             // 
             label29.AutoSize = true;
-            label29.BackColor = Color.FromArgb(69, 68, 63);
-            label29.ForeColor = Color.FromArgb(223, 219, 210);
+            label29.BackColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
+            label29.ForeColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             label29.Location = new Point(1427, 17);
             label29.Name = "label29";
             label29.Size = new Size(34, 15);
@@ -6384,8 +6412,8 @@
             // label28
             // 
             label28.AutoSize = true;
-            label28.BackColor = Color.FromArgb(69, 68, 63);
-            label28.ForeColor = Color.FromArgb(223, 219, 210);
+            label28.BackColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
+            label28.ForeColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             label28.Location = new Point(1324, 17);
             label28.Name = "label28";
             label28.Size = new Size(59, 15);
@@ -6400,19 +6428,19 @@
             cyberSwitch8.Background_WidthPen = 2F;
             cyberSwitch8.BackgroundPen = false;
             cyberSwitch8.Checked = false;
-            cyberSwitch8.ColorBackground = Color.FromArgb(223, 219, 210);
-            cyberSwitch8.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch8.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            cyberSwitch8.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            cyberSwitch8.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            cyberSwitch8.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            cyberSwitch8.ColorLighting = Color.FromArgb(223, 219, 210);
-            cyberSwitch8.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            cyberSwitch8.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            cyberSwitch8.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch8.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            cyberSwitch8.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            cyberSwitch8.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch8.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch8.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch8.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch8.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            cyberSwitch8.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             cyberSwitch8.ColorValue = Color.ForestGreen;
             cyberSwitch8.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             cyberSwitch8.Font = new Font("Arial", 11F);
-            cyberSwitch8.ForeColor = Color.FromArgb(245, 245, 245);
+            cyberSwitch8.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             cyberSwitch8.Lighting = true;
             cyberSwitch8.LinearGradient_Background = false;
             cyberSwitch8.LinearGradient_Value = false;
@@ -6432,9 +6460,9 @@
             // 
             // ZoomToFitButton
             // 
-            ZoomToFitButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            ZoomToFitButton.Anchor = (AnchorStyles)(AnchorStyles.Bottom) | (AnchorStyles.Right);
             ZoomToFitButton.BackColor = SystemColors.InactiveCaption;
-            ZoomToFitButton.FlatAppearance.BorderColor = Color.FromArgb(69, 68, 63);
+            ZoomToFitButton.FlatAppearance.BorderColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
             ZoomToFitButton.FlatStyle = FlatStyle.Popup;
             ZoomToFitButton.IconChar = FontAwesome.Sharp.IconChar.Arrows;
             ZoomToFitButton.IconColor = Color.Black;
@@ -6446,13 +6474,13 @@
             ZoomToFitButton.Size = new Size(76, 51);
             ZoomToFitButton.TabIndex = 17;
             ZoomToFitButton.UseVisualStyleBackColor = false;
-            ZoomToFitButton.Click += ZoomToFitButton_Click;
+            ZoomToFitButton.Click += (this.ZoomToFitButton_Click);
             // 
             // ResetButton
             // 
-            ResetButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            ResetButton.Anchor = (AnchorStyles)(AnchorStyles.Bottom) | (AnchorStyles.Right);
             ResetButton.BackColor = SystemColors.Info;
-            ResetButton.FlatAppearance.BorderColor = Color.FromArgb(69, 68, 63);
+            ResetButton.FlatAppearance.BorderColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
             ResetButton.FlatStyle = FlatStyle.Popup;
             ResetButton.IconChar = FontAwesome.Sharp.IconChar.Refresh;
             ResetButton.IconColor = Color.Black;
@@ -6464,7 +6492,7 @@
             ResetButton.Size = new Size(77, 51);
             ResetButton.TabIndex = 15;
             ResetButton.UseVisualStyleBackColor = false;
-            ResetButton.Click += ResetButton_Click;
+            ResetButton.Click += (this.ResetButton_Click);
             // 
             // LogoPictureBox
             // 
@@ -6480,7 +6508,7 @@
             // 
             // SKGLRenderControl
             // 
-            SKGLRenderControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            SKGLRenderControl.Anchor = (AnchorStyles)(((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left)) | (AnchorStyles.Right);
             SKGLRenderControl.API = OpenTK.Windowing.Common.ContextAPI.OpenGL;
             SKGLRenderControl.APIVersion = new Version(3, 3, 0, 0);
             SKGLRenderControl.BackColor = Color.White;
@@ -6493,20 +6521,22 @@
             SKGLRenderControl.SharedContext = null;
             SKGLRenderControl.Size = new Size(1128, 848);
             SKGLRenderControl.TabIndex = 5;
-            SKGLRenderControl.PaintSurface += SKGLRenderControl_PaintSurface;
-            SKGLRenderControl.Enter += SKGLRenderControl_Enter;
-            SKGLRenderControl.Leave += SKGLRenderControl_Leave;
-            SKGLRenderControl.MouseDown += SKGLRenderControl_MouseDown;
-            SKGLRenderControl.MouseEnter += SKGLRenderControl_MouseEnter;
-            SKGLRenderControl.MouseLeave += SKGLRenderControl_MouseLeave;
-            SKGLRenderControl.MouseMove += SKGLRenderControl_MouseMove;
-            SKGLRenderControl.MouseUp += SKGLRenderControl_MouseUp;
-            SKGLRenderControl.PreviewKeyDown += SKGLRenderControl_PreviewKeyDown;
+            SKGLRenderControl.PaintSurface += (this.SKGLRenderControl_PaintSurface);
+            SKGLRenderControl.Enter += (this.SKGLRenderControl_Enter);
+            SKGLRenderControl.Leave += (this.SKGLRenderControl_Leave);
+            SKGLRenderControl.MouseDown += (this.SKGLRenderControl_MouseDown);
+            SKGLRenderControl.MouseEnter += (this.SKGLRenderControl_MouseEnter);
+            SKGLRenderControl.MouseLeave += (this.SKGLRenderControl_MouseLeave);
+            SKGLRenderControl.MouseMove += (this.SKGLRenderControl_MouseMove);
+            SKGLRenderControl.MouseUp += (this.SKGLRenderControl_MouseUp);
+            SKGLRenderControl.PreviewKeyDown += (this.SKGLRenderControl_PreviewKeyDown);
             // 
             // SaveButton
             // 
             SaveButton.BackColor = Color.Transparent;
             SaveButton.FlatAppearance.BorderSize = 0;
+            SaveButton.FlatAppearance.MouseDownBackColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
+            SaveButton.FlatAppearance.MouseOverBackColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
             SaveButton.FlatStyle = FlatStyle.Flat;
             SaveButton.ForeColor = Color.ForestGreen;
             SaveButton.IconChar = FontAwesome.Sharp.IconChar.Save;
@@ -6518,7 +6548,7 @@
             SaveButton.Size = new Size(30, 30);
             SaveButton.TabIndex = 11;
             SaveButton.UseVisualStyleBackColor = false;
-            SaveButton.Click += SaveButton_Click;
+            SaveButton.Click += (this.SaveButton_Click);
             // 
             // AutosaveSwitch
             // 
@@ -6528,19 +6558,19 @@
             AutosaveSwitch.Background_WidthPen = 2F;
             AutosaveSwitch.BackgroundPen = false;
             AutosaveSwitch.Checked = true;
-            AutosaveSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            AutosaveSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            AutosaveSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            AutosaveSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            AutosaveSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            AutosaveSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            AutosaveSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            AutosaveSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            AutosaveSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            AutosaveSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AutosaveSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            AutosaveSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            AutosaveSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AutosaveSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AutosaveSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AutosaveSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AutosaveSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            AutosaveSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
             AutosaveSwitch.ColorValue = Color.ForestGreen;
             AutosaveSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
             AutosaveSwitch.Font = new Font("Arial", 11F);
-            AutosaveSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            AutosaveSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
             AutosaveSwitch.Lighting = true;
             AutosaveSwitch.LinearGradient_Background = false;
             AutosaveSwitch.LinearGradient_Value = false;
@@ -6557,13 +6587,13 @@
             AutosaveSwitch.Tag = "Cyber";
             AutosaveSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             AutosaveSwitch.Timer_RGB = 300;
-            AutosaveSwitch.CheckedChanged += AutosaveSwitch_CheckedChanged;
+            AutosaveSwitch.CheckedChanged += (this.AutosaveSwitch_CheckedChanged);
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.BackColor = Color.FromArgb(69, 68, 63);
-            label1.ForeColor = Color.FromArgb(223, 219, 210);
+            label1.BackColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
+            label1.ForeColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             label1.Location = new Point(70, 17);
             label1.Name = "label1";
             label1.Size = new Size(56, 15);
@@ -6585,9 +6615,9 @@
             // 
             // RealmDataStatusStrip
             // 
-            RealmDataStatusStrip.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            RealmDataStatusStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Left)) | (AnchorStyles.Right);
             RealmDataStatusStrip.AutoSize = false;
-            RealmDataStatusStrip.BackColor = Color.FromArgb(69, 68, 63);
+            RealmDataStatusStrip.BackColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
             RealmDataStatusStrip.Dock = DockStyle.None;
             RealmDataStatusStrip.Items.AddRange(new ToolStripItem[] { MapNameLabel, MapPathLabel });
             RealmDataStatusStrip.Location = new Point(271, 90);
@@ -6615,9 +6645,9 @@
             // 
             // MapStatusStrip
             // 
-            MapStatusStrip.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            MapStatusStrip.Anchor = (AnchorStyles)((AnchorStyles.Bottom) | (AnchorStyles.Left)) | (AnchorStyles.Right);
             MapStatusStrip.AutoSize = false;
-            MapStatusStrip.BackColor = Color.FromArgb(69, 68, 63);
+            MapStatusStrip.BackColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
             MapStatusStrip.Dock = DockStyle.None;
             MapStatusStrip.GripMargin = new Padding(0);
             MapStatusStrip.Items.AddRange(new ToolStripItem[] { MapSizeLabel, ZoomLevelLabel, DrawingModeLabel, DrawingPointLabel });
@@ -6644,7 +6674,7 @@
             // DrawingModeLabel
             // 
             DrawingModeLabel.AutoSize = false;
-            DrawingModeLabel.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            DrawingModeLabel.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             DrawingModeLabel.ForeColor = Color.ForestGreen;
             DrawingModeLabel.Name = "DrawingModeLabel";
             DrawingModeLabel.Size = new Size(1000, 17);
@@ -6659,9 +6689,9 @@
             // 
             // ApplicationStatusStrip
             // 
-            ApplicationStatusStrip.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            ApplicationStatusStrip.Anchor = (AnchorStyles)((AnchorStyles.Bottom) | (AnchorStyles.Left)) | (AnchorStyles.Right);
             ApplicationStatusStrip.AutoSize = false;
-            ApplicationStatusStrip.BackColor = Color.FromArgb(69, 68, 63);
+            ApplicationStatusStrip.BackColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
             ApplicationStatusStrip.Dock = DockStyle.None;
             ApplicationStatusStrip.GripMargin = new Padding(2, 2, 4, -4);
             ApplicationStatusStrip.Items.AddRange(new ToolStripItem[] { ApplicationStatusMessage, ApplicationHelpMessage });
@@ -6687,7 +6717,7 @@
             // 
             // ApplicationControlBox
             // 
-            ApplicationControlBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            ApplicationControlBox.Anchor = (AnchorStyles)(AnchorStyles.Top) | (AnchorStyles.Right);
             ApplicationControlBox.BackColor = Color.Transparent;
             ApplicationControlBox.DefaultLocation = false;
             ApplicationControlBox.ForeColor = SystemColors.ControlLight;
@@ -6720,20 +6750,20 @@
             NewToolStripMenuItem.Image = (Image)resources.GetObject("NewToolStripMenuItem.Image");
             NewToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             NewToolStripMenuItem.Name = "NewToolStripMenuItem";
-            NewToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
+            NewToolStripMenuItem.ShortcutKeys = (Keys)(Keys.Control) | (Keys.N);
             NewToolStripMenuItem.Size = new Size(146, 22);
             NewToolStripMenuItem.Text = "&New";
-            NewToolStripMenuItem.Click += NewToolStripMenuItem_Click;
+            NewToolStripMenuItem.Click += (this.NewToolStripMenuItem_Click);
             // 
             // OpenToolStripMenuItem
             // 
             OpenToolStripMenuItem.Image = (Image)resources.GetObject("OpenToolStripMenuItem.Image");
             OpenToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             OpenToolStripMenuItem.Name = "OpenToolStripMenuItem";
-            OpenToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
+            OpenToolStripMenuItem.ShortcutKeys = (Keys)(Keys.Control) | (Keys.O);
             OpenToolStripMenuItem.Size = new Size(146, 22);
             OpenToolStripMenuItem.Text = "&Open";
-            OpenToolStripMenuItem.Click += OpenToolStripMenuItem_Click;
+            OpenToolStripMenuItem.Click += (this.OpenToolStripMenuItem_Click);
             // 
             // toolStripSeparator
             // 
@@ -6745,17 +6775,17 @@
             SaveToolStripMenuItem.Image = (Image)resources.GetObject("SaveToolStripMenuItem.Image");
             SaveToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
-            SaveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
+            SaveToolStripMenuItem.ShortcutKeys = (Keys)(Keys.Control) | (Keys.S);
             SaveToolStripMenuItem.Size = new Size(146, 22);
             SaveToolStripMenuItem.Text = "&Save";
-            SaveToolStripMenuItem.Click += SaveToolStripMenuItem_Click;
+            SaveToolStripMenuItem.Click += (this.SaveToolStripMenuItem_Click);
             // 
             // SaveAsToolStripMenuItem
             // 
             SaveAsToolStripMenuItem.Name = "SaveAsToolStripMenuItem";
             SaveAsToolStripMenuItem.Size = new Size(146, 22);
             SaveAsToolStripMenuItem.Text = "Save &As";
-            SaveAsToolStripMenuItem.Click += SaveAsToolStripMenuItem_Click;
+            SaveAsToolStripMenuItem.Click += (this.SaveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -6770,7 +6800,7 @@
             ExportMapMenuItem.Name = "ExportMapMenuItem";
             ExportMapMenuItem.Size = new Size(146, 22);
             ExportMapMenuItem.Text = "&Export...";
-            ExportMapMenuItem.Click += ExportMapMenuItem_Click;
+            ExportMapMenuItem.Click += (this.ExportMapMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
@@ -6782,10 +6812,10 @@
             PrintToolStripMenuItem.Image = (Image)resources.GetObject("PrintToolStripMenuItem.Image");
             PrintToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             PrintToolStripMenuItem.Name = "PrintToolStripMenuItem";
-            PrintToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.P;
+            PrintToolStripMenuItem.ShortcutKeys = (Keys)(Keys.Control) | (Keys.P);
             PrintToolStripMenuItem.Size = new Size(146, 22);
             PrintToolStripMenuItem.Text = "&Print";
-            PrintToolStripMenuItem.Click += PrintToolStripMenuItem_Click;
+            PrintToolStripMenuItem.Click += (this.PrintToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -6797,7 +6827,7 @@
             ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
             ExitToolStripMenuItem.Size = new Size(146, 22);
             ExitToolStripMenuItem.Text = "E&xit";
-            ExitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
+            ExitToolStripMenuItem.Click += (this.ExitToolStripMenuItem_Click);
             // 
             // EditToolStripMenuItem
             // 
@@ -6809,18 +6839,18 @@
             // UndoToolStripMenuItem
             // 
             UndoToolStripMenuItem.Name = "UndoToolStripMenuItem";
-            UndoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Z;
+            UndoToolStripMenuItem.ShortcutKeys = (Keys)(Keys.Control) | (Keys.Z);
             UndoToolStripMenuItem.Size = new Size(193, 22);
             UndoToolStripMenuItem.Text = "&Undo";
-            UndoToolStripMenuItem.Click += UndoToolStripMenuItem_Click;
+            UndoToolStripMenuItem.Click += (this.UndoToolStripMenuItem_Click);
             // 
             // RedoToolStripMenuItem
             // 
             RedoToolStripMenuItem.Name = "RedoToolStripMenuItem";
-            RedoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Y;
+            RedoToolStripMenuItem.ShortcutKeys = (Keys)(Keys.Control) | (Keys.Y);
             RedoToolStripMenuItem.Size = new Size(193, 22);
             RedoToolStripMenuItem.Text = "&Redo";
-            RedoToolStripMenuItem.Click += RedoToolStripMenuItem_Click;
+            RedoToolStripMenuItem.Click += (this.RedoToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
@@ -6832,38 +6862,38 @@
             CutToolStripMenuItem.Image = (Image)resources.GetObject("CutToolStripMenuItem.Image");
             CutToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             CutToolStripMenuItem.Name = "CutToolStripMenuItem";
-            CutToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.X;
+            CutToolStripMenuItem.ShortcutKeys = (Keys)(Keys.Control) | (Keys.X);
             CutToolStripMenuItem.Size = new Size(193, 22);
             CutToolStripMenuItem.Text = "Cu&t";
-            CutToolStripMenuItem.Click += CutToolStripMenuItem_Click;
+            CutToolStripMenuItem.Click += (this.CutToolStripMenuItem_Click);
             // 
             // CopyToolStripMenuItem
             // 
             CopyToolStripMenuItem.Image = (Image)resources.GetObject("CopyToolStripMenuItem.Image");
             CopyToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             CopyToolStripMenuItem.Name = "CopyToolStripMenuItem";
-            CopyToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.C;
+            CopyToolStripMenuItem.ShortcutKeys = (Keys)(Keys.Control) | (Keys.C);
             CopyToolStripMenuItem.Size = new Size(193, 22);
             CopyToolStripMenuItem.Text = "&Copy";
-            CopyToolStripMenuItem.Click += CopyToolStripMenuItem_Click;
+            CopyToolStripMenuItem.Click += (this.CopyToolStripMenuItem_Click);
             // 
             // PasteToolStripMenuItem
             // 
             PasteToolStripMenuItem.Image = (Image)resources.GetObject("PasteToolStripMenuItem.Image");
             PasteToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             PasteToolStripMenuItem.Name = "PasteToolStripMenuItem";
-            PasteToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.V;
+            PasteToolStripMenuItem.ShortcutKeys = (Keys)(Keys.Control) | (Keys.V);
             PasteToolStripMenuItem.Size = new Size(193, 22);
             PasteToolStripMenuItem.Text = "&Paste";
-            PasteToolStripMenuItem.Click += PasteToolStripMenuItem_Click;
+            PasteToolStripMenuItem.Click += (this.PasteToolStripMenuItem_Click);
             // 
             // ClearSelectionToolStripMenuItem
             // 
             ClearSelectionToolStripMenuItem.Name = "ClearSelectionToolStripMenuItem";
-            ClearSelectionToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.R;
+            ClearSelectionToolStripMenuItem.ShortcutKeys = (Keys)(Keys.Control) | (Keys.R);
             ClearSelectionToolStripMenuItem.Size = new Size(193, 22);
             ClearSelectionToolStripMenuItem.Text = "Clea&r Selection";
-            ClearSelectionToolStripMenuItem.Click += ClearSelectionToolStripMenuItem_Click;
+            ClearSelectionToolStripMenuItem.Click += (this.ClearSelectionToolStripMenuItem_Click);
             // 
             // RealmToolStripMenuItem
             // 
@@ -6877,28 +6907,28 @@
             MapPropertiesMenuItem.Name = "MapPropertiesMenuItem";
             MapPropertiesMenuItem.Size = new Size(181, 22);
             MapPropertiesMenuItem.Text = "&Properties...";
-            MapPropertiesMenuItem.Click += MapPropertiesMenuItem_Click;
+            MapPropertiesMenuItem.Click += (this.MapPropertiesMenuItem_Click);
             // 
             // ChangeMapSizeMenuItem
             // 
             ChangeMapSizeMenuItem.Name = "ChangeMapSizeMenuItem";
             ChangeMapSizeMenuItem.Size = new Size(181, 22);
             ChangeMapSizeMenuItem.Text = "Change Map &Size...";
-            ChangeMapSizeMenuItem.Click += ChangeMapSizeMenuItem_Click;
+            ChangeMapSizeMenuItem.Click += (this.ChangeMapSizeMenuItem_Click);
             // 
             // CreateDetailMapMenuItem
             // 
             CreateDetailMapMenuItem.Name = "CreateDetailMapMenuItem";
             CreateDetailMapMenuItem.Size = new Size(181, 22);
             CreateDetailMapMenuItem.Text = "Create &Detail Map...";
-            CreateDetailMapMenuItem.Click += CreateDetailMapMenuItem_Click;
+            CreateDetailMapMenuItem.Click += (this.CreateDetailMapMenuItem_Click);
             // 
             // TraceToolStripMenuItem
             // 
             TraceToolStripMenuItem.Name = "TraceToolStripMenuItem";
             TraceToolStripMenuItem.Size = new Size(181, 22);
             TraceToolStripMenuItem.Text = "&Trace Outline";
-            TraceToolStripMenuItem.Click += TraceToolStripMenuItem_Click;
+            TraceToolStripMenuItem.Click += (this.TraceToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
@@ -6911,14 +6941,14 @@
             RenderAsHeightMapMenuItem.Name = "RenderAsHeightMapMenuItem";
             RenderAsHeightMapMenuItem.Size = new Size(181, 22);
             RenderAsHeightMapMenuItem.Text = "Display &Height Map";
-            RenderAsHeightMapMenuItem.CheckedChanged += RenderAsHeightMapMenuItem_CheckedChanged;
+            RenderAsHeightMapMenuItem.CheckedChanged += (this.RenderAsHeightMapMenuItem_CheckedChanged);
             // 
             // DisplayWorldGlobeToolStripMenuItem
             // 
             DisplayWorldGlobeToolStripMenuItem.Name = "DisplayWorldGlobeToolStripMenuItem";
             DisplayWorldGlobeToolStripMenuItem.Size = new Size(181, 22);
             DisplayWorldGlobeToolStripMenuItem.Text = "Display World &Globe";
-            DisplayWorldGlobeToolStripMenuItem.Click += DisplayWorldGlobeToolStripMenuItem_Click;
+            DisplayWorldGlobeToolStripMenuItem.Click += (this.DisplayWorldGlobeToolStripMenuItem_Click);
             // 
             // AssetsToolStripMenuItem
             // 
@@ -6932,7 +6962,7 @@
             CreateSymbolCollectionMenuItem.Name = "CreateSymbolCollectionMenuItem";
             CreateSymbolCollectionMenuItem.Size = new Size(217, 22);
             CreateSymbolCollectionMenuItem.Text = "&Create Symbol Collection...";
-            CreateSymbolCollectionMenuItem.Click += CreateSymbolCollectionMenuItem_Click;
+            CreateSymbolCollectionMenuItem.Click += (this.CreateSymbolCollectionMenuItem_Click);
             // 
             // ImportAssetsMenuItem
             // 
@@ -6946,53 +6976,58 @@
             WDAssetZipFileMenuItem.Name = "WDAssetZipFileMenuItem";
             WDAssetZipFileMenuItem.Size = new Size(222, 22);
             WDAssetZipFileMenuItem.Text = "Wonderdraft Asset &Zip File...";
-            WDAssetZipFileMenuItem.Click += WDAssetZipFileMenuItem_Click;
+            WDAssetZipFileMenuItem.Click += (this.WDAssetZipFileMenuItem_Click);
             // 
             // WDUserFolderMenuItem
             // 
             WDUserFolderMenuItem.Name = "WDUserFolderMenuItem";
             WDUserFolderMenuItem.Size = new Size(222, 22);
             WDUserFolderMenuItem.Text = "Wonderdraft &User Folder...";
-            WDUserFolderMenuItem.Click += WDUserFolderMenuItem_Click;
+            WDUserFolderMenuItem.Click += (this.WDUserFolderMenuItem_Click);
             // 
             // ReloadAllAssetsMenuItem
             // 
             ReloadAllAssetsMenuItem.Name = "ReloadAllAssetsMenuItem";
             ReloadAllAssetsMenuItem.Size = new Size(217, 22);
             ReloadAllAssetsMenuItem.Text = "&Reload All Assets";
-            ReloadAllAssetsMenuItem.Click += ReloadAllAssetsMenuItem_Click;
+            ReloadAllAssetsMenuItem.Click += (this.ReloadAllAssetsMenuItem_Click);
             // 
             // ThemeToolStripMenuItem
             // 
             ThemeToolStripMenuItem.Name = "ThemeToolStripMenuItem";
             ThemeToolStripMenuItem.Size = new Size(56, 20);
             ThemeToolStripMenuItem.Text = "&Theme";
-            ThemeToolStripMenuItem.Click += ThemeToolStripMenuItem_Click;
+            ThemeToolStripMenuItem.Click += (this.ThemeToolStripMenuItem_Click);
             // 
             // OptionsToolStripMenuItem
             // 
-            OptionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { PreferencesMenuItem, NameGeneratorConfigurationToolStripMenuItem });
+            OptionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { NameGeneratorConfigurationToolStripMenuItem, toolStripSeparator9, PreferencesMenuItem });
             OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem";
             OptionsToolStripMenuItem.Size = new Size(61, 20);
             OptionsToolStripMenuItem.Text = "&Options";
-            // 
-            // PreferencesMenuItem
-            // 
-            PreferencesMenuItem.Name = "PreferencesMenuItem";
-            PreferencesMenuItem.Size = new Size(247, 22);
-            PreferencesMenuItem.Text = "&Preferences...";
-            PreferencesMenuItem.Click += PreferencesMenuItem_Click;
             // 
             // NameGeneratorConfigurationToolStripMenuItem
             // 
             NameGeneratorConfigurationToolStripMenuItem.Name = "NameGeneratorConfigurationToolStripMenuItem";
             NameGeneratorConfigurationToolStripMenuItem.Size = new Size(247, 22);
             NameGeneratorConfigurationToolStripMenuItem.Text = "&Name Generator Configuration...";
-            NameGeneratorConfigurationToolStripMenuItem.Click += NameGeneratorConfigurationToolStripMenuItem_Click;
+            NameGeneratorConfigurationToolStripMenuItem.Click += (this.NameGeneratorConfigurationToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator9
+            // 
+            toolStripSeparator9.Name = "toolStripSeparator9";
+            toolStripSeparator9.Size = new Size(244, 6);
+            // 
+            // PreferencesMenuItem
+            // 
+            PreferencesMenuItem.Name = "PreferencesMenuItem";
+            PreferencesMenuItem.Size = new Size(247, 22);
+            PreferencesMenuItem.Text = "&Preferences...";
+            PreferencesMenuItem.Click += (this.PreferencesMenuItem_Click);
             // 
             // HelpToolStripMenuItem
             // 
-            HelpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { HelpContentsToolStripMenuItem, toolStripSeparator5, AboutToolStripMenuItem });
+            HelpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { HelpContentsToolStripMenuItem, toolStripSeparator5, CheckForNewReleaseToolStripMenuItem, toolStripSeparator8, AboutToolStripMenuItem });
             HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
             HelpToolStripMenuItem.Size = new Size(44, 20);
             HelpToolStripMenuItem.Text = "&Help";
@@ -7000,25 +7035,37 @@
             // HelpContentsToolStripMenuItem
             // 
             HelpContentsToolStripMenuItem.Name = "HelpContentsToolStripMenuItem";
-            HelpContentsToolStripMenuItem.Size = new Size(122, 22);
+            HelpContentsToolStripMenuItem.Size = new Size(194, 22);
             HelpContentsToolStripMenuItem.Text = "&Contents";
-            HelpContentsToolStripMenuItem.Click += HelpContentsToolStripMenuItem_Click;
+            HelpContentsToolStripMenuItem.Click += (this.HelpContentsToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new Size(119, 6);
+            toolStripSeparator5.Size = new Size(191, 6);
+            // 
+            // CheckForNewReleaseToolStripMenuItem
+            // 
+            CheckForNewReleaseToolStripMenuItem.Name = "CheckForNewReleaseToolStripMenuItem";
+            CheckForNewReleaseToolStripMenuItem.Size = new Size(194, 22);
+            CheckForNewReleaseToolStripMenuItem.Text = "Check for New &Release";
+            CheckForNewReleaseToolStripMenuItem.Click += (this.CheckForNewReleaseToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator8
+            // 
+            toolStripSeparator8.Name = "toolStripSeparator8";
+            toolStripSeparator8.Size = new Size(191, 6);
             // 
             // AboutToolStripMenuItem
             // 
             AboutToolStripMenuItem.Name = "AboutToolStripMenuItem";
-            AboutToolStripMenuItem.Size = new Size(122, 22);
+            AboutToolStripMenuItem.Size = new Size(194, 22);
             AboutToolStripMenuItem.Text = "&About...";
-            AboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
+            AboutToolStripMenuItem.Click += (this.AboutToolStripMenuItem_Click);
             // 
             // PathToolPanel
             // 
-            PathToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            PathToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             PathToolPanel.BackColor = SystemColors.Control;
             PathToolPanel.Controls.Add(groupBox1);
             PathToolPanel.Controls.Add(RailroadTracksPictureBox);
@@ -7101,7 +7148,7 @@
             TowerSizeUpDown.TabIndex = 87;
             TowerSizeUpDown.TextAlign = HorizontalAlignment.Center;
             TowerSizeUpDown.Value = new decimal(new int[] { 12, 0, 0, 65536 });
-            TowerSizeUpDown.ValueChanged += TowerSizeUpDown_ValueChanged;
+            TowerSizeUpDown.ValueChanged += (this.TowerSizeUpDown_ValueChanged);
             // 
             // label100
             // 
@@ -7123,7 +7170,7 @@
             TowerDistanceUpDown.TabIndex = 85;
             TowerDistanceUpDown.TextAlign = HorizontalAlignment.Center;
             TowerDistanceUpDown.Value = new decimal(new int[] { 10, 0, 0, 0 });
-            TowerDistanceUpDown.ValueChanged += TowerDistanceUpDown_ValueChanged;
+            TowerDistanceUpDown.ValueChanged += (this.TowerDistanceUpDown_ValueChanged);
             // 
             // SquareTowerWallPathRadio
             // 
@@ -7136,7 +7183,7 @@
             SquareTowerWallPathRadio.TabStop = true;
             SquareTowerWallPathRadio.Text = "Wall (Square Towers)";
             SquareTowerWallPathRadio.UseVisualStyleBackColor = true;
-            SquareTowerWallPathRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            SquareTowerWallPathRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // RoundTowerWallPathRadio
             // 
@@ -7149,7 +7196,7 @@
             RoundTowerWallPathRadio.TabStop = true;
             RoundTowerWallPathRadio.Text = "Wall (Round Towers)";
             RoundTowerWallPathRadio.UseVisualStyleBackColor = true;
-            RoundTowerWallPathRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            RoundTowerWallPathRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // RailroadTracksPictureBox
             // 
@@ -7162,7 +7209,7 @@
             RailroadTracksPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             RailroadTracksPictureBox.TabIndex = 76;
             RailroadTracksPictureBox.TabStop = false;
-            RailroadTracksPictureBox.Click += RailroadTracksPictureBox_Click;
+            RailroadTracksPictureBox.Click += (this.RailroadTracksPictureBox_Click);
             // 
             // FootPrintsPictureBox
             // 
@@ -7175,7 +7222,7 @@
             FootPrintsPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             FootPrintsPictureBox.TabIndex = 75;
             FootPrintsPictureBox.TabStop = false;
-            FootPrintsPictureBox.Click += FootPrintsPictureBox_Click;
+            FootPrintsPictureBox.Click += (this.FootPrintsPictureBox_Click);
             // 
             // BirdTracksPictureBox
             // 
@@ -7188,7 +7235,7 @@
             BirdTracksPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             BirdTracksPictureBox.TabIndex = 74;
             BirdTracksPictureBox.TabStop = false;
-            BirdTracksPictureBox.Click += BirdTracksPictureBox_Click;
+            BirdTracksPictureBox.Click += (this.BirdTracksPictureBox_Click);
             // 
             // BearTracksPictureBox
             // 
@@ -7201,7 +7248,7 @@
             BearTracksPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             BearTracksPictureBox.TabIndex = 73;
             BearTracksPictureBox.TabStop = false;
-            BearTracksPictureBox.Click += BearTracksPictureBox_Click;
+            BearTracksPictureBox.Click += (this.BearTracksPictureBox_Click);
             // 
             // BorderedLightSolidPictureBox
             // 
@@ -7214,7 +7261,7 @@
             BorderedLightSolidPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             BorderedLightSolidPictureBox.TabIndex = 72;
             BorderedLightSolidPictureBox.TabStop = false;
-            BorderedLightSolidPictureBox.Click += BorderedLightSolidPictureBox_Click;
+            BorderedLightSolidPictureBox.Click += (this.BorderedLightSolidPictureBox_Click);
             // 
             // BorderedGradientPictureBox
             // 
@@ -7227,7 +7274,7 @@
             BorderedGradientPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             BorderedGradientPictureBox.TabIndex = 71;
             BorderedGradientPictureBox.TabStop = false;
-            BorderedGradientPictureBox.Click += BorderedGradientPictureBox_Click;
+            BorderedGradientPictureBox.Click += (this.BorderedGradientPictureBox_Click);
             // 
             // BlackBorderLinePictureBox
             // 
@@ -7240,7 +7287,7 @@
             BlackBorderLinePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             BlackBorderLinePictureBox.TabIndex = 70;
             BlackBorderLinePictureBox.TabStop = false;
-            BlackBorderLinePictureBox.Click += BlackBorderLinePictureBox_Click;
+            BlackBorderLinePictureBox.Click += (this.BlackBorderLinePictureBox_Click);
             // 
             // ThickLinePictureBox
             // 
@@ -7253,7 +7300,7 @@
             ThickLinePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             ThickLinePictureBox.TabIndex = 69;
             ThickLinePictureBox.TabStop = false;
-            ThickLinePictureBox.Click += ThickLinePictureBox_Click;
+            ThickLinePictureBox.Click += (this.ThickLinePictureBox_Click);
             // 
             // SmallDashesPictureBox
             // 
@@ -7266,7 +7313,7 @@
             SmallDashesPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             SmallDashesPictureBox.TabIndex = 68;
             SmallDashesPictureBox.TabStop = false;
-            SmallDashesPictureBox.Click += SmallDashesPictureBox_Click;
+            SmallDashesPictureBox.Click += (this.SmallDashesPictureBox_Click);
             // 
             // LineDashPictureBox
             // 
@@ -7279,7 +7326,7 @@
             LineDashPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             LineDashPictureBox.TabIndex = 67;
             LineDashPictureBox.TabStop = false;
-            LineDashPictureBox.Click += LineDashPictureBox_Click;
+            LineDashPictureBox.Click += (this.LineDashPictureBox_Click);
             // 
             // ChevronPictureBox
             // 
@@ -7292,7 +7339,7 @@
             ChevronPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             ChevronPictureBox.TabIndex = 66;
             ChevronPictureBox.TabStop = false;
-            ChevronPictureBox.Click += ChevronPictureBox_Click;
+            ChevronPictureBox.Click += (this.ChevronPictureBox_Click);
             // 
             // DoubleSolidBorderPictureBox
             // 
@@ -7305,7 +7352,7 @@
             DoubleSolidBorderPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             DoubleSolidBorderPictureBox.TabIndex = 65;
             DoubleSolidBorderPictureBox.TabStop = false;
-            DoubleSolidBorderPictureBox.Click += DoubleSolidBorderPictureBox_Click;
+            DoubleSolidBorderPictureBox.Click += (this.DoubleSolidBorderPictureBox_Click);
             // 
             // DashDotDotPictureBox
             // 
@@ -7318,7 +7365,7 @@
             DashDotDotPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             DashDotDotPictureBox.TabIndex = 64;
             DashDotDotPictureBox.TabStop = false;
-            DashDotDotPictureBox.Click += DashDotDotPictureBox_Click;
+            DashDotDotPictureBox.Click += (this.DashDotDotPictureBox_Click);
             // 
             // DashDotPictureBox
             // 
@@ -7331,7 +7378,7 @@
             DashDotPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             DashDotPictureBox.TabIndex = 63;
             DashDotPictureBox.TabStop = false;
-            DashDotPictureBox.Click += DashDotPictureBox_Click;
+            DashDotPictureBox.Click += (this.DashDotPictureBox_Click);
             // 
             // DashedLinePictureBox
             // 
@@ -7344,7 +7391,7 @@
             DashedLinePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             DashedLinePictureBox.TabIndex = 62;
             DashedLinePictureBox.TabStop = false;
-            DashedLinePictureBox.Click += DashedLinePictureBox_Click;
+            DashedLinePictureBox.Click += (this.DashedLinePictureBox_Click);
             // 
             // DottedLinePictureBox
             // 
@@ -7357,7 +7404,7 @@
             DottedLinePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             DottedLinePictureBox.TabIndex = 61;
             DottedLinePictureBox.TabStop = false;
-            DottedLinePictureBox.Click += DottedLinePictureBox_Click;
+            DottedLinePictureBox.Click += (this.DottedLinePictureBox_Click);
             // 
             // SolidLinePictureBox
             // 
@@ -7370,7 +7417,7 @@
             SolidLinePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             SolidLinePictureBox.TabIndex = 60;
             SolidLinePictureBox.TabStop = false;
-            SolidLinePictureBox.Click += SolidLinePictureBox_Click;
+            SolidLinePictureBox.Click += (this.SolidLinePictureBox_Click);
             // 
             // BorderTexturePathRadio
             // 
@@ -7382,7 +7429,7 @@
             BorderTexturePathRadio.TabIndex = 59;
             BorderTexturePathRadio.Text = "Border and Texture";
             BorderTexturePathRadio.UseVisualStyleBackColor = true;
-            BorderTexturePathRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            BorderTexturePathRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // TexturePathRadio
             // 
@@ -7394,7 +7441,7 @@
             TexturePathRadio.TabIndex = 58;
             TexturePathRadio.Text = "Texture Filled";
             TexturePathRadio.UseVisualStyleBackColor = true;
-            TexturePathRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            TexturePathRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // DoubleSolidBorderRadio
             // 
@@ -7404,7 +7451,7 @@
             DoubleSolidBorderRadio.Size = new Size(14, 13);
             DoubleSolidBorderRadio.TabIndex = 57;
             DoubleSolidBorderRadio.UseVisualStyleBackColor = true;
-            DoubleSolidBorderRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            DoubleSolidBorderRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // RailroadTracksRadio
             // 
@@ -7414,7 +7461,7 @@
             RailroadTracksRadio.Size = new Size(14, 13);
             RailroadTracksRadio.TabIndex = 56;
             RailroadTracksRadio.UseVisualStyleBackColor = true;
-            RailroadTracksRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            RailroadTracksRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // FootPrintsRadio
             // 
@@ -7424,7 +7471,7 @@
             FootPrintsRadio.Size = new Size(14, 13);
             FootPrintsRadio.TabIndex = 55;
             FootPrintsRadio.UseVisualStyleBackColor = true;
-            FootPrintsRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            FootPrintsRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // BirdTracksRadio
             // 
@@ -7434,7 +7481,7 @@
             BirdTracksRadio.Size = new Size(14, 13);
             BirdTracksRadio.TabIndex = 54;
             BirdTracksRadio.UseVisualStyleBackColor = true;
-            BirdTracksRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            BirdTracksRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // BearTracksRadio
             // 
@@ -7444,7 +7491,7 @@
             BearTracksRadio.Size = new Size(14, 13);
             BearTracksRadio.TabIndex = 53;
             BearTracksRadio.UseVisualStyleBackColor = true;
-            BearTracksRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            BearTracksRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // BorderedLightSolidRadio
             // 
@@ -7454,7 +7501,7 @@
             BorderedLightSolidRadio.Size = new Size(14, 13);
             BorderedLightSolidRadio.TabIndex = 52;
             BorderedLightSolidRadio.UseVisualStyleBackColor = true;
-            BorderedLightSolidRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            BorderedLightSolidRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // BorderedGradientRadio
             // 
@@ -7464,7 +7511,7 @@
             BorderedGradientRadio.Size = new Size(14, 13);
             BorderedGradientRadio.TabIndex = 51;
             BorderedGradientRadio.UseVisualStyleBackColor = true;
-            BorderedGradientRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            BorderedGradientRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // BlackBorderPathRadio
             // 
@@ -7474,7 +7521,7 @@
             BlackBorderPathRadio.Size = new Size(14, 13);
             BlackBorderPathRadio.TabIndex = 50;
             BlackBorderPathRadio.UseVisualStyleBackColor = true;
-            BlackBorderPathRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            BlackBorderPathRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // ThickLineRadio
             // 
@@ -7484,7 +7531,7 @@
             ThickLineRadio.Size = new Size(14, 13);
             ThickLineRadio.TabIndex = 49;
             ThickLineRadio.UseVisualStyleBackColor = true;
-            ThickLineRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            ThickLineRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // SmallDashesRadio
             // 
@@ -7494,7 +7541,7 @@
             SmallDashesRadio.Size = new Size(14, 13);
             SmallDashesRadio.TabIndex = 48;
             SmallDashesRadio.UseVisualStyleBackColor = true;
-            SmallDashesRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            SmallDashesRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // LineAndDashesRadio
             // 
@@ -7504,7 +7551,7 @@
             LineAndDashesRadio.Size = new Size(14, 13);
             LineAndDashesRadio.TabIndex = 47;
             LineAndDashesRadio.UseVisualStyleBackColor = true;
-            LineAndDashesRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            LineAndDashesRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // ChevronLineRadio
             // 
@@ -7514,7 +7561,7 @@
             ChevronLineRadio.Size = new Size(14, 13);
             ChevronLineRadio.TabIndex = 46;
             ChevronLineRadio.UseVisualStyleBackColor = true;
-            ChevronLineRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            ChevronLineRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // DashDotDotLineRadio
             // 
@@ -7524,7 +7571,7 @@
             DashDotDotLineRadio.Size = new Size(14, 13);
             DashDotDotLineRadio.TabIndex = 45;
             DashDotDotLineRadio.UseVisualStyleBackColor = true;
-            DashDotDotLineRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            DashDotDotLineRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // DashDotLineRadio
             // 
@@ -7534,7 +7581,7 @@
             DashDotLineRadio.Size = new Size(14, 13);
             DashDotLineRadio.TabIndex = 44;
             DashDotLineRadio.UseVisualStyleBackColor = true;
-            DashDotLineRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            DashDotLineRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // DashedLineRadio
             // 
@@ -7544,7 +7591,7 @@
             DashedLineRadio.Size = new Size(14, 13);
             DashedLineRadio.TabIndex = 43;
             DashedLineRadio.UseVisualStyleBackColor = true;
-            DashedLineRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            DashedLineRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // DottedLineRadio
             // 
@@ -7554,7 +7601,7 @@
             DottedLineRadio.Size = new Size(14, 13);
             DottedLineRadio.TabIndex = 42;
             DottedLineRadio.UseVisualStyleBackColor = true;
-            DottedLineRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            DottedLineRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // SolidLineRadio
             // 
@@ -7567,12 +7614,12 @@
             SolidLineRadio.TabIndex = 41;
             SolidLineRadio.TabStop = true;
             SolidLineRadio.UseVisualStyleBackColor = true;
-            SolidLineRadio.CheckedChanged += PathTypeRadio_CheckedChanged;
+            SolidLineRadio.CheckedChanged += (this.PathTypeRadio_CheckedChanged);
             // 
             // label51
             // 
             label51.AutoSize = true;
-            label51.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label51.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             label51.ForeColor = SystemColors.ControlDarkDark;
             label51.Location = new Point(17, 22);
             label51.Name = "label51";
@@ -7582,7 +7629,7 @@
             // 
             // WaterToolPanel
             // 
-            WaterToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            WaterToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             WaterToolPanel.BackColor = SystemColors.Control;
             WaterToolPanel.Controls.Add(label76);
             WaterToolPanel.Controls.Add(WaterBrushVelocityTrack);
@@ -7617,7 +7664,7 @@
             // label76
             // 
             label76.AutoSize = true;
-            label76.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label76.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label76.ForeColor = SystemColors.ControlDarkDark;
             label76.Location = new Point(17, 144);
             label76.Name = "label76";
@@ -7636,14 +7683,14 @@
             WaterBrushVelocityTrack.TabIndex = 88;
             WaterBrushVelocityTrack.TickStyle = TickStyle.None;
             WaterBrushVelocityTrack.Value = 100;
-            WaterBrushVelocityTrack.ValueChanged += WaterBrushVelocityTrack_ValueChanged;
+            WaterBrushVelocityTrack.ValueChanged += (this.WaterBrushVelocityTrack_ValueChanged);
             // 
             // WaterColorButton
             // 
             WaterColorButton.BackColor = SystemColors.ControlLightLight;
             WaterColorButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
             WaterColorButton.FlatStyle = FlatStyle.Flat;
-            WaterColorButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterColorButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterColorButton.ForeColor = SystemColors.ControlDarkDark;
             WaterColorButton.IconChar = FontAwesome.Sharp.IconChar.Brush;
             WaterColorButton.IconColor = Color.Black;
@@ -7656,12 +7703,12 @@
             WaterColorButton.Text = "Color";
             WaterColorButton.TextImageRelation = TextImageRelation.TextAboveImage;
             WaterColorButton.UseVisualStyleBackColor = false;
-            WaterColorButton.Click += WaterColorButton_Click;
+            WaterColorButton.Click += (this.WaterColorButton_Click);
             // 
             // label20
             // 
             label20.AutoSize = true;
-            label20.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label20.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label20.ForeColor = SystemColors.ControlDarkDark;
             label20.Location = new Point(17, 178);
             label20.Name = "label20";
@@ -7681,119 +7728,119 @@
             WaterColorEraserSizeTrack.TickFrequency = 2;
             WaterColorEraserSizeTrack.TickStyle = TickStyle.None;
             WaterColorEraserSizeTrack.Value = 20;
-            WaterColorEraserSizeTrack.ValueChanged += WaterColorEraserSizeTrack_ValueChanged;
+            WaterColorEraserSizeTrack.ValueChanged += (this.WaterColorEraserSizeTrack_ValueChanged);
             // 
             // WaterCustomColor8
             // 
             WaterCustomColor8.BackColor = Color.White;
             WaterCustomColor8.FlatAppearance.BorderColor = SystemColors.ControlDark;
             WaterCustomColor8.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterCustomColor8.ForeColor = SystemColors.ControlDark;
             WaterCustomColor8.Location = new Point(80, 737);
             WaterCustomColor8.Name = "WaterCustomColor8";
             WaterCustomColor8.Size = new Size(60, 57);
             WaterCustomColor8.TabIndex = 82;
             WaterCustomColor8.UseVisualStyleBackColor = false;
-            WaterCustomColor8.Click += WaterCustomColor8_Click;
+            WaterCustomColor8.Click += (this.WaterCustomColor8_Click);
             // 
             // WaterCustomColor7
             // 
             WaterCustomColor7.BackColor = Color.White;
             WaterCustomColor7.FlatAppearance.BorderColor = SystemColors.ControlDark;
             WaterCustomColor7.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor7.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor7.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterCustomColor7.ForeColor = SystemColors.ControlDark;
             WaterCustomColor7.Location = new Point(14, 737);
             WaterCustomColor7.Name = "WaterCustomColor7";
             WaterCustomColor7.Size = new Size(60, 57);
             WaterCustomColor7.TabIndex = 81;
             WaterCustomColor7.UseVisualStyleBackColor = false;
-            WaterCustomColor7.Click += WaterCustomColor7_Click;
+            WaterCustomColor7.Click += (this.WaterCustomColor7_Click);
             // 
             // WaterCustomColor6
             // 
             WaterCustomColor6.BackColor = Color.White;
             WaterCustomColor6.FlatAppearance.BorderColor = SystemColors.ControlDark;
             WaterCustomColor6.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor6.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor6.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterCustomColor6.ForeColor = SystemColors.ControlDark;
             WaterCustomColor6.Location = new Point(80, 674);
             WaterCustomColor6.Name = "WaterCustomColor6";
             WaterCustomColor6.Size = new Size(60, 57);
             WaterCustomColor6.TabIndex = 80;
             WaterCustomColor6.UseVisualStyleBackColor = false;
-            WaterCustomColor6.Click += WaterCustomColor6_Click;
+            WaterCustomColor6.Click += (this.WaterCustomColor6_Click);
             // 
             // WaterCustomColor5
             // 
             WaterCustomColor5.BackColor = Color.White;
             WaterCustomColor5.FlatAppearance.BorderColor = SystemColors.ControlDark;
             WaterCustomColor5.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor5.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor5.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterCustomColor5.ForeColor = SystemColors.ControlDark;
             WaterCustomColor5.Location = new Point(14, 674);
             WaterCustomColor5.Name = "WaterCustomColor5";
             WaterCustomColor5.Size = new Size(60, 57);
             WaterCustomColor5.TabIndex = 79;
             WaterCustomColor5.UseVisualStyleBackColor = false;
-            WaterCustomColor5.Click += WaterCustomColor5_Click;
+            WaterCustomColor5.Click += (this.WaterCustomColor5_Click);
             // 
             // WaterCustomColor4
             // 
             WaterCustomColor4.BackColor = Color.White;
             WaterCustomColor4.FlatAppearance.BorderColor = SystemColors.ControlDark;
             WaterCustomColor4.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor4.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor4.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterCustomColor4.ForeColor = SystemColors.ControlDark;
             WaterCustomColor4.Location = new Point(80, 611);
             WaterCustomColor4.Name = "WaterCustomColor4";
             WaterCustomColor4.Size = new Size(60, 57);
             WaterCustomColor4.TabIndex = 78;
             WaterCustomColor4.UseVisualStyleBackColor = false;
-            WaterCustomColor4.Click += WaterCustomColor4_Click;
+            WaterCustomColor4.Click += (this.WaterCustomColor4_Click);
             // 
             // WaterCustomColor3
             // 
             WaterCustomColor3.BackColor = Color.White;
             WaterCustomColor3.FlatAppearance.BorderColor = SystemColors.ControlDark;
             WaterCustomColor3.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor3.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor3.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterCustomColor3.ForeColor = SystemColors.ControlDark;
             WaterCustomColor3.Location = new Point(14, 611);
             WaterCustomColor3.Name = "WaterCustomColor3";
             WaterCustomColor3.Size = new Size(60, 57);
             WaterCustomColor3.TabIndex = 77;
             WaterCustomColor3.UseVisualStyleBackColor = false;
-            WaterCustomColor3.Click += WaterCustomColor3_Click;
+            WaterCustomColor3.Click += (this.WaterCustomColor3_Click);
             // 
             // WaterCustomColor2
             // 
             WaterCustomColor2.BackColor = Color.White;
             WaterCustomColor2.FlatAppearance.BorderColor = SystemColors.ControlDark;
             WaterCustomColor2.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor2.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor2.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterCustomColor2.ForeColor = SystemColors.ControlDark;
             WaterCustomColor2.Location = new Point(80, 548);
             WaterCustomColor2.Name = "WaterCustomColor2";
             WaterCustomColor2.Size = new Size(60, 57);
             WaterCustomColor2.TabIndex = 76;
             WaterCustomColor2.UseVisualStyleBackColor = false;
-            WaterCustomColor2.Click += WaterCustomColor2_Click;
+            WaterCustomColor2.Click += (this.WaterCustomColor2_Click);
             // 
             // WaterCustomColor1
             // 
             WaterCustomColor1.BackColor = Color.White;
             WaterCustomColor1.FlatAppearance.BorderColor = SystemColors.ControlDark;
             WaterCustomColor1.FlatStyle = FlatStyle.Flat;
-            WaterCustomColor1.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterCustomColor1.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterCustomColor1.ForeColor = SystemColors.ControlDark;
             WaterCustomColor1.Location = new Point(14, 548);
             WaterCustomColor1.Name = "WaterCustomColor1";
             WaterCustomColor1.Size = new Size(60, 57);
             WaterCustomColor1.TabIndex = 75;
             WaterCustomColor1.UseVisualStyleBackColor = false;
-            WaterCustomColor1.Click += WaterCustomColor1_Click;
+            WaterCustomColor1.Click += (this.WaterCustomColor1_Click);
             // 
             // WaterHardBrushButton
             // 
@@ -7807,7 +7854,7 @@
             WaterHardBrushButton.Size = new Size(60, 60);
             WaterHardBrushButton.TabIndex = 73;
             WaterHardBrushButton.UseVisualStyleBackColor = false;
-            WaterHardBrushButton.Click += WaterHardBrushButton_Click;
+            WaterHardBrushButton.Click += (this.WaterHardBrushButton_Click);
             // 
             // WaterSoftBrushButton
             // 
@@ -7821,14 +7868,14 @@
             WaterSoftBrushButton.Size = new Size(60, 60);
             WaterSoftBrushButton.TabIndex = 72;
             WaterSoftBrushButton.UseVisualStyleBackColor = false;
-            WaterSoftBrushButton.Click += WaterSoftBrushButton_Click;
+            WaterSoftBrushButton.Click += (this.WaterSoftBrushButton_Click);
             // 
             // WaterButton42718D
             // 
-            WaterButton42718D.BackColor = Color.FromArgb(66, 113, 141);
+            WaterButton42718D.BackColor = Color.FromArgb((int)(byte)66, (int)(byte)113, (int)(byte)141);
             WaterButton42718D.FlatAppearance.BorderColor = SystemColors.ControlDark;
             WaterButton42718D.FlatStyle = FlatStyle.Flat;
-            WaterButton42718D.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterButton42718D.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterButton42718D.ForeColor = SystemColors.ControlDark;
             WaterButton42718D.Location = new Point(80, 485);
             WaterButton42718D.Name = "WaterButton42718D";
@@ -7836,14 +7883,14 @@
             WaterButton42718D.TabIndex = 71;
             WaterButton42718D.Text = "#42718D";
             WaterButton42718D.UseVisualStyleBackColor = false;
-            WaterButton42718D.Click += WaterButton42718D_Click;
+            WaterButton42718D.Click += (this.WaterButton42718D_Click);
             // 
             // WaterButton6BA5B9
             // 
-            WaterButton6BA5B9.BackColor = Color.FromArgb(107, 165, 185);
+            WaterButton6BA5B9.BackColor = Color.FromArgb((int)(byte)107, (int)(byte)165, (int)(byte)185);
             WaterButton6BA5B9.FlatAppearance.BorderColor = SystemColors.ControlDark;
             WaterButton6BA5B9.FlatStyle = FlatStyle.Flat;
-            WaterButton6BA5B9.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterButton6BA5B9.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterButton6BA5B9.ForeColor = SystemColors.ControlDarkDark;
             WaterButton6BA5B9.Location = new Point(14, 485);
             WaterButton6BA5B9.Name = "WaterButton6BA5B9";
@@ -7851,14 +7898,14 @@
             WaterButton6BA5B9.TabIndex = 70;
             WaterButton6BA5B9.Text = "#6BA5B9";
             WaterButton6BA5B9.UseVisualStyleBackColor = false;
-            WaterButton6BA5B9.Click += WaterButton6BA5B9_Click;
+            WaterButton6BA5B9.Click += (this.WaterButton6BA5B9_Click);
             // 
             // WaterButton88B5BB
             // 
-            WaterButton88B5BB.BackColor = Color.FromArgb(136, 181, 187);
+            WaterButton88B5BB.BackColor = Color.FromArgb((int)(byte)136, (int)(byte)181, (int)(byte)187);
             WaterButton88B5BB.FlatAppearance.BorderColor = SystemColors.ControlDark;
             WaterButton88B5BB.FlatStyle = FlatStyle.Flat;
-            WaterButton88B5BB.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterButton88B5BB.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterButton88B5BB.ForeColor = SystemColors.ControlDarkDark;
             WaterButton88B5BB.Location = new Point(80, 422);
             WaterButton88B5BB.Name = "WaterButton88B5BB";
@@ -7866,14 +7913,14 @@
             WaterButton88B5BB.TabIndex = 69;
             WaterButton88B5BB.Text = "#88B5BB";
             WaterButton88B5BB.UseVisualStyleBackColor = false;
-            WaterButton88B5BB.Click += WaterButton88B5BB_Click;
+            WaterButton88B5BB.Click += (this.WaterButton88B5BB_Click);
             // 
             // WaterButton91CBB8
             // 
-            WaterButton91CBB8.BackColor = Color.FromArgb(145, 203, 184);
+            WaterButton91CBB8.BackColor = Color.FromArgb((int)(byte)145, (int)(byte)203, (int)(byte)184);
             WaterButton91CBB8.FlatAppearance.BorderColor = SystemColors.ControlDark;
             WaterButton91CBB8.FlatStyle = FlatStyle.Flat;
-            WaterButton91CBB8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterButton91CBB8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterButton91CBB8.ForeColor = SystemColors.ControlDarkDark;
             WaterButton91CBB8.Location = new Point(14, 422);
             WaterButton91CBB8.Name = "WaterButton91CBB8";
@@ -7881,14 +7928,14 @@
             WaterButton91CBB8.TabIndex = 68;
             WaterButton91CBB8.Text = "#91CBB8";
             WaterButton91CBB8.UseVisualStyleBackColor = false;
-            WaterButton91CBB8.Click += WaterButton91CBB8_Click;
+            WaterButton91CBB8.Click += (this.WaterButton91CBB8_Click);
             // 
             // WaterColorEraseButton
             // 
             WaterColorEraseButton.BackColor = SystemColors.ControlLightLight;
             WaterColorEraseButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
             WaterColorEraseButton.FlatStyle = FlatStyle.Flat;
-            WaterColorEraseButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterColorEraseButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterColorEraseButton.ForeColor = SystemColors.ControlDarkDark;
             WaterColorEraseButton.IconChar = FontAwesome.Sharp.IconChar.Eraser;
             WaterColorEraseButton.IconColor = Color.Black;
@@ -7901,12 +7948,12 @@
             WaterColorEraseButton.Text = "Erase";
             WaterColorEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
             WaterColorEraseButton.UseVisualStyleBackColor = false;
-            WaterColorEraseButton.Click += WaterColorEraseButton_Click;
+            WaterColorEraseButton.Click += (this.WaterColorEraseButton_Click);
             // 
             // label61
             // 
             label61.AutoSize = true;
-            label61.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label61.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label61.ForeColor = SystemColors.ControlDarkDark;
             label61.Location = new Point(17, 100);
             label61.Name = "label61";
@@ -7926,12 +7973,12 @@
             WaterColorBrushSizeTrack.TickFrequency = 2;
             WaterColorBrushSizeTrack.TickStyle = TickStyle.None;
             WaterColorBrushSizeTrack.Value = 8;
-            WaterColorBrushSizeTrack.ValueChanged += WaterColorBrushSizeTrack_ValueChanged;
+            WaterColorBrushSizeTrack.ValueChanged += (this.WaterColorBrushSizeTrack_ValueChanged);
             // 
             // label62
             // 
             label62.AutoSize = true;
-            label62.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label62.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label62.ForeColor = SystemColors.ControlDarkDark;
             label62.Location = new Point(16, 15);
             label62.Name = "label62";
@@ -7941,10 +7988,10 @@
             // 
             // WaterPaintColorSelectButton
             // 
-            WaterPaintColorSelectButton.BackColor = Color.FromArgb(128, 145, 203, 184);
+            WaterPaintColorSelectButton.BackColor = Color.FromArgb((int)(byte)128, (int)(byte)145, (int)(byte)203, (int)(byte)184);
             WaterPaintColorSelectButton.FlatAppearance.BorderColor = SystemColors.ControlDarkDark;
             WaterPaintColorSelectButton.FlatStyle = FlatStyle.Flat;
-            WaterPaintColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            WaterPaintColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             WaterPaintColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
             WaterPaintColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             WaterPaintColorSelectButton.IconColor = Color.Tan;
@@ -7955,11 +8002,11 @@
             WaterPaintColorSelectButton.TabIndex = 62;
             WaterPaintColorSelectButton.Text = "Select Brush Color";
             WaterPaintColorSelectButton.UseVisualStyleBackColor = false;
-            WaterPaintColorSelectButton.Click += WaterPaintColorSelectButton_Click;
+            WaterPaintColorSelectButton.Click += (this.WaterPaintColorSelectButton_Click);
             // 
             // LandToolPanel
             // 
-            LandToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            LandToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             LandToolPanel.BackColor = SystemColors.Control;
             LandToolPanel.Controls.Add(label75);
             LandToolPanel.Controls.Add(LandBrushVelocityTrack);
@@ -7994,7 +8041,7 @@
             // label75
             // 
             label75.AutoSize = true;
-            label75.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label75.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label75.ForeColor = SystemColors.ControlDarkDark;
             label75.Location = new Point(17, 139);
             label75.Name = "label75";
@@ -8013,14 +8060,14 @@
             LandBrushVelocityTrack.TabIndex = 86;
             LandBrushVelocityTrack.TickStyle = TickStyle.None;
             LandBrushVelocityTrack.Value = 100;
-            LandBrushVelocityTrack.ValueChanged += LandBrushVelocityTrack_ValueChanged;
+            LandBrushVelocityTrack.ValueChanged += (this.LandBrushVelocityTrack_ValueChanged);
             // 
             // LandColorButton
             // 
             LandColorButton.BackColor = SystemColors.ControlLightLight;
             LandColorButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandColorButton.FlatStyle = FlatStyle.Flat;
-            LandColorButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandColorButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandColorButton.ForeColor = SystemColors.ControlDarkDark;
             LandColorButton.IconChar = FontAwesome.Sharp.IconChar.Brush;
             LandColorButton.IconColor = Color.Black;
@@ -8033,12 +8080,12 @@
             LandColorButton.Text = "Color";
             LandColorButton.TextImageRelation = TextImageRelation.TextAboveImage;
             LandColorButton.UseVisualStyleBackColor = false;
-            LandColorButton.Click += LandColorButton_Click;
+            LandColorButton.Click += (this.LandColorButton_Click);
             // 
             // label58
             // 
             label58.AutoSize = true;
-            label58.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label58.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label58.ForeColor = SystemColors.ControlDarkDark;
             label58.Location = new Point(17, 181);
             label58.Name = "label58";
@@ -8058,98 +8105,98 @@
             LandColorEraserSizeTrack.TickFrequency = 2;
             LandColorEraserSizeTrack.TickStyle = TickStyle.None;
             LandColorEraserSizeTrack.Value = 20;
-            LandColorEraserSizeTrack.ValueChanged += LandColorEraserSizeTrack_ValueChanged;
+            LandColorEraserSizeTrack.ValueChanged += (this.LandColorEraserSizeTrack_ValueChanged);
             // 
             // LandCustomColorButton6
             // 
             LandCustomColorButton6.BackColor = Color.White;
             LandCustomColorButton6.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandCustomColorButton6.FlatStyle = FlatStyle.Flat;
-            LandCustomColorButton6.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandCustomColorButton6.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandCustomColorButton6.ForeColor = SystemColors.ControlDark;
             LandCustomColorButton6.Location = new Point(80, 737);
             LandCustomColorButton6.Name = "LandCustomColorButton6";
             LandCustomColorButton6.Size = new Size(60, 57);
             LandCustomColorButton6.TabIndex = 79;
             LandCustomColorButton6.UseVisualStyleBackColor = false;
-            LandCustomColorButton6.Click += LandCustomColorButton6_Click;
+            LandCustomColorButton6.Click += (this.LandCustomColorButton6_Click);
             // 
             // LandCustomColorButton5
             // 
             LandCustomColorButton5.BackColor = Color.White;
             LandCustomColorButton5.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandCustomColorButton5.FlatStyle = FlatStyle.Flat;
-            LandCustomColorButton5.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandCustomColorButton5.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandCustomColorButton5.ForeColor = SystemColors.ControlDark;
             LandCustomColorButton5.Location = new Point(14, 737);
             LandCustomColorButton5.Name = "LandCustomColorButton5";
             LandCustomColorButton5.Size = new Size(60, 57);
             LandCustomColorButton5.TabIndex = 78;
             LandCustomColorButton5.UseVisualStyleBackColor = false;
-            LandCustomColorButton5.Click += LandCustomColorButton5_Click;
+            LandCustomColorButton5.Click += (this.LandCustomColorButton5_Click);
             // 
             // LandCustomColorButton4
             // 
             LandCustomColorButton4.BackColor = Color.White;
             LandCustomColorButton4.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandCustomColorButton4.FlatStyle = FlatStyle.Flat;
-            LandCustomColorButton4.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandCustomColorButton4.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandCustomColorButton4.ForeColor = SystemColors.ControlDark;
             LandCustomColorButton4.Location = new Point(80, 674);
             LandCustomColorButton4.Name = "LandCustomColorButton4";
             LandCustomColorButton4.Size = new Size(60, 57);
             LandCustomColorButton4.TabIndex = 77;
             LandCustomColorButton4.UseVisualStyleBackColor = false;
-            LandCustomColorButton4.Click += LandCustomColorButton4_Click;
+            LandCustomColorButton4.Click += (this.LandCustomColorButton4_Click);
             // 
             // LandCustomColorButton3
             // 
             LandCustomColorButton3.BackColor = Color.White;
             LandCustomColorButton3.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandCustomColorButton3.FlatStyle = FlatStyle.Flat;
-            LandCustomColorButton3.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandCustomColorButton3.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandCustomColorButton3.ForeColor = SystemColors.ControlDark;
             LandCustomColorButton3.Location = new Point(14, 674);
             LandCustomColorButton3.Name = "LandCustomColorButton3";
             LandCustomColorButton3.Size = new Size(60, 57);
             LandCustomColorButton3.TabIndex = 76;
             LandCustomColorButton3.UseVisualStyleBackColor = false;
-            LandCustomColorButton3.Click += LandCustomColorButton3_Click;
+            LandCustomColorButton3.Click += (this.LandCustomColorButton3_Click);
             // 
             // LandCustomColorButton2
             // 
             LandCustomColorButton2.BackColor = Color.White;
             LandCustomColorButton2.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandCustomColorButton2.FlatStyle = FlatStyle.Flat;
-            LandCustomColorButton2.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandCustomColorButton2.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandCustomColorButton2.ForeColor = SystemColors.ControlDark;
             LandCustomColorButton2.Location = new Point(80, 611);
             LandCustomColorButton2.Name = "LandCustomColorButton2";
             LandCustomColorButton2.Size = new Size(60, 57);
             LandCustomColorButton2.TabIndex = 75;
             LandCustomColorButton2.UseVisualStyleBackColor = false;
-            LandCustomColorButton2.Click += LandCustomColorButton2_Click;
+            LandCustomColorButton2.Click += (this.LandCustomColorButton2_Click);
             // 
             // LandCustomColorButton1
             // 
             LandCustomColorButton1.BackColor = Color.White;
             LandCustomColorButton1.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandCustomColorButton1.FlatStyle = FlatStyle.Flat;
-            LandCustomColorButton1.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandCustomColorButton1.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandCustomColorButton1.ForeColor = SystemColors.ControlDark;
             LandCustomColorButton1.Location = new Point(14, 611);
             LandCustomColorButton1.Name = "LandCustomColorButton1";
             LandCustomColorButton1.Size = new Size(60, 57);
             LandCustomColorButton1.TabIndex = 74;
             LandCustomColorButton1.UseVisualStyleBackColor = false;
-            LandCustomColorButton1.Click += LandCustomColorButton1_Click;
+            LandCustomColorButton1.Click += (this.LandCustomColorButton1_Click);
             // 
             // LandButton3D3728
             // 
-            LandButton3D3728.BackColor = Color.FromArgb(61, 55, 40);
+            LandButton3D3728.BackColor = Color.FromArgb((int)(byte)61, (int)(byte)55, (int)(byte)40);
             LandButton3D3728.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandButton3D3728.FlatStyle = FlatStyle.Flat;
-            LandButton3D3728.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandButton3D3728.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandButton3D3728.ForeColor = SystemColors.ControlDark;
             LandButton3D3728.Location = new Point(80, 548);
             LandButton3D3728.Name = "LandButton3D3728";
@@ -8157,7 +8204,7 @@
             LandButton3D3728.TabIndex = 73;
             LandButton3D3728.Text = "#3D3728";
             LandButton3D3728.UseVisualStyleBackColor = false;
-            LandButton3D3728.Click += LandButton3D3728_Click;
+            LandButton3D3728.Click += (this.LandButton3D3728_Click);
             // 
             // LandHardBrushButton
             // 
@@ -8171,7 +8218,7 @@
             LandHardBrushButton.Size = new Size(60, 60);
             LandHardBrushButton.TabIndex = 71;
             LandHardBrushButton.UseVisualStyleBackColor = false;
-            LandHardBrushButton.Click += LandHardBrushButton_Click;
+            LandHardBrushButton.Click += (this.LandHardBrushButton_Click);
             // 
             // LandSoftBrushButton
             // 
@@ -8185,14 +8232,14 @@
             LandSoftBrushButton.Size = new Size(60, 60);
             LandSoftBrushButton.TabIndex = 70;
             LandSoftBrushButton.UseVisualStyleBackColor = false;
-            LandSoftBrushButton.Click += LandSoftBrushButton_Click;
+            LandSoftBrushButton.Click += (this.LandSoftBrushButton_Click);
             // 
             // LandButtonAD9C7E
             // 
-            LandButtonAD9C7E.BackColor = Color.FromArgb(173, 156, 126);
+            LandButtonAD9C7E.BackColor = Color.FromArgb((int)(byte)173, (int)(byte)156, (int)(byte)126);
             LandButtonAD9C7E.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandButtonAD9C7E.FlatStyle = FlatStyle.Flat;
-            LandButtonAD9C7E.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandButtonAD9C7E.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandButtonAD9C7E.ForeColor = SystemColors.ControlDarkDark;
             LandButtonAD9C7E.Location = new Point(14, 548);
             LandButtonAD9C7E.Name = "LandButtonAD9C7E";
@@ -8200,14 +8247,14 @@
             LandButtonAD9C7E.TabIndex = 69;
             LandButtonAD9C7E.Text = "#AD9C7E";
             LandButtonAD9C7E.UseVisualStyleBackColor = false;
-            LandButtonAD9C7E.Click += LandButtonAD9C7E_Click;
+            LandButtonAD9C7E.Click += (this.LandButtonAD9C7E_Click);
             // 
             // LandButtonD7C293
             // 
-            LandButtonD7C293.BackColor = Color.FromArgb(215, 194, 147);
+            LandButtonD7C293.BackColor = Color.FromArgb((int)(byte)215, (int)(byte)194, (int)(byte)147);
             LandButtonD7C293.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandButtonD7C293.FlatStyle = FlatStyle.Flat;
-            LandButtonD7C293.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandButtonD7C293.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandButtonD7C293.ForeColor = SystemColors.ControlDarkDark;
             LandButtonD7C293.Location = new Point(80, 485);
             LandButtonD7C293.Name = "LandButtonD7C293";
@@ -8215,14 +8262,14 @@
             LandButtonD7C293.TabIndex = 68;
             LandButtonD7C293.Text = "#D7C293";
             LandButtonD7C293.UseVisualStyleBackColor = false;
-            LandButtonD7C293.Click += LandButtonD7C293_Click;
+            LandButtonD7C293.Click += (this.LandButtonD7C293_Click);
             // 
             // LandButtonBEBB8E
             // 
-            LandButtonBEBB8E.BackColor = Color.FromArgb(190, 187, 142);
+            LandButtonBEBB8E.BackColor = Color.FromArgb((int)(byte)190, (int)(byte)187, (int)(byte)142);
             LandButtonBEBB8E.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandButtonBEBB8E.FlatStyle = FlatStyle.Flat;
-            LandButtonBEBB8E.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandButtonBEBB8E.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandButtonBEBB8E.ForeColor = SystemColors.ControlDarkDark;
             LandButtonBEBB8E.Location = new Point(14, 485);
             LandButtonBEBB8E.Name = "LandButtonBEBB8E";
@@ -8230,14 +8277,14 @@
             LandButtonBEBB8E.TabIndex = 67;
             LandButtonBEBB8E.Text = "#BEBB8E";
             LandButtonBEBB8E.UseVisualStyleBackColor = false;
-            LandButtonBEBB8E.Click += LandButtonBEBB8E_Click;
+            LandButtonBEBB8E.Click += (this.LandButtonBEBB8E_Click);
             // 
             // LandButtonD8B48F
             // 
-            LandButtonD8B48F.BackColor = Color.FromArgb(216, 180, 143);
+            LandButtonD8B48F.BackColor = Color.FromArgb((int)(byte)216, (int)(byte)180, (int)(byte)143);
             LandButtonD8B48F.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandButtonD8B48F.FlatStyle = FlatStyle.Flat;
-            LandButtonD8B48F.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandButtonD8B48F.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandButtonD8B48F.ForeColor = SystemColors.ControlDarkDark;
             LandButtonD8B48F.Location = new Point(80, 422);
             LandButtonD8B48F.Name = "LandButtonD8B48F";
@@ -8245,14 +8292,14 @@
             LandButtonD8B48F.TabIndex = 66;
             LandButtonD8B48F.Text = "#D8B48F";
             LandButtonD8B48F.UseVisualStyleBackColor = false;
-            LandButtonD8B48F.Click += LandButtonD8B48F_Click;
+            LandButtonD8B48F.Click += (this.LandButtonD8B48F_Click);
             // 
             // LandButtonE6D0AB
             // 
-            LandButtonE6D0AB.BackColor = Color.FromArgb(230, 208, 171);
+            LandButtonE6D0AB.BackColor = Color.FromArgb((int)(byte)230, (int)(byte)208, (int)(byte)171);
             LandButtonE6D0AB.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandButtonE6D0AB.FlatStyle = FlatStyle.Flat;
-            LandButtonE6D0AB.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandButtonE6D0AB.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandButtonE6D0AB.ForeColor = SystemColors.ControlDarkDark;
             LandButtonE6D0AB.Location = new Point(14, 422);
             LandButtonE6D0AB.Name = "LandButtonE6D0AB";
@@ -8260,14 +8307,14 @@
             LandButtonE6D0AB.TabIndex = 65;
             LandButtonE6D0AB.Text = "#E6D0AB";
             LandButtonE6D0AB.UseVisualStyleBackColor = false;
-            LandButtonE6D0AB.Click += LandButtonE6D0AB_Click;
+            LandButtonE6D0AB.Click += (this.LandButtonE6D0AB_Click);
             // 
             // LandColorEraseButton
             // 
             LandColorEraseButton.BackColor = SystemColors.ControlLightLight;
             LandColorEraseButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandColorEraseButton.FlatStyle = FlatStyle.Flat;
-            LandColorEraseButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandColorEraseButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandColorEraseButton.ForeColor = SystemColors.ControlDarkDark;
             LandColorEraseButton.IconChar = FontAwesome.Sharp.IconChar.Eraser;
             LandColorEraseButton.IconColor = Color.Black;
@@ -8280,12 +8327,12 @@
             LandColorEraseButton.Text = "Erase";
             LandColorEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
             LandColorEraseButton.UseVisualStyleBackColor = false;
-            LandColorEraseButton.Click += LandColorEraseButton_Click;
+            LandColorEraseButton.Click += (this.LandColorEraseButton_Click);
             // 
             // label59
             // 
             label59.AutoSize = true;
-            label59.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label59.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label59.ForeColor = SystemColors.ControlDarkDark;
             label59.Location = new Point(17, 100);
             label59.Name = "label59";
@@ -8305,12 +8352,12 @@
             LandColorBrushSizeTrack.TickFrequency = 2;
             LandColorBrushSizeTrack.TickStyle = TickStyle.None;
             LandColorBrushSizeTrack.Value = 20;
-            LandColorBrushSizeTrack.ValueChanged += LandColorBrushSizeTrack_ValueChanged;
+            LandColorBrushSizeTrack.ValueChanged += (this.LandColorBrushSizeTrack_ValueChanged);
             // 
             // label60
             // 
             label60.AutoSize = true;
-            label60.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label60.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label60.ForeColor = SystemColors.ControlDarkDark;
             label60.Location = new Point(16, 15);
             label60.Name = "label60";
@@ -8320,10 +8367,10 @@
             // 
             // LandColorSelectionButton
             // 
-            LandColorSelectionButton.BackColor = Color.FromArgb(128, 230, 208, 171);
+            LandColorSelectionButton.BackColor = Color.FromArgb((int)(byte)128, (int)(byte)230, (int)(byte)208, (int)(byte)171);
             LandColorSelectionButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
             LandColorSelectionButton.FlatStyle = FlatStyle.Flat;
-            LandColorSelectionButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            LandColorSelectionButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LandColorSelectionButton.ForeColor = SystemColors.ControlDarkDark;
             LandColorSelectionButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             LandColorSelectionButton.IconColor = Color.Tan;
@@ -8334,11 +8381,11 @@
             LandColorSelectionButton.TabIndex = 59;
             LandColorSelectionButton.Text = "Select Brush Color";
             LandColorSelectionButton.UseVisualStyleBackColor = false;
-            LandColorSelectionButton.Click += LandColorSelectionButton_Click;
+            LandColorSelectionButton.Click += (this.LandColorSelectionButton_Click);
             // 
             // OceanToolPanel
             // 
-            OceanToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            OceanToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             OceanToolPanel.BackColor = SystemColors.Control;
             OceanToolPanel.Controls.Add(label72);
             OceanToolPanel.Controls.Add(OceanBrushVelocityTrack);
@@ -8373,7 +8420,7 @@
             // label72
             // 
             label72.AutoSize = true;
-            label72.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label72.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label72.ForeColor = SystemColors.ControlDarkDark;
             label72.Location = new Point(17, 141);
             label72.Name = "label72";
@@ -8393,14 +8440,14 @@
             OceanBrushVelocityTrack.TickFrequency = 2;
             OceanBrushVelocityTrack.TickStyle = TickStyle.None;
             OceanBrushVelocityTrack.Value = 100;
-            OceanBrushVelocityTrack.ValueChanged += OceanBrushVelocityTrack_ValueChanged;
+            OceanBrushVelocityTrack.ValueChanged += (this.OceanBrushVelocityTrack_ValueChanged);
             // 
             // OceanPaintButton
             // 
             OceanPaintButton.BackColor = SystemColors.ControlLightLight;
             OceanPaintButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanPaintButton.FlatStyle = FlatStyle.Flat;
-            OceanPaintButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanPaintButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanPaintButton.ForeColor = SystemColors.ControlDarkDark;
             OceanPaintButton.IconChar = FontAwesome.Sharp.IconChar.Brush;
             OceanPaintButton.IconColor = Color.Black;
@@ -8413,12 +8460,12 @@
             OceanPaintButton.Text = "Color";
             OceanPaintButton.TextImageRelation = TextImageRelation.TextAboveImage;
             OceanPaintButton.UseVisualStyleBackColor = false;
-            OceanPaintButton.Click += OceanPaintButton_Click;
+            OceanPaintButton.Click += (this.OceanPaintButton_Click);
             // 
             // label18
             // 
             label18.AutoSize = true;
-            label18.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label18.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label18.ForeColor = SystemColors.ControlDarkDark;
             label18.Location = new Point(17, 178);
             label18.Name = "label18";
@@ -8438,119 +8485,119 @@
             OceanEraserSizeTrack.TickFrequency = 2;
             OceanEraserSizeTrack.TickStyle = TickStyle.None;
             OceanEraserSizeTrack.Value = 20;
-            OceanEraserSizeTrack.ValueChanged += OceanEraserSizeTrack_ValueChanged;
+            OceanEraserSizeTrack.ValueChanged += (this.OceanEraserSizeTrack_ValueChanged);
             // 
             // OceanCustomColorButton8
             // 
             OceanCustomColorButton8.BackColor = Color.White;
             OceanCustomColorButton8.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanCustomColorButton8.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanCustomColorButton8.ForeColor = SystemColors.ControlDark;
             OceanCustomColorButton8.Location = new Point(80, 737);
             OceanCustomColorButton8.Name = "OceanCustomColorButton8";
             OceanCustomColorButton8.Size = new Size(60, 57);
             OceanCustomColorButton8.TabIndex = 74;
             OceanCustomColorButton8.UseVisualStyleBackColor = false;
-            OceanCustomColorButton8.MouseClick += OceanCustomColorButton8_Click;
+            OceanCustomColorButton8.MouseClick += (this.OceanCustomColorButton8_Click);
             // 
             // OceanCustomColorButton7
             // 
             OceanCustomColorButton7.BackColor = Color.White;
             OceanCustomColorButton7.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanCustomColorButton7.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton7.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton7.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanCustomColorButton7.ForeColor = SystemColors.ControlDark;
             OceanCustomColorButton7.Location = new Point(14, 737);
             OceanCustomColorButton7.Name = "OceanCustomColorButton7";
             OceanCustomColorButton7.Size = new Size(60, 57);
             OceanCustomColorButton7.TabIndex = 73;
             OceanCustomColorButton7.UseVisualStyleBackColor = false;
-            OceanCustomColorButton7.MouseClick += OceanCustomColorButton7_Click;
+            OceanCustomColorButton7.MouseClick += (this.OceanCustomColorButton7_Click);
             // 
             // OceanCustomColorButton6
             // 
             OceanCustomColorButton6.BackColor = Color.White;
             OceanCustomColorButton6.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanCustomColorButton6.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton6.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton6.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanCustomColorButton6.ForeColor = SystemColors.ControlDark;
             OceanCustomColorButton6.Location = new Point(80, 674);
             OceanCustomColorButton6.Name = "OceanCustomColorButton6";
             OceanCustomColorButton6.Size = new Size(60, 57);
             OceanCustomColorButton6.TabIndex = 72;
             OceanCustomColorButton6.UseVisualStyleBackColor = false;
-            OceanCustomColorButton6.MouseClick += OceanCustomColorButton6_Click;
+            OceanCustomColorButton6.MouseClick += (this.OceanCustomColorButton6_Click);
             // 
             // OceanCustomColorButton5
             // 
             OceanCustomColorButton5.BackColor = Color.White;
             OceanCustomColorButton5.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanCustomColorButton5.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton5.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton5.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanCustomColorButton5.ForeColor = SystemColors.ControlDark;
             OceanCustomColorButton5.Location = new Point(14, 674);
             OceanCustomColorButton5.Name = "OceanCustomColorButton5";
             OceanCustomColorButton5.Size = new Size(60, 57);
             OceanCustomColorButton5.TabIndex = 71;
             OceanCustomColorButton5.UseVisualStyleBackColor = false;
-            OceanCustomColorButton5.MouseClick += OceanCustomColorButton5_Click;
+            OceanCustomColorButton5.MouseClick += (this.OceanCustomColorButton5_Click);
             // 
             // OceanCustomColorButton4
             // 
             OceanCustomColorButton4.BackColor = Color.White;
             OceanCustomColorButton4.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanCustomColorButton4.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton4.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton4.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanCustomColorButton4.ForeColor = SystemColors.ControlDark;
             OceanCustomColorButton4.Location = new Point(80, 611);
             OceanCustomColorButton4.Name = "OceanCustomColorButton4";
             OceanCustomColorButton4.Size = new Size(60, 57);
             OceanCustomColorButton4.TabIndex = 70;
             OceanCustomColorButton4.UseVisualStyleBackColor = false;
-            OceanCustomColorButton4.MouseClick += OceanCustomColorButton4_Click;
+            OceanCustomColorButton4.MouseClick += (this.OceanCustomColorButton4_Click);
             // 
             // OceanCustomColorButton3
             // 
             OceanCustomColorButton3.BackColor = Color.White;
             OceanCustomColorButton3.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanCustomColorButton3.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton3.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton3.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanCustomColorButton3.ForeColor = SystemColors.ControlDark;
             OceanCustomColorButton3.Location = new Point(14, 611);
             OceanCustomColorButton3.Name = "OceanCustomColorButton3";
             OceanCustomColorButton3.Size = new Size(60, 57);
             OceanCustomColorButton3.TabIndex = 69;
             OceanCustomColorButton3.UseVisualStyleBackColor = false;
-            OceanCustomColorButton3.MouseClick += OceanCustomColorButton3_Click;
+            OceanCustomColorButton3.MouseClick += (this.OceanCustomColorButton3_Click);
             // 
             // OceanCustomColorButton2
             // 
             OceanCustomColorButton2.BackColor = Color.White;
             OceanCustomColorButton2.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanCustomColorButton2.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton2.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton2.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanCustomColorButton2.ForeColor = SystemColors.ControlDark;
             OceanCustomColorButton2.Location = new Point(80, 548);
             OceanCustomColorButton2.Name = "OceanCustomColorButton2";
             OceanCustomColorButton2.Size = new Size(60, 57);
             OceanCustomColorButton2.TabIndex = 68;
             OceanCustomColorButton2.UseVisualStyleBackColor = false;
-            OceanCustomColorButton2.MouseClick += OceanCustomColorButton2_Click;
+            OceanCustomColorButton2.MouseClick += (this.OceanCustomColorButton2_Click);
             // 
             // OceanCustomColorButton1
             // 
             OceanCustomColorButton1.BackColor = Color.White;
             OceanCustomColorButton1.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanCustomColorButton1.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton1.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanCustomColorButton1.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanCustomColorButton1.ForeColor = SystemColors.ControlDark;
             OceanCustomColorButton1.Location = new Point(14, 548);
             OceanCustomColorButton1.Name = "OceanCustomColorButton1";
             OceanCustomColorButton1.Size = new Size(60, 57);
             OceanCustomColorButton1.TabIndex = 67;
             OceanCustomColorButton1.UseVisualStyleBackColor = false;
-            OceanCustomColorButton1.MouseClick += OceanCustomColorButton1_Click;
+            OceanCustomColorButton1.MouseClick += (this.OceanCustomColorButton1_Click);
             // 
             // OceanHardBrushButton
             // 
@@ -8564,7 +8611,7 @@
             OceanHardBrushButton.Size = new Size(60, 60);
             OceanHardBrushButton.TabIndex = 65;
             OceanHardBrushButton.UseVisualStyleBackColor = false;
-            OceanHardBrushButton.Click += OceanHardBrushButton_Click;
+            OceanHardBrushButton.Click += (this.OceanHardBrushButton_Click);
             // 
             // OceanSoftBrushButton
             // 
@@ -8578,14 +8625,14 @@
             OceanSoftBrushButton.Size = new Size(60, 60);
             OceanSoftBrushButton.TabIndex = 64;
             OceanSoftBrushButton.UseVisualStyleBackColor = false;
-            OceanSoftBrushButton.Click += OceanSoftBrushButton_Click;
+            OceanSoftBrushButton.Click += (this.OceanSoftBrushButton_Click);
             // 
             // OceanButton42718D
             // 
-            OceanButton42718D.BackColor = Color.FromArgb(66, 113, 141);
+            OceanButton42718D.BackColor = Color.FromArgb((int)(byte)66, (int)(byte)113, (int)(byte)141);
             OceanButton42718D.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanButton42718D.FlatStyle = FlatStyle.Flat;
-            OceanButton42718D.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanButton42718D.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanButton42718D.ForeColor = SystemColors.ControlDark;
             OceanButton42718D.Location = new Point(80, 485);
             OceanButton42718D.Name = "OceanButton42718D";
@@ -8593,14 +8640,14 @@
             OceanButton42718D.TabIndex = 63;
             OceanButton42718D.Text = "#42718D";
             OceanButton42718D.UseVisualStyleBackColor = false;
-            OceanButton42718D.Click += OceanButton42718D_Click;
+            OceanButton42718D.Click += (this.OceanButton42718D_Click);
             // 
             // OceanButton6BA5B9
             // 
-            OceanButton6BA5B9.BackColor = Color.FromArgb(107, 165, 185);
+            OceanButton6BA5B9.BackColor = Color.FromArgb((int)(byte)107, (int)(byte)165, (int)(byte)185);
             OceanButton6BA5B9.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanButton6BA5B9.FlatStyle = FlatStyle.Flat;
-            OceanButton6BA5B9.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanButton6BA5B9.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanButton6BA5B9.ForeColor = SystemColors.ControlDarkDark;
             OceanButton6BA5B9.Location = new Point(14, 485);
             OceanButton6BA5B9.Name = "OceanButton6BA5B9";
@@ -8608,14 +8655,14 @@
             OceanButton6BA5B9.TabIndex = 62;
             OceanButton6BA5B9.Text = "#6BA5B9";
             OceanButton6BA5B9.UseVisualStyleBackColor = false;
-            OceanButton6BA5B9.Click += OceanButton6BA5B9_Click;
+            OceanButton6BA5B9.Click += (this.OceanButton6BA5B9_Click);
             // 
             // OceanButton88B5BB
             // 
-            OceanButton88B5BB.BackColor = Color.FromArgb(136, 181, 187);
+            OceanButton88B5BB.BackColor = Color.FromArgb((int)(byte)136, (int)(byte)181, (int)(byte)187);
             OceanButton88B5BB.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanButton88B5BB.FlatStyle = FlatStyle.Flat;
-            OceanButton88B5BB.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanButton88B5BB.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanButton88B5BB.ForeColor = SystemColors.ControlDarkDark;
             OceanButton88B5BB.Location = new Point(80, 422);
             OceanButton88B5BB.Name = "OceanButton88B5BB";
@@ -8623,14 +8670,14 @@
             OceanButton88B5BB.TabIndex = 61;
             OceanButton88B5BB.Text = "#88B5BB";
             OceanButton88B5BB.UseVisualStyleBackColor = false;
-            OceanButton88B5BB.Click += OceanButton88B5BB_Click;
+            OceanButton88B5BB.Click += (this.OceanButton88B5BB_Click);
             // 
             // OceanButton91CBB8
             // 
-            OceanButton91CBB8.BackColor = Color.FromArgb(145, 203, 184);
+            OceanButton91CBB8.BackColor = Color.FromArgb((int)(byte)145, (int)(byte)203, (int)(byte)184);
             OceanButton91CBB8.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanButton91CBB8.FlatStyle = FlatStyle.Flat;
-            OceanButton91CBB8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanButton91CBB8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanButton91CBB8.ForeColor = SystemColors.ControlDarkDark;
             OceanButton91CBB8.Location = new Point(14, 422);
             OceanButton91CBB8.Name = "OceanButton91CBB8";
@@ -8638,14 +8685,14 @@
             OceanButton91CBB8.TabIndex = 60;
             OceanButton91CBB8.Text = "#91CBB8";
             OceanButton91CBB8.UseVisualStyleBackColor = false;
-            OceanButton91CBB8.Click += OceanButton91CBB8_Click;
+            OceanButton91CBB8.Click += (this.OceanButton91CBB8_Click);
             // 
             // OceanColorEraseButton
             // 
             OceanColorEraseButton.BackColor = SystemColors.ControlLightLight;
             OceanColorEraseButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanColorEraseButton.FlatStyle = FlatStyle.Flat;
-            OceanColorEraseButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanColorEraseButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanColorEraseButton.ForeColor = SystemColors.ControlDarkDark;
             OceanColorEraseButton.IconChar = FontAwesome.Sharp.IconChar.Eraser;
             OceanColorEraseButton.IconColor = Color.Black;
@@ -8658,12 +8705,12 @@
             OceanColorEraseButton.Text = "Erase";
             OceanColorEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
             OceanColorEraseButton.UseVisualStyleBackColor = false;
-            OceanColorEraseButton.Click += OceanColorEraseButton_Click;
+            OceanColorEraseButton.Click += (this.OceanColorEraseButton_Click);
             // 
             // label23
             // 
             label23.AutoSize = true;
-            label23.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label23.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label23.ForeColor = SystemColors.ControlDarkDark;
             label23.Location = new Point(17, 100);
             label23.Name = "label23";
@@ -8683,12 +8730,12 @@
             OceanBrushSizeTrack.TickFrequency = 2;
             OceanBrushSizeTrack.TickStyle = TickStyle.None;
             OceanBrushSizeTrack.Value = 20;
-            OceanBrushSizeTrack.ValueChanged += OceanBrushSizeTrack_ValueChanged;
+            OceanBrushSizeTrack.ValueChanged += (this.OceanBrushSizeTrack_ValueChanged);
             // 
             // label57
             // 
             label57.AutoSize = true;
-            label57.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label57.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label57.ForeColor = SystemColors.ControlDarkDark;
             label57.Location = new Point(16, 15);
             label57.Name = "label57";
@@ -8698,10 +8745,10 @@
             // 
             // OceanPaintColorSelectButton
             // 
-            OceanPaintColorSelectButton.BackColor = Color.FromArgb(128, 145, 203, 184);
+            OceanPaintColorSelectButton.BackColor = Color.FromArgb((int)(byte)128, (int)(byte)145, (int)(byte)203, (int)(byte)184);
             OceanPaintColorSelectButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
             OceanPaintColorSelectButton.FlatStyle = FlatStyle.Flat;
-            OceanPaintColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            OceanPaintColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             OceanPaintColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
             OceanPaintColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             OceanPaintColorSelectButton.IconColor = Color.Tan;
@@ -8712,11 +8759,11 @@
             OceanPaintColorSelectButton.TabIndex = 54;
             OceanPaintColorSelectButton.Text = "Select Brush Color";
             OceanPaintColorSelectButton.UseVisualStyleBackColor = false;
-            OceanPaintColorSelectButton.Click += OceanPaintColorSelectButton_Click;
+            OceanPaintColorSelectButton.Click += (this.OceanPaintColorSelectButton_Click);
             // 
             // BackgroundToolPanel
             // 
-            BackgroundToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            BackgroundToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             BackgroundToolPanel.BackColor = SystemColors.Control;
             BackgroundToolPanel.Location = new Point(1421, 90);
             BackgroundToolPanel.Margin = new Padding(0);
@@ -8726,7 +8773,7 @@
             // 
             // DrawingToolPanel
             // 
-            DrawingToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            DrawingToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             DrawingToolPanel.BackColor = SystemColors.Control;
             DrawingToolPanel.Controls.Add(label26);
             DrawingToolPanel.Location = new Point(1421, 90);
@@ -8746,7 +8793,7 @@
             // 
             // RegionToolPanel
             // 
-            RegionToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            RegionToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             RegionToolPanel.BackColor = SystemColors.Control;
             RegionToolPanel.Controls.Add(label90);
             RegionToolPanel.Controls.Add(LightSolidRegionBorderPicture);
@@ -8777,7 +8824,7 @@
             // 
             label90.AutoSize = true;
             label90.CausesValidation = false;
-            label90.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label90.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             label90.ForeColor = SystemColors.ControlDarkDark;
             label90.Location = new Point(17, 22);
             label90.Name = "label90";
@@ -8797,7 +8844,7 @@
             LightSolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
             LightSolidRegionBorderPicture.TabIndex = 119;
             LightSolidRegionBorderPicture.TabStop = false;
-            LightSolidRegionBorderPicture.Click += LightSolidRegionBorderPicture_Click;
+            LightSolidRegionBorderPicture.Click += (this.LightSolidRegionBorderPicture_Click);
             // 
             // GradientRegionBorderPicture
             // 
@@ -8810,7 +8857,7 @@
             GradientRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
             GradientRegionBorderPicture.TabIndex = 118;
             GradientRegionBorderPicture.TabStop = false;
-            GradientRegionBorderPicture.Click += GradientRegionBorderPicture_Click;
+            GradientRegionBorderPicture.Click += (this.GradientRegionBorderPicture_Click);
             // 
             // SolidAndDashRegionBorderPicture
             // 
@@ -8823,7 +8870,7 @@
             SolidAndDashRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
             SolidAndDashRegionBorderPicture.TabIndex = 117;
             SolidAndDashRegionBorderPicture.TabStop = false;
-            SolidAndDashRegionBorderPicture.Click += SolidAndDashRegionBorderPicture_Click;
+            SolidAndDashRegionBorderPicture.Click += (this.SolidAndDashRegionBorderPicture_Click);
             // 
             // DoubleSolidRegionBorderPicture
             // 
@@ -8836,7 +8883,7 @@
             DoubleSolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
             DoubleSolidRegionBorderPicture.TabIndex = 116;
             DoubleSolidRegionBorderPicture.TabStop = false;
-            DoubleSolidRegionBorderPicture.Click += DoubleSolidRegionBorderPicture_Click;
+            DoubleSolidRegionBorderPicture.Click += (this.DoubleSolidRegionBorderPicture_Click);
             // 
             // DashDotDotRegionBorderPicture
             // 
@@ -8849,7 +8896,7 @@
             DashDotDotRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
             DashDotDotRegionBorderPicture.TabIndex = 115;
             DashDotDotRegionBorderPicture.TabStop = false;
-            DashDotDotRegionBorderPicture.Click += DashDotDotRegionBorderPicture_Click;
+            DashDotDotRegionBorderPicture.Click += (this.DashDotDotRegionBorderPicture_Click);
             // 
             // DashDotRegionBorderPicture
             // 
@@ -8862,7 +8909,7 @@
             DashDotRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
             DashDotRegionBorderPicture.TabIndex = 114;
             DashDotRegionBorderPicture.TabStop = false;
-            DashDotRegionBorderPicture.Click += DashDotRegionBorderPicture_Click;
+            DashDotRegionBorderPicture.Click += (this.DashDotRegionBorderPicture_Click);
             // 
             // DashedRegionBorderPicture
             // 
@@ -8875,7 +8922,7 @@
             DashedRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
             DashedRegionBorderPicture.TabIndex = 113;
             DashedRegionBorderPicture.TabStop = false;
-            DashedRegionBorderPicture.Click += DashedRegionBorderPicture_Click;
+            DashedRegionBorderPicture.Click += (this.DashedRegionBorderPicture_Click);
             // 
             // DottedRegionBorderPicture
             // 
@@ -8888,7 +8935,7 @@
             DottedRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
             DottedRegionBorderPicture.TabIndex = 112;
             DottedRegionBorderPicture.TabStop = false;
-            DottedRegionBorderPicture.Click += DottedRegionBorderPicture_Click;
+            DottedRegionBorderPicture.Click += (this.DottedRegionBorderPicture_Click);
             // 
             // SolidRegionBorderPicture
             // 
@@ -8901,7 +8948,7 @@
             SolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
             SolidRegionBorderPicture.TabIndex = 111;
             SolidRegionBorderPicture.TabStop = false;
-            SolidRegionBorderPicture.Click += SolidRegionBorderPicture_Click;
+            SolidRegionBorderPicture.Click += (this.SolidRegionBorderPicture_Click);
             // 
             // RegionDoubleSolidBorderRadio
             // 
@@ -8911,7 +8958,7 @@
             RegionDoubleSolidBorderRadio.Size = new Size(14, 13);
             RegionDoubleSolidBorderRadio.TabIndex = 110;
             RegionDoubleSolidBorderRadio.UseVisualStyleBackColor = true;
-            RegionDoubleSolidBorderRadio.CheckedChanged += RegionDoubleSolidBorderRadio_CheckedChanged;
+            RegionDoubleSolidBorderRadio.CheckedChanged += (this.RegionDoubleSolidBorderRadio_CheckedChanged);
             // 
             // RegionBorderedLightSolidRadio
             // 
@@ -8921,7 +8968,7 @@
             RegionBorderedLightSolidRadio.Size = new Size(14, 13);
             RegionBorderedLightSolidRadio.TabIndex = 109;
             RegionBorderedLightSolidRadio.UseVisualStyleBackColor = true;
-            RegionBorderedLightSolidRadio.CheckedChanged += RegionBorderedLightSolidRadio_CheckedChanged;
+            RegionBorderedLightSolidRadio.CheckedChanged += (this.RegionBorderedLightSolidRadio_CheckedChanged);
             // 
             // RegionBorderedGradientRadio
             // 
@@ -8931,7 +8978,7 @@
             RegionBorderedGradientRadio.Size = new Size(14, 13);
             RegionBorderedGradientRadio.TabIndex = 108;
             RegionBorderedGradientRadio.UseVisualStyleBackColor = true;
-            RegionBorderedGradientRadio.CheckedChanged += RegionBorderedGradientRadio_CheckedChanged;
+            RegionBorderedGradientRadio.CheckedChanged += (this.RegionBorderedGradientRadio_CheckedChanged);
             // 
             // RegionSolidAndDashesBorderRadio
             // 
@@ -8941,7 +8988,7 @@
             RegionSolidAndDashesBorderRadio.Size = new Size(14, 13);
             RegionSolidAndDashesBorderRadio.TabIndex = 107;
             RegionSolidAndDashesBorderRadio.UseVisualStyleBackColor = true;
-            RegionSolidAndDashesBorderRadio.CheckedChanged += RegionSolidAndDashesBorderRadio_CheckedChanged;
+            RegionSolidAndDashesBorderRadio.CheckedChanged += (this.RegionSolidAndDashesBorderRadio_CheckedChanged);
             // 
             // RegionDashDotDotBorderRadio
             // 
@@ -8951,7 +8998,7 @@
             RegionDashDotDotBorderRadio.Size = new Size(14, 13);
             RegionDashDotDotBorderRadio.TabIndex = 106;
             RegionDashDotDotBorderRadio.UseVisualStyleBackColor = true;
-            RegionDashDotDotBorderRadio.CheckedChanged += RegionDashDotDotBorderRadio_CheckedChanged;
+            RegionDashDotDotBorderRadio.CheckedChanged += (this.RegionDashDotDotBorderRadio_CheckedChanged);
             // 
             // RegionDashDotBorderRadio
             // 
@@ -8961,7 +9008,7 @@
             RegionDashDotBorderRadio.Size = new Size(14, 13);
             RegionDashDotBorderRadio.TabIndex = 105;
             RegionDashDotBorderRadio.UseVisualStyleBackColor = true;
-            RegionDashDotBorderRadio.CheckedChanged += RegionDashDotBorderRadio_CheckedChanged;
+            RegionDashDotBorderRadio.CheckedChanged += (this.RegionDashDotBorderRadio_CheckedChanged);
             // 
             // RegionDashBorderRadio
             // 
@@ -8971,7 +9018,7 @@
             RegionDashBorderRadio.Size = new Size(14, 13);
             RegionDashBorderRadio.TabIndex = 104;
             RegionDashBorderRadio.UseVisualStyleBackColor = true;
-            RegionDashBorderRadio.CheckedChanged += RegionDashBorderRadio_CheckedChanged;
+            RegionDashBorderRadio.CheckedChanged += (this.RegionDashBorderRadio_CheckedChanged);
             // 
             // RegionDottedBorderRadio
             // 
@@ -8981,7 +9028,7 @@
             RegionDottedBorderRadio.Size = new Size(14, 13);
             RegionDottedBorderRadio.TabIndex = 103;
             RegionDottedBorderRadio.UseVisualStyleBackColor = true;
-            RegionDottedBorderRadio.CheckedChanged += RegionDottedBorderRadio_CheckedChanged;
+            RegionDottedBorderRadio.CheckedChanged += (this.RegionDottedBorderRadio_CheckedChanged);
             // 
             // RegionSolidBorderRadio
             // 
@@ -8994,11 +9041,11 @@
             RegionSolidBorderRadio.TabIndex = 102;
             RegionSolidBorderRadio.TabStop = true;
             RegionSolidBorderRadio.UseVisualStyleBackColor = true;
-            RegionSolidBorderRadio.CheckedChanged += RegionSolidBorderRadio_CheckedChanged;
+            RegionSolidBorderRadio.CheckedChanged += (this.RegionSolidBorderRadio_CheckedChanged);
             // 
             // OverlayToolPanel
             // 
-            OverlayToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            OverlayToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             OverlayToolPanel.BackColor = SystemColors.Control;
             OverlayToolPanel.Controls.Add(FrameStyleTable);
             OverlayToolPanel.Location = new Point(1421, 90);
@@ -9023,7 +9070,7 @@
             // 
             // LabelToolPanel
             // 
-            LabelToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            LabelToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             LabelToolPanel.BackColor = SystemColors.Control;
             LabelToolPanel.Controls.Add(SelectBoxTintButton);
             LabelToolPanel.Controls.Add(LabelBoxStyleTable);
@@ -9036,7 +9083,7 @@
             // SelectBoxTintButton
             // 
             SelectBoxTintButton.BackColor = Color.White;
-            SelectBoxTintButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SelectBoxTintButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             SelectBoxTintButton.ForeColor = SystemColors.ControlDarkDark;
             SelectBoxTintButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
             SelectBoxTintButton.IconColor = Color.Tan;
@@ -9047,7 +9094,7 @@
             SelectBoxTintButton.TabIndex = 113;
             SelectBoxTintButton.Text = "Select Tint Color";
             SelectBoxTintButton.UseVisualStyleBackColor = false;
-            SelectBoxTintButton.Click += SelectBoxTintButton_Click;
+            SelectBoxTintButton.Click += (this.SelectBoxTintButton_Click);
             // 
             // LabelBoxStyleTable
             // 
@@ -9065,7 +9112,7 @@
             // 
             // SymbolToolPanel
             // 
-            SymbolToolPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            SymbolToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             SymbolToolPanel.BackColor = SystemColors.Control;
             SymbolToolPanel.Controls.Add(label22);
             SymbolToolPanel.Controls.Add(SymbolSearchTextBox);
@@ -9079,7 +9126,7 @@
             // label22
             // 
             label22.AutoSize = true;
-            label22.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label22.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label22.ForeColor = SystemColors.ControlDarkDark;
             label22.Location = new Point(10, 13);
             label22.Name = "label22";
@@ -9094,7 +9141,7 @@
             SymbolSearchTextBox.Name = "SymbolSearchTextBox";
             SymbolSearchTextBox.Size = new Size(132, 23);
             SymbolSearchTextBox.TabIndex = 78;
-            SymbolSearchTextBox.TextChanged += SymbolSearchTextBox_TextChanged;
+            SymbolSearchTextBox.TextChanged += (this.SymbolSearchTextBox_TextChanged);
             // 
             // SymbolTable
             // 
@@ -9147,26 +9194,26 @@
             // 
             // RealmStudioMainForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            AutoValidate = AutoValidate.Disable;
-            BackColor = Color.FromArgb(223, 219, 210);
-            ClientSize = new Size(1583, 1024);
-            Controls.Add(RealmStudioForm);
-            DoubleBuffered = true;
-            ForeColor = SystemColors.Control;
-            FormBorderStyle = FormBorderStyle.None;
-            Icon = (Icon)resources.GetObject("$this.Icon");
-            KeyPreview = true;
-            MaximumSize = new Size(1920, 1200);
-            MinimumSize = new Size(261, 65);
-            Name = "RealmStudioMainForm";
-            Text = "Realm Studio";
-            TransparencyKey = Color.Fuchsia;
-            FormClosing += RealmStudioMainForm_FormClosing;
-            Load += RealmStudioMainForm_Load;
-            Shown += RealmStudioMainForm_Shown;
-            KeyDown += RealmStudioMainForm_KeyDown;
+            this.AutoScaleDimensions = new SizeF(7F, 15F);
+            this.AutoScaleMode = AutoScaleMode.Font;
+            this.AutoValidate = AutoValidate.Disable;
+            this.BackColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            this.ClientSize = new Size(1583, 1024);
+            this.Controls.Add(RealmStudioForm);
+            this.DoubleBuffered = true;
+            this.ForeColor = SystemColors.Control;
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.Icon = (Icon)resources.GetObject("$this.Icon");
+            this.KeyPreview = true;
+            this.MaximumSize = new Size(1920, 1200);
+            this.MinimumSize = new Size(261, 65);
+            this.Name = "RealmStudioMainForm";
+            this.Text = "Realm Studio";
+            this.TransparencyKey = Color.Fuchsia;
+            this.FormClosing += (this.RealmStudioMainForm_FormClosing);
+            this.Load += (this.RealmStudioMainForm_Load);
+            this.Shown += (this.RealmStudioMainForm_Shown);
+            this.KeyDown += (this.RealmStudioMainForm_KeyDown);
             OceanTab.ResumeLayout(false);
             OceanTab.PerformLayout();
             WindroseGroup.ResumeLayout(false);
@@ -9382,7 +9429,7 @@
             LabelToolPanel.ResumeLayout(false);
             SymbolToolPanel.ResumeLayout(false);
             SymbolToolPanel.PerformLayout();
-            ResumeLayout(false);
+            this.ResumeLayout(false);
         }
 
         #endregion
@@ -9952,5 +9999,9 @@
         private NumericUpDown TowerDistanceUpDown;
         internal RadioButton SquareTowerWallPathRadio;
         internal RadioButton RoundTowerWallPathRadio;
+        private ToolStripMenuItem CheckForNewReleaseToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator8;
+        private ToolStripSeparator toolStripSeparator9;
+        internal FontAwesome.Sharp.IconButton NewVersionButton;
     }
 }
