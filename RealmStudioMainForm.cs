@@ -411,6 +411,10 @@ namespace RealmStudio
 
         private void NewVersionButton_Click(object sender, EventArgs e)
         {
+            // if user preferences are set to automatically check for new versions,
+            // Realm Studio will automatically check for a new version
+            // two minutes after the main form is shown; if a new version is available, the NewVersionButton will be
+            // shown and the user can click it to go to the latest release on GitHub
             var psi = new ProcessStartInfo
             {
                 FileName = "https://github.com/PeteNelson372/RealmStudio/releases/latest",
