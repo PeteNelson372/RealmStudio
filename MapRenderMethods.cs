@@ -80,8 +80,8 @@ namespace RealmStudio
             // measure layer
             RenderMeasures(map, renderCanvas, scrollPoint);
 
-            // TODO: drawing layer
-            //RenderDrawing(map, renderCanvas, scrollPoint);
+            // drawing layer
+            RenderDrawing(map, renderCanvas, scrollPoint);
 
             // vignette layer
             RenderVignette(map, renderCanvas, scrollPoint);
@@ -304,17 +304,25 @@ namespace RealmStudio
             renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
         }
 
-        /*
+
         internal static void RenderDrawing(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
-            // TODO
+            MapLayer drawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.DRAWINGLAYER);
+
+            if (drawingLayer.LayerSurface != null)
+            {
+                // code that makes use of the drawing layer is responsible for clearing
+                // and drawing to the canvas properly; it is only rendered here;
+                // clearing the drawing layer requires the user to explicitly clear it (by erasing or clearing the layer)
+                renderCanvas.DrawSurface(drawingLayer.LayerSurface, scrollPoint);
+            }
         }
 
         internal static void RenderDrawingForExport(RealmStudioMap map, SKCanvas renderCanvas)
         {
             // TODO
         }
-        */
+
 
         internal static void RenderLowerGrid(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {

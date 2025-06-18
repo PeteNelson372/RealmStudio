@@ -28,10 +28,10 @@ using System.Text.Json;
 
 namespace RealmStudio
 {
-    internal class AiIntegration
+    internal sealed class AiIntegration
     {
 
-        private static readonly HttpClient _httpClient = new HttpClient();
+        private static readonly HttpClient _httpClient = new();
 
         public static async Task<string?> GetJwtTokenAsync()
         {

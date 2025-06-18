@@ -270,15 +270,120 @@ namespace RealmStudio
 
                     MainForm.LandHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
                     MainForm.LandHardBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush1Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush2Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush3Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush4Button.FlatAppearance.BorderSize = 3;
                 }
-                else
+                else if (LandPaintBrush == ColorPaintBrush.HardBrush)
                 {
                     MainForm.LandHardBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
                     MainForm.LandHardBrushButton.FlatAppearance.BorderSize = 3;
 
                     MainForm.LandSoftBrushButton.FlatAppearance.BorderColor = Color.LightGray;
                     MainForm.LandSoftBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush1Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush2Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush3Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush4Button.FlatAppearance.BorderSize = 3;
                 }
+                else if (LandPaintBrush == ColorPaintBrush.PatternBrush1)
+                {
+                    MainForm.LandPatternBrush1Button.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+                    MainForm.LandPatternBrush1Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandSoftBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandSoftBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandHardBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush2Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush3Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush4Button.FlatAppearance.BorderSize = 3;
+                }
+                else if (LandPaintBrush == ColorPaintBrush.PatternBrush2)
+                {
+                    MainForm.LandPatternBrush2Button.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+                    MainForm.LandPatternBrush2Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandSoftBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandSoftBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandHardBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush1Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush3Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush4Button.FlatAppearance.BorderSize = 3;
+                }
+                else if (LandPaintBrush == ColorPaintBrush.PatternBrush3)
+                {
+                    MainForm.LandPatternBrush3Button.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+                    MainForm.LandPatternBrush3Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandSoftBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandSoftBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandHardBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush1Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush2Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush4Button.FlatAppearance.BorderSize = 3;
+                }
+                else if (LandPaintBrush == ColorPaintBrush.PatternBrush4)
+                {
+                    MainForm.LandPatternBrush4Button.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+                    MainForm.LandPatternBrush4Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandSoftBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandSoftBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandHardBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush1Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush2Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.LandPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.LandPatternBrush3Button.FlatAppearance.BorderSize = 3;
+                }
+
 
                 MapStateMediator.SelectedColorPaintBrush = LandPaintBrush;
 

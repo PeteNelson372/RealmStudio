@@ -178,6 +178,12 @@ namespace RealmStudio
                     }
 
                     BackgroundManager.BackgroundMediator.BackgroundTextureList.Add(t);
+
+                    bool hasTexture = DrawingManager.DrawingMediator.DrawingTextureList.Any(dt => dt.TextureName == t.TextureName);
+                    if (!hasTexture)
+                    {
+                        DrawingManager.DrawingMediator.DrawingTextureList.Add(t);
+                    }
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Water"))
                 {
@@ -192,6 +198,12 @@ namespace RealmStudio
 
                     OceanManager.OceanMediator.OceanTextureList.Add(t);
                     WaterFeatureManager.WaterFeatureMediator.WaterTextureList.Add(t);
+
+                    bool hasTexture = DrawingManager.DrawingMediator.DrawingTextureList.Any(dt => dt.TextureName == t.TextureName);
+                    if (!hasTexture)
+                    {
+                        DrawingManager.DrawingMediator.DrawingTextureList.Add(t);
+                    }
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Land"))
                 {
@@ -205,6 +217,12 @@ namespace RealmStudio
                     }
 
                     MapStateMediator.LandformUIMediator.LandTextureList.Add(t);
+
+                    bool hasTexture = DrawingManager.DrawingMediator.DrawingTextureList.Any(dt => dt.TextureName == t.TextureName);
+                    if (!hasTexture)
+                    {
+                        DrawingManager.DrawingMediator.DrawingTextureList.Add(t);
+                    }
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Hatch"))
                 {
@@ -216,6 +234,12 @@ namespace RealmStudio
                     }
 
                     HATCH_TEXTURE_LIST.Add(t);
+
+                    bool hasTexture = DrawingManager.DrawingMediator.DrawingTextureList.Any(dt => dt.TextureName == t.TextureName);
+                    if (!hasTexture)
+                    {
+                        DrawingManager.DrawingMediator.DrawingTextureList.Add(t);
+                    }
                 }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Path"))
                 {
@@ -327,6 +351,9 @@ namespace RealmStudio
 
             numAssets += files.Count();
 
+            ArgumentNullException.ThrowIfNull(DrawingManager.DrawingMediator);
+            DrawingManager.DrawingMediator.DrawingTextureList.Sort((t1, t2) => t1.TextureName.CompareTo(t2.TextureName));
+
             int numPresets = LabelPresetManager.LoadLabelPresets();
             numAssets += numPresets;
 
@@ -358,6 +385,7 @@ namespace RealmStudio
             ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
             ArgumentNullException.ThrowIfNull(OceanManager.OceanMediator);
             ArgumentNullException.ThrowIfNull(PathManager.PathMediator);
+            ArgumentNullException.ThrowIfNull(DrawingManager.DrawingMediator);
 
             HATCH_TEXTURE_LIST.Clear();
             BRUSH_LIST.Clear();
@@ -370,6 +398,8 @@ namespace RealmStudio
 
             PathManager.PathMediator.PathTextureList.Clear();
             PathManager.PathMediator.PathVectorList.Clear();
+
+            DrawingManager.DrawingMediator.DrawingTextureList.Clear();
 
             LabelPresetManager.ClearLabelPresets();
 

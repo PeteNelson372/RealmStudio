@@ -41,14 +41,12 @@ namespace RealmStudio
         public SKColor StrokeColor { get; set; } = SKColor.Empty;
         public ColorPaintBrush PaintBrush { get; set; }
         public int BrushRadius { get; set; }
+        internal MapBrush StrokeBrush { get; set; } = new();
         public SKShader StrokeShader { get; set; } = SKShader.CreateEmpty();
         public int MapLayerIdentifier { get; set; }
         public bool Erase { get; set; }
-
         public bool Rendered { get; set; }
-
         public SKPaint ShaderPaint { get; set; }
-
         public SKSurface? RenderSurface { get; set; }
 
         public LayerPaintStroke()
@@ -187,14 +185,39 @@ namespace RealmStudio
                     RenderSurface?.Canvas.ClipPath(clipPath);
                 }
 
+                StrokeShader = SKShader.CreateColor(StrokeColor);
+                SKBitmap? strokeBitmap = null;
+                Bitmap resizedBitmap;
+
+                if (PaintBrush == ColorPaintBrush.PatternBrush1
+                            || PaintBrush == ColorPaintBrush.PatternBrush2
+                            || PaintBrush == ColorPaintBrush.PatternBrush3
+                            || PaintBrush == ColorPaintBrush.PatternBrush4)
+                {
+                    if (StrokeBrush.BrushBitmap == null)
+                    {
+                        return;
+                    }
+
+                    // scale and set opacity of the texture
+                    // resize the bitmap, but maintain aspect ratio
+                    resizedBitmap = DrawingMethods.ScaleBitmap(StrokeBrush.BrushBitmap, (int)(BrushRadius * 2), (int)(BrushRadius * 2));
+                    strokeBitmap = resizedBitmap.ToSKBitmap();
+
+                    // combine the stroke color with the bitmap color
+                    ShaderPaint.ColorFilter = SKColorFilter.CreateBlendMode(StrokeColor, SKBlendMode.Modulate);
+
+                    ShaderPaint.Style = SKPaintStyle.StrokeAndFill;
+                }
+
+                ShaderPaint.Shader = StrokeShader;
+
                 // when erasing (painting with transparent color), painting to the RenderSurface canvas doesn't paint over
                 // previously painted color; painting directly to the canvas that is passed in does (a Skia bug?)
                 foreach (LayerPaintStrokePoint point in PaintStrokePoints)
                 {
                     if (!Erase)
                     {
-                        StrokeShader = SKShader.CreateColor(StrokeColor);
-
                         if (PaintBrush == ColorPaintBrush.SoftBrush)
                         {
                             StrokeShader.Dispose();
@@ -202,8 +225,22 @@ namespace RealmStudio
                             StrokeShader = SKShader.CreateRadialGradient(gradientCenter, BrushRadius, [StrokeColor, StrokeColor.WithAlpha(0)], SKShaderTileMode.Clamp);
                         }
 
-                        ShaderPaint.Shader = StrokeShader;
-                        RenderSurface?.Canvas.DrawCircle(point.StrokeLocation.X, point.StrokeLocation.Y, point.StrokeRadius, ShaderPaint);
+                        if (PaintBrush == ColorPaintBrush.PatternBrush1
+                            || PaintBrush == ColorPaintBrush.PatternBrush2
+                            || PaintBrush == ColorPaintBrush.PatternBrush3
+                            || PaintBrush == ColorPaintBrush.PatternBrush4)
+                        {
+                            if (strokeBitmap == null)
+                            {
+                                return;
+                            }
+
+                            RenderSurface?.Canvas.DrawBitmap(strokeBitmap, new SKRect(0, 0, strokeBitmap.Width, strokeBitmap.Height), new SKRect(point.StrokeLocation.X - strokeBitmap.Width / 2, point.StrokeLocation.Y - strokeBitmap.Height / 2, point.StrokeLocation.X + strokeBitmap.Width / 2, point.StrokeLocation.Y + strokeBitmap.Height / 2), ShaderPaint);
+                        }
+                        else
+                        {
+                            RenderSurface?.Canvas.DrawCircle(point.StrokeLocation.X, point.StrokeLocation.Y, point.StrokeRadius, ShaderPaint);
+                        }
                     }
                     else
                     {

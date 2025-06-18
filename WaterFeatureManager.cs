@@ -29,8 +29,6 @@ namespace RealmStudio
     internal sealed class WaterFeatureManager : IMapComponentManager
     {
         public static SKPath WaterFeaturErasePath { get; set; } = new();
-
-
         public static Color DEFAULT_WATER_OUTLINE_COLOR { get; } = ColorTranslator.FromHtml("#A19076");
         public static Color DEFAULT_WATER_COLOR { get; } = ColorTranslator.FromHtml("#658CBFC5");
 
@@ -1158,12 +1156,39 @@ namespace RealmStudio
 
             if (MapStateMediator.CurrentLayerPaintStroke == null)
             {
-                MapStateMediator.CurrentLayerPaintStroke = new LayerPaintStroke(MapStateMediator.CurrentMap, WaterFeatureMediator.WaterPaintColor.ToSKColor(),
-                    MapStateMediator.SelectedColorPaintBrush, MapStateMediator.MainUIMediator.SelectedBrushSize / 2, MapBuilder.WATERDRAWINGLAYER)
+                MapStateMediator.CurrentLayerPaintStroke = new LayerPaintStroke(MapStateMediator.CurrentMap,
+                    WaterFeatureMediator.WaterPaintColor.ToSKColor(),
+                    MapStateMediator.SelectedColorPaintBrush,
+                    MapStateMediator.MainUIMediator.SelectedBrushSize / 2,
+                    MapBuilder.WATERDRAWINGLAYER)
                 {
                     RenderSurface = SKSurface.Create(glRenderControl.GRContext, false,
                     new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
                 };
+
+                MapBrush? brush = null;
+                if (WaterFeatureMediator.WaterPaintBrush == ColorPaintBrush.PatternBrush1)
+                {
+                    brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush1");
+                }
+                else if (WaterFeatureMediator.WaterPaintBrush == ColorPaintBrush.PatternBrush2)
+                {
+                    brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush2");
+                }
+                else if (WaterFeatureMediator.WaterPaintBrush == ColorPaintBrush.PatternBrush3)
+                {
+                    brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush3");
+                }
+                else if (WaterFeatureMediator.WaterPaintBrush == ColorPaintBrush.PatternBrush4)
+                {
+                    brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush4"); ;
+                }
+
+                if (brush != null)
+                {
+                    brush.BrushBitmap = (Bitmap)Bitmap.FromFile(brush.BrushPath);
+                    MapStateMediator.CurrentLayerPaintStroke.StrokeBrush = brush;
+                }
 
                 Cmd_AddWaterPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
                 CommandManager.AddCommand(cmd);

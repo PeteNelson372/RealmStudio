@@ -212,6 +212,14 @@ namespace RealmStudio
                 MapDrawingMode.HeightMapPaint => "Paint Height Map",
                 MapDrawingMode.MapHeightIncrease => "Increase Map Height",
                 MapDrawingMode.MapHeightDecrease => "Decrease Map Height",
+                MapDrawingMode.DrawingLine => "Draw Line",
+                MapDrawingMode.DrawingErase => "Erase",
+                MapDrawingMode.DrawingPaint => "Paint",
+                MapDrawingMode.DrawingRectangle => "Draw Rectangle",
+                MapDrawingMode.DrawingEllipse => "Draw Ellipse",
+                MapDrawingMode.DrawingPolygon => "Draw Polygon",
+                MapDrawingMode.DrawingStamp => "Stamp",
+                MapDrawingMode.DrawingFill => "Flood Fill",
                 _ => "Undefined",
             };
 
@@ -224,6 +232,18 @@ namespace RealmStudio
                     break;
                 case ColorPaintBrush.HardBrush:
                     modeText += "Hard Brush";
+                    break;
+                case ColorPaintBrush.PatternBrush1:
+                    modeText += "Pattern 1";
+                    break;
+                case ColorPaintBrush.PatternBrush2:
+                    modeText += "Pattern 2";
+                    break;
+                case ColorPaintBrush.PatternBrush3:
+                    modeText += "Pattern 3";
+                    break;
+                case ColorPaintBrush.PatternBrush4:
+                    modeText += "Pattern 4";
                     break;
                 case ColorPaintBrush.None:
                     break;

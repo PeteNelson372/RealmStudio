@@ -26,9 +26,9 @@ using System.Text.Json;
 
 namespace RealmStudio
 {
-    internal class ReleaseChecker
+    internal sealed class ReleaseChecker
     {
-        private static readonly HttpClient _httpClient = new HttpClient();
+        private static readonly HttpClient _httpClient = new();
 
         public static async Task<List<(string, string)>> FetchRealmStudioGithubReleasesAsync()
         {
@@ -85,7 +85,7 @@ namespace RealmStudio
                     string latestReleaseDate = latestRelease.Value.Item1;
                     string latestReleaseName = latestRelease.Value.Item2;
 
-                    string latestReleaseVersionNumber = latestReleaseName.Substring(latestReleaseName.LastIndexOf(' ') + 1).Trim();
+                    string latestReleaseVersionNumber = latestReleaseName[(latestReleaseName.LastIndexOf(' ') + 1)..].Trim();
                     string currentVersionNumber = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "Unknown";
 
                     string[] latestVersionNumbers = latestReleaseVersionNumber.Split('.');

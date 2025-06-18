@@ -319,8 +319,36 @@
             ShowRegionLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label10 = new Label();
             DrawingTab = new TabPage();
+            PreviousDrawingFillTextureButton = new FontAwesome.Sharp.IconButton();
+            NextDrawingFillTextureButton = new FontAwesome.Sharp.IconButton();
+            label105 = new Label();
+            DrawingFillTextureScaleTrack = new TrackBar();
+            label107 = new Label();
+            DrawingFillTextureOpacityTrack = new TrackBar();
+            DrawingFillTextureNameLabel = new Label();
+            label109 = new Label();
+            DrawingFillTextureBox = new PictureBox();
+            groupBox2 = new GroupBox();
+            label104 = new Label();
+            LineBrushSizeTrack = new TrackBar();
+            label103 = new Label();
+            SelectFillColorButton = new FontAwesome.Sharp.IconButton();
+            label102 = new Label();
+            SelectPaintColorButton = new FontAwesome.Sharp.IconButton();
             DrawingToolStrip = new ToolStrip();
-            iconToolStripButton8 = new FontAwesome.Sharp.IconToolStripButton();
+            DrawingSelectButton = new FontAwesome.Sharp.IconToolStripButton();
+            PencilDrawButton = new FontAwesome.Sharp.IconToolStripButton();
+            PaintDrawButton = new FontAwesome.Sharp.IconToolStripButton();
+            FillShapeButton = new FontAwesome.Sharp.IconToolStripButton();
+            FillTypeDropdownButton = new ToolStripDropDownButton();
+            ColorMenuItem = new ToolStripMenuItem();
+            TextureMenuItem = new ToolStripMenuItem();
+            toolStripSeparator10 = new ToolStripSeparator();
+            PlaceRectangleButton = new FontAwesome.Sharp.IconToolStripButton();
+            PlaceEllipseButton = new FontAwesome.Sharp.IconToolStripButton();
+            PlacePolygonButton = new FontAwesome.Sharp.IconToolStripButton();
+            PlaceStampButton = new FontAwesome.Sharp.IconToolStripButton();
+            EraseDrawingButton = new FontAwesome.Sharp.IconToolStripButton();
             ShowDrawingLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label11 = new Label();
             RealmStudioForm = new ReaLTaiizor.Forms.DungeonForm();
@@ -446,6 +474,45 @@
             CheckForNewReleaseToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator8 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
+            DrawingToolPanel = new Panel();
+            DrawingPatternBrush4Button = new Button();
+            DrawingPatternBrush3Button = new Button();
+            DrawingPatternBrush2Button = new Button();
+            DrawingPatternBrush1Button = new Button();
+            label26 = new Label();
+            trackBar1 = new TrackBar();
+            DrawingHardBrushButton = new Button();
+            DrawingSoftBrushButton = new Button();
+            label106 = new Label();
+            RegionToolPanel = new Panel();
+            label90 = new Label();
+            LightSolidRegionBorderPicture = new PictureBox();
+            GradientRegionBorderPicture = new PictureBox();
+            SolidAndDashRegionBorderPicture = new PictureBox();
+            DoubleSolidRegionBorderPicture = new PictureBox();
+            DashDotDotRegionBorderPicture = new PictureBox();
+            DashDotRegionBorderPicture = new PictureBox();
+            DashedRegionBorderPicture = new PictureBox();
+            DottedRegionBorderPicture = new PictureBox();
+            SolidRegionBorderPicture = new PictureBox();
+            RegionDoubleSolidBorderRadio = new RadioButton();
+            RegionBorderedLightSolidRadio = new RadioButton();
+            RegionBorderedGradientRadio = new RadioButton();
+            RegionSolidAndDashesBorderRadio = new RadioButton();
+            RegionDashDotDotBorderRadio = new RadioButton();
+            RegionDashDotBorderRadio = new RadioButton();
+            RegionDashBorderRadio = new RadioButton();
+            RegionDottedBorderRadio = new RadioButton();
+            RegionSolidBorderRadio = new RadioButton();
+            OverlayToolPanel = new Panel();
+            FrameStyleTable = new TableLayoutPanel();
+            LabelToolPanel = new Panel();
+            SelectBoxTintButton = new FontAwesome.Sharp.IconButton();
+            LabelBoxStyleTable = new TableLayoutPanel();
+            SymbolToolPanel = new Panel();
+            label22 = new Label();
+            SymbolSearchTextBox = new TextBox();
+            SymbolTable = new TableLayoutPanel();
             PathToolPanel = new Panel();
             groupBox1 = new GroupBox();
             label101 = new Label();
@@ -492,6 +559,10 @@
             SolidLineRadio = new RadioButton();
             label51 = new Label();
             WaterToolPanel = new Panel();
+            WaterPatternBrush4Button = new Button();
+            WaterPatternBrush3Button = new Button();
+            WaterPatternBrush2Button = new Button();
+            WaterPatternBrush1Button = new Button();
             label76 = new Label();
             WaterBrushVelocityTrack = new TrackBar();
             WaterColorButton = new FontAwesome.Sharp.IconButton();
@@ -517,6 +588,10 @@
             label62 = new Label();
             WaterPaintColorSelectButton = new FontAwesome.Sharp.IconButton();
             LandToolPanel = new Panel();
+            LandPatternBrush4Button = new Button();
+            LandPatternBrush3Button = new Button();
+            LandPatternBrush2Button = new Button();
+            LandPatternBrush1Button = new Button();
             label75 = new Label();
             LandBrushVelocityTrack = new TrackBar();
             LandColorButton = new FontAwesome.Sharp.IconButton();
@@ -542,6 +617,10 @@
             label60 = new Label();
             LandColorSelectionButton = new FontAwesome.Sharp.IconButton();
             OceanToolPanel = new Panel();
+            OceanPatternBrush4Button = new Button();
+            OceanPatternBrush3Button = new Button();
+            OceanPatternBrush2Button = new Button();
+            OceanPatternBrush1Button = new Button();
             label72 = new Label();
             OceanBrushVelocityTrack = new TrackBar();
             OceanPaintButton = new FontAwesome.Sharp.IconButton();
@@ -567,37 +646,6 @@
             label57 = new Label();
             OceanPaintColorSelectButton = new FontAwesome.Sharp.IconButton();
             BackgroundToolPanel = new Panel();
-            DrawingToolPanel = new Panel();
-            label26 = new Label();
-            RegionToolPanel = new Panel();
-            label90 = new Label();
-            LightSolidRegionBorderPicture = new PictureBox();
-            GradientRegionBorderPicture = new PictureBox();
-            SolidAndDashRegionBorderPicture = new PictureBox();
-            DoubleSolidRegionBorderPicture = new PictureBox();
-            DashDotDotRegionBorderPicture = new PictureBox();
-            DashDotRegionBorderPicture = new PictureBox();
-            DashedRegionBorderPicture = new PictureBox();
-            DottedRegionBorderPicture = new PictureBox();
-            SolidRegionBorderPicture = new PictureBox();
-            RegionDoubleSolidBorderRadio = new RadioButton();
-            RegionBorderedLightSolidRadio = new RadioButton();
-            RegionBorderedGradientRadio = new RadioButton();
-            RegionSolidAndDashesBorderRadio = new RadioButton();
-            RegionDashDotDotBorderRadio = new RadioButton();
-            RegionDashDotBorderRadio = new RadioButton();
-            RegionDashBorderRadio = new RadioButton();
-            RegionDottedBorderRadio = new RadioButton();
-            RegionSolidBorderRadio = new RadioButton();
-            OverlayToolPanel = new Panel();
-            FrameStyleTable = new TableLayoutPanel();
-            LabelToolPanel = new Panel();
-            SelectBoxTintButton = new FontAwesome.Sharp.IconButton();
-            LabelBoxStyleTable = new TableLayoutPanel();
-            SymbolToolPanel = new Panel();
-            label22 = new Label();
-            SymbolSearchTextBox = new TextBox();
-            SymbolTable = new TableLayoutPanel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
             OceanTab = new TabPage();
@@ -690,6 +738,10 @@
             ((System.ComponentModel.ISupportInitialize)RegionBorderWidthTrack).BeginInit();
             RegionToolStrip.SuspendLayout();
             DrawingTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)DrawingFillTextureScaleTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DrawingFillTextureOpacityTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DrawingFillTextureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)LineBrushSizeTrack).BeginInit();
             DrawingToolStrip.SuspendLayout();
             RealmStudioForm.SuspendLayout();
             FontSelectionPanel.SuspendLayout();
@@ -713,6 +765,21 @@
             MapStatusStrip.SuspendLayout();
             ApplicationStatusStrip.SuspendLayout();
             RealmStudioMainMenuStrip.SuspendLayout();
+            DrawingToolPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
+            RegionToolPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SolidAndDashRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DoubleSolidRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DashDotDotRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DashDotRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).BeginInit();
+            OverlayToolPanel.SuspendLayout();
+            LabelToolPanel.SuspendLayout();
+            SymbolToolPanel.SuspendLayout();
             PathToolPanel.SuspendLayout();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)TowerSizeUpDown).BeginInit();
@@ -746,20 +813,6 @@
             ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).BeginInit();
-            DrawingToolPanel.SuspendLayout();
-            RegionToolPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)SolidAndDashRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DoubleSolidRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DashDotDotRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DashDotRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).BeginInit();
-            OverlayToolPanel.SuspendLayout();
-            LabelToolPanel.SuspendLayout();
-            SymbolToolPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // OceanTab
@@ -5488,6 +5541,22 @@
             // DrawingTab
             // 
             DrawingTab.BackColor = SystemColors.Control;
+            DrawingTab.Controls.Add(PreviousDrawingFillTextureButton);
+            DrawingTab.Controls.Add(NextDrawingFillTextureButton);
+            DrawingTab.Controls.Add(label105);
+            DrawingTab.Controls.Add(DrawingFillTextureScaleTrack);
+            DrawingTab.Controls.Add(label107);
+            DrawingTab.Controls.Add(DrawingFillTextureOpacityTrack);
+            DrawingTab.Controls.Add(DrawingFillTextureNameLabel);
+            DrawingTab.Controls.Add(label109);
+            DrawingTab.Controls.Add(DrawingFillTextureBox);
+            DrawingTab.Controls.Add(groupBox2);
+            DrawingTab.Controls.Add(label104);
+            DrawingTab.Controls.Add(LineBrushSizeTrack);
+            DrawingTab.Controls.Add(label103);
+            DrawingTab.Controls.Add(SelectFillColorButton);
+            DrawingTab.Controls.Add(label102);
+            DrawingTab.Controls.Add(SelectPaintColorButton);
             DrawingTab.Controls.Add(DrawingToolStrip);
             DrawingTab.Controls.Add(ShowDrawingLayerSwitch);
             DrawingTab.Controls.Add(label11);
@@ -5496,6 +5565,207 @@
             DrawingTab.Size = new Size(230, 878);
             DrawingTab.TabIndex = 8;
             DrawingTab.Text = "Drawing";
+            // 
+            // PreviousDrawingFillTextureButton
+            // 
+            PreviousDrawingFillTextureButton.FlatStyle = FlatStyle.Flat;
+            PreviousDrawingFillTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            PreviousDrawingFillTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleLeft;
+            PreviousDrawingFillTextureButton.IconColor = Color.Black;
+            PreviousDrawingFillTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PreviousDrawingFillTextureButton.IconSize = 24;
+            PreviousDrawingFillTextureButton.Location = new Point(6, 408);
+            PreviousDrawingFillTextureButton.Name = "PreviousDrawingFillTextureButton";
+            PreviousDrawingFillTextureButton.Size = new Size(24, 24);
+            PreviousDrawingFillTextureButton.TabIndex = 42;
+            PreviousDrawingFillTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
+            PreviousDrawingFillTextureButton.UseVisualStyleBackColor = true;
+            PreviousDrawingFillTextureButton.Click += (this.PreviousDrawingFillTextureButton_Click);
+            // 
+            // NextDrawingFillTextureButton
+            // 
+            NextDrawingFillTextureButton.FlatStyle = FlatStyle.Flat;
+            NextDrawingFillTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            NextDrawingFillTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleRight;
+            NextDrawingFillTextureButton.IconColor = Color.Black;
+            NextDrawingFillTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            NextDrawingFillTextureButton.IconSize = 24;
+            NextDrawingFillTextureButton.Location = new Point(121, 408);
+            NextDrawingFillTextureButton.Name = "NextDrawingFillTextureButton";
+            NextDrawingFillTextureButton.Size = new Size(24, 24);
+            NextDrawingFillTextureButton.TabIndex = 41;
+            NextDrawingFillTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
+            NextDrawingFillTextureButton.UseVisualStyleBackColor = true;
+            NextDrawingFillTextureButton.Click += (this.NextDrawingFillTextureButton_Click);
+            // 
+            // label105
+            // 
+            label105.AutoSize = true;
+            label105.BackColor = Color.Transparent;
+            label105.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label105.ForeColor = SystemColors.ControlDarkDark;
+            label105.Location = new Point(13, 506);
+            label105.Name = "label105";
+            label105.Size = new Size(34, 15);
+            label105.TabIndex = 40;
+            label105.Text = "Scale";
+            // 
+            // DrawingFillTextureScaleTrack
+            // 
+            DrawingFillTextureScaleTrack.AutoSize = false;
+            DrawingFillTextureScaleTrack.Location = new Point(9, 529);
+            DrawingFillTextureScaleTrack.Maximum = 200;
+            DrawingFillTextureScaleTrack.Name = "DrawingFillTextureScaleTrack";
+            DrawingFillTextureScaleTrack.Size = new Size(136, 20);
+            DrawingFillTextureScaleTrack.TabIndex = 39;
+            DrawingFillTextureScaleTrack.TickStyle = TickStyle.None;
+            DrawingFillTextureScaleTrack.Value = 100;
+            // 
+            // label107
+            // 
+            label107.AutoSize = true;
+            label107.BackColor = Color.Transparent;
+            label107.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label107.ForeColor = SystemColors.ControlDarkDark;
+            label107.Location = new Point(9, 463);
+            label107.Name = "label107";
+            label107.Size = new Size(48, 15);
+            label107.TabIndex = 38;
+            label107.Text = "Opacity";
+            // 
+            // DrawingFillTextureOpacityTrack
+            // 
+            DrawingFillTextureOpacityTrack.AutoSize = false;
+            DrawingFillTextureOpacityTrack.BackColor = SystemColors.Control;
+            DrawingFillTextureOpacityTrack.Location = new Point(9, 481);
+            DrawingFillTextureOpacityTrack.Maximum = 255;
+            DrawingFillTextureOpacityTrack.Name = "DrawingFillTextureOpacityTrack";
+            DrawingFillTextureOpacityTrack.Size = new Size(136, 20);
+            DrawingFillTextureOpacityTrack.TabIndex = 37;
+            DrawingFillTextureOpacityTrack.TickStyle = TickStyle.None;
+            DrawingFillTextureOpacityTrack.Value = 255;
+            // 
+            // DrawingFillTextureNameLabel
+            // 
+            DrawingFillTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            DrawingFillTextureNameLabel.ForeColor = SystemColors.ControlDarkDark;
+            DrawingFillTextureNameLabel.Location = new Point(9, 435);
+            DrawingFillTextureNameLabel.Name = "DrawingFillTextureNameLabel";
+            DrawingFillTextureNameLabel.Size = new Size(136, 15);
+            DrawingFillTextureNameLabel.TabIndex = 36;
+            DrawingFillTextureNameLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // label109
+            // 
+            label109.AutoSize = true;
+            label109.BackColor = Color.Transparent;
+            label109.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label109.ForeColor = SystemColors.ControlDarkDark;
+            label109.Location = new Point(9, 278);
+            label109.Name = "label109";
+            label109.Size = new Size(63, 15);
+            label109.TabIndex = 35;
+            label109.Text = "Fill Texture";
+            // 
+            // DrawingFillTextureBox
+            // 
+            DrawingFillTextureBox.Location = new Point(9, 296);
+            DrawingFillTextureBox.Name = "DrawingFillTextureBox";
+            DrawingFillTextureBox.Size = new Size(136, 136);
+            DrawingFillTextureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+            DrawingFillTextureBox.TabIndex = 34;
+            DrawingFillTextureBox.TabStop = false;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Location = new Point(9, 570);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(146, 232);
+            groupBox2.TabIndex = 33;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Drawing Layers";
+            // 
+            // label104
+            // 
+            label104.AutoSize = true;
+            label104.BackColor = Color.Transparent;
+            label104.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label104.ForeColor = SystemColors.ControlDarkDark;
+            label104.Location = new Point(9, 55);
+            label104.Name = "label104";
+            label104.Size = new Size(87, 15);
+            label104.TabIndex = 32;
+            label104.Text = "Line/Brush Size";
+            // 
+            // LineBrushSizeTrack
+            // 
+            LineBrushSizeTrack.AutoSize = false;
+            LineBrushSizeTrack.BackColor = SystemColors.Control;
+            LineBrushSizeTrack.Location = new Point(9, 71);
+            LineBrushSizeTrack.Maximum = 256;
+            LineBrushSizeTrack.Minimum = 1;
+            LineBrushSizeTrack.Name = "LineBrushSizeTrack";
+            LineBrushSizeTrack.Size = new Size(136, 20);
+            LineBrushSizeTrack.TabIndex = 31;
+            LineBrushSizeTrack.TickStyle = TickStyle.None;
+            LineBrushSizeTrack.Value = 8;
+            LineBrushSizeTrack.Scroll += (this.LineBrushSizeTrack_Scroll);
+            // 
+            // label103
+            // 
+            label103.AutoSize = true;
+            label103.BackColor = Color.Transparent;
+            label103.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label103.ForeColor = SystemColors.ControlDarkDark;
+            label103.Location = new Point(9, 184);
+            label103.Name = "label103";
+            label103.Size = new Size(54, 15);
+            label103.TabIndex = 30;
+            label103.Text = "Fill Color";
+            // 
+            // SelectFillColorButton
+            // 
+            SelectFillColorButton.BackColor = Color.Transparent;
+            SelectFillColorButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            SelectFillColorButton.ForeColor = SystemColors.ControlDarkDark;
+            SelectFillColorButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SelectFillColorButton.IconColor = Color.Tan;
+            SelectFillColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectFillColorButton.Location = new Point(9, 202);
+            SelectFillColorButton.Name = "SelectFillColorButton";
+            SelectFillColorButton.Size = new Size(136, 60);
+            SelectFillColorButton.TabIndex = 29;
+            SelectFillColorButton.Text = "Click to Select";
+            SelectFillColorButton.UseVisualStyleBackColor = false;
+            SelectFillColorButton.Click += (this.SelectFillColorButton_Click);
+            // 
+            // label102
+            // 
+            label102.AutoSize = true;
+            label102.BackColor = Color.Transparent;
+            label102.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label102.ForeColor = SystemColors.ControlDarkDark;
+            label102.Location = new Point(9, 96);
+            label102.Name = "label102";
+            label102.Size = new Size(109, 15);
+            label102.TabIndex = 28;
+            label102.Text = "Draw && Paint Color";
+            // 
+            // SelectPaintColorButton
+            // 
+            SelectPaintColorButton.BackColor = Color.Black;
+            SelectPaintColorButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            SelectPaintColorButton.ForeColor = SystemColors.HighlightText;
+            SelectPaintColorButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SelectPaintColorButton.IconColor = Color.Tan;
+            SelectPaintColorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectPaintColorButton.Location = new Point(6, 114);
+            SelectPaintColorButton.Name = "SelectPaintColorButton";
+            SelectPaintColorButton.Size = new Size(136, 60);
+            SelectPaintColorButton.TabIndex = 27;
+            SelectPaintColorButton.Text = "Click to Select";
+            SelectPaintColorButton.UseVisualStyleBackColor = false;
+            SelectPaintColorButton.Click += (this.SelectPaintColorButton_Click);
             // 
             // DrawingToolStrip
             // 
@@ -5506,30 +5776,205 @@
             DrawingToolStrip.Dock = DockStyle.None;
             DrawingToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             DrawingToolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            DrawingToolStrip.Items.AddRange(new ToolStripItem[] { iconToolStripButton8 });
+            DrawingToolStrip.Items.AddRange(new ToolStripItem[] { DrawingSelectButton, PencilDrawButton, PaintDrawButton, FillShapeButton, FillTypeDropdownButton, toolStripSeparator10, PlaceRectangleButton, PlaceEllipseButton, PlacePolygonButton, PlaceStampButton, EraseDrawingButton });
             DrawingToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
             DrawingToolStrip.Location = new Point(158, 0);
             DrawingToolStrip.Name = "DrawingToolStrip";
             DrawingToolStrip.Size = new Size(72, 878);
             DrawingToolStrip.TabIndex = 21;
-            DrawingToolStrip.Text = "LandformTools";
             // 
-            // iconToolStripButton8
+            // DrawingSelectButton
             // 
-            iconToolStripButton8.AutoSize = false;
-            iconToolStripButton8.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            iconToolStripButton8.ForeColor = SystemColors.ControlDarkDark;
-            iconToolStripButton8.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
-            iconToolStripButton8.IconColor = Color.Black;
-            iconToolStripButton8.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconToolStripButton8.IconSize = 24;
-            iconToolStripButton8.ImageScaling = ToolStripItemImageScaling.None;
-            iconToolStripButton8.ImageTransparentColor = Color.Magenta;
-            iconToolStripButton8.Margin = new Padding(0, 25, 0, 2);
-            iconToolStripButton8.Name = "iconToolStripButton8";
-            iconToolStripButton8.Size = new Size(60, 60);
-            iconToolStripButton8.Text = "Select";
-            iconToolStripButton8.TextImageRelation = TextImageRelation.TextAboveImage;
+            DrawingSelectButton.AutoSize = false;
+            DrawingSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            DrawingSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            DrawingSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
+            DrawingSelectButton.IconColor = Color.Black;
+            DrawingSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            DrawingSelectButton.IconSize = 24;
+            DrawingSelectButton.ImageScaling = ToolStripItemImageScaling.None;
+            DrawingSelectButton.ImageTransparentColor = Color.Magenta;
+            DrawingSelectButton.Margin = new Padding(0, 25, 0, 2);
+            DrawingSelectButton.Name = "DrawingSelectButton";
+            DrawingSelectButton.Size = new Size(60, 60);
+            DrawingSelectButton.Text = "Select";
+            DrawingSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            DrawingSelectButton.Click += (this.DrawingSelectButton_Click);
+            // 
+            // PencilDrawButton
+            // 
+            PencilDrawButton.AutoSize = false;
+            PencilDrawButton.ForeColor = SystemColors.ControlDarkDark;
+            PencilDrawButton.IconChar = FontAwesome.Sharp.IconChar.Pencil;
+            PencilDrawButton.IconColor = Color.Black;
+            PencilDrawButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PencilDrawButton.IconSize = 24;
+            PencilDrawButton.ImageScaling = ToolStripItemImageScaling.None;
+            PencilDrawButton.ImageTransparentColor = Color.Magenta;
+            PencilDrawButton.Margin = new Padding(0, 25, 0, 2);
+            PencilDrawButton.Name = "PencilDrawButton";
+            PencilDrawButton.Size = new Size(60, 60);
+            PencilDrawButton.Text = "Draw";
+            PencilDrawButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            PencilDrawButton.Click += (this.PencilDrawButton_Click);
+            // 
+            // PaintDrawButton
+            // 
+            PaintDrawButton.AutoSize = false;
+            PaintDrawButton.ForeColor = SystemColors.ControlDarkDark;
+            PaintDrawButton.IconChar = FontAwesome.Sharp.IconChar.Paintbrush;
+            PaintDrawButton.IconColor = Color.Black;
+            PaintDrawButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PaintDrawButton.IconSize = 24;
+            PaintDrawButton.ImageScaling = ToolStripItemImageScaling.None;
+            PaintDrawButton.ImageTransparentColor = Color.Magenta;
+            PaintDrawButton.Margin = new Padding(0, 25, 0, 25);
+            PaintDrawButton.Name = "PaintDrawButton";
+            PaintDrawButton.Size = new Size(60, 60);
+            PaintDrawButton.Text = "Paint";
+            PaintDrawButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            PaintDrawButton.Click += (this.PaintDrawButton_Click);
+            // 
+            // FillShapeButton
+            // 
+            FillShapeButton.AutoSize = false;
+            FillShapeButton.CheckOnClick = true;
+            FillShapeButton.ForeColor = SystemColors.ControlDarkDark;
+            FillShapeButton.IconChar = FontAwesome.Sharp.IconChar.Fill;
+            FillShapeButton.IconColor = Color.Black;
+            FillShapeButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            FillShapeButton.IconSize = 24;
+            FillShapeButton.ImageScaling = ToolStripItemImageScaling.None;
+            FillShapeButton.ImageTransparentColor = Color.Magenta;
+            FillShapeButton.Name = "FillShapeButton";
+            FillShapeButton.Size = new Size(60, 60);
+            FillShapeButton.Text = "Fill";
+            FillShapeButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            FillShapeButton.Click += (this.FillShapeButton_Click);
+            // 
+            // FillTypeDropdownButton
+            // 
+            FillTypeDropdownButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            FillTypeDropdownButton.DropDownItems.AddRange(new ToolStripItem[] { ColorMenuItem, TextureMenuItem });
+            FillTypeDropdownButton.ForeColor = SystemColors.ControlDarkDark;
+            FillTypeDropdownButton.Image = (Image)resources.GetObject("FillTypeDropdownButton.Image");
+            FillTypeDropdownButton.ImageTransparentColor = Color.Magenta;
+            FillTypeDropdownButton.Name = "FillTypeDropdownButton";
+            FillTypeDropdownButton.Size = new Size(70, 21);
+            FillTypeDropdownButton.Text = "Type";
+            FillTypeDropdownButton.TextImageRelation = TextImageRelation.Overlay;
+            // 
+            // ColorMenuItem
+            // 
+            ColorMenuItem.Checked = true;
+            ColorMenuItem.CheckOnClick = true;
+            ColorMenuItem.CheckState = CheckState.Checked;
+            ColorMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            ColorMenuItem.Name = "ColorMenuItem";
+            ColorMenuItem.Size = new Size(180, 22);
+            ColorMenuItem.Text = "Color";
+            ColorMenuItem.CheckedChanged += (this.ColorMenuItem_CheckedChanged);
+            // 
+            // TextureMenuItem
+            // 
+            TextureMenuItem.CheckOnClick = true;
+            TextureMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            TextureMenuItem.Name = "TextureMenuItem";
+            TextureMenuItem.Size = new Size(180, 22);
+            TextureMenuItem.Text = "Texture";
+            TextureMenuItem.TextImageRelation = TextImageRelation.Overlay;
+            TextureMenuItem.ToolTipText = "Texture";
+            TextureMenuItem.CheckedChanged += (this.TextureMenuItem_CheckedChanged);
+            // 
+            // toolStripSeparator10
+            // 
+            toolStripSeparator10.Name = "toolStripSeparator10";
+            toolStripSeparator10.Size = new Size(70, 6);
+            // 
+            // PlaceRectangleButton
+            // 
+            PlaceRectangleButton.AutoSize = false;
+            PlaceRectangleButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            PlaceRectangleButton.ForeColor = SystemColors.ControlDarkDark;
+            PlaceRectangleButton.IconChar = FontAwesome.Sharp.IconChar.Square;
+            PlaceRectangleButton.IconColor = Color.Black;
+            PlaceRectangleButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PlaceRectangleButton.IconSize = 32;
+            PlaceRectangleButton.ImageScaling = ToolStripItemImageScaling.None;
+            PlaceRectangleButton.ImageTransparentColor = Color.Magenta;
+            PlaceRectangleButton.Margin = new Padding(0, 25, 0, 2);
+            PlaceRectangleButton.Name = "PlaceRectangleButton";
+            PlaceRectangleButton.Size = new Size(40, 40);
+            PlaceRectangleButton.Text = "Rectangle";
+            PlaceRectangleButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            PlaceRectangleButton.ToolTipText = "Draw Rectangle";
+            PlaceRectangleButton.Click += (this.PlaceRectangleButton_Click);
+            // 
+            // PlaceEllipseButton
+            // 
+            PlaceEllipseButton.AutoSize = false;
+            PlaceEllipseButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            PlaceEllipseButton.ForeColor = SystemColors.ControlDarkDark;
+            PlaceEllipseButton.IconChar = FontAwesome.Sharp.IconChar.Circle;
+            PlaceEllipseButton.IconColor = Color.Black;
+            PlaceEllipseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PlaceEllipseButton.IconSize = 32;
+            PlaceEllipseButton.ImageScaling = ToolStripItemImageScaling.None;
+            PlaceEllipseButton.ImageTransparentColor = Color.Magenta;
+            PlaceEllipseButton.Margin = new Padding(0, 25, 0, 2);
+            PlaceEllipseButton.Name = "PlaceEllipseButton";
+            PlaceEllipseButton.Size = new Size(40, 40);
+            PlaceEllipseButton.Text = "Ellipse";
+            PlaceEllipseButton.ToolTipText = "Place Ellipse";
+            PlaceEllipseButton.Click += (this.PlaceEllipseButton_Click);
+            // 
+            // PlacePolygonButton
+            // 
+            PlacePolygonButton.AutoSize = false;
+            PlacePolygonButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            PlacePolygonButton.IconChar = FontAwesome.Sharp.IconChar.DrawPolygon;
+            PlacePolygonButton.IconColor = Color.Black;
+            PlacePolygonButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PlacePolygonButton.IconSize = 32;
+            PlacePolygonButton.ImageScaling = ToolStripItemImageScaling.None;
+            PlacePolygonButton.ImageTransparentColor = Color.Magenta;
+            PlacePolygonButton.Margin = new Padding(0, 25, 0, 2);
+            PlacePolygonButton.Name = "PlacePolygonButton";
+            PlacePolygonButton.Size = new Size(40, 40);
+            PlacePolygonButton.Text = "iconToolStripButton1";
+            PlacePolygonButton.Click += (this.PlacePolygonButton_Click);
+            // 
+            // PlaceStampButton
+            // 
+            PlaceStampButton.AutoSize = false;
+            PlaceStampButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            PlaceStampButton.IconChar = FontAwesome.Sharp.IconChar.Stamp;
+            PlaceStampButton.IconColor = Color.Black;
+            PlaceStampButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PlaceStampButton.IconSize = 32;
+            PlaceStampButton.ImageScaling = ToolStripItemImageScaling.None;
+            PlaceStampButton.ImageTransparentColor = Color.Magenta;
+            PlaceStampButton.Margin = new Padding(0, 25, 0, 2);
+            PlaceStampButton.Name = "PlaceStampButton";
+            PlaceStampButton.Size = new Size(40, 40);
+            PlaceStampButton.Text = "iconToolStripButton1";
+            PlaceStampButton.Click += (this.PlaceStampButton_Click);
+            // 
+            // EraseDrawingButton
+            // 
+            EraseDrawingButton.AutoSize = false;
+            EraseDrawingButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            EraseDrawingButton.IconChar = FontAwesome.Sharp.IconChar.Eraser;
+            EraseDrawingButton.IconColor = Color.Black;
+            EraseDrawingButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            EraseDrawingButton.IconSize = 36;
+            EraseDrawingButton.ImageScaling = ToolStripItemImageScaling.None;
+            EraseDrawingButton.ImageTransparentColor = Color.Magenta;
+            EraseDrawingButton.Margin = new Padding(0, 25, 0, 2);
+            EraseDrawingButton.Name = "EraseDrawingButton";
+            EraseDrawingButton.Size = new Size(40, 40);
+            EraseDrawingButton.Text = "iconToolStripButton1";
+            EraseDrawingButton.Click += (this.EraseDrawingButton_Click);
             // 
             // ShowDrawingLayerSwitch
             // 
@@ -5568,6 +6013,7 @@
             ShowDrawingLayerSwitch.Tag = "Cyber";
             ShowDrawingLayerSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowDrawingLayerSwitch.Timer_RGB = 300;
+            ShowDrawingLayerSwitch.CheckedChanged += (this.ShowDrawingLayerSwitch_CheckedChanged);
             // 
             // label11
             // 
@@ -5613,16 +6059,16 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(RealmStudioMainMenuStrip);
-            RealmStudioForm.Controls.Add(PathToolPanel);
-            RealmStudioForm.Controls.Add(WaterToolPanel);
-            RealmStudioForm.Controls.Add(LandToolPanel);
-            RealmStudioForm.Controls.Add(OceanToolPanel);
-            RealmStudioForm.Controls.Add(BackgroundToolPanel);
             RealmStudioForm.Controls.Add(DrawingToolPanel);
             RealmStudioForm.Controls.Add(RegionToolPanel);
             RealmStudioForm.Controls.Add(OverlayToolPanel);
             RealmStudioForm.Controls.Add(LabelToolPanel);
             RealmStudioForm.Controls.Add(SymbolToolPanel);
+            RealmStudioForm.Controls.Add(PathToolPanel);
+            RealmStudioForm.Controls.Add(WaterToolPanel);
+            RealmStudioForm.Controls.Add(LandToolPanel);
+            RealmStudioForm.Controls.Add(OceanToolPanel);
+            RealmStudioForm.Controls.Add(BackgroundToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
             RealmStudioForm.FillEdgeColorA = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
             RealmStudioForm.FillEdgeColorB = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
@@ -7063,6 +7509,515 @@
             AboutToolStripMenuItem.Text = "&About...";
             AboutToolStripMenuItem.Click += (this.AboutToolStripMenuItem_Click);
             // 
+            // DrawingToolPanel
+            // 
+            DrawingToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
+            DrawingToolPanel.BackColor = SystemColors.Control;
+            DrawingToolPanel.Controls.Add(DrawingPatternBrush4Button);
+            DrawingToolPanel.Controls.Add(DrawingPatternBrush3Button);
+            DrawingToolPanel.Controls.Add(DrawingPatternBrush2Button);
+            DrawingToolPanel.Controls.Add(DrawingPatternBrush1Button);
+            DrawingToolPanel.Controls.Add(label26);
+            DrawingToolPanel.Controls.Add(trackBar1);
+            DrawingToolPanel.Controls.Add(DrawingHardBrushButton);
+            DrawingToolPanel.Controls.Add(DrawingSoftBrushButton);
+            DrawingToolPanel.Controls.Add(label106);
+            DrawingToolPanel.Location = new Point(1421, 90);
+            DrawingToolPanel.Margin = new Padding(0);
+            DrawingToolPanel.Name = "DrawingToolPanel";
+            DrawingToolPanel.Size = new Size(152, 806);
+            DrawingToolPanel.TabIndex = 26;
+            // 
+            // DrawingPatternBrush4Button
+            // 
+            DrawingPatternBrush4Button.BackColor = Color.Black;
+            DrawingPatternBrush4Button.BackgroundImage = (Image)resources.GetObject("DrawingPatternBrush4Button.BackgroundImage");
+            DrawingPatternBrush4Button.BackgroundImageLayout = ImageLayout.Zoom;
+            DrawingPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+            DrawingPatternBrush4Button.FlatAppearance.BorderSize = 3;
+            DrawingPatternBrush4Button.FlatStyle = FlatStyle.Flat;
+            DrawingPatternBrush4Button.Location = new Point(104, 77);
+            DrawingPatternBrush4Button.Name = "DrawingPatternBrush4Button";
+            DrawingPatternBrush4Button.Size = new Size(40, 40);
+            DrawingPatternBrush4Button.TabIndex = 105;
+            DrawingPatternBrush4Button.UseVisualStyleBackColor = false;
+            DrawingPatternBrush4Button.Click += (this.DrawingPatternBrush4Button_Click);
+            // 
+            // DrawingPatternBrush3Button
+            // 
+            DrawingPatternBrush3Button.BackColor = Color.Black;
+            DrawingPatternBrush3Button.BackgroundImage = (Image)resources.GetObject("DrawingPatternBrush3Button.BackgroundImage");
+            DrawingPatternBrush3Button.BackgroundImageLayout = ImageLayout.Zoom;
+            DrawingPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+            DrawingPatternBrush3Button.FlatAppearance.BorderSize = 3;
+            DrawingPatternBrush3Button.FlatStyle = FlatStyle.Flat;
+            DrawingPatternBrush3Button.Location = new Point(59, 77);
+            DrawingPatternBrush3Button.Name = "DrawingPatternBrush3Button";
+            DrawingPatternBrush3Button.Size = new Size(40, 40);
+            DrawingPatternBrush3Button.TabIndex = 104;
+            DrawingPatternBrush3Button.UseVisualStyleBackColor = false;
+            DrawingPatternBrush3Button.Click += (this.DrawingPatternBrush3Button_Click);
+            // 
+            // DrawingPatternBrush2Button
+            // 
+            DrawingPatternBrush2Button.BackColor = Color.Black;
+            DrawingPatternBrush2Button.BackgroundImage = (Image)resources.GetObject("DrawingPatternBrush2Button.BackgroundImage");
+            DrawingPatternBrush2Button.BackgroundImageLayout = ImageLayout.Zoom;
+            DrawingPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+            DrawingPatternBrush2Button.FlatAppearance.BorderSize = 3;
+            DrawingPatternBrush2Button.FlatStyle = FlatStyle.Flat;
+            DrawingPatternBrush2Button.Location = new Point(14, 77);
+            DrawingPatternBrush2Button.Name = "DrawingPatternBrush2Button";
+            DrawingPatternBrush2Button.Size = new Size(40, 40);
+            DrawingPatternBrush2Button.TabIndex = 103;
+            DrawingPatternBrush2Button.UseVisualStyleBackColor = false;
+            DrawingPatternBrush2Button.Click += (this.DrawingPatternBrush2Button_Click);
+            // 
+            // DrawingPatternBrush1Button
+            // 
+            DrawingPatternBrush1Button.BackColor = Color.Black;
+            DrawingPatternBrush1Button.BackgroundImage = (Image)resources.GetObject("DrawingPatternBrush1Button.BackgroundImage");
+            DrawingPatternBrush1Button.BackgroundImageLayout = ImageLayout.Zoom;
+            DrawingPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+            DrawingPatternBrush1Button.FlatAppearance.BorderSize = 3;
+            DrawingPatternBrush1Button.FlatStyle = FlatStyle.Flat;
+            DrawingPatternBrush1Button.Location = new Point(104, 31);
+            DrawingPatternBrush1Button.Name = "DrawingPatternBrush1Button";
+            DrawingPatternBrush1Button.Size = new Size(40, 40);
+            DrawingPatternBrush1Button.TabIndex = 102;
+            DrawingPatternBrush1Button.UseVisualStyleBackColor = false;
+            DrawingPatternBrush1Button.Click += (this.DrawingPatternBrush1Button_Click);
+            // 
+            // label26
+            // 
+            label26.AutoSize = true;
+            label26.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label26.ForeColor = SystemColors.ControlDarkDark;
+            label26.Location = new Point(17, 123);
+            label26.Name = "label26";
+            label26.Size = new Size(74, 13);
+            label26.TabIndex = 101;
+            label26.Text = "Brush Velocity";
+            // 
+            // trackBar1
+            // 
+            trackBar1.AutoSize = false;
+            trackBar1.Location = new Point(14, 139);
+            trackBar1.Maximum = 100;
+            trackBar1.Minimum = 1;
+            trackBar1.Name = "trackBar1";
+            trackBar1.Size = new Size(126, 20);
+            trackBar1.TabIndex = 100;
+            trackBar1.TickStyle = TickStyle.None;
+            trackBar1.Value = 100;
+            // 
+            // DrawingHardBrushButton
+            // 
+            DrawingHardBrushButton.BackColor = Color.Black;
+            DrawingHardBrushButton.BackgroundImage = (Image)resources.GetObject("DrawingHardBrushButton.BackgroundImage");
+            DrawingHardBrushButton.BackgroundImageLayout = ImageLayout.Zoom;
+            DrawingHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+            DrawingHardBrushButton.FlatAppearance.BorderSize = 3;
+            DrawingHardBrushButton.FlatStyle = FlatStyle.Flat;
+            DrawingHardBrushButton.Location = new Point(59, 31);
+            DrawingHardBrushButton.Name = "DrawingHardBrushButton";
+            DrawingHardBrushButton.Size = new Size(40, 40);
+            DrawingHardBrushButton.TabIndex = 99;
+            DrawingHardBrushButton.UseVisualStyleBackColor = false;
+            DrawingHardBrushButton.Click += (this.DrawingHardBrushButton_Click);
+            // 
+            // DrawingSoftBrushButton
+            // 
+            DrawingSoftBrushButton.BackColor = Color.Black;
+            DrawingSoftBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            DrawingSoftBrushButton.FlatAppearance.BorderSize = 3;
+            DrawingSoftBrushButton.FlatStyle = FlatStyle.Flat;
+            DrawingSoftBrushButton.Image = (Image)resources.GetObject("DrawingSoftBrushButton.Image");
+            DrawingSoftBrushButton.Location = new Point(14, 31);
+            DrawingSoftBrushButton.Name = "DrawingSoftBrushButton";
+            DrawingSoftBrushButton.Size = new Size(40, 40);
+            DrawingSoftBrushButton.TabIndex = 98;
+            DrawingSoftBrushButton.UseVisualStyleBackColor = false;
+            DrawingSoftBrushButton.Click += (this.DrawingSoftBrushButton_Click);
+            // 
+            // label106
+            // 
+            label106.AutoSize = true;
+            label106.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label106.ForeColor = SystemColors.ControlDarkDark;
+            label106.Location = new Point(7, 11);
+            label106.Name = "label106";
+            label106.Size = new Size(62, 13);
+            label106.TabIndex = 97;
+            label106.Text = "Color Brush";
+            // 
+            // RegionToolPanel
+            // 
+            RegionToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
+            RegionToolPanel.BackColor = SystemColors.Control;
+            RegionToolPanel.Controls.Add(label90);
+            RegionToolPanel.Controls.Add(LightSolidRegionBorderPicture);
+            RegionToolPanel.Controls.Add(GradientRegionBorderPicture);
+            RegionToolPanel.Controls.Add(SolidAndDashRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DoubleSolidRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DashDotDotRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DashDotRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DashedRegionBorderPicture);
+            RegionToolPanel.Controls.Add(DottedRegionBorderPicture);
+            RegionToolPanel.Controls.Add(SolidRegionBorderPicture);
+            RegionToolPanel.Controls.Add(RegionDoubleSolidBorderRadio);
+            RegionToolPanel.Controls.Add(RegionBorderedLightSolidRadio);
+            RegionToolPanel.Controls.Add(RegionBorderedGradientRadio);
+            RegionToolPanel.Controls.Add(RegionSolidAndDashesBorderRadio);
+            RegionToolPanel.Controls.Add(RegionDashDotDotBorderRadio);
+            RegionToolPanel.Controls.Add(RegionDashDotBorderRadio);
+            RegionToolPanel.Controls.Add(RegionDashBorderRadio);
+            RegionToolPanel.Controls.Add(RegionDottedBorderRadio);
+            RegionToolPanel.Controls.Add(RegionSolidBorderRadio);
+            RegionToolPanel.Location = new Point(1421, 90);
+            RegionToolPanel.Margin = new Padding(0);
+            RegionToolPanel.Name = "RegionToolPanel";
+            RegionToolPanel.Size = new Size(152, 806);
+            RegionToolPanel.TabIndex = 25;
+            // 
+            // label90
+            // 
+            label90.AutoSize = true;
+            label90.CausesValidation = false;
+            label90.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
+            label90.ForeColor = SystemColors.ControlDarkDark;
+            label90.Location = new Point(17, 22);
+            label90.Name = "label90";
+            label90.Size = new Size(93, 20);
+            label90.TabIndex = 120;
+            label90.Text = "Border Style";
+            label90.UseMnemonic = false;
+            // 
+            // LightSolidRegionBorderPicture
+            // 
+            LightSolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            LightSolidRegionBorderPicture.Image = (Image)resources.GetObject("LightSolidRegionBorderPicture.Image");
+            LightSolidRegionBorderPicture.InitialImage = null;
+            LightSolidRegionBorderPicture.Location = new Point(31, 246);
+            LightSolidRegionBorderPicture.Name = "LightSolidRegionBorderPicture";
+            LightSolidRegionBorderPicture.Size = new Size(106, 18);
+            LightSolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            LightSolidRegionBorderPicture.TabIndex = 119;
+            LightSolidRegionBorderPicture.TabStop = false;
+            LightSolidRegionBorderPicture.Click += (this.LightSolidRegionBorderPicture_Click);
+            // 
+            // GradientRegionBorderPicture
+            // 
+            GradientRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            GradientRegionBorderPicture.Image = (Image)resources.GetObject("GradientRegionBorderPicture.Image");
+            GradientRegionBorderPicture.InitialImage = null;
+            GradientRegionBorderPicture.Location = new Point(31, 220);
+            GradientRegionBorderPicture.Name = "GradientRegionBorderPicture";
+            GradientRegionBorderPicture.Size = new Size(106, 18);
+            GradientRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            GradientRegionBorderPicture.TabIndex = 118;
+            GradientRegionBorderPicture.TabStop = false;
+            GradientRegionBorderPicture.Click += (this.GradientRegionBorderPicture_Click);
+            // 
+            // SolidAndDashRegionBorderPicture
+            // 
+            SolidAndDashRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            SolidAndDashRegionBorderPicture.Image = (Image)resources.GetObject("SolidAndDashRegionBorderPicture.Image");
+            SolidAndDashRegionBorderPicture.InitialImage = null;
+            SolidAndDashRegionBorderPicture.Location = new Point(31, 194);
+            SolidAndDashRegionBorderPicture.Name = "SolidAndDashRegionBorderPicture";
+            SolidAndDashRegionBorderPicture.Size = new Size(106, 18);
+            SolidAndDashRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            SolidAndDashRegionBorderPicture.TabIndex = 117;
+            SolidAndDashRegionBorderPicture.TabStop = false;
+            SolidAndDashRegionBorderPicture.Click += (this.SolidAndDashRegionBorderPicture_Click);
+            // 
+            // DoubleSolidRegionBorderPicture
+            // 
+            DoubleSolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DoubleSolidRegionBorderPicture.Image = (Image)resources.GetObject("DoubleSolidRegionBorderPicture.Image");
+            DoubleSolidRegionBorderPicture.InitialImage = null;
+            DoubleSolidRegionBorderPicture.Location = new Point(31, 170);
+            DoubleSolidRegionBorderPicture.Name = "DoubleSolidRegionBorderPicture";
+            DoubleSolidRegionBorderPicture.Size = new Size(106, 18);
+            DoubleSolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DoubleSolidRegionBorderPicture.TabIndex = 116;
+            DoubleSolidRegionBorderPicture.TabStop = false;
+            DoubleSolidRegionBorderPicture.Click += (this.DoubleSolidRegionBorderPicture_Click);
+            // 
+            // DashDotDotRegionBorderPicture
+            // 
+            DashDotDotRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DashDotDotRegionBorderPicture.Image = (Image)resources.GetObject("DashDotDotRegionBorderPicture.Image");
+            DashDotDotRegionBorderPicture.InitialImage = null;
+            DashDotDotRegionBorderPicture.Location = new Point(31, 145);
+            DashDotDotRegionBorderPicture.Name = "DashDotDotRegionBorderPicture";
+            DashDotDotRegionBorderPicture.Size = new Size(106, 18);
+            DashDotDotRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DashDotDotRegionBorderPicture.TabIndex = 115;
+            DashDotDotRegionBorderPicture.TabStop = false;
+            DashDotDotRegionBorderPicture.Click += (this.DashDotDotRegionBorderPicture_Click);
+            // 
+            // DashDotRegionBorderPicture
+            // 
+            DashDotRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DashDotRegionBorderPicture.Image = (Image)resources.GetObject("DashDotRegionBorderPicture.Image");
+            DashDotRegionBorderPicture.InitialImage = null;
+            DashDotRegionBorderPicture.Location = new Point(31, 120);
+            DashDotRegionBorderPicture.Name = "DashDotRegionBorderPicture";
+            DashDotRegionBorderPicture.Size = new Size(106, 18);
+            DashDotRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DashDotRegionBorderPicture.TabIndex = 114;
+            DashDotRegionBorderPicture.TabStop = false;
+            DashDotRegionBorderPicture.Click += (this.DashDotRegionBorderPicture_Click);
+            // 
+            // DashedRegionBorderPicture
+            // 
+            DashedRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DashedRegionBorderPicture.Image = (Image)resources.GetObject("DashedRegionBorderPicture.Image");
+            DashedRegionBorderPicture.InitialImage = null;
+            DashedRegionBorderPicture.Location = new Point(31, 95);
+            DashedRegionBorderPicture.Name = "DashedRegionBorderPicture";
+            DashedRegionBorderPicture.Size = new Size(106, 18);
+            DashedRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DashedRegionBorderPicture.TabIndex = 113;
+            DashedRegionBorderPicture.TabStop = false;
+            DashedRegionBorderPicture.Click += (this.DashedRegionBorderPicture_Click);
+            // 
+            // DottedRegionBorderPicture
+            // 
+            DottedRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            DottedRegionBorderPicture.Image = (Image)resources.GetObject("DottedRegionBorderPicture.Image");
+            DottedRegionBorderPicture.InitialImage = null;
+            DottedRegionBorderPicture.Location = new Point(31, 69);
+            DottedRegionBorderPicture.Name = "DottedRegionBorderPicture";
+            DottedRegionBorderPicture.Size = new Size(106, 18);
+            DottedRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            DottedRegionBorderPicture.TabIndex = 112;
+            DottedRegionBorderPicture.TabStop = false;
+            DottedRegionBorderPicture.Click += (this.DottedRegionBorderPicture_Click);
+            // 
+            // SolidRegionBorderPicture
+            // 
+            SolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
+            SolidRegionBorderPicture.Image = (Image)resources.GetObject("SolidRegionBorderPicture.Image");
+            SolidRegionBorderPicture.InitialImage = null;
+            SolidRegionBorderPicture.Location = new Point(31, 45);
+            SolidRegionBorderPicture.Name = "SolidRegionBorderPicture";
+            SolidRegionBorderPicture.Size = new Size(106, 18);
+            SolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+            SolidRegionBorderPicture.TabIndex = 111;
+            SolidRegionBorderPicture.TabStop = false;
+            SolidRegionBorderPicture.Click += (this.SolidRegionBorderPicture_Click);
+            // 
+            // RegionDoubleSolidBorderRadio
+            // 
+            RegionDoubleSolidBorderRadio.AutoSize = true;
+            RegionDoubleSolidBorderRadio.Location = new Point(16, 175);
+            RegionDoubleSolidBorderRadio.Name = "RegionDoubleSolidBorderRadio";
+            RegionDoubleSolidBorderRadio.Size = new Size(14, 13);
+            RegionDoubleSolidBorderRadio.TabIndex = 110;
+            RegionDoubleSolidBorderRadio.UseVisualStyleBackColor = true;
+            RegionDoubleSolidBorderRadio.CheckedChanged += (this.RegionDoubleSolidBorderRadio_CheckedChanged);
+            // 
+            // RegionBorderedLightSolidRadio
+            // 
+            RegionBorderedLightSolidRadio.AutoSize = true;
+            RegionBorderedLightSolidRadio.Location = new Point(16, 251);
+            RegionBorderedLightSolidRadio.Name = "RegionBorderedLightSolidRadio";
+            RegionBorderedLightSolidRadio.Size = new Size(14, 13);
+            RegionBorderedLightSolidRadio.TabIndex = 109;
+            RegionBorderedLightSolidRadio.UseVisualStyleBackColor = true;
+            RegionBorderedLightSolidRadio.CheckedChanged += (this.RegionBorderedLightSolidRadio_CheckedChanged);
+            // 
+            // RegionBorderedGradientRadio
+            // 
+            RegionBorderedGradientRadio.AutoSize = true;
+            RegionBorderedGradientRadio.Location = new Point(16, 225);
+            RegionBorderedGradientRadio.Name = "RegionBorderedGradientRadio";
+            RegionBorderedGradientRadio.Size = new Size(14, 13);
+            RegionBorderedGradientRadio.TabIndex = 108;
+            RegionBorderedGradientRadio.UseVisualStyleBackColor = true;
+            RegionBorderedGradientRadio.CheckedChanged += (this.RegionBorderedGradientRadio_CheckedChanged);
+            // 
+            // RegionSolidAndDashesBorderRadio
+            // 
+            RegionSolidAndDashesBorderRadio.AutoSize = true;
+            RegionSolidAndDashesBorderRadio.Location = new Point(16, 199);
+            RegionSolidAndDashesBorderRadio.Name = "RegionSolidAndDashesBorderRadio";
+            RegionSolidAndDashesBorderRadio.Size = new Size(14, 13);
+            RegionSolidAndDashesBorderRadio.TabIndex = 107;
+            RegionSolidAndDashesBorderRadio.UseVisualStyleBackColor = true;
+            RegionSolidAndDashesBorderRadio.CheckedChanged += (this.RegionSolidAndDashesBorderRadio_CheckedChanged);
+            // 
+            // RegionDashDotDotBorderRadio
+            // 
+            RegionDashDotDotBorderRadio.AutoSize = true;
+            RegionDashDotDotBorderRadio.Location = new Point(16, 150);
+            RegionDashDotDotBorderRadio.Name = "RegionDashDotDotBorderRadio";
+            RegionDashDotDotBorderRadio.Size = new Size(14, 13);
+            RegionDashDotDotBorderRadio.TabIndex = 106;
+            RegionDashDotDotBorderRadio.UseVisualStyleBackColor = true;
+            RegionDashDotDotBorderRadio.CheckedChanged += (this.RegionDashDotDotBorderRadio_CheckedChanged);
+            // 
+            // RegionDashDotBorderRadio
+            // 
+            RegionDashDotBorderRadio.AutoSize = true;
+            RegionDashDotBorderRadio.Location = new Point(16, 125);
+            RegionDashDotBorderRadio.Name = "RegionDashDotBorderRadio";
+            RegionDashDotBorderRadio.Size = new Size(14, 13);
+            RegionDashDotBorderRadio.TabIndex = 105;
+            RegionDashDotBorderRadio.UseVisualStyleBackColor = true;
+            RegionDashDotBorderRadio.CheckedChanged += (this.RegionDashDotBorderRadio_CheckedChanged);
+            // 
+            // RegionDashBorderRadio
+            // 
+            RegionDashBorderRadio.AutoSize = true;
+            RegionDashBorderRadio.Location = new Point(16, 100);
+            RegionDashBorderRadio.Name = "RegionDashBorderRadio";
+            RegionDashBorderRadio.Size = new Size(14, 13);
+            RegionDashBorderRadio.TabIndex = 104;
+            RegionDashBorderRadio.UseVisualStyleBackColor = true;
+            RegionDashBorderRadio.CheckedChanged += (this.RegionDashBorderRadio_CheckedChanged);
+            // 
+            // RegionDottedBorderRadio
+            // 
+            RegionDottedBorderRadio.AutoSize = true;
+            RegionDottedBorderRadio.Location = new Point(16, 75);
+            RegionDottedBorderRadio.Name = "RegionDottedBorderRadio";
+            RegionDottedBorderRadio.Size = new Size(14, 13);
+            RegionDottedBorderRadio.TabIndex = 103;
+            RegionDottedBorderRadio.UseVisualStyleBackColor = true;
+            RegionDottedBorderRadio.CheckedChanged += (this.RegionDottedBorderRadio_CheckedChanged);
+            // 
+            // RegionSolidBorderRadio
+            // 
+            RegionSolidBorderRadio.AutoSize = true;
+            RegionSolidBorderRadio.BackgroundImageLayout = ImageLayout.Stretch;
+            RegionSolidBorderRadio.Checked = true;
+            RegionSolidBorderRadio.Location = new Point(16, 50);
+            RegionSolidBorderRadio.Name = "RegionSolidBorderRadio";
+            RegionSolidBorderRadio.Size = new Size(14, 13);
+            RegionSolidBorderRadio.TabIndex = 102;
+            RegionSolidBorderRadio.TabStop = true;
+            RegionSolidBorderRadio.UseVisualStyleBackColor = true;
+            RegionSolidBorderRadio.CheckedChanged += (this.RegionSolidBorderRadio_CheckedChanged);
+            // 
+            // OverlayToolPanel
+            // 
+            OverlayToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
+            OverlayToolPanel.BackColor = SystemColors.Control;
+            OverlayToolPanel.Controls.Add(FrameStyleTable);
+            OverlayToolPanel.Location = new Point(1421, 90);
+            OverlayToolPanel.Margin = new Padding(0);
+            OverlayToolPanel.Name = "OverlayToolPanel";
+            OverlayToolPanel.Size = new Size(152, 806);
+            OverlayToolPanel.TabIndex = 24;
+            // 
+            // FrameStyleTable
+            // 
+            FrameStyleTable.AutoScroll = true;
+            FrameStyleTable.CausesValidation = false;
+            FrameStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
+            FrameStyleTable.ColumnCount = 1;
+            FrameStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
+            FrameStyleTable.Location = new Point(20, 15);
+            FrameStyleTable.Name = "FrameStyleTable";
+            FrameStyleTable.RowCount = 1;
+            FrameStyleTable.RowStyles.Add(new RowStyle());
+            FrameStyleTable.Size = new Size(122, 779);
+            FrameStyleTable.TabIndex = 74;
+            // 
+            // LabelToolPanel
+            // 
+            LabelToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
+            LabelToolPanel.BackColor = SystemColors.Control;
+            LabelToolPanel.Controls.Add(SelectBoxTintButton);
+            LabelToolPanel.Controls.Add(LabelBoxStyleTable);
+            LabelToolPanel.Location = new Point(1421, 90);
+            LabelToolPanel.Margin = new Padding(0);
+            LabelToolPanel.Name = "LabelToolPanel";
+            LabelToolPanel.Size = new Size(152, 806);
+            LabelToolPanel.TabIndex = 27;
+            // 
+            // SelectBoxTintButton
+            // 
+            SelectBoxTintButton.BackColor = Color.White;
+            SelectBoxTintButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            SelectBoxTintButton.ForeColor = SystemColors.ControlDarkDark;
+            SelectBoxTintButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            SelectBoxTintButton.IconColor = Color.Tan;
+            SelectBoxTintButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectBoxTintButton.Location = new Point(15, 20);
+            SelectBoxTintButton.Name = "SelectBoxTintButton";
+            SelectBoxTintButton.Size = new Size(120, 60);
+            SelectBoxTintButton.TabIndex = 113;
+            SelectBoxTintButton.Text = "Select Tint Color";
+            SelectBoxTintButton.UseVisualStyleBackColor = false;
+            SelectBoxTintButton.Click += (this.SelectBoxTintButton_Click);
+            // 
+            // LabelBoxStyleTable
+            // 
+            LabelBoxStyleTable.AutoScroll = true;
+            LabelBoxStyleTable.CausesValidation = false;
+            LabelBoxStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
+            LabelBoxStyleTable.ColumnCount = 1;
+            LabelBoxStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
+            LabelBoxStyleTable.Location = new Point(15, 86);
+            LabelBoxStyleTable.Name = "LabelBoxStyleTable";
+            LabelBoxStyleTable.RowCount = 1;
+            LabelBoxStyleTable.RowStyles.Add(new RowStyle());
+            LabelBoxStyleTable.Size = new Size(122, 708);
+            LabelBoxStyleTable.TabIndex = 112;
+            // 
+            // SymbolToolPanel
+            // 
+            SymbolToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
+            SymbolToolPanel.BackColor = SystemColors.Control;
+            SymbolToolPanel.Controls.Add(label22);
+            SymbolToolPanel.Controls.Add(SymbolSearchTextBox);
+            SymbolToolPanel.Controls.Add(SymbolTable);
+            SymbolToolPanel.Location = new Point(1421, 90);
+            SymbolToolPanel.Margin = new Padding(0);
+            SymbolToolPanel.Name = "SymbolToolPanel";
+            SymbolToolPanel.Size = new Size(152, 806);
+            SymbolToolPanel.TabIndex = 22;
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label22.ForeColor = SystemColors.ControlDarkDark;
+            label22.Location = new Point(10, 13);
+            label22.Name = "label22";
+            label22.Size = new Size(47, 17);
+            label22.TabIndex = 79;
+            label22.Text = "Search";
+            // 
+            // SymbolSearchTextBox
+            // 
+            SymbolSearchTextBox.BorderStyle = BorderStyle.FixedSingle;
+            SymbolSearchTextBox.Location = new Point(10, 33);
+            SymbolSearchTextBox.Name = "SymbolSearchTextBox";
+            SymbolSearchTextBox.Size = new Size(132, 23);
+            SymbolSearchTextBox.TabIndex = 78;
+            SymbolSearchTextBox.TextChanged += (this.SymbolSearchTextBox_TextChanged);
+            // 
+            // SymbolTable
+            // 
+            SymbolTable.CausesValidation = false;
+            SymbolTable.ColumnCount = 1;
+            SymbolTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 110F));
+            SymbolTable.ForeColor = SystemColors.ControlDarkDark;
+            SymbolTable.Location = new Point(10, 62);
+            SymbolTable.MaximumSize = new Size(130, 680);
+            SymbolTable.MinimumSize = new Size(130, 42);
+            SymbolTable.Name = "SymbolTable";
+            SymbolTable.RowCount = 1;
+            SymbolTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 45F));
+            SymbolTable.Size = new Size(130, 680);
+            SymbolTable.TabIndex = 77;
+            // 
             // PathToolPanel
             // 
             PathToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
@@ -7631,6 +8586,10 @@
             // 
             WaterToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             WaterToolPanel.BackColor = SystemColors.Control;
+            WaterToolPanel.Controls.Add(WaterPatternBrush4Button);
+            WaterToolPanel.Controls.Add(WaterPatternBrush3Button);
+            WaterToolPanel.Controls.Add(WaterPatternBrush2Button);
+            WaterToolPanel.Controls.Add(WaterPatternBrush1Button);
             WaterToolPanel.Controls.Add(label76);
             WaterToolPanel.Controls.Add(WaterBrushVelocityTrack);
             WaterToolPanel.Controls.Add(WaterColorButton);
@@ -7661,12 +8620,72 @@
             WaterToolPanel.Size = new Size(152, 806);
             WaterToolPanel.TabIndex = 28;
             // 
+            // WaterPatternBrush4Button
+            // 
+            WaterPatternBrush4Button.BackColor = Color.Black;
+            WaterPatternBrush4Button.BackgroundImage = (Image)resources.GetObject("WaterPatternBrush4Button.BackgroundImage");
+            WaterPatternBrush4Button.BackgroundImageLayout = ImageLayout.Zoom;
+            WaterPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+            WaterPatternBrush4Button.FlatAppearance.BorderSize = 3;
+            WaterPatternBrush4Button.FlatStyle = FlatStyle.Flat;
+            WaterPatternBrush4Button.Location = new Point(105, 77);
+            WaterPatternBrush4Button.Name = "WaterPatternBrush4Button";
+            WaterPatternBrush4Button.Size = new Size(40, 40);
+            WaterPatternBrush4Button.TabIndex = 93;
+            WaterPatternBrush4Button.UseVisualStyleBackColor = false;
+            WaterPatternBrush4Button.Click += (this.WaterPatternBrush4Button_Click);
+            // 
+            // WaterPatternBrush3Button
+            // 
+            WaterPatternBrush3Button.BackColor = Color.Black;
+            WaterPatternBrush3Button.BackgroundImage = (Image)resources.GetObject("WaterPatternBrush3Button.BackgroundImage");
+            WaterPatternBrush3Button.BackgroundImageLayout = ImageLayout.Zoom;
+            WaterPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+            WaterPatternBrush3Button.FlatAppearance.BorderSize = 3;
+            WaterPatternBrush3Button.FlatStyle = FlatStyle.Flat;
+            WaterPatternBrush3Button.Location = new Point(59, 77);
+            WaterPatternBrush3Button.Name = "WaterPatternBrush3Button";
+            WaterPatternBrush3Button.Size = new Size(40, 40);
+            WaterPatternBrush3Button.TabIndex = 92;
+            WaterPatternBrush3Button.UseVisualStyleBackColor = false;
+            WaterPatternBrush3Button.Click += (this.WaterPatternBrush3Button_Click);
+            // 
+            // WaterPatternBrush2Button
+            // 
+            WaterPatternBrush2Button.BackColor = Color.Black;
+            WaterPatternBrush2Button.BackgroundImage = (Image)resources.GetObject("WaterPatternBrush2Button.BackgroundImage");
+            WaterPatternBrush2Button.BackgroundImageLayout = ImageLayout.Zoom;
+            WaterPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+            WaterPatternBrush2Button.FlatAppearance.BorderSize = 3;
+            WaterPatternBrush2Button.FlatStyle = FlatStyle.Flat;
+            WaterPatternBrush2Button.Location = new Point(14, 77);
+            WaterPatternBrush2Button.Name = "WaterPatternBrush2Button";
+            WaterPatternBrush2Button.Size = new Size(40, 40);
+            WaterPatternBrush2Button.TabIndex = 91;
+            WaterPatternBrush2Button.UseVisualStyleBackColor = false;
+            WaterPatternBrush2Button.Click += (this.WaterPatternBrush2Button_Click);
+            // 
+            // WaterPatternBrush1Button
+            // 
+            WaterPatternBrush1Button.BackColor = Color.Black;
+            WaterPatternBrush1Button.BackgroundImage = (Image)resources.GetObject("WaterPatternBrush1Button.BackgroundImage");
+            WaterPatternBrush1Button.BackgroundImageLayout = ImageLayout.Zoom;
+            WaterPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+            WaterPatternBrush1Button.FlatAppearance.BorderSize = 3;
+            WaterPatternBrush1Button.FlatStyle = FlatStyle.Flat;
+            WaterPatternBrush1Button.Location = new Point(104, 31);
+            WaterPatternBrush1Button.Name = "WaterPatternBrush1Button";
+            WaterPatternBrush1Button.Size = new Size(40, 40);
+            WaterPatternBrush1Button.TabIndex = 90;
+            WaterPatternBrush1Button.UseVisualStyleBackColor = false;
+            WaterPatternBrush1Button.Click += (this.WaterPatternBrush1Button_Click);
+            // 
             // label76
             // 
             label76.AutoSize = true;
             label76.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label76.ForeColor = SystemColors.ControlDarkDark;
-            label76.Location = new Point(17, 144);
+            label76.Location = new Point(17, 167);
             label76.Name = "label76";
             label76.Size = new Size(74, 13);
             label76.TabIndex = 89;
@@ -7675,7 +8694,7 @@
             // WaterBrushVelocityTrack
             // 
             WaterBrushVelocityTrack.AutoSize = false;
-            WaterBrushVelocityTrack.Location = new Point(14, 155);
+            WaterBrushVelocityTrack.Location = new Point(14, 178);
             WaterBrushVelocityTrack.Maximum = 100;
             WaterBrushVelocityTrack.Minimum = 1;
             WaterBrushVelocityTrack.Name = "WaterBrushVelocityTrack";
@@ -7710,7 +8729,7 @@
             label20.AutoSize = true;
             label20.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label20.ForeColor = SystemColors.ControlDarkDark;
-            label20.Location = new Point(17, 178);
+            label20.Location = new Point(17, 201);
             label20.Name = "label20";
             label20.Size = new Size(60, 13);
             label20.TabIndex = 84;
@@ -7719,7 +8738,7 @@
             // WaterColorEraserSizeTrack
             // 
             WaterColorEraserSizeTrack.AutoSize = false;
-            WaterColorEraserSizeTrack.Location = new Point(14, 194);
+            WaterColorEraserSizeTrack.Location = new Point(14, 217);
             WaterColorEraserSizeTrack.Maximum = 256;
             WaterColorEraserSizeTrack.Minimum = 2;
             WaterColorEraserSizeTrack.Name = "WaterColorEraserSizeTrack";
@@ -7845,13 +8864,14 @@
             // WaterHardBrushButton
             // 
             WaterHardBrushButton.BackColor = Color.Black;
+            WaterHardBrushButton.BackgroundImage = (Image)resources.GetObject("WaterHardBrushButton.BackgroundImage");
+            WaterHardBrushButton.BackgroundImageLayout = ImageLayout.Zoom;
             WaterHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
             WaterHardBrushButton.FlatAppearance.BorderSize = 3;
             WaterHardBrushButton.FlatStyle = FlatStyle.Flat;
-            WaterHardBrushButton.Image = (Image)resources.GetObject("WaterHardBrushButton.Image");
-            WaterHardBrushButton.Location = new Point(80, 31);
+            WaterHardBrushButton.Location = new Point(59, 31);
             WaterHardBrushButton.Name = "WaterHardBrushButton";
-            WaterHardBrushButton.Size = new Size(60, 60);
+            WaterHardBrushButton.Size = new Size(40, 40);
             WaterHardBrushButton.TabIndex = 73;
             WaterHardBrushButton.UseVisualStyleBackColor = false;
             WaterHardBrushButton.Click += (this.WaterHardBrushButton_Click);
@@ -7859,13 +8879,14 @@
             // WaterSoftBrushButton
             // 
             WaterSoftBrushButton.BackColor = Color.Black;
+            WaterSoftBrushButton.BackgroundImage = (Image)resources.GetObject("WaterSoftBrushButton.BackgroundImage");
+            WaterSoftBrushButton.BackgroundImageLayout = ImageLayout.Zoom;
             WaterSoftBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
             WaterSoftBrushButton.FlatAppearance.BorderSize = 3;
             WaterSoftBrushButton.FlatStyle = FlatStyle.Flat;
-            WaterSoftBrushButton.Image = (Image)resources.GetObject("WaterSoftBrushButton.Image");
             WaterSoftBrushButton.Location = new Point(14, 31);
             WaterSoftBrushButton.Name = "WaterSoftBrushButton";
-            WaterSoftBrushButton.Size = new Size(60, 60);
+            WaterSoftBrushButton.Size = new Size(40, 40);
             WaterSoftBrushButton.TabIndex = 72;
             WaterSoftBrushButton.UseVisualStyleBackColor = false;
             WaterSoftBrushButton.Click += (this.WaterSoftBrushButton_Click);
@@ -7955,7 +8976,7 @@
             label61.AutoSize = true;
             label61.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label61.ForeColor = SystemColors.ControlDarkDark;
-            label61.Location = new Point(17, 100);
+            label61.Location = new Point(17, 123);
             label61.Name = "label61";
             label61.Size = new Size(56, 13);
             label61.TabIndex = 66;
@@ -7964,7 +8985,7 @@
             // WaterColorBrushSizeTrack
             // 
             WaterColorBrushSizeTrack.AutoSize = false;
-            WaterColorBrushSizeTrack.Location = new Point(14, 116);
+            WaterColorBrushSizeTrack.Location = new Point(14, 139);
             WaterColorBrushSizeTrack.Maximum = 256;
             WaterColorBrushSizeTrack.Minimum = 2;
             WaterColorBrushSizeTrack.Name = "WaterColorBrushSizeTrack";
@@ -8008,6 +9029,10 @@
             // 
             LandToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             LandToolPanel.BackColor = SystemColors.Control;
+            LandToolPanel.Controls.Add(LandPatternBrush4Button);
+            LandToolPanel.Controls.Add(LandPatternBrush3Button);
+            LandToolPanel.Controls.Add(LandPatternBrush2Button);
+            LandToolPanel.Controls.Add(LandPatternBrush1Button);
             LandToolPanel.Controls.Add(label75);
             LandToolPanel.Controls.Add(LandBrushVelocityTrack);
             LandToolPanel.Controls.Add(LandColorButton);
@@ -8038,12 +9063,72 @@
             LandToolPanel.Size = new Size(152, 806);
             LandToolPanel.TabIndex = 19;
             // 
+            // LandPatternBrush4Button
+            // 
+            LandPatternBrush4Button.BackColor = Color.Black;
+            LandPatternBrush4Button.BackgroundImage = (Image)resources.GetObject("LandPatternBrush4Button.BackgroundImage");
+            LandPatternBrush4Button.BackgroundImageLayout = ImageLayout.Zoom;
+            LandPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+            LandPatternBrush4Button.FlatAppearance.BorderSize = 3;
+            LandPatternBrush4Button.FlatStyle = FlatStyle.Flat;
+            LandPatternBrush4Button.Location = new Point(104, 77);
+            LandPatternBrush4Button.Name = "LandPatternBrush4Button";
+            LandPatternBrush4Button.Size = new Size(40, 40);
+            LandPatternBrush4Button.TabIndex = 97;
+            LandPatternBrush4Button.UseVisualStyleBackColor = false;
+            LandPatternBrush4Button.Click += (this.LandPatternBrush4Button_Click);
+            // 
+            // LandPatternBrush3Button
+            // 
+            LandPatternBrush3Button.BackColor = Color.Black;
+            LandPatternBrush3Button.BackgroundImage = (Image)resources.GetObject("LandPatternBrush3Button.BackgroundImage");
+            LandPatternBrush3Button.BackgroundImageLayout = ImageLayout.Zoom;
+            LandPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+            LandPatternBrush3Button.FlatAppearance.BorderSize = 3;
+            LandPatternBrush3Button.FlatStyle = FlatStyle.Flat;
+            LandPatternBrush3Button.Location = new Point(59, 77);
+            LandPatternBrush3Button.Name = "LandPatternBrush3Button";
+            LandPatternBrush3Button.Size = new Size(40, 40);
+            LandPatternBrush3Button.TabIndex = 96;
+            LandPatternBrush3Button.UseVisualStyleBackColor = false;
+            LandPatternBrush3Button.Click += (this.LandPatternBrush3Button_Click);
+            // 
+            // LandPatternBrush2Button
+            // 
+            LandPatternBrush2Button.BackColor = Color.Black;
+            LandPatternBrush2Button.BackgroundImage = (Image)resources.GetObject("LandPatternBrush2Button.BackgroundImage");
+            LandPatternBrush2Button.BackgroundImageLayout = ImageLayout.Zoom;
+            LandPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+            LandPatternBrush2Button.FlatAppearance.BorderSize = 3;
+            LandPatternBrush2Button.FlatStyle = FlatStyle.Flat;
+            LandPatternBrush2Button.Location = new Point(14, 77);
+            LandPatternBrush2Button.Name = "LandPatternBrush2Button";
+            LandPatternBrush2Button.Size = new Size(40, 40);
+            LandPatternBrush2Button.TabIndex = 95;
+            LandPatternBrush2Button.UseVisualStyleBackColor = false;
+            LandPatternBrush2Button.Click += (this.LandPatternBrush2Button_Click);
+            // 
+            // LandPatternBrush1Button
+            // 
+            LandPatternBrush1Button.BackColor = Color.Black;
+            LandPatternBrush1Button.BackgroundImage = (Image)resources.GetObject("LandPatternBrush1Button.BackgroundImage");
+            LandPatternBrush1Button.BackgroundImageLayout = ImageLayout.Zoom;
+            LandPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+            LandPatternBrush1Button.FlatAppearance.BorderSize = 3;
+            LandPatternBrush1Button.FlatStyle = FlatStyle.Flat;
+            LandPatternBrush1Button.Location = new Point(104, 31);
+            LandPatternBrush1Button.Name = "LandPatternBrush1Button";
+            LandPatternBrush1Button.Size = new Size(40, 40);
+            LandPatternBrush1Button.TabIndex = 94;
+            LandPatternBrush1Button.UseVisualStyleBackColor = false;
+            LandPatternBrush1Button.Click += (this.LandPatternBrush1Button_Click);
+            // 
             // label75
             // 
             label75.AutoSize = true;
             label75.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label75.ForeColor = SystemColors.ControlDarkDark;
-            label75.Location = new Point(17, 139);
+            label75.Location = new Point(17, 167);
             label75.Name = "label75";
             label75.Size = new Size(74, 13);
             label75.TabIndex = 87;
@@ -8052,7 +9137,7 @@
             // LandBrushVelocityTrack
             // 
             LandBrushVelocityTrack.AutoSize = false;
-            LandBrushVelocityTrack.Location = new Point(14, 155);
+            LandBrushVelocityTrack.Location = new Point(14, 178);
             LandBrushVelocityTrack.Maximum = 100;
             LandBrushVelocityTrack.Minimum = 1;
             LandBrushVelocityTrack.Name = "LandBrushVelocityTrack";
@@ -8087,7 +9172,7 @@
             label58.AutoSize = true;
             label58.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label58.ForeColor = SystemColors.ControlDarkDark;
-            label58.Location = new Point(17, 181);
+            label58.Location = new Point(17, 201);
             label58.Name = "label58";
             label58.Size = new Size(60, 13);
             label58.TabIndex = 81;
@@ -8096,7 +9181,7 @@
             // LandColorEraserSizeTrack
             // 
             LandColorEraserSizeTrack.AutoSize = false;
-            LandColorEraserSizeTrack.Location = new Point(14, 194);
+            LandColorEraserSizeTrack.Location = new Point(14, 217);
             LandColorEraserSizeTrack.Maximum = 256;
             LandColorEraserSizeTrack.Minimum = 2;
             LandColorEraserSizeTrack.Name = "LandColorEraserSizeTrack";
@@ -8209,13 +9294,14 @@
             // LandHardBrushButton
             // 
             LandHardBrushButton.BackColor = Color.Black;
+            LandHardBrushButton.BackgroundImage = (Image)resources.GetObject("LandHardBrushButton.BackgroundImage");
+            LandHardBrushButton.BackgroundImageLayout = ImageLayout.Zoom;
             LandHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
             LandHardBrushButton.FlatAppearance.BorderSize = 3;
             LandHardBrushButton.FlatStyle = FlatStyle.Flat;
-            LandHardBrushButton.Image = (Image)resources.GetObject("LandHardBrushButton.Image");
-            LandHardBrushButton.Location = new Point(80, 31);
+            LandHardBrushButton.Location = new Point(59, 31);
             LandHardBrushButton.Name = "LandHardBrushButton";
-            LandHardBrushButton.Size = new Size(60, 60);
+            LandHardBrushButton.Size = new Size(40, 40);
             LandHardBrushButton.TabIndex = 71;
             LandHardBrushButton.UseVisualStyleBackColor = false;
             LandHardBrushButton.Click += (this.LandHardBrushButton_Click);
@@ -8229,7 +9315,7 @@
             LandSoftBrushButton.Image = (Image)resources.GetObject("LandSoftBrushButton.Image");
             LandSoftBrushButton.Location = new Point(14, 31);
             LandSoftBrushButton.Name = "LandSoftBrushButton";
-            LandSoftBrushButton.Size = new Size(60, 60);
+            LandSoftBrushButton.Size = new Size(40, 40);
             LandSoftBrushButton.TabIndex = 70;
             LandSoftBrushButton.UseVisualStyleBackColor = false;
             LandSoftBrushButton.Click += (this.LandSoftBrushButton_Click);
@@ -8334,7 +9420,7 @@
             label59.AutoSize = true;
             label59.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label59.ForeColor = SystemColors.ControlDarkDark;
-            label59.Location = new Point(17, 100);
+            label59.Location = new Point(17, 123);
             label59.Name = "label59";
             label59.Size = new Size(56, 13);
             label59.TabIndex = 63;
@@ -8343,7 +9429,7 @@
             // LandColorBrushSizeTrack
             // 
             LandColorBrushSizeTrack.AutoSize = false;
-            LandColorBrushSizeTrack.Location = new Point(14, 116);
+            LandColorBrushSizeTrack.Location = new Point(14, 139);
             LandColorBrushSizeTrack.Maximum = 256;
             LandColorBrushSizeTrack.Minimum = 2;
             LandColorBrushSizeTrack.Name = "LandColorBrushSizeTrack";
@@ -8387,6 +9473,10 @@
             // 
             OceanToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             OceanToolPanel.BackColor = SystemColors.Control;
+            OceanToolPanel.Controls.Add(OceanPatternBrush4Button);
+            OceanToolPanel.Controls.Add(OceanPatternBrush3Button);
+            OceanToolPanel.Controls.Add(OceanPatternBrush2Button);
+            OceanToolPanel.Controls.Add(OceanPatternBrush1Button);
             OceanToolPanel.Controls.Add(label72);
             OceanToolPanel.Controls.Add(OceanBrushVelocityTrack);
             OceanToolPanel.Controls.Add(OceanPaintButton);
@@ -8417,12 +9507,72 @@
             OceanToolPanel.Size = new Size(152, 806);
             OceanToolPanel.TabIndex = 29;
             // 
+            // OceanPatternBrush4Button
+            // 
+            OceanPatternBrush4Button.BackColor = Color.Black;
+            OceanPatternBrush4Button.BackgroundImage = (Image)resources.GetObject("OceanPatternBrush4Button.BackgroundImage");
+            OceanPatternBrush4Button.BackgroundImageLayout = ImageLayout.Zoom;
+            OceanPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+            OceanPatternBrush4Button.FlatAppearance.BorderSize = 3;
+            OceanPatternBrush4Button.FlatStyle = FlatStyle.Flat;
+            OceanPatternBrush4Button.Location = new Point(104, 77);
+            OceanPatternBrush4Button.Name = "OceanPatternBrush4Button";
+            OceanPatternBrush4Button.Size = new Size(40, 40);
+            OceanPatternBrush4Button.TabIndex = 97;
+            OceanPatternBrush4Button.UseVisualStyleBackColor = false;
+            OceanPatternBrush4Button.Click += (this.OceanPatternBrush4Button_Click);
+            // 
+            // OceanPatternBrush3Button
+            // 
+            OceanPatternBrush3Button.BackColor = Color.Black;
+            OceanPatternBrush3Button.BackgroundImage = (Image)resources.GetObject("OceanPatternBrush3Button.BackgroundImage");
+            OceanPatternBrush3Button.BackgroundImageLayout = ImageLayout.Zoom;
+            OceanPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+            OceanPatternBrush3Button.FlatAppearance.BorderSize = 3;
+            OceanPatternBrush3Button.FlatStyle = FlatStyle.Flat;
+            OceanPatternBrush3Button.Location = new Point(59, 77);
+            OceanPatternBrush3Button.Name = "OceanPatternBrush3Button";
+            OceanPatternBrush3Button.Size = new Size(40, 40);
+            OceanPatternBrush3Button.TabIndex = 96;
+            OceanPatternBrush3Button.UseVisualStyleBackColor = false;
+            OceanPatternBrush3Button.Click += (this.OceanPatternBrush3Button_Click);
+            // 
+            // OceanPatternBrush2Button
+            // 
+            OceanPatternBrush2Button.BackColor = Color.Black;
+            OceanPatternBrush2Button.BackgroundImage = (Image)resources.GetObject("OceanPatternBrush2Button.BackgroundImage");
+            OceanPatternBrush2Button.BackgroundImageLayout = ImageLayout.Zoom;
+            OceanPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+            OceanPatternBrush2Button.FlatAppearance.BorderSize = 3;
+            OceanPatternBrush2Button.FlatStyle = FlatStyle.Flat;
+            OceanPatternBrush2Button.Location = new Point(14, 77);
+            OceanPatternBrush2Button.Name = "OceanPatternBrush2Button";
+            OceanPatternBrush2Button.Size = new Size(40, 40);
+            OceanPatternBrush2Button.TabIndex = 95;
+            OceanPatternBrush2Button.UseVisualStyleBackColor = false;
+            OceanPatternBrush2Button.Click += (this.OceanPatternBrush2Button_Click);
+            // 
+            // OceanPatternBrush1Button
+            // 
+            OceanPatternBrush1Button.BackColor = Color.Black;
+            OceanPatternBrush1Button.BackgroundImage = (Image)resources.GetObject("OceanPatternBrush1Button.BackgroundImage");
+            OceanPatternBrush1Button.BackgroundImageLayout = ImageLayout.Zoom;
+            OceanPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+            OceanPatternBrush1Button.FlatAppearance.BorderSize = 3;
+            OceanPatternBrush1Button.FlatStyle = FlatStyle.Flat;
+            OceanPatternBrush1Button.Location = new Point(104, 31);
+            OceanPatternBrush1Button.Name = "OceanPatternBrush1Button";
+            OceanPatternBrush1Button.Size = new Size(40, 40);
+            OceanPatternBrush1Button.TabIndex = 94;
+            OceanPatternBrush1Button.UseVisualStyleBackColor = false;
+            OceanPatternBrush1Button.Click += (this.OceanPatternBrush1Button_Click);
+            // 
             // label72
             // 
             label72.AutoSize = true;
             label72.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label72.ForeColor = SystemColors.ControlDarkDark;
-            label72.Location = new Point(17, 141);
+            label72.Location = new Point(17, 167);
             label72.Name = "label72";
             label72.Size = new Size(74, 13);
             label72.TabIndex = 82;
@@ -8431,7 +9581,7 @@
             // OceanBrushVelocityTrack
             // 
             OceanBrushVelocityTrack.AutoSize = false;
-            OceanBrushVelocityTrack.Location = new Point(14, 155);
+            OceanBrushVelocityTrack.Location = new Point(14, 178);
             OceanBrushVelocityTrack.Maximum = 100;
             OceanBrushVelocityTrack.Minimum = 1;
             OceanBrushVelocityTrack.Name = "OceanBrushVelocityTrack";
@@ -8467,7 +9617,7 @@
             label18.AutoSize = true;
             label18.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label18.ForeColor = SystemColors.ControlDarkDark;
-            label18.Location = new Point(17, 178);
+            label18.Location = new Point(17, 201);
             label18.Name = "label18";
             label18.Size = new Size(60, 13);
             label18.TabIndex = 77;
@@ -8476,7 +9626,7 @@
             // OceanEraserSizeTrack
             // 
             OceanEraserSizeTrack.AutoSize = false;
-            OceanEraserSizeTrack.Location = new Point(14, 194);
+            OceanEraserSizeTrack.Location = new Point(14, 217);
             OceanEraserSizeTrack.Maximum = 256;
             OceanEraserSizeTrack.Minimum = 2;
             OceanEraserSizeTrack.Name = "OceanEraserSizeTrack";
@@ -8602,13 +9752,14 @@
             // OceanHardBrushButton
             // 
             OceanHardBrushButton.BackColor = Color.Black;
+            OceanHardBrushButton.BackgroundImage = (Image)resources.GetObject("OceanHardBrushButton.BackgroundImage");
+            OceanHardBrushButton.BackgroundImageLayout = ImageLayout.Zoom;
             OceanHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
             OceanHardBrushButton.FlatAppearance.BorderSize = 3;
             OceanHardBrushButton.FlatStyle = FlatStyle.Flat;
-            OceanHardBrushButton.Image = (Image)resources.GetObject("OceanHardBrushButton.Image");
-            OceanHardBrushButton.Location = new Point(80, 31);
+            OceanHardBrushButton.Location = new Point(59, 31);
             OceanHardBrushButton.Name = "OceanHardBrushButton";
-            OceanHardBrushButton.Size = new Size(60, 60);
+            OceanHardBrushButton.Size = new Size(40, 40);
             OceanHardBrushButton.TabIndex = 65;
             OceanHardBrushButton.UseVisualStyleBackColor = false;
             OceanHardBrushButton.Click += (this.OceanHardBrushButton_Click);
@@ -8622,7 +9773,7 @@
             OceanSoftBrushButton.Image = (Image)resources.GetObject("OceanSoftBrushButton.Image");
             OceanSoftBrushButton.Location = new Point(14, 31);
             OceanSoftBrushButton.Name = "OceanSoftBrushButton";
-            OceanSoftBrushButton.Size = new Size(60, 60);
+            OceanSoftBrushButton.Size = new Size(40, 40);
             OceanSoftBrushButton.TabIndex = 64;
             OceanSoftBrushButton.UseVisualStyleBackColor = false;
             OceanSoftBrushButton.Click += (this.OceanSoftBrushButton_Click);
@@ -8712,7 +9863,7 @@
             label23.AutoSize = true;
             label23.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label23.ForeColor = SystemColors.ControlDarkDark;
-            label23.Location = new Point(17, 100);
+            label23.Location = new Point(17, 123);
             label23.Name = "label23";
             label23.Size = new Size(56, 13);
             label23.TabIndex = 58;
@@ -8721,7 +9872,7 @@
             // OceanBrushSizeTrack
             // 
             OceanBrushSizeTrack.AutoSize = false;
-            OceanBrushSizeTrack.Location = new Point(14, 116);
+            OceanBrushSizeTrack.Location = new Point(14, 139);
             OceanBrushSizeTrack.Maximum = 256;
             OceanBrushSizeTrack.Minimum = 2;
             OceanBrushSizeTrack.Name = "OceanBrushSizeTrack";
@@ -8770,393 +9921,6 @@
             BackgroundToolPanel.Name = "BackgroundToolPanel";
             BackgroundToolPanel.Size = new Size(152, 806);
             BackgroundToolPanel.TabIndex = 15;
-            // 
-            // DrawingToolPanel
-            // 
-            DrawingToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
-            DrawingToolPanel.BackColor = SystemColors.Control;
-            DrawingToolPanel.Controls.Add(label26);
-            DrawingToolPanel.Location = new Point(1421, 90);
-            DrawingToolPanel.Margin = new Padding(0);
-            DrawingToolPanel.Name = "DrawingToolPanel";
-            DrawingToolPanel.Size = new Size(152, 806);
-            DrawingToolPanel.TabIndex = 26;
-            // 
-            // label26
-            // 
-            label26.AutoSize = true;
-            label26.Location = new Point(22, 15);
-            label26.Name = "label26";
-            label26.Size = new Size(51, 15);
-            label26.TabIndex = 0;
-            label26.Text = "Drawing";
-            // 
-            // RegionToolPanel
-            // 
-            RegionToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
-            RegionToolPanel.BackColor = SystemColors.Control;
-            RegionToolPanel.Controls.Add(label90);
-            RegionToolPanel.Controls.Add(LightSolidRegionBorderPicture);
-            RegionToolPanel.Controls.Add(GradientRegionBorderPicture);
-            RegionToolPanel.Controls.Add(SolidAndDashRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DoubleSolidRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DashDotDotRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DashDotRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DashedRegionBorderPicture);
-            RegionToolPanel.Controls.Add(DottedRegionBorderPicture);
-            RegionToolPanel.Controls.Add(SolidRegionBorderPicture);
-            RegionToolPanel.Controls.Add(RegionDoubleSolidBorderRadio);
-            RegionToolPanel.Controls.Add(RegionBorderedLightSolidRadio);
-            RegionToolPanel.Controls.Add(RegionBorderedGradientRadio);
-            RegionToolPanel.Controls.Add(RegionSolidAndDashesBorderRadio);
-            RegionToolPanel.Controls.Add(RegionDashDotDotBorderRadio);
-            RegionToolPanel.Controls.Add(RegionDashDotBorderRadio);
-            RegionToolPanel.Controls.Add(RegionDashBorderRadio);
-            RegionToolPanel.Controls.Add(RegionDottedBorderRadio);
-            RegionToolPanel.Controls.Add(RegionSolidBorderRadio);
-            RegionToolPanel.Location = new Point(1421, 90);
-            RegionToolPanel.Margin = new Padding(0);
-            RegionToolPanel.Name = "RegionToolPanel";
-            RegionToolPanel.Size = new Size(152, 806);
-            RegionToolPanel.TabIndex = 25;
-            // 
-            // label90
-            // 
-            label90.AutoSize = true;
-            label90.CausesValidation = false;
-            label90.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
-            label90.ForeColor = SystemColors.ControlDarkDark;
-            label90.Location = new Point(17, 22);
-            label90.Name = "label90";
-            label90.Size = new Size(93, 20);
-            label90.TabIndex = 120;
-            label90.Text = "Border Style";
-            label90.UseMnemonic = false;
-            // 
-            // LightSolidRegionBorderPicture
-            // 
-            LightSolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            LightSolidRegionBorderPicture.Image = (Image)resources.GetObject("LightSolidRegionBorderPicture.Image");
-            LightSolidRegionBorderPicture.InitialImage = null;
-            LightSolidRegionBorderPicture.Location = new Point(31, 246);
-            LightSolidRegionBorderPicture.Name = "LightSolidRegionBorderPicture";
-            LightSolidRegionBorderPicture.Size = new Size(106, 18);
-            LightSolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            LightSolidRegionBorderPicture.TabIndex = 119;
-            LightSolidRegionBorderPicture.TabStop = false;
-            LightSolidRegionBorderPicture.Click += (this.LightSolidRegionBorderPicture_Click);
-            // 
-            // GradientRegionBorderPicture
-            // 
-            GradientRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            GradientRegionBorderPicture.Image = (Image)resources.GetObject("GradientRegionBorderPicture.Image");
-            GradientRegionBorderPicture.InitialImage = null;
-            GradientRegionBorderPicture.Location = new Point(31, 220);
-            GradientRegionBorderPicture.Name = "GradientRegionBorderPicture";
-            GradientRegionBorderPicture.Size = new Size(106, 18);
-            GradientRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            GradientRegionBorderPicture.TabIndex = 118;
-            GradientRegionBorderPicture.TabStop = false;
-            GradientRegionBorderPicture.Click += (this.GradientRegionBorderPicture_Click);
-            // 
-            // SolidAndDashRegionBorderPicture
-            // 
-            SolidAndDashRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            SolidAndDashRegionBorderPicture.Image = (Image)resources.GetObject("SolidAndDashRegionBorderPicture.Image");
-            SolidAndDashRegionBorderPicture.InitialImage = null;
-            SolidAndDashRegionBorderPicture.Location = new Point(31, 194);
-            SolidAndDashRegionBorderPicture.Name = "SolidAndDashRegionBorderPicture";
-            SolidAndDashRegionBorderPicture.Size = new Size(106, 18);
-            SolidAndDashRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            SolidAndDashRegionBorderPicture.TabIndex = 117;
-            SolidAndDashRegionBorderPicture.TabStop = false;
-            SolidAndDashRegionBorderPicture.Click += (this.SolidAndDashRegionBorderPicture_Click);
-            // 
-            // DoubleSolidRegionBorderPicture
-            // 
-            DoubleSolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DoubleSolidRegionBorderPicture.Image = (Image)resources.GetObject("DoubleSolidRegionBorderPicture.Image");
-            DoubleSolidRegionBorderPicture.InitialImage = null;
-            DoubleSolidRegionBorderPicture.Location = new Point(31, 170);
-            DoubleSolidRegionBorderPicture.Name = "DoubleSolidRegionBorderPicture";
-            DoubleSolidRegionBorderPicture.Size = new Size(106, 18);
-            DoubleSolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DoubleSolidRegionBorderPicture.TabIndex = 116;
-            DoubleSolidRegionBorderPicture.TabStop = false;
-            DoubleSolidRegionBorderPicture.Click += (this.DoubleSolidRegionBorderPicture_Click);
-            // 
-            // DashDotDotRegionBorderPicture
-            // 
-            DashDotDotRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DashDotDotRegionBorderPicture.Image = (Image)resources.GetObject("DashDotDotRegionBorderPicture.Image");
-            DashDotDotRegionBorderPicture.InitialImage = null;
-            DashDotDotRegionBorderPicture.Location = new Point(31, 145);
-            DashDotDotRegionBorderPicture.Name = "DashDotDotRegionBorderPicture";
-            DashDotDotRegionBorderPicture.Size = new Size(106, 18);
-            DashDotDotRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DashDotDotRegionBorderPicture.TabIndex = 115;
-            DashDotDotRegionBorderPicture.TabStop = false;
-            DashDotDotRegionBorderPicture.Click += (this.DashDotDotRegionBorderPicture_Click);
-            // 
-            // DashDotRegionBorderPicture
-            // 
-            DashDotRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DashDotRegionBorderPicture.Image = (Image)resources.GetObject("DashDotRegionBorderPicture.Image");
-            DashDotRegionBorderPicture.InitialImage = null;
-            DashDotRegionBorderPicture.Location = new Point(31, 120);
-            DashDotRegionBorderPicture.Name = "DashDotRegionBorderPicture";
-            DashDotRegionBorderPicture.Size = new Size(106, 18);
-            DashDotRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DashDotRegionBorderPicture.TabIndex = 114;
-            DashDotRegionBorderPicture.TabStop = false;
-            DashDotRegionBorderPicture.Click += (this.DashDotRegionBorderPicture_Click);
-            // 
-            // DashedRegionBorderPicture
-            // 
-            DashedRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DashedRegionBorderPicture.Image = (Image)resources.GetObject("DashedRegionBorderPicture.Image");
-            DashedRegionBorderPicture.InitialImage = null;
-            DashedRegionBorderPicture.Location = new Point(31, 95);
-            DashedRegionBorderPicture.Name = "DashedRegionBorderPicture";
-            DashedRegionBorderPicture.Size = new Size(106, 18);
-            DashedRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DashedRegionBorderPicture.TabIndex = 113;
-            DashedRegionBorderPicture.TabStop = false;
-            DashedRegionBorderPicture.Click += (this.DashedRegionBorderPicture_Click);
-            // 
-            // DottedRegionBorderPicture
-            // 
-            DottedRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            DottedRegionBorderPicture.Image = (Image)resources.GetObject("DottedRegionBorderPicture.Image");
-            DottedRegionBorderPicture.InitialImage = null;
-            DottedRegionBorderPicture.Location = new Point(31, 69);
-            DottedRegionBorderPicture.Name = "DottedRegionBorderPicture";
-            DottedRegionBorderPicture.Size = new Size(106, 18);
-            DottedRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            DottedRegionBorderPicture.TabIndex = 112;
-            DottedRegionBorderPicture.TabStop = false;
-            DottedRegionBorderPicture.Click += (this.DottedRegionBorderPicture_Click);
-            // 
-            // SolidRegionBorderPicture
-            // 
-            SolidRegionBorderPicture.BackgroundImageLayout = ImageLayout.Zoom;
-            SolidRegionBorderPicture.Image = (Image)resources.GetObject("SolidRegionBorderPicture.Image");
-            SolidRegionBorderPicture.InitialImage = null;
-            SolidRegionBorderPicture.Location = new Point(31, 45);
-            SolidRegionBorderPicture.Name = "SolidRegionBorderPicture";
-            SolidRegionBorderPicture.Size = new Size(106, 18);
-            SolidRegionBorderPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-            SolidRegionBorderPicture.TabIndex = 111;
-            SolidRegionBorderPicture.TabStop = false;
-            SolidRegionBorderPicture.Click += (this.SolidRegionBorderPicture_Click);
-            // 
-            // RegionDoubleSolidBorderRadio
-            // 
-            RegionDoubleSolidBorderRadio.AutoSize = true;
-            RegionDoubleSolidBorderRadio.Location = new Point(16, 175);
-            RegionDoubleSolidBorderRadio.Name = "RegionDoubleSolidBorderRadio";
-            RegionDoubleSolidBorderRadio.Size = new Size(14, 13);
-            RegionDoubleSolidBorderRadio.TabIndex = 110;
-            RegionDoubleSolidBorderRadio.UseVisualStyleBackColor = true;
-            RegionDoubleSolidBorderRadio.CheckedChanged += (this.RegionDoubleSolidBorderRadio_CheckedChanged);
-            // 
-            // RegionBorderedLightSolidRadio
-            // 
-            RegionBorderedLightSolidRadio.AutoSize = true;
-            RegionBorderedLightSolidRadio.Location = new Point(16, 251);
-            RegionBorderedLightSolidRadio.Name = "RegionBorderedLightSolidRadio";
-            RegionBorderedLightSolidRadio.Size = new Size(14, 13);
-            RegionBorderedLightSolidRadio.TabIndex = 109;
-            RegionBorderedLightSolidRadio.UseVisualStyleBackColor = true;
-            RegionBorderedLightSolidRadio.CheckedChanged += (this.RegionBorderedLightSolidRadio_CheckedChanged);
-            // 
-            // RegionBorderedGradientRadio
-            // 
-            RegionBorderedGradientRadio.AutoSize = true;
-            RegionBorderedGradientRadio.Location = new Point(16, 225);
-            RegionBorderedGradientRadio.Name = "RegionBorderedGradientRadio";
-            RegionBorderedGradientRadio.Size = new Size(14, 13);
-            RegionBorderedGradientRadio.TabIndex = 108;
-            RegionBorderedGradientRadio.UseVisualStyleBackColor = true;
-            RegionBorderedGradientRadio.CheckedChanged += (this.RegionBorderedGradientRadio_CheckedChanged);
-            // 
-            // RegionSolidAndDashesBorderRadio
-            // 
-            RegionSolidAndDashesBorderRadio.AutoSize = true;
-            RegionSolidAndDashesBorderRadio.Location = new Point(16, 199);
-            RegionSolidAndDashesBorderRadio.Name = "RegionSolidAndDashesBorderRadio";
-            RegionSolidAndDashesBorderRadio.Size = new Size(14, 13);
-            RegionSolidAndDashesBorderRadio.TabIndex = 107;
-            RegionSolidAndDashesBorderRadio.UseVisualStyleBackColor = true;
-            RegionSolidAndDashesBorderRadio.CheckedChanged += (this.RegionSolidAndDashesBorderRadio_CheckedChanged);
-            // 
-            // RegionDashDotDotBorderRadio
-            // 
-            RegionDashDotDotBorderRadio.AutoSize = true;
-            RegionDashDotDotBorderRadio.Location = new Point(16, 150);
-            RegionDashDotDotBorderRadio.Name = "RegionDashDotDotBorderRadio";
-            RegionDashDotDotBorderRadio.Size = new Size(14, 13);
-            RegionDashDotDotBorderRadio.TabIndex = 106;
-            RegionDashDotDotBorderRadio.UseVisualStyleBackColor = true;
-            RegionDashDotDotBorderRadio.CheckedChanged += (this.RegionDashDotDotBorderRadio_CheckedChanged);
-            // 
-            // RegionDashDotBorderRadio
-            // 
-            RegionDashDotBorderRadio.AutoSize = true;
-            RegionDashDotBorderRadio.Location = new Point(16, 125);
-            RegionDashDotBorderRadio.Name = "RegionDashDotBorderRadio";
-            RegionDashDotBorderRadio.Size = new Size(14, 13);
-            RegionDashDotBorderRadio.TabIndex = 105;
-            RegionDashDotBorderRadio.UseVisualStyleBackColor = true;
-            RegionDashDotBorderRadio.CheckedChanged += (this.RegionDashDotBorderRadio_CheckedChanged);
-            // 
-            // RegionDashBorderRadio
-            // 
-            RegionDashBorderRadio.AutoSize = true;
-            RegionDashBorderRadio.Location = new Point(16, 100);
-            RegionDashBorderRadio.Name = "RegionDashBorderRadio";
-            RegionDashBorderRadio.Size = new Size(14, 13);
-            RegionDashBorderRadio.TabIndex = 104;
-            RegionDashBorderRadio.UseVisualStyleBackColor = true;
-            RegionDashBorderRadio.CheckedChanged += (this.RegionDashBorderRadio_CheckedChanged);
-            // 
-            // RegionDottedBorderRadio
-            // 
-            RegionDottedBorderRadio.AutoSize = true;
-            RegionDottedBorderRadio.Location = new Point(16, 75);
-            RegionDottedBorderRadio.Name = "RegionDottedBorderRadio";
-            RegionDottedBorderRadio.Size = new Size(14, 13);
-            RegionDottedBorderRadio.TabIndex = 103;
-            RegionDottedBorderRadio.UseVisualStyleBackColor = true;
-            RegionDottedBorderRadio.CheckedChanged += (this.RegionDottedBorderRadio_CheckedChanged);
-            // 
-            // RegionSolidBorderRadio
-            // 
-            RegionSolidBorderRadio.AutoSize = true;
-            RegionSolidBorderRadio.BackgroundImageLayout = ImageLayout.Stretch;
-            RegionSolidBorderRadio.Checked = true;
-            RegionSolidBorderRadio.Location = new Point(16, 50);
-            RegionSolidBorderRadio.Name = "RegionSolidBorderRadio";
-            RegionSolidBorderRadio.Size = new Size(14, 13);
-            RegionSolidBorderRadio.TabIndex = 102;
-            RegionSolidBorderRadio.TabStop = true;
-            RegionSolidBorderRadio.UseVisualStyleBackColor = true;
-            RegionSolidBorderRadio.CheckedChanged += (this.RegionSolidBorderRadio_CheckedChanged);
-            // 
-            // OverlayToolPanel
-            // 
-            OverlayToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
-            OverlayToolPanel.BackColor = SystemColors.Control;
-            OverlayToolPanel.Controls.Add(FrameStyleTable);
-            OverlayToolPanel.Location = new Point(1421, 90);
-            OverlayToolPanel.Margin = new Padding(0);
-            OverlayToolPanel.Name = "OverlayToolPanel";
-            OverlayToolPanel.Size = new Size(152, 806);
-            OverlayToolPanel.TabIndex = 24;
-            // 
-            // FrameStyleTable
-            // 
-            FrameStyleTable.AutoScroll = true;
-            FrameStyleTable.CausesValidation = false;
-            FrameStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
-            FrameStyleTable.ColumnCount = 1;
-            FrameStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
-            FrameStyleTable.Location = new Point(20, 15);
-            FrameStyleTable.Name = "FrameStyleTable";
-            FrameStyleTable.RowCount = 1;
-            FrameStyleTable.RowStyles.Add(new RowStyle());
-            FrameStyleTable.Size = new Size(122, 779);
-            FrameStyleTable.TabIndex = 74;
-            // 
-            // LabelToolPanel
-            // 
-            LabelToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
-            LabelToolPanel.BackColor = SystemColors.Control;
-            LabelToolPanel.Controls.Add(SelectBoxTintButton);
-            LabelToolPanel.Controls.Add(LabelBoxStyleTable);
-            LabelToolPanel.Location = new Point(1421, 90);
-            LabelToolPanel.Margin = new Padding(0);
-            LabelToolPanel.Name = "LabelToolPanel";
-            LabelToolPanel.Size = new Size(152, 806);
-            LabelToolPanel.TabIndex = 27;
-            // 
-            // SelectBoxTintButton
-            // 
-            SelectBoxTintButton.BackColor = Color.White;
-            SelectBoxTintButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            SelectBoxTintButton.ForeColor = SystemColors.ControlDarkDark;
-            SelectBoxTintButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            SelectBoxTintButton.IconColor = Color.Tan;
-            SelectBoxTintButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            SelectBoxTintButton.Location = new Point(15, 20);
-            SelectBoxTintButton.Name = "SelectBoxTintButton";
-            SelectBoxTintButton.Size = new Size(120, 60);
-            SelectBoxTintButton.TabIndex = 113;
-            SelectBoxTintButton.Text = "Select Tint Color";
-            SelectBoxTintButton.UseVisualStyleBackColor = false;
-            SelectBoxTintButton.Click += (this.SelectBoxTintButton_Click);
-            // 
-            // LabelBoxStyleTable
-            // 
-            LabelBoxStyleTable.AutoScroll = true;
-            LabelBoxStyleTable.CausesValidation = false;
-            LabelBoxStyleTable.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset;
-            LabelBoxStyleTable.ColumnCount = 1;
-            LabelBoxStyleTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
-            LabelBoxStyleTable.Location = new Point(15, 86);
-            LabelBoxStyleTable.Name = "LabelBoxStyleTable";
-            LabelBoxStyleTable.RowCount = 1;
-            LabelBoxStyleTable.RowStyles.Add(new RowStyle());
-            LabelBoxStyleTable.Size = new Size(122, 708);
-            LabelBoxStyleTable.TabIndex = 112;
-            // 
-            // SymbolToolPanel
-            // 
-            SymbolToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
-            SymbolToolPanel.BackColor = SystemColors.Control;
-            SymbolToolPanel.Controls.Add(label22);
-            SymbolToolPanel.Controls.Add(SymbolSearchTextBox);
-            SymbolToolPanel.Controls.Add(SymbolTable);
-            SymbolToolPanel.Location = new Point(1421, 90);
-            SymbolToolPanel.Margin = new Padding(0);
-            SymbolToolPanel.Name = "SymbolToolPanel";
-            SymbolToolPanel.Size = new Size(152, 806);
-            SymbolToolPanel.TabIndex = 22;
-            // 
-            // label22
-            // 
-            label22.AutoSize = true;
-            label22.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            label22.ForeColor = SystemColors.ControlDarkDark;
-            label22.Location = new Point(10, 13);
-            label22.Name = "label22";
-            label22.Size = new Size(47, 17);
-            label22.TabIndex = 79;
-            label22.Text = "Search";
-            // 
-            // SymbolSearchTextBox
-            // 
-            SymbolSearchTextBox.BorderStyle = BorderStyle.FixedSingle;
-            SymbolSearchTextBox.Location = new Point(10, 33);
-            SymbolSearchTextBox.Name = "SymbolSearchTextBox";
-            SymbolSearchTextBox.Size = new Size(132, 23);
-            SymbolSearchTextBox.TabIndex = 78;
-            SymbolSearchTextBox.TextChanged += (this.SymbolSearchTextBox_TextChanged);
-            // 
-            // SymbolTable
-            // 
-            SymbolTable.CausesValidation = false;
-            SymbolTable.ColumnCount = 1;
-            SymbolTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 110F));
-            SymbolTable.ForeColor = SystemColors.ControlDarkDark;
-            SymbolTable.Location = new Point(10, 62);
-            SymbolTable.MaximumSize = new Size(130, 680);
-            SymbolTable.MinimumSize = new Size(130, 42);
-            SymbolTable.Name = "SymbolTable";
-            SymbolTable.RowCount = 1;
-            SymbolTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 45F));
-            SymbolTable.Size = new Size(130, 680);
-            SymbolTable.TabIndex = 77;
             // 
             // materialCheckBox1
             // 
@@ -9342,6 +10106,10 @@
             RegionToolStrip.PerformLayout();
             DrawingTab.ResumeLayout(false);
             DrawingTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)DrawingFillTextureScaleTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DrawingFillTextureOpacityTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DrawingFillTextureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)LineBrushSizeTrack).EndInit();
             DrawingToolStrip.ResumeLayout(false);
             DrawingToolStrip.PerformLayout();
             RealmStudioForm.ResumeLayout(false);
@@ -9374,6 +10142,24 @@
             ApplicationStatusStrip.PerformLayout();
             RealmStudioMainMenuStrip.ResumeLayout(false);
             RealmStudioMainMenuStrip.PerformLayout();
+            DrawingToolPanel.ResumeLayout(false);
+            DrawingToolPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
+            RegionToolPanel.ResumeLayout(false);
+            RegionToolPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SolidAndDashRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DoubleSolidRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DashDotDotRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DashDotRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).EndInit();
+            OverlayToolPanel.ResumeLayout(false);
+            LabelToolPanel.ResumeLayout(false);
+            SymbolToolPanel.ResumeLayout(false);
+            SymbolToolPanel.PerformLayout();
             PathToolPanel.ResumeLayout(false);
             PathToolPanel.PerformLayout();
             groupBox1.ResumeLayout(false);
@@ -9412,23 +10198,6 @@
             ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).EndInit();
-            DrawingToolPanel.ResumeLayout(false);
-            DrawingToolPanel.PerformLayout();
-            RegionToolPanel.ResumeLayout(false);
-            RegionToolPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)SolidAndDashRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DoubleSolidRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DashDotDotRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DashDotRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DashedRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DottedRegionBorderPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)SolidRegionBorderPicture).EndInit();
-            OverlayToolPanel.ResumeLayout(false);
-            LabelToolPanel.ResumeLayout(false);
-            SymbolToolPanel.ResumeLayout(false);
-            SymbolToolPanel.PerformLayout();
             this.ResumeLayout(false);
         }
 
@@ -9497,7 +10266,6 @@
         private Label label19;
         private Panel LandToolPanel;
         private Panel DrawingToolPanel;
-        private Label label26;
         private Panel WaterToolPanel;
         private Panel OceanToolPanel;
         private ToolStrip LandToolStrip;
@@ -9510,7 +10278,7 @@
         private ToolStrip RegionToolStrip;
         private FontAwesome.Sharp.IconToolStripButton SelectRegionButton;
         private ToolStrip DrawingToolStrip;
-        private FontAwesome.Sharp.IconToolStripButton iconToolStripButton8;
+        private FontAwesome.Sharp.IconToolStripButton DrawingSelectButton;
         private GroupBox BackgroundTextureGroup;
         private ToolStrip BackgroundToolStrip;
         private Label label12;
@@ -10003,5 +10771,54 @@
         private ToolStripSeparator toolStripSeparator8;
         private ToolStripSeparator toolStripSeparator9;
         internal FontAwesome.Sharp.IconButton NewVersionButton;
+        internal FontAwesome.Sharp.IconToolStripButton PencilDrawButton;
+        private Label label102;
+        internal FontAwesome.Sharp.IconButton SelectPaintColorButton;
+        private FontAwesome.Sharp.IconToolStripButton PaintDrawButton;
+        private ToolStripSeparator toolStripSeparator10;
+        private FontAwesome.Sharp.IconToolStripButton PlaceRectangleButton;
+        private Label label103;
+        internal FontAwesome.Sharp.IconButton SelectFillColorButton;
+        private FontAwesome.Sharp.IconToolStripButton PlaceEllipseButton;
+        private FontAwesome.Sharp.IconToolStripButton PlacePolygonButton;
+        private FontAwesome.Sharp.IconToolStripButton PlaceStampButton;
+        private FontAwesome.Sharp.IconToolStripButton EraseDrawingButton;
+        private Label label104;
+        internal TrackBar LineBrushSizeTrack;
+        private GroupBox groupBox2;
+        private FontAwesome.Sharp.IconToolStripButton FillShapeButton;
+        private Label label26;
+        internal TrackBar trackBar1;
+        internal Button DrawingHardBrushButton;
+        internal Button DrawingSoftBrushButton;
+        private Label label106;
+        internal FontAwesome.Sharp.IconButton PreviousDrawingFillTextureButton;
+        internal FontAwesome.Sharp.IconButton NextDrawingFillTextureButton;
+        private Label label105;
+        internal TrackBar DrawingFillTextureScaleTrack;
+        private Label label107;
+        internal TrackBar DrawingFillTextureOpacityTrack;
+        internal Label DrawingFillTextureNameLabel;
+        private Label label109;
+        internal PictureBox DrawingFillTextureBox;
+        internal Button WaterPatternBrush1Button;
+        internal Button WaterPatternBrush2Button;
+        internal Button WaterPatternBrush4Button;
+        internal Button WaterPatternBrush3Button;
+        internal Button OceanPatternBrush4Button;
+        internal Button OceanPatternBrush3Button;
+        internal Button OceanPatternBrush2Button;
+        internal Button OceanPatternBrush1Button;
+        internal Button LandPatternBrush4Button;
+        internal Button LandPatternBrush3Button;
+        internal Button LandPatternBrush2Button;
+        internal Button LandPatternBrush1Button;
+        internal Button DrawingPatternBrush4Button;
+        internal Button DrawingPatternBrush3Button;
+        internal Button DrawingPatternBrush2Button;
+        internal Button DrawingPatternBrush1Button;
+        private ToolStripDropDownButton FillTypeDropdownButton;
+        private ToolStripMenuItem ColorMenuItem;
+        private ToolStripMenuItem TextureMenuItem;
     }
 }

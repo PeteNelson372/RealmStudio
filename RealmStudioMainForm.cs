@@ -64,6 +64,9 @@ namespace RealmStudio
         // UI mediator for map boxes
         private BoxUIMediator BoxMediator { get; set; }
 
+        // UI mediator for drawing layer
+        private DrawingUIMediator DrawingMediator { get; set; }
+
         // UI mediator for the map frame
         private FrameUIMediator FrameMediator { get; set; }
 
@@ -159,6 +162,9 @@ namespace RealmStudio
             BoxMediator = new BoxUIMediator(this);
             BoxManager.BoxMediator = BoxMediator;
 
+            DrawingMediator = new DrawingUIMediator(this);
+            DrawingManager.DrawingMediator = DrawingMediator;
+
             FrameMediator = new FrameUIMediator(this);
             FrameManager.FrameMediator = FrameMediator;
 
@@ -171,9 +177,6 @@ namespace RealmStudio
             LandformMediator = new LandformUIMediator(this);
             LandformManager.LandformMediator = LandformMediator;
 
-            RegionMediator = new(this);
-            RegionManager.RegionUIMediator = RegionMediator;
-
             MeasureMediator = new(this);
             MapMeasureManager.MeasureUIMediator = MeasureMediator;
 
@@ -185,6 +188,9 @@ namespace RealmStudio
 
             PresetMediator = new(this);
             LabelPresetManager.PresetMediator = PresetMediator;
+
+            RegionMediator = new(this);
+            RegionManager.RegionUIMediator = RegionMediator;
 
             ScaleMediator = new(this);
             MapScaleManager.ScaleMediator = ScaleMediator;
@@ -1466,7 +1472,7 @@ namespace RealmStudio
                     break;
                 case 4:
                     PathToolPanel.Visible = true;
-                    PathMediator.NotifyUpdate(null);
+                    //PathMediator.NotifyUpdate(null);
                     BackgroundToolPanel.Visible = false;
                     break;
                 case 5:
@@ -1498,7 +1504,7 @@ namespace RealmStudio
                     break;
             }
 
-            Refresh();
+            MainTab.Invalidate();
         }
 
         private void SetZoomLevel(int upDown)
@@ -1560,7 +1566,9 @@ namespace RealmStudio
             PathTexturePreviewPicture.Image = PathMediator.PathTextureList.First().TextureBitmap;
             PathTextureNameLabel.Text = PathMediator.PathTextureList.First().TextureName;
 
-
+            // drawing texture
+            DrawingFillTextureBox.Image = DrawingMediator.DrawingTextureList[DrawingMediator.DrawingTextureIndex].TextureBitmap;
+            DrawingFillTextureNameLabel.Text = DrawingMediator.DrawingTextureList[DrawingMediator.DrawingTextureIndex].TextureName;
         }
 
         public void LoadNameGeneratorConfigurationDialog()
@@ -2769,6 +2777,36 @@ namespace RealmStudio
             {
                 MainMediator.SelectedBrushSize = RealmMapMethods.GetNewBrushSize(LandBrushSizeTrack, sizeDelta);
             }
+            else if (ModifierKeys == Keys.None && MainMediator.CurrentDrawingMode == MapDrawingMode.DrawingLine)
+            {
+                MainMediator.SelectedBrushSize = RealmMapMethods.GetNewBrushSize(LineBrushSizeTrack, sizeDelta);
+                DrawingMediator.DrawingLineBrushSize = MainMediator.SelectedBrushSize;
+            }
+            else if (ModifierKeys == Keys.None && MainMediator.CurrentDrawingMode == MapDrawingMode.DrawingPaint)
+            {
+                MainMediator.SelectedBrushSize = RealmMapMethods.GetNewBrushSize(LineBrushSizeTrack, sizeDelta);
+                DrawingMediator.DrawingLineBrushSize = MainMediator.SelectedBrushSize;
+            }
+            else if (ModifierKeys == Keys.None && MainMediator.CurrentDrawingMode == MapDrawingMode.DrawingPolygon)
+            {
+                MainMediator.SelectedBrushSize = RealmMapMethods.GetNewBrushSize(LineBrushSizeTrack, sizeDelta);
+                DrawingMediator.DrawingLineBrushSize = MainMediator.SelectedBrushSize;
+            }
+            else if (ModifierKeys == Keys.None && MainMediator.CurrentDrawingMode == MapDrawingMode.DrawingEllipse)
+            {
+                MainMediator.SelectedBrushSize = RealmMapMethods.GetNewBrushSize(LineBrushSizeTrack, sizeDelta);
+                DrawingMediator.DrawingLineBrushSize = MainMediator.SelectedBrushSize;
+            }
+            else if (ModifierKeys == Keys.None && MainMediator.CurrentDrawingMode == MapDrawingMode.DrawingRectangle)
+            {
+                MainMediator.SelectedBrushSize = RealmMapMethods.GetNewBrushSize(LineBrushSizeTrack, sizeDelta);
+                DrawingMediator.DrawingLineBrushSize = MainMediator.SelectedBrushSize;
+            }
+            else if (ModifierKeys == Keys.None && MainMediator.CurrentDrawingMode == MapDrawingMode.DrawingErase)
+            {
+                MainMediator.SelectedBrushSize = RealmMapMethods.GetNewBrushSize(LineBrushSizeTrack, sizeDelta);
+                DrawingMediator.DrawingLineBrushSize = MainMediator.SelectedBrushSize;
+            }
             else if (ModifierKeys != Keys.Control && MainMediator.CurrentDrawingMode == MapDrawingMode.SymbolPlace)
             {
                 if (AreaBrushSwitch.Enabled && SymbolMediator.UseAreaBrush)
@@ -2851,23 +2889,7 @@ namespace RealmStudio
                         MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
-                        if (MapStateMediator.CurrentLayerPaintStroke == null)
-                        {
-                            MapStateMediator.CurrentLayerPaintStroke = new LayerPaintStroke(MapStateMediator.CurrentMap, OceanPaintColorSelectButton.BackColor.ToSKColor(),
-                                MapStateMediator.SelectedColorPaintBrush, MainMediator.SelectedBrushSize / 2, MapBuilder.OCEANDRAWINGLAYER)
-                            {
-                                RenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false,
-                                new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
-                            };
-
-                            Cmd_AddOceanPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
-
-                            MainMediator.CurrentBrushVelocity = Math.Max(1, MapStateMediator.BasePaintEventInterval / (OceanBrushVelocityTrack.Value / 100.0));
-
-                            ApplicationTimerManager.BrushTimerEnabled = true;
-                        }
+                        OceanManager.StartColorPainting(ApplicationTimerManager, SKGLRenderControl);
                     }
                     break;
                 case MapDrawingMode.OceanErase:
@@ -2875,19 +2897,7 @@ namespace RealmStudio
                         MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
-                        if (MapStateMediator.CurrentLayerPaintStroke == null)
-                        {
-                            MapStateMediator.CurrentLayerPaintStroke = new LayerPaintStroke(MapStateMediator.CurrentMap, SKColors.Transparent,
-                                ColorPaintBrush.HardBrush, MainMediator.SelectedBrushSize / 2, MapBuilder.OCEANDRAWINGLAYER, true)
-                            {
-                                RenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false,
-                                new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
-                            };
-
-                            Cmd_AddOceanPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
-                        }
+                        OceanManager.StartColorErasing(SKGLRenderControl);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -2939,23 +2949,7 @@ namespace RealmStudio
                         MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
-                        if (MapStateMediator.CurrentLayerPaintStroke == null)
-                        {
-                            MapStateMediator.CurrentLayerPaintStroke = new LayerPaintStroke(MapStateMediator.CurrentMap, LandColorSelectionButton.BackColor.ToSKColor(),
-                                MapStateMediator.SelectedColorPaintBrush, MainMediator.SelectedBrushSize / 2, MapBuilder.LANDDRAWINGLAYER)
-                            {
-                                RenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false,
-                                new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
-                            };
-
-                            Cmd_AddLandPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
-
-                            MainMediator.CurrentBrushVelocity = Math.Max(1, MapStateMediator.BasePaintEventInterval / (LandBrushVelocityTrack.Value / 100.0));
-
-                            ApplicationTimerManager.BrushTimerEnabled = true;
-                        }
+                        LandformManager.StartColorPainting(ApplicationTimerManager, SKGLRenderControl);
                     }
                     break;
                 case MapDrawingMode.LandColorErase:
@@ -2963,18 +2957,7 @@ namespace RealmStudio
                         MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
-                        if (MapStateMediator.CurrentLayerPaintStroke == null)
-                        {
-                            MapStateMediator.CurrentLayerPaintStroke = new LayerPaintStroke(MapStateMediator.CurrentMap, SKColors.Transparent,
-                                ColorPaintBrush.HardBrush, MainMediator.SelectedBrushSize / 2, MapBuilder.LANDDRAWINGLAYER, true)
-                            {
-                                RenderSurface = SKSurface.Create(SKGLRenderControl.GRContext, false, new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
-                            };
-
-                            Cmd_AddLandPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
-                        }
+                        LandformManager.StartColorErasing(SKGLRenderControl);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3220,6 +3203,35 @@ namespace RealmStudio
                 case MapDrawingMode.RealmAreaSelect:
                     Cursor = Cursors.Cross;
                     MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                    break;
+                case MapDrawingMode.DrawingLine:
+                    {
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingRectangle:
+                    {
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingEllipse:
+                    {
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingPolygon:
+                    {
+                        DrawingMediator.PolygonPoints.Add(MapStateMediator.CurrentCursorPoint);
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKGLRenderControl.Invalidate();
+                    }
                     break;
             }
         }
@@ -3639,6 +3651,189 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case MapDrawingMode.DrawingLine:
+                    {
+                        // draw a line from the previous cursor point to the current cursor point
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        using SKPaint paint = new()
+                        {
+                            Style = SKPaintStyle.StrokeAndFill,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            StrokeWidth = DrawingMediator.DrawingLineBrushSize,
+                            IsAntialias = true,
+                            StrokeCap = SKStrokeCap.Round
+                        };
+
+                        canvas.DrawLine(MapStateMediator.PreviousCursorPoint, MapStateMediator.CurrentCursorPoint, paint);
+
+                        // update the previous cursor point
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingPaint:
+                    {
+                        // draw with a brush at the current cursor point
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        DrawingManager.Paint(canvas, MapStateMediator.CurrentCursorPoint, DrawingMediator.DrawingLineBrushSize);
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingRectangle:
+                    {
+                        // draw a rectangle from the previous cursor point to the current cursor point
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        canvas?.Clear(SKColors.Transparent);
+                        if (canvas == null) return;
+
+                        using SKPaint strokepaint = new()
+                        {
+                            Style = SKPaintStyle.Stroke,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            StrokeWidth = DrawingMediator.DrawingLineBrushSize,
+                            IsAntialias = true,
+                            StrokeCap = SKStrokeCap.Butt
+                        };
+
+                        SKRect rect = new(MapStateMediator.PreviousCursorPoint.X, MapStateMediator.PreviousCursorPoint.Y,
+                            MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                        if (DrawingMediator.FillDrawnShape)
+                        {
+                            // draw the filled rectangle first if the fill is enabled
+                            using SKPaint fillpaint = new()
+                            {
+                                Style = SKPaintStyle.Fill,
+                                Color = DrawingMediator.DrawingFillColor.ToSKColor(),
+                                StrokeWidth = DrawingMediator.DrawingLineBrushSize,
+                                IsAntialias = true,
+                                StrokeCap = SKStrokeCap.Butt
+                            };
+
+                            canvas.DrawRect(rect, fillpaint);
+                        }
+
+                        canvas.DrawRect(rect, strokepaint);
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingErase:
+                    {
+                        // erase at the current cursor point
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        using SKPaint paint = new()
+                        {
+                            Style = SKPaintStyle.Fill,
+                            Color = SKColors.Transparent,
+                            StrokeWidth = MainMediator.SelectedBrushSize / 2,
+                            IsAntialias = true,
+                            BlendMode = SKBlendMode.Clear
+                        };
+
+                        canvas.DrawCircle(MapStateMediator.CurrentCursorPoint, MainMediator.SelectedBrushSize / 2, paint);
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingEllipse:
+                    {
+                        // draw an ellipse from the previous cursor point to the current cursor point
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        canvas?.Clear(SKColors.Transparent);
+                        if (canvas == null) return;
+                        using SKPaint strokepaint = new()
+                        {
+                            Style = SKPaintStyle.Stroke,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            StrokeWidth = DrawingMediator.DrawingLineBrushSize,
+                            IsAntialias = true,
+                            StrokeCap = SKStrokeCap.Butt
+                        };
+
+                        SKRect rect = new(MapStateMediator.PreviousCursorPoint.X, MapStateMediator.PreviousCursorPoint.Y,
+                            MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                        // draw the filled ellipse first if the fill is enabled
+                        if (DrawingMediator.FillDrawnShape)
+                        {
+                            using SKPaint fillpaint = new()
+                            {
+                                Style = SKPaintStyle.Fill,
+                                Color = DrawingMediator.DrawingFillColor.ToSKColor(),
+                                StrokeWidth = DrawingMediator.DrawingLineBrushSize,
+                                IsAntialias = true,
+                                StrokeCap = SKStrokeCap.Butt
+                            };
+                            canvas.DrawOval(rect, fillpaint);
+                        }
+
+                        // draw the outline of the ellipse
+                        canvas.DrawOval(rect, strokepaint);
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingPolygon:
+                    {
+                        // draw a polygon from the previous cursor point to the current cursor point
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        canvas?.Clear(SKColors.Transparent);
+                        if (canvas == null) return;
+
+                        using SKPaint strokepaint = new()
+                        {
+                            Style = SKPaintStyle.Stroke,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            StrokeWidth = DrawingMediator.DrawingLineBrushSize,
+                            IsAntialias = true,
+                            StrokeCap = SKStrokeCap.Round,
+                            StrokeJoin = SKStrokeJoin.Round
+                        };
+
+                        if (DrawingMediator.PolygonPoints.Count < 1)
+                        {
+                            return;
+                        }
+                        else if (DrawingMediator.PolygonPoints.Count == 1)
+                        {
+                            canvas.DrawLine(MapStateMediator.PreviousCursorPoint, MapStateMediator.CurrentCursorPoint, strokepaint);
+                        }
+                        else if (DrawingMediator.PolygonPoints.Count > 1)
+                        {
+                            DrawingMediator.PolygonPoints.Add(MapStateMediator.CurrentCursorPoint);
+
+                            SKPath polyPath = DrawingMethods.GetLinePathFromPoints(DrawingMediator.PolygonPoints);
+
+                            // draw the filled polygon first if the fill is enabled
+                            if (DrawingMediator.FillDrawnShape)
+                            {
+                                using SKPaint fillpaint = new()
+                                {
+                                    Style = SKPaintStyle.Fill,
+                                    Color = DrawingMediator.DrawingFillColor.ToSKColor(),
+                                    StrokeWidth = DrawingMediator.DrawingLineBrushSize,
+                                    IsAntialias = true,
+                                    StrokeCap = SKStrokeCap.Round,
+                                    StrokeJoin = SKStrokeJoin.Round
+                                };
+                                canvas.DrawPath(polyPath, fillpaint);
+                            }
+
+                            // draw the outline of the polygon
+                            canvas.DrawPath(polyPath, strokepaint);
+
+                            DrawingMediator.PolygonPoints.RemoveAt(DrawingMediator.PolygonPoints.Count - 1);
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
             }
 
         }
@@ -3737,13 +3932,12 @@ namespace RealmStudio
             {
                 case MapDrawingMode.OceanPaint:
                     {
-                        ApplicationTimerManager.BrushTimerEnabled = false;
-                        MapStateMediator.CurrentLayerPaintStroke = null;
+                        OceanManager.StopColorPainting(ApplicationTimerManager);
                     }
                     break;
                 case MapDrawingMode.OceanErase:
                     {
-                        MapStateMediator.CurrentLayerPaintStroke = null;
+                        OceanManager.StopColorErasing();
                     }
                     break;
                 case MapDrawingMode.LandPaint:
@@ -3766,13 +3960,12 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.LandColor:
                     {
-                        ApplicationTimerManager.BrushTimerEnabled = false;
-                        MapStateMediator.CurrentLayerPaintStroke = null;
+                        LandformManager.StopColorPainting(ApplicationTimerManager);
                     }
                     break;
                 case MapDrawingMode.LandColorErase:
                     {
-                        MapStateMediator.CurrentLayerPaintStroke = null;
+                        LandformManager.StopColorErasing();
                     }
                     break;
                 case MapDrawingMode.PlaceWindrose:
@@ -4064,6 +4257,76 @@ namespace RealmStudio
                         }
                         break;
                     }
+                case MapDrawingMode.DrawingRectangle:
+                    {
+                        // finalize rectangle drawing and add the rectangle
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+                        SKRect rect = new(MapStateMediator.PreviousCursorPoint.X, MapStateMediator.PreviousCursorPoint.Y,
+                            MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                        using SKPaint paint = new()
+                        {
+                            Style = SKPaintStyle.Stroke,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            StrokeWidth = DrawingMediator.DrawingLineBrushSize,
+                            IsAntialias = true,
+                            StrokeCap = SKStrokeCap.Butt
+                        };
+
+                        if (DrawingMediator.FillDrawnShape)
+                        {
+                            // draw the filled rectangle first if the fill is enabled
+                            using SKPaint fillpaint = new()
+                            {
+                                Style = SKPaintStyle.Fill,
+                                Color = DrawingMediator.DrawingFillColor.ToSKColor(),
+                                StrokeWidth = DrawingMediator.DrawingLineBrushSize,
+                                IsAntialias = true,
+                                StrokeCap = SKStrokeCap.Butt
+                            };
+
+                            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas.DrawRect(rect, fillpaint);
+                        }
+
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas.DrawRect(rect, paint);
+                    }
+                    break;
+                case MapDrawingMode.DrawingEllipse:
+                    {
+                        // finalize ellipse drawing and add the ellipse
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+                        SKRect rect = new(MapStateMediator.PreviousCursorPoint.X, MapStateMediator.PreviousCursorPoint.Y,
+                            MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                        using SKPaint paint = new()
+                        {
+                            Style = SKPaintStyle.Stroke,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            StrokeWidth = DrawingMediator.DrawingLineBrushSize,
+                            IsAntialias = true,
+                            StrokeCap = SKStrokeCap.Butt
+                        };
+
+                        if (DrawingMediator.FillDrawnShape)
+                        {
+                            // draw the filled rectangle first if the fill is enabled
+                            using SKPaint fillpaint = new()
+                            {
+                                Style = SKPaintStyle.Fill,
+                                Color = DrawingMediator.DrawingFillColor.ToSKColor(),
+                                StrokeWidth = DrawingMediator.DrawingLineBrushSize,
+                                IsAntialias = true,
+                                StrokeCap = SKStrokeCap.Butt
+                            };
+
+                            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas.DrawOval(rect, fillpaint);
+                        }
+
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas.DrawOval(rect, paint);
+                    }
+                    break;
             }
 
             SKGLRenderControl.Invalidate();
@@ -4145,6 +4408,64 @@ namespace RealmStudio
                     {
                         MapRegionInfo mri = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion, SKGLRenderControl);
                         mri.ShowDialog(this);
+                    }
+                    break;
+                case MapDrawingMode.DrawingPolygon:
+                    {
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+                        // draw a polygon from the previous cursor point to the current cursor point
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        using SKPaint strokepaint = new()
+                        {
+                            Style = SKPaintStyle.Stroke,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            StrokeWidth = DrawingMediator.DrawingLineBrushSize,
+                            IsAntialias = true,
+                            StrokeCap = SKStrokeCap.Round,
+                            StrokeJoin = SKStrokeJoin.Round
+                        };
+
+                        if (DrawingMediator.PolygonPoints.Count < 2)
+                        {
+                            // if there are not enough points to draw a polygon, just return
+                            return;
+                        }
+                        else if (DrawingMediator.PolygonPoints.Count == 2)
+                        {
+                            canvas.DrawLine(MapStateMediator.PreviousCursorPoint, MapStateMediator.CurrentCursorPoint, strokepaint);
+                        }
+                        else
+                        {
+                            DrawingMediator.PolygonPoints.Add(MapStateMediator.CurrentCursorPoint);
+
+                            SKPath polyPath = DrawingMethods.GetLinePathFromPoints(DrawingMediator.PolygonPoints);
+
+                            // draw the filled polygon first if the fill is enabled
+                            if (DrawingMediator.FillDrawnShape)
+                            {
+                                using SKPaint fillpaint = new()
+                                {
+                                    Style = SKPaintStyle.Fill,
+                                    Color = DrawingMediator.DrawingFillColor.ToSKColor(),
+                                    StrokeWidth = DrawingMediator.DrawingLineBrushSize,
+                                    IsAntialias = true,
+                                    StrokeCap = SKStrokeCap.Round,
+                                    StrokeJoin = SKStrokeJoin.Round
+
+                                };
+                                canvas.DrawPath(polyPath, fillpaint);
+                            }
+
+                            // draw the outline of the polygon
+                            canvas.DrawPath(polyPath, strokepaint);
+                        }
+
+                        DrawingMediator.PolygonPoints.Clear(); // clear the polygon points after drawing
+
+                        SKGLRenderControl.Invalidate();
                     }
                     break;
             }
@@ -4327,6 +4648,30 @@ namespace RealmStudio
         {
             MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
             OceanMediator.OceanPaintBrush = ColorPaintBrush.HardBrush;
+        }
+
+        private void OceanPatternBrush1Button_Click(object sender, EventArgs e)
+        {
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush1;
+            OceanMediator.OceanPaintBrush = ColorPaintBrush.PatternBrush1;
+        }
+
+        private void OceanPatternBrush2Button_Click(object sender, EventArgs e)
+        {
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush2;
+            OceanMediator.OceanPaintBrush = ColorPaintBrush.PatternBrush2;
+        }
+
+        private void OceanPatternBrush3Button_Click(object sender, EventArgs e)
+        {
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush3;
+            OceanMediator.OceanPaintBrush = ColorPaintBrush.PatternBrush3;
+        }
+
+        private void OceanPatternBrush4Button_Click(object sender, EventArgs e)
+        {
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush4;
+            OceanMediator.OceanPaintBrush = ColorPaintBrush.PatternBrush4;
         }
 
         private void OceanBrushSizeTrack_ValueChanged(object sender, EventArgs e)
@@ -4690,6 +5035,30 @@ namespace RealmStudio
             MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
         }
 
+        private void LandPatternBrush1Button_Click(object sender, EventArgs e)
+        {
+            LandformMediator.LandPaintBrush = ColorPaintBrush.PatternBrush1;
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush1;
+        }
+
+        private void LandPatternBrush2Button_Click(object sender, EventArgs e)
+        {
+            LandformMediator.LandPaintBrush = ColorPaintBrush.PatternBrush2;
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush2;
+        }
+
+        private void LandPatternBrush3Button_Click(object sender, EventArgs e)
+        {
+            LandformMediator.LandPaintBrush = ColorPaintBrush.PatternBrush3;
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush3;
+        }
+
+        private void LandPatternBrush4Button_Click(object sender, EventArgs e)
+        {
+            LandformMediator.LandPaintBrush = ColorPaintBrush.PatternBrush4;
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush4;
+        }
+
         private void LandColorBrushSizeTrack_ValueChanged(object sender, EventArgs e)
         {
             LandformMediator.LandPaintBrushSize = LandColorBrushSizeTrack.Value;
@@ -4921,12 +5290,37 @@ namespace RealmStudio
         private void WaterSoftBrushButton_Click(object sender, EventArgs e)
         {
             WaterFeatureMediator.WaterPaintBrush = ColorPaintBrush.SoftBrush;
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.SoftBrush;
         }
 
         private void WaterHardBrushButton_Click(object sender, EventArgs e)
         {
             WaterFeatureMediator.WaterPaintBrush = ColorPaintBrush.HardBrush;
             MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
+        }
+
+        private void WaterPatternBrush1Button_Click(object sender, EventArgs e)
+        {
+            WaterFeatureMediator.WaterPaintBrush = ColorPaintBrush.PatternBrush1;
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush1;
+        }
+
+        private void WaterPatternBrush2Button_Click(object sender, EventArgs e)
+        {
+            WaterFeatureMediator.WaterPaintBrush = ColorPaintBrush.PatternBrush2;
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush2;
+        }
+
+        private void WaterPatternBrush3Button_Click(object sender, EventArgs e)
+        {
+            WaterFeatureMediator.WaterPaintBrush = ColorPaintBrush.PatternBrush3;
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush3;
+        }
+
+        private void WaterPatternBrush4Button_Click(object sender, EventArgs e)
+        {
+            WaterFeatureMediator.WaterPaintBrush = ColorPaintBrush.PatternBrush4;
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush4;
         }
 
         private void WaterColorBrushSizeTrack_ValueChanged(object sender, EventArgs e)
@@ -5930,6 +6324,151 @@ namespace RealmStudio
         }
 
         #endregion
+
+        #region Drawing Tab Event Handlers
+
+        private void ShowDrawingLayerSwitch_CheckedChanged()
+        {
+            MapLayer drawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+            drawingLayer.ShowLayer = ShowDrawingLayerSwitch.Checked;
+        }
+
+        private void DrawingSelectButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingSelect, 0);
+        }
+
+        private void PencilDrawButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingLine, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void PaintDrawButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingPaint, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void PlaceRectangleButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingRectangle, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void PlaceEllipseButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingEllipse, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void PlacePolygonButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingPolygon, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void PlaceStampButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingStamp, 0);
+        }
+
+        private void DrawingFillButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingFill, 0);
+        }
+
+        private void EraseDrawingButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingErase, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void LineBrushSizeTrack_Scroll(object sender, EventArgs e)
+        {
+            DrawingMediator.DrawingLineBrushSize = LineBrushSizeTrack.Value;
+            MainMediator.SelectedBrushSize = DrawingMediator.DrawingLineBrushSize;
+
+            TOOLTIP.Show(DrawingMediator.DrawingLineBrushSize.ToString(), DrawingTab, new Point(LineBrushSizeTrack.Right - 30, LineBrushSizeTrack.Top - 20), 2000);
+        }
+
+        private void FillShapeButton_Click(object sender, EventArgs e)
+        {
+            DrawingMediator.FillDrawnShape = FillShapeButton.Checked;
+        }
+
+        private void DrawingSoftBrushButton_Click(object sender, EventArgs e)
+        {
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.SoftBrush;
+            DrawingMediator.DrawingPaintBrush = ColorPaintBrush.SoftBrush;
+        }
+
+        private void DrawingHardBrushButton_Click(object sender, EventArgs e)
+        {
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
+            DrawingMediator.DrawingPaintBrush = ColorPaintBrush.HardBrush;
+        }
+
+        private void DrawingPatternBrush1Button_Click(object sender, EventArgs e)
+        {
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush1;
+            DrawingMediator.DrawingPaintBrush = ColorPaintBrush.PatternBrush1;
+        }
+
+        private void DrawingPatternBrush2Button_Click(object sender, EventArgs e)
+        {
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush2;
+            DrawingMediator.DrawingPaintBrush = ColorPaintBrush.PatternBrush2;
+        }
+
+        private void DrawingPatternBrush3Button_Click(object sender, EventArgs e)
+        {
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush3;
+            DrawingMediator.DrawingPaintBrush = ColorPaintBrush.PatternBrush3;
+        }
+
+        private void DrawingPatternBrush4Button_Click(object sender, EventArgs e)
+        {
+            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush4;
+            DrawingMediator.DrawingPaintBrush = ColorPaintBrush.PatternBrush4;
+        }
+
+        private void SelectPaintColorButton_Click(object sender, EventArgs e)
+        {
+            Color newColor = UtilityMethods.SelectColorFromDialog(this, SelectPaintColorButton.BackColor);
+            DrawingMediator.DrawingLineColor = newColor;
+        }
+
+        private void SelectFillColorButton_Click(object sender, EventArgs e)
+        {
+            Color newColor = UtilityMethods.SelectColorFromDialog(this, SelectPaintColorButton.BackColor);
+            DrawingMediator.DrawingFillColor = newColor;
+        }
+
+        private void PreviousDrawingFillTextureButton_Click(object sender, EventArgs e)
+        {
+            DrawingMediator.DrawingTextureIndex--;
+        }
+
+        private void NextDrawingFillTextureButton_Click(object sender, EventArgs e)
+        {
+            DrawingMediator.DrawingTextureIndex++;
+        }
+
+        private void ColorMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ColorMenuItem.Checked)
+            {
+                TextureMenuItem.Checked = false;
+            }
+        }
+
+        private void TextureMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (TextureMenuItem.Checked)
+            {
+                ColorMenuItem.Checked = false;
+            }
+        }
+
+        #endregion
+
+
 
     }
 }

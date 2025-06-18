@@ -215,20 +215,20 @@ namespace RealmStudio
                     else if (changedPropertyName == "PathWidth")
                     {
                         // TODO: maybe shouldn't update trackbar here, since user is changing it in the UI
-                        MainForm.PathWidthTrack.Value = (PathWidth >= MainForm.PathWidthTrack.Minimum && PathWidth <= MainForm.PathWidthTrack.Maximum) ? PathWidth : MainForm.PathWidthTrack.Minimum;
+                        //MainForm.PathWidthTrack.Value = (PathWidth >= MainForm.PathWidthTrack.Minimum && PathWidth <= MainForm.PathWidthTrack.Maximum) ? PathWidth : MainForm.PathWidthTrack.Minimum;
                     }
                     else if (changedPropertyName == "PathTextureOpacity")
                     {
                         // TODO: maybe shouldn't update trackbar here, since user is changing it in the UI
                         // selected path texture opacity should be changed in the UI
-                        MainForm.PathTextureOpacityTrack.Value = (PathTextureOpacity >= MainForm.PathTextureOpacityTrack.Minimum && PathTextureOpacity <= MainForm.PathTextureOpacityTrack.Maximum) ? PathTextureOpacity : MainForm.PathTextureOpacityTrack.Minimum;
+                        //MainForm.PathTextureOpacityTrack.Value = (PathTextureOpacity >= MainForm.PathTextureOpacityTrack.Minimum && PathTextureOpacity <= MainForm.PathTextureOpacityTrack.Maximum) ? PathTextureOpacity : MainForm.PathTextureOpacityTrack.Minimum;
                         UpdatePathTextureComboBox();
                     }
                     else if (changedPropertyName == "PathTextureScale")
                     {
                         // TODO: maybe shouldn't update trackbar here, since user is changing it in the UI
                         // selected path texture scale should be changed in the UI
-                        MainForm.PathTextureScaleTrack.Value = (int)(PathTextureScale * 100.0f);
+                        //MainForm.PathTextureScaleTrack.Value = (int)(PathTextureScale * 100.0f);
                         UpdatePathTextureComboBox();
                     }
                 }
@@ -267,7 +267,7 @@ namespace RealmStudio
 
                     using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, PathTextureOpacity / 255.0F);
 
-                    MainForm.PathTexturePreviewPicture.Image = b;
+                    MainForm.PathTexturePreviewPicture.Image = new Bitmap(b);
                     MainForm.PathTexturePreviewPicture.Refresh();
                     MainForm.PathTextureNameLabel.Text = PathTextureList[PathTextureIndex].TextureName;
                     MainForm.PathTextureNameLabel.Refresh();
@@ -278,7 +278,7 @@ namespace RealmStudio
 
                     using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, PathTextureOpacity / 255.0F);
 
-                    MainForm.PathTexturePreviewPicture.Image = b;
+                    MainForm.PathTexturePreviewPicture.Image = new Bitmap(b);
                     MainForm.PathTexturePreviewPicture.Refresh();
                     MainForm.PathTextureNameLabel.Text = PathTextureList[PathTextureIndex].TextureName;
                     MainForm.PathTextureNameLabel.Refresh();

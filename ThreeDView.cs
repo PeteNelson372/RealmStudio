@@ -3527,7 +3527,7 @@ namespace RealmStudio
 
         #region Data Structures
 
-        internal class LocalStar
+        internal sealed class LocalStar
         {
             internal Point3D Center { get; set; } = new Point3D(3, 3, 0);
             internal double Radius { get; set; } = 0.15;
@@ -3538,7 +3538,7 @@ namespace RealmStudio
             internal Quaternion RotationQuaternion { get; set; } = Quaternion.Identity;
         }
 
-        internal class PlanetaryRing
+        internal sealed class PlanetaryRing
         {
             internal byte[] RingImageResource = Resources.saturn_ring;
             internal double InnerRadius { get; set; } = 1.5;
@@ -3549,14 +3549,14 @@ namespace RealmStudio
 
         }
 
-        internal class PlanetAtmosphere
+        internal sealed class PlanetAtmosphere
         {
             internal double AtmosphereRadius { get; set; } = 0.1;
             internal System.Drawing.Color AtmosphereColor { get; set; } = System.Drawing.Color.FromArgb(255, 103, 137, 175);
             internal double AtmosphereOpacity { get; set; } = 0.5;
         }
 
-        internal class Moon
+        internal sealed class Moon
         {
             internal SphereVisual3D moonVisual = new();
             internal string MoonName { get; set; } = string.Empty;

@@ -32,7 +32,7 @@ namespace RealmStudio
     //
     // Some HLSL shaders are here: https://developer.download.nvidia.com/shaderlibrary/webpages/hlsl_shaders.html
     //
-    internal class SepiaEffect : ShaderEffect
+    internal sealed class SepiaEffect : ShaderEffect
     {
         private static readonly PixelShader _pixelShader = new()
         {

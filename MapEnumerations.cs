@@ -65,6 +65,16 @@ namespace RealmStudio
         HeightMapPaint,
         MapHeightIncrease,
         MapHeightDecrease,
+        DrawingSelect,
+        DrawingLine,
+        DrawingPaint,
+        DrawingRectangle,
+        DrawingEllipse,
+        DrawingPolygon,
+        DrawingStamp,
+        DrawingFill,
+        DrawingText,
+        DrawingErase,
     }
 
     public enum LandGradientDirection
@@ -78,7 +88,11 @@ namespace RealmStudio
     {
         None,
         SoftBrush,
-        HardBrush
+        HardBrush,
+        PatternBrush1,
+        PatternBrush2,
+        PatternBrush3,
+        PatternBrush4,
     }
 
     public enum WaterFeatureType

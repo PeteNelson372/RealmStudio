@@ -25,11 +25,11 @@ namespace RealmStudio
 {
     internal sealed class MapBrush
     {
-        public required string BrushName { get; set; }
+        public string BrushName { get; set; } = string.Empty;
 
         public Bitmap? BrushBitmap { get; set; }
 
-        public required string BrushPath { get; set; }
+        public string BrushPath { get; set; } = string.Empty;
 
         public Color BrushColor { get; set; } = Color.Black;
 

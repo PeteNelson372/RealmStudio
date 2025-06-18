@@ -281,14 +281,118 @@ namespace RealmStudio
 
                     MainForm.WaterHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
                     MainForm.WaterHardBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush1Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush2Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush3Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush4Button.FlatAppearance.BorderSize = 3;
                 }
-                else
+                else if (WaterPaintBrush == ColorPaintBrush.HardBrush)
                 {
                     MainForm.WaterHardBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
                     MainForm.WaterHardBrushButton.FlatAppearance.BorderSize = 3;
 
                     MainForm.WaterSoftBrushButton.FlatAppearance.BorderColor = Color.LightGray;
                     MainForm.WaterSoftBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush1Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush2Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush3Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush4Button.FlatAppearance.BorderSize = 3;
+                }
+                else if (WaterPaintBrush == ColorPaintBrush.PatternBrush1)
+                {
+                    MainForm.WaterPatternBrush1Button.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+                    MainForm.WaterPatternBrush1Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterSoftBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterSoftBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterHardBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush2Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush3Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush4Button.FlatAppearance.BorderSize = 3;
+                }
+                else if (WaterPaintBrush == ColorPaintBrush.PatternBrush2)
+                {
+                    MainForm.WaterPatternBrush2Button.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+                    MainForm.WaterPatternBrush2Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterSoftBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterSoftBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterHardBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush1Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush3Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush4Button.FlatAppearance.BorderSize = 3;
+                }
+                else if (WaterPaintBrush == ColorPaintBrush.PatternBrush3)
+                {
+                    MainForm.WaterPatternBrush3Button.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+                    MainForm.WaterPatternBrush3Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterSoftBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterSoftBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterHardBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush1Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush2Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush4Button.FlatAppearance.BorderSize = 3;
+                }
+                else if (WaterPaintBrush == ColorPaintBrush.PatternBrush4)
+                {
+                    MainForm.WaterPatternBrush4Button.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+                    MainForm.WaterPatternBrush4Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterSoftBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterSoftBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterHardBrushButton.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush1Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush2Button.FlatAppearance.BorderSize = 3;
+
+                    MainForm.WaterPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+                    MainForm.WaterPatternBrush3Button.FlatAppearance.BorderSize = 3;
                 }
 
                 MapStateMediator.SelectedColorPaintBrush = WaterPaintBrush;

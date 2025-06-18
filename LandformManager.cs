@@ -740,5 +740,87 @@ namespace RealmStudio
             CommandManager.AddCommand(cmd);
             cmd.DoOperation();
         }
+
+        internal static void StartColorPainting(TimerManager applicationTimerManager, SKGLControl glRenderControl)
+        {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(LandformMediator);
+
+            if (MapStateMediator.CurrentLayerPaintStroke == null)
+            {
+                MapStateMediator.CurrentLayerPaintStroke = new LayerPaintStroke(MapStateMediator.CurrentMap,
+                    LandformMediator.LandPaintColor.ToSKColor(),
+                    MapStateMediator.SelectedColorPaintBrush,
+                    MapStateMediator.MainUIMediator.SelectedBrushSize / 2,
+                    MapBuilder.LANDDRAWINGLAYER)
+                {
+                    RenderSurface = SKSurface.Create(glRenderControl.GRContext, false,
+                    new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
+                };
+
+                MapBrush? brush = null;
+                if (LandformMediator.LandPaintBrush == ColorPaintBrush.PatternBrush1)
+                {
+                    brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush1");
+                }
+                else if (LandformMediator.LandPaintBrush == ColorPaintBrush.PatternBrush2)
+                {
+                    brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush2");
+                }
+                else if (LandformMediator.LandPaintBrush == ColorPaintBrush.PatternBrush3)
+                {
+                    brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush3");
+                }
+                else if (LandformMediator.LandPaintBrush == ColorPaintBrush.PatternBrush4)
+                {
+                    brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush4"); ;
+                }
+
+                if (brush != null)
+                {
+                    brush.BrushBitmap = (Bitmap)Bitmap.FromFile(brush.BrushPath);
+                    MapStateMediator.CurrentLayerPaintStroke.StrokeBrush = brush;
+                }
+
+                Cmd_AddLandPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+
+                applicationTimerManager.BrushTimerEnabled = true;
+            }
+        }
+
+        internal static void StartColorErasing(SKGLControl glRenderControl)
+        {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+
+            if (MapStateMediator.CurrentLayerPaintStroke == null)
+            {
+                MapStateMediator.CurrentLayerPaintStroke = new LayerPaintStroke(MapStateMediator.CurrentMap, SKColors.Empty,
+                    ColorPaintBrush.HardBrush, MapStateMediator.MainUIMediator.SelectedBrushSize / 2, MapBuilder.LANDDRAWINGLAYER, true)
+                {
+                    RenderSurface = SKSurface.Create(glRenderControl.GRContext, false, new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
+                };
+
+                Cmd_AddLandPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
+                CommandManager.AddCommand(cmd);
+                cmd.DoOperation();
+            }
+        }
+
+        internal static void StopColorPainting(TimerManager applicationTimerManager)
+        {
+            applicationTimerManager.BrushTimerEnabled = false;
+
+            if (MapStateMediator.CurrentLayerPaintStroke != null)
+            {
+                MapStateMediator.CurrentLayerPaintStroke = null;
+            }
+        }
+
+        internal static void StopColorErasing()
+        {
+            MapStateMediator.CurrentLayerPaintStroke = null;
+        }
     }
 }
