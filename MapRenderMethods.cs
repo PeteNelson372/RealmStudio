@@ -22,6 +22,7 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
+using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
@@ -232,6 +233,36 @@ namespace RealmStudio
                         }
                     }
                     break;
+                case MapDrawingMode.DrawingStamp:
+                    {
+                        ArgumentNullException.ThrowIfNull(DrawingManager.DrawingMediator);
+
+                        if (DrawingManager.DrawingMediator.DrawingStampBitmap != null &&
+                            DrawingManager.DrawingMediator.DrawingStampBitmap.Width > 0 &&
+                            DrawingManager.DrawingMediator.DrawingStampBitmap.Height > 0)
+                        {
+                            Bitmap stampBitmap = DrawingMethods.SetBitmapOpacity(DrawingManager.DrawingMediator.DrawingStampBitmap, DrawingManager.DrawingMediator.DrawingStampOpacity);
+
+                            SKBitmap scaledStamp = DrawingMethods.ScaleSKBitmap(stampBitmap.ToSKBitmap(), DrawingManager.DrawingMediator.DrawingStampScale);
+
+                            SKBitmap rotatedAndScaledStamp = DrawingMethods.RotateSKBitmap(scaledStamp, DrawingManager.DrawingMediator.DrawingStampRotation, mirrorSymbol);
+
+                            canvas.DrawBitmap(rotatedAndScaledStamp,
+                                new SKPoint(point.X - (rotatedAndScaledStamp.Width / 2), point.Y - (rotatedAndScaledStamp.Height / 2)), null);
+
+                            stampBitmap.Dispose();
+                            scaledStamp.Dispose();
+                            rotatedAndScaledStamp.Dispose();
+                        }
+                        else
+                        {
+                            if (brushSize > 0)
+                            {
+                                canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                            }
+                        }
+                    }
+                    break;
                 default:
                     {
                         if (brushSize > 0)
@@ -320,7 +351,15 @@ namespace RealmStudio
 
         internal static void RenderDrawingForExport(RealmStudioMap map, SKCanvas renderCanvas)
         {
-            // TODO
+            MapLayer drawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.DRAWINGLAYER);
+
+            using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+            using SKCanvas canvas = new(b);
+
+            canvas.Clear(SKColors.Transparent);
+            drawingLayer.Render(canvas);
+
+            renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
         }
 
 

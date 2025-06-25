@@ -26,7 +26,7 @@ using System.ComponentModel;
 
 namespace RealmStudio
 {
-    internal class DrawingUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class DrawingUIMediator : IUIMediatorObserver, INotifyPropertyChanged, IDisposable
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -41,7 +41,24 @@ namespace RealmStudio
         private readonly List<MapTexture> _drawingTextureList = [];
         private int _drawingTextureIndex;
 
+        private DrawingFillType _fillType = DrawingFillType.Color;
+
+        private SKPaint _fillPaint = new()
+        {
+            Style = SKPaintStyle.Fill,
+            IsAntialias = true,
+            StrokeCap = SKStrokeCap.Butt
+        };
+
+        private Bitmap? _drawingStampBitmap;
+
         private ColorPaintBrush _drawingPaintBrush = ColorPaintBrush.SoftBrush;
+
+        private float _drawingStampOpacity = 1.0f;
+        private float _drawingStampScale = 1.0f;
+        private float _drawingStampRotation;
+
+        private bool disposedValue;
 
         public DrawingUIMediator(RealmStudioMainForm mainForm)
         {
@@ -96,6 +113,42 @@ namespace RealmStudio
         {
             get { return _drawingTextureIndex; }
             set { SetPropertyField(nameof(DrawingTextureIndex), ref _drawingTextureIndex, value); }
+        }
+
+        internal DrawingFillType FillType
+        {
+            get { return _fillType; }
+            set { SetPropertyField(nameof(FillType), ref _fillType, value); }
+        }
+
+        internal SKPaint FillPaint
+        {
+            get { return _fillPaint; }
+            set { SetPropertyField(nameof(FillPaint), ref _fillPaint, value); }
+        }
+
+        internal Bitmap? DrawingStampBitmap
+        {
+            get { return _drawingStampBitmap; }
+            set { SetPropertyField(nameof(DrawingStampBitmap), ref _drawingStampBitmap, value); }
+        }
+
+        internal float DrawingStampOpacity
+        {
+            get { return _drawingStampOpacity; }
+            set { SetPropertyField(nameof(DrawingStampOpacity), ref _drawingStampOpacity, value); }
+        }
+
+        internal float DrawingStampScale
+        {
+            get { return _drawingStampScale; }
+            set { SetPropertyField(nameof(DrawingStampScale), ref _drawingStampScale, value); }
+        }
+
+        internal float DrawingStampRotation
+        {
+            get { return _drawingStampRotation; }
+            set { SetPropertyField(nameof(DrawingStampRotation), ref _drawingStampRotation, value); }
         }
 
         #endregion
@@ -275,6 +328,30 @@ namespace RealmStudio
                     {
                         UpdateDrawingTexturePictureBox();
                     }
+                    else if (changedPropertyName == "DrawingStampBitmap")
+                    {
+                        if (DrawingStampBitmap != null)
+                        {
+                            Bitmap b = DrawingMethods.SetBitmapOpacity(DrawingStampBitmap, DrawingStampOpacity);
+                            MainForm.StampPictureBox.Image = b;
+                        }
+                        else
+                        {
+                            MainForm.StampPictureBox.Image = null;
+                        }
+                    }
+                    else if (changedPropertyName == "DrawingStampOpacity")
+                    {
+                        if (DrawingStampBitmap != null)
+                        {
+                            Bitmap b = DrawingMethods.SetBitmapOpacity(DrawingStampBitmap, DrawingStampOpacity);
+                            MainForm.StampPictureBox.Image = b;
+                        }
+                    }
+                    else if (changedPropertyName == "DrawingStampScale")
+                    {
+                        MainForm.DrawingStampScaleTrack.Value = (int)(DrawingStampScale * 100);
+                    }
                 }
 
             }));
@@ -303,6 +380,25 @@ namespace RealmStudio
 
             MainForm.DrawingFillTextureBox.Image = DrawingTextureList[DrawingTextureIndex].TextureBitmap;
             MainForm.DrawingFillTextureNameLabel.Text = DrawingTextureList[DrawingTextureIndex].TextureName;
+        }
+
+        public void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    FillPaint.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
 
         #endregion

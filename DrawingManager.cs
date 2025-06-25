@@ -27,7 +27,7 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class DrawingManager : IMapComponentManager
+    internal sealed class DrawingManager : IMapComponentManager
     {
         private static DrawingUIMediator? _drawingUIMediator;
 
@@ -114,7 +114,11 @@ namespace RealmStudio
                 // combine the stroke color with the bitmap color
                 ShaderPaint.ColorFilter = SKColorFilter.CreateBlendMode(DrawingMediator.DrawingLineColor.ToSKColor(), SKBlendMode.Modulate);
 
-                ShaderPaint.Style = SKPaintStyle.Fill;
+                if (DrawingMediator.FillType == DrawingFillType.Texture)
+                {
+                    // if the fill type is texture, we need to create a shader from the bitmap
+                    StrokeShader = SKShader.CreateBitmap(strokeBitmap, SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                }
             }
 
             ShaderPaint.Shader = StrokeShader;
@@ -141,6 +145,29 @@ namespace RealmStudio
             else
             {
                 canvas.DrawCircle(currentCursorPoint.X, currentCursorPoint.Y, brushSize / 2, ShaderPaint);
+            }
+        }
+
+        internal static void PlaceStampAtCursor(SKCanvas canvas, SKPoint currentCursorPoint)
+        {
+            ArgumentNullException.ThrowIfNull(DrawingMediator);
+
+            if (DrawingMediator.DrawingStampBitmap != null &&
+                DrawingMediator.DrawingStampBitmap.Width > 0 &&
+                DrawingMediator.DrawingStampBitmap.Height > 0)
+            {
+                Bitmap stampBitmap = DrawingMethods.SetBitmapOpacity(DrawingMediator.DrawingStampBitmap, DrawingMediator.DrawingStampOpacity);
+
+                SKBitmap scaledStamp = DrawingMethods.ScaleSKBitmap(stampBitmap.ToSKBitmap(), DrawingMediator.DrawingStampScale);
+
+                SKBitmap rotatedAndScaledStamp = DrawingMethods.RotateSKBitmap(scaledStamp, DrawingMediator.DrawingStampRotation, false);
+
+                canvas.DrawBitmap(rotatedAndScaledStamp,
+                    new SKPoint(currentCursorPoint.X - (rotatedAndScaledStamp.Width / 2), currentCursorPoint.Y - (rotatedAndScaledStamp.Height / 2)), null);
+
+                stampBitmap.Dispose();
+                scaledStamp.Dispose();
+                rotatedAndScaledStamp.Dispose();
             }
         }
     }

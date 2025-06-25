@@ -482,40 +482,37 @@ namespace RealmStudio
 
         internal void ColorButtonMouseUp(object sender, MouseEventArgs e)
         {
-            IconButton colorButton = (IconButton)sender;
-
-            if (e.Button == MouseButtons.Left)
+            var mainForm = UtilityMethods.GetMainForm();
+            if (mainForm == null)
             {
-                if (RealmStudioMainForm.ModifierKeys == Keys.None)
+                // Handle the case where the main form is null to avoid passing a null reference
+                return;
+            }
+
+            if (RealmStudioMainForm.ModifierKeys == Keys.None)
+            {
+                IconButton colorButton = (IconButton)sender;
+
+                Color c = UtilityMethods.SelectColor(mainForm, e, colorButton.BackColor);
+
+                if (colorButton == MainForm.SymbolColor1Button)
                 {
-                    Color c = UtilityMethods.SelectColorFromDialog(MainForm, colorButton.BackColor);
-
-                    if (colorButton == MainForm.SymbolColor1Button)
-                    {
-                        SymbolColor1 = c;
-                    }
-                    else if (colorButton == MainForm.SymbolColor2Button)
-                    {
-                        SymbolColor2 = c;
-                    }
-                    else if (colorButton == MainForm.SymbolColor3Button)
-                    {
-                        SymbolColor3 = c;
-                    }
-                    else
-                    {
-                        SymbolColor1 = c;
-                    }
-
-                    List<MapSymbol> selectedSymbols = GetFilteredMapSymbols();
-                    AddSymbolsToSymbolTable(selectedSymbols);
+                    SymbolColor1 = c;
                 }
-                else if (RealmStudioMainForm.ModifierKeys == Keys.Control)
+                else if (colorButton == MainForm.SymbolColor2Button)
                 {
-                    SymbolColor1 = colorButton.BackColor;
+                    SymbolColor2 = c;
+                }
+                else if (colorButton == MainForm.SymbolColor3Button)
+                {
+                    SymbolColor3 = c;
+                }
+                else
+                {
+                    SymbolColor1 = c;
                 }
             }
-            else if (e.Button == MouseButtons.Right && MapStateMediator.SelectedMapSymbol != null)
+            else if (RealmStudioMainForm.ModifierKeys == Keys.Control && MapStateMediator.SelectedMapSymbol != null)
             {
                 if (MapStateMediator.SelectedMapSymbol.IsGrayscale || MapStateMediator.SelectedMapSymbol.UseCustomColors)
                 {
@@ -525,7 +522,7 @@ namespace RealmStudio
                     Color paintColor = ((Button)sender).BackColor;
 
                     Cmd_PaintSymbol cmd = new(MapStateMediator.SelectedMapSymbol,
-                        paintColor.ToSKColor(), SymbolColor1.ToSKColor(), SymbolColor2.ToSKColor(), SymbolColor2.ToSKColor());
+                        paintColor.ToSKColor(), SymbolColor1.ToSKColor(), SymbolColor2.ToSKColor(), SymbolColor3.ToSKColor());
 
                     CommandManager.AddCommand(cmd);
                     cmd.DoOperation();
@@ -682,8 +679,8 @@ namespace RealmStudio
             {
                 if (UseAreaBrush)
                 {
-                    MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.SymbolColor, MainForm.AreaBrushSizeTrack.Value);
                     AreaBrushSize = MapStateMediator.MainUIMediator.SelectedBrushSize;
+                    MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.SymbolColor, AreaBrushSize);
                 }
                 else
                 {

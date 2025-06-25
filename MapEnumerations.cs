@@ -301,4 +301,11 @@ namespace RealmStudio
         Corona,
         BlackHole,
     }
+
+    public enum DrawingFillType
+    {
+        None,
+        Color,
+        Texture,
+    }
 }

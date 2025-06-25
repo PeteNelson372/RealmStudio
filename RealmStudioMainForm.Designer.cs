@@ -474,13 +474,52 @@
             CheckForNewReleaseToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator8 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
+            OceanToolPanel = new Panel();
+            OceanPatternBrush4Button = new Button();
+            OceanPatternBrush3Button = new Button();
+            OceanPatternBrush2Button = new Button();
+            OceanPatternBrush1Button = new Button();
+            label72 = new Label();
+            OceanBrushVelocityTrack = new TrackBar();
+            OceanPaintButton = new FontAwesome.Sharp.IconButton();
+            label18 = new Label();
+            OceanEraserSizeTrack = new TrackBar();
+            OceanCustomColorButton8 = new Button();
+            OceanCustomColorButton7 = new Button();
+            OceanCustomColorButton6 = new Button();
+            OceanCustomColorButton5 = new Button();
+            OceanCustomColorButton4 = new Button();
+            OceanCustomColorButton3 = new Button();
+            OceanCustomColorButton2 = new Button();
+            OceanCustomColorButton1 = new Button();
+            OceanHardBrushButton = new Button();
+            OceanSoftBrushButton = new Button();
+            OceanButton42718D = new Button();
+            OceanButton6BA5B9 = new Button();
+            OceanButton88B5BB = new Button();
+            OceanButton91CBB8 = new Button();
+            OceanColorEraseButton = new FontAwesome.Sharp.IconButton();
+            label23 = new Label();
+            OceanBrushSizeTrack = new TrackBar();
+            label57 = new Label();
+            OceanPaintColorSelectButton = new FontAwesome.Sharp.IconButton();
+            BackgroundToolPanel = new Panel();
             DrawingToolPanel = new Panel();
+            label112 = new Label();
+            DrawingStampOpacityTrack = new TrackBar();
+            label111 = new Label();
+            DrawingStampRotationTrack = new TrackBar();
+            label110 = new Label();
+            DrawingStampScaleTrack = new TrackBar();
+            SelectStampButton = new FontAwesome.Sharp.IconButton();
+            label108 = new Label();
+            StampPictureBox = new PictureBox();
             DrawingPatternBrush4Button = new Button();
             DrawingPatternBrush3Button = new Button();
             DrawingPatternBrush2Button = new Button();
             DrawingPatternBrush1Button = new Button();
             label26 = new Label();
-            trackBar1 = new TrackBar();
+            DrawingBrushVelocityTrack = new TrackBar();
             DrawingHardBrushButton = new Button();
             DrawingSoftBrushButton = new Button();
             label106 = new Label();
@@ -616,36 +655,6 @@
             LandColorBrushSizeTrack = new TrackBar();
             label60 = new Label();
             LandColorSelectionButton = new FontAwesome.Sharp.IconButton();
-            OceanToolPanel = new Panel();
-            OceanPatternBrush4Button = new Button();
-            OceanPatternBrush3Button = new Button();
-            OceanPatternBrush2Button = new Button();
-            OceanPatternBrush1Button = new Button();
-            label72 = new Label();
-            OceanBrushVelocityTrack = new TrackBar();
-            OceanPaintButton = new FontAwesome.Sharp.IconButton();
-            label18 = new Label();
-            OceanEraserSizeTrack = new TrackBar();
-            OceanCustomColorButton8 = new Button();
-            OceanCustomColorButton7 = new Button();
-            OceanCustomColorButton6 = new Button();
-            OceanCustomColorButton5 = new Button();
-            OceanCustomColorButton4 = new Button();
-            OceanCustomColorButton3 = new Button();
-            OceanCustomColorButton2 = new Button();
-            OceanCustomColorButton1 = new Button();
-            OceanHardBrushButton = new Button();
-            OceanSoftBrushButton = new Button();
-            OceanButton42718D = new Button();
-            OceanButton6BA5B9 = new Button();
-            OceanButton88B5BB = new Button();
-            OceanButton91CBB8 = new Button();
-            OceanColorEraseButton = new FontAwesome.Sharp.IconButton();
-            label23 = new Label();
-            OceanBrushSizeTrack = new TrackBar();
-            label57 = new Label();
-            OceanPaintColorSelectButton = new FontAwesome.Sharp.IconButton();
-            BackgroundToolPanel = new Panel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
             OceanTab = new TabPage();
@@ -765,8 +774,16 @@
             MapStatusStrip.SuspendLayout();
             ApplicationStatusStrip.SuspendLayout();
             RealmStudioMainMenuStrip.SuspendLayout();
+            OceanToolPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).BeginInit();
             DrawingToolPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DrawingStampOpacityTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DrawingStampRotationTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DrawingStampScaleTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)StampPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DrawingBrushVelocityTrack).BeginInit();
             RegionToolPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)GradientRegionBorderPicture).BeginInit();
@@ -809,10 +826,6 @@
             ((System.ComponentModel.ISupportInitialize)LandBrushVelocityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LandColorEraserSizeTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)LandColorBrushSizeTrack).BeginInit();
-            OceanToolPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).BeginInit();
             this.SuspendLayout();
             // 
             // OceanTab
@@ -1030,7 +1043,7 @@
             WindroseColorSelectButton.TabIndex = 21;
             WindroseColorSelectButton.Text = "Click to Select";
             WindroseColorSelectButton.UseVisualStyleBackColor = false;
-            WindroseColorSelectButton.Click += (this.WindroseColorSelectButton_Click);
+            WindroseColorSelectButton.MouseUp += (this.WindroseColorSelectButton_MouseUp);
             // 
             // OceanColorGroup
             // 
@@ -1059,7 +1072,7 @@
             OceanColorSelectButton.TabIndex = 21;
             OceanColorSelectButton.Text = "Click to Select";
             OceanColorSelectButton.UseVisualStyleBackColor = false;
-            OceanColorSelectButton.Click += (this.OceanColorSelectButton_Click);
+            OceanColorSelectButton.MouseUp += (this.OceanColorSelectButton_MouseUp);
             // 
             // OceanTextureGroup
             // 
@@ -1516,7 +1529,7 @@
             VignetteColorSelectionButton.TabIndex = 21;
             VignetteColorSelectionButton.Text = "Click to Select";
             VignetteColorSelectionButton.UseVisualStyleBackColor = false;
-            VignetteColorSelectionButton.Click += (this.VignetteColorSelectionButton_Click);
+            VignetteColorSelectionButton.MouseUp += (this.VignetteColorSelectionButton_MouseUp);
             // 
             // label27
             // 
@@ -1917,7 +1930,7 @@
             CoastlineColorSelectionButton.TabIndex = 22;
             CoastlineColorSelectionButton.Text = "Click to Select";
             CoastlineColorSelectionButton.UseVisualStyleBackColor = false;
-            CoastlineColorSelectionButton.Click += (this.CoastlineColorSelectionButton_Click);
+            CoastlineColorSelectionButton.MouseUp += (this.CoastlineColorSelectionButton_MouseUp);
             // 
             // label14
             // 
@@ -2048,7 +2061,7 @@
             LandformBackgroundColorSelectButton.TabIndex = 25;
             LandformBackgroundColorSelectButton.Text = "Click to Select";
             LandformBackgroundColorSelectButton.UseVisualStyleBackColor = false;
-            LandformBackgroundColorSelectButton.Click += (this.LandformBackgroundColorSelectButton_Click);
+            LandformBackgroundColorSelectButton.MouseUp += (this.LandformBackgroundColorSelectButton_MouseUp);
             // 
             // LandTextureNameLabel
             // 
@@ -2113,7 +2126,7 @@
             LandformOutlineColorSelectButton.TabIndex = 19;
             LandformOutlineColorSelectButton.Text = "Click to Select";
             LandformOutlineColorSelectButton.UseVisualStyleBackColor = false;
-            LandformOutlineColorSelectButton.Click += (this.LandformOutlineColorSelectButton_Click);
+            LandformOutlineColorSelectButton.MouseUp += (this.LandformOutlineColorSelectButton_MouseUp);
             // 
             // label12
             // 
@@ -2883,7 +2896,7 @@
             ShorelineColorSelectionButton.TabIndex = 21;
             ShorelineColorSelectionButton.Text = "Click to Select";
             ShorelineColorSelectionButton.UseVisualStyleBackColor = false;
-            ShorelineColorSelectionButton.Click += (this.ShorelineColorSelectionButton_Click);
+            ShorelineColorSelectionButton.MouseUp += (this.ShorelineColorSelectionButton_MouseUp);
             // 
             // label37
             // 
@@ -2911,7 +2924,7 @@
             WaterColorSelectionButton.TabIndex = 19;
             WaterColorSelectionButton.Text = "Click to Select";
             WaterColorSelectionButton.UseVisualStyleBackColor = false;
-            WaterColorSelectionButton.Click += (this.WaterColorSelectionButton_Click);
+            WaterColorSelectionButton.MouseUp += (this.WaterColorSelectionButton_MouseUp);
             // 
             // label39
             // 
@@ -3360,7 +3373,7 @@
             PathColorSelectButton.TabIndex = 19;
             PathColorSelectButton.Text = "Click to Select";
             PathColorSelectButton.UseVisualStyleBackColor = false;
-            PathColorSelectButton.Click += (this.PathColorSelectButton_Click);
+            PathColorSelectButton.MouseUp += (this.PathColorSelectButton_MouseUp);
             // 
             // label46
             // 
@@ -4342,7 +4355,7 @@
             GlowColorSelectButton.TabIndex = 20;
             GlowColorSelectButton.Text = "Select Color";
             GlowColorSelectButton.UseVisualStyleBackColor = false;
-            GlowColorSelectButton.Click += (this.GlowColorSelectButton_Click);
+            GlowColorSelectButton.MouseUp += (this.GlowColorSelectButton_MouseUp);
             // 
             // LabelOutlineGroup
             // 
@@ -4395,7 +4408,7 @@
             OutlineColorSelectButton.TabIndex = 20;
             OutlineColorSelectButton.Text = "Select Color";
             OutlineColorSelectButton.UseVisualStyleBackColor = false;
-            OutlineColorSelectButton.Click += (this.OutlineColorSelectButton_Click);
+            OutlineColorSelectButton.MouseUp += (this.OutlineColorSelectButton_MouseUp);
             // 
             // LabelFontGroup
             // 
@@ -4439,7 +4452,7 @@
             FontColorSelectButton.TabIndex = 20;
             FontColorSelectButton.Text = "Select Color";
             FontColorSelectButton.UseVisualStyleBackColor = false;
-            FontColorSelectButton.Click += (this.FontColorSelectButton_Click);
+            FontColorSelectButton.MouseUp += (this.FontColorSelectButton_MouseUp);
             // 
             // LabelPresetGroup
             // 
@@ -4813,7 +4826,7 @@
             SelectMeasureColorButton.TabIndex = 23;
             SelectMeasureColorButton.Text = "Select Measure Color";
             SelectMeasureColorButton.UseVisualStyleBackColor = false;
-            SelectMeasureColorButton.Click += (this.SelectMeasureColorButton_Click);
+            SelectMeasureColorButton.MouseUp += (this.SelectMeasureColorButton_MouseUp);
             // 
             // GridValuesGroup
             // 
@@ -5029,7 +5042,7 @@
             GridColorSelectButton.TabIndex = 23;
             GridColorSelectButton.Text = "Select Grid Color";
             GridColorSelectButton.UseVisualStyleBackColor = false;
-            GridColorSelectButton.Click += (this.GridColorSelectButton_Click);
+            GridColorSelectButton.MouseUp += (this.GridColorSelectButton_MouseUp);
             // 
             // label65
             // 
@@ -5134,7 +5147,7 @@
             FrameTintColorSelectButton.TabIndex = 23;
             FrameTintColorSelectButton.Text = "Select Frame Tint";
             FrameTintColorSelectButton.UseVisualStyleBackColor = false;
-            FrameTintColorSelectButton.Click += (this.FrameTintColorSelectButton_Click);
+            FrameTintColorSelectButton.MouseUp += (this.FrameTintColorSelectButton_MouseUp);
             // 
             // label24
             // 
@@ -5434,7 +5447,7 @@
             RegionColorSelectButton.TabIndex = 23;
             RegionColorSelectButton.Text = "Select Border Color";
             RegionColorSelectButton.UseVisualStyleBackColor = false;
-            RegionColorSelectButton.Click += (this.RegionColorSelectButton_Click);
+            RegionColorSelectButton.MouseUp += (this.RegionColorSelectButton_MouseUp);
             // 
             // RegionToolStrip
             // 
@@ -5604,7 +5617,7 @@
             label105.BackColor = Color.Transparent;
             label105.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label105.ForeColor = SystemColors.ControlDarkDark;
-            label105.Location = new Point(13, 506);
+            label105.Location = new Point(9, 502);
             label105.Name = "label105";
             label105.Size = new Size(34, 15);
             label105.TabIndex = 40;
@@ -5613,7 +5626,7 @@
             // DrawingFillTextureScaleTrack
             // 
             DrawingFillTextureScaleTrack.AutoSize = false;
-            DrawingFillTextureScaleTrack.Location = new Point(9, 529);
+            DrawingFillTextureScaleTrack.Location = new Point(9, 517);
             DrawingFillTextureScaleTrack.Maximum = 200;
             DrawingFillTextureScaleTrack.Name = "DrawingFillTextureScaleTrack";
             DrawingFillTextureScaleTrack.Size = new Size(136, 20);
@@ -5627,7 +5640,7 @@
             label107.BackColor = Color.Transparent;
             label107.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label107.ForeColor = SystemColors.ControlDarkDark;
-            label107.Location = new Point(9, 463);
+            label107.Location = new Point(9, 466);
             label107.Name = "label107";
             label107.Size = new Size(48, 15);
             label107.TabIndex = 38;
@@ -5678,9 +5691,9 @@
             // 
             // groupBox2
             // 
-            groupBox2.Location = new Point(9, 570);
+            groupBox2.Location = new Point(9, 584);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(146, 232);
+            groupBox2.Size = new Size(146, 286);
             groupBox2.TabIndex = 33;
             groupBox2.TabStop = false;
             groupBox2.Text = "Drawing Layers";
@@ -5737,7 +5750,7 @@
             SelectFillColorButton.TabIndex = 29;
             SelectFillColorButton.Text = "Click to Select";
             SelectFillColorButton.UseVisualStyleBackColor = false;
-            SelectFillColorButton.Click += (this.SelectFillColorButton_Click);
+            SelectFillColorButton.MouseUp += (this.SelectFillColorButton_MouseUp);
             // 
             // label102
             // 
@@ -5765,7 +5778,7 @@
             SelectPaintColorButton.TabIndex = 27;
             SelectPaintColorButton.Text = "Click to Select";
             SelectPaintColorButton.UseVisualStyleBackColor = false;
-            SelectPaintColorButton.Click += (this.SelectPaintColorButton_Click);
+            SelectPaintColorButton.MouseUp += (this.SelectPaintColorButton_MouseUp);
             // 
             // DrawingToolStrip
             // 
@@ -5867,24 +5880,22 @@
             // ColorMenuItem
             // 
             ColorMenuItem.Checked = true;
-            ColorMenuItem.CheckOnClick = true;
             ColorMenuItem.CheckState = CheckState.Checked;
             ColorMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             ColorMenuItem.Name = "ColorMenuItem";
-            ColorMenuItem.Size = new Size(180, 22);
+            ColorMenuItem.Size = new Size(118, 22);
             ColorMenuItem.Text = "Color";
-            ColorMenuItem.CheckedChanged += (this.ColorMenuItem_CheckedChanged);
+            ColorMenuItem.Click += (this.ColorMenuItem_Click);
             // 
             // TextureMenuItem
             // 
-            TextureMenuItem.CheckOnClick = true;
             TextureMenuItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
             TextureMenuItem.Name = "TextureMenuItem";
-            TextureMenuItem.Size = new Size(180, 22);
+            TextureMenuItem.Size = new Size(118, 22);
             TextureMenuItem.Text = "Texture";
             TextureMenuItem.TextImageRelation = TextImageRelation.Overlay;
             TextureMenuItem.ToolTipText = "Texture";
-            TextureMenuItem.CheckedChanged += (this.TextureMenuItem_CheckedChanged);
+            TextureMenuItem.Click += (this.TextureMenuItem_Click);
             // 
             // toolStripSeparator10
             // 
@@ -5957,7 +5968,7 @@
             PlaceStampButton.Margin = new Padding(0, 25, 0, 2);
             PlaceStampButton.Name = "PlaceStampButton";
             PlaceStampButton.Size = new Size(40, 40);
-            PlaceStampButton.Text = "iconToolStripButton1";
+            PlaceStampButton.Text = "Stamp";
             PlaceStampButton.Click += (this.PlaceStampButton_Click);
             // 
             // EraseDrawingButton
@@ -6120,7 +6131,7 @@
             Open3DViewButton.IconColor = Color.DarkGoldenrod;
             Open3DViewButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             Open3DViewButton.IconSize = 32;
-            Open3DViewButton.Location = new Point(1422, 56);
+            Open3DViewButton.Location = new Point(1427, 56);
             Open3DViewButton.Name = "Open3DViewButton";
             Open3DViewButton.Size = new Size(32, 32);
             Open3DViewButton.TabIndex = 41;
@@ -6418,7 +6429,7 @@
             SelectScaleOutlineColorButton.TabIndex = 22;
             SelectScaleOutlineColorButton.Text = "Select Color";
             SelectScaleOutlineColorButton.UseVisualStyleBackColor = false;
-            SelectScaleOutlineColorButton.Click += (this.SelectScaleOutlineColorButton_Click);
+            SelectScaleOutlineColorButton.MouseUp += (this.SelectScaleOutlineColorButton_MouseUp);
             // 
             // ScaleSegmentColorsGroupBox
             // 
@@ -6467,7 +6478,7 @@
             ScaleColor3Button.TabIndex = 27;
             ScaleColor3Button.Text = "Select Color";
             ScaleColor3Button.UseVisualStyleBackColor = false;
-            ScaleColor3Button.Click += (this.ScaleColor3Button_Click);
+            ScaleColor3Button.MouseUp += (this.ScaleColor3Button_MouseUp);
             // 
             // ScaleColor2Button
             // 
@@ -6487,7 +6498,7 @@
             ScaleColor2Button.TabIndex = 26;
             ScaleColor2Button.Text = "Select Color";
             ScaleColor2Button.UseVisualStyleBackColor = false;
-            ScaleColor2Button.Click += (this.ScaleColor2Button_Click);
+            ScaleColor2Button.MouseUp += (this.ScaleColor2Button_MouseUp);
             // 
             // ScaleColor1Button
             // 
@@ -6507,7 +6518,7 @@
             ScaleColor1Button.TabIndex = 25;
             ScaleColor1Button.Text = "Select Color";
             ScaleColor1Button.UseVisualStyleBackColor = false;
-            ScaleColor1Button.Click += (this.ScaleColor1Button_Click);
+            ScaleColor1Button.MouseUp += (this.ScaleColor1Button_MouseUp);
             // 
             // ScaleFontGroupBox
             // 
@@ -6553,7 +6564,7 @@
             SelectScaleFontColorButton.TabIndex = 22;
             SelectScaleFontColorButton.Text = "Select Color";
             SelectScaleFontColorButton.UseVisualStyleBackColor = false;
-            SelectScaleFontColorButton.Click += (this.SelectScaleFontColorButton_Click);
+            SelectScaleFontColorButton.MouseUp += (this.SelectScaleFontColorButton_MouseUp);
             // 
             // ScaleNumbersDisplayGroupBox
             // 
@@ -6790,6 +6801,7 @@
             AddPresetColorButton.UseVisualStyleBackColor = true;
             AddPresetColorButton.Click += (this.AddPresetColorButton_Click);
             AddPresetColorButton.MouseHover += (this.AddPresetColorButton_MouseHover);
+            AddPresetColorButton.MouseUp += (this.AddPresetColorButton_MouseUp);
             // 
             // SelectColorButton
             // 
@@ -7509,16 +7521,478 @@
             AboutToolStripMenuItem.Text = "&About...";
             AboutToolStripMenuItem.Click += (this.AboutToolStripMenuItem_Click);
             // 
+            // OceanToolPanel
+            // 
+            OceanToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
+            OceanToolPanel.BackColor = SystemColors.Control;
+            OceanToolPanel.Controls.Add(OceanPatternBrush4Button);
+            OceanToolPanel.Controls.Add(OceanPatternBrush3Button);
+            OceanToolPanel.Controls.Add(OceanPatternBrush2Button);
+            OceanToolPanel.Controls.Add(OceanPatternBrush1Button);
+            OceanToolPanel.Controls.Add(label72);
+            OceanToolPanel.Controls.Add(OceanBrushVelocityTrack);
+            OceanToolPanel.Controls.Add(OceanPaintButton);
+            OceanToolPanel.Controls.Add(label18);
+            OceanToolPanel.Controls.Add(OceanEraserSizeTrack);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton8);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton7);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton6);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton5);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton4);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton3);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton2);
+            OceanToolPanel.Controls.Add(OceanCustomColorButton1);
+            OceanToolPanel.Controls.Add(OceanHardBrushButton);
+            OceanToolPanel.Controls.Add(OceanSoftBrushButton);
+            OceanToolPanel.Controls.Add(OceanButton42718D);
+            OceanToolPanel.Controls.Add(OceanButton6BA5B9);
+            OceanToolPanel.Controls.Add(OceanButton88B5BB);
+            OceanToolPanel.Controls.Add(OceanButton91CBB8);
+            OceanToolPanel.Controls.Add(OceanColorEraseButton);
+            OceanToolPanel.Controls.Add(label23);
+            OceanToolPanel.Controls.Add(OceanBrushSizeTrack);
+            OceanToolPanel.Controls.Add(label57);
+            OceanToolPanel.Controls.Add(OceanPaintColorSelectButton);
+            OceanToolPanel.Location = new Point(1421, 90);
+            OceanToolPanel.Margin = new Padding(0);
+            OceanToolPanel.Name = "OceanToolPanel";
+            OceanToolPanel.Size = new Size(152, 806);
+            OceanToolPanel.TabIndex = 29;
+            // 
+            // OceanPatternBrush4Button
+            // 
+            OceanPatternBrush4Button.BackColor = Color.Black;
+            OceanPatternBrush4Button.BackgroundImage = (Image)resources.GetObject("OceanPatternBrush4Button.BackgroundImage");
+            OceanPatternBrush4Button.BackgroundImageLayout = ImageLayout.Zoom;
+            OceanPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
+            OceanPatternBrush4Button.FlatAppearance.BorderSize = 3;
+            OceanPatternBrush4Button.FlatStyle = FlatStyle.Flat;
+            OceanPatternBrush4Button.Location = new Point(104, 77);
+            OceanPatternBrush4Button.Name = "OceanPatternBrush4Button";
+            OceanPatternBrush4Button.Size = new Size(40, 40);
+            OceanPatternBrush4Button.TabIndex = 97;
+            OceanPatternBrush4Button.UseVisualStyleBackColor = false;
+            OceanPatternBrush4Button.Click += (this.OceanPatternBrush4Button_Click);
+            // 
+            // OceanPatternBrush3Button
+            // 
+            OceanPatternBrush3Button.BackColor = Color.Black;
+            OceanPatternBrush3Button.BackgroundImage = (Image)resources.GetObject("OceanPatternBrush3Button.BackgroundImage");
+            OceanPatternBrush3Button.BackgroundImageLayout = ImageLayout.Zoom;
+            OceanPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
+            OceanPatternBrush3Button.FlatAppearance.BorderSize = 3;
+            OceanPatternBrush3Button.FlatStyle = FlatStyle.Flat;
+            OceanPatternBrush3Button.Location = new Point(59, 77);
+            OceanPatternBrush3Button.Name = "OceanPatternBrush3Button";
+            OceanPatternBrush3Button.Size = new Size(40, 40);
+            OceanPatternBrush3Button.TabIndex = 96;
+            OceanPatternBrush3Button.UseVisualStyleBackColor = false;
+            OceanPatternBrush3Button.Click += (this.OceanPatternBrush3Button_Click);
+            // 
+            // OceanPatternBrush2Button
+            // 
+            OceanPatternBrush2Button.BackColor = Color.Black;
+            OceanPatternBrush2Button.BackgroundImage = (Image)resources.GetObject("OceanPatternBrush2Button.BackgroundImage");
+            OceanPatternBrush2Button.BackgroundImageLayout = ImageLayout.Zoom;
+            OceanPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
+            OceanPatternBrush2Button.FlatAppearance.BorderSize = 3;
+            OceanPatternBrush2Button.FlatStyle = FlatStyle.Flat;
+            OceanPatternBrush2Button.Location = new Point(14, 77);
+            OceanPatternBrush2Button.Name = "OceanPatternBrush2Button";
+            OceanPatternBrush2Button.Size = new Size(40, 40);
+            OceanPatternBrush2Button.TabIndex = 95;
+            OceanPatternBrush2Button.UseVisualStyleBackColor = false;
+            OceanPatternBrush2Button.Click += (this.OceanPatternBrush2Button_Click);
+            // 
+            // OceanPatternBrush1Button
+            // 
+            OceanPatternBrush1Button.BackColor = Color.Black;
+            OceanPatternBrush1Button.BackgroundImage = (Image)resources.GetObject("OceanPatternBrush1Button.BackgroundImage");
+            OceanPatternBrush1Button.BackgroundImageLayout = ImageLayout.Zoom;
+            OceanPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
+            OceanPatternBrush1Button.FlatAppearance.BorderSize = 3;
+            OceanPatternBrush1Button.FlatStyle = FlatStyle.Flat;
+            OceanPatternBrush1Button.Location = new Point(104, 31);
+            OceanPatternBrush1Button.Name = "OceanPatternBrush1Button";
+            OceanPatternBrush1Button.Size = new Size(40, 40);
+            OceanPatternBrush1Button.TabIndex = 94;
+            OceanPatternBrush1Button.UseVisualStyleBackColor = false;
+            OceanPatternBrush1Button.Click += (this.OceanPatternBrush1Button_Click);
+            // 
+            // label72
+            // 
+            label72.AutoSize = true;
+            label72.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label72.ForeColor = SystemColors.ControlDarkDark;
+            label72.Location = new Point(17, 167);
+            label72.Name = "label72";
+            label72.Size = new Size(74, 13);
+            label72.TabIndex = 82;
+            label72.Text = "Brush Velocity";
+            // 
+            // OceanBrushVelocityTrack
+            // 
+            OceanBrushVelocityTrack.AutoSize = false;
+            OceanBrushVelocityTrack.Location = new Point(14, 178);
+            OceanBrushVelocityTrack.Maximum = 100;
+            OceanBrushVelocityTrack.Minimum = 1;
+            OceanBrushVelocityTrack.Name = "OceanBrushVelocityTrack";
+            OceanBrushVelocityTrack.Size = new Size(126, 20);
+            OceanBrushVelocityTrack.TabIndex = 81;
+            OceanBrushVelocityTrack.TickFrequency = 2;
+            OceanBrushVelocityTrack.TickStyle = TickStyle.None;
+            OceanBrushVelocityTrack.Value = 100;
+            OceanBrushVelocityTrack.ValueChanged += (this.OceanBrushVelocityTrack_ValueChanged);
+            // 
+            // OceanPaintButton
+            // 
+            OceanPaintButton.BackColor = SystemColors.ControlLightLight;
+            OceanPaintButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanPaintButton.FlatStyle = FlatStyle.Flat;
+            OceanPaintButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanPaintButton.ForeColor = SystemColors.ControlDarkDark;
+            OceanPaintButton.IconChar = FontAwesome.Sharp.IconChar.Brush;
+            OceanPaintButton.IconColor = Color.Black;
+            OceanPaintButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            OceanPaintButton.IconSize = 24;
+            OceanPaintButton.Location = new Point(14, 248);
+            OceanPaintButton.Name = "OceanPaintButton";
+            OceanPaintButton.Size = new Size(60, 60);
+            OceanPaintButton.TabIndex = 79;
+            OceanPaintButton.Text = "Color";
+            OceanPaintButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            OceanPaintButton.UseVisualStyleBackColor = false;
+            OceanPaintButton.Click += (this.OceanPaintButton_Click);
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label18.ForeColor = SystemColors.ControlDarkDark;
+            label18.Location = new Point(17, 201);
+            label18.Name = "label18";
+            label18.Size = new Size(60, 13);
+            label18.TabIndex = 77;
+            label18.Text = "Eraser Size";
+            // 
+            // OceanEraserSizeTrack
+            // 
+            OceanEraserSizeTrack.AutoSize = false;
+            OceanEraserSizeTrack.Location = new Point(14, 217);
+            OceanEraserSizeTrack.Maximum = 256;
+            OceanEraserSizeTrack.Minimum = 2;
+            OceanEraserSizeTrack.Name = "OceanEraserSizeTrack";
+            OceanEraserSizeTrack.Size = new Size(126, 20);
+            OceanEraserSizeTrack.TabIndex = 76;
+            OceanEraserSizeTrack.TickFrequency = 2;
+            OceanEraserSizeTrack.TickStyle = TickStyle.None;
+            OceanEraserSizeTrack.Value = 20;
+            OceanEraserSizeTrack.ValueChanged += (this.OceanEraserSizeTrack_ValueChanged);
+            // 
+            // OceanCustomColorButton8
+            // 
+            OceanCustomColorButton8.BackColor = Color.White;
+            OceanCustomColorButton8.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton8.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanCustomColorButton8.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton8.Location = new Point(80, 737);
+            OceanCustomColorButton8.Name = "OceanCustomColorButton8";
+            OceanCustomColorButton8.Size = new Size(60, 57);
+            OceanCustomColorButton8.TabIndex = 74;
+            OceanCustomColorButton8.UseVisualStyleBackColor = false;
+            OceanCustomColorButton8.MouseClick += (this.OceanCustomColorButton8_Click);
+            // 
+            // OceanCustomColorButton7
+            // 
+            OceanCustomColorButton7.BackColor = Color.White;
+            OceanCustomColorButton7.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton7.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton7.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanCustomColorButton7.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton7.Location = new Point(14, 737);
+            OceanCustomColorButton7.Name = "OceanCustomColorButton7";
+            OceanCustomColorButton7.Size = new Size(60, 57);
+            OceanCustomColorButton7.TabIndex = 73;
+            OceanCustomColorButton7.UseVisualStyleBackColor = false;
+            OceanCustomColorButton7.MouseClick += (this.OceanCustomColorButton7_Click);
+            // 
+            // OceanCustomColorButton6
+            // 
+            OceanCustomColorButton6.BackColor = Color.White;
+            OceanCustomColorButton6.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton6.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton6.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanCustomColorButton6.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton6.Location = new Point(80, 674);
+            OceanCustomColorButton6.Name = "OceanCustomColorButton6";
+            OceanCustomColorButton6.Size = new Size(60, 57);
+            OceanCustomColorButton6.TabIndex = 72;
+            OceanCustomColorButton6.UseVisualStyleBackColor = false;
+            OceanCustomColorButton6.MouseClick += (this.OceanCustomColorButton6_Click);
+            // 
+            // OceanCustomColorButton5
+            // 
+            OceanCustomColorButton5.BackColor = Color.White;
+            OceanCustomColorButton5.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton5.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton5.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanCustomColorButton5.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton5.Location = new Point(14, 674);
+            OceanCustomColorButton5.Name = "OceanCustomColorButton5";
+            OceanCustomColorButton5.Size = new Size(60, 57);
+            OceanCustomColorButton5.TabIndex = 71;
+            OceanCustomColorButton5.UseVisualStyleBackColor = false;
+            OceanCustomColorButton5.MouseClick += (this.OceanCustomColorButton5_Click);
+            // 
+            // OceanCustomColorButton4
+            // 
+            OceanCustomColorButton4.BackColor = Color.White;
+            OceanCustomColorButton4.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton4.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton4.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanCustomColorButton4.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton4.Location = new Point(80, 611);
+            OceanCustomColorButton4.Name = "OceanCustomColorButton4";
+            OceanCustomColorButton4.Size = new Size(60, 57);
+            OceanCustomColorButton4.TabIndex = 70;
+            OceanCustomColorButton4.UseVisualStyleBackColor = false;
+            OceanCustomColorButton4.MouseClick += (this.OceanCustomColorButton4_Click);
+            // 
+            // OceanCustomColorButton3
+            // 
+            OceanCustomColorButton3.BackColor = Color.White;
+            OceanCustomColorButton3.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton3.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton3.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanCustomColorButton3.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton3.Location = new Point(14, 611);
+            OceanCustomColorButton3.Name = "OceanCustomColorButton3";
+            OceanCustomColorButton3.Size = new Size(60, 57);
+            OceanCustomColorButton3.TabIndex = 69;
+            OceanCustomColorButton3.UseVisualStyleBackColor = false;
+            OceanCustomColorButton3.MouseClick += (this.OceanCustomColorButton3_Click);
+            // 
+            // OceanCustomColorButton2
+            // 
+            OceanCustomColorButton2.BackColor = Color.White;
+            OceanCustomColorButton2.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton2.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton2.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanCustomColorButton2.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton2.Location = new Point(80, 548);
+            OceanCustomColorButton2.Name = "OceanCustomColorButton2";
+            OceanCustomColorButton2.Size = new Size(60, 57);
+            OceanCustomColorButton2.TabIndex = 68;
+            OceanCustomColorButton2.UseVisualStyleBackColor = false;
+            OceanCustomColorButton2.MouseClick += (this.OceanCustomColorButton2_Click);
+            // 
+            // OceanCustomColorButton1
+            // 
+            OceanCustomColorButton1.BackColor = Color.White;
+            OceanCustomColorButton1.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanCustomColorButton1.FlatStyle = FlatStyle.Flat;
+            OceanCustomColorButton1.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanCustomColorButton1.ForeColor = SystemColors.ControlDark;
+            OceanCustomColorButton1.Location = new Point(14, 548);
+            OceanCustomColorButton1.Name = "OceanCustomColorButton1";
+            OceanCustomColorButton1.Size = new Size(60, 57);
+            OceanCustomColorButton1.TabIndex = 67;
+            OceanCustomColorButton1.UseVisualStyleBackColor = false;
+            OceanCustomColorButton1.MouseClick += (this.OceanCustomColorButton1_Click);
+            // 
+            // OceanHardBrushButton
+            // 
+            OceanHardBrushButton.BackColor = Color.Black;
+            OceanHardBrushButton.BackgroundImage = (Image)resources.GetObject("OceanHardBrushButton.BackgroundImage");
+            OceanHardBrushButton.BackgroundImageLayout = ImageLayout.Zoom;
+            OceanHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
+            OceanHardBrushButton.FlatAppearance.BorderSize = 3;
+            OceanHardBrushButton.FlatStyle = FlatStyle.Flat;
+            OceanHardBrushButton.Location = new Point(59, 31);
+            OceanHardBrushButton.Name = "OceanHardBrushButton";
+            OceanHardBrushButton.Size = new Size(40, 40);
+            OceanHardBrushButton.TabIndex = 65;
+            OceanHardBrushButton.UseVisualStyleBackColor = false;
+            OceanHardBrushButton.Click += (this.OceanHardBrushButton_Click);
+            // 
+            // OceanSoftBrushButton
+            // 
+            OceanSoftBrushButton.BackColor = Color.Black;
+            OceanSoftBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            OceanSoftBrushButton.FlatAppearance.BorderSize = 3;
+            OceanSoftBrushButton.FlatStyle = FlatStyle.Flat;
+            OceanSoftBrushButton.Image = (Image)resources.GetObject("OceanSoftBrushButton.Image");
+            OceanSoftBrushButton.Location = new Point(14, 31);
+            OceanSoftBrushButton.Name = "OceanSoftBrushButton";
+            OceanSoftBrushButton.Size = new Size(40, 40);
+            OceanSoftBrushButton.TabIndex = 64;
+            OceanSoftBrushButton.UseVisualStyleBackColor = false;
+            OceanSoftBrushButton.Click += (this.OceanSoftBrushButton_Click);
+            // 
+            // OceanButton42718D
+            // 
+            OceanButton42718D.BackColor = Color.FromArgb((int)(byte)66, (int)(byte)113, (int)(byte)141);
+            OceanButton42718D.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanButton42718D.FlatStyle = FlatStyle.Flat;
+            OceanButton42718D.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanButton42718D.ForeColor = SystemColors.ControlDark;
+            OceanButton42718D.Location = new Point(80, 485);
+            OceanButton42718D.Name = "OceanButton42718D";
+            OceanButton42718D.Size = new Size(60, 57);
+            OceanButton42718D.TabIndex = 63;
+            OceanButton42718D.Text = "#42718D";
+            OceanButton42718D.UseVisualStyleBackColor = false;
+            OceanButton42718D.Click += (this.OceanButton42718D_Click);
+            // 
+            // OceanButton6BA5B9
+            // 
+            OceanButton6BA5B9.BackColor = Color.FromArgb((int)(byte)107, (int)(byte)165, (int)(byte)185);
+            OceanButton6BA5B9.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanButton6BA5B9.FlatStyle = FlatStyle.Flat;
+            OceanButton6BA5B9.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanButton6BA5B9.ForeColor = SystemColors.ControlDarkDark;
+            OceanButton6BA5B9.Location = new Point(14, 485);
+            OceanButton6BA5B9.Name = "OceanButton6BA5B9";
+            OceanButton6BA5B9.Size = new Size(60, 57);
+            OceanButton6BA5B9.TabIndex = 62;
+            OceanButton6BA5B9.Text = "#6BA5B9";
+            OceanButton6BA5B9.UseVisualStyleBackColor = false;
+            OceanButton6BA5B9.Click += (this.OceanButton6BA5B9_Click);
+            // 
+            // OceanButton88B5BB
+            // 
+            OceanButton88B5BB.BackColor = Color.FromArgb((int)(byte)136, (int)(byte)181, (int)(byte)187);
+            OceanButton88B5BB.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanButton88B5BB.FlatStyle = FlatStyle.Flat;
+            OceanButton88B5BB.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanButton88B5BB.ForeColor = SystemColors.ControlDarkDark;
+            OceanButton88B5BB.Location = new Point(80, 422);
+            OceanButton88B5BB.Name = "OceanButton88B5BB";
+            OceanButton88B5BB.Size = new Size(60, 57);
+            OceanButton88B5BB.TabIndex = 61;
+            OceanButton88B5BB.Text = "#88B5BB";
+            OceanButton88B5BB.UseVisualStyleBackColor = false;
+            OceanButton88B5BB.Click += (this.OceanButton88B5BB_Click);
+            // 
+            // OceanButton91CBB8
+            // 
+            OceanButton91CBB8.BackColor = Color.FromArgb((int)(byte)145, (int)(byte)203, (int)(byte)184);
+            OceanButton91CBB8.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanButton91CBB8.FlatStyle = FlatStyle.Flat;
+            OceanButton91CBB8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanButton91CBB8.ForeColor = SystemColors.ControlDarkDark;
+            OceanButton91CBB8.Location = new Point(14, 422);
+            OceanButton91CBB8.Name = "OceanButton91CBB8";
+            OceanButton91CBB8.Size = new Size(60, 57);
+            OceanButton91CBB8.TabIndex = 60;
+            OceanButton91CBB8.Text = "#91CBB8";
+            OceanButton91CBB8.UseVisualStyleBackColor = false;
+            OceanButton91CBB8.Click += (this.OceanButton91CBB8_Click);
+            // 
+            // OceanColorEraseButton
+            // 
+            OceanColorEraseButton.BackColor = SystemColors.ControlLightLight;
+            OceanColorEraseButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanColorEraseButton.FlatStyle = FlatStyle.Flat;
+            OceanColorEraseButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanColorEraseButton.ForeColor = SystemColors.ControlDarkDark;
+            OceanColorEraseButton.IconChar = FontAwesome.Sharp.IconChar.Eraser;
+            OceanColorEraseButton.IconColor = Color.Black;
+            OceanColorEraseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            OceanColorEraseButton.IconSize = 24;
+            OceanColorEraseButton.Location = new Point(80, 248);
+            OceanColorEraseButton.Name = "OceanColorEraseButton";
+            OceanColorEraseButton.Size = new Size(60, 60);
+            OceanColorEraseButton.TabIndex = 59;
+            OceanColorEraseButton.Text = "Erase";
+            OceanColorEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            OceanColorEraseButton.UseVisualStyleBackColor = false;
+            OceanColorEraseButton.Click += (this.OceanColorEraseButton_Click);
+            // 
+            // label23
+            // 
+            label23.AutoSize = true;
+            label23.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label23.ForeColor = SystemColors.ControlDarkDark;
+            label23.Location = new Point(17, 123);
+            label23.Name = "label23";
+            label23.Size = new Size(56, 13);
+            label23.TabIndex = 58;
+            label23.Text = "Brush Size";
+            // 
+            // OceanBrushSizeTrack
+            // 
+            OceanBrushSizeTrack.AutoSize = false;
+            OceanBrushSizeTrack.Location = new Point(14, 139);
+            OceanBrushSizeTrack.Maximum = 256;
+            OceanBrushSizeTrack.Minimum = 2;
+            OceanBrushSizeTrack.Name = "OceanBrushSizeTrack";
+            OceanBrushSizeTrack.Size = new Size(126, 20);
+            OceanBrushSizeTrack.TabIndex = 57;
+            OceanBrushSizeTrack.TickFrequency = 2;
+            OceanBrushSizeTrack.TickStyle = TickStyle.None;
+            OceanBrushSizeTrack.Value = 20;
+            OceanBrushSizeTrack.ValueChanged += (this.OceanBrushSizeTrack_ValueChanged);
+            // 
+            // label57
+            // 
+            label57.AutoSize = true;
+            label57.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label57.ForeColor = SystemColors.ControlDarkDark;
+            label57.Location = new Point(16, 15);
+            label57.Name = "label57";
+            label57.Size = new Size(62, 13);
+            label57.TabIndex = 55;
+            label57.Text = "Color Brush";
+            // 
+            // OceanPaintColorSelectButton
+            // 
+            OceanPaintColorSelectButton.BackColor = Color.FromArgb((int)(byte)128, (int)(byte)145, (int)(byte)203, (int)(byte)184);
+            OceanPaintColorSelectButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
+            OceanPaintColorSelectButton.FlatStyle = FlatStyle.Flat;
+            OceanPaintColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            OceanPaintColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            OceanPaintColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            OceanPaintColorSelectButton.IconColor = Color.Tan;
+            OceanPaintColorSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            OceanPaintColorSelectButton.Location = new Point(14, 314);
+            OceanPaintColorSelectButton.Name = "OceanPaintColorSelectButton";
+            OceanPaintColorSelectButton.Size = new Size(126, 60);
+            OceanPaintColorSelectButton.TabIndex = 54;
+            OceanPaintColorSelectButton.Text = "Select Brush Color";
+            OceanPaintColorSelectButton.UseVisualStyleBackColor = false;
+            OceanPaintColorSelectButton.MouseUp += (this.OceanPaintColorSelectButton_MouseUp);
+            // 
+            // BackgroundToolPanel
+            // 
+            BackgroundToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
+            BackgroundToolPanel.BackColor = SystemColors.Control;
+            BackgroundToolPanel.Location = new Point(1421, 90);
+            BackgroundToolPanel.Margin = new Padding(0);
+            BackgroundToolPanel.Name = "BackgroundToolPanel";
+            BackgroundToolPanel.Size = new Size(152, 806);
+            BackgroundToolPanel.TabIndex = 15;
+            // 
             // DrawingToolPanel
             // 
             DrawingToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             DrawingToolPanel.BackColor = SystemColors.Control;
+            DrawingToolPanel.Controls.Add(label112);
+            DrawingToolPanel.Controls.Add(DrawingStampOpacityTrack);
+            DrawingToolPanel.Controls.Add(label111);
+            DrawingToolPanel.Controls.Add(DrawingStampRotationTrack);
+            DrawingToolPanel.Controls.Add(label110);
+            DrawingToolPanel.Controls.Add(DrawingStampScaleTrack);
+            DrawingToolPanel.Controls.Add(SelectStampButton);
+            DrawingToolPanel.Controls.Add(label108);
+            DrawingToolPanel.Controls.Add(StampPictureBox);
             DrawingToolPanel.Controls.Add(DrawingPatternBrush4Button);
             DrawingToolPanel.Controls.Add(DrawingPatternBrush3Button);
             DrawingToolPanel.Controls.Add(DrawingPatternBrush2Button);
             DrawingToolPanel.Controls.Add(DrawingPatternBrush1Button);
             DrawingToolPanel.Controls.Add(label26);
-            DrawingToolPanel.Controls.Add(trackBar1);
+            DrawingToolPanel.Controls.Add(DrawingBrushVelocityTrack);
             DrawingToolPanel.Controls.Add(DrawingHardBrushButton);
             DrawingToolPanel.Controls.Add(DrawingSoftBrushButton);
             DrawingToolPanel.Controls.Add(label106);
@@ -7527,6 +8001,117 @@
             DrawingToolPanel.Name = "DrawingToolPanel";
             DrawingToolPanel.Size = new Size(152, 806);
             DrawingToolPanel.TabIndex = 26;
+            // 
+            // label112
+            // 
+            label112.AutoSize = true;
+            label112.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label112.ForeColor = SystemColors.ControlDarkDark;
+            label112.Location = new Point(17, 488);
+            label112.Name = "label112";
+            label112.Size = new Size(77, 13);
+            label112.TabIndex = 114;
+            label112.Text = "Stamp Opacity";
+            // 
+            // DrawingStampOpacityTrack
+            // 
+            DrawingStampOpacityTrack.AutoSize = false;
+            DrawingStampOpacityTrack.BackColor = SystemColors.Control;
+            DrawingStampOpacityTrack.Location = new Point(10, 502);
+            DrawingStampOpacityTrack.Maximum = 100;
+            DrawingStampOpacityTrack.Name = "DrawingStampOpacityTrack";
+            DrawingStampOpacityTrack.Size = new Size(126, 20);
+            DrawingStampOpacityTrack.TabIndex = 113;
+            DrawingStampOpacityTrack.TickStyle = TickStyle.None;
+            DrawingStampOpacityTrack.Value = 100;
+            DrawingStampOpacityTrack.Scroll += (this.DrawingStampOpacityTrack_Scroll);
+            // 
+            // label111
+            // 
+            label111.AutoSize = true;
+            label111.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label111.ForeColor = SystemColors.ControlDarkDark;
+            label111.Location = new Point(14, 444);
+            label111.Name = "label111";
+            label111.Size = new Size(81, 13);
+            label111.TabIndex = 112;
+            label111.Text = "Stamp Rotation";
+            // 
+            // DrawingStampRotationTrack
+            // 
+            DrawingStampRotationTrack.AutoSize = false;
+            DrawingStampRotationTrack.BackColor = SystemColors.Control;
+            DrawingStampRotationTrack.Location = new Point(10, 460);
+            DrawingStampRotationTrack.Maximum = 359;
+            DrawingStampRotationTrack.Name = "DrawingStampRotationTrack";
+            DrawingStampRotationTrack.Size = new Size(126, 20);
+            DrawingStampRotationTrack.TabIndex = 111;
+            DrawingStampRotationTrack.TickStyle = TickStyle.None;
+            DrawingStampRotationTrack.Scroll += (this.DrawingStampRotationTrack_Scroll);
+            // 
+            // label110
+            // 
+            label110.AutoSize = true;
+            label110.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label110.ForeColor = SystemColors.ControlDarkDark;
+            label110.Location = new Point(10, 402);
+            label110.Name = "label110";
+            label110.Size = new Size(65, 13);
+            label110.TabIndex = 110;
+            label110.Text = "Stamp Scale";
+            // 
+            // DrawingStampScaleTrack
+            // 
+            DrawingStampScaleTrack.AutoSize = false;
+            DrawingStampScaleTrack.BackColor = SystemColors.Control;
+            DrawingStampScaleTrack.Location = new Point(10, 418);
+            DrawingStampScaleTrack.Maximum = 500;
+            DrawingStampScaleTrack.Minimum = 1;
+            DrawingStampScaleTrack.Name = "DrawingStampScaleTrack";
+            DrawingStampScaleTrack.Size = new Size(126, 20);
+            DrawingStampScaleTrack.TabIndex = 109;
+            DrawingStampScaleTrack.TickStyle = TickStyle.None;
+            DrawingStampScaleTrack.Value = 100;
+            DrawingStampScaleTrack.Scroll += (this.DrawingStampScaleTrack_Scroll);
+            // 
+            // SelectStampButton
+            // 
+            SelectStampButton.BackColor = Color.Transparent;
+            SelectStampButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            SelectStampButton.ForeColor = SystemColors.ControlDarkDark;
+            SelectStampButton.IconChar = FontAwesome.Sharp.IconChar.Stamp;
+            SelectStampButton.IconColor = Color.DarkSeaGreen;
+            SelectStampButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            SelectStampButton.Location = new Point(10, 332);
+            SelectStampButton.Name = "SelectStampButton";
+            SelectStampButton.Size = new Size(136, 60);
+            SelectStampButton.TabIndex = 108;
+            SelectStampButton.Text = "Click to Select";
+            SelectStampButton.UseVisualStyleBackColor = false;
+            SelectStampButton.Click += (this.SelectStampButton_Click);
+            // 
+            // label108
+            // 
+            label108.AutoSize = true;
+            label108.BackColor = Color.Transparent;
+            label108.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label108.ForeColor = SystemColors.ControlDarkDark;
+            label108.Location = new Point(10, 163);
+            label108.Name = "label108";
+            label108.Size = new Size(41, 15);
+            label108.TabIndex = 107;
+            label108.Text = "Stamp";
+            // 
+            // StampPictureBox
+            // 
+            StampPictureBox.BorderStyle = BorderStyle.FixedSingle;
+            StampPictureBox.InitialImage = null;
+            StampPictureBox.Location = new Point(10, 183);
+            StampPictureBox.Name = "StampPictureBox";
+            StampPictureBox.Size = new Size(136, 136);
+            StampPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            StampPictureBox.TabIndex = 106;
+            StampPictureBox.TabStop = false;
             // 
             // DrawingPatternBrush4Button
             // 
@@ -7599,17 +8184,17 @@
             label26.TabIndex = 101;
             label26.Text = "Brush Velocity";
             // 
-            // trackBar1
+            // DrawingBrushVelocityTrack
             // 
-            trackBar1.AutoSize = false;
-            trackBar1.Location = new Point(14, 139);
-            trackBar1.Maximum = 100;
-            trackBar1.Minimum = 1;
-            trackBar1.Name = "trackBar1";
-            trackBar1.Size = new Size(126, 20);
-            trackBar1.TabIndex = 100;
-            trackBar1.TickStyle = TickStyle.None;
-            trackBar1.Value = 100;
+            DrawingBrushVelocityTrack.AutoSize = false;
+            DrawingBrushVelocityTrack.Location = new Point(14, 139);
+            DrawingBrushVelocityTrack.Maximum = 100;
+            DrawingBrushVelocityTrack.Minimum = 1;
+            DrawingBrushVelocityTrack.Name = "DrawingBrushVelocityTrack";
+            DrawingBrushVelocityTrack.Size = new Size(126, 20);
+            DrawingBrushVelocityTrack.TabIndex = 100;
+            DrawingBrushVelocityTrack.TickStyle = TickStyle.None;
+            DrawingBrushVelocityTrack.Value = 100;
             // 
             // DrawingHardBrushButton
             // 
@@ -7954,7 +8539,7 @@
             SelectBoxTintButton.TabIndex = 113;
             SelectBoxTintButton.Text = "Select Tint Color";
             SelectBoxTintButton.UseVisualStyleBackColor = false;
-            SelectBoxTintButton.Click += (this.SelectBoxTintButton_Click);
+            SelectBoxTintButton.MouseUp += (this.SelectBoxTintButton_MouseUp);
             // 
             // LabelBoxStyleTable
             // 
@@ -9023,7 +9608,7 @@
             WaterPaintColorSelectButton.TabIndex = 62;
             WaterPaintColorSelectButton.Text = "Select Brush Color";
             WaterPaintColorSelectButton.UseVisualStyleBackColor = false;
-            WaterPaintColorSelectButton.Click += (this.WaterPaintColorSelectButton_Click);
+            WaterPaintColorSelectButton.MouseUp += (this.WaterPaintColorSelectButton_MouseUp);
             // 
             // LandToolPanel
             // 
@@ -9467,460 +10052,7 @@
             LandColorSelectionButton.TabIndex = 59;
             LandColorSelectionButton.Text = "Select Brush Color";
             LandColorSelectionButton.UseVisualStyleBackColor = false;
-            LandColorSelectionButton.Click += (this.LandColorSelectionButton_Click);
-            // 
-            // OceanToolPanel
-            // 
-            OceanToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
-            OceanToolPanel.BackColor = SystemColors.Control;
-            OceanToolPanel.Controls.Add(OceanPatternBrush4Button);
-            OceanToolPanel.Controls.Add(OceanPatternBrush3Button);
-            OceanToolPanel.Controls.Add(OceanPatternBrush2Button);
-            OceanToolPanel.Controls.Add(OceanPatternBrush1Button);
-            OceanToolPanel.Controls.Add(label72);
-            OceanToolPanel.Controls.Add(OceanBrushVelocityTrack);
-            OceanToolPanel.Controls.Add(OceanPaintButton);
-            OceanToolPanel.Controls.Add(label18);
-            OceanToolPanel.Controls.Add(OceanEraserSizeTrack);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton8);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton7);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton6);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton5);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton4);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton3);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton2);
-            OceanToolPanel.Controls.Add(OceanCustomColorButton1);
-            OceanToolPanel.Controls.Add(OceanHardBrushButton);
-            OceanToolPanel.Controls.Add(OceanSoftBrushButton);
-            OceanToolPanel.Controls.Add(OceanButton42718D);
-            OceanToolPanel.Controls.Add(OceanButton6BA5B9);
-            OceanToolPanel.Controls.Add(OceanButton88B5BB);
-            OceanToolPanel.Controls.Add(OceanButton91CBB8);
-            OceanToolPanel.Controls.Add(OceanColorEraseButton);
-            OceanToolPanel.Controls.Add(label23);
-            OceanToolPanel.Controls.Add(OceanBrushSizeTrack);
-            OceanToolPanel.Controls.Add(label57);
-            OceanToolPanel.Controls.Add(OceanPaintColorSelectButton);
-            OceanToolPanel.Location = new Point(1421, 90);
-            OceanToolPanel.Margin = new Padding(0);
-            OceanToolPanel.Name = "OceanToolPanel";
-            OceanToolPanel.Size = new Size(152, 806);
-            OceanToolPanel.TabIndex = 29;
-            // 
-            // OceanPatternBrush4Button
-            // 
-            OceanPatternBrush4Button.BackColor = Color.Black;
-            OceanPatternBrush4Button.BackgroundImage = (Image)resources.GetObject("OceanPatternBrush4Button.BackgroundImage");
-            OceanPatternBrush4Button.BackgroundImageLayout = ImageLayout.Zoom;
-            OceanPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
-            OceanPatternBrush4Button.FlatAppearance.BorderSize = 3;
-            OceanPatternBrush4Button.FlatStyle = FlatStyle.Flat;
-            OceanPatternBrush4Button.Location = new Point(104, 77);
-            OceanPatternBrush4Button.Name = "OceanPatternBrush4Button";
-            OceanPatternBrush4Button.Size = new Size(40, 40);
-            OceanPatternBrush4Button.TabIndex = 97;
-            OceanPatternBrush4Button.UseVisualStyleBackColor = false;
-            OceanPatternBrush4Button.Click += (this.OceanPatternBrush4Button_Click);
-            // 
-            // OceanPatternBrush3Button
-            // 
-            OceanPatternBrush3Button.BackColor = Color.Black;
-            OceanPatternBrush3Button.BackgroundImage = (Image)resources.GetObject("OceanPatternBrush3Button.BackgroundImage");
-            OceanPatternBrush3Button.BackgroundImageLayout = ImageLayout.Zoom;
-            OceanPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
-            OceanPatternBrush3Button.FlatAppearance.BorderSize = 3;
-            OceanPatternBrush3Button.FlatStyle = FlatStyle.Flat;
-            OceanPatternBrush3Button.Location = new Point(59, 77);
-            OceanPatternBrush3Button.Name = "OceanPatternBrush3Button";
-            OceanPatternBrush3Button.Size = new Size(40, 40);
-            OceanPatternBrush3Button.TabIndex = 96;
-            OceanPatternBrush3Button.UseVisualStyleBackColor = false;
-            OceanPatternBrush3Button.Click += (this.OceanPatternBrush3Button_Click);
-            // 
-            // OceanPatternBrush2Button
-            // 
-            OceanPatternBrush2Button.BackColor = Color.Black;
-            OceanPatternBrush2Button.BackgroundImage = (Image)resources.GetObject("OceanPatternBrush2Button.BackgroundImage");
-            OceanPatternBrush2Button.BackgroundImageLayout = ImageLayout.Zoom;
-            OceanPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
-            OceanPatternBrush2Button.FlatAppearance.BorderSize = 3;
-            OceanPatternBrush2Button.FlatStyle = FlatStyle.Flat;
-            OceanPatternBrush2Button.Location = new Point(14, 77);
-            OceanPatternBrush2Button.Name = "OceanPatternBrush2Button";
-            OceanPatternBrush2Button.Size = new Size(40, 40);
-            OceanPatternBrush2Button.TabIndex = 95;
-            OceanPatternBrush2Button.UseVisualStyleBackColor = false;
-            OceanPatternBrush2Button.Click += (this.OceanPatternBrush2Button_Click);
-            // 
-            // OceanPatternBrush1Button
-            // 
-            OceanPatternBrush1Button.BackColor = Color.Black;
-            OceanPatternBrush1Button.BackgroundImage = (Image)resources.GetObject("OceanPatternBrush1Button.BackgroundImage");
-            OceanPatternBrush1Button.BackgroundImageLayout = ImageLayout.Zoom;
-            OceanPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
-            OceanPatternBrush1Button.FlatAppearance.BorderSize = 3;
-            OceanPatternBrush1Button.FlatStyle = FlatStyle.Flat;
-            OceanPatternBrush1Button.Location = new Point(104, 31);
-            OceanPatternBrush1Button.Name = "OceanPatternBrush1Button";
-            OceanPatternBrush1Button.Size = new Size(40, 40);
-            OceanPatternBrush1Button.TabIndex = 94;
-            OceanPatternBrush1Button.UseVisualStyleBackColor = false;
-            OceanPatternBrush1Button.Click += (this.OceanPatternBrush1Button_Click);
-            // 
-            // label72
-            // 
-            label72.AutoSize = true;
-            label72.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            label72.ForeColor = SystemColors.ControlDarkDark;
-            label72.Location = new Point(17, 167);
-            label72.Name = "label72";
-            label72.Size = new Size(74, 13);
-            label72.TabIndex = 82;
-            label72.Text = "Brush Velocity";
-            // 
-            // OceanBrushVelocityTrack
-            // 
-            OceanBrushVelocityTrack.AutoSize = false;
-            OceanBrushVelocityTrack.Location = new Point(14, 178);
-            OceanBrushVelocityTrack.Maximum = 100;
-            OceanBrushVelocityTrack.Minimum = 1;
-            OceanBrushVelocityTrack.Name = "OceanBrushVelocityTrack";
-            OceanBrushVelocityTrack.Size = new Size(126, 20);
-            OceanBrushVelocityTrack.TabIndex = 81;
-            OceanBrushVelocityTrack.TickFrequency = 2;
-            OceanBrushVelocityTrack.TickStyle = TickStyle.None;
-            OceanBrushVelocityTrack.Value = 100;
-            OceanBrushVelocityTrack.ValueChanged += (this.OceanBrushVelocityTrack_ValueChanged);
-            // 
-            // OceanPaintButton
-            // 
-            OceanPaintButton.BackColor = SystemColors.ControlLightLight;
-            OceanPaintButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanPaintButton.FlatStyle = FlatStyle.Flat;
-            OceanPaintButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanPaintButton.ForeColor = SystemColors.ControlDarkDark;
-            OceanPaintButton.IconChar = FontAwesome.Sharp.IconChar.Brush;
-            OceanPaintButton.IconColor = Color.Black;
-            OceanPaintButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            OceanPaintButton.IconSize = 24;
-            OceanPaintButton.Location = new Point(14, 248);
-            OceanPaintButton.Name = "OceanPaintButton";
-            OceanPaintButton.Size = new Size(60, 60);
-            OceanPaintButton.TabIndex = 79;
-            OceanPaintButton.Text = "Color";
-            OceanPaintButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            OceanPaintButton.UseVisualStyleBackColor = false;
-            OceanPaintButton.Click += (this.OceanPaintButton_Click);
-            // 
-            // label18
-            // 
-            label18.AutoSize = true;
-            label18.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            label18.ForeColor = SystemColors.ControlDarkDark;
-            label18.Location = new Point(17, 201);
-            label18.Name = "label18";
-            label18.Size = new Size(60, 13);
-            label18.TabIndex = 77;
-            label18.Text = "Eraser Size";
-            // 
-            // OceanEraserSizeTrack
-            // 
-            OceanEraserSizeTrack.AutoSize = false;
-            OceanEraserSizeTrack.Location = new Point(14, 217);
-            OceanEraserSizeTrack.Maximum = 256;
-            OceanEraserSizeTrack.Minimum = 2;
-            OceanEraserSizeTrack.Name = "OceanEraserSizeTrack";
-            OceanEraserSizeTrack.Size = new Size(126, 20);
-            OceanEraserSizeTrack.TabIndex = 76;
-            OceanEraserSizeTrack.TickFrequency = 2;
-            OceanEraserSizeTrack.TickStyle = TickStyle.None;
-            OceanEraserSizeTrack.Value = 20;
-            OceanEraserSizeTrack.ValueChanged += (this.OceanEraserSizeTrack_ValueChanged);
-            // 
-            // OceanCustomColorButton8
-            // 
-            OceanCustomColorButton8.BackColor = Color.White;
-            OceanCustomColorButton8.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton8.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanCustomColorButton8.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton8.Location = new Point(80, 737);
-            OceanCustomColorButton8.Name = "OceanCustomColorButton8";
-            OceanCustomColorButton8.Size = new Size(60, 57);
-            OceanCustomColorButton8.TabIndex = 74;
-            OceanCustomColorButton8.UseVisualStyleBackColor = false;
-            OceanCustomColorButton8.MouseClick += (this.OceanCustomColorButton8_Click);
-            // 
-            // OceanCustomColorButton7
-            // 
-            OceanCustomColorButton7.BackColor = Color.White;
-            OceanCustomColorButton7.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton7.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton7.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanCustomColorButton7.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton7.Location = new Point(14, 737);
-            OceanCustomColorButton7.Name = "OceanCustomColorButton7";
-            OceanCustomColorButton7.Size = new Size(60, 57);
-            OceanCustomColorButton7.TabIndex = 73;
-            OceanCustomColorButton7.UseVisualStyleBackColor = false;
-            OceanCustomColorButton7.MouseClick += (this.OceanCustomColorButton7_Click);
-            // 
-            // OceanCustomColorButton6
-            // 
-            OceanCustomColorButton6.BackColor = Color.White;
-            OceanCustomColorButton6.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton6.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton6.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanCustomColorButton6.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton6.Location = new Point(80, 674);
-            OceanCustomColorButton6.Name = "OceanCustomColorButton6";
-            OceanCustomColorButton6.Size = new Size(60, 57);
-            OceanCustomColorButton6.TabIndex = 72;
-            OceanCustomColorButton6.UseVisualStyleBackColor = false;
-            OceanCustomColorButton6.MouseClick += (this.OceanCustomColorButton6_Click);
-            // 
-            // OceanCustomColorButton5
-            // 
-            OceanCustomColorButton5.BackColor = Color.White;
-            OceanCustomColorButton5.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton5.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton5.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanCustomColorButton5.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton5.Location = new Point(14, 674);
-            OceanCustomColorButton5.Name = "OceanCustomColorButton5";
-            OceanCustomColorButton5.Size = new Size(60, 57);
-            OceanCustomColorButton5.TabIndex = 71;
-            OceanCustomColorButton5.UseVisualStyleBackColor = false;
-            OceanCustomColorButton5.MouseClick += (this.OceanCustomColorButton5_Click);
-            // 
-            // OceanCustomColorButton4
-            // 
-            OceanCustomColorButton4.BackColor = Color.White;
-            OceanCustomColorButton4.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton4.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton4.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanCustomColorButton4.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton4.Location = new Point(80, 611);
-            OceanCustomColorButton4.Name = "OceanCustomColorButton4";
-            OceanCustomColorButton4.Size = new Size(60, 57);
-            OceanCustomColorButton4.TabIndex = 70;
-            OceanCustomColorButton4.UseVisualStyleBackColor = false;
-            OceanCustomColorButton4.MouseClick += (this.OceanCustomColorButton4_Click);
-            // 
-            // OceanCustomColorButton3
-            // 
-            OceanCustomColorButton3.BackColor = Color.White;
-            OceanCustomColorButton3.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton3.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton3.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanCustomColorButton3.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton3.Location = new Point(14, 611);
-            OceanCustomColorButton3.Name = "OceanCustomColorButton3";
-            OceanCustomColorButton3.Size = new Size(60, 57);
-            OceanCustomColorButton3.TabIndex = 69;
-            OceanCustomColorButton3.UseVisualStyleBackColor = false;
-            OceanCustomColorButton3.MouseClick += (this.OceanCustomColorButton3_Click);
-            // 
-            // OceanCustomColorButton2
-            // 
-            OceanCustomColorButton2.BackColor = Color.White;
-            OceanCustomColorButton2.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton2.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton2.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanCustomColorButton2.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton2.Location = new Point(80, 548);
-            OceanCustomColorButton2.Name = "OceanCustomColorButton2";
-            OceanCustomColorButton2.Size = new Size(60, 57);
-            OceanCustomColorButton2.TabIndex = 68;
-            OceanCustomColorButton2.UseVisualStyleBackColor = false;
-            OceanCustomColorButton2.MouseClick += (this.OceanCustomColorButton2_Click);
-            // 
-            // OceanCustomColorButton1
-            // 
-            OceanCustomColorButton1.BackColor = Color.White;
-            OceanCustomColorButton1.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanCustomColorButton1.FlatStyle = FlatStyle.Flat;
-            OceanCustomColorButton1.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanCustomColorButton1.ForeColor = SystemColors.ControlDark;
-            OceanCustomColorButton1.Location = new Point(14, 548);
-            OceanCustomColorButton1.Name = "OceanCustomColorButton1";
-            OceanCustomColorButton1.Size = new Size(60, 57);
-            OceanCustomColorButton1.TabIndex = 67;
-            OceanCustomColorButton1.UseVisualStyleBackColor = false;
-            OceanCustomColorButton1.MouseClick += (this.OceanCustomColorButton1_Click);
-            // 
-            // OceanHardBrushButton
-            // 
-            OceanHardBrushButton.BackColor = Color.Black;
-            OceanHardBrushButton.BackgroundImage = (Image)resources.GetObject("OceanHardBrushButton.BackgroundImage");
-            OceanHardBrushButton.BackgroundImageLayout = ImageLayout.Zoom;
-            OceanHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
-            OceanHardBrushButton.FlatAppearance.BorderSize = 3;
-            OceanHardBrushButton.FlatStyle = FlatStyle.Flat;
-            OceanHardBrushButton.Location = new Point(59, 31);
-            OceanHardBrushButton.Name = "OceanHardBrushButton";
-            OceanHardBrushButton.Size = new Size(40, 40);
-            OceanHardBrushButton.TabIndex = 65;
-            OceanHardBrushButton.UseVisualStyleBackColor = false;
-            OceanHardBrushButton.Click += (this.OceanHardBrushButton_Click);
-            // 
-            // OceanSoftBrushButton
-            // 
-            OceanSoftBrushButton.BackColor = Color.Black;
-            OceanSoftBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
-            OceanSoftBrushButton.FlatAppearance.BorderSize = 3;
-            OceanSoftBrushButton.FlatStyle = FlatStyle.Flat;
-            OceanSoftBrushButton.Image = (Image)resources.GetObject("OceanSoftBrushButton.Image");
-            OceanSoftBrushButton.Location = new Point(14, 31);
-            OceanSoftBrushButton.Name = "OceanSoftBrushButton";
-            OceanSoftBrushButton.Size = new Size(40, 40);
-            OceanSoftBrushButton.TabIndex = 64;
-            OceanSoftBrushButton.UseVisualStyleBackColor = false;
-            OceanSoftBrushButton.Click += (this.OceanSoftBrushButton_Click);
-            // 
-            // OceanButton42718D
-            // 
-            OceanButton42718D.BackColor = Color.FromArgb((int)(byte)66, (int)(byte)113, (int)(byte)141);
-            OceanButton42718D.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanButton42718D.FlatStyle = FlatStyle.Flat;
-            OceanButton42718D.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanButton42718D.ForeColor = SystemColors.ControlDark;
-            OceanButton42718D.Location = new Point(80, 485);
-            OceanButton42718D.Name = "OceanButton42718D";
-            OceanButton42718D.Size = new Size(60, 57);
-            OceanButton42718D.TabIndex = 63;
-            OceanButton42718D.Text = "#42718D";
-            OceanButton42718D.UseVisualStyleBackColor = false;
-            OceanButton42718D.Click += (this.OceanButton42718D_Click);
-            // 
-            // OceanButton6BA5B9
-            // 
-            OceanButton6BA5B9.BackColor = Color.FromArgb((int)(byte)107, (int)(byte)165, (int)(byte)185);
-            OceanButton6BA5B9.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanButton6BA5B9.FlatStyle = FlatStyle.Flat;
-            OceanButton6BA5B9.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanButton6BA5B9.ForeColor = SystemColors.ControlDarkDark;
-            OceanButton6BA5B9.Location = new Point(14, 485);
-            OceanButton6BA5B9.Name = "OceanButton6BA5B9";
-            OceanButton6BA5B9.Size = new Size(60, 57);
-            OceanButton6BA5B9.TabIndex = 62;
-            OceanButton6BA5B9.Text = "#6BA5B9";
-            OceanButton6BA5B9.UseVisualStyleBackColor = false;
-            OceanButton6BA5B9.Click += (this.OceanButton6BA5B9_Click);
-            // 
-            // OceanButton88B5BB
-            // 
-            OceanButton88B5BB.BackColor = Color.FromArgb((int)(byte)136, (int)(byte)181, (int)(byte)187);
-            OceanButton88B5BB.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanButton88B5BB.FlatStyle = FlatStyle.Flat;
-            OceanButton88B5BB.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanButton88B5BB.ForeColor = SystemColors.ControlDarkDark;
-            OceanButton88B5BB.Location = new Point(80, 422);
-            OceanButton88B5BB.Name = "OceanButton88B5BB";
-            OceanButton88B5BB.Size = new Size(60, 57);
-            OceanButton88B5BB.TabIndex = 61;
-            OceanButton88B5BB.Text = "#88B5BB";
-            OceanButton88B5BB.UseVisualStyleBackColor = false;
-            OceanButton88B5BB.Click += (this.OceanButton88B5BB_Click);
-            // 
-            // OceanButton91CBB8
-            // 
-            OceanButton91CBB8.BackColor = Color.FromArgb((int)(byte)145, (int)(byte)203, (int)(byte)184);
-            OceanButton91CBB8.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanButton91CBB8.FlatStyle = FlatStyle.Flat;
-            OceanButton91CBB8.Font = new Font("Tahoma", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanButton91CBB8.ForeColor = SystemColors.ControlDarkDark;
-            OceanButton91CBB8.Location = new Point(14, 422);
-            OceanButton91CBB8.Name = "OceanButton91CBB8";
-            OceanButton91CBB8.Size = new Size(60, 57);
-            OceanButton91CBB8.TabIndex = 60;
-            OceanButton91CBB8.Text = "#91CBB8";
-            OceanButton91CBB8.UseVisualStyleBackColor = false;
-            OceanButton91CBB8.Click += (this.OceanButton91CBB8_Click);
-            // 
-            // OceanColorEraseButton
-            // 
-            OceanColorEraseButton.BackColor = SystemColors.ControlLightLight;
-            OceanColorEraseButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanColorEraseButton.FlatStyle = FlatStyle.Flat;
-            OceanColorEraseButton.Font = new Font("Tahoma", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanColorEraseButton.ForeColor = SystemColors.ControlDarkDark;
-            OceanColorEraseButton.IconChar = FontAwesome.Sharp.IconChar.Eraser;
-            OceanColorEraseButton.IconColor = Color.Black;
-            OceanColorEraseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            OceanColorEraseButton.IconSize = 24;
-            OceanColorEraseButton.Location = new Point(80, 248);
-            OceanColorEraseButton.Name = "OceanColorEraseButton";
-            OceanColorEraseButton.Size = new Size(60, 60);
-            OceanColorEraseButton.TabIndex = 59;
-            OceanColorEraseButton.Text = "Erase";
-            OceanColorEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            OceanColorEraseButton.UseVisualStyleBackColor = false;
-            OceanColorEraseButton.Click += (this.OceanColorEraseButton_Click);
-            // 
-            // label23
-            // 
-            label23.AutoSize = true;
-            label23.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            label23.ForeColor = SystemColors.ControlDarkDark;
-            label23.Location = new Point(17, 123);
-            label23.Name = "label23";
-            label23.Size = new Size(56, 13);
-            label23.TabIndex = 58;
-            label23.Text = "Brush Size";
-            // 
-            // OceanBrushSizeTrack
-            // 
-            OceanBrushSizeTrack.AutoSize = false;
-            OceanBrushSizeTrack.Location = new Point(14, 139);
-            OceanBrushSizeTrack.Maximum = 256;
-            OceanBrushSizeTrack.Minimum = 2;
-            OceanBrushSizeTrack.Name = "OceanBrushSizeTrack";
-            OceanBrushSizeTrack.Size = new Size(126, 20);
-            OceanBrushSizeTrack.TabIndex = 57;
-            OceanBrushSizeTrack.TickFrequency = 2;
-            OceanBrushSizeTrack.TickStyle = TickStyle.None;
-            OceanBrushSizeTrack.Value = 20;
-            OceanBrushSizeTrack.ValueChanged += (this.OceanBrushSizeTrack_ValueChanged);
-            // 
-            // label57
-            // 
-            label57.AutoSize = true;
-            label57.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            label57.ForeColor = SystemColors.ControlDarkDark;
-            label57.Location = new Point(16, 15);
-            label57.Name = "label57";
-            label57.Size = new Size(62, 13);
-            label57.TabIndex = 55;
-            label57.Text = "Color Brush";
-            // 
-            // OceanPaintColorSelectButton
-            // 
-            OceanPaintColorSelectButton.BackColor = Color.FromArgb((int)(byte)128, (int)(byte)145, (int)(byte)203, (int)(byte)184);
-            OceanPaintColorSelectButton.FlatAppearance.BorderColor = SystemColors.ControlDark;
-            OceanPaintColorSelectButton.FlatStyle = FlatStyle.Flat;
-            OceanPaintColorSelectButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            OceanPaintColorSelectButton.ForeColor = SystemColors.ControlDarkDark;
-            OceanPaintColorSelectButton.IconChar = FontAwesome.Sharp.IconChar.Palette;
-            OceanPaintColorSelectButton.IconColor = Color.Tan;
-            OceanPaintColorSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            OceanPaintColorSelectButton.Location = new Point(14, 314);
-            OceanPaintColorSelectButton.Name = "OceanPaintColorSelectButton";
-            OceanPaintColorSelectButton.Size = new Size(126, 60);
-            OceanPaintColorSelectButton.TabIndex = 54;
-            OceanPaintColorSelectButton.Text = "Select Brush Color";
-            OceanPaintColorSelectButton.UseVisualStyleBackColor = false;
-            OceanPaintColorSelectButton.Click += (this.OceanPaintColorSelectButton_Click);
-            // 
-            // BackgroundToolPanel
-            // 
-            BackgroundToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
-            BackgroundToolPanel.BackColor = SystemColors.Control;
-            BackgroundToolPanel.Location = new Point(1421, 90);
-            BackgroundToolPanel.Margin = new Padding(0);
-            BackgroundToolPanel.Name = "BackgroundToolPanel";
-            BackgroundToolPanel.Size = new Size(152, 806);
-            BackgroundToolPanel.TabIndex = 15;
+            LandColorSelectionButton.MouseUp += (this.LandColorSelectionButton_MouseUp);
             // 
             // materialCheckBox1
             // 
@@ -10142,9 +10274,18 @@
             ApplicationStatusStrip.PerformLayout();
             RealmStudioMainMenuStrip.ResumeLayout(false);
             RealmStudioMainMenuStrip.PerformLayout();
+            OceanToolPanel.ResumeLayout(false);
+            OceanToolPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).EndInit();
             DrawingToolPanel.ResumeLayout(false);
             DrawingToolPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DrawingStampOpacityTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DrawingStampRotationTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DrawingStampScaleTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)StampPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DrawingBrushVelocityTrack).EndInit();
             RegionToolPanel.ResumeLayout(false);
             RegionToolPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)LightSolidRegionBorderPicture).EndInit();
@@ -10193,11 +10334,6 @@
             ((System.ComponentModel.ISupportInitialize)LandBrushVelocityTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LandColorEraserSizeTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)LandColorBrushSizeTrack).EndInit();
-            OceanToolPanel.ResumeLayout(false);
-            OceanToolPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).EndInit();
-            ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).EndInit();
-            ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).EndInit();
             this.ResumeLayout(false);
         }
 
@@ -10785,10 +10921,9 @@
         private FontAwesome.Sharp.IconToolStripButton EraseDrawingButton;
         private Label label104;
         internal TrackBar LineBrushSizeTrack;
-        private GroupBox groupBox2;
         private FontAwesome.Sharp.IconToolStripButton FillShapeButton;
         private Label label26;
-        internal TrackBar trackBar1;
+        internal TrackBar DrawingBrushVelocityTrack;
         internal Button DrawingHardBrushButton;
         internal Button DrawingSoftBrushButton;
         private Label label106;
@@ -10820,5 +10955,15 @@
         private ToolStripDropDownButton FillTypeDropdownButton;
         private ToolStripMenuItem ColorMenuItem;
         private ToolStripMenuItem TextureMenuItem;
+        private Label label108;
+        internal PictureBox StampPictureBox;
+        internal FontAwesome.Sharp.IconButton SelectStampButton;
+        internal TrackBar DrawingStampScaleTrack;
+        private Label label110;
+        private Label label112;
+        internal TrackBar DrawingStampOpacityTrack;
+        private Label label111;
+        internal TrackBar DrawingStampRotationTrack;
+        private GroupBox groupBox2;
     }
 }

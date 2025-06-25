@@ -42,6 +42,7 @@
             // ColorSelectorWheel
             // 
             ColorSelectorWheel.Alpha = 1D;
+            ColorSelectorWheel.DisplayLightness = true;
             ColorSelectorWheel.Location = new Point(12, 13);
             ColorSelectorWheel.Name = "ColorSelectorWheel";
             ColorSelectorWheel.ShowAngleArrow = true;

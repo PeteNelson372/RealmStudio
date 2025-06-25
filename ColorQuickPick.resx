@@ -117,17 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="ColorSelectorManager.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="ColorSelectorPicker.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vAAADrwBlbxySQAAAMNJREFUOE+dkDGugVEQRk9hCZ7CEljAC1vSsgWtBejfsxS9ZdCI0Ak54iZjci/5
-        fckU/585Z2YuwBbYAb98GeFbqBOwAnq5sRUnR0Gpvy6SApkpcOwqcW0BYTPpKvFmm4WETZTMgB9gDvQT
-        +4gTnFSTrIFheGwl1bQkgwBfgVHiXhIlTo5wKb/934wSb45r5/oo8cFacJRUH9Qsnk3enMFY/xkscQMl
-        4w+bnDNYS+0hS+1zcystyTI3votnbYALcHjCvTvWv2GuwCUJkwAAAABJRU5ErkJggg==
-</value>
-  </data>
 </root>

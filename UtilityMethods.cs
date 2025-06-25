@@ -186,5 +186,30 @@ namespace RealmStudio
                 "|Graphics Interchange Format (*.gif)|*.gif" +
                 "|All Files (*.*)|*.*";
         }
+
+        internal static Color SelectColor(RealmStudioMainForm realmStudioMainForm, MouseEventArgs e, Color backColor)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Color selectedColor = SelectColorFromDialog(realmStudioMainForm, backColor);
+                return selectedColor;
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                ColorQuickPick colorQuickPick = new ColorQuickPick
+                {
+                    SelectedColor = backColor
+                };
+
+                colorQuickPick.ShowDialog(realmStudioMainForm);
+
+                if (colorQuickPick.SelectedColor != Color.Empty)
+                {
+                    return colorQuickPick.SelectedColor;
+                }
+            }
+
+            return backColor;
+        }
     }
 }

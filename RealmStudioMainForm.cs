@@ -488,12 +488,17 @@ namespace RealmStudio
 
         private void AddPresetColorButton_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void AddPresetColorButton_MouseUp(object sender, MouseEventArgs e)
+        {
             switch (MainTab.SelectedIndex)
             {
                 case 1:
                     {
                         // ocean layer
-                        Color selectedColor = UtilityMethods.SelectColorFromDialog(this, OceanPaintColorSelectButton.BackColor);
+                        Color selectedColor = UtilityMethods.SelectColor(this, e, OceanPaintColorSelectButton.BackColor);
 
                         if (selectedColor != Color.Empty)
                         {
@@ -535,7 +540,7 @@ namespace RealmStudio
                 case 2:
                     {
                         // land layer
-                        Color selectedColor = UtilityMethods.SelectColorFromDialog(this, LandColorSelectionButton.BackColor);
+                        Color selectedColor = UtilityMethods.SelectColor(this, e, LandColorSelectionButton.BackColor);
 
                         if (selectedColor != Color.Empty)
                         {
@@ -569,7 +574,7 @@ namespace RealmStudio
                 case 3:
                     {
                         // water layer
-                        Color selectedColor = UtilityMethods.SelectColorFromDialog(this, WaterPaintColorSelectButton.BackColor);
+                        Color selectedColor = UtilityMethods.SelectColor(this, e, WaterPaintColorSelectButton.BackColor);
 
                         if (selectedColor != Color.Empty)
                         {
@@ -1310,19 +1315,10 @@ namespace RealmStudio
                 MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
 
                 BackgroundMediator.Reset();
-                //BoxMediator.Reset();
-                //FrameMediator.Reset();
-                //GridMediator.Reset();
-                //LabelMediator.Reset();
                 LandformMediator.Reset();
-                //MeasureMediator.Reset();
                 OceanMediator.Reset();
                 PathMediator.Reset();
-                //RegionMediator.Reset();
-                //ScaleMediator.Reset();
-                //VignetteMediator.Reset();
                 WaterFeatureMediator.Reset();
-                //WindroseMediator.Reset();
 
                 int assetCount = AssetManager.LoadAllAssets();
 
@@ -2807,6 +2803,12 @@ namespace RealmStudio
                 MainMediator.SelectedBrushSize = RealmMapMethods.GetNewBrushSize(LineBrushSizeTrack, sizeDelta);
                 DrawingMediator.DrawingLineBrushSize = MainMediator.SelectedBrushSize;
             }
+            else if (ModifierKeys == Keys.None && MainMediator.CurrentDrawingMode == MapDrawingMode.DrawingStamp)
+            {
+                int newValue = (int)Math.Max(DrawingStampScaleTrack.Minimum, DrawingStampScaleTrack.Value + sizeDelta);
+                newValue = (int)Math.Min(DrawingStampScaleTrack.Maximum, newValue);
+                DrawingMediator.DrawingStampScale = newValue / 100.0F;
+            }
             else if (ModifierKeys != Keys.Control && MainMediator.CurrentDrawingMode == MapDrawingMode.SymbolPlace)
             {
                 if (AreaBrushSwitch.Enabled && SymbolMediator.UseAreaBrush)
@@ -3215,6 +3217,30 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+
+                        if (DrawingMediator.FillDrawnShape)
+                        {
+                            // initialize the fill paint
+                            DrawingMediator.FillPaint.Color = DrawingMediator.DrawingFillColor.ToSKColor();
+                            DrawingMediator.FillPaint.StrokeWidth = DrawingMediator.DrawingLineBrushSize;
+
+                            if (DrawingMediator.FillType == DrawingFillType.Texture)
+                            {
+                                Bitmap? fillTexture = DrawingMediator.DrawingTextureList[DrawingMediator.DrawingTextureIndex].TextureBitmap;
+
+                                if (fillTexture != null)
+                                {
+                                    // if the fill type is texture, we need to create a shader from the bitmap
+                                    SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                                    DrawingMediator.FillPaint.Shader = fillShader;
+                                }
+                            }
+                            else
+                            {
+                                DrawingMediator.FillPaint.Shader = null; // reset shader if not using texture fill
+                            }
+                        }
+
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -3222,6 +3248,30 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+
+                        if (DrawingMediator.FillDrawnShape)
+                        {
+                            // initialize the fill paint
+                            DrawingMediator.FillPaint.Color = DrawingMediator.DrawingFillColor.ToSKColor();
+                            DrawingMediator.FillPaint.StrokeWidth = DrawingMediator.DrawingLineBrushSize;
+
+                            if (DrawingMediator.FillType == DrawingFillType.Texture)
+                            {
+                                Bitmap? fillTexture = DrawingMediator.DrawingTextureList[DrawingMediator.DrawingTextureIndex].TextureBitmap;
+
+                                if (fillTexture != null)
+                                {
+                                    // if the fill type is texture, we need to create a shader from the bitmap
+                                    SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                                    DrawingMediator.FillPaint.Shader = fillShader;
+                                }
+                            }
+                            else
+                            {
+                                DrawingMediator.FillPaint.Shader = null; // reset shader if not using texture fill
+                            }
+                        }
+
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -3230,6 +3280,46 @@ namespace RealmStudio
                         DrawingMediator.PolygonPoints.Add(MapStateMediator.CurrentCursorPoint);
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+
+                        if (DrawingMediator.FillDrawnShape)
+                        {
+                            // initialize the fill paint
+                            DrawingMediator.FillPaint.Color = DrawingMediator.DrawingFillColor.ToSKColor();
+                            DrawingMediator.FillPaint.StrokeWidth = DrawingMediator.DrawingLineBrushSize;
+
+                            if (DrawingMediator.FillType == DrawingFillType.Texture)
+                            {
+                                Bitmap? fillTexture = DrawingMediator.DrawingTextureList[DrawingMediator.DrawingTextureIndex].TextureBitmap;
+
+                                if (fillTexture != null)
+                                {
+                                    // if the fill type is texture, we need to create a shader from the bitmap
+                                    SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                                    DrawingMediator.FillPaint.Shader = fillShader;
+                                }
+                            }
+                            else
+                            {
+                                DrawingMediator.FillPaint.Shader = null; // reset shader if not using texture fill
+                            }
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingStamp:
+                    {
+                        Cursor = Cursors.Cross;
+
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        if (DrawingMediator.DrawingStampBitmap != null)
+                        {
+                            // place the stamp at the cursor position
+                            DrawingManager.PlaceStampAtCursor(canvas, MapStateMediator.CurrentCursorPoint);
+                        }
+
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -3706,16 +3796,7 @@ namespace RealmStudio
                         if (DrawingMediator.FillDrawnShape)
                         {
                             // draw the filled rectangle first if the fill is enabled
-                            using SKPaint fillpaint = new()
-                            {
-                                Style = SKPaintStyle.Fill,
-                                Color = DrawingMediator.DrawingFillColor.ToSKColor(),
-                                StrokeWidth = DrawingMediator.DrawingLineBrushSize,
-                                IsAntialias = true,
-                                StrokeCap = SKStrokeCap.Butt
-                            };
-
-                            canvas.DrawRect(rect, fillpaint);
+                            canvas.DrawRect(rect, DrawingMediator.FillPaint);
                         }
 
                         canvas.DrawRect(rect, strokepaint);
@@ -3763,15 +3844,8 @@ namespace RealmStudio
                         // draw the filled ellipse first if the fill is enabled
                         if (DrawingMediator.FillDrawnShape)
                         {
-                            using SKPaint fillpaint = new()
-                            {
-                                Style = SKPaintStyle.Fill,
-                                Color = DrawingMediator.DrawingFillColor.ToSKColor(),
-                                StrokeWidth = DrawingMediator.DrawingLineBrushSize,
-                                IsAntialias = true,
-                                StrokeCap = SKStrokeCap.Butt
-                            };
-                            canvas.DrawOval(rect, fillpaint);
+                            // draw the filled rectangle first if the fill is enabled
+                            canvas.DrawOval(rect, DrawingMediator.FillPaint);
                         }
 
                         // draw the outline of the ellipse
@@ -3813,16 +3887,8 @@ namespace RealmStudio
                             // draw the filled polygon first if the fill is enabled
                             if (DrawingMediator.FillDrawnShape)
                             {
-                                using SKPaint fillpaint = new()
-                                {
-                                    Style = SKPaintStyle.Fill,
-                                    Color = DrawingMediator.DrawingFillColor.ToSKColor(),
-                                    StrokeWidth = DrawingMediator.DrawingLineBrushSize,
-                                    IsAntialias = true,
-                                    StrokeCap = SKStrokeCap.Round,
-                                    StrokeJoin = SKStrokeJoin.Round
-                                };
-                                canvas.DrawPath(polyPath, fillpaint);
+                                // draw the filled rectangle first if the fill is enabled
+                                canvas.DrawPath(polyPath, DrawingMediator.FillPaint);
                             }
 
                             // draw the outline of the polygon
@@ -4277,16 +4343,7 @@ namespace RealmStudio
                         if (DrawingMediator.FillDrawnShape)
                         {
                             // draw the filled rectangle first if the fill is enabled
-                            using SKPaint fillpaint = new()
-                            {
-                                Style = SKPaintStyle.Fill,
-                                Color = DrawingMediator.DrawingFillColor.ToSKColor(),
-                                StrokeWidth = DrawingMediator.DrawingLineBrushSize,
-                                IsAntialias = true,
-                                StrokeCap = SKStrokeCap.Butt
-                            };
-
-                            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas.DrawRect(rect, fillpaint);
+                            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas.DrawRect(rect, DrawingMediator.FillPaint);
                         }
 
                         MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas.DrawRect(rect, paint);
@@ -4312,16 +4369,7 @@ namespace RealmStudio
                         if (DrawingMediator.FillDrawnShape)
                         {
                             // draw the filled rectangle first if the fill is enabled
-                            using SKPaint fillpaint = new()
-                            {
-                                Style = SKPaintStyle.Fill,
-                                Color = DrawingMediator.DrawingFillColor.ToSKColor(),
-                                StrokeWidth = DrawingMediator.DrawingLineBrushSize,
-                                IsAntialias = true,
-                                StrokeCap = SKStrokeCap.Butt
-                            };
-
-                            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas.DrawOval(rect, fillpaint);
+                            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas.DrawOval(rect, DrawingMediator.FillPaint);
                         }
 
                         MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas.DrawOval(rect, paint);
@@ -4443,20 +4491,10 @@ namespace RealmStudio
 
                             SKPath polyPath = DrawingMethods.GetLinePathFromPoints(DrawingMediator.PolygonPoints);
 
-                            // draw the filled polygon first if the fill is enabled
                             if (DrawingMediator.FillDrawnShape)
                             {
-                                using SKPaint fillpaint = new()
-                                {
-                                    Style = SKPaintStyle.Fill,
-                                    Color = DrawingMediator.DrawingFillColor.ToSKColor(),
-                                    StrokeWidth = DrawingMediator.DrawingLineBrushSize,
-                                    IsAntialias = true,
-                                    StrokeCap = SKStrokeCap.Round,
-                                    StrokeJoin = SKStrokeJoin.Round
-
-                                };
-                                canvas.DrawPath(polyPath, fillpaint);
+                                // draw the filled rectangle first if the fill is enabled
+                                canvas.DrawPath(polyPath, DrawingMediator.FillPaint);
                             }
 
                             // draw the outline of the polygon
@@ -4534,11 +4572,9 @@ namespace RealmStudio
             SKGLRenderControl.Invalidate();
         }
 
-        private void VignetteColorSelectionButton_Click(object sender, EventArgs e)
+        private void VignetteColorSelectionButton_MouseUp(object sender, MouseEventArgs e)
         {
-            // TODO: implement vignette mediator and manager, separating vignette from background
-            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, VignetteColorSelectionButton.BackColor);
-            VignetteMediator.VignetteColor = selectedColor;
+            VignetteMediator.VignetteColor = UtilityMethods.SelectColor(this, e, VignetteColorSelectionButton.BackColor);
         }
 
         private void VignetteStrengthTrack_Scroll(object sender, EventArgs e)
@@ -4604,10 +4640,10 @@ namespace RealmStudio
             SKGLRenderControl.Invalidate();
         }
 
-        private void OceanColorSelectButton_Click(object sender, EventArgs e)
+
+        private void OceanColorSelectButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, OceanColorSelectButton.BackColor);
-            OceanMediator.OceanFillColor = selectedColor;
+            OceanMediator.OceanFillColor = UtilityMethods.SelectColor(this, e, OceanColorSelectButton.BackColor);
         }
 
         private void OceanColorFillButton_Click(object sender, EventArgs e)
@@ -4636,6 +4672,11 @@ namespace RealmStudio
         {
             Color selectedColor = UtilityMethods.SelectColorFromDialog(this, OceanPaintColorSelectButton.BackColor);
             OceanMediator.OceanPaintColor = selectedColor;
+        }
+
+        private void OceanPaintColorSelectButton_MouseUp(object sender, MouseEventArgs e)
+        {
+            OceanMediator.OceanPaintColor = UtilityMethods.SelectColor(this, e, OceanPaintColorSelectButton.BackColor);
         }
 
         private void OceanSoftBrushButton_Click(object sender, EventArgs e)
@@ -4839,10 +4880,9 @@ namespace RealmStudio
             TOOLTIP.Show(LandformMediator.LandformBrushSize.ToString(), LandformValuesGroup, new Point(LandBrushSizeTrack.Right - 30, LandBrushSizeTrack.Top - 20), 2000);
         }
 
-        private void LandformOutlineColorSelectButton_Click(object sender, EventArgs e)
+        private void LandformOutlineColorSelectButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, LandformOutlineColorSelectButton.BackColor);
-            LandformMediator.LandOutlineColor = selectedColor;
+            LandformMediator.LandOutlineColor = UtilityMethods.SelectColor(this, e, LandformOutlineColorSelectButton.BackColor);
         }
 
         private void LandformOutlineWidthTrack_ValueChanged(object sender, EventArgs e)
@@ -4851,10 +4891,9 @@ namespace RealmStudio
             TOOLTIP.Show(LandformMediator.LandOutlineWidth.ToString(), LandformValuesGroup, new Point(LandformOutlineWidthTrack.Right - 30, LandformOutlineWidthTrack.Top - 20), 2000);
         }
 
-        private void LandformBackgroundColorSelectButton_Click(object sender, EventArgs e)
+        private void LandformBackgroundColorSelectButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, LandformOutlineColorSelectButton.BackColor);
-            LandformMediator.LandBackgroundColor = selectedColor;
+            LandformMediator.LandBackgroundColor = UtilityMethods.SelectColor(this, e, LandformBackgroundColorSelectButton.BackColor);
         }
 
         private void PreviousTextureButton_Click(object sender, EventArgs e)
@@ -4878,10 +4917,9 @@ namespace RealmStudio
             TOOLTIP.Show(LandformMediator.CoastlineEffectDistance.ToString(), CoastlineValuesGroup, new Point(CoastlineEffectDistanceTrack.Right - 30, CoastlineEffectDistanceTrack.Top - 20), 2000);
         }
 
-        private void CoastlineColorSelectionButton_Click(object sender, EventArgs e)
+        private void CoastlineColorSelectionButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, CoastlineColorSelectionButton.BackColor);
-            LandformMediator.CoastlineColor = selectedColor;
+            LandformMediator.CoastlineColor = UtilityMethods.SelectColor(this, e, CoastlineColorSelectionButton.BackColor);
         }
 
         private void CoastlineStyleList_SelectedIndexChanged(object sender, EventArgs e)
@@ -4921,10 +4959,9 @@ namespace RealmStudio
             MainMediator.SetDrawingMode(MapDrawingMode.LandColorErase, LandformMediator.LandPaintEraserSize);
         }
 
-        private void LandColorSelectionButton_Click(object sender, EventArgs e)
+        private void LandColorSelectionButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, LandColorSelectionButton.BackColor);
-            LandformMediator.LandPaintColor = selectedColor;
+            LandformMediator.LandPaintColor = UtilityMethods.SelectColor(this, e, LandColorSelectionButton.BackColor);
         }
 
         private void LandButtonE6D0AB_Click(object sender, EventArgs e)
@@ -5164,10 +5201,9 @@ namespace RealmStudio
 
         }
 
-        private void WindroseColorSelectButton_Click(object sender, EventArgs e)
+        private void WindroseColorSelectButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, WindroseColorSelectButton.BackColor);
-            WindroseMediator.WindroseColor = selectedColor;
+            WindroseMediator.WindroseColor = UtilityMethods.SelectColor(this, e, WindroseColorSelectButton.BackColor);
         }
 
         private void WindroseClearButton_Click(object sender, EventArgs e)
@@ -5246,16 +5282,14 @@ namespace RealmStudio
             MainMediator.SelectedBrushSize = WaterFeatureMediator.WaterFeatureBrushSize;
         }
 
-        private void WaterColorSelectionButton_Click(object sender, EventArgs e)
+        private void WaterColorSelectionButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, WaterFeatureMediator.WaterColor);
-            WaterFeatureMediator.WaterColor = selectedColor;
+            WaterFeatureMediator.WaterColor = UtilityMethods.SelectColor(this, e, WaterColorSelectionButton.BackColor);
         }
 
-        private void ShorelineColorSelectionButton_Click(object sender, EventArgs e)
+        private void ShorelineColorSelectionButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, WaterFeatureMediator.ShorelineColor);
-            WaterFeatureMediator.ShorelineColor = selectedColor;
+            WaterFeatureMediator.ShorelineColor = UtilityMethods.SelectColor(this, e, ShorelineColorSelectionButton.BackColor);
         }
 
         private void RiverWidthTrack_ValueChanged(object sender, EventArgs e)
@@ -5353,10 +5387,9 @@ namespace RealmStudio
             MainMediator.SetDrawingMode(MapDrawingMode.WaterColorErase, WaterFeatureMediator.WaterColorEraserSize);
         }
 
-        private void WaterPaintColorSelectButton_Click(object sender, EventArgs e)
+        private void WaterPaintColorSelectButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, WaterFeatureMediator.WaterPaintColor);
-            WaterFeatureMediator.WaterPaintColor = selectedColor;
+            WaterFeatureMediator.WaterPaintColor = UtilityMethods.SelectColor(this, e, WaterPaintColorSelectButton.BackColor);
         }
 
         private void WaterButton91CBB8_Click(object sender, EventArgs e)
@@ -5500,10 +5533,9 @@ namespace RealmStudio
             TOOLTIP.Show(PathMediator.PathWidth.ToString(), MapPathValuesGroup, new Point(PathWidthTrack.Right - 30, PathWidthTrack.Top - 20), 2000);
         }
 
-        private void PathColorSelectButton_Click(object sender, EventArgs e)
+        private void PathColorSelectButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color selectedColor = UtilityMethods.SelectColorFromDialog(this, PathColorSelectButton.BackColor);
-            PathMediator.PathColor = selectedColor;
+            PathMediator.PathColor = UtilityMethods.SelectColor(this, e, PathColorSelectButton.BackColor);
         }
 
         private void EditPathPointSwitch_CheckedChanged()
@@ -5820,28 +5852,25 @@ namespace RealmStudio
             FontSelectionPanel.Visible = true;
         }
 
-        private void FontColorSelectButton_Click(object sender, EventArgs e)
+        private void FontColorSelectButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color labelColor = UtilityMethods.SelectColorFromDialog(this, FontColorSelectButton.BackColor);
-            LabelMediator.LabelColor = labelColor;
+            LabelMediator.LabelColor = UtilityMethods.SelectColor(this, e, FontColorSelectButton.BackColor);
         }
 
-        private void OutlineColorSelectButton_Click(object sender, EventArgs e)
+        private void OutlineColorSelectButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color outlineColor = UtilityMethods.SelectColorFromDialog(this, OutlineColorSelectButton.BackColor);
-            LabelMediator.OutlineColor = outlineColor;
+            LabelMediator.OutlineColor = UtilityMethods.SelectColor(this, e, OutlineColorSelectButton.BackColor);
+        }
+
+        private void GlowColorSelectButton_MouseUp(object sender, MouseEventArgs e)
+        {
+            LabelMediator.GlowColor = UtilityMethods.SelectColor(this, e, GlowColorSelectButton.BackColor);
         }
 
         private void OutlineWidthTrack_ValueChanged(object sender, EventArgs e)
         {
             LabelMediator.OutlineWidth = OutlineWidthTrack.Value / 10.0F;
             TOOLTIP.Show(LabelMediator.OutlineWidth.ToString(), LabelOutlineGroup, new Point(OutlineWidthTrack.Right - 30, OutlineWidthTrack.Top - 20), 2000);
-        }
-
-        private void GlowColorSelectButton_Click(object sender, EventArgs e)
-        {
-            Color glowColor = UtilityMethods.SelectColorFromDialog(this, GlowColorSelectButton.BackColor);
-            LabelMediator.GlowColor = glowColor;
         }
 
         private void GlowWidthTrack_ValueChanged(object sender, EventArgs e)
@@ -5886,10 +5915,9 @@ namespace RealmStudio
             MainMediator.SetDrawingMode(MapDrawingMode.DrawBox, 0);
         }
 
-        private void SelectBoxTintButton_Click(object sender, EventArgs e)
+        private void SelectBoxTintButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color boxColor = UtilityMethods.SelectColorFromDialog(this, SelectBoxTintButton.BackColor);
-            BoxMediator.BoxTint = boxColor;
+            BoxMediator.BoxTint = UtilityMethods.SelectColor(this, e, SelectBoxTintButton.BackColor);
         }
 
         private void GenerateNameButton_Click(object sender, EventArgs e)
@@ -5935,10 +5963,9 @@ namespace RealmStudio
             TOOLTIP.Show(FrameMediator.FrameScale.ToString(), FrameValuesGroup, new Point(FrameScaleTrack.Right - 30, FrameScaleTrack.Top - 20), 2000);
         }
 
-        private void FrameTintColorSelectButton_Click(object sender, EventArgs e)
+        private void FrameTintColorSelectButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color frameColor = UtilityMethods.SelectColorFromDialog(this, FrameTintColorSelectButton.BackColor);
-            FrameMediator.FrameTint = frameColor;
+            FrameMediator.FrameTint = UtilityMethods.SelectColor(this, e, FrameTintColorSelectButton.BackColor);
         }
 
         #endregion
@@ -6022,40 +6049,35 @@ namespace RealmStudio
             ScaleMediator.ResetScaleColors();
         }
 
-        private void ScaleColor1Button_Click(object sender, EventArgs e)
+        private void ScaleColor1Button_MouseUp(object sender, MouseEventArgs e)
         {
-            Color scaleColor = UtilityMethods.SelectColorFromDialog(this, ScaleColor1Button.BackColor);
-            ScaleMediator.ScaleColor1 = scaleColor;
+            ScaleMediator.ScaleColor1 = UtilityMethods.SelectColor(this, e, ScaleColor1Button.BackColor);
         }
 
-        private void ScaleColor2Button_Click(object sender, EventArgs e)
+        private void ScaleColor2Button_MouseUp(object sender, MouseEventArgs e)
         {
-            Color scaleColor = UtilityMethods.SelectColorFromDialog(this, ScaleColor2Button.BackColor);
-            ScaleMediator.ScaleColor2 = scaleColor;
+            ScaleMediator.ScaleColor2 = UtilityMethods.SelectColor(this, e, ScaleColor2Button.BackColor);
         }
 
-        private void ScaleColor3Button_Click(object sender, EventArgs e)
+        private void ScaleColor3Button_MouseUp(object sender, MouseEventArgs e)
         {
-            Color scaleColor = UtilityMethods.SelectColorFromDialog(this, ScaleColor3Button.BackColor);
-            ScaleMediator.ScaleColor3 = scaleColor;
+            ScaleMediator.ScaleColor3 = UtilityMethods.SelectColor(this, e, ScaleColor3Button.BackColor);
+        }
+
+        private void SelectScaleFontColorButton_MouseUp(object sender, MouseEventArgs e)
+        {
+            ScaleMediator.ScaleFontColor = UtilityMethods.SelectColor(this, e, SelectScaleFontColorButton.BackColor);
+        }
+
+        private void SelectScaleOutlineColorButton_MouseUp(object sender, MouseEventArgs e)
+        {
+            ScaleMediator.ScaleNumberOutlineColor = UtilityMethods.SelectColor(this, e, SelectScaleOutlineColorButton.BackColor);
         }
 
         private void SelectScaleFontButton_Click(object sender, EventArgs e)
         {
             FontPanelManager.FontPanelOpener = FontPanelOpener.ScaleFontButton;
             FontSelectionPanel.Visible = !FontSelectionPanel.Visible;
-        }
-
-        private void SelectScaleFontColorButton_Click(object sender, EventArgs e)
-        {
-            Color scaleColor = UtilityMethods.SelectColorFromDialog(this, SelectScaleFontColorButton.BackColor);
-            ScaleMediator.ScaleFontColor = scaleColor;
-        }
-
-        private void SelectScaleOutlineColorButton_Click(object sender, EventArgs e)
-        {
-            Color scaleColor = UtilityMethods.SelectColorFromDialog(this, SelectScaleOutlineColorButton.BackColor);
-            ScaleMediator.ScaleNumberOutlineColor = scaleColor;
         }
 
         private void ScaleOutlineWidthTrack_Scroll(object sender, EventArgs e)
@@ -6112,10 +6134,9 @@ namespace RealmStudio
             TOOLTIP.Show(GridLineWidthTrack.Value.ToString(), GridValuesGroup, new Point(GridLineWidthTrack.Right - 30, GridLineWidthTrack.Top - 20), 2000);
         }
 
-        private void GridColorSelectButton_Click(object sender, EventArgs e)
+        private void GridColorSelectButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color gridColor = UtilityMethods.SelectColorFromDialog(this, GridColorSelectButton.BackColor);
-            GridMediator.GridColor = gridColor;
+            GridMediator.GridColor = UtilityMethods.SelectColor(this, e, GridColorSelectButton.BackColor);
         }
 
         private void ShowGridSizeSwitch_CheckedChanged()
@@ -6132,10 +6153,9 @@ namespace RealmStudio
             MainMediator.SetDrawingMode(MapDrawingMode.DrawMapMeasure, 0);
         }
 
-        private void SelectMeasureColorButton_Click(object sender, EventArgs e)
+        private void SelectMeasureColorButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color measureColor = UtilityMethods.SelectColorFromDialog(this, SelectMeasureColorButton.BackColor);
-            MeasureMediator.MapMeasureColor = measureColor;
+            MeasureMediator.MapMeasureColor = UtilityMethods.SelectColor(this, e, SelectMeasureColorButton.BackColor);
         }
 
         private void UseScaleUnitsSwitch_CheckedChanged()
@@ -6182,10 +6202,9 @@ namespace RealmStudio
             MapStateMediator.CurrentMapRegion = null;
         }
 
-        private void RegionColorSelectButton_Click(object sender, EventArgs e)
+        private void RegionColorSelectButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color regionColor = UtilityMethods.SelectColorFromDialog(this, RegionColorSelectButton.BackColor);
-            RegionMediator.RegionColor = regionColor;
+            RegionMediator.RegionColor = UtilityMethods.SelectColor(this, e, RegionColorSelectButton.BackColor);
         }
 
         private void RegionBorderWidthTrack_ValueChanged(object sender, EventArgs e)
@@ -6366,7 +6385,14 @@ namespace RealmStudio
 
         private void PlaceStampButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingStamp, 0);
+            if (MainMediator.CurrentDrawingMode != MapDrawingMode.DrawingStamp)
+            {
+                MainMediator.SetDrawingMode(MapDrawingMode.DrawingStamp, 0);
+            }
+            else
+            {
+                MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
+            }
         }
 
         private void DrawingFillButton_Click(object sender, EventArgs e)
@@ -6428,16 +6454,14 @@ namespace RealmStudio
             DrawingMediator.DrawingPaintBrush = ColorPaintBrush.PatternBrush4;
         }
 
-        private void SelectPaintColorButton_Click(object sender, EventArgs e)
+        private void SelectPaintColorButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color newColor = UtilityMethods.SelectColorFromDialog(this, SelectPaintColorButton.BackColor);
-            DrawingMediator.DrawingLineColor = newColor;
+            DrawingMediator.DrawingLineColor = UtilityMethods.SelectColor(this, e, SelectPaintColorButton.BackColor);
         }
 
-        private void SelectFillColorButton_Click(object sender, EventArgs e)
+        private void SelectFillColorButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Color newColor = UtilityMethods.SelectColorFromDialog(this, SelectPaintColorButton.BackColor);
-            DrawingMediator.DrawingFillColor = newColor;
+            DrawingMediator.DrawingFillColor = UtilityMethods.SelectColor(this, e, SelectFillColorButton.BackColor);
         }
 
         private void PreviousDrawingFillTextureButton_Click(object sender, EventArgs e)
@@ -6450,20 +6474,86 @@ namespace RealmStudio
             DrawingMediator.DrawingTextureIndex++;
         }
 
-        private void ColorMenuItem_CheckedChanged(object sender, EventArgs e)
+        private void ColorMenuItem_Click(object sender, EventArgs e)
         {
+            ColorMenuItem.Checked = !ColorMenuItem.Checked;
+
             if (ColorMenuItem.Checked)
             {
                 TextureMenuItem.Checked = false;
+                DrawingMediator.FillType = DrawingFillType.Color;
             }
         }
 
-        private void TextureMenuItem_CheckedChanged(object sender, EventArgs e)
+        private void TextureMenuItem_Click(object sender, EventArgs e)
         {
+            TextureMenuItem.Checked = !TextureMenuItem.Checked;
+
             if (TextureMenuItem.Checked)
             {
                 ColorMenuItem.Checked = false;
+                DrawingMediator.FillType = DrawingFillType.Texture;
             }
+        }
+
+
+        private void SelectStampButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string defaultStampDir = AssetManager.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Stamps" + Path.DirectorySeparatorChar;
+
+                OpenFileDialog ofd = new()
+                {
+                    Title = "Open Image to Stamp",
+                    DefaultExt = "png",
+                    InitialDirectory = defaultStampDir,
+                    CheckFileExists = true,
+                    RestoreDirectory = true,
+                    ShowHelp = false,           // enabling the help button causes the dialog not to display files
+                    Multiselect = false,
+                    Filter = UtilityMethods.GetCommonImageFilter()
+                };
+
+                if (ofd.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (ofd.FileName != "")
+                    {
+                        try
+                        {
+                            Bitmap b = (Bitmap)Bitmap.FromFile(ofd.FileName);
+
+                            if (b.Height > 0 && b.Width > 0)
+                            {
+                                DrawingMediator.DrawingStampBitmap = (Bitmap?)b.Clone();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.LOGGER.Error(ex);
+                            throw;
+                        }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void DrawingStampScaleTrack_Scroll(object sender, EventArgs e)
+        {
+            DrawingMediator.DrawingStampScale = DrawingStampScaleTrack.Value / 100.0F;
+        }
+
+        private void DrawingStampRotationTrack_Scroll(object sender, EventArgs e)
+        {
+            DrawingMediator.DrawingStampRotation = DrawingStampRotationTrack.Value;
+        }
+
+        private void DrawingStampOpacityTrack_Scroll(object sender, EventArgs e)
+        {
+            DrawingMediator.DrawingStampOpacity = DrawingStampOpacityTrack.Value / 100.0F;
         }
 
         #endregion
