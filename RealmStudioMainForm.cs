@@ -3210,6 +3210,23 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+
+                        Cmd_DrawOnCanvas cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), SKGLRenderControl.GRContext);
+                        CommandManager.AddCommand(cmd);
+                        cmd.DoOperation();
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingPaint:
+                    {
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+
+                        Cmd_DrawOnCanvas cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), SKGLRenderControl.GRContext);
+                        CommandManager.AddCommand(cmd);
+                        cmd.DoOperation();
+
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -3793,6 +3810,13 @@ namespace RealmStudio
                         SKRect rect = new(MapStateMediator.PreviousCursorPoint.X, MapStateMediator.PreviousCursorPoint.Y,
                             MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
 
+                        if (RealmStudioMainForm.ModifierKeys == Keys.Control)
+                        {
+                            // if the ctrl key is pressed, make the rectangle a square
+                            float size = Math.Max(rect.Width, rect.Height);
+                            rect = new SKRect(rect.Left, rect.Top, rect.Left + size, rect.Top + size);
+                        }
+
                         if (DrawingMediator.FillDrawnShape)
                         {
                             // draw the filled rectangle first if the fill is enabled
@@ -3840,6 +3864,13 @@ namespace RealmStudio
 
                         SKRect rect = new(MapStateMediator.PreviousCursorPoint.X, MapStateMediator.PreviousCursorPoint.Y,
                             MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                        if (RealmStudioMainForm.ModifierKeys == Keys.Control)
+                        {
+                            // if the ctrl key is pressed, make the ellipse a circle
+                            float size = Math.Max(rect.Width, rect.Height);
+                            rect = new SKRect(rect.Left, rect.Top, rect.Left + size, rect.Top + size);
+                        }
 
                         // draw the filled ellipse first if the fill is enabled
                         if (DrawingMediator.FillDrawnShape)
@@ -4323,6 +4354,7 @@ namespace RealmStudio
                         }
                         break;
                     }
+
                 case MapDrawingMode.DrawingRectangle:
                     {
                         // finalize rectangle drawing and add the rectangle
@@ -4339,6 +4371,17 @@ namespace RealmStudio
                             IsAntialias = true,
                             StrokeCap = SKStrokeCap.Butt
                         };
+
+                        if (RealmStudioMainForm.ModifierKeys == Keys.Control)
+                        {
+                            // if the ctrl key is pressed, make the rectangle a square
+                            float size = Math.Max(rect.Width, rect.Height);
+                            rect = new SKRect(rect.Left, rect.Top, rect.Left + size, rect.Top + size);
+                        }
+
+                        Cmd_DrawOnCanvas cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), SKGLRenderControl.GRContext);
+                        CommandManager.AddCommand(cmd);
+                        cmd.DoOperation();
 
                         if (DrawingMediator.FillDrawnShape)
                         {
@@ -4366,9 +4409,20 @@ namespace RealmStudio
                             StrokeCap = SKStrokeCap.Butt
                         };
 
+                        if (RealmStudioMainForm.ModifierKeys == Keys.Control)
+                        {
+                            // if the ctrl key is pressed, make the ellipse a circle
+                            float size = Math.Max(rect.Width, rect.Height);
+                            rect = new SKRect(rect.Left, rect.Top, rect.Left + size, rect.Top + size);
+                        }
+
+                        Cmd_DrawOnCanvas cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), SKGLRenderControl.GRContext);
+                        CommandManager.AddCommand(cmd);
+                        cmd.DoOperation();
+
                         if (DrawingMediator.FillDrawnShape)
                         {
-                            // draw the filled rectangle first if the fill is enabled
+                            // draw the filled ellipse first if the fill is enabled
                             MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas.DrawOval(rect, DrawingMediator.FillPaint);
                         }
 
@@ -4490,6 +4544,10 @@ namespace RealmStudio
                             DrawingMediator.PolygonPoints.Add(MapStateMediator.CurrentCursorPoint);
 
                             SKPath polyPath = DrawingMethods.GetLinePathFromPoints(DrawingMediator.PolygonPoints);
+
+                            Cmd_DrawOnCanvas cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), SKGLRenderControl.GRContext);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
 
                             if (DrawingMediator.FillDrawnShape)
                             {
@@ -6556,9 +6614,12 @@ namespace RealmStudio
             DrawingMediator.DrawingStampOpacity = DrawingStampOpacityTrack.Value / 100.0F;
         }
 
+        private void LayerListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
         #endregion
-
-
 
     }
 }
