@@ -173,10 +173,8 @@ namespace RealmStudio
             // If the XML document has been altered with unknown
             // nodes or attributes, handle them with the
             // UnknownNode and UnknownAttribute events.
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             serializer.UnknownNode += new XmlNodeEventHandler(Serializer_UnknownNode);
             serializer.UnknownAttribute += new XmlAttributeEventHandler(Serializer_UnknownAttribute);
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
 
             // A FileStream is needed to read the XML document.            
             FileStream fs = new(path, FileMode.Open);

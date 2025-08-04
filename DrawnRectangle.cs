@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class DrawnRectangle : DrawnMapComponent
+    internal sealed class DrawnRectangle : DrawnMapComponent
     {
         private SKPoint _topLeft;
         private SKPoint _bottomRight;

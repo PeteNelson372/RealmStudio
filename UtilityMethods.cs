@@ -196,7 +196,7 @@ namespace RealmStudio
             }
             else if (e.Button == MouseButtons.Right)
             {
-                ColorQuickPick colorQuickPick = new ColorQuickPick
+                ColorQuickPick colorQuickPick = new()
                 {
                     SelectedColor = backColor
                 };

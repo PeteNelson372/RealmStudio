@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class DrawnPolygon : DrawnMapComponent
+    internal sealed class DrawnPolygon : DrawnMapComponent
     {
         private List<SKPoint> _points = [];
         private SKColor _color = SKColors.Black;
@@ -38,11 +38,7 @@ namespace RealmStudio
             get => _points;
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value), "Points cannot be null.");
-                }
-                _points = value;
+                _points = value ?? throw new ArgumentNullException(nameof(value), "Points cannot be null.");
             }
         }
         public SKColor Color

@@ -26,7 +26,7 @@ using SkiaSharp.Views.Desktop;
 
 namespace RealmStudio
 {
-    internal class PaintedLine : DrawnMapComponent, IDisposable
+    internal sealed class PaintedLine : DrawnMapComponent, IDisposable
     {
         private bool disposedValue;
 
@@ -50,11 +50,7 @@ namespace RealmStudio
             get => _points;
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value), "Points cannot be null.");
-                }
-                _points = value;
+                _points = value ?? throw new ArgumentNullException(nameof(value), "Points cannot be null.");
             }
         }
 

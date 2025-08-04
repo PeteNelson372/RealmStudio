@@ -2,7 +2,7 @@
 
 namespace RealmStudio
 {
-    internal class DrawnLine : DrawnMapComponent, IDisposable
+    internal sealed class DrawnLine : DrawnMapComponent, IDisposable
     {
         private bool disposedValue;
 

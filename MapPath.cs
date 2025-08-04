@@ -532,7 +532,7 @@ namespace RealmStudio
                 string? pathTextureName = null;
                 string? pathTexturePath = null;
 
-                List<XNode> textureNodes = pathTextureElem.Nodes().ToList();
+                List<XNode> textureNodes = [.. pathTextureElem.Nodes()];
                 if (textureNodes.Count == 2)
                 {
                     pathTextureName = ((XElement)textureNodes[0]).Value;

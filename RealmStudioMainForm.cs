@@ -3883,11 +3883,8 @@ namespace RealmStudio
 
                         canvas.Clear(SKColors.Transparent);
 
-                        if (DrawingManager.CurrentDrawingErase != null)
-                        {
-                            // add the current cursor point to the current drawing erase object
-                            DrawingManager.CurrentDrawingErase.Points.Add(MapStateMediator.CurrentCursorPoint);
-                        }
+                        // add the current cursor point to the current drawing erase object
+                        DrawingManager.CurrentDrawingErase?.Points.Add(MapStateMediator.CurrentCursorPoint);
 
                         SKGLRenderControl.Invalidate();
                     }

@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddPaintedLine(MapLayer mapLayer, PaintedLine paintedLine) : IMapOperation, IDisposable
+    internal sealed class Cmd_AddPaintedLine(MapLayer mapLayer, PaintedLine paintedLine) : IMapOperation, IDisposable
     {
         private bool disposedValue;
         private readonly MapLayer mapLayer = mapLayer;

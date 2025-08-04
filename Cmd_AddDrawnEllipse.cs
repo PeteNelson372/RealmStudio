@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddDrawnEllipse(MapLayer mapLayer, DrawnEllipse drawnEllipse) : IMapOperation
+    internal sealed class Cmd_AddDrawnEllipse(MapLayer mapLayer, DrawnEllipse drawnEllipse) : IMapOperation
     {
         private readonly MapLayer mapLayer = mapLayer;
         private readonly DrawnEllipse de = drawnEllipse;

@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class DrawingErase : DrawnMapComponent
+    internal sealed class DrawingErase : DrawnMapComponent
     {
         private int _brushSize = 2;
         private List<SKPoint> _points = [];
@@ -35,11 +35,7 @@ namespace RealmStudio
             get => _points;
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value), "Points cannot be null.");
-                }
-                _points = value;
+                _points = value ?? throw new ArgumentNullException(nameof(value), "Points cannot be null.");
             }
         }
 

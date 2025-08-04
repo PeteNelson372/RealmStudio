@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddDrawnRectangle(MapLayer mapLayer, DrawnRectangle drawnRectangle) : IMapOperation
+    internal sealed class Cmd_AddDrawnRectangle(MapLayer mapLayer, DrawnRectangle drawnRectangle) : IMapOperation
     {
         private readonly MapLayer mapLayer = mapLayer;
         private readonly DrawnRectangle dr = drawnRectangle;

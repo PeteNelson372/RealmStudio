@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddDrawnErase(MapLayer mapLayer, DrawingErase drawingErase) : IMapOperation
+    internal sealed class Cmd_AddDrawnErase(MapLayer mapLayer, DrawingErase drawingErase) : IMapOperation
     {
         private readonly MapLayer mapLayer = mapLayer;
         private readonly DrawingErase de = drawingErase;

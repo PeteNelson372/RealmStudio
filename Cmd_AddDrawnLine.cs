@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddDrawnLine(MapLayer mapLayer, DrawnLine dl) : IMapOperation
+    internal sealed class Cmd_AddDrawnLine(MapLayer mapLayer, DrawnLine dl) : IMapOperation
     {
         private readonly MapLayer mapLayer = mapLayer;
         private readonly DrawnLine dl = dl;

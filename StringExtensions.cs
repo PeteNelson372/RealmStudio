@@ -74,7 +74,9 @@ namespace RealmStudio
 
         public static string SplitCamelCase(string str)
         {
+#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
             return Regex.Replace(Regex.Replace(str, @"(\P{Ll})(\P{Ll}\p{Ll})", "$1 $2"), @"(\p{Ll})(\P{Ll})", "$1 $2");
+#pragma warning restore SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
         }
     }
 }

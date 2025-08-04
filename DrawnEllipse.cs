@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal class DrawnEllipse : DrawnMapComponent
+    internal sealed class DrawnEllipse : DrawnMapComponent
     {
         private SKPoint _topLeft;
         private SKPoint _bottomRight;

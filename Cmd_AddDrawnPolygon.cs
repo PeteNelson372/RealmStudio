@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddDrawnPolygon(MapLayer mapLayer, DrawnPolygon drawnPolygon) : IMapOperation
+    internal sealed class Cmd_AddDrawnPolygon(MapLayer mapLayer, DrawnPolygon drawnPolygon) : IMapOperation
     {
         private readonly MapLayer mapLayer = mapLayer;
         private readonly DrawnPolygon dp = drawnPolygon;

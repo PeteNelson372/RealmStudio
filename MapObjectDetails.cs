@@ -83,7 +83,7 @@ namespace RealmStudio
             "Sike",
         ];
 
-        List<string> pathTypes =
+        private readonly List<string> pathTypes =
         [
             // Common Types of Paths and Roads
             "Road",
@@ -127,7 +127,7 @@ namespace RealmStudio
             "Wanderer's Trail"
         ];
 
-        List<string> regionTypes =
+        private readonly List<string> regionTypes =
         [
             // Political / Administrative Regions
             "Country",
@@ -180,7 +180,7 @@ namespace RealmStudio
             "Continental Shelf"
         ];
 
-        List<string> symbolTypes =
+        private readonly List<string> symbolTypes =
         [
             // Structures
             "House", "Home", "Hut", "Cottage", "Cabin", "Manor", "Villa", "Lodge", "Shack",

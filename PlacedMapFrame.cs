@@ -204,7 +204,6 @@ namespace RealmStudio
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8601 // Possible null reference assignment
 
             XNamespace ns = "RealmStudio";
             string content = reader.ReadOuterXml();
@@ -326,7 +325,6 @@ namespace RealmStudio
 
             //FrameManager.CompletePlacedFrame(this);
 
-#pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }

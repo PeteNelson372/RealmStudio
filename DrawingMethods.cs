@@ -57,8 +57,8 @@ namespace RealmStudio
         public static extern bool DeleteObject([In] IntPtr hObject);
 #pragma warning restore SYSLIB1054
 
-        private static int[] dirmap = { 1, 5, 4, 6, 2, 10, 8, 9 };
-        private static int[] effmap = { 0, 0x40000, 0x10, 0x80000 };
+        private static readonly int[] dirmap = [1, 5, 4, 6, 2, 10, 8, 9];
+        private static readonly int[] effmap = [0, 0x40000, 0x10, 0x80000];
 
         [DllImport("user32.dll")]
         private static extern bool AnimateWindow(IntPtr handle, int msec, int flags);

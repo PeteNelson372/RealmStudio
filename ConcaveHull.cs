@@ -43,7 +43,7 @@ namespace RealmStudio
         // Returns:
         // - A list of points representing the concave hull.
         // </summary>
-        public static List<SKPoint> ComputeConcaveHull(List<SKPoint> points, int k)
+        public static List<SKPoint> ComputeConcaveHull(List<SKPoint> points)
         {
             // Check if the number of points is less than 3.
             if (points.Count < 3)
