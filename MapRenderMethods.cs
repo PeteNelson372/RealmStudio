@@ -345,6 +345,10 @@ namespace RealmStudio
                 // code that makes use of the drawing layer is responsible for clearing
                 // and drawing to the canvas properly; it is only rendered here;
                 // clearing the drawing layer requires the user to explicitly clear it (by erasing or clearing the layer)
+
+                drawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+                drawingLayer.Render(drawingLayer.LayerSurface.Canvas);
+
                 renderCanvas.DrawSurface(drawingLayer.LayerSurface, scrollPoint);
             }
         }

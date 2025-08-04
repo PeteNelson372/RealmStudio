@@ -30,11 +30,46 @@ namespace RealmStudio
     internal sealed class DrawingManager : IMapComponentManager
     {
         private static DrawingUIMediator? _drawingUIMediator;
+        private static PaintedLine? _currentPaintedLine;
+        private static DrawnRectangle? _currentDrawnRectangle;
+        private static DrawnEllipse? _currentDrawnEllipse;
+        private static DrawingErase? _currentDrawingErase;
+        private static DrawnPolygon? _currentDrawnPolygon;
 
         internal static DrawingUIMediator? DrawingMediator
         {
             get { return _drawingUIMediator; }
             set { _drawingUIMediator = value; }
+        }
+
+        internal static PaintedLine? CurrentPaintedLine
+        {
+            get { return _currentPaintedLine; }
+            set { _currentPaintedLine = value; }
+        }
+
+        internal static DrawnRectangle? CurrentDrawnRectangle
+        {
+            get { return _currentDrawnRectangle; }
+            set { _currentDrawnRectangle = value; }
+        }
+
+        internal static DrawnEllipse? CurrentDrawnEllipse
+        {
+            get { return _currentDrawnEllipse; }
+            set { _currentDrawnEllipse = value; }
+        }
+
+        internal static DrawingErase? CurrentDrawingErase
+        {
+            get { return _currentDrawingErase; }
+            set { _currentDrawingErase = value; }
+        }
+
+        internal static DrawnPolygon? CurrentDrawnPolygon
+        {
+            get { return _currentDrawnPolygon; }
+            set { _currentDrawnPolygon = value; }
         }
 
         public static IMapComponent? Create()
@@ -55,97 +90,6 @@ namespace RealmStudio
         public static bool Update()
         {
             return true;
-        }
-
-        internal static void Paint(SKCanvas canvas, SKPoint currentCursorPoint, int brushSize)
-        {
-            ArgumentNullException.ThrowIfNull(DrawingMediator);
-
-            MapBrush? brush = null;
-            if (DrawingMediator.DrawingPaintBrush == ColorPaintBrush.PatternBrush1)
-            {
-                brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush1");
-            }
-            else if (DrawingMediator.DrawingPaintBrush == ColorPaintBrush.PatternBrush2)
-            {
-                brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush2");
-            }
-            else if (DrawingMediator.DrawingPaintBrush == ColorPaintBrush.PatternBrush3)
-            {
-                brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush3");
-            }
-            else if (DrawingMediator.DrawingPaintBrush == ColorPaintBrush.PatternBrush4)
-            {
-                brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush4"); ;
-            }
-
-            if (brush != null && brush.BrushBitmap == null)
-            {
-                brush.BrushBitmap = (Bitmap)Bitmap.FromFile(brush.BrushPath);
-            }
-
-            SKPaint ShaderPaint = new()
-            {
-                IsAntialias = true,
-                Color = DrawingMediator.DrawingLineColor.ToSKColor(),
-                StrokeWidth = brushSize,
-                Style = SKPaintStyle.Fill
-            };
-
-            SKShader StrokeShader = SKShader.CreateColor(DrawingMediator.DrawingLineColor.ToSKColor());
-            SKBitmap? strokeBitmap = null;
-            Bitmap resizedBitmap;
-
-            if (DrawingMediator.DrawingPaintBrush == ColorPaintBrush.PatternBrush1
-                        || DrawingMediator.DrawingPaintBrush == ColorPaintBrush.PatternBrush2
-                        || DrawingMediator.DrawingPaintBrush == ColorPaintBrush.PatternBrush3
-                        || DrawingMediator.DrawingPaintBrush == ColorPaintBrush.PatternBrush4)
-            {
-                if (brush == null || brush.BrushBitmap == null)
-                {
-                    return;
-                }
-
-                // scale and set opacity of the texture
-                // resize the bitmap, but maintain aspect ratio
-                resizedBitmap = DrawingMethods.ScaleBitmap(brush.BrushBitmap, brushSize, brushSize);
-                strokeBitmap = resizedBitmap.ToSKBitmap();
-
-                // combine the stroke color with the bitmap color
-                ShaderPaint.ColorFilter = SKColorFilter.CreateBlendMode(DrawingMediator.DrawingLineColor.ToSKColor(), SKBlendMode.Modulate);
-
-                if (DrawingMediator.FillType == DrawingFillType.Texture)
-                {
-                    // if the fill type is texture, we need to create a shader from the bitmap
-                    StrokeShader = SKShader.CreateBitmap(strokeBitmap, SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
-                }
-            }
-
-            ShaderPaint.Shader = StrokeShader;
-
-            if (DrawingMediator.DrawingPaintBrush == ColorPaintBrush.SoftBrush)
-            {
-                StrokeShader.Dispose();
-                SKPoint gradientCenter = new(currentCursorPoint.X, currentCursorPoint.Y);
-                StrokeShader = SKShader.CreateRadialGradient(gradientCenter, brushSize / 2, [DrawingMediator.DrawingLineColor.ToSKColor(), DrawingMediator.DrawingLineColor.ToSKColor().WithAlpha(0)], SKShaderTileMode.Clamp);
-            }
-
-            if (DrawingMediator.DrawingPaintBrush == ColorPaintBrush.PatternBrush1
-                || DrawingMediator.DrawingPaintBrush == ColorPaintBrush.PatternBrush2
-                || DrawingMediator.DrawingPaintBrush == ColorPaintBrush.PatternBrush3
-                || DrawingMediator.DrawingPaintBrush == ColorPaintBrush.PatternBrush4)
-            {
-                if (strokeBitmap == null)
-                {
-                    return;
-                }
-
-                canvas.DrawBitmap(strokeBitmap, new SKRect(0, 0, strokeBitmap.Width, strokeBitmap.Height), new SKRect(currentCursorPoint.X - strokeBitmap.Width / 2, currentCursorPoint.Y - strokeBitmap.Height / 2, currentCursorPoint.X + strokeBitmap.Width / 2, currentCursorPoint.Y + strokeBitmap.Height / 2), ShaderPaint);
-            }
-            else
-            {
-                canvas.DrawCircle(currentCursorPoint.X, currentCursorPoint.Y, brushSize / 2, ShaderPaint);
-            }
         }
 
         internal static void PlaceStampAtCursor(SKCanvas canvas, SKPoint currentCursorPoint)

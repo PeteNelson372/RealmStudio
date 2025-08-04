@@ -72,7 +72,6 @@ namespace RealmStudio
         DrawingEllipse,
         DrawingPolygon,
         DrawingStamp,
-        DrawingFill,
         DrawingText,
         DrawingErase,
     }
@@ -307,5 +306,18 @@ namespace RealmStudio
         None,
         Color,
         Texture,
+    }
+
+    public enum DrawnComponentType
+    {
+        NotSet,
+        Erase,
+        Line,
+        Paint,
+        Rectangle,
+        Ellipse,
+        Polygon,
+        Stamp,
+        Text
     }
 }

@@ -329,6 +329,7 @@
             label109 = new Label();
             DrawingFillTextureBox = new PictureBox();
             groupBox2 = new GroupBox();
+            LayerListBox = new ListBox();
             label104 = new Label();
             LineBrushSizeTrack = new TrackBar();
             label103 = new Label();
@@ -657,7 +658,6 @@
             BackgroundToolPanel = new Panel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
-            LayerListBox = new ListBox();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -5635,6 +5635,7 @@
             DrawingFillTextureScaleTrack.TabIndex = 39;
             DrawingFillTextureScaleTrack.TickStyle = TickStyle.None;
             DrawingFillTextureScaleTrack.Value = 100;
+            DrawingFillTextureScaleTrack.Scroll += (this.DrawingFillTextureScaleTrack_Scroll);
             // 
             // label107
             // 
@@ -5653,12 +5654,13 @@
             DrawingFillTextureOpacityTrack.AutoSize = false;
             DrawingFillTextureOpacityTrack.BackColor = SystemColors.Control;
             DrawingFillTextureOpacityTrack.Location = new Point(9, 481);
-            DrawingFillTextureOpacityTrack.Maximum = 255;
+            DrawingFillTextureOpacityTrack.Maximum = 100;
             DrawingFillTextureOpacityTrack.Name = "DrawingFillTextureOpacityTrack";
             DrawingFillTextureOpacityTrack.Size = new Size(136, 20);
             DrawingFillTextureOpacityTrack.TabIndex = 37;
             DrawingFillTextureOpacityTrack.TickStyle = TickStyle.None;
-            DrawingFillTextureOpacityTrack.Value = 255;
+            DrawingFillTextureOpacityTrack.Value = 100;
+            DrawingFillTextureOpacityTrack.Scroll += (this.DrawingFillTextureOpacityTrack_Scroll);
             // 
             // DrawingFillTextureNameLabel
             // 
@@ -5700,6 +5702,18 @@
             groupBox2.TabIndex = 33;
             groupBox2.TabStop = false;
             groupBox2.Text = "Drawing Layers";
+            // 
+            // LayerListBox
+            // 
+            LayerListBox.Font = new Font("Segoe UI", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            LayerListBox.FormattingEnabled = true;
+            LayerListBox.ItemHeight = 12;
+            LayerListBox.Items.AddRange(new object[] { "BASELAYER", "OCEANTEXTURELAYER", "OCEANTEXTUREOVERLAYLAYER", "OCEANDRAWINGLAYER", "WINDROSELAYER", "ABOVEOCEANGRIDLAYER", "LANDCOASTLINELAYER", "LANDFORMLAYER", "LANDDRAWINGLAYER", "WATERLAYER", "WATERDRAWINGLAYER", "BELOWSYMBOLSGRIDLAYER", "PATHLOWERLAYER", "SYMBOLLAYER", "PATHUPPERLAYER", "REGIONLAYER", "REGIONOVERLAYLAYER", "DEFAULTGRIDLAYER", "BOXLAYER", "LABELLAYER", "OVERLAYLAYER", "FRAMELAYER", "MEASURELAYER", "DRAWINGLAYER", "VIGNETTELAYER" });
+            LayerListBox.Location = new Point(0, 20);
+            LayerListBox.Name = "LayerListBox";
+            LayerListBox.Size = new Size(136, 280);
+            LayerListBox.TabIndex = 1;
+            LayerListBox.SelectedIndexChanged += (this.LayerListBox_SelectedIndexChanged);
             // 
             // label104
             // 
@@ -5910,7 +5924,7 @@
             PlaceRectangleButton.AutoSize = false;
             PlaceRectangleButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
             PlaceRectangleButton.ForeColor = SystemColors.ControlDarkDark;
-            PlaceRectangleButton.IconChar = FontAwesome.Sharp.IconChar.Square;
+            PlaceRectangleButton.IconChar = FontAwesome.Sharp.IconChar.SquareFull;
             PlaceRectangleButton.IconColor = Color.Black;
             PlaceRectangleButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             PlaceRectangleButton.IconSize = 32;
@@ -10090,18 +10104,6 @@
             materialCheckBox2.Text = "materialCheckBox2";
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
-            // 
-            // LayerListBox
-            // 
-            LayerListBox.Font = new Font("Segoe UI", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            LayerListBox.FormattingEnabled = true;
-            LayerListBox.ItemHeight = 12;
-            LayerListBox.Items.AddRange(new object[] { "BASELAYER", "OCEANTEXTURELAYER", "OCEANTEXTUREOVERLAYLAYER", "OCEANDRAWINGLAYER", "WINDROSELAYER", "ABOVEOCEANGRIDLAYER", "LANDCOASTLINELAYER", "LANDFORMLAYER", "LANDDRAWINGLAYER", "WATERLAYER", "WATERDRAWINGLAYER", "BELOWSYMBOLSGRIDLAYER", "PATHLOWERLAYER", "SYMBOLLAYER", "PATHUPPERLAYER", "REGIONLAYER", "REGIONOVERLAYLAYER", "DEFAULTGRIDLAYER", "BOXLAYER", "LABELLAYER", "OVERLAYLAYER", "FRAMELAYER", "MEASURELAYER", "DRAWINGLAYER", "VIGNETTELAYER" });
-            LayerListBox.Location = new Point(0, 56);
-            LayerListBox.Name = "LayerListBox";
-            LayerListBox.Size = new Size(136, 244);
-            LayerListBox.TabIndex = 1;
-            LayerListBox.SelectedIndexChanged += (this.LayerListBox_SelectedIndexChanged);
             // 
             // RealmStudioMainForm
             // 

@@ -36,10 +36,13 @@ namespace RealmStudio
         private Color _drawingLineColor = Color.Black;
         private Color _drawingFillColor = Color.White;
         private bool _fillDrawnShape;
-        private List<SKPoint> _polygonPoints = [];
+        private List<SKPoint> _linePoints = [];
+        private List<SKPoint> _paintPoints = [];
 
         private readonly List<MapTexture> _drawingTextureList = [];
         private int _drawingTextureIndex;
+        private float _drawingTextureScale = 1.0F;
+        private float _drawingTextureOpacity = 1.0f;
 
         private DrawingFillType _fillType = DrawingFillType.Color;
 
@@ -53,6 +56,7 @@ namespace RealmStudio
         private Bitmap? _drawingStampBitmap;
 
         private ColorPaintBrush _drawingPaintBrush = ColorPaintBrush.SoftBrush;
+        private MapBrush? _drawingMapBrush;
 
         private float _drawingStampOpacity = 1.0f;
         private float _drawingStampScale = 1.0f;
@@ -92,16 +96,28 @@ namespace RealmStudio
             set { SetPropertyField(nameof(FillDrawnShape), ref _fillDrawnShape, value); }
         }
 
-        internal List<SKPoint> PolygonPoints
+        internal List<SKPoint> LinePoints
         {
-            get { return _polygonPoints; }
-            set { SetPropertyField(nameof(PolygonPoints), ref _polygonPoints, value); }
+            get { return _linePoints; }
+            set { SetPropertyField(nameof(LinePoints), ref _linePoints, value); }
+        }
+
+        internal List<SKPoint> PaintPoints
+        {
+            get { return _paintPoints; }
+            set { SetPropertyField(nameof(PaintPoints), ref _paintPoints, value); }
         }
 
         internal ColorPaintBrush DrawingPaintBrush
         {
             get { return _drawingPaintBrush; }
             set { SetPropertyField(nameof(DrawingPaintBrush), ref _drawingPaintBrush, value); }
+        }
+
+        internal MapBrush? DrawingMapBrush
+        {
+            get { return _drawingMapBrush; }
+            set { SetPropertyField(nameof(DrawingMapBrush), ref _drawingMapBrush, value); }
         }
 
         internal List<MapTexture> DrawingTextureList
@@ -113,6 +129,18 @@ namespace RealmStudio
         {
             get { return _drawingTextureIndex; }
             set { SetPropertyField(nameof(DrawingTextureIndex), ref _drawingTextureIndex, value); }
+        }
+
+        internal float DrawingTextureScale
+        {
+            get { return _drawingTextureScale; }
+            set { SetPropertyField(nameof(DrawingTextureScale), ref _drawingTextureScale, value); }
+        }
+
+        internal float DrawingTextureOpacity
+        {
+            get { return _drawingTextureOpacity; }
+            set { SetPropertyField(nameof(DrawingTextureOpacity), ref _drawingTextureOpacity, value); }
         }
 
         internal DrawingFillType FillType
@@ -194,6 +222,47 @@ namespace RealmStudio
 
             MainForm.SelectPaintColorButton.BackColor = DrawingLineColor;
             MainForm.SelectFillColorButton.BackColor = DrawingFillColor;
+
+            if (DrawingPaintBrush == ColorPaintBrush.PatternBrush1)
+            {
+                DrawingMapBrush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush1");
+            }
+            else if (DrawingPaintBrush == ColorPaintBrush.PatternBrush2)
+            {
+                DrawingMapBrush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush2");
+            }
+            else if (DrawingPaintBrush == ColorPaintBrush.PatternBrush3)
+            {
+                DrawingMapBrush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush3");
+            }
+            else if (DrawingPaintBrush == ColorPaintBrush.PatternBrush4)
+            {
+                DrawingMapBrush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush4"); ;
+            }
+
+            if (DrawingPaintBrush == ColorPaintBrush.SoftBrush)
+            {
+                _drawingMapBrush = new()
+                {
+                    BrushName = "Soft Brush",
+                    BrushBitmap = DrawingTextureList[DrawingTextureIndex].TextureBitmap,
+                    BrushPath = DrawingTextureList[DrawingTextureIndex].TexturePath,
+                };
+            }
+            else if (DrawingPaintBrush == ColorPaintBrush.HardBrush)
+            {
+                _drawingMapBrush = new()
+                {
+                    BrushName = "Hard Brush",
+                    BrushBitmap = DrawingTextureList[DrawingTextureIndex].TextureBitmap,
+                    BrushPath = DrawingTextureList[DrawingTextureIndex].TexturePath,
+                };
+            }
+
+            if (DrawingMapBrush != null && DrawingMapBrush.BrushBitmap == null)
+            {
+                DrawingMapBrush.BrushBitmap = (Bitmap)Bitmap.FromFile(DrawingMapBrush.BrushPath);
+            }
 
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
@@ -318,8 +387,6 @@ namespace RealmStudio
                     MainForm.DrawingPatternBrush3Button.FlatAppearance.BorderSize = 3;
                 }
 
-                MapStateMediator.SelectedColorPaintBrush = DrawingPaintBrush;
-
                 MapStateMediator.MainUIMediator.SetDrawingModeLabel();
 
                 if (!string.IsNullOrEmpty(changedPropertyName))
@@ -352,6 +419,20 @@ namespace RealmStudio
                     {
                         MainForm.DrawingStampScaleTrack.Value = (int)(DrawingStampScale * 100);
                     }
+                    else if (changedPropertyName == "DrawingTextureOpacity")
+                    {
+                        if (DrawingTextureList.Count > 0)
+                        {
+                            UpdateDrawingTexturePictureBox();
+                        }
+                    }
+                    else if (changedPropertyName == "DrawingTextureScale")
+                    {
+                        if (DrawingTextureList.Count > 0)
+                        {
+                            UpdateDrawingTexturePictureBox();
+                        }
+                    }
                 }
 
             }));
@@ -378,8 +459,24 @@ namespace RealmStudio
                 DrawingTextureList[DrawingTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(DrawingTextureList[DrawingTextureIndex].TexturePath);
             }
 
-            MainForm.DrawingFillTextureBox.Image = DrawingTextureList[DrawingTextureIndex].TextureBitmap;
-            MainForm.DrawingFillTextureNameLabel.Text = DrawingTextureList[DrawingTextureIndex].TextureName;
+            if (DrawingTextureList[DrawingTextureIndex].TextureBitmap != null)
+            {
+                Bitmap? textureBitmap = DrawingTextureList[DrawingTextureIndex].TextureBitmap;
+                if (textureBitmap != null)
+                {
+                    using Bitmap resizedBitmap = (DrawingTextureScale != 1.0F)
+                        ? DrawingMethods.ScaleBitmap(textureBitmap, (int)(textureBitmap.Width * DrawingTextureScale), (int)(textureBitmap.Height * DrawingTextureScale))
+                        : new(textureBitmap, MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
+
+                    using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, DrawingTextureOpacity);
+
+                    MainForm.DrawingFillTextureBox.Image = new Bitmap(b);
+                    MainForm.DrawingFillTextureBox.Refresh();
+
+                    MainForm.DrawingFillTextureNameLabel.Text = DrawingTextureList[DrawingTextureIndex].TextureName;
+                    MainForm.DrawingFillTextureNameLabel.Refresh();
+                }
+            }
         }
 
         public void Dispose(bool disposing)

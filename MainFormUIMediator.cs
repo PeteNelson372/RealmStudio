@@ -219,7 +219,6 @@ namespace RealmStudio
                 MapDrawingMode.DrawingEllipse => "Draw Ellipse",
                 MapDrawingMode.DrawingPolygon => "Draw Polygon",
                 MapDrawingMode.DrawingStamp => "Stamp",
-                MapDrawingMode.DrawingFill => "Flood Fill",
                 _ => "Undefined",
             };
 

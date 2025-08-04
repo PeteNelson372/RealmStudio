@@ -1111,7 +1111,7 @@ namespace RealmStudio
                 path.LineTo(points[i]);
             }
 
-            path.LineTo(points.First());
+            //path.LineTo(points.First());
 
             path.Close();
 
