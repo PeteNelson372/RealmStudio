@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal sealed class DrawnRectangle : DrawnMapComponent
+    internal class DrawnTriangle : DrawnMapComponent
     {
         private SKPoint _topLeft;
         private SKPoint _bottomRight;
@@ -33,7 +33,7 @@ namespace RealmStudio
         private int _brushSize = 2;
         private DrawingFillType _fillType = DrawingFillType.None;
         private SKShader? _shader;
-        private bool _drawRounded;
+        private bool _drawRight;
 
         public SKPoint TopLeft
         {
@@ -62,10 +62,10 @@ namespace RealmStudio
             set => _fillType = value;
         }
 
-        public bool DrawRounded
+        public bool DrawRight
         {
-            get => _drawRounded;
-            set => _drawRounded = value;
+            get => _drawRight;
+            set => _drawRight = value;
         }
 
         public SKShader? Shader
@@ -107,42 +107,25 @@ namespace RealmStudio
                 fillPaint.Style = SKPaintStyle.Stroke;
             }
 
-            if (DrawRounded)
+            SKPath path = new();
+            SKPoint triangleTop = new(_topLeft.X + (_bottomRight.X - _topLeft.X) / 2, _topLeft.Y);
+            SKPoint triangleBottomLeft = new(_topLeft.X, _bottomRight.Y);
+            SKPoint triangleBottomRight = new(_bottomRight.X, _bottomRight.Y);
+
+            if (DrawRight)
             {
-                // draw the rounded rectangle
-                SKRect rect = new(TopLeft.X, TopLeft.Y, BottomRight.X, BottomRight.Y);
-
-                int width = (int)Math.Abs(BottomRight.X - TopLeft.X);
-                int height = (int)Math.Abs(BottomRight.Y - TopLeft.Y);
-
-                SKRoundRect roundRect = new(rect, (int)(width * 0.1), (int)(height * 0.1));
-
-                if (FillType != DrawingFillType.None)
-                {
-                    // draw the filled rectangle first if the fill is enabled
-                    canvas.DrawRoundRect(roundRect, fillPaint);
-                }
-
-                canvas.DrawRoundRect(roundRect, paint);
-            }
-            else
-            {
-                // draw the normal rectangle
-                SKRect rect = new(TopLeft.X, TopLeft.Y, BottomRight.X, BottomRight.Y);
-
-                if (FillType != DrawingFillType.None)
-                {
-                    // draw the filled rectangle first if the fill is enabled
-                    canvas.DrawRect(rect, fillPaint);
-                }
-
-                canvas.DrawRect(rect, paint);
-
+                triangleTop = new(_topLeft.X, _topLeft.Y);
+                triangleBottomLeft = new(_topLeft.X, _bottomRight.Y);
+                triangleBottomRight = new(_bottomRight.X, _bottomRight.Y);
             }
 
+            path.MoveTo(triangleTop);
+            path.LineTo(triangleBottomLeft);
+            path.LineTo(triangleBottomRight);
+            path.Close();
 
-
-
+            canvas.DrawPath(path, fillPaint);
+            canvas.DrawPath(path, paint);
         }
     }
 }

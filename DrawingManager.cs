@@ -35,6 +35,8 @@ namespace RealmStudio
         private static DrawnEllipse? _currentDrawnEllipse;
         private static DrawingErase? _currentDrawingErase;
         private static DrawnPolygon? _currentDrawnPolygon;
+        private static DrawnTriangle? _currentDrawnTriangle;
+        private static DrawnRegularPolygon? _currentDrawnRegularPolygon;
 
         internal static DrawingUIMediator? DrawingMediator
         {
@@ -70,6 +72,18 @@ namespace RealmStudio
         {
             get { return _currentDrawnPolygon; }
             set { _currentDrawnPolygon = value; }
+        }
+
+        internal static DrawnTriangle? CurrentDrawnTriangle
+        {
+            get { return _currentDrawnTriangle; }
+            set { _currentDrawnTriangle = value; }
+        }
+
+        internal static DrawnRegularPolygon? CurrentDrawnRegularPolygon
+        {
+            get { return _currentDrawnRegularPolygon; }
+            set { _currentDrawnRegularPolygon = value; }
         }
 
         public static IMapComponent? Create()

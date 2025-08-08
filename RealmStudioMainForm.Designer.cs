@@ -476,6 +476,16 @@
             toolStripSeparator8 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
             DrawingToolPanel = new Panel();
+            groupBox3 = new GroupBox();
+            SixPointStarButton = new Button();
+            FivePointStarButton = new Button();
+            ArrowButton = new Button();
+            HexagonButton = new Button();
+            PentagonButton = new Button();
+            DiamondButton = new Button();
+            RightTriangleButton = new Button();
+            TriangleButton = new Button();
+            RoundRectButton = new Button();
             label112 = new Label();
             DrawingStampOpacityTrack = new TrackBar();
             label111 = new Label();
@@ -777,6 +787,7 @@
             ApplicationStatusStrip.SuspendLayout();
             RealmStudioMainMenuStrip.SuspendLayout();
             DrawingToolPanel.SuspendLayout();
+            groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DrawingStampOpacityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)DrawingStampRotationTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)DrawingStampScaleTrack).BeginInit();
@@ -7542,6 +7553,7 @@
             // 
             DrawingToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             DrawingToolPanel.BackColor = SystemColors.Control;
+            DrawingToolPanel.Controls.Add(groupBox3);
             DrawingToolPanel.Controls.Add(label112);
             DrawingToolPanel.Controls.Add(DrawingStampOpacityTrack);
             DrawingToolPanel.Controls.Add(label111);
@@ -7565,6 +7577,150 @@
             DrawingToolPanel.Name = "DrawingToolPanel";
             DrawingToolPanel.Size = new Size(152, 806);
             DrawingToolPanel.TabIndex = 26;
+            // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(SixPointStarButton);
+            groupBox3.Controls.Add(FivePointStarButton);
+            groupBox3.Controls.Add(ArrowButton);
+            groupBox3.Controls.Add(HexagonButton);
+            groupBox3.Controls.Add(PentagonButton);
+            groupBox3.Controls.Add(DiamondButton);
+            groupBox3.Controls.Add(RightTriangleButton);
+            groupBox3.Controls.Add(TriangleButton);
+            groupBox3.Controls.Add(RoundRectButton);
+            groupBox3.Location = new Point(10, 541);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(130, 151);
+            groupBox3.TabIndex = 115;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Other Shapes";
+            // 
+            // SixPointStarButton
+            // 
+            SixPointStarButton.BackgroundImage = (Image)resources.GetObject("SixPointStarButton.BackgroundImage");
+            SixPointStarButton.BackgroundImageLayout = ImageLayout.Zoom;
+            SixPointStarButton.FlatAppearance.BorderColor = Color.LightGray;
+            SixPointStarButton.FlatAppearance.BorderSize = 2;
+            SixPointStarButton.FlatStyle = FlatStyle.Flat;
+            SixPointStarButton.Location = new Point(88, 104);
+            SixPointStarButton.Name = "SixPointStarButton";
+            SixPointStarButton.Size = new Size(35, 35);
+            SixPointStarButton.TabIndex = 8;
+            SixPointStarButton.UseVisualStyleBackColor = true;
+            SixPointStarButton.Click += (this.SixPointStarButton_Click);
+            // 
+            // FivePointStarButton
+            // 
+            FivePointStarButton.BackgroundImage = (Image)resources.GetObject("FivePointStarButton.BackgroundImage");
+            FivePointStarButton.BackgroundImageLayout = ImageLayout.Zoom;
+            FivePointStarButton.FlatAppearance.BorderColor = Color.LightGray;
+            FivePointStarButton.FlatAppearance.BorderSize = 2;
+            FivePointStarButton.FlatStyle = FlatStyle.Flat;
+            FivePointStarButton.Location = new Point(47, 104);
+            FivePointStarButton.Name = "FivePointStarButton";
+            FivePointStarButton.Size = new Size(35, 35);
+            FivePointStarButton.TabIndex = 7;
+            FivePointStarButton.UseVisualStyleBackColor = true;
+            FivePointStarButton.Click += (this.FivePointStarButton_Click);
+            // 
+            // ArrowButton
+            // 
+            ArrowButton.BackgroundImage = (Image)resources.GetObject("ArrowButton.BackgroundImage");
+            ArrowButton.BackgroundImageLayout = ImageLayout.Zoom;
+            ArrowButton.FlatAppearance.BorderColor = Color.LightGray;
+            ArrowButton.FlatAppearance.BorderSize = 2;
+            ArrowButton.FlatStyle = FlatStyle.Flat;
+            ArrowButton.Location = new Point(6, 104);
+            ArrowButton.Name = "ArrowButton";
+            ArrowButton.Size = new Size(35, 35);
+            ArrowButton.TabIndex = 6;
+            ArrowButton.UseVisualStyleBackColor = true;
+            ArrowButton.Click += (this.ArrowButton_Click);
+            // 
+            // HexagonButton
+            // 
+            HexagonButton.BackgroundImage = (Image)resources.GetObject("HexagonButton.BackgroundImage");
+            HexagonButton.BackgroundImageLayout = ImageLayout.Zoom;
+            HexagonButton.FlatAppearance.BorderColor = Color.LightGray;
+            HexagonButton.FlatAppearance.BorderSize = 2;
+            HexagonButton.FlatStyle = FlatStyle.Flat;
+            HexagonButton.Location = new Point(88, 63);
+            HexagonButton.Name = "HexagonButton";
+            HexagonButton.Size = new Size(35, 35);
+            HexagonButton.TabIndex = 5;
+            HexagonButton.UseVisualStyleBackColor = true;
+            HexagonButton.Click += (this.HexagonButton_Click);
+            // 
+            // PentagonButton
+            // 
+            PentagonButton.BackgroundImage = (Image)resources.GetObject("PentagonButton.BackgroundImage");
+            PentagonButton.BackgroundImageLayout = ImageLayout.Zoom;
+            PentagonButton.FlatAppearance.BorderColor = Color.LightGray;
+            PentagonButton.FlatAppearance.BorderSize = 2;
+            PentagonButton.FlatStyle = FlatStyle.Flat;
+            PentagonButton.Location = new Point(47, 63);
+            PentagonButton.Name = "PentagonButton";
+            PentagonButton.Size = new Size(35, 35);
+            PentagonButton.TabIndex = 4;
+            PentagonButton.UseVisualStyleBackColor = true;
+            PentagonButton.Click += (this.PentagonButton_Click);
+            // 
+            // DiamondButton
+            // 
+            DiamondButton.BackgroundImage = (Image)resources.GetObject("DiamondButton.BackgroundImage");
+            DiamondButton.BackgroundImageLayout = ImageLayout.Zoom;
+            DiamondButton.FlatAppearance.BorderColor = Color.LightGray;
+            DiamondButton.FlatAppearance.BorderSize = 2;
+            DiamondButton.FlatStyle = FlatStyle.Flat;
+            DiamondButton.Location = new Point(6, 63);
+            DiamondButton.Name = "DiamondButton";
+            DiamondButton.Size = new Size(35, 35);
+            DiamondButton.TabIndex = 3;
+            DiamondButton.UseVisualStyleBackColor = true;
+            DiamondButton.Click += (this.DiamondButton_Click);
+            // 
+            // RightTriangleButton
+            // 
+            RightTriangleButton.BackgroundImage = (Image)resources.GetObject("RightTriangleButton.BackgroundImage");
+            RightTriangleButton.BackgroundImageLayout = ImageLayout.Zoom;
+            RightTriangleButton.FlatAppearance.BorderColor = Color.LightGray;
+            RightTriangleButton.FlatAppearance.BorderSize = 2;
+            RightTriangleButton.FlatStyle = FlatStyle.Flat;
+            RightTriangleButton.Location = new Point(88, 22);
+            RightTriangleButton.Name = "RightTriangleButton";
+            RightTriangleButton.Size = new Size(35, 35);
+            RightTriangleButton.TabIndex = 2;
+            RightTriangleButton.UseVisualStyleBackColor = true;
+            RightTriangleButton.Click += (this.RightTriangleButton_Click);
+            // 
+            // TriangleButton
+            // 
+            TriangleButton.BackgroundImage = (Image)resources.GetObject("TriangleButton.BackgroundImage");
+            TriangleButton.BackgroundImageLayout = ImageLayout.Zoom;
+            TriangleButton.FlatAppearance.BorderColor = Color.LightGray;
+            TriangleButton.FlatAppearance.BorderSize = 2;
+            TriangleButton.FlatStyle = FlatStyle.Flat;
+            TriangleButton.Location = new Point(47, 22);
+            TriangleButton.Name = "TriangleButton";
+            TriangleButton.Size = new Size(35, 35);
+            TriangleButton.TabIndex = 1;
+            TriangleButton.UseVisualStyleBackColor = true;
+            TriangleButton.Click += (this.TriangleButton_Click);
+            // 
+            // RoundRectButton
+            // 
+            RoundRectButton.BackgroundImage = (Image)resources.GetObject("RoundRectButton.BackgroundImage");
+            RoundRectButton.BackgroundImageLayout = ImageLayout.Zoom;
+            RoundRectButton.FlatAppearance.BorderColor = Color.LightGray;
+            RoundRectButton.FlatAppearance.BorderSize = 2;
+            RoundRectButton.FlatStyle = FlatStyle.Flat;
+            RoundRectButton.Location = new Point(6, 22);
+            RoundRectButton.Name = "RoundRectButton";
+            RoundRectButton.Size = new Size(35, 35);
+            RoundRectButton.TabIndex = 0;
+            RoundRectButton.UseVisualStyleBackColor = true;
+            RoundRectButton.Click += (this.RoundRectButton_Click);
             // 
             // label112
             // 
@@ -7683,7 +7839,7 @@
             DrawingPatternBrush4Button.BackgroundImage = (Image)resources.GetObject("DrawingPatternBrush4Button.BackgroundImage");
             DrawingPatternBrush4Button.BackgroundImageLayout = ImageLayout.Zoom;
             DrawingPatternBrush4Button.FlatAppearance.BorderColor = Color.LightGray;
-            DrawingPatternBrush4Button.FlatAppearance.BorderSize = 3;
+            DrawingPatternBrush4Button.FlatAppearance.BorderSize = 2;
             DrawingPatternBrush4Button.FlatStyle = FlatStyle.Flat;
             DrawingPatternBrush4Button.Location = new Point(104, 77);
             DrawingPatternBrush4Button.Name = "DrawingPatternBrush4Button";
@@ -7698,7 +7854,7 @@
             DrawingPatternBrush3Button.BackgroundImage = (Image)resources.GetObject("DrawingPatternBrush3Button.BackgroundImage");
             DrawingPatternBrush3Button.BackgroundImageLayout = ImageLayout.Zoom;
             DrawingPatternBrush3Button.FlatAppearance.BorderColor = Color.LightGray;
-            DrawingPatternBrush3Button.FlatAppearance.BorderSize = 3;
+            DrawingPatternBrush3Button.FlatAppearance.BorderSize = 2;
             DrawingPatternBrush3Button.FlatStyle = FlatStyle.Flat;
             DrawingPatternBrush3Button.Location = new Point(59, 77);
             DrawingPatternBrush3Button.Name = "DrawingPatternBrush3Button";
@@ -7713,7 +7869,7 @@
             DrawingPatternBrush2Button.BackgroundImage = (Image)resources.GetObject("DrawingPatternBrush2Button.BackgroundImage");
             DrawingPatternBrush2Button.BackgroundImageLayout = ImageLayout.Zoom;
             DrawingPatternBrush2Button.FlatAppearance.BorderColor = Color.LightGray;
-            DrawingPatternBrush2Button.FlatAppearance.BorderSize = 3;
+            DrawingPatternBrush2Button.FlatAppearance.BorderSize = 2;
             DrawingPatternBrush2Button.FlatStyle = FlatStyle.Flat;
             DrawingPatternBrush2Button.Location = new Point(14, 77);
             DrawingPatternBrush2Button.Name = "DrawingPatternBrush2Button";
@@ -7728,7 +7884,7 @@
             DrawingPatternBrush1Button.BackgroundImage = (Image)resources.GetObject("DrawingPatternBrush1Button.BackgroundImage");
             DrawingPatternBrush1Button.BackgroundImageLayout = ImageLayout.Zoom;
             DrawingPatternBrush1Button.FlatAppearance.BorderColor = Color.LightGray;
-            DrawingPatternBrush1Button.FlatAppearance.BorderSize = 3;
+            DrawingPatternBrush1Button.FlatAppearance.BorderSize = 2;
             DrawingPatternBrush1Button.FlatStyle = FlatStyle.Flat;
             DrawingPatternBrush1Button.Location = new Point(104, 31);
             DrawingPatternBrush1Button.Name = "DrawingPatternBrush1Button";
@@ -7766,7 +7922,7 @@
             DrawingHardBrushButton.BackgroundImage = (Image)resources.GetObject("DrawingHardBrushButton.BackgroundImage");
             DrawingHardBrushButton.BackgroundImageLayout = ImageLayout.Zoom;
             DrawingHardBrushButton.FlatAppearance.BorderColor = Color.LightGray;
-            DrawingHardBrushButton.FlatAppearance.BorderSize = 3;
+            DrawingHardBrushButton.FlatAppearance.BorderSize = 2;
             DrawingHardBrushButton.FlatStyle = FlatStyle.Flat;
             DrawingHardBrushButton.Location = new Point(59, 31);
             DrawingHardBrushButton.Name = "DrawingHardBrushButton";
@@ -7779,7 +7935,7 @@
             // 
             DrawingSoftBrushButton.BackColor = Color.Black;
             DrawingSoftBrushButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
-            DrawingSoftBrushButton.FlatAppearance.BorderSize = 3;
+            DrawingSoftBrushButton.FlatAppearance.BorderSize = 2;
             DrawingSoftBrushButton.FlatStyle = FlatStyle.Flat;
             DrawingSoftBrushButton.Image = (Image)resources.GetObject("DrawingSoftBrushButton.Image");
             DrawingSoftBrushButton.Location = new Point(14, 31);
@@ -10294,6 +10450,7 @@
             RealmStudioMainMenuStrip.PerformLayout();
             DrawingToolPanel.ResumeLayout(false);
             DrawingToolPanel.PerformLayout();
+            groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)DrawingStampOpacityTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)DrawingStampRotationTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)DrawingStampScaleTrack).EndInit();
@@ -10984,5 +11141,15 @@
         internal TrackBar DrawingStampRotationTrack;
         private GroupBox groupBox2;
         private ListBox LayerListBox;
+        private GroupBox groupBox3;
+        internal Button RoundRectButton;
+        internal Button HexagonButton;
+        internal Button PentagonButton;
+        internal Button DiamondButton;
+        internal Button RightTriangleButton;
+        internal Button TriangleButton;
+        internal Button SixPointStarButton;
+        internal Button FivePointStarButton;
+        internal Button ArrowButton;
     }
 }

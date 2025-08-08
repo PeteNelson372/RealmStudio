@@ -3300,6 +3300,42 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case MapDrawingMode.DrawingRoundedRectangle:
+                    {
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        DrawnRectangle drawnRectangle = new()
+                        {
+                            TopLeft = MapStateMediator.PreviousCursorPoint,
+                            BottomRight = MapStateMediator.CurrentCursorPoint,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            BrushSize = DrawingMediator.DrawingLineBrushSize,
+                            FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                            DrawRounded = true
+                        };
+
+                        if (drawnRectangle.FillType == DrawingFillType.Texture)
+                        {
+                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+
+                            if (fillTexture != null)
+                            {
+                                // if the fill type is texture, we need to create a shader from the bitmap
+                                SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                                drawnRectangle.Shader = fillShader;
+                            }
+                        }
+
+                        DrawingManager.CurrentDrawnRectangle = drawnRectangle;
+                        DrawingManager.CurrentDrawnRectangle.Render(canvas);
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
                 case MapDrawingMode.DrawingEllipse:
                     {
                         Cursor = Cursors.Cross;
@@ -3386,6 +3422,149 @@ namespace RealmStudio
                             // place the stamp at the cursor position
                             DrawingManager.PlaceStampAtCursor(canvas, MapStateMediator.CurrentCursorPoint);
                         }
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingTriangle:
+                    {
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        DrawnTriangle drawnTriangle = new()
+                        {
+                            TopLeft = MapStateMediator.PreviousCursorPoint,
+                            BottomRight = MapStateMediator.CurrentCursorPoint,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            BrushSize = DrawingMediator.DrawingLineBrushSize,
+                            FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                        };
+
+                        if (drawnTriangle.FillType == DrawingFillType.Texture)
+                        {
+                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+
+                            if (fillTexture != null)
+                            {
+                                // if the fill type is texture, we need to create a shader from the bitmap
+                                SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                                drawnTriangle.Shader = fillShader;
+                            }
+                        }
+
+                        DrawingManager.CurrentDrawnTriangle = drawnTriangle;
+                        DrawingManager.CurrentDrawnTriangle.Render(canvas);
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingRightTriangle:
+                    {
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        DrawnTriangle drawnTriangle = new()
+                        {
+                            TopLeft = MapStateMediator.PreviousCursorPoint,
+                            BottomRight = MapStateMediator.CurrentCursorPoint,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            BrushSize = DrawingMediator.DrawingLineBrushSize,
+                            FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                            DrawRight = true,
+                        };
+
+                        if (drawnTriangle.FillType == DrawingFillType.Texture)
+                        {
+                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+
+                            if (fillTexture != null)
+                            {
+                                // if the fill type is texture, we need to create a shader from the bitmap
+                                SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                                drawnTriangle.Shader = fillShader;
+                            }
+                        }
+
+                        DrawingManager.CurrentDrawnTriangle = drawnTriangle;
+                        DrawingManager.CurrentDrawnTriangle.Render(canvas);
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingPentagon:
+                    {
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        DrawnRegularPolygon drawnPentagon = new()
+                        {
+                            TopLeft = MapStateMediator.PreviousCursorPoint,
+                            BottomRight = MapStateMediator.CurrentCursorPoint,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            BrushSize = DrawingMediator.DrawingLineBrushSize,
+                            FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                            Sides = 5, // Pentagon has 5 sides
+                        };
+
+                        if (drawnPentagon.FillType == DrawingFillType.Texture)
+                        {
+                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+
+                            if (fillTexture != null)
+                            {
+                                // if the fill type is texture, we need to create a shader from the bitmap
+                                SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                                drawnPentagon.Shader = fillShader;
+                            }
+                        }
+
+                        DrawingManager.CurrentDrawnRegularPolygon = drawnPentagon;
+                        DrawingManager.CurrentDrawnRegularPolygon.Render(canvas);
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingHexagon:
+                    {
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        DrawnRegularPolygon drawnPentagon = new()
+                        {
+                            TopLeft = MapStateMediator.PreviousCursorPoint,
+                            BottomRight = MapStateMediator.CurrentCursorPoint,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            BrushSize = DrawingMediator.DrawingLineBrushSize,
+                            FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                            Sides = 6, // Hexagon has 6 sides
+                        };
+
+                        if (drawnPentagon.FillType == DrawingFillType.Texture)
+                        {
+                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+
+                            if (fillTexture != null)
+                            {
+                                // if the fill type is texture, we need to create a shader from the bitmap
+                                SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                                drawnPentagon.Shader = fillShader;
+                            }
+                        }
+
+                        DrawingManager.CurrentDrawnRegularPolygon = drawnPentagon;
+                        DrawingManager.CurrentDrawnRegularPolygon.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3875,6 +4054,36 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case MapDrawingMode.DrawingRoundedRectangle:
+                    {
+                        // draw a rectangle from the previous cursor point to the current cursor point
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnRectangle != null)
+                        {
+                            SKRect rect = new(DrawingManager.CurrentDrawnRectangle.TopLeft.X, DrawingManager.CurrentDrawnRectangle.TopLeft.Y,
+                                MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                            if (RealmStudioMainForm.ModifierKeys == Keys.Control)
+                            {
+                                // if the ctrl key is pressed, make the rectangle a square
+                                float size = Math.Max(rect.Width, rect.Height);
+                                rect = new SKRect(rect.Left, rect.Top, rect.Left + size, rect.Top + size);
+                            }
+
+                            DrawingManager.CurrentDrawnRectangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
+
+                            DrawingManager.CurrentDrawnRectangle.Render(canvas);
+                        }
+
+                        // update the previous cursor point
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
                 case MapDrawingMode.DrawingErase:
                     {
                         // TODO: erase on the selected layer
@@ -3937,7 +4146,94 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case MapDrawingMode.DrawingTriangle:
+                    {
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
 
+                        canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnTriangle != null)
+                        {
+                            SKRect rect = new(DrawingManager.CurrentDrawnTriangle.TopLeft.X, DrawingManager.CurrentDrawnTriangle.TopLeft.Y,
+                                MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                            DrawingManager.CurrentDrawnTriangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
+
+                            DrawingManager.CurrentDrawnTriangle.Render(canvas);
+                        }
+
+                        // update the previous cursor point
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingRightTriangle:
+                    {
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnTriangle != null)
+                        {
+                            SKRect rect = new(DrawingManager.CurrentDrawnTriangle.TopLeft.X, DrawingManager.CurrentDrawnTriangle.TopLeft.Y,
+                                MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                            DrawingManager.CurrentDrawnTriangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
+
+                            DrawingManager.CurrentDrawnTriangle.Render(canvas);
+                        }
+
+                        // update the previous cursor point
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingPentagon:
+                    {
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnRegularPolygon != null)
+                        {
+                            SKRect rect = new(DrawingManager.CurrentDrawnRegularPolygon.TopLeft.X, DrawingManager.CurrentDrawnRegularPolygon.TopLeft.Y,
+                                MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                            DrawingManager.CurrentDrawnRegularPolygon.BottomRight = new SKPoint(rect.Right, rect.Bottom);
+
+                            DrawingManager.CurrentDrawnRegularPolygon.Render(canvas);
+                        }
+
+                        // update the previous cursor point
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingHexagon:
+                    {
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnRegularPolygon != null)
+                        {
+                            SKRect rect = new(DrawingManager.CurrentDrawnRegularPolygon.TopLeft.X, DrawingManager.CurrentDrawnRegularPolygon.TopLeft.Y,
+                                MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                            DrawingManager.CurrentDrawnRegularPolygon.BottomRight = new SKPoint(rect.Right, rect.Bottom);
+
+                            DrawingManager.CurrentDrawnRegularPolygon.Render(canvas);
+                        }
+
+                        // update the previous cursor point
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
             }
 
         }
@@ -4461,6 +4757,33 @@ namespace RealmStudio
                         }
                     }
                     break;
+                case MapDrawingMode.DrawingRoundedRectangle:
+                    {
+                        // finalize rectangle drawing and add the rectangle
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnRectangle != null)
+                        {
+                            SKRect rect = new(DrawingManager.CurrentDrawnRectangle.TopLeft.X, DrawingManager.CurrentDrawnRectangle.TopLeft.Y,
+                                MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                            if (RealmStudioMainForm.ModifierKeys == Keys.Control)
+                            {
+                                // if the ctrl key is pressed, make the rectangle a square
+                                float size = Math.Max(rect.Width, rect.Height);
+                                rect = new SKRect(rect.Left, rect.Top, rect.Left + size, rect.Top + size);
+                            }
+
+                            DrawingManager.CurrentDrawnRectangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
+
+                            Cmd_AddDrawnRectangle cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentDrawnRectangle);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            DrawingManager.CurrentDrawnRectangle = null;
+                        }
+                    }
+                    break;
                 case MapDrawingMode.DrawingEllipse:
                     {
                         // finalize ellipse drawing and add the ellipse
@@ -4503,6 +4826,86 @@ namespace RealmStudio
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
                         SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingTriangle:
+                    {
+                        // finalize triangle drawing and add the triangle
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnTriangle != null)
+                        {
+                            SKRect rect = new(DrawingManager.CurrentDrawnTriangle.TopLeft.X, DrawingManager.CurrentDrawnTriangle.TopLeft.Y,
+                                MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                            DrawingManager.CurrentDrawnTriangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
+
+                            Cmd_AddDrawnTriangle cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentDrawnTriangle);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            DrawingManager.CurrentDrawnTriangle = null;
+                        }
+                    }
+                    break;
+                case MapDrawingMode.DrawingRightTriangle:
+                    {
+                        // finalize triangle drawing and add the triangle
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnTriangle != null)
+                        {
+                            SKRect rect = new(DrawingManager.CurrentDrawnTriangle.TopLeft.X, DrawingManager.CurrentDrawnTriangle.TopLeft.Y,
+                                MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                            DrawingManager.CurrentDrawnTriangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
+
+                            Cmd_AddDrawnTriangle cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentDrawnTriangle);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            DrawingManager.CurrentDrawnTriangle = null;
+                        }
+                    }
+                    break;
+                case MapDrawingMode.DrawingPentagon:
+                    {
+                        // finalize pentagon drawing and add the pentagon
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnRegularPolygon != null)
+                        {
+                            SKRect rect = new(DrawingManager.CurrentDrawnRegularPolygon.TopLeft.X, DrawingManager.CurrentDrawnRegularPolygon.TopLeft.Y,
+                                MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                            DrawingManager.CurrentDrawnRegularPolygon.BottomRight = new SKPoint(rect.Right, rect.Bottom);
+
+                            Cmd_AddDrawnRegularPolygon cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentDrawnRegularPolygon);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            DrawingManager.CurrentDrawnRegularPolygon = null;
+                        }
+                    }
+                    break;
+                case MapDrawingMode.DrawingHexagon:
+                    {
+                        // finalize hexagon drawing and add the hexagon
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnRegularPolygon != null)
+                        {
+                            SKRect rect = new(DrawingManager.CurrentDrawnRegularPolygon.TopLeft.X, DrawingManager.CurrentDrawnRegularPolygon.TopLeft.Y,
+                                MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                            DrawingManager.CurrentDrawnRegularPolygon.BottomRight = new SKPoint(rect.Right, rect.Bottom);
+
+                            Cmd_AddDrawnRegularPolygon cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentDrawnRegularPolygon);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            DrawingManager.CurrentDrawnRegularPolygon = null;
+                        }
                     }
                     break;
             }
@@ -6671,6 +7074,52 @@ namespace RealmStudio
 
         }
 
+        private void RoundRectButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingRoundedRectangle, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void TriangleButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingTriangle, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void RightTriangleButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingRightTriangle, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void DiamondButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingDiamond, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void PentagonButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingPentagon, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void HexagonButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingHexagon, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void ArrowButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingArrow, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void FivePointStarButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingFivePointStar, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void SixPointStarButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingSixPointStar, DrawingMediator.DrawingLineBrushSize);
+        }
+
         #endregion
+
     }
 }

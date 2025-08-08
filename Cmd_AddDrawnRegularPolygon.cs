@@ -23,23 +23,23 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal sealed class Cmd_AddDrawnPolygon(MapLayer mapLayer, DrawnPolygon drawnPolygon) : IMapOperation
+    internal class Cmd_AddDrawnRegularPolygon(MapLayer mapLayer, DrawnRegularPolygon drawnRegularPolygon) : IMapOperation
     {
         private readonly MapLayer mapLayer = mapLayer;
-        private readonly DrawnPolygon dp = drawnPolygon;
+        private readonly DrawnRegularPolygon drp = drawnRegularPolygon;
 
         public void DoOperation()
         {
-            mapLayer.MapLayerComponents.Add(dp);
+            mapLayer.MapLayerComponents.Add(drp);
         }
 
         public void UndoOperation()
         {
             for (int i = mapLayer.MapLayerComponents.Count - 1; i >= 0; i--)
             {
-                if (mapLayer.MapLayerComponents[i] is DrawnPolygon drawnPolygon)
+                if (mapLayer.MapLayerComponents[i] is DrawnRegularPolygon drawnRegularPolygon)
                 {
-                    if (drawnPolygon.DrawnComponentGuid.ToString() == dp.DrawnComponentGuid.ToString())
+                    if (drawnRegularPolygon.DrawnComponentGuid.ToString() == drp.DrawnComponentGuid.ToString())
                     {
                         mapLayer.MapLayerComponents.RemoveAt(i);
                         break;

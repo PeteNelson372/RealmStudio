@@ -74,6 +74,15 @@ namespace RealmStudio
         DrawingStamp,
         DrawingText,
         DrawingErase,
+        DrawingRoundedRectangle,
+        DrawingTriangle,
+        DrawingRightTriangle,
+        DrawingDiamond,
+        DrawingPentagon,
+        DrawingHexagon,
+        DrawingArrow,
+        DrawingFivePointStar,
+        DrawingSixPointStar,
     }
 
     public enum LandGradientDirection

@@ -9,7 +9,7 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>false</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>1.2025.0-alpha-2931</Version>
+    <Version>1.2025.0-alpha-2967</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
@@ -29,8 +29,8 @@
     <UseWPF>True</UseWPF>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <ApplicationIcon>realm_studio_icon_1024x1024_g3u_icon.ico</ApplicationIcon>
-    <AssemblyVersion>1.2025.215.10904</AssemblyVersion>
-    <FileVersion>1.2025.215.10904</FileVersion> 
+    <AssemblyVersion>1.2025.219.32837</AssemblyVersion>
+    <FileVersion>1.2025.219.32837</FileVersion> 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

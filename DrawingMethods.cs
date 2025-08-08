@@ -65,6 +65,29 @@ namespace RealmStudio
 
         public enum Effect { Roll, Slide, Center, Blend }
 
+        public static List<SKPoint> PolyPoints(SKPoint location, float sides, float radius, float start)
+        {
+            List<SKPoint> points = [];
+
+            float x_center = location.X;
+            float y_center = location.Y;
+            float angle = start;
+            float angle_increment = (float)(2.0F * Math.PI / sides);
+
+            for (int i = 0; i < sides; i++)
+            {
+                float x = (float)(x_center + radius * Math.Cos(angle));
+                float y = (float)(y_center + radius * Math.Sin(angle));
+
+                points.Add(new SKPoint(x, y));
+
+                angle += angle_increment;
+            }
+
+            return points;
+        }
+
+
         public static void Animate(Control ctl, Effect effect, int msec, int angle)
         {
             int flags = effmap[(int)effect];

@@ -159,6 +159,55 @@ namespace RealmStudio
         internal void SetDrawingMode(MapDrawingMode newDrawingMode, int newBrushSize = -1)
         {
             CurrentDrawingMode = newDrawingMode;
+
+            MainForm.RoundRectButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.TriangleButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.RightTriangleButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.DiamondButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.PentagonButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.HexagonButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.ArrowButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.FivePointStarButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.SixPointStarButton.FlatAppearance.BorderColor = Color.LightGray;
+
+            if (newDrawingMode == MapDrawingMode.DrawingRoundedRectangle)
+            {
+                MainForm.RoundRectButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingTriangle)
+            {
+                MainForm.TriangleButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingRightTriangle)
+            {
+                MainForm.RightTriangleButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingDiamond)
+            {
+                MainForm.DiamondButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingPentagon)
+            {
+                MainForm.PentagonButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingHexagon)
+            {
+                MainForm.HexagonButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingArrow)
+            {
+                MainForm.ArrowButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingFivePointStar)
+            {
+                MainForm.FivePointStarButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingSixPointStar)
+            {
+                MainForm.SixPointStarButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+
+
             SetDrawingModeLabel();
 
             if (newBrushSize >= 0)
@@ -219,6 +268,15 @@ namespace RealmStudio
                 MapDrawingMode.DrawingEllipse => "Draw Ellipse",
                 MapDrawingMode.DrawingPolygon => "Draw Polygon",
                 MapDrawingMode.DrawingStamp => "Stamp",
+                MapDrawingMode.DrawingDiamond => "Draw Diamond",
+                MapDrawingMode.DrawingRoundedRectangle => "Draw Rounded Rectangle",
+                MapDrawingMode.DrawingTriangle => "Draw Triangle",
+                MapDrawingMode.DrawingRightTriangle => "Draw Right Triangle",
+                MapDrawingMode.DrawingHexagon => "Draw Hexagon",
+                MapDrawingMode.DrawingPentagon => "Draw Pentagon",
+                MapDrawingMode.DrawingArrow => "Draw Arrow",
+                MapDrawingMode.DrawingFivePointStar => "Draw 5-Point Star",
+                MapDrawingMode.DrawingSixPointStar => "Draw 6-Point Star",
                 _ => "Undefined",
             };
 
