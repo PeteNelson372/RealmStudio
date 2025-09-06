@@ -31,6 +31,7 @@ namespace RealmStudio
         private SKPoint _bottomRight;
         private SKColor _color = SKColors.Black;
         private int _brushSize = 2;
+        private int _rotation;
         private DrawingFillType _fillType = DrawingFillType.None;
         private SKShader? _shader;
         private bool _drawRight;
@@ -55,6 +56,11 @@ namespace RealmStudio
         {
             get => _brushSize;
             set => _brushSize = value;
+        }
+        public int Rotation
+        {
+            get => _rotation;
+            set => _rotation = value;
         }
         public DrawingFillType FillType
         {
@@ -124,8 +130,18 @@ namespace RealmStudio
             path.LineTo(triangleBottomRight);
             path.Close();
 
+            Bounds = path.Bounds;
+
+            using SKAutoCanvasRestore autoRestore = new(canvas, true);
+            if (Rotation != 0)
+            {
+                canvas.RotateDegrees(Rotation, (_topLeft.X + _bottomRight.X) / 2, (_topLeft.Y + _bottomRight.Y) / 2);
+            }
+
+            base.Render(canvas);
             canvas.DrawPath(path, fillPaint);
             canvas.DrawPath(path, paint);
+
         }
     }
 }

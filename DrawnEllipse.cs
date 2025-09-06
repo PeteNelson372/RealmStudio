@@ -31,6 +31,7 @@ namespace RealmStudio
         private SKPoint _bottomRight;
         private SKColor _color = SKColors.Black;
         private int _brushSize = 2;
+        private int _rotation;
         private DrawingFillType _fillType = DrawingFillType.None;
         private SKShader? _shader;
 
@@ -55,6 +56,12 @@ namespace RealmStudio
             get => _brushSize;
             set => _brushSize = value;
         }
+
+        public int Rotation
+        {
+            get => _rotation;
+            set => _rotation = value;
+        }
         public DrawingFillType FillType
         {
             get => _fillType;
@@ -69,6 +76,10 @@ namespace RealmStudio
 
         public override void Render(SKCanvas canvas)
         {
+            SKRect rect = new(TopLeft.X, TopLeft.Y, BottomRight.X, BottomRight.Y);
+            Bounds = rect;
+            Bounds = SKRect.Inflate(Bounds, 2, 2);
+
             using SKPaint paint = new()
             {
                 Style = SKPaintStyle.Stroke,
@@ -100,7 +111,13 @@ namespace RealmStudio
                 fillPaint.Style = SKPaintStyle.Stroke;
             }
 
-            SKRect rect = new(TopLeft.X, TopLeft.Y, BottomRight.X, BottomRight.Y);
+            using SKAutoCanvasRestore autoRestore = new(canvas, true);
+            if (Rotation != 0)
+            {
+                canvas.RotateDegrees(Rotation, (_topLeft.X + _bottomRight.X) / 2, (_topLeft.Y + _bottomRight.Y) / 2);
+            }
+
+            base.Render(canvas);
 
             if (FillType != DrawingFillType.None)
             {

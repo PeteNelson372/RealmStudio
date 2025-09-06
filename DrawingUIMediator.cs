@@ -62,6 +62,8 @@ namespace RealmStudio
         private float _drawingStampScale = 1.0f;
         private float _drawingStampRotation;
 
+        private float _drawingShapeRotation;
+
         private bool disposedValue;
 
         public DrawingUIMediator(RealmStudioMainForm mainForm)
@@ -177,6 +179,12 @@ namespace RealmStudio
         {
             get { return _drawingStampRotation; }
             set { SetPropertyField(nameof(DrawingStampRotation), ref _drawingStampRotation, value); }
+        }
+
+        internal float DrawingShapeRotation
+        {
+            get { return _drawingShapeRotation; }
+            set { SetPropertyField(nameof(DrawingShapeRotation), ref _drawingShapeRotation, value); }
         }
 
         #endregion
@@ -432,6 +440,10 @@ namespace RealmStudio
                         {
                             UpdateDrawingTexturePictureBox();
                         }
+                    }
+                    else if (changedPropertyName == "DrawingShapeRotation")
+                    {
+                        MainForm.DrawingShapeRotationTrack.Value = (int)DrawingShapeRotation;
                     }
                 }
 

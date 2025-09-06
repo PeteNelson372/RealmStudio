@@ -197,6 +197,14 @@ namespace RealmStudio
                     ShaderPaint.ColorFilter = SKColorFilter.CreateBlendMode(Color, SKBlendMode.Modulate);
                 }
             }
+            SKPath boundsPath = new();
+            foreach (SKPoint point in Points)
+            {
+                boundsPath.AddCircle(point.X, point.Y, BrushSize / 2);
+            }
+
+            Bounds = boundsPath.Bounds;
+            base.Render(canvas);
 
             foreach (SKPoint point in Points)
             {

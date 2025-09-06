@@ -285,5 +285,13 @@ namespace RealmStudio
             PathEffect = SKPathEffect.CreateDash([4F, 2F], 6F),
         };
 
+        public static readonly SKPaint SelectedDrawnObjectPaint = new()
+        {
+            Style = SKPaintStyle.Stroke,
+            IsAntialias = true,
+            Color = SKColors.BlueViolet,
+            StrokeWidth = 2,
+            PathEffect = SKPathEffect.CreateDash([5F, 5F], 10F),
+        };
     }
 }

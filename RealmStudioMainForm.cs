@@ -207,7 +207,6 @@ namespace RealmStudio
             WindroseMediator = new(this);
             WindroseManager.WindroseMediator = WindroseMediator;
 
-
             ApplicationTimerManager = new(this)
             {
                 SymbolUIMediator = SymbolMediator
@@ -381,6 +380,14 @@ namespace RealmStudio
             else
             {
                 MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
+            }
+        }
+
+        private void RealmStudioMainForm_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
+            {
+                e.IsInputKey = true;
             }
         }
 
@@ -1004,6 +1011,8 @@ namespace RealmStudio
 
                 UpdateMapNameAndSize();
 
+                DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
                 SKGLRenderControl.Invalidate();
             }
         }
@@ -1050,6 +1059,8 @@ namespace RealmStudio
                 MapRenderVScroll.Value = 0;
 
                 UpdateMapNameAndSize();
+
+                DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
                 SKGLRenderControl.Invalidate();
             }
@@ -1407,6 +1418,8 @@ namespace RealmStudio
                 // create the map vignette and add it to the vignette layer
                 VignetteManager.Delete();
                 VignetteManager.Create();
+
+                DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
             }
 
             return result;
@@ -2040,6 +2053,8 @@ namespace RealmStudio
                         {
                             ml.LayerSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, false, imageInfo);
                         }
+
+                        DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
                     }
                     else
                     {
@@ -2193,6 +2208,8 @@ namespace RealmStudio
 
                 MapStateMediator.CurrentMap.IsSaved = true;
 
+                DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
                 SKGLRenderControl.Invalidate();
             }
             catch
@@ -2208,6 +2225,9 @@ namespace RealmStudio
                 VignetteManager.Create();
 
                 MapStateMediator.CurrentMap.IsSaved = false;
+
+                DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
                 throw;
             }
             finally
@@ -3414,13 +3434,10 @@ namespace RealmStudio
                     {
                         Cursor = Cursors.Cross;
 
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
-
                         if (DrawingMediator.DrawingStampBitmap != null)
                         {
                             // place the stamp at the cursor position
-                            DrawingManager.PlaceStampAtCursor(canvas, MapStateMediator.CurrentCursorPoint);
+                            DrawingManager.PlaceStampAtCursor(MapStateMediator.CurrentCursorPoint);
                         }
 
                         SKGLRenderControl.Invalidate();
@@ -3569,6 +3586,150 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case MapDrawingMode.DrawingDiamond:
+                    {
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        DrawnDiamond drawnDiamond = new()
+                        {
+                            TopLeft = MapStateMediator.PreviousCursorPoint,
+                            BottomRight = MapStateMediator.CurrentCursorPoint,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            BrushSize = DrawingMediator.DrawingLineBrushSize,
+                            FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                        };
+
+                        if (drawnDiamond.FillType == DrawingFillType.Texture)
+                        {
+                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+
+                            if (fillTexture != null)
+                            {
+                                // if the fill type is texture, we need to create a shader from the bitmap
+                                SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                                drawnDiamond.Shader = fillShader;
+                            }
+                        }
+
+                        DrawingManager.CurrentDrawnDiamond = drawnDiamond;
+                        DrawingManager.CurrentDrawnDiamond.Render(canvas);
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingArrow:
+                    {
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+
+                        if (canvas == null) return;
+
+                        DrawnArrow drawnArrow = new()
+                        {
+                            TopLeft = MapStateMediator.PreviousCursorPoint,
+                            BottomRight = MapStateMediator.CurrentCursorPoint,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            BrushSize = DrawingMediator.DrawingLineBrushSize,
+                            FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                        };
+
+                        if (drawnArrow.FillType == DrawingFillType.Texture)
+                        {
+                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                            if (fillTexture != null)
+                            {
+                                // if the fill type is texture, we need to create a shader from the bitmap
+                                SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                                drawnArrow.Shader = fillShader;
+                            }
+                        }
+                        DrawingManager.CurrentDrawnArrow = drawnArrow;
+                        DrawingManager.CurrentDrawnArrow.Render(canvas);
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingFivePointStar:
+                    {
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+
+                        if (canvas == null) return;
+
+                        DrawnFivePointStar drawnStar = new()
+                        {
+                            Center = MapStateMediator.CurrentCursorPoint,
+                            Radius = 0,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            BrushSize = DrawingMediator.DrawingLineBrushSize,
+                            FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                        };
+
+                        if (drawnStar.FillType == DrawingFillType.Texture)
+                        {
+                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                            if (fillTexture != null)
+                            {
+                                // if the fill type is texture, we need to create a shader from the bitmap
+                                SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                                drawnStar.Shader = fillShader;
+                            }
+                        }
+                        DrawingManager.CurrentDrawnFivePointStar = drawnStar;
+                        DrawingManager.CurrentDrawnFivePointStar.Render(canvas);
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingSixPointStar:
+                    {
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+
+                        if (canvas == null) return;
+
+                        DrawnSixPointStar drawnStar = new()
+                        {
+                            Center = MapStateMediator.CurrentCursorPoint,
+                            Radius = 0,
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            BrushSize = DrawingMediator.DrawingLineBrushSize,
+                            FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                        };
+
+                        if (drawnStar.FillType == DrawingFillType.Texture)
+                        {
+                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                            if (fillTexture != null)
+                            {
+                                // if the fill type is texture, we need to create a shader from the bitmap
+                                SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                                drawnStar.Shader = fillShader;
+                            }
+                        }
+                        DrawingManager.CurrentDrawnSixPointStar = drawnStar;
+                        DrawingManager.CurrentDrawnSixPointStar.Render(canvas);
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingSelect:
+                    {
+                        Cursor = Cursors.Default;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+
+                        MapStateMediator.SelectedDrawnMapComponent = DrawingManager.SelectDrawnMapComponentAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
             }
         }
 
@@ -3664,6 +3825,8 @@ namespace RealmStudio
 
         private void LeftButtonMouseMoveHandler()
         {
+            Cursor = Cursors.Default;
+
             switch (MainMediator.CurrentDrawingMode)
             {
                 case MapDrawingMode.OceanErase:
@@ -4234,6 +4397,101 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case MapDrawingMode.DrawingDiamond:
+                    {
+                        // draw a diamond from the previous cursor point to the current cursor point
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnDiamond != null)
+                        {
+                            SKRect rect = new(DrawingManager.CurrentDrawnDiamond.TopLeft.X, DrawingManager.CurrentDrawnDiamond.TopLeft.Y,
+                                MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                            DrawingManager.CurrentDrawnDiamond.BottomRight = new SKPoint(rect.Right, rect.Bottom);
+
+                            DrawingManager.CurrentDrawnDiamond.Render(canvas);
+                        }
+
+                        // update the previous cursor point
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingArrow:
+                    {
+                        // draw an arrow from the previous cursor point to the current cursor point
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnArrow != null)
+                        {
+                            SKRect rect = new(DrawingManager.CurrentDrawnArrow.TopLeft.X, DrawingManager.CurrentDrawnArrow.TopLeft.Y,
+                                MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+                            DrawingManager.CurrentDrawnArrow.BottomRight = new SKPoint(rect.Right, rect.Bottom);
+                            DrawingManager.CurrentDrawnArrow.Render(canvas);
+                        }
+
+                        // update the previous cursor point
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingFivePointStar:
+                    {
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnFivePointStar != null)
+                        {
+                            DrawingManager.CurrentDrawnFivePointStar.Radius = SKPoint.Distance(MapStateMediator.CurrentCursorPoint, DrawingManager.CurrentDrawnFivePointStar.Center);
+                            DrawingManager.CurrentDrawnFivePointStar.Render(canvas);
+                        }
+
+                        // update the previous cursor point
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingSixPointStar:
+                    {
+                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        if (canvas == null) return;
+
+                        canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnSixPointStar != null)
+                        {
+                            DrawingManager.CurrentDrawnSixPointStar.Radius = SKPoint.Distance(MapStateMediator.CurrentCursorPoint, DrawingManager.CurrentDrawnSixPointStar.Center);
+                            DrawingManager.CurrentDrawnSixPointStar.Render(canvas);
+                        }
+
+                        // update the previous cursor point
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
+                case MapDrawingMode.DrawingSelect:
+                    {
+                        Cursor = Cursors.SizeAll;
+
+                        float deltaX = MapStateMediator.CurrentCursorPoint.X - MapStateMediator.PreviousCursorPoint.X;
+                        float deltaY = MapStateMediator.CurrentCursorPoint.Y - MapStateMediator.PreviousCursorPoint.Y;
+
+                        DrawingManager.MoveDrawnComponent(MapStateMediator.SelectedDrawnMapComponent, deltaX, deltaY);
+
+                        MapStateMediator.CurrentMap.IsSaved = false;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
             }
 
         }
@@ -4676,9 +4934,10 @@ namespace RealmStudio
 
                         DrawingMediator.LinePoints.Clear();
 
+                        // use the selected map layer for the drawn line
+                        MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-                        // TODO: use the selected map layer for the drawn line
-                        Cmd_AddDrawnLine cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), dl);
+                        Cmd_AddDrawnLine cmd = new(drawLayer, dl);
                         CommandManager.AddCommand(cmd);
                         cmd.DoOperation();
 
@@ -4692,7 +4951,10 @@ namespace RealmStudio
 
                         if (DrawingManager.CurrentPaintedLine != null)
                         {
-                            Cmd_AddPaintedLine cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentPaintedLine);
+                            // use the selected map layer for the painted line
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddPaintedLine cmd = new(drawLayer, DrawingManager.CurrentPaintedLine);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
                         }
@@ -4722,7 +4984,9 @@ namespace RealmStudio
                                 }
                             }
 
-                            Cmd_AddDrawnErase cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentDrawingErase);
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddDrawnErase cmd = new(drawLayer, DrawingManager.CurrentDrawingErase);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
                         }
@@ -4749,7 +5013,9 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnRectangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            Cmd_AddDrawnRectangle cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentDrawnRectangle);
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddDrawnRectangle cmd = new(drawLayer, DrawingManager.CurrentDrawnRectangle);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
@@ -4776,7 +5042,9 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnRectangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            Cmd_AddDrawnRectangle cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentDrawnRectangle);
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddDrawnRectangle cmd = new(drawLayer, DrawingManager.CurrentDrawnRectangle);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
@@ -4803,7 +5071,9 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnEllipse.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            Cmd_AddDrawnEllipse cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentDrawnEllipse);
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddDrawnEllipse cmd = new(drawLayer, DrawingManager.CurrentDrawnEllipse);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
@@ -4840,7 +5110,9 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnTriangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            Cmd_AddDrawnTriangle cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentDrawnTriangle);
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddDrawnTriangle cmd = new(drawLayer, DrawingManager.CurrentDrawnTriangle);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
@@ -4860,7 +5132,9 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnTriangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            Cmd_AddDrawnTriangle cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentDrawnTriangle);
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddDrawnTriangle cmd = new(drawLayer, DrawingManager.CurrentDrawnTriangle);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
@@ -4880,7 +5154,9 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnRegularPolygon.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            Cmd_AddDrawnRegularPolygon cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentDrawnRegularPolygon);
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddDrawnRegularPolygon cmd = new(drawLayer, DrawingManager.CurrentDrawnRegularPolygon);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
@@ -4900,7 +5176,9 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnRegularPolygon.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            Cmd_AddDrawnRegularPolygon cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentDrawnRegularPolygon);
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddDrawnRegularPolygon cmd = new(drawLayer, DrawingManager.CurrentDrawnRegularPolygon);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
@@ -4908,10 +5186,86 @@ namespace RealmStudio
                         }
                     }
                     break;
+                case MapDrawingMode.DrawingDiamond:
+                    {
+                        // finalize rectangle drawing and add the rectangle
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnDiamond != null)
+                        {
+                            SKRect rect = new(DrawingManager.CurrentDrawnDiamond.TopLeft.X, DrawingManager.CurrentDrawnDiamond.TopLeft.Y,
+                                MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+
+                            DrawingManager.CurrentDrawnDiamond.BottomRight = new SKPoint(rect.Right, rect.Bottom);
+
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddDrawnDiamond cmd = new(drawLayer, DrawingManager.CurrentDrawnDiamond);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            DrawingManager.CurrentDrawnDiamond = null;
+                        }
+                        break;
+                    }
+                case MapDrawingMode.DrawingArrow:
+                    {
+                        // finalize arrow drawing and add the arrow
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnArrow != null)
+                        {
+                            SKRect rect = new(DrawingManager.CurrentDrawnArrow.TopLeft.X, DrawingManager.CurrentDrawnArrow.TopLeft.Y,
+                                MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
+                            DrawingManager.CurrentDrawnArrow.BottomRight = new SKPoint(rect.Right, rect.Bottom);
+
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddDrawnArrow cmd = new(drawLayer, DrawingManager.CurrentDrawnArrow);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            DrawingManager.CurrentDrawnArrow = null;
+                        }
+                    }
+                    break;
+                case MapDrawingMode.DrawingFivePointStar:
+                    {
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnFivePointStar != null)
+                        {
+                            DrawingManager.CurrentDrawnFivePointStar.Radius = SKPoint.Distance(MapStateMediator.CurrentCursorPoint, DrawingManager.CurrentDrawnFivePointStar.Center);
+
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddDrawnFivePointStar cmd = new(drawLayer, DrawingManager.CurrentDrawnFivePointStar);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            DrawingManager.CurrentDrawnFivePointStar = null;
+                        }
+                    }
+                    break;
+                case MapDrawingMode.DrawingSixPointStar:
+                    {
+                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+
+                        if (DrawingManager.CurrentDrawnSixPointStar != null)
+                        {
+                            DrawingManager.CurrentDrawnSixPointStar.Radius = SKPoint.Distance(MapStateMediator.CurrentCursorPoint, DrawingManager.CurrentDrawnSixPointStar.Center);
+
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddDrawnSixPointStar cmd = new(drawLayer, DrawingManager.CurrentDrawnSixPointStar);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            DrawingManager.CurrentDrawnSixPointStar = null;
+                        }
+                    }
+                    break;
             }
-
-            SKGLRenderControl.Invalidate();
-
         }
 
         #endregion
@@ -4995,15 +5349,13 @@ namespace RealmStudio
                     {
                         MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-                        // draw a polygon from the previous cursor point to the current cursor point
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
-
                         // finalize polygon drawing and add the polygon
                         MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
                         if (DrawingManager.CurrentDrawnPolygon != null && DrawingManager.CurrentDrawnPolygon.Points.Count > 2)
                         {
-                            Cmd_AddDrawnPolygon cmd = new(MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER), DrawingManager.CurrentDrawnPolygon);
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddDrawnPolygon cmd = new(drawLayer, DrawingManager.CurrentDrawnPolygon);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
 
@@ -5023,15 +5375,15 @@ namespace RealmStudio
         #endregion
 
         #region SKGLRenderControl KeyDown Handler
-        //private void SKGLRenderControl_KeyDown(object sender, KeyEventArgs e)
-        //{
-        //    -- for some unknown reason, this method was not being called when a key
-        //    -- is pressed in the SKGLRenderControl, when it was before.
-        //    -- key presses are now handled in the RealmStudioMainForm keydown event handler.
-        //    KeyHandler.HandleKey(e.KeyCode);
-        //    e.Handled = true;
-        //    SKGLRenderControl.Invalidate();
-        //}
+        private void SKGLRenderControl_KeyDown(object sender, KeyEventArgs e)
+        {
+            //    -- for some unknown reason, this method was not being called when a key
+            //    -- is pressed in the SKGLRenderControl, when it was before.
+            //    -- key presses are now handled in the RealmStudioMainForm keydown event handler.
+            //KeyHandler.HandleKey(e.KeyCode);
+            //e.Handled = true;
+            //SKGLRenderControl.Invalidate();
+        }
         #endregion
 
         #region Background Tab Event Handlers
@@ -7035,6 +7387,7 @@ namespace RealmStudio
                         try
                         {
                             Bitmap b = (Bitmap)Bitmap.FromFile(ofd.FileName);
+                            b.SetResolution(96, 96);
 
                             if (b.Height > 0 && b.Width > 0)
                             {
@@ -7071,7 +7424,32 @@ namespace RealmStudio
 
         private void LayerListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            string? selectedLayerName = LayerListBox.SelectedItem as string;
 
+            if (!string.IsNullOrEmpty(selectedLayerName))
+            {
+                MapLayer? selectedLayer = MapBuilder.GetMapLayerByName(MapStateMediator.CurrentMap, selectedLayerName);
+
+                if (selectedLayer != null && selectedLayer.Drawable)
+                {
+                    MainMediator.SetDrawingLayerLabel(selectedLayer.MapLayerName);
+                    DrawingManager.DrawingLayer = selectedLayer;
+                }
+                else
+                {
+                    MapLayer drawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                    if (drawingLayer != null && drawingLayer.LayerSurface != null)
+                    {
+                        DrawingManager.DrawingLayer = drawingLayer;
+                        MainMediator.SetDrawingLayerLabel(drawingLayer.MapLayerName);
+                    }
+                    else
+                    {
+                        MessageBox.Show("No drawable layer selected or available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+            }
         }
 
         private void RoundRectButton_Click(object sender, EventArgs e)
@@ -7117,6 +7495,11 @@ namespace RealmStudio
         private void SixPointStarButton_Click(object sender, EventArgs e)
         {
             MainMediator.SetDrawingMode(MapDrawingMode.DrawingSixPointStar, DrawingMediator.DrawingLineBrushSize);
+        }
+
+        private void DrawingShapeRotationTrack_Scroll(object sender, EventArgs e)
+        {
+            DrawingMediator.DrawingShapeRotation = DrawingShapeRotationTrack.Value;
         }
 
         #endregion

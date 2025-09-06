@@ -75,6 +75,7 @@ namespace RealmStudio
         private static IWaterFeature? _selectedWaterFeature;
         private static MapRiverPoint? _selectedRiverPoint;
         private static ColorPaintBrush _selectedColorPaintBrush = ColorPaintBrush.SoftBrush;
+        private static DrawnMapComponent? _selectedDrawnMapComponent;
         private static SKRect _selectedRealmArea = SKRect.Empty;
         private static SKRect _previousSelectedRealmArea = SKRect.Empty;
 
@@ -322,6 +323,11 @@ namespace RealmStudio
             get { return _selectedRiverPoint; }
             set { _selectedRiverPoint = value; }
         }
+        internal static DrawnMapComponent? SelectedDrawnMapComponent
+        {
+            get { return _selectedDrawnMapComponent; }
+            set { _selectedDrawnMapComponent = value; }
+        }
 
         internal static ColorPaintBrush SelectedColorPaintBrush
         {
@@ -477,7 +483,6 @@ namespace RealmStudio
             MapBuilder.GetMapLayerByIndex(CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
             MapBuilder.GetMapLayerByIndex(CurrentMap, MapBuilder.WORKLAYER2).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-
             // unselect anything selected
             RealmMapMethods.DeselectAllMapComponents(CurrentMap, null);
 
@@ -564,6 +569,14 @@ namespace RealmStudio
                             {
                                 RegionManager.Delete();
                             }
+                        }
+                    }
+                    break;
+                case MapDrawingMode.DrawingSelect:
+                    {
+                        if (SelectedDrawnMapComponent != null)
+                        {
+                            DrawingManager.Delete();
                         }
                     }
                     break;

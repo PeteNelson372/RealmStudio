@@ -1,5 +1,5 @@
 ﻿/**************************************************************************************************************************
-* Copyright 2024, Peter R. Nelson
+* Copyright 2025, Peter R. Nelson
 *
 * This file is part of the RealmStudio application. The RealmStudio application is intended
 * for creating fantasy maps for gaming and world building.
@@ -21,60 +21,33 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
-using System.Xml;
-using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    [XmlType("MapLayer")]
-    public class MapLayer : MapComponent
+    internal class Cmd_DeleteDrawnMapComponent(MapLayer layer, DrawnMapComponent drawnComponent) : IMapOperation
     {
-        private int mapLayerOrder;
+        private readonly MapLayer mapLayer = layer;
+        private readonly DrawnMapComponent dmc = drawnComponent;
 
-        [XmlAttribute]
-        public Guid MapLayerGuid { get; set; } = Guid.NewGuid();
-
-        [XmlAttribute]
-        public string MapLayerName { get; set; } = "";
-
-        [XmlAttribute]
-        public int MapLayerOrder { get => mapLayerOrder; set => mapLayerOrder = value; }
-
-        [XmlIgnore]
-        public SKSurface? LayerSurface { get; set; } = null;
-
-        [XmlIgnore]
-        public bool ShowLayer { get; set; } = true;
-
-        [XmlIgnore]
-        public SKRectI LayerRect { get; set; }
-
-        [XmlIgnore]
-        public bool Drawable { get; set; } = false;
-
-        public override void Render(SKCanvas canvas)
+        public void DoOperation()
         {
-            if (ShowLayer)
+            for (int i = mapLayer.MapLayerComponents.Count - 1; i >= 0; i--)
             {
-                if (MapLayerComponents != null)
+                if (mapLayer.MapLayerComponents[i] is DrawnMapComponent dc)
                 {
-                    LayerRect = new(0, 0, Width, Height);
-                    canvas.ClipRect(LayerRect);
-
-                    foreach (var component in MapLayerComponents)
+                    if (dc.DrawnComponentGuid.ToString() == dmc.DrawnComponentGuid.ToString())
                     {
-                        if (component.RenderComponent)
-                        {
-                            // clip drawing to the boundaries of the layer
-                            using (new SKAutoCanvasRestore(canvas))
-                            {
-                                component.Render(canvas);
-                            }
-                        }
+                        mapLayer.MapLayerComponents.RemoveAt(i);
+                        break;
                     }
                 }
             }
+
+        }
+
+        public void UndoOperation()
+        {
+            mapLayer.MapLayerComponents.Add(dmc);
         }
     }
 }

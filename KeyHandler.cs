@@ -128,6 +128,12 @@ namespace RealmStudio
                                     }
                                 }
                                 break;
+                            case MapDrawingMode.DrawingSelect:
+                                {
+                                    DrawnMapComponent? dmc = DrawingManager.FindSelectedDrawnMapComponent(MapStateMediator.CurrentMap);
+                                    DrawingManager.MoveDrawnComponent(dmc, ComponentMoveDirection.Down);
+                                    break;
+                                }
                         }
                     }
                     break;
@@ -143,6 +149,12 @@ namespace RealmStudio
                                     }
                                 }
                                 break;
+                            case MapDrawingMode.DrawingSelect:
+                                {
+                                    DrawnMapComponent? dmc = DrawingManager.FindSelectedDrawnMapComponent(MapStateMediator.CurrentMap);
+                                    DrawingManager.MoveDrawnComponent(dmc, ComponentMoveDirection.Up);
+                                    break;
+                                }
                         }
                     }
                     break;
@@ -161,6 +173,12 @@ namespace RealmStudio
                                     }
                                 }
                                 break;
+                            case MapDrawingMode.DrawingSelect:
+                                {
+                                    DrawnMapComponent? dmc = DrawingManager.FindSelectedDrawnMapComponent(MapStateMediator.CurrentMap);
+                                    DrawingManager.MoveDrawnComponent(dmc, ComponentMoveDirection.Left);
+                                    break;
+                                }
                         }
                     }
                     break;
@@ -176,6 +194,12 @@ namespace RealmStudio
                                     }
                                 }
                                 break;
+                            case MapDrawingMode.DrawingSelect:
+                                {
+                                    DrawnMapComponent? dmc = DrawingManager.FindSelectedDrawnMapComponent(MapStateMediator.CurrentMap);
+                                    DrawingManager.MoveDrawnComponent(dmc, ComponentMoveDirection.Right);
+                                    break;
+                                }
                         }
                     }
                     break;

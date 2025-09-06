@@ -30,6 +30,7 @@ namespace RealmStudio
         private List<SKPoint> _points = [];
         private SKColor _color = SKColors.Black;
         private int _brushSize = 2;
+        private int _rotation;
         private DrawingFillType _fillType = DrawingFillType.None;
         private SKShader? _shader;
 
@@ -50,6 +51,11 @@ namespace RealmStudio
         {
             get => _brushSize;
             set => _brushSize = value;
+        }
+        public int Rotation
+        {
+            get => _rotation;
+            set => _rotation = value;
         }
         public DrawingFillType FillType
         {
@@ -106,6 +112,18 @@ namespace RealmStudio
             else if (Points.Count > 2)
             {
                 SKPath polyPath = DrawingMethods.GetLinePathFromPoints(Points);
+
+                // set the bounds of the drawn polygon
+                Bounds = polyPath.Bounds;
+                Bounds = SKRect.Inflate(Bounds, 2, 2);
+
+                using SKAutoCanvasRestore autoRestore = new(canvas, true);
+                if (Rotation != 0)
+                {
+                    canvas.RotateDegrees(Rotation, Bounds.MidX, Bounds.MidY);
+                }
+
+                base.Render(canvas);
 
                 // draw the filled polygon first if the fill is enabled
                 if (FillType != DrawingFillType.None)

@@ -241,18 +241,14 @@ namespace RealmStudio
                             DrawingManager.DrawingMediator.DrawingStampBitmap.Width > 0 &&
                             DrawingManager.DrawingMediator.DrawingStampBitmap.Height > 0)
                         {
-                            Bitmap stampBitmap = DrawingMethods.SetBitmapOpacity(DrawingManager.DrawingMediator.DrawingStampBitmap, DrawingManager.DrawingMediator.DrawingStampOpacity);
+                            using Bitmap stampBitmap = DrawingMethods.SetBitmapOpacity(DrawingManager.DrawingMediator.DrawingStampBitmap, DrawingManager.DrawingMediator.DrawingStampOpacity);
 
-                            SKBitmap scaledStamp = DrawingMethods.ScaleSKBitmap(stampBitmap.ToSKBitmap(), DrawingManager.DrawingMediator.DrawingStampScale);
+                            using SKBitmap scaledStamp = DrawingMethods.ScaleSKBitmap(stampBitmap.ToSKBitmap(), DrawingManager.DrawingMediator.DrawingStampScale);
 
-                            SKBitmap rotatedAndScaledStamp = DrawingMethods.RotateSKBitmap(scaledStamp, DrawingManager.DrawingMediator.DrawingStampRotation, mirrorSymbol);
+                            using SKBitmap rotatedAndScaledStamp = DrawingMethods.RotateSKBitmap(scaledStamp, DrawingManager.DrawingMediator.DrawingStampRotation, false);
 
                             canvas.DrawBitmap(rotatedAndScaledStamp,
                                 new SKPoint(point.X - (rotatedAndScaledStamp.Width / 2), point.Y - (rotatedAndScaledStamp.Height / 2)), null);
-
-                            stampBitmap.Dispose();
-                            scaledStamp.Dispose();
-                            rotatedAndScaledStamp.Dispose();
                         }
                         else
                         {
@@ -1013,9 +1009,9 @@ namespace RealmStudio
                 // render rivers first, then water features (lakes, painted water features)
                 // so that water features are painted on top of rivers to make it appear that
                 // rivers flow into/out of water features
-                foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
+                foreach (MapComponent mc in waterLayer.MapLayerComponents)
                 {
-                    if (w is River r)
+                    if (mc is River r)
                     {
                         r.Render(waterLayer.LayerSurface.Canvas);
 
@@ -1038,13 +1034,13 @@ namespace RealmStudio
                             }
                         }
                     }
-                }
-
-                foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
-                {
-                    if (w is WaterFeature wf)
+                    else if (mc is WaterFeature wf)
                     {
                         wf.Render(waterLayer.LayerSurface.Canvas);
+                    }
+                    else if (mc is DrawnMapComponent dmc)
+                    {
+                        dmc.Render(waterLayer.LayerSurface.Canvas);
                     }
                 }
 
@@ -1063,9 +1059,9 @@ namespace RealmStudio
                 {
                     selectionLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
-                    foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
+                    foreach (MapComponent mc in waterLayer.MapLayerComponents)
                     {
-                        if (w is WaterFeature wf)
+                        if (mc is WaterFeature wf)
                         {
                             if (wf.IsSelected)
                             {
@@ -1077,7 +1073,7 @@ namespace RealmStudio
                                 break;
                             }
                         }
-                        else if (w is River r)
+                        else if (mc is River r)
                         {
                             if (r.IsSelected)
                             {

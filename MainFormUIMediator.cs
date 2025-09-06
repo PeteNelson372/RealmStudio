@@ -207,13 +207,14 @@ namespace RealmStudio
                 MainForm.SixPointStarButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
             }
 
-
             SetDrawingModeLabel();
 
             if (newBrushSize >= 0)
             {
                 SelectedBrushSize = newBrushSize;
             }
+
+            MainForm.SKGLRenderControl.Focus();
         }
 
         internal void SetDrawingModeLabel()
@@ -277,6 +278,7 @@ namespace RealmStudio
                 MapDrawingMode.DrawingArrow => "Draw Arrow",
                 MapDrawingMode.DrawingFivePointStar => "Draw 5-Point Star",
                 MapDrawingMode.DrawingSixPointStar => "Draw 6-Point Star",
+                MapDrawingMode.DrawingSelect => "Select Drawn Object",
                 _ => "Undefined",
             };
 
@@ -310,6 +312,12 @@ namespace RealmStudio
             }
 
             MainForm.DrawingModeLabel.Text = modeText;
+            MainForm.ApplicationStatusStrip.Refresh();
+        }
+
+        internal void SetDrawingLayerLabel(string labelText)
+        {
+            MainForm.DrawingLayerLabel.Text = labelText.ToUpperInvariant();
             MainForm.ApplicationStatusStrip.Refresh();
         }
 

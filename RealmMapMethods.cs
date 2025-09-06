@@ -1689,6 +1689,13 @@ namespace RealmStudio
                 if (selectedComponent != null && selectedComponent is MapRegion region && region == r) continue;
                 r.IsSelected = false;
             }
+
+            MapLayer drawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.DRAWINGLAYER);
+            foreach (DrawnMapComponent dmc in drawingLayer.MapLayerComponents.Cast<DrawnMapComponent>())
+            {
+                if (selectedComponent != null && selectedComponent is DrawnMapComponent drawnMapComponent && drawnMapComponent == dmc) continue;
+                dmc.IsSelected = false;
+            }
         }
 
         internal static SKRect DrawSelectedRealmAreaOnWorkLayer(RealmStudioMap map, SKPoint zoomedScrolledPoint, SKPoint previousPoint)

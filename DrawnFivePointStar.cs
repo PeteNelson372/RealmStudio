@@ -25,26 +25,26 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal sealed class DrawnRectangle : DrawnMapComponent
+    internal sealed class DrawnFivePointStar : DrawnMapComponent
     {
-        private SKPoint _topLeft;
-        private SKPoint _bottomRight;
+        private SKPoint _center;
+        private float _radius;
         private SKColor _color = SKColors.Black;
         private int _brushSize = 2;
         private int _rotation;
         private DrawingFillType _fillType = DrawingFillType.None;
         private SKShader? _shader;
-        private bool _drawRounded;
 
-        public SKPoint TopLeft
+        public SKPoint Center
         {
-            get => _topLeft;
-            set => _topLeft = value;
+            get => _center;
+            set => _center = value;
         }
-        public SKPoint BottomRight
+
+        public float Radius
         {
-            get => _bottomRight;
-            set => _bottomRight = value;
+            get => _radius;
+            set => _radius = value;
         }
 
         public SKColor Color
@@ -57,21 +57,17 @@ namespace RealmStudio
             get => _brushSize;
             set => _brushSize = value;
         }
+
         public int Rotation
         {
             get => _rotation;
             set => _rotation = value;
         }
+
         public DrawingFillType FillType
         {
             get => _fillType;
             set => _fillType = value;
-        }
-
-        public bool DrawRounded
-        {
-            get => _drawRounded;
-            set => _drawRounded = value;
         }
 
         public SKShader? Shader
@@ -113,46 +109,56 @@ namespace RealmStudio
                 fillPaint.Style = SKPaintStyle.Stroke;
             }
 
-            SKRect rect = new(TopLeft.X, TopLeft.Y, BottomRight.X, BottomRight.Y);
-            Bounds = rect;
-            Bounds = SKRect.Inflate(Bounds, 2, 2);
+            SKPoint p1 = new(Radius * 0.94783F + Center.X, Radius * -0.31878F + Center.Y);
+            SKPoint p2 = new(Radius * 0.22132F + Center.X, Radius * -0.31131F + Center.Y);
+
+            SKPoint p3 = new(Radius * -0.01028F + Center.X, Radius * -0.99995F + Center.Y);
+            SKPoint p4 = new(Radius * -0.22768F + Center.X, Radius * -0.30669F + Center.Y);
+
+            SKPoint p5 = new(Radius * -0.95418F + Center.X, Radius * -0.29922F + Center.Y);
+            SKPoint p6 = new(Radius * -0.36204F + Center.X, Radius * 0.12176F + Center.Y);
+
+            SKPoint p7 = new(Radius * -0.57943F + Center.X, Radius * 0.81502F + Center.Y);
+            SKPoint p8 = new(Radius * 0.00393F + Center.X, Radius * 0.38195F + Center.Y);
+
+            SKPoint p9 = new(Radius * 0.59607F + Center.X, Radius * 0.80293F + Center.Y);
+            SKPoint p10 = new(Radius * 0.36447F + Center.X, Radius * 0.11429F + Center.Y);
+
+            SKPoint p11 = new(Radius * 0.94783F + Center.X, Radius * -0.31878F + Center.Y);
+
+
+            using SKPath path = new();
+            path.MoveTo(p1);
+            path.LineTo(p2);
+            path.LineTo(p3);
+            path.LineTo(p4);
+            path.LineTo(p5);
+            path.LineTo(p6);
+            path.LineTo(p7);
+            path.LineTo(p8);
+            path.LineTo(p9);
+            path.LineTo(p10);
+            path.LineTo(p11);
+            path.Close();
+
+            path.GetBounds(out SKRect bounds);
+            Bounds = bounds;
 
             using SKAutoCanvasRestore autoRestore = new(canvas, true);
             if (Rotation != 0)
             {
-                canvas.RotateDegrees(Rotation, (_topLeft.X + _bottomRight.X) / 2, (_topLeft.Y + _bottomRight.Y) / 2);
-            }
-
-            if (DrawRounded)
-            {
-                // draw the rounded rectangle
-                int width = (int)Math.Abs(BottomRight.X - TopLeft.X);
-                int height = (int)Math.Abs(BottomRight.Y - TopLeft.Y);
-
-                SKRoundRect roundRect = new(rect, (int)(width * 0.1), (int)(height * 0.1));
-
-                if (FillType != DrawingFillType.None)
-                {
-                    // draw the filled rectangle first if the fill is enabled
-                    canvas.DrawRoundRect(roundRect, fillPaint);
-                }
-
-                canvas.DrawRoundRect(roundRect, paint);
-            }
-            else
-            {
-                // draw the normal rectangle
-
-                if (FillType != DrawingFillType.None)
-                {
-                    // draw the filled rectangle first if the fill is enabled
-                    canvas.DrawRect(rect, fillPaint);
-                }
-
-                canvas.DrawRect(rect, paint);
+                canvas.RotateDegrees(Rotation, Bounds.MidX, Bounds.MidY);
             }
 
             base.Render(canvas);
+
+            if (FillType != DrawingFillType.None)
+            {
+                // draw the filled diamond first if the fill is enabled
+                canvas.DrawPath(path, fillPaint);
+            }
+
+            canvas.DrawPath(path, paint);
         }
     }
 }

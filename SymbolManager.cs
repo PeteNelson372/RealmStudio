@@ -99,7 +99,6 @@ namespace RealmStudio
         public static bool Update()
         {
             return true;
-            //throw new NotImplementedException();
         }
 
         public static bool Delete()

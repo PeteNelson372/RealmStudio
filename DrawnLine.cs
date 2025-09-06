@@ -40,6 +40,21 @@ namespace RealmStudio
 
         public override void Render(SKCanvas canvas)
         {
+            SKPath path = new();
+            path.MoveTo(_points[0]);
+
+            for (int i = 1; i < _points.Count; i++)
+            {
+                path.LineTo(_points[i]);
+            }
+
+            canvas.DrawPath(path, Paint);
+            path.GetBounds(out SKRect bounds);
+
+            Bounds = bounds;
+
+            base.Render(canvas);
+
             for (int i = 0; i < _points.Count - 1; i++)
             {
                 SKPoint start = _points[i];

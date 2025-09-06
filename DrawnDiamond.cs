@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace RealmStudio
 {
-    internal sealed class DrawnRectangle : DrawnMapComponent
+    internal sealed class DrawnDiamond : DrawnMapComponent
     {
         private SKPoint _topLeft;
         private SKPoint _bottomRight;
@@ -34,7 +34,6 @@ namespace RealmStudio
         private int _rotation;
         private DrawingFillType _fillType = DrawingFillType.None;
         private SKShader? _shader;
-        private bool _drawRounded;
 
         public SKPoint TopLeft
         {
@@ -57,21 +56,17 @@ namespace RealmStudio
             get => _brushSize;
             set => _brushSize = value;
         }
+
         public int Rotation
         {
             get => _rotation;
             set => _rotation = value;
         }
+
         public DrawingFillType FillType
         {
             get => _fillType;
             set => _fillType = value;
-        }
-
-        public bool DrawRounded
-        {
-            get => _drawRounded;
-            set => _drawRounded = value;
         }
 
         public SKShader? Shader
@@ -82,6 +77,9 @@ namespace RealmStudio
 
         public override void Render(SKCanvas canvas)
         {
+            SKRect rect = new(TopLeft.X, TopLeft.Y, BottomRight.X, BottomRight.Y);
+            Bounds = rect;
+
             using SKPaint paint = new()
             {
                 Style = SKPaintStyle.Stroke,
@@ -113,46 +111,35 @@ namespace RealmStudio
                 fillPaint.Style = SKPaintStyle.Stroke;
             }
 
-            SKRect rect = new(TopLeft.X, TopLeft.Y, BottomRight.X, BottomRight.Y);
-            Bounds = rect;
-            Bounds = SKRect.Inflate(Bounds, 2, 2);
-
             using SKAutoCanvasRestore autoRestore = new(canvas, true);
             if (Rotation != 0)
             {
                 canvas.RotateDegrees(Rotation, (_topLeft.X + _bottomRight.X) / 2, (_topLeft.Y + _bottomRight.Y) / 2);
             }
 
-            if (DrawRounded)
-            {
-                // draw the rounded rectangle
-                int width = (int)Math.Abs(BottomRight.X - TopLeft.X);
-                int height = (int)Math.Abs(BottomRight.Y - TopLeft.Y);
-
-                SKRoundRect roundRect = new(rect, (int)(width * 0.1), (int)(height * 0.1));
-
-                if (FillType != DrawingFillType.None)
-                {
-                    // draw the filled rectangle first if the fill is enabled
-                    canvas.DrawRoundRect(roundRect, fillPaint);
-                }
-
-                canvas.DrawRoundRect(roundRect, paint);
-            }
-            else
-            {
-                // draw the normal rectangle
-
-                if (FillType != DrawingFillType.None)
-                {
-                    // draw the filled rectangle first if the fill is enabled
-                    canvas.DrawRect(rect, fillPaint);
-                }
-
-                canvas.DrawRect(rect, paint);
-            }
-
             base.Render(canvas);
+
+            // draw the diamond
+
+            SKPoint p1 = new((TopLeft.X + BottomRight.X) / 2, TopLeft.Y);
+            SKPoint p2 = new(BottomRight.X, (TopLeft.Y + BottomRight.Y) / 2);
+            SKPoint p3 = new((TopLeft.X + BottomRight.X) / 2, BottomRight.Y);
+            SKPoint p4 = new(TopLeft.X, (TopLeft.Y + BottomRight.Y) / 2);
+
+            using SKPath path = new();
+            path.MoveTo(p1);
+            path.LineTo(p2);
+            path.LineTo(p3);
+            path.LineTo(p4);
+            path.Close();
+
+            if (FillType != DrawingFillType.None)
+            {
+                // draw the filled diamond first if the fill is enabled
+                canvas.DrawPath(path, fillPaint);
+            }
+
+            canvas.DrawPath(path, paint);
         }
     }
 }

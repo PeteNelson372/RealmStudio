@@ -164,7 +164,7 @@ namespace RealmStudio
 
     public enum ComponentMoveDirection
     {
-        Up, Down
+        Up, Down, Left, Right
     }
 
     public enum LabelTextAlignment

@@ -32,6 +32,7 @@ namespace RealmStudio
         private int _sides = 5; // Default to pentagon
         private SKColor _color = SKColors.Black;
         private int _brushSize = 2;
+        private int _rotation;
         private DrawingFillType _fillType = DrawingFillType.None;
         private SKShader? _shader;
 
@@ -55,6 +56,11 @@ namespace RealmStudio
         {
             get => _brushSize;
             set => _brushSize = value;
+        }
+        public int Rotation
+        {
+            get => _rotation;
+            set => _rotation = value;
         }
         public DrawingFillType FillType
         {
@@ -127,11 +133,20 @@ namespace RealmStudio
 
             path.Close();
 
+            Bounds = path.Bounds;
+            Bounds = SKRect.Inflate(Bounds, 2, 2);
+
+            using SKAutoCanvasRestore autoRestore = new(canvas, true);
+            if (Rotation != 0)
+            {
+                canvas.RotateDegrees(Rotation, Bounds.MidX, Bounds.MidY);
+            }
+
+            base.Render(canvas);
+
             canvas.DrawPath(path, fillPaint);
             canvas.DrawPath(path, paint);
 
         }
-
-
     }
 }

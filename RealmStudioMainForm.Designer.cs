@@ -424,6 +424,7 @@
             MapSizeLabel = new ToolStripStatusLabel();
             ZoomLevelLabel = new ToolStripStatusLabel();
             DrawingModeLabel = new ToolStripStatusLabel();
+            DrawingLayerLabel = new ToolStripStatusLabel();
             DrawingPointLabel = new ToolStripStatusLabel();
             ApplicationStatusStrip = new StatusStrip();
             ApplicationStatusMessage = new ToolStripStatusLabel();
@@ -668,6 +669,8 @@
             BackgroundToolPanel = new Panel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
+            label113 = new Label();
+            DrawingShapeRotationTrack = new TrackBar();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -839,6 +842,7 @@
             ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DrawingShapeRotationTrack).BeginInit();
             this.SuspendLayout();
             // 
             // OceanTab
@@ -5719,7 +5723,7 @@
             LayerListBox.Font = new Font("Segoe UI", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LayerListBox.FormattingEnabled = true;
             LayerListBox.ItemHeight = 12;
-            LayerListBox.Items.AddRange(new object[] { "BASELAYER", "OCEANTEXTURELAYER", "OCEANTEXTUREOVERLAYLAYER", "OCEANDRAWINGLAYER", "WINDROSELAYER", "ABOVEOCEANGRIDLAYER", "LANDCOASTLINELAYER", "LANDFORMLAYER", "LANDDRAWINGLAYER", "WATERLAYER", "WATERDRAWINGLAYER", "BELOWSYMBOLSGRIDLAYER", "PATHLOWERLAYER", "SYMBOLLAYER", "PATHUPPERLAYER", "REGIONLAYER", "REGIONOVERLAYLAYER", "DEFAULTGRIDLAYER", "BOXLAYER", "LABELLAYER", "OVERLAYLAYER", "FRAMELAYER", "MEASURELAYER", "DRAWINGLAYER", "VIGNETTELAYER" });
+            LayerListBox.Items.AddRange(new object[] { "BASE", "OCEANDRAWING", "WINDROSE", "ABOVEOCEANGRID", "COASTLINE", "LANDFORM", "LANDDRAWING", "WATER", "WATERDRAWING", "BELOWSYMBOLSGRID", "PATHLOWER", "SYMBOLS", "PATHUPPER", "REGION", "REGIONOVERLAY", "GRID", "BOXES", "LABELS", "OVERLAY", "FRAME", "USERDRAWING", "VIGNETTE" });
             LayerListBox.Location = new Point(0, 20);
             LayerListBox.Name = "LayerListBox";
             LayerListBox.Size = new Size(136, 280);
@@ -7136,7 +7140,7 @@
             MapStatusStrip.BackColor = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
             MapStatusStrip.Dock = DockStyle.None;
             MapStatusStrip.GripMargin = new Padding(0);
-            MapStatusStrip.Items.AddRange(new ToolStripItem[] { MapSizeLabel, ZoomLevelLabel, DrawingModeLabel, DrawingPointLabel });
+            MapStatusStrip.Items.AddRange(new ToolStripItem[] { MapSizeLabel, ZoomLevelLabel, DrawingModeLabel, DrawingLayerLabel, DrawingPointLabel });
             MapStatusStrip.Location = new Point(9, 976);
             MapStatusStrip.Name = "MapStatusStrip";
             MapStatusStrip.RenderMode = ToolStripRenderMode.Professional;
@@ -7163,8 +7167,17 @@
             DrawingModeLabel.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             DrawingModeLabel.ForeColor = Color.ForestGreen;
             DrawingModeLabel.Name = "DrawingModeLabel";
-            DrawingModeLabel.Size = new Size(1000, 17);
+            DrawingModeLabel.Size = new Size(750, 17);
             DrawingModeLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // DrawingLayerLabel
+            // 
+            DrawingLayerLabel.AutoSize = false;
+            DrawingLayerLabel.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
+            DrawingLayerLabel.ForeColor = Color.SkyBlue;
+            DrawingLayerLabel.Name = "DrawingLayerLabel";
+            DrawingLayerLabel.Size = new Size(250, 17);
+            DrawingLayerLabel.Text = "USERDRAWING";
             // 
             // DrawingPointLabel
             // 
@@ -7553,6 +7566,8 @@
             // 
             DrawingToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
             DrawingToolPanel.BackColor = SystemColors.Control;
+            DrawingToolPanel.Controls.Add(label113);
+            DrawingToolPanel.Controls.Add(DrawingShapeRotationTrack);
             DrawingToolPanel.Controls.Add(groupBox3);
             DrawingToolPanel.Controls.Add(label112);
             DrawingToolPanel.Controls.Add(DrawingStampOpacityTrack);
@@ -10261,6 +10276,29 @@
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
             // 
+            // label113
+            // 
+            label113.AutoSize = true;
+            label113.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label113.ForeColor = SystemColors.ControlDarkDark;
+            label113.Location = new Point(17, 705);
+            label113.Name = "label113";
+            label113.Size = new Size(81, 13);
+            label113.TabIndex = 117;
+            label113.Text = "Shape Rotation";
+            // 
+            // DrawingShapeRotationTrack
+            // 
+            DrawingShapeRotationTrack.AutoSize = false;
+            DrawingShapeRotationTrack.BackColor = SystemColors.Control;
+            DrawingShapeRotationTrack.Location = new Point(10, 721);
+            DrawingShapeRotationTrack.Maximum = 359;
+            DrawingShapeRotationTrack.Name = "DrawingShapeRotationTrack";
+            DrawingShapeRotationTrack.Size = new Size(126, 20);
+            DrawingShapeRotationTrack.TabIndex = 116;
+            DrawingShapeRotationTrack.TickStyle = TickStyle.None;
+            DrawingShapeRotationTrack.Scroll += (this.DrawingShapeRotationTrack_Scroll);
+            // 
             // RealmStudioMainForm
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
@@ -10283,6 +10321,7 @@
             this.Load += (this.RealmStudioMainForm_Load);
             this.Shown += (this.RealmStudioMainForm_Shown);
             this.KeyDown += (this.RealmStudioMainForm_KeyDown);
+            this.PreviewKeyDown += (this.RealmStudioMainForm_PreviewKeyDown);
             OceanTab.ResumeLayout(false);
             OceanTab.PerformLayout();
             WindroseGroup.ResumeLayout(false);
@@ -10509,6 +10548,7 @@
             ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DrawingShapeRotationTrack).EndInit();
             this.ResumeLayout(false);
         }
 
@@ -11151,5 +11191,8 @@
         internal Button SixPointStarButton;
         internal Button FivePointStarButton;
         internal Button ArrowButton;
+        internal ToolStripStatusLabel DrawingLayerLabel;
+        private Label label113;
+        internal TrackBar DrawingShapeRotationTrack;
     }
 }
