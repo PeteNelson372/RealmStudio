@@ -24,7 +24,7 @@
 
 namespace RealmStudio
 {
-    internal class Cmd_DeleteDrawnMapComponent(MapLayer layer, DrawnMapComponent drawnComponent) : IMapOperation
+    internal sealed class Cmd_DeleteDrawnMapComponent(MapLayer layer, DrawnMapComponent drawnComponent) : IMapOperation
     {
         private readonly MapLayer mapLayer = layer;
         private readonly DrawnMapComponent dmc = drawnComponent;

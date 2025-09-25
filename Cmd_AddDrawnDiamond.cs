@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddDrawnDiamond(MapLayer mapLayer, DrawnDiamond drawnDiamond) : IMapOperation
+    internal sealed class Cmd_AddDrawnDiamond(MapLayer mapLayer, DrawnDiamond drawnDiamond) : IMapOperation
     {
         private readonly MapLayer mapLayer = mapLayer;
         private readonly DrawnDiamond dd = drawnDiamond;

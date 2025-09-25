@@ -46,10 +46,6 @@ namespace RealmStudio
             get => _bounds;
             set
             {
-                if (value.IsEmpty)
-                {
-                    throw new ArgumentException("Bounds cannot be empty.", nameof(value));
-                }
                 _bounds = value;
             }
         }

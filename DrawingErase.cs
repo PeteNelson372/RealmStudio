@@ -22,10 +22,14 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    internal sealed class DrawingErase : DrawnMapComponent
+    public sealed class DrawingErase : DrawnMapComponent, IXmlSerializable
     {
         private int _brushSize = 2;
         private List<SKPoint> _points = [];
@@ -60,6 +64,67 @@ namespace RealmStudio
             {
                 canvas.DrawCircle(erasePoint, BrushSize / 2, paint);
             }
+        }
+
+        public XmlSchema? GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            XNamespace ns = "RealmStudio";
+            string content = reader.ReadOuterXml();
+
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return;
+            }
+
+            XDocument eraseDoc = XDocument.Parse(content);
+
+            XElement? root = eraseDoc.Element(ns + "DrawingErase");
+
+            if (root != null)
+            {
+                XElement? brushSizeElement = root.Element(ns + "BrushSize");
+                if (brushSizeElement != null && int.TryParse(brushSizeElement.Value, out int brushSize))
+                {
+                    BrushSize = brushSize;
+                }
+                XElement? pointsElement = root.Element(ns + "Points");
+                if (pointsElement != null)
+                {
+                    List<SKPoint> points = [];
+                    foreach (XElement pointElement in pointsElement.Elements(ns + "Point"))
+                    {
+                        XElement? xElement = pointElement.Element(ns + "X");
+                        XElement? yElement = pointElement.Element(ns + "Y");
+                        if (xElement != null && yElement != null &&
+                            float.TryParse(xElement.Value, out float x) &&
+                            float.TryParse(yElement.Value, out float y))
+                        {
+                            points.Add(new SKPoint(x, y));
+                        }
+                    }
+                    Points = points;
+                }
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteElementString("BrushSize", BrushSize.ToString());
+
+            writer.WriteStartElement("Points");
+            foreach (SKPoint point in Points)
+            {
+                writer.WriteStartElement("Point");
+                writer.WriteElementString("X", point.X.ToString());
+                writer.WriteElementString("Y", point.Y.ToString());
+                writer.WriteEndElement(); // Point
+            }
+            writer.WriteEndElement(); // Points
         }
     }
 }

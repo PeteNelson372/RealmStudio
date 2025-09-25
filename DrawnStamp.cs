@@ -23,17 +23,21 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using System.IO;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    internal sealed class DrawnStamp : DrawnMapComponent
+    public sealed class DrawnStamp : DrawnMapComponent, IXmlSerializable
     {
         private SKPoint _topLeft;
         private int _rotation;
         private float _opacity = 1.0f;
         private float _scale = 1.0f;
         private SKBitmap? _stampBitmap;
-
 
         public SKPoint TopLeft
         {
@@ -99,6 +103,120 @@ namespace RealmStudio
                                     TopLeft.X + (rotatedAndScaledStamp.Width / 2), TopLeft.Y + (rotatedAndScaledStamp.Height / 2));
 
                 base.Render(canvas);
+            }
+        }
+
+        public XmlSchema? GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            XNamespace ns = "RealmStudio";
+            string content = reader.ReadOuterXml();
+
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return;
+            }
+
+            XDocument stampDoc = XDocument.Parse(content);
+
+            if (stampDoc.Root == null)
+            {
+                throw new InvalidDataException("The stamp XML data is missing the root element.");
+            }
+
+            XAttribute? xAttr = stampDoc.Root.Attribute("X");
+            if (xAttr != null)
+            {
+                X = int.Parse(xAttr.Value);
+            }
+
+            XAttribute? yAttr = stampDoc.Root.Attribute("Y");
+            if (yAttr != null)
+            {
+                Y = int.Parse(yAttr.Value);
+            }
+
+            XAttribute? wAttr = stampDoc.Root.Attribute("Width");
+            if (wAttr != null)
+            {
+                Width = int.Parse(wAttr.Value);
+            }
+
+            XAttribute? hAttr = stampDoc.Root.Attribute("Height");
+            if (hAttr != null)
+            {
+                Height = int.Parse(hAttr.Value);
+            }
+
+            XElement? topLeftElement = stampDoc.Root.Element(ns + "TopLeft");
+            if (topLeftElement != null)
+            {
+                XAttribute? tlxAttr = topLeftElement.Attribute("X");
+                XAttribute? tlyAttr = topLeftElement.Attribute("Y");
+                if (tlxAttr != null && tlyAttr != null)
+                {
+                    _topLeft = new SKPoint(int.Parse(tlxAttr.Value), int.Parse(tlyAttr.Value));
+                }
+            }
+
+            XElement? scaleElement = stampDoc.Root.Element(ns + "Scale");
+            if (scaleElement != null)
+            {
+                _scale = float.Parse(scaleElement.Value);
+            }
+
+            XElement? opacityElement = stampDoc.Root.Element(ns + "Opacity");
+            if (opacityElement != null)
+            {
+                _opacity = float.Parse(opacityElement.Value);
+            }
+
+            XElement? rotationElement = stampDoc.Root.Element(ns + "Rotation");
+            if (rotationElement != null)
+            {
+                _rotation = int.Parse(rotationElement.Value);
+            }
+
+            XElement? stampBitmapElement = stampDoc.Root.Element(ns + "StampBitmap");
+            if (stampBitmapElement != null)
+            {
+                string base64Data = stampBitmapElement.Value;
+                byte[] stampBitmapData = Convert.FromBase64String(base64Data);
+                using MemoryStream ms = new(stampBitmapData);
+                SKBitmap skBitmap = SKBitmap.Decode(ms);
+                _stampBitmap = skBitmap.Copy();
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttributeString("X", X.ToString());
+            writer.WriteAttributeString("Y", Y.ToString());
+            writer.WriteAttributeString("Width", Width.ToString());
+            writer.WriteAttributeString("Height", Height.ToString());
+
+            writer.WriteStartElement("TopLeft");
+            writer.WriteAttributeString("X", TopLeft.X.ToString());
+            writer.WriteAttributeString("Y", TopLeft.Y.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteElementString("Rotation", Rotation.ToString());
+            writer.WriteElementString("Opacity", Opacity.ToString());
+            writer.WriteElementString("Scale", Scale.ToString());
+
+            if (StampBitmap != null)
+            {
+                using MemoryStream ms = new();
+                using SKManagedWStream wstream = new(ms);
+                StampBitmap.Encode(wstream, SKEncodedImageFormat.Png, 100);
+                byte[] stampBitmapData = ms.ToArray();
+                writer.WriteStartElement("StampBitmap");
+                writer.WriteBase64(stampBitmapData, 0, stampBitmapData.Length);
+                writer.WriteEndElement();
             }
         }
     }

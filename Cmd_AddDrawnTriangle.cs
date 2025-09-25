@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddDrawnTriangle(MapLayer mapLayer, DrawnTriangle drawnTriangle) : IMapOperation
+    internal sealed class Cmd_AddDrawnTriangle(MapLayer mapLayer, DrawnTriangle drawnTriangle) : IMapOperation
     {
         private readonly MapLayer mapLayer = mapLayer;
         private readonly DrawnTriangle dt = drawnTriangle;

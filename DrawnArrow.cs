@@ -22,10 +22,16 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
+using SkiaSharp.Views.Desktop;
+using System.IO;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    internal sealed class DrawnArrow : DrawnMapComponent
+    public sealed class DrawnArrow : DrawnMapComponent, IXmlSerializable
     {
         private SKPoint _topLeft;
         private SKPoint _bottomRight;
@@ -33,6 +39,7 @@ namespace RealmStudio
         private int _brushSize = 2;
         private int _rotation;
         private DrawingFillType _fillType = DrawingFillType.None;
+        private Bitmap? _fillBitmap;
         private SKShader? _shader;
 
         public SKPoint TopLeft
@@ -69,6 +76,11 @@ namespace RealmStudio
             set => _fillType = value;
         }
 
+        public Bitmap? FillBitmap
+        {
+            get => _fillBitmap;
+            set => _fillBitmap = value;
+        }
         public SKShader? Shader
         {
             get => _shader;
@@ -79,6 +91,11 @@ namespace RealmStudio
         {
             SKRect rect = new(TopLeft.X, TopLeft.Y, BottomRight.X, BottomRight.Y);
             Bounds = rect;
+
+            X = (int)TopLeft.X;
+            Y = (int)TopLeft.Y;
+            Width = (int)(BottomRight.X - TopLeft.X);
+            Height = (int)(BottomRight.Y - TopLeft.Y);
 
             using SKPaint paint = new()
             {
@@ -150,6 +167,149 @@ namespace RealmStudio
 
             canvas.DrawPath(path, paint);
             base.Render(canvas);
+        }
+
+        public XmlSchema? GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            XNamespace ns = "RealmStudio";
+            string content = reader.ReadOuterXml();
+
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return;
+            }
+
+            XDocument arrowDoc = XDocument.Parse(content);
+
+            if (arrowDoc.Root == null)
+            {
+                throw new InvalidDataException("The arrow XML data is missing the root element.");
+            }
+
+            XAttribute? xAttr = arrowDoc.Root.Attribute("X");
+            if (xAttr != null)
+            {
+                X = int.Parse(xAttr.Value);
+            }
+
+            XAttribute? yAttr = arrowDoc.Root.Attribute("Y");
+            if (yAttr != null)
+            {
+                Y = int.Parse(yAttr.Value);
+            }
+
+            XAttribute? wAttr = arrowDoc.Root.Attribute("Width");
+            if (wAttr != null)
+            {
+                Width = int.Parse(wAttr.Value);
+            }
+
+            XAttribute? hAttr = arrowDoc.Root.Attribute("Height");
+            if (hAttr != null)
+            {
+                Height = int.Parse(hAttr.Value);
+            }
+
+            XElement? topLeftElement = arrowDoc.Root.Element(ns + "TopLeft");
+            if (topLeftElement != null)
+            {
+                XAttribute? tlxAttr = topLeftElement.Attribute("X");
+                XAttribute? tlyAttr = topLeftElement.Attribute("Y");
+                if (tlxAttr != null && tlyAttr != null)
+                {
+                    _topLeft = new SKPoint(int.Parse(tlxAttr.Value), int.Parse(tlyAttr.Value));
+                }
+            }
+
+            XElement? bottomRightElement = arrowDoc.Root.Element(ns + "BottomRight");
+            if (bottomRightElement != null)
+            {
+                XAttribute? brxAttr = bottomRightElement.Attribute("X");
+                XAttribute? bryAttr = bottomRightElement.Attribute("Y");
+                if (brxAttr != null && bryAttr != null)
+                {
+                    _bottomRight = new SKPoint(int.Parse(brxAttr.Value), int.Parse(bryAttr.Value));
+                }
+            }
+
+            SKRect rect = new(TopLeft.X, TopLeft.Y, BottomRight.X, BottomRight.Y);
+            Bounds = rect;
+
+            XElement? colorElement = arrowDoc.Root.Element(ns + "Color");
+            if (colorElement != null)
+            {
+                _color = SKColor.Parse(colorElement.Value);
+            }
+
+            XElement? brushSizeElement = arrowDoc.Root.Element(ns + "BrushSize");
+            if (brushSizeElement != null)
+            {
+                _brushSize = int.Parse(brushSizeElement.Value);
+            }
+
+            XElement? rotationElement = arrowDoc.Root.Element(ns + "Rotation");
+            if (rotationElement != null)
+            {
+                _rotation = int.Parse(rotationElement.Value);
+            }
+
+            XElement? fillTypeElement = arrowDoc.Root.Element(ns + "FillType");
+            if (fillTypeElement != null)
+            {
+                _fillType = Enum.Parse<DrawingFillType>(fillTypeElement.Value);
+            }
+
+            XElement? fillBitmapElement = arrowDoc.Root.Element(ns + "FillBitmap");
+            if (fillBitmapElement != null)
+            {
+                string base64Data = fillBitmapElement.Value;
+                byte[] fillBitmapData = Convert.FromBase64String(base64Data);
+                using MemoryStream ms = new(fillBitmapData);
+                SKBitmap skBitmap = SKBitmap.Decode(ms);
+                _fillBitmap = skBitmap.ToBitmap();
+
+                SKShader fillShader = SKShader.CreateBitmap(skBitmap, SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                Shader = fillShader;
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttributeString("X", X.ToString());
+            writer.WriteAttributeString("Y", Y.ToString());
+            writer.WriteAttributeString("Width", Width.ToString());
+            writer.WriteAttributeString("Height", Height.ToString());
+
+            writer.WriteStartElement("TopLeft");
+            writer.WriteAttributeString("X", TopLeft.X.ToString());
+            writer.WriteAttributeString("Y", TopLeft.Y.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("BottomRight");
+            writer.WriteAttributeString("X", BottomRight.X.ToString());
+            writer.WriteAttributeString("Y", BottomRight.Y.ToString());
+            writer.WriteEndElement();
+
+            writer.WriteElementString("Color", Color.ToString());
+            writer.WriteElementString("BrushSize", BrushSize.ToString());
+            writer.WriteElementString("Rotation", Rotation.ToString());
+            writer.WriteElementString("FillType", FillType.ToString());
+
+            if (FillType == DrawingFillType.Texture && FillBitmap != null)
+            {
+                using MemoryStream ms = new();
+                using SKManagedWStream wstream = new(ms);
+                FillBitmap.ToSKBitmap().Encode(wstream, SKEncodedImageFormat.Png, 100);
+                byte[] fillBitmapData = ms.ToArray();
+                writer.WriteStartElement("FillBitmap");
+                writer.WriteBase64(fillBitmapData, 0, fillBitmapData.Length);
+                writer.WriteEndElement();
+            }
         }
     }
 }

@@ -3309,6 +3309,7 @@ namespace RealmStudio
                             if (fillTexture != null)
                             {
                                 // if the fill type is texture, we need to create a shader from the bitmap
+                                drawnRectangle.FillBitmap = fillTexture;
                                 SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
                                 drawnRectangle.Shader = fillShader;
                             }
@@ -3344,6 +3345,8 @@ namespace RealmStudio
 
                             if (fillTexture != null)
                             {
+                                drawnRectangle.FillBitmap = fillTexture;
+
                                 // if the fill type is texture, we need to create a shader from the bitmap
                                 SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
                                 drawnRectangle.Shader = fillShader;
@@ -3379,11 +3382,14 @@ namespace RealmStudio
 
                             if (fillTexture != null)
                             {
+                                drawnEllipse.FillBitmap = fillTexture;
+
                                 // if the fill type is texture, we need to create a shader from the bitmap
                                 SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
                                 drawnEllipse.Shader = fillShader;
                             }
                         }
+
 
                         DrawingManager.CurrentDrawnEllipse = drawnEllipse;
                         DrawingManager.CurrentDrawnEllipse.Render(canvas);
@@ -3415,6 +3421,8 @@ namespace RealmStudio
 
                                 if (fillTexture != null)
                                 {
+                                    drawnPolygon.FillBitmap = fillTexture;
+
                                     // if the fill type is texture, we need to create a shader from the bitmap
                                     SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
                                     drawnPolygon.Shader = fillShader;
@@ -3466,6 +3474,8 @@ namespace RealmStudio
 
                             if (fillTexture != null)
                             {
+                                drawnTriangle.FillBitmap = fillTexture;
+
                                 // if the fill type is texture, we need to create a shader from the bitmap
                                 SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
                                 drawnTriangle.Shader = fillShader;
@@ -3502,6 +3512,8 @@ namespace RealmStudio
 
                             if (fillTexture != null)
                             {
+                                drawnTriangle.FillBitmap = fillTexture;
+
                                 // if the fill type is texture, we need to create a shader from the bitmap
                                 SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
                                 drawnTriangle.Shader = fillShader;
@@ -3538,6 +3550,8 @@ namespace RealmStudio
 
                             if (fillTexture != null)
                             {
+                                drawnPentagon.FillBitmap = fillTexture;
+
                                 // if the fill type is texture, we need to create a shader from the bitmap
                                 SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
                                 drawnPentagon.Shader = fillShader;
@@ -3558,7 +3572,7 @@ namespace RealmStudio
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
                         if (canvas == null) return;
 
-                        DrawnRegularPolygon drawnPentagon = new()
+                        DrawnRegularPolygon drawnHexagon = new()
                         {
                             TopLeft = MapStateMediator.PreviousCursorPoint,
                             BottomRight = MapStateMediator.CurrentCursorPoint,
@@ -3568,19 +3582,21 @@ namespace RealmStudio
                             Sides = 6, // Hexagon has 6 sides
                         };
 
-                        if (drawnPentagon.FillType == DrawingFillType.Texture)
+                        if (drawnHexagon.FillType == DrawingFillType.Texture)
                         {
                             Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
 
                             if (fillTexture != null)
                             {
+                                drawnHexagon.FillBitmap = fillTexture;
+
                                 // if the fill type is texture, we need to create a shader from the bitmap
                                 SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
-                                drawnPentagon.Shader = fillShader;
+                                drawnHexagon.Shader = fillShader;
                             }
                         }
 
-                        DrawingManager.CurrentDrawnRegularPolygon = drawnPentagon;
+                        DrawingManager.CurrentDrawnRegularPolygon = drawnHexagon;
                         DrawingManager.CurrentDrawnRegularPolygon.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
@@ -3609,6 +3625,8 @@ namespace RealmStudio
 
                             if (fillTexture != null)
                             {
+                                drawnDiamond.FillBitmap = fillTexture;
+
                                 // if the fill type is texture, we need to create a shader from the bitmap
                                 SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
                                 drawnDiamond.Shader = fillShader;
@@ -3643,6 +3661,8 @@ namespace RealmStudio
                             Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
                             if (fillTexture != null)
                             {
+                                drawnArrow.FillBitmap = fillTexture;
+
                                 // if the fill type is texture, we need to create a shader from the bitmap
                                 SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
                                 drawnArrow.Shader = fillShader;
@@ -3674,8 +3694,11 @@ namespace RealmStudio
                         if (drawnStar.FillType == DrawingFillType.Texture)
                         {
                             Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+
                             if (fillTexture != null)
                             {
+                                drawnStar.FillBitmap = fillTexture;
+
                                 // if the fill type is texture, we need to create a shader from the bitmap
                                 SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
                                 drawnStar.Shader = fillShader;
@@ -3707,8 +3730,11 @@ namespace RealmStudio
                         if (drawnStar.FillType == DrawingFillType.Texture)
                         {
                             Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+
                             if (fillTexture != null)
                             {
+                                drawnStar.FillBitmap = fillTexture;
+
                                 // if the fill type is texture, we need to create a shader from the bitmap
                                 SKShader fillShader = SKShader.CreateBitmap(fillTexture.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
                                 drawnStar.Shader = fillShader;
@@ -4922,14 +4948,8 @@ namespace RealmStudio
                         DrawnLine dl = new()
                         {
                             Points = [.. DrawingMediator.LinePoints, MapStateMediator.CurrentCursorPoint],
-                            Paint = new SKPaint
-                            {
-                                Style = SKPaintStyle.StrokeAndFill,
-                                Color = DrawingMediator.DrawingLineColor.ToSKColor(),
-                                StrokeWidth = DrawingMediator.DrawingLineBrushSize,
-                                IsAntialias = true,
-                                StrokeCap = SKStrokeCap.Round
-                            },
+                            Color = DrawingMediator.DrawingLineColor.ToSKColor(),
+                            BrushSize = DrawingMediator.DrawingLineBrushSize,
                         };
 
                         DrawingMediator.LinePoints.Clear();

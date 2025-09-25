@@ -49,6 +49,20 @@ namespace RealmStudio
         [XmlArrayItem("MapImage", Type = typeof(MapImage))]
         [XmlArrayItem("MapHeightMap", Type = typeof(MapHeightMap))]
         [XmlArrayItem("LayerPaintStroke", Type = typeof(LayerPaintStroke))]
+        [XmlArrayItem("DrawnArrow", Type = typeof(DrawnArrow))]
+        [XmlArrayItem("DrawingErase", Type = typeof(DrawingErase))]
+        [XmlArrayItem("DrawnDiamond", Type = typeof(DrawnDiamond))]
+        [XmlArrayItem("DrawnEllipse", Type = typeof(DrawnEllipse))]
+        [XmlArrayItem("DrawnFivePointStar", Type = typeof(DrawnFivePointStar))]
+        [XmlArrayItem("DrawnLine", Type = typeof(DrawnLine))]
+        [XmlArrayItem("DrawnPolygon", Type = typeof(DrawnPolygon))]
+        [XmlArrayItem("DrawnRectangle", Type = typeof(DrawnRectangle))]
+        [XmlArrayItem("DrawnRegularPolygon", Type = typeof(DrawnRegularPolygon))]
+        [XmlArrayItem("DrawnSixPointStar", Type = typeof(DrawnSixPointStar))]
+        [XmlArrayItem("DrawnStamp", Type = typeof(DrawnStamp))]
+        [XmlArrayItem("DrawnTriangle", Type = typeof(DrawnTriangle))]
+        [XmlArrayItem("PaintedLine", Type = typeof(PaintedLine))]
+
         public List<MapComponent> MapLayerComponents { get; } = new List<MapComponent>(500);
 
         [XmlAttribute]

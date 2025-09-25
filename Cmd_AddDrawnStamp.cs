@@ -24,7 +24,7 @@
 
 namespace RealmStudio
 {
-    internal class Cmd_AddDrawnStamp(MapLayer mapLayer, DrawnStamp drawnStamp) : IMapOperation
+    internal sealed class Cmd_AddDrawnStamp(MapLayer mapLayer, DrawnStamp drawnStamp) : IMapOperation
     {
         private readonly MapLayer mapLayer = mapLayer;
         private readonly DrawnStamp ds = drawnStamp;

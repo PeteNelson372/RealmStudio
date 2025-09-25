@@ -23,10 +23,15 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using System.IO;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    internal sealed class PaintedLine : DrawnMapComponent, IDisposable
+    public sealed class PaintedLine : DrawnMapComponent, IXmlSerializable, IDisposable
     {
         private bool disposedValue;
 
@@ -258,6 +263,155 @@ namespace RealmStudio
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        public XmlSchema? GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            XNamespace ns = "RealmStudio";
+            string content = reader.ReadOuterXml();
+
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return;
+            }
+
+            XDocument lineDoc = XDocument.Parse(content);
+
+            if (lineDoc.Root == null)
+            {
+                throw new InvalidDataException("The painted line XML data is missing the root element.");
+            }
+
+            XAttribute? xAttr = lineDoc.Root.Attribute("X");
+            if (xAttr != null)
+            {
+                X = int.Parse(xAttr.Value);
+            }
+
+            XAttribute? yAttr = lineDoc.Root.Attribute("Y");
+            if (yAttr != null)
+            {
+                Y = int.Parse(yAttr.Value);
+            }
+
+            XAttribute? wAttr = lineDoc.Root.Attribute("Width");
+            if (wAttr != null)
+            {
+                Width = int.Parse(wAttr.Value);
+            }
+
+            XAttribute? hAttr = lineDoc.Root.Attribute("Height");
+            if (hAttr != null)
+            {
+                Height = int.Parse(hAttr.Value);
+            }
+
+
+            XElement? colorElement = lineDoc.Root.Element(ns + "Color");
+            if (colorElement != null)
+            {
+                _color = SKColor.Parse(colorElement.Value);
+            }
+
+            XElement? brushSizeElement = lineDoc.Root.Element(ns + "BrushSize");
+            if (brushSizeElement != null)
+            {
+                _brushSize = int.Parse(brushSizeElement.Value);
+            }
+
+            XElement? fillTypeElement = lineDoc.Root.Element(ns + "FillType");
+            if (fillTypeElement != null)
+            {
+                _fillType = Enum.Parse<DrawingFillType>(fillTypeElement.Value);
+            }
+
+            XElement? pointsElement = lineDoc.Root.Element(ns + "Points");
+            if (pointsElement != null)
+            {
+                List<SKPoint> points = [];
+                foreach (XElement pointElement in pointsElement.Elements(ns + "Point"))
+                {
+                    XElement? xElement = pointElement.Element(ns + "X");
+                    XElement? yElement = pointElement.Element(ns + "Y");
+                    if (xElement != null && yElement != null &&
+                        float.TryParse(xElement.Value, out float x) &&
+                        float.TryParse(yElement.Value, out float y))
+                    {
+                        points.Add(new SKPoint(x, y));
+                    }
+                }
+
+                Points = points;
+
+                int minX = (int)Points.Min(p => p.X);
+                int minY = (int)Points.Min(p => p.Y);
+                int maxX = (int)Points.Max(p => p.X);
+                int maxY = (int)Points.Max(p => p.Y);
+
+                X = minX;
+                Y = minY;
+                Width = maxX - minX;
+                Height = maxY - minY;
+
+                Bounds = new SKRect(minX, minY, maxX, maxY);
+            }
+
+            XElement? fillBitmapElement = lineDoc.Root.Element(ns + "StrokeBitmap");
+            if (fillBitmapElement != null)
+            {
+                string base64Data = fillBitmapElement.Value;
+                byte[] strokeBitmapData = Convert.FromBase64String(base64Data);
+                using MemoryStream ms = new(strokeBitmapData);
+                SKBitmap skBitmap = SKBitmap.Decode(ms);
+                _strokeBitmap = skBitmap.Copy();
+            }
+
+            XElement? colorBrushElement = lineDoc.Root.Element(ns + "ColorBrush");
+            if (colorBrushElement != null)
+            {
+                _colorbrush = Enum.Parse<ColorPaintBrush>(colorBrushElement.Value);
+                ColorBrush = _colorbrush; // This will set the Brush and resize the bitmap
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttributeString("X", X.ToString());
+            writer.WriteAttributeString("Y", Y.ToString());
+            writer.WriteAttributeString("Width", Width.ToString());
+            writer.WriteAttributeString("Height", Height.ToString());
+
+            writer.WriteElementString("Color", Color.ToString());
+            writer.WriteElementString("BrushSize", BrushSize.ToString());
+            writer.WriteElementString("FillType", FillType.ToString());
+            writer.WriteElementString("ColorBrush", ColorBrush.ToString());
+
+            writer.WriteStartElement("Points");
+            for (int i = 0; i < Points.Count; i++)
+            {
+                writer.WriteStartElement("Point");
+                writer.WriteAttributeString("Index", i.ToString());
+                writer.WriteElementString("X", Points[i].X.ToString());
+                writer.WriteElementString("Y", Points[i].Y.ToString());
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement(); // Points
+
+            if (FillType == DrawingFillType.Texture && StrokeBitmap != null)
+            {
+                using MemoryStream ms = new();
+                using SKManagedWStream wstream = new(ms);
+                StrokeBitmap.Encode(wstream, SKEncodedImageFormat.Png, 100);
+                byte[] strokeBitmapData = ms.ToArray();
+                writer.WriteStartElement("StrokeBitmap");
+                writer.WriteBase64(strokeBitmapData, 0, strokeBitmapData.Length);
+                writer.WriteEndElement();
+            }
         }
     }
 }

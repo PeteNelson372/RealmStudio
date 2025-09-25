@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddDrawnArrow(MapLayer mapLayer, DrawnArrow drawnArrow) : IMapOperation
+    internal sealed class Cmd_AddDrawnArrow(MapLayer mapLayer, DrawnArrow drawnArrow) : IMapOperation
     {
         private readonly MapLayer mapLayer = mapLayer;
         private readonly DrawnArrow da = drawnArrow;

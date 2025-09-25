@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddDrawnFivePointStar(MapLayer mapLayer, DrawnFivePointStar drawnStar) : IMapOperation
+    internal sealed class Cmd_AddDrawnFivePointStar(MapLayer mapLayer, DrawnFivePointStar drawnStar) : IMapOperation
     {
         private readonly MapLayer mapLayer = mapLayer;
         private readonly DrawnFivePointStar ds = drawnStar;
