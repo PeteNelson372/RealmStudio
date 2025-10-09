@@ -48,7 +48,6 @@ namespace RealmStudio
         public float PathTextureScale { get; set; } = 1.0F;
         public bool DrawOverSymbols { get; set; }
         public bool ShowPathPoints { get; set; }
-        public bool IsSelected { get; set; }
         public SKPaint? PathPaint { get; set; }
         public SKPath BoundaryPath { get; set; } = new();
 

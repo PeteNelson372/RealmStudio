@@ -57,8 +57,6 @@ namespace RealmStudio
 
         public bool ShowRiverPoints { get; set; }
 
-        public bool IsSelected { get; set; }
-
         public SKPaint RiverFillPaint { get; set; } = new();
 
         public SKPaint RiverShorelinePaint { get; set; } = new()

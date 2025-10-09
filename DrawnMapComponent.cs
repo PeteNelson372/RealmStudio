@@ -29,7 +29,6 @@ namespace RealmStudio
     {
         private readonly Guid _drawnComponentGuid = Guid.NewGuid();
         private SKRect _bounds = SKRect.Empty;
-        private bool _isSelected;
 
         protected DrawnMapComponent()
         {
@@ -47,15 +46,6 @@ namespace RealmStudio
             set
             {
                 _bounds = value;
-            }
-        }
-
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set
-            {
-                _isSelected = value;
             }
         }
 

@@ -50,7 +50,6 @@ namespace RealmStudio
         public Color ScaleFontColor { get; set; } = Color.White;
         public int ScaleOutlineWidth { get; set; } = 2;
         public Color ScaleOutlineColor { get; set; } = Color.Black;
-        public bool IsSelected { get; set; }
 
         private SKPaint SegmentOutlinePaint = new();
         private SKPaint EvenSegmentPaint = new();

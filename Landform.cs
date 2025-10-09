@@ -202,7 +202,6 @@ namespace RealmStudio
         public string? CoastlineHatchBlendMode { get; set; } = string.Empty;
         public bool PaintCoastlineGradient { get; set; } = true;
         public bool FillWithTexture { get; set; } = true;
-        public bool IsSelected { get; set; }
         public bool IsModified { get; set; } = true;
         public bool IsDeleted { get; set; }
 

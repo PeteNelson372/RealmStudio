@@ -87,8 +87,6 @@ namespace RealmStudio
             FillType = SKPathFillType.Winding,
         };
 
-        public bool IsSelected { get; set; }
-
         public SKPaint WaterFeatureBackgroundPaint { get; set; } = new()
         {
             Color = ColorTranslator.FromHtml("#658CBFC5").ToSKColor(),

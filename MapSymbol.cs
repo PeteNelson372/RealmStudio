@@ -43,8 +43,6 @@ namespace RealmStudio
 
         public int SymbolHeight { get; set; }
 
-        public bool IsSelected { get; set; }
-
         public SymbolFileFormat SymbolFormat { get; set; } = SymbolFileFormat.NotSet;
 
         public MapSymbolType SymbolType { get; set; } = MapSymbolType.NotSet;

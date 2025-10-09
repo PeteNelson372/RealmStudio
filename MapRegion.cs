@@ -45,7 +45,6 @@ namespace RealmStudio
         public int RegionInnerOpacity { get; set; } = 64;
         public int RegionBorderSmoothing { get; set; } = 20;
         public PathType RegionBorderType { get; set; } = PathType.SolidLinePath;
-        public bool IsSelected { get; set; }
 
         public SKPaint RegionBorderPaint { get; set; } = new();
 

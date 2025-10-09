@@ -9,7 +9,7 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>false</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>1.2025.0-alpha-3081</Version>
+    <Version>1.2025.0-alpha-3094</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
@@ -29,8 +29,8 @@
     <UseWPF>True</UseWPF>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <ApplicationIcon>realm_studio_icon_1024x1024_g3u_icon.ico</ApplicationIcon>
-    <AssemblyVersion>1.2025.268.33403</AssemblyVersion>
-    <FileVersion>1.2025.268.33403</FileVersion> 
+    <AssemblyVersion>1.2025.282.32752</AssemblyVersion>
+    <FileVersion>1.2025.282.32752</FileVersion> 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -170,12 +170,12 @@
     <PackageReference Include="ReaLTaiizor" Version="3.8.1.3" />
     <PackageReference Include="SharpAvi" Version="3.0.1" />
     <PackageReference Include="SimplexNoise" Version="2.0.0" />
-    <PackageReference Include="SkiaSharp" Version="3.119.0" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.119.0" />
-    <PackageReference Include="SkiaSharp.Views" Version="3.119.0" />
-    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.0" />
-    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.119.0" />
-    <PackageReference Include="SkiaSharp.Views.WPF" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.Views" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.Views.WPF" Version="3.119.1" />
     <PackageReference Include="Svg.Skia" Version="3.2.1" />
     <PackageReference Include="System.Management" Version="9.0.9" />
   </ItemGroup>

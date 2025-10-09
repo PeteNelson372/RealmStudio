@@ -42,8 +42,6 @@ namespace RealmStudio
 
         public SKPaint? BoxPaint { get; set; }
 
-        public bool IsSelected { get; set; }
-
         public float BoxCenterLeft { get; set; }
         public float BoxCenterTop { get; set; }
         public float BoxCenterRight { get; set; }

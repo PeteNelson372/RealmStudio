@@ -77,6 +77,8 @@ namespace RealmStudio
         [XmlAttribute]
         public int Height { get; set; }
 
+        public bool IsSelected { get; set; }
+
         public abstract void Render(SKCanvas canvas);
     }
 }

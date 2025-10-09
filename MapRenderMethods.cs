@@ -141,8 +141,8 @@ namespace RealmStudio
             // measure layer
             RenderMeasuresForExport(map, renderCanvas);
 
-            // TODO: drawing layer
-            //MapRenderMethods.RenderDrawingForExport(map, renderCanvas);
+            // drawing layer
+            RenderDrawingForExport(map, renderCanvas);
 
             // vignette layer
             RenderVignetteForExport(map, renderCanvas);
@@ -499,6 +499,18 @@ namespace RealmStudio
                         }
                     }
                 }
+                else if (landformLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    dmc.Render(landformLayer.LayerSurface.Canvas);
+                }
+            }
+
+            for (int i = 0; i < landCoastlineLayer.MapLayerComponents.Count; i++)
+            {
+                if (landCoastlineLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    dmc.Render(landCoastlineLayer.LayerSurface.Canvas);
+                }
             }
 
             renderCanvas.DrawSurface(landCoastlineLayer.LayerSurface, scrollPoint);
@@ -537,9 +549,23 @@ namespace RealmStudio
                     // eraser strokes
                     lps.Render(canvas);
                 }
+                else if (landformLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    dmc.Render(canvas);
+                }
             }
 
             renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
+
+            MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDCOASTLINELAYER);
+
+            for (int i = 0; i < landCoastlineLayer.MapLayerComponents.Count; i++)
+            {
+                if (landCoastlineLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    dmc.Render(canvas);
+                }
+            }
 
             // landform drawing (color painting over landform)
             MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDDRAWINGLAYER);
@@ -610,27 +636,34 @@ namespace RealmStudio
                     MapStateMediator.CurrentMapPath.Render(pathLowerLayer.LayerSurface.Canvas);
                 }
 
-                foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                for (int i = 0; i < pathLowerLayer.MapLayerComponents.Count; i++)
                 {
-                    mp.Render(pathLowerLayer.LayerSurface.Canvas);
-
-                    if (mp.ShowPathPoints)
+                    if (pathLowerLayer.MapLayerComponents[i] is MapPath mp)
                     {
-                        List<MapPathPoint> controlPoints = mp.GetMapPathControlPoints();
+                        mp.Render(pathLowerLayer.LayerSurface.Canvas);
 
-                        foreach (MapPathPoint p in controlPoints)
+                        if (mp.ShowPathPoints)
                         {
-                            if (p.IsSelected)
-                            {
-                                pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathSelectedControlPointPaint);
-                            }
-                            else
-                            {
-                                pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathControlPointPaint);
-                            }
+                            List<MapPathPoint> controlPoints = mp.GetMapPathControlPoints();
 
-                            pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathControlPointOutlinePaint);
+                            foreach (MapPathPoint p in controlPoints)
+                            {
+                                if (p.IsSelected)
+                                {
+                                    pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathSelectedControlPointPaint);
+                                }
+                                else
+                                {
+                                    pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathControlPointPaint);
+                                }
+
+                                pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathControlPointOutlinePaint);
+                            }
                         }
+                    }
+                    else if (pathLowerLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        dmc.Render(pathLowerLayer.LayerSurface.Canvas);
                     }
                 }
 
@@ -642,20 +675,23 @@ namespace RealmStudio
                 {
                     selectionLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
-                    foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+                    for (int i = 0; i < pathLowerLayer.MapLayerComponents.Count; i++)
                     {
-                        if (mp.IsSelected)
+                        if (pathLowerLayer.MapLayerComponents[i] is MapPath mp)
                         {
-                            if (mp.BoundaryPath != null)
+                            if (mp.IsSelected)
                             {
-                                // only one path can be selected
-                                // draw an outline around the path to show that it is selected
-                                mp.BoundaryPath.GetBounds(out SKRect boundRect);
-                                using SKPath boundsPath = new();
-                                boundsPath.AddRect(boundRect);
+                                if (mp.BoundaryPath != null)
+                                {
+                                    // only one path can be selected
+                                    // draw an outline around the path to show that it is selected
+                                    mp.BoundaryPath.GetBounds(out SKRect boundRect);
+                                    using SKPath boundsPath = new();
+                                    boundsPath.AddRect(boundRect);
 
-                                selectionLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.MapPathSelectPaint);
-                                break;
+                                    selectionLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.MapPathSelectPaint);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -673,9 +709,16 @@ namespace RealmStudio
 
             using SKCanvas canvas = new(b);
 
-            foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+            for (int i = 0; i < pathLowerLayer.MapLayerComponents.Count; i++)
             {
-                mp.Render(canvas);
+                if (pathLowerLayer.MapLayerComponents[i] is MapPath mp)
+                {
+                    mp.Render(canvas);
+                }
+                else if (pathLowerLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    dmc.Render(canvas);
+                }
             }
 
             renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
@@ -696,27 +739,34 @@ namespace RealmStudio
                     MapStateMediator.CurrentMapPath.Render(pathUpperLayer.LayerSurface.Canvas);
                 }
 
-                foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                for (int i = 0; i < pathUpperLayer.MapLayerComponents.Count; i++)
                 {
-                    mp.Render(pathUpperLayer.LayerSurface.Canvas);
-
-                    if (mp.ShowPathPoints)
+                    if (pathUpperLayer.MapLayerComponents[i] is MapPath mp)
                     {
-                        List<MapPathPoint> controlPoints = mp.GetMapPathControlPoints();
+                        mp.Render(pathUpperLayer.LayerSurface.Canvas);
 
-                        foreach (MapPathPoint p in controlPoints)
+                        if (mp.ShowPathPoints)
                         {
-                            if (p.IsSelected)
-                            {
-                                pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathSelectedControlPointPaint);
-                            }
-                            else
-                            {
-                                pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathControlPointPaint);
-                            }
+                            List<MapPathPoint> controlPoints = mp.GetMapPathControlPoints();
 
-                            pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathControlPointOutlinePaint);
+                            foreach (MapPathPoint p in controlPoints)
+                            {
+                                if (p.IsSelected)
+                                {
+                                    pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathSelectedControlPointPaint);
+                                }
+                                else
+                                {
+                                    pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathControlPointPaint);
+                                }
+
+                                pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathControlPointOutlinePaint);
+                            }
                         }
+                    }
+                    else if (pathUpperLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        dmc.Render(pathUpperLayer.LayerSurface.Canvas);
                     }
                 }
 
@@ -728,20 +778,23 @@ namespace RealmStudio
                 {
                     selectionLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
-                    foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+                    for (int i = 0; i < pathUpperLayer.MapLayerComponents.Count; i++)
                     {
-                        if (mp.IsSelected)
+                        if (pathUpperLayer.MapLayerComponents[i] is MapPath mp)
                         {
-                            if (mp.BoundaryPath != null)
+                            if (mp.IsSelected)
                             {
-                                // only one path can be selected
-                                // draw an outline around the path to show that it is selected
-                                mp.BoundaryPath.GetBounds(out SKRect boundRect);
-                                using SKPath boundsPath = new();
-                                boundsPath.AddRect(boundRect);
+                                if (mp.BoundaryPath != null)
+                                {
+                                    // only one path can be selected
+                                    // draw an outline around the path to show that it is selected
+                                    mp.BoundaryPath.GetBounds(out SKRect boundRect);
+                                    using SKPath boundsPath = new();
+                                    boundsPath.AddRect(boundRect);
 
-                                selectionLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.MapPathSelectPaint);
-                                break;
+                                    selectionLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.MapPathSelectPaint);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -759,9 +812,16 @@ namespace RealmStudio
             using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
             using SKCanvas canvas = new(b);
 
-            foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+            for (int i = 0; i < pathUpperLayer.MapLayerComponents.Count; i++)
             {
-                mp.Render(canvas);
+                if (pathUpperLayer.MapLayerComponents[i] is MapPath mp)
+                {
+                    mp.Render(canvas);
+                }
+                else if (pathUpperLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    dmc.Render(canvas);
+                }
             }
 
             renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
@@ -844,15 +904,10 @@ namespace RealmStudio
             MapLayer frameLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER);
             if (frameLayer.LayerSurface == null || frameLayer.MapLayerComponents.Count == 0) return;
 
-            PlacedMapFrame placedFrame = (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents[0];
+            frameLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+            frameLayer.Render(frameLayer.LayerSurface.Canvas);
 
-            if (placedFrame.FrameEnabled)
-            {
-                frameLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                frameLayer.Render(frameLayer.LayerSurface.Canvas);
-
-                renderCanvas.DrawSurface(frameLayer.LayerSurface, scrollPoint);
-            }
+            renderCanvas.DrawSurface(frameLayer.LayerSurface, scrollPoint);
         }
 
         internal static void RenderFrameForExport(RealmStudioMap map, SKCanvas renderCanvas)
@@ -863,15 +918,10 @@ namespace RealmStudio
             using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
             using SKCanvas canvas = new(b);
 
-            PlacedMapFrame placedFrame = (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(map, MapBuilder.FRAMELAYER).MapLayerComponents[0];
+            canvas.Clear(SKColors.Transparent);
+            frameLayer.Render(canvas);
 
-            if (placedFrame.FrameEnabled)
-            {
-                canvas.Clear(SKColors.Transparent);
-                frameLayer.Render(canvas);
-
-                renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
-            }
+            renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
         }
 
         internal static void RenderOverlays(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
@@ -1106,15 +1156,19 @@ namespace RealmStudio
             canvas.Clear(SKColors.Transparent);
 
             // water features
-            foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
+            foreach (MapComponent mc in waterLayer.MapLayerComponents)
             {
-                if (w is WaterFeature wf)
+                if (mc is WaterFeature wf)
                 {
                     wf.Render(canvas);
                 }
-                else if (w is River r)
+                else if (mc is River r)
                 {
                     r.Render(canvas);
+                }
+                else if (mc is DrawnMapComponent dmc)
+                {
+                    dmc.Render(canvas);
                 }
             }
 

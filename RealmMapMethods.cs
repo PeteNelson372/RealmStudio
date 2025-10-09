@@ -1575,126 +1575,244 @@ namespace RealmStudio
 
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
 
-            foreach (Landform l in landformLayer.MapLayerComponents.Cast<Landform>())
+            for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
             {
-                if (selectedComponent != null && selectedComponent is Landform landform && landform == l) continue;
-                l.IsSelected = false;
-                MapStateMediator.SelectedLandform = null;
+                if (landformLayer.MapLayerComponents[i] is Landform landform)
+                {
+                    if (selectedComponent != null && selectedComponent is Landform lf && lf.LandformGuid.ToString() == landform.LandformGuid.ToString())
+                    {
+                        continue;
+                    }
+                    else if (landform.IsSelected)
+                    {
+                        landform.IsSelected = false;
+                        MapStateMediator.SelectedLandform = null;
+                    }
+                }
+                else
+                {
+                    landformLayer.MapLayerComponents[i].IsSelected = false;
+                }
             }
 
             MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER);
-            foreach (IWaterFeature w in waterLayer.MapLayerComponents.Cast<IWaterFeature>())
-            {
-                if (selectedComponent == null)
-                {
-                    if (w is WaterFeature wf)
-                    {
-                        wf.IsSelected = false;
 
-                        if (MapStateMediator.SelectedWaterFeature == wf)
-                        {
-                            MapStateMediator.SelectedWaterFeature = null;
-                        }
-                    }
-                    else if (w is River r)
+            for (int i = 0; i < waterLayer.MapLayerComponents.Count; i++)
+            {
+                if (waterLayer.MapLayerComponents[i] is WaterFeature waterfeature)
+                {
+                    if (selectedComponent != null && selectedComponent is WaterFeature wf && wf.WaterFeatureGuid.ToString() == waterfeature.WaterFeatureGuid.ToString())
                     {
-                        r.IsSelected = false;
+                        continue;
+                    }
+                    else if (waterfeature.IsSelected)
+                    {
+                        waterfeature.IsSelected = false;
                         MapStateMediator.SelectedWaterFeature = null;
                     }
                 }
-                else if (selectedComponent != null)
+                else if (waterLayer.MapLayerComponents[i] is River river)
                 {
-                    if (w is WaterFeature wf)
+                    if (selectedComponent != null && selectedComponent is River r && r.MapRiverGuid.ToString() == river.MapRiverGuid.ToString())
                     {
-                        if (wf == selectedComponent)
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            wf.IsSelected = false;
-                            MapStateMediator.SelectedWaterFeature = null;
-                        }
+                        continue;
                     }
-                    else if (w is River r)
+                    else if (river.IsSelected)
                     {
-                        if (r == selectedComponent)
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            r.IsSelected = false;
-                            MapStateMediator.SelectedWaterFeature = null;
-                        }
+                        river.IsSelected = false;
+                        MapStateMediator.SelectedWaterFeature = null;
                     }
                 }
+                else
+                {
+                    waterLayer.MapLayerComponents[i].IsSelected = false;
+                }
             }
+
 
             MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER);
 
-            foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
+            for (int i = 0; i < pathUpperLayer.MapLayerComponents.Count; i++)
             {
-                if (selectedComponent != null && selectedComponent is MapPath mapPath && mapPath == mp) continue;
-                mp.IsSelected = false;
-                mp.ShowPathPoints = false;
-
-                if (MapStateMediator.SelectedMapPath == mp)
+                if (pathUpperLayer.MapLayerComponents[i] is MapPath mapPath)
                 {
-                    MapStateMediator.SelectedMapPath = null;
+                    if (selectedComponent != null && selectedComponent is MapPath mp && mp == mapPath)
+                    {
+                        continue;
+                    }
+                    else if (mapPath.IsSelected)
+                    {
+                        mapPath.IsSelected = false;
+                        mapPath.ShowPathPoints = false;
+                        MapStateMediator.SelectedMapPath = null;
+                    }
+                }
+                else
+                {
+                    pathUpperLayer.MapLayerComponents[i].IsSelected = false;
                 }
             }
+
 
             MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
 
-            foreach (MapPath mp in pathLowerLayer.MapLayerComponents.Cast<MapPath>())
+            for (int i = 0; i < pathLowerLayer.MapLayerComponents.Count; i++)
             {
-                if (selectedComponent != null && selectedComponent is MapPath mapPath && mapPath == mp) continue;
-                mp.IsSelected = false;
-                mp.ShowPathPoints = false;
-
-                if (MapStateMediator.SelectedMapPath == mp)
+                if (pathLowerLayer.MapLayerComponents[i] is MapPath mapPath)
                 {
-                    MapStateMediator.SelectedMapPath = null;
+                    if (selectedComponent != null && selectedComponent is MapPath mp && mp == mapPath)
+                    {
+                        continue;
+                    }
+                    else if (mapPath.IsSelected)
+                    {
+                        mapPath.IsSelected = false;
+                        mapPath.ShowPathPoints = false;
+                        MapStateMediator.SelectedMapPath = null;
+                    }
+                }
+                else
+                {
+                    pathLowerLayer.MapLayerComponents[i].IsSelected = false;
                 }
             }
 
+
             MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER);
 
-            foreach (MapSymbol symbol in symbolLayer.MapLayerComponents.Cast<MapSymbol>())
+            for (int i = 0; i < symbolLayer.MapLayerComponents.Count; i++)
             {
-                if (selectedComponent != null && selectedComponent is MapSymbol s && s == symbol) continue;
-                symbol.IsSelected = false;
+                if (symbolLayer.MapLayerComponents[i] is MapSymbol symbol)
+                {
+                    if (selectedComponent != null && selectedComponent is MapSymbol s && s == symbol)
+                    {
+                        continue;
+                    }
+                    else if (symbol.IsSelected)
+                    {
+                        symbol.IsSelected = false;
+                        MapStateMediator.SelectedMapSymbol = null;
+                    }
+                }
+                else
+                {
+                    symbolLayer.MapLayerComponents[i].IsSelected = false;
+                }
             }
+
 
             MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LABELLAYER);
 
-            foreach (MapLabel label in labelLayer.MapLayerComponents.Cast<MapLabel>())
+            for (int i = 0; i < labelLayer.MapLayerComponents.Count; i++)
             {
-                if (selectedComponent != null && selectedComponent is MapLabel l && l == label) continue;
-                label.IsSelected = false;
+                if (labelLayer.MapLayerComponents[i] is MapLabel label)
+                {
+                    if (selectedComponent != null && selectedComponent is MapLabel l && l == label)
+                    {
+                        continue;
+                    }
+                    else if (label.IsSelected)
+                    {
+                        label.IsSelected = false;
+                        MapStateMediator.SelectedMapLabel = null;
+                    }
+                }
+                else
+                {
+                    labelLayer.MapLayerComponents[i].IsSelected = false;
+                }
             }
 
             MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BOXLAYER);
 
-            foreach (PlacedMapBox box in boxLayer.MapLayerComponents.Cast<PlacedMapBox>())
+            for (int i = 0; i < boxLayer.MapLayerComponents.Count; i++)
             {
-                if (selectedComponent != null && selectedComponent is PlacedMapBox b && b == box) continue;
-                box.IsSelected = false;
+                if (boxLayer.MapLayerComponents[i] is PlacedMapBox box)
+                {
+                    if (selectedComponent != null && selectedComponent is PlacedMapBox b && b.BoxGuid.ToString() == box.BoxGuid.ToString())
+                    {
+                        continue;
+                    }
+                    else if (box.IsSelected)
+                    {
+                        box.IsSelected = false;
+                    }
+                }
+                else
+                {
+                    boxLayer.MapLayerComponents[i].IsSelected = false;
+                }
             }
 
+
             MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONLAYER);
-            foreach (MapRegion r in regionLayer.MapLayerComponents.Cast<MapRegion>())
+
+            for (int i = 0; i < regionLayer.MapLayerComponents.Count; i++)
             {
-                if (selectedComponent != null && selectedComponent is MapRegion region && region == r) continue;
-                r.IsSelected = false;
+                if (regionLayer.MapLayerComponents[i] is MapRegion region)
+                {
+                    if (selectedComponent != null && selectedComponent is MapRegion r && r.RegionGuid.ToString() == region.RegionGuid.ToString())
+                    {
+                        continue;
+                    }
+                    else if (region.IsSelected)
+                    {
+                        region.IsSelected = false;
+                    }
+                }
+                else
+                {
+                    regionLayer.MapLayerComponents[i].IsSelected = false;
+                }
             }
 
             MapLayer drawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.DRAWINGLAYER);
-            foreach (DrawnMapComponent dmc in drawingLayer.MapLayerComponents.Cast<DrawnMapComponent>())
+
+            for (int i = 0; i < drawingLayer.MapLayerComponents.Count; i++)
             {
-                if (selectedComponent != null && selectedComponent is DrawnMapComponent drawnMapComponent && drawnMapComponent == dmc) continue;
-                dmc.IsSelected = false;
+                if (drawingLayer.MapLayerComponents[i] is DrawnMapComponent drawnMapComponent)
+                {
+                    if (selectedComponent != null && selectedComponent is DrawnMapComponent dmc && dmc == drawnMapComponent)
+                    {
+                        continue;
+                    }
+                    else if (drawnMapComponent.IsSelected)
+                    {
+                        drawnMapComponent.IsSelected = false;
+                        MapStateMediator.SelectedDrawnMapComponent = null;
+                    }
+                }
+                else
+                {
+                    drawingLayer.MapLayerComponents[i].IsSelected = false;
+                }
+            }
+
+
+            // drawn components can be drawn on many layers, so they have to be able to be selected/deselected on any layer
+
+            for (int i = MapBuilder.BASELAYER; i < MapBuilder.WORKLAYER; i++)
+            {
+                MapLayer layer = MapBuilder.GetMapLayerByIndex(map, i);
+                for (int j = 0; j < layer.MapLayerComponents.Count; j++)
+                {
+                    if (layer.MapLayerComponents[j] is DrawnMapComponent drawnMapComponent)
+                    {
+                        if (selectedComponent != null && selectedComponent is DrawnMapComponent dmc && dmc == drawnMapComponent)
+                        {
+                            continue;
+                        }
+                        else if (drawnMapComponent.IsSelected)
+                        {
+                            drawnMapComponent.IsSelected = false;
+                            MapStateMediator.SelectedDrawnMapComponent = null;
+                        }
+                    }
+                    else
+                    {
+                        layer.MapLayerComponents[j].IsSelected = false;
+                    }
+                }
             }
         }
 

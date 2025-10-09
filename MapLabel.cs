@@ -33,8 +33,6 @@ namespace RealmStudio
 {
     public class MapLabel : MapComponent, IXmlSerializable
     {
-        public bool IsSelected { get; set; }
-
         public Guid LabelGuid { get; set; } = Guid.NewGuid();
 
         public string LabelText { get; set; } = "";
