@@ -2052,6 +2052,17 @@ namespace RealmStudio
                         foreach (MapLayer ml in MapStateMediator.CurrentMap.MapLayers)
                         {
                             ml.LayerSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, false, imageInfo);
+
+                            if (LayerListBox.Items.Contains(ml.MapLayerName.ToUpperInvariant()))
+                            {
+                                // layer is drawable
+                                ml.Drawable = true;
+                            }
+                            else
+                            {
+                                // layer is not drawable
+                                ml.Drawable = false;
+                            }
                         }
 
                         DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
@@ -2993,12 +3004,14 @@ namespace RealmStudio
                 case MapDrawingMode.WaterPaint:
                     {
                         Cursor = Cursors.Cross;
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         WaterFeatureManager.Create();
                     }
                     break;
                 case MapDrawingMode.LakePaint:
                     {
                         Cursor = Cursors.Cross;
+                        MapStateMediator.CurrentMap.IsSaved = false;
 
                         MapStateMediator.CurrentWaterFeature = WaterFeatureManager.CreateLake(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint,
                             brushSize, WaterColorSelectionButton.BackColor, ShorelineColorSelectionButton.BackColor);
@@ -3018,6 +3031,7 @@ namespace RealmStudio
                 case MapDrawingMode.RiverPaint:
                     {
                         Cursor = Cursors.Cross;
+                        MapStateMediator.CurrentMap.IsSaved = false;
 
                         if (MapStateMediator.CurrentRiver == null)
                         {
@@ -3074,6 +3088,7 @@ namespace RealmStudio
                 case MapDrawingMode.PathPaint:
                     {
                         Cursor = Cursors.Cross;
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
                         if (MapStateMediator.CurrentMapPath == null)
@@ -3112,6 +3127,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.SymbolPlace:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         if (SymbolMediator.UseAreaBrush)
                         {
                             ApplicationTimerManager.SymbolAreaBrushTimerEnabled = true;
@@ -3125,6 +3141,7 @@ namespace RealmStudio
                     }
                     break;
                 case MapDrawingMode.SymbolErase:
+                    MapStateMediator.CurrentMap.IsSaved = false;
                     int eraserRadius = SymbolMediator.AreaBrushSize / 2;
 
                     SKPoint eraserCursorPoint = new(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
@@ -3133,6 +3150,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawArcLabelPath:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
                         LabelManager.ResetLabelPath();
@@ -3143,6 +3161,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawBezierLabelPath:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         LabelManager.ResetLabelPath();
 
@@ -3155,6 +3174,8 @@ namespace RealmStudio
                     {
                         if (BoxMediator.Box != null)
                         {
+                            MapStateMediator.CurrentMap.IsSaved = false;
+
                             // initialize new box
                             Cursor = Cursors.Cross;
 
@@ -3171,6 +3192,8 @@ namespace RealmStudio
                     {
                         if (MapStateMediator.CurrentMapMeasure == null)
                         {
+                            MapStateMediator.CurrentMap.IsSaved = false;
+
                             MapMeasureManager.Create();
                             MapMeasureManager.AddMeasurePoint(MapStateMediator.CurrentCursorPoint);
                             MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
@@ -3185,6 +3208,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.RegionPaint:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
                         // initialize region
@@ -3214,6 +3238,8 @@ namespace RealmStudio
                     {
                         if (MapStateMediator.CurrentMapRegion != null && RegionManager.NewRegionPoint != null)
                         {
+                            MapStateMediator.CurrentMap.IsSaved = false;
+
                             Cmd_AddMapRegionPoint cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion, RegionManager.NewRegionPoint, RegionManager.NextRegionPointIndex);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
@@ -3228,6 +3254,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingLine:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
@@ -3239,6 +3266,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingPaint:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
@@ -3267,6 +3295,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingErase:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
                         DrawingErase drawingErase = new()
@@ -3287,6 +3316,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingRectangle:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
@@ -3323,6 +3353,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingRoundedRectangle:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
@@ -3361,6 +3392,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingEllipse:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
@@ -3400,6 +3432,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingPolygon:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
@@ -3440,6 +3473,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingStamp:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
                         if (DrawingMediator.DrawingStampBitmap != null)
@@ -3453,6 +3487,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingTriangle:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
@@ -3490,6 +3525,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingRightTriangle:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
@@ -3528,6 +3564,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingPentagon:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
@@ -3566,6 +3603,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingHexagon:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
@@ -3604,6 +3642,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingDiamond:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
@@ -3641,6 +3680,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingArrow:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
@@ -3676,6 +3716,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingFivePointStar:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
@@ -3712,6 +3753,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingSixPointStar:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
@@ -3857,6 +3899,7 @@ namespace RealmStudio
             {
                 case MapDrawingMode.OceanErase:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
                         MapStateMediator.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(MapStateMediator.CurrentCursorPoint);
@@ -3870,6 +3913,7 @@ namespace RealmStudio
                             && MapStateMediator.CurrentCursorPoint.X > 0 && MapStateMediator.CurrentCursorPoint.X < MapStateMediator.CurrentMap.MapWidth
                             && MapStateMediator.CurrentCursorPoint.Y > 0 && MapStateMediator.CurrentCursorPoint.Y < MapStateMediator.CurrentMap.MapHeight)
                         {
+                            MapStateMediator.CurrentMap.IsSaved = false;
                             MapStateMediator.CurrentLandform.IsModified = true;
 
                             MapStateMediator.CurrentLandform.DrawPath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, MainMediator.SelectedBrushSize / 2);
@@ -3888,6 +3932,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.LandErase:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
                         LandformManager.LandformErasePath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, MainMediator.SelectedBrushSize / 2);
@@ -3902,6 +3947,7 @@ namespace RealmStudio
                     {
                         if (MapStateMediator.SelectedLandform != null)
                         {
+                            MapStateMediator.CurrentMap.IsSaved = false;
                             LandformManager.MoveLandform(MapStateMediator.CurrentMap, MapStateMediator.SelectedLandform, MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
 
                             MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
@@ -3912,6 +3958,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.LandColorErase:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
                         MapStateMediator.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(MapStateMediator.CurrentCursorPoint);
@@ -3921,6 +3968,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.WaterPaint:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
                         if (MapStateMediator.CurrentWaterFeature != null)
@@ -3936,6 +3984,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.WaterErase:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
                         WaterFeatureManager.WaterFeaturErasePath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, MainMediator.SelectedBrushSize / 2);
@@ -3947,6 +3996,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.WaterColorErase:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
                         MapStateMediator.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(MapStateMediator.CurrentCursorPoint);
@@ -3956,6 +4006,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.RiverPaint:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
                         MapStateMediator.CurrentRiver?.RiverPoints.Add(new MapRiverPoint(MapStateMediator.CurrentCursorPoint));
@@ -3980,6 +4031,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.PathPaint:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         const int minimumPathPointCount = 5;
 
@@ -3994,6 +4046,7 @@ namespace RealmStudio
                     {
                         if (MapStateMediator.SelectedMapPath != null)
                         {
+                            MapStateMediator.CurrentMap.IsSaved = false;
                             PathManager.MovePath(MapStateMediator.SelectedMapPath, MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
 
                             MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
@@ -4015,6 +4068,7 @@ namespace RealmStudio
                 case MapDrawingMode.SymbolPlace:
                     if (!SymbolMediator.UseAreaBrush)
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         SymbolManager.PlaceSelectedSymbolAtCursor(MapStateMediator.CurrentCursorPoint);
                     }
 
@@ -4030,7 +4084,6 @@ namespace RealmStudio
                     MapStateMediator.CurrentMap.IsSaved = false;
                     break;
                 case MapDrawingMode.SymbolColor:
-
                     if (SymbolMediator.UseAreaBrush)
                     {
                         int colorBrushRadius = SymbolMediator.AreaBrushSize / 2;
@@ -4137,6 +4190,7 @@ namespace RealmStudio
 
                             if (!RegionManager.EditingRegion)
                             {
+                                MapStateMediator.CurrentMap.IsSaved = false;
                                 RegionManager.MoveRegion(MapStateMediator.CurrentMapRegion, MapStateMediator.CurrentCursorPoint, MapStateMediator.PreviousCursorPoint);
                                 MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
                             }
@@ -4182,6 +4236,8 @@ namespace RealmStudio
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
                         if (canvas == null) return;
 
+                        MapStateMediator.CurrentMap.IsSaved = false;
+
                         DrawingMediator.LinePoints.Add(MapStateMediator.CurrentCursorPoint);
 
                         using SKPaint paint = new()
@@ -4206,6 +4262,8 @@ namespace RealmStudio
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
                         if (canvas == null) return;
 
+                        MapStateMediator.CurrentMap.IsSaved = false;
+
                         canvas.Clear(SKColors.Transparent);
                         DrawingManager.CurrentPaintedLine?.Points.Add(MapStateMediator.CurrentCursorPoint);
                         DrawingManager.CurrentPaintedLine?.Render(canvas);
@@ -4220,6 +4278,8 @@ namespace RealmStudio
                         if (canvas == null) return;
 
                         canvas.Clear(SKColors.Transparent);
+
+                        MapStateMediator.CurrentMap.IsSaved = false;
 
                         if (DrawingManager.CurrentDrawnRectangle != null)
                         {
@@ -4249,6 +4309,7 @@ namespace RealmStudio
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
                         if (canvas == null) return;
 
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnRectangle != null)
@@ -4279,6 +4340,7 @@ namespace RealmStudio
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas;
                         if (canvas == null) return;
 
+                        MapStateMediator.CurrentMap.IsSaved = false;
                         canvas.Clear(SKColors.Transparent);
 
                         // add the current cursor point to the current drawing erase object
@@ -4323,6 +4385,8 @@ namespace RealmStudio
                         canvas?.Clear(SKColors.Transparent);
                         if (canvas == null) return;
 
+                        MapStateMediator.CurrentMap.IsSaved = false;
+
                         DrawingManager.CurrentDrawnPolygon?.Points.Add(MapStateMediator.CurrentCursorPoint);
 
                         DrawingManager.CurrentDrawnPolygon?.Render(canvas);
@@ -4341,6 +4405,8 @@ namespace RealmStudio
                         if (canvas == null) return;
 
                         canvas.Clear(SKColors.Transparent);
+
+                        MapStateMediator.CurrentMap.IsSaved = false;
 
                         if (DrawingManager.CurrentDrawnTriangle != null)
                         {
@@ -4361,6 +4427,8 @@ namespace RealmStudio
                     {
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
                         if (canvas == null) return;
+
+                        MapStateMediator.CurrentMap.IsSaved = false;
 
                         canvas.Clear(SKColors.Transparent);
 
@@ -4384,6 +4452,8 @@ namespace RealmStudio
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
                         if (canvas == null) return;
 
+                        MapStateMediator.CurrentMap.IsSaved = false;
+
                         canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnRegularPolygon != null)
@@ -4405,6 +4475,8 @@ namespace RealmStudio
                     {
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
                         if (canvas == null) return;
+
+                        MapStateMediator.CurrentMap.IsSaved = false;
 
                         canvas.Clear(SKColors.Transparent);
 
@@ -4429,6 +4501,8 @@ namespace RealmStudio
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
                         if (canvas == null) return;
 
+                        MapStateMediator.CurrentMap.IsSaved = false;
+
                         canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnDiamond != null)
@@ -4452,6 +4526,8 @@ namespace RealmStudio
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
                         if (canvas == null) return;
 
+                        MapStateMediator.CurrentMap.IsSaved = false;
+
                         canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnArrow != null)
@@ -4472,6 +4548,8 @@ namespace RealmStudio
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
                         if (canvas == null) return;
 
+                        MapStateMediator.CurrentMap.IsSaved = false;
+
                         canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnFivePointStar != null)
@@ -4490,6 +4568,8 @@ namespace RealmStudio
                         SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
                         if (canvas == null) return;
 
+                        MapStateMediator.CurrentMap.IsSaved = false;
+
                         canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnSixPointStar != null)
@@ -4505,6 +4585,8 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingSelect:
                     {
+                        MapStateMediator.CurrentMap.IsSaved = false;
+
                         Cursor = Cursors.SizeAll;
 
                         float deltaX = MapStateMediator.CurrentCursorPoint.X - MapStateMediator.PreviousCursorPoint.X;

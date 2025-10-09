@@ -191,25 +191,25 @@ namespace RealmStudio
             XAttribute? xAttr = ellipseDoc.Root.Attribute("X");
             if (xAttr != null)
             {
-                X = int.Parse(xAttr.Value);
+                X = (int)float.Parse(xAttr.Value);
             }
 
             XAttribute? yAttr = ellipseDoc.Root.Attribute("Y");
             if (yAttr != null)
             {
-                Y = int.Parse(yAttr.Value);
+                Y = (int)float.Parse(yAttr.Value);
             }
 
             XAttribute? wAttr = ellipseDoc.Root.Attribute("Width");
             if (wAttr != null)
             {
-                Width = int.Parse(wAttr.Value);
+                Width = (int)float.Parse(wAttr.Value);
             }
 
             XAttribute? hAttr = ellipseDoc.Root.Attribute("Height");
             if (hAttr != null)
             {
-                Height = int.Parse(hAttr.Value);
+                Height = (int)float.Parse(hAttr.Value);
             }
 
             XElement? topLeftElement = ellipseDoc.Root.Element(ns + "TopLeft");
@@ -219,7 +219,7 @@ namespace RealmStudio
                 XAttribute? tlyAttr = topLeftElement.Attribute("Y");
                 if (tlxAttr != null && tlyAttr != null)
                 {
-                    _topLeft = new SKPoint(int.Parse(tlxAttr.Value), int.Parse(tlyAttr.Value));
+                    _topLeft = new SKPoint((int)float.Parse(tlxAttr.Value), (int)float.Parse(tlyAttr.Value));
                 }
             }
 
@@ -230,7 +230,7 @@ namespace RealmStudio
                 XAttribute? bryAttr = bottomRightElement.Attribute("Y");
                 if (brxAttr != null && bryAttr != null)
                 {
-                    _bottomRight = new SKPoint(int.Parse(brxAttr.Value), int.Parse(bryAttr.Value));
+                    _bottomRight = new SKPoint((int)float.Parse(brxAttr.Value), (int)float.Parse(bryAttr.Value));
                 }
             }
 
@@ -246,13 +246,13 @@ namespace RealmStudio
             XElement? brushSizeElement = ellipseDoc.Root.Element(ns + "BrushSize");
             if (brushSizeElement != null)
             {
-                _brushSize = int.Parse(brushSizeElement.Value);
+                _brushSize = (int)float.Parse(brushSizeElement.Value);
             }
 
             XElement? rotationElement = ellipseDoc.Root.Element(ns + "Rotation");
             if (rotationElement != null)
             {
-                _rotation = int.Parse(rotationElement.Value);
+                _rotation = (int)float.Parse(rotationElement.Value);
             }
 
             XElement? drawRoundedElement = ellipseDoc.Root.Element(ns + "DrawRounded");

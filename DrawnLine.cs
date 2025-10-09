@@ -105,25 +105,25 @@ namespace RealmStudio
             XAttribute? xAttr = lineDoc.Root.Attribute("X");
             if (xAttr != null)
             {
-                X = int.Parse(xAttr.Value);
+                X = (int)float.Parse(xAttr.Value);
             }
 
             XAttribute? yAttr = lineDoc.Root.Attribute("Y");
             if (yAttr != null)
             {
-                Y = int.Parse(yAttr.Value);
+                Y = (int)float.Parse(yAttr.Value);
             }
 
             XAttribute? wAttr = lineDoc.Root.Attribute("Width");
             if (wAttr != null)
             {
-                Width = int.Parse(wAttr.Value);
+                Width = (int)float.Parse(wAttr.Value);
             }
 
             XAttribute? hAttr = lineDoc.Root.Attribute("Height");
             if (hAttr != null)
             {
-                Height = int.Parse(hAttr.Value);
+                Height = (int)float.Parse(hAttr.Value);
             }
 
 
@@ -136,7 +136,7 @@ namespace RealmStudio
             XElement? brushSizeElement = lineDoc.Root.Element(ns + "BrushSize");
             if (brushSizeElement != null)
             {
-                _brushSize = int.Parse(brushSizeElement.Value);
+                _brushSize = (int)float.Parse(brushSizeElement.Value);
             }
 
             XElement? pointsElement = lineDoc.Root.Element(ns + "Points");

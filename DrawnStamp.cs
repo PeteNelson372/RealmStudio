@@ -131,25 +131,25 @@ namespace RealmStudio
             XAttribute? xAttr = stampDoc.Root.Attribute("X");
             if (xAttr != null)
             {
-                X = int.Parse(xAttr.Value);
+                X = (int)float.Parse(xAttr.Value);
             }
 
             XAttribute? yAttr = stampDoc.Root.Attribute("Y");
             if (yAttr != null)
             {
-                Y = int.Parse(yAttr.Value);
+                Y = (int)float.Parse(yAttr.Value);
             }
 
             XAttribute? wAttr = stampDoc.Root.Attribute("Width");
             if (wAttr != null)
             {
-                Width = int.Parse(wAttr.Value);
+                Width = (int)float.Parse(wAttr.Value);
             }
 
             XAttribute? hAttr = stampDoc.Root.Attribute("Height");
             if (hAttr != null)
             {
-                Height = int.Parse(hAttr.Value);
+                Height = (int)float.Parse(hAttr.Value);
             }
 
             XElement? topLeftElement = stampDoc.Root.Element(ns + "TopLeft");
@@ -159,7 +159,7 @@ namespace RealmStudio
                 XAttribute? tlyAttr = topLeftElement.Attribute("Y");
                 if (tlxAttr != null && tlyAttr != null)
                 {
-                    _topLeft = new SKPoint(int.Parse(tlxAttr.Value), int.Parse(tlyAttr.Value));
+                    _topLeft = new SKPoint((int)float.Parse(tlxAttr.Value), (int)float.Parse(tlyAttr.Value));
                 }
             }
 
@@ -178,7 +178,7 @@ namespace RealmStudio
             XElement? rotationElement = stampDoc.Root.Element(ns + "Rotation");
             if (rotationElement != null)
             {
-                _rotation = int.Parse(rotationElement.Value);
+                _rotation = (int)float.Parse(rotationElement.Value);
             }
 
             XElement? stampBitmapElement = stampDoc.Root.Element(ns + "StampBitmap");

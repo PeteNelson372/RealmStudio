@@ -198,25 +198,25 @@ namespace RealmStudio
             XAttribute? xAttr = starDoc.Root.Attribute("X");
             if (xAttr != null)
             {
-                X = int.Parse(xAttr.Value);
+                X = (int)float.Parse(xAttr.Value);
             }
 
             XAttribute? yAttr = starDoc.Root.Attribute("Y");
             if (yAttr != null)
             {
-                Y = int.Parse(yAttr.Value);
+                Y = (int)float.Parse(yAttr.Value);
             }
 
             XAttribute? wAttr = starDoc.Root.Attribute("Width");
             if (wAttr != null)
             {
-                Width = int.Parse(wAttr.Value);
+                Width = (int)float.Parse(wAttr.Value);
             }
 
             XAttribute? hAttr = starDoc.Root.Attribute("Height");
             if (hAttr != null)
             {
-                Height = int.Parse(hAttr.Value);
+                Height = (int)float.Parse(hAttr.Value);
             }
 
             XElement? centerElement = starDoc.Root.Element(ns + "Center");
@@ -226,7 +226,7 @@ namespace RealmStudio
                 XAttribute? tlyAttr = centerElement.Attribute("Y");
                 if (tlxAttr != null && tlyAttr != null)
                 {
-                    Center = new SKPoint(int.Parse(tlxAttr.Value), int.Parse(tlyAttr.Value));
+                    Center = new SKPoint((int)float.Parse(tlxAttr.Value), (int)float.Parse(tlyAttr.Value));
                 }
             }
 
@@ -245,13 +245,13 @@ namespace RealmStudio
             XElement? brushSizeElement = starDoc.Root.Element(ns + "BrushSize");
             if (brushSizeElement != null)
             {
-                _brushSize = int.Parse(brushSizeElement.Value);
+                _brushSize = (int)float.Parse(brushSizeElement.Value);
             }
 
             XElement? rotationElement = starDoc.Root.Element(ns + "Rotation");
             if (rotationElement != null)
             {
-                _rotation = int.Parse(rotationElement.Value);
+                _rotation = (int)float.Parse(rotationElement.Value);
             }
 
             XElement? fillTypeElement = starDoc.Root.Element(ns + "FillType");

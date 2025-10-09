@@ -50,7 +50,7 @@ namespace RealmStudio
         [XmlIgnore]
         public SKRectI LayerRect { get; set; }
 
-        [XmlIgnore]
+        [XmlAttribute]
         public bool Drawable { get; set; } = false;
 
         public override void Render(SKCanvas canvas)

@@ -176,25 +176,25 @@ namespace RealmStudio
             XAttribute? xAttr = polyDoc.Root.Attribute("X");
             if (xAttr != null)
             {
-                X = int.Parse(xAttr.Value);
+                X = (int)float.Parse(xAttr.Value);
             }
 
             XAttribute? yAttr = polyDoc.Root.Attribute("Y");
             if (yAttr != null)
             {
-                Y = int.Parse(yAttr.Value);
+                Y = (int)float.Parse(yAttr.Value);
             }
 
             XAttribute? wAttr = polyDoc.Root.Attribute("Width");
             if (wAttr != null)
             {
-                Width = int.Parse(wAttr.Value);
+                Width = (int)float.Parse(wAttr.Value);
             }
 
             XAttribute? hAttr = polyDoc.Root.Attribute("Height");
             if (hAttr != null)
             {
-                Height = int.Parse(hAttr.Value);
+                Height = (int)float.Parse(hAttr.Value);
             }
 
 
@@ -207,13 +207,13 @@ namespace RealmStudio
             XElement? brushSizeElement = polyDoc.Root.Element(ns + "BrushSize");
             if (brushSizeElement != null)
             {
-                _brushSize = int.Parse(brushSizeElement.Value);
+                _brushSize = (int)float.Parse(brushSizeElement.Value);
             }
 
             XElement? rotationElement = polyDoc.Root.Element(ns + "Rotation");
             if (rotationElement != null)
             {
-                _rotation = int.Parse(rotationElement.Value);
+                _rotation = (int)float.Parse(rotationElement.Value);
             }
 
             XElement? fillTypeElement = polyDoc.Root.Element(ns + "FillType");
