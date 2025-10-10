@@ -64,7 +64,7 @@ namespace RealmStudio
             }
             else
             {
-                oceanTextureLayer.ShowLayer = true;
+                oceanTextureLayer.ShowLayer = OceanMediator.ShowOceanLayers;
 
                 if (oceanTextureLayer.MapLayerComponents.Count == 1 && textureBitmap != null && scale > 0.0F)
                 {

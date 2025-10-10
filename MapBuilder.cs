@@ -100,7 +100,8 @@ namespace RealmStudio
                 Height = height,
                 ShowLayer = true,
                 Drawable = drawable,
-                LayerSurface = SKSurface.Create(grContext, false, imageInfo)
+                LayerSurface = SKSurface.Create(grContext, false, imageInfo),
+                LayerRect = new SKRectI(0, 0, width, height),
             };
 
             return ml;

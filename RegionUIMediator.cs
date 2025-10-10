@@ -38,6 +38,7 @@ namespace RealmStudio
         private int _regionBorderSmoothing = 20;
         private int _regionInnerOpacity = 64;
         private PathType _regionBorderType;
+        private bool _showRegions = true;
 
         public RegionUIMediator(RealmStudioMainForm mainForm)
         {
@@ -87,6 +88,12 @@ namespace RealmStudio
         {
             get { return _regionBorderType; }
             set { SetPropertyField(nameof(RegionBorderType), ref _regionBorderType, value); }
+        }
+
+        public bool ShowRegions
+        {
+            get { return _showRegions; }
+            set { SetPropertyField(nameof(ShowRegions), ref _showRegions, value); }
         }
 
         #endregion
@@ -172,6 +179,12 @@ namespace RealmStudio
                         }
                         break;
                 }
+
+                MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.REGIONLAYER);
+                MapLayer regionOverlayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.REGIONOVERLAYLAYER);
+
+                regionLayer.ShowLayer = ShowRegions;
+                regionOverlayLayer.ShowLayer = ShowRegions;
             }));
         }
 

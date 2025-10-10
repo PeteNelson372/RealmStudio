@@ -1808,10 +1808,6 @@ namespace RealmStudio
                             MapStateMediator.SelectedDrawnMapComponent = null;
                         }
                     }
-                    else
-                    {
-                        layer.MapLayerComponents[j].IsSelected = false;
-                    }
                 }
             }
         }

@@ -3330,6 +3330,7 @@ namespace RealmStudio
                             Color = DrawingMediator.DrawingLineColor.ToSKColor(),
                             BrushSize = DrawingMediator.DrawingLineBrushSize,
                             FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                            FillColor = DrawingMediator.DrawingFillColor.ToSKColor(),
                         };
 
                         if (drawnRectangle.FillType == DrawingFillType.Texture)
@@ -3367,7 +3368,8 @@ namespace RealmStudio
                             Color = DrawingMediator.DrawingLineColor.ToSKColor(),
                             BrushSize = DrawingMediator.DrawingLineBrushSize,
                             FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
-                            DrawRounded = true
+                            DrawRounded = true,
+                            FillColor = DrawingMediator.DrawingFillColor.ToSKColor(),
                         };
 
                         if (drawnRectangle.FillType == DrawingFillType.Texture)
@@ -3406,6 +3408,7 @@ namespace RealmStudio
                             Color = DrawingMediator.DrawingLineColor.ToSKColor(),
                             BrushSize = DrawingMediator.DrawingLineBrushSize,
                             FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                            FillColor = DrawingMediator.DrawingFillColor.ToSKColor(),
                         };
 
                         if (drawnEllipse.FillType == DrawingFillType.Texture)
@@ -3446,6 +3449,7 @@ namespace RealmStudio
                                 Color = DrawingMediator.DrawingLineColor.ToSKColor(),
                                 BrushSize = DrawingMediator.DrawingLineBrushSize,
                                 FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                                FillColor = DrawingMediator.DrawingFillColor.ToSKColor(),
                             };
 
                             if (drawnPolygon.FillType == DrawingFillType.Texture)
@@ -3501,6 +3505,7 @@ namespace RealmStudio
                             Color = DrawingMediator.DrawingLineColor.ToSKColor(),
                             BrushSize = DrawingMediator.DrawingLineBrushSize,
                             FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                            FillColor = DrawingMediator.DrawingFillColor.ToSKColor(),
                         };
 
                         if (drawnTriangle.FillType == DrawingFillType.Texture)
@@ -3540,6 +3545,7 @@ namespace RealmStudio
                             BrushSize = DrawingMediator.DrawingLineBrushSize,
                             FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
                             DrawRight = true,
+                            FillColor = DrawingMediator.DrawingFillColor.ToSKColor(),
                         };
 
                         if (drawnTriangle.FillType == DrawingFillType.Texture)
@@ -3579,6 +3585,7 @@ namespace RealmStudio
                             BrushSize = DrawingMediator.DrawingLineBrushSize,
                             FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
                             Sides = 5, // Pentagon has 5 sides
+                            FillColor = DrawingMediator.DrawingFillColor.ToSKColor(),
                         };
 
                         if (drawnPentagon.FillType == DrawingFillType.Texture)
@@ -3618,6 +3625,7 @@ namespace RealmStudio
                             BrushSize = DrawingMediator.DrawingLineBrushSize,
                             FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
                             Sides = 6, // Hexagon has 6 sides
+                            FillColor = DrawingMediator.DrawingFillColor.ToSKColor(),
                         };
 
                         if (drawnHexagon.FillType == DrawingFillType.Texture)
@@ -3656,6 +3664,7 @@ namespace RealmStudio
                             Color = DrawingMediator.DrawingLineColor.ToSKColor(),
                             BrushSize = DrawingMediator.DrawingLineBrushSize,
                             FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                            FillColor = DrawingMediator.DrawingFillColor.ToSKColor(),
                         };
 
                         if (drawnDiamond.FillType == DrawingFillType.Texture)
@@ -3694,6 +3703,7 @@ namespace RealmStudio
                             Color = DrawingMediator.DrawingLineColor.ToSKColor(),
                             BrushSize = DrawingMediator.DrawingLineBrushSize,
                             FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                            FillColor = DrawingMediator.DrawingFillColor.ToSKColor(),
                         };
 
                         if (drawnArrow.FillType == DrawingFillType.Texture)
@@ -3730,6 +3740,7 @@ namespace RealmStudio
                             Color = DrawingMediator.DrawingLineColor.ToSKColor(),
                             BrushSize = DrawingMediator.DrawingLineBrushSize,
                             FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                            FillColor = DrawingMediator.DrawingFillColor.ToSKColor(),
                         };
 
                         if (drawnStar.FillType == DrawingFillType.Texture)
@@ -3767,6 +3778,7 @@ namespace RealmStudio
                             Color = DrawingMediator.DrawingLineColor.ToSKColor(),
                             BrushSize = DrawingMediator.DrawingLineBrushSize,
                             FillType = DrawingMediator.FillDrawnShape ? DrawingMediator.FillType : DrawingFillType.None,
+                            FillColor = DrawingMediator.DrawingFillColor.ToSKColor(),
                         };
 
                         if (drawnStar.FillType == DrawingFillType.Texture)
@@ -5601,7 +5613,6 @@ namespace RealmStudio
             SKGLRenderControl.Invalidate();
         }
 
-
         private void OceanColorSelectButton_MouseUp(object sender, MouseEventArgs e)
         {
             OceanMediator.OceanFillColor = UtilityMethods.SelectColor(this, e, OceanColorSelectButton.BackColor);
@@ -7143,13 +7154,7 @@ namespace RealmStudio
 
         private void ShowRegionLayerSwitch_CheckedChanged()
         {
-            MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.REGIONLAYER);
-
-            regionLayer.ShowLayer = ShowRegionLayerSwitch.Checked;
-
-            MapLayer regionOverlayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.REGIONOVERLAYLAYER);
-
-            regionOverlayLayer.ShowLayer = ShowRegionLayerSwitch.Checked;
+            RegionMediator.ShowRegions = ShowRegionLayerSwitch.Checked;
         }
 
         private void SelectRegionButton_Click(object sender, EventArgs e)
@@ -7309,9 +7314,7 @@ namespace RealmStudio
 
         private void ShowDrawingLayerSwitch_CheckedChanged()
         {
-            MapLayer drawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
-
-            drawingLayer.ShowLayer = ShowDrawingLayerSwitch.Checked;
+            DrawingMediator.ShowDrawingLayer = ShowDrawingLayerSwitch.Checked;
         }
 
         private void DrawingSelectButton_Click(object sender, EventArgs e)

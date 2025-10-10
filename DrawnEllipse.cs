@@ -36,6 +36,7 @@ namespace RealmStudio
         private SKPoint _topLeft;
         private SKPoint _bottomRight;
         private SKColor _color = SKColors.Black;
+        private SKColor _fillColor = SKColors.Transparent;
         private int _brushSize = 2;
         private int _rotation;
         private DrawingFillType _fillType = DrawingFillType.None;
@@ -58,6 +59,13 @@ namespace RealmStudio
             get => _color;
             set => _color = value;
         }
+
+        public SKColor FillColor
+        {
+            get => _fillColor;
+            set => _fillColor = value;
+        }
+
         public int BrushSize
         {
             get => _brushSize;
@@ -105,7 +113,7 @@ namespace RealmStudio
             using SKPaint fillPaint = new()
             {
                 Style = SKPaintStyle.Fill,
-                Color = Color,
+                Color = FillColor,
                 IsAntialias = true
             };
 
@@ -116,7 +124,7 @@ namespace RealmStudio
             }
             else if (FillType == DrawingFillType.Color)
             {
-                fillPaint.Color = Color;
+                fillPaint.Color = FillColor;
                 fillPaint.Style = SKPaintStyle.StrokeAndFill;
             }
             else

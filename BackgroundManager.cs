@@ -61,7 +61,7 @@ namespace RealmStudio
             }
             else
             {
-                baseLayer.ShowLayer = true;
+                baseLayer.ShowLayer = BackgroundMediator.ShowBackground;
 
                 if (baseLayer.MapLayerComponents.Count == 1 && textureBitmap != null && scale > 0.0F && scale <= 1.0F)
                 {

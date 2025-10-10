@@ -46,6 +46,8 @@ namespace RealmStudio
 
         private DrawingFillType _fillType = DrawingFillType.Color;
 
+        private bool _showDrawingLayer;
+
         private SKPaint _fillPaint = new()
         {
             Style = SKPaintStyle.Fill,
@@ -185,6 +187,12 @@ namespace RealmStudio
         {
             get { return _drawingShapeRotation; }
             set { SetPropertyField(nameof(DrawingShapeRotation), ref _drawingShapeRotation, value); }
+        }
+
+        internal bool ShowDrawingLayer
+        {
+            get { return _showDrawingLayer; }
+            set { SetPropertyField(nameof(ShowDrawingLayer), ref _showDrawingLayer, value); }
         }
 
         #endregion
@@ -444,6 +452,11 @@ namespace RealmStudio
                     else if (changedPropertyName == "DrawingShapeRotation")
                     {
                         MainForm.DrawingShapeRotationTrack.Value = (int)DrawingShapeRotation;
+                    }
+                    else if (changedPropertyName == "ShowDrawingLayer")
+                    {
+                        MapLayer drawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                        drawingLayer.ShowLayer = ShowDrawingLayer;
                     }
                 }
 

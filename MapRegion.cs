@@ -35,7 +35,6 @@ namespace RealmStudio
     public class MapRegion : MapComponent, IXmlSerializable
     {
         public RealmStudioMap? ParentMap { get; set; }
-
         public string RegionName { get; set; } = string.Empty;
         public Guid RegionGuid { get; set; } = Guid.NewGuid();
         public string RegionDescription { get; set; } = string.Empty;

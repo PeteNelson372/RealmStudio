@@ -335,18 +335,11 @@ namespace RealmStudio
         internal static void RenderDrawing(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
         {
             MapLayer drawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.DRAWINGLAYER);
+            if (drawingLayer.LayerSurface == null) return;
 
-            if (drawingLayer.LayerSurface != null)
-            {
-                // code that makes use of the drawing layer is responsible for clearing
-                // and drawing to the canvas properly; it is only rendered here;
-                // clearing the drawing layer requires the user to explicitly clear it (by erasing or clearing the layer)
-
-                drawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                drawingLayer.Render(drawingLayer.LayerSurface.Canvas);
-
-                renderCanvas.DrawSurface(drawingLayer.LayerSurface, scrollPoint);
-            }
+            drawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+            drawingLayer.Render(drawingLayer.LayerSurface.Canvas);
+            renderCanvas.DrawSurface(drawingLayer.LayerSurface, scrollPoint);
         }
 
         internal static void RenderDrawingForExport(RealmStudioMap map, SKCanvas renderCanvas)
@@ -476,54 +469,59 @@ namespace RealmStudio
             landCoastlineLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
             landformLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
 
-            MapStateMediator.CurrentLandform?.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
-            MapStateMediator.CurrentLandform?.RenderLandform(landformLayer.LayerSurface.Canvas);
-
-            for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
+            if (landformLayer.ShowLayer && landCoastlineLayer.ShowLayer)
             {
-                if (landformLayer.MapLayerComponents[i] is Landform l)
+                // only render if both layers are visible
+
+                MapStateMediator.CurrentLandform?.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
+                MapStateMediator.CurrentLandform?.RenderLandform(landformLayer.LayerSurface.Canvas);
+
+                for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
                 {
-                    if (!l.IsDeleted)
+                    if (landformLayer.MapLayerComponents[i] is Landform l)
                     {
-                        l.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
-                        l.RenderLandform(landformLayer.LayerSurface.Canvas);
-
-                        if (l.IsSelected)
+                        if (!l.IsDeleted)
                         {
-                            // draw an outline around the landform to show that it is selected
-                            l.ContourPath.GetBounds(out SKRect boundRect);
-                            using SKPath boundsPath = new();
-                            boundsPath.AddRect(boundRect);
+                            l.RenderCoastline(landCoastlineLayer.LayerSurface.Canvas);
+                            l.RenderLandform(landformLayer.LayerSurface.Canvas);
 
-                            landformLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
+                            if (l.IsSelected)
+                            {
+                                // draw an outline around the landform to show that it is selected
+                                l.ContourPath.GetBounds(out SKRect boundRect);
+                                using SKPath boundsPath = new();
+                                boundsPath.AddRect(boundRect);
+
+                                landformLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.LandformSelectPaint);
+                            }
                         }
                     }
+                    else if (landformLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        dmc.Render(landformLayer.LayerSurface.Canvas);
+                    }
                 }
-                else if (landformLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+
+                for (int i = 0; i < landCoastlineLayer.MapLayerComponents.Count; i++)
                 {
-                    dmc.Render(landformLayer.LayerSurface.Canvas);
+                    if (landCoastlineLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        dmc.Render(landCoastlineLayer.LayerSurface.Canvas);
+                    }
                 }
-            }
 
-            for (int i = 0; i < landCoastlineLayer.MapLayerComponents.Count; i++)
-            {
-                if (landCoastlineLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                renderCanvas.DrawSurface(landCoastlineLayer.LayerSurface, scrollPoint);
+                renderCanvas.DrawSurface(landformLayer.LayerSurface, scrollPoint);
+
+                // landform drawing (color painting over landform)
+                MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDDRAWINGLAYER);
+
+                if (landDrawingLayer.LayerSurface != null)
                 {
-                    dmc.Render(landCoastlineLayer.LayerSurface.Canvas);
+                    landDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+                    landDrawingLayer.Render(landDrawingLayer.LayerSurface.Canvas);
+                    renderCanvas.DrawSurface(landDrawingLayer.LayerSurface, scrollPoint);
                 }
-            }
-
-            renderCanvas.DrawSurface(landCoastlineLayer.LayerSurface, scrollPoint);
-            renderCanvas.DrawSurface(landformLayer.LayerSurface, scrollPoint);
-
-            // landform drawing (color painting over landform)
-            MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDDRAWINGLAYER);
-
-            if (landDrawingLayer.LayerSurface != null)
-            {
-                landDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
-                landDrawingLayer.Render(landDrawingLayer.LayerSurface.Canvas);
-                renderCanvas.DrawSurface(landDrawingLayer.LayerSurface, scrollPoint);
             }
         }
 

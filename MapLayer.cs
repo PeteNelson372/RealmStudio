@@ -59,16 +59,14 @@ namespace RealmStudio
             {
                 if (MapLayerComponents != null)
                 {
-                    LayerRect = new(0, 0, Width, Height);
                     canvas.ClipRect(LayerRect);
-
-                    foreach (var component in MapLayerComponents)
+                    using (new SKAutoCanvasRestore(canvas))
                     {
-                        if (component.RenderComponent)
+                        foreach (var component in MapLayerComponents)
                         {
-                            // clip drawing to the boundaries of the layer
-                            using (new SKAutoCanvasRestore(canvas))
+                            if (component.RenderComponent)
                             {
+                                // clip drawing to the boundaries of the layer
                                 component.Render(canvas);
                             }
                         }
