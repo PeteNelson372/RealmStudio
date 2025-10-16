@@ -234,6 +234,7 @@ namespace RealmStudio
             bool includeScale,
             bool includeGrid,
             bool includeRegions,
+            bool includeDrawnShapes,
             bool includeHeightMap)
         {
             // if the current map is being resized, the selectedMapArea is the entire current map
@@ -460,7 +461,7 @@ namespace RealmStudio
             }
 
 
-            // get the landforms within or intersecting the selected area, then translate and scale them
+            // get the landforms and drawn shapes within or intersecting the selected area, then translate and scale them
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.LANDFORMLAYER);
             MapLayer newRealmLandformLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.LANDFORMLAYER);
 
@@ -499,6 +500,18 @@ namespace RealmStudio
                         }
                     }
                 }
+                else if (landformLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                    {
+                        DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+
+                        if (newDmc != null)
+                        {
+                            newRealmLandformLayer.MapLayerComponents.Add(newDmc);
+                        }
+                    }
+                }
             }
 
             // go through the current map to get textures, painted colors, etc. and assign them to the detail map
@@ -507,87 +520,145 @@ namespace RealmStudio
             MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.BASELAYER);
             MapLayer newRealmBaseLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.BASELAYER);
 
-            foreach (MapImage mi in baseLayer.MapLayerComponents.Cast<MapImage>())
+            for (int i = 0; i < baseLayer.MapLayerComponents.Count; i++)
             {
-                Bitmap resizedBitmap = new(mi.MapImageBitmap.ToBitmap(), newRealmMap.MapWidth, newRealmMap.MapHeight);
-
-                MapImage BackgroundTexture = new()
+                if (baseLayer.MapLayerComponents[i] is MapImage mi)
                 {
-                    Width = newRealmMap.MapWidth,
-                    Height = newRealmMap.MapHeight,
-                    MapImageBitmap = resizedBitmap.ToSKBitmap(),
-                };
+                    Bitmap resizedBitmap = new(mi.MapImageBitmap.ToBitmap(), newRealmMap.MapWidth, newRealmMap.MapHeight);
 
-                newRealmBaseLayer.MapLayerComponents.Add(BackgroundTexture);
+                    MapImage BackgroundTexture = new()
+                    {
+                        Width = newRealmMap.MapWidth,
+                        Height = newRealmMap.MapHeight,
+                        MapImageBitmap = resizedBitmap.ToSKBitmap(),
+                    };
+
+                    newRealmBaseLayer.MapLayerComponents.Add(BackgroundTexture);
+                }
+                else if (baseLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                    {
+                        DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                        if (newDmc != null)
+                        {
+                            newRealmBaseLayer.MapLayerComponents.Add(newDmc);
+                        }
+                    }
+                }
             }
 
             // texture needs to be resized to new map size
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.OCEANTEXTURELAYER);
             MapLayer newRealmOceanTextureLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.OCEANTEXTURELAYER);
 
-            foreach (MapImage mi in oceanTextureLayer.MapLayerComponents.Cast<MapImage>())
+            for (int i = 0; i < oceanTextureLayer.MapLayerComponents.Count; i++)
             {
-                Bitmap resizedBitmap = new(mi.MapImageBitmap.ToBitmap(), newRealmMap.MapWidth, newRealmMap.MapHeight);
-
-                MapImage OceanTexture = new()
+                if (oceanTextureLayer.MapLayerComponents[i] is MapImage mi)
                 {
-                    Width = newRealmMap.MapWidth,
-                    Height = newRealmMap.MapHeight,
-                    MapImageBitmap = resizedBitmap.ToSKBitmap(),
-                };
+                    Bitmap resizedBitmap = new(mi.MapImageBitmap.ToBitmap(), newRealmMap.MapWidth, newRealmMap.MapHeight);
 
-                newRealmOceanTextureLayer.MapLayerComponents.Add(OceanTexture);
+                    MapImage BackgroundTexture = new()
+                    {
+                        Width = newRealmMap.MapWidth,
+                        Height = newRealmMap.MapHeight,
+                        MapImageBitmap = resizedBitmap.ToSKBitmap(),
+                    };
+
+                    newRealmOceanTextureLayer.MapLayerComponents.Add(BackgroundTexture);
+                }
+                else if (oceanTextureLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                    {
+                        DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                        if (newDmc != null)
+                        {
+                            newRealmOceanTextureLayer.MapLayerComponents.Add(newDmc);
+                        }
+                    }
+                }
             }
+
 
             // texture needs to be resized to new map size
             MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
             MapLayer newRealmOceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
 
-            foreach (MapImage mi in oceanTextureOverlayLayer.MapLayerComponents.Cast<MapImage>())
+            for (int i = 0; i < oceanTextureOverlayLayer.MapLayerComponents.Count; i++)
             {
-                Bitmap resizedBitmap = new(mi.MapImageBitmap.ToBitmap(), newRealmMap.MapWidth, newRealmMap.MapHeight);
-
-                MapImage OceanColor = new()
+                if (oceanTextureOverlayLayer.MapLayerComponents[i] is MapImage mi)
                 {
-                    Width = newRealmMap.MapWidth,
-                    Height = newRealmMap.MapHeight,
-                    MapImageBitmap = resizedBitmap.ToSKBitmap(),
-                };
+                    Bitmap resizedBitmap = new(mi.MapImageBitmap.ToBitmap(), newRealmMap.MapWidth, newRealmMap.MapHeight);
 
-                newRealmOceanTextureOverlayLayer.MapLayerComponents.Add(OceanColor);
+                    MapImage BackgroundTexture = new()
+                    {
+                        Width = newRealmMap.MapWidth,
+                        Height = newRealmMap.MapHeight,
+                        MapImageBitmap = resizedBitmap.ToSKBitmap(),
+                    };
+
+                    newRealmOceanTextureOverlayLayer.MapLayerComponents.Add(BackgroundTexture);
+                }
+                else if (oceanTextureOverlayLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                    {
+                        DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                        if (newDmc != null)
+                        {
+                            newRealmOceanTextureOverlayLayer.MapLayerComponents.Add(newDmc);
+                        }
+                    }
+                }
             }
+
 
             // ocean drawing layer
             MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.OCEANDRAWINGLAYER);
             MapLayer newRealmOceanDrawingLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.OCEANDRAWINGLAYER);
 
-            foreach (LayerPaintStroke lps in oceanDrawingLayer.MapLayerComponents.Cast<LayerPaintStroke>())
+            for (int i = 0; i < oceanDrawingLayer.MapLayerComponents.Count; i++)
             {
-                LayerPaintStroke newPaintStroke = new()
+                if (oceanDrawingLayer.MapLayerComponents[i] is LayerPaintStroke lps)
                 {
-                    ParentMap = newRealmMap,
-                    StrokeColor = lps.StrokeColor,
-                    PaintBrush = lps.PaintBrush,
-                    BrushRadius = (int)(lps.BrushRadius * scaleX),
-                    MapLayerIdentifier = lps.MapLayerIdentifier,
-                    Erase = lps.Erase,
-                    Rendered = false,
-                };
-
-                foreach (LayerPaintStrokePoint point in lps.PaintStrokePoints)
-                {
-                    LayerPaintStrokePoint newStrokePoint = new()
+                    LayerPaintStroke newPaintStroke = new()
                     {
-                        StrokeLocation = new SKPoint((point.X * scaleX) + deltaX, (point.Y * scaleY) + deltaY),
-                        StrokeRadius = (int)(point.StrokeRadius * scaleX)
+                        ParentMap = newRealmMap,
+                        StrokeColor = lps.StrokeColor,
+                        PaintBrush = lps.PaintBrush,
+                        BrushRadius = (int)(lps.BrushRadius * scaleX),
+                        MapLayerIdentifier = lps.MapLayerIdentifier,
+                        Erase = lps.Erase,
+                        Rendered = false,
                     };
 
-                    newPaintStroke.PaintStrokePoints.Add(newStrokePoint);
-                }
+                    foreach (LayerPaintStrokePoint point in lps.PaintStrokePoints)
+                    {
+                        LayerPaintStrokePoint newStrokePoint = new()
+                        {
+                            StrokeLocation = new SKPoint((point.X * scaleX) + deltaX, (point.Y * scaleY) + deltaY),
+                            StrokeRadius = (int)(point.StrokeRadius * scaleX)
+                        };
 
-                SKImageInfo imageInfo = new(newRealmMap.MapWidth, newRealmMap.MapHeight);
-                newPaintStroke.RenderSurface ??= SKSurface.Create(newMapGRContext, false, imageInfo);
-                newRealmOceanDrawingLayer.MapLayerComponents.Add(newPaintStroke);
+                        newPaintStroke.PaintStrokePoints.Add(newStrokePoint);
+                    }
+
+                    SKImageInfo imageInfo = new(newRealmMap.MapWidth, newRealmMap.MapHeight);
+                    newPaintStroke.RenderSurface ??= SKSurface.Create(newMapGRContext, false, imageInfo);
+                    newRealmOceanDrawingLayer.MapLayerComponents.Add(newPaintStroke);
+                }
+                else if (oceanDrawingLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                    {
+                        DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                        if (newDmc != null)
+                        {
+                            newRealmOceanDrawingLayer.MapLayerComponents.Add(newDmc);
+                        }
+                    }
+                }
             }
 
 
@@ -627,6 +698,17 @@ namespace RealmStudio
                     SKImageInfo imageInfo = new(newRealmMap.MapWidth, newRealmMap.MapHeight);
                     newPaintStroke.RenderSurface ??= SKSurface.Create(newMapGRContext, false, imageInfo);
                     newRealmLandDrawingLayer.MapLayerComponents.Add(newPaintStroke);
+                }
+                else if (landDrawingLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                    {
+                        DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                        if (newDmc != null)
+                        {
+                            newRealmLandDrawingLayer.MapLayerComponents.Add(newDmc);
+                        }
+                    }
                 }
             }
 
@@ -708,6 +790,17 @@ namespace RealmStudio
                         }
                     }
                 }
+                else if (waterLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                    {
+                        DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                        if (newDmc != null)
+                        {
+                            newRealmWaterLayer.MapLayerComponents.Add(newDmc);
+                        }
+                    }
+                }
             }
 
             // water drawing layer
@@ -747,6 +840,17 @@ namespace RealmStudio
                     newPaintStroke.RenderSurface ??= SKSurface.Create(newMapGRContext, false, imageInfo);
                     newRealmWaterDrawingLayer.MapLayerComponents.Add(newPaintStroke);
                 }
+                else if (waterDrawingLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                    {
+                        DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                        if (newDmc != null)
+                        {
+                            newRealmWaterDrawingLayer.MapLayerComponents.Add(newDmc);
+                        }
+                    }
+                }
             }
 
             // gather the symbols in the selected area
@@ -776,6 +880,17 @@ namespace RealmStudio
                         }
                     }
                 }
+                else if (symbolLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    if (selectedMapArea.IntersectsWith(dmc.Bounds) && includeDrawnShapes)
+                    {
+                        DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                        if (newDmc != null)
+                        {
+                            newRealmSymbolLayer.MapLayerComponents.Add(newDmc);
+                        }
+                    }
+                }
             }
 
             // scale the symbols and add them to the detail map
@@ -797,7 +912,6 @@ namespace RealmStudio
 
 
             // get map paths
-
             if (includePaths)
             {
                 List<MapPath> gatheredPaths = [];
@@ -818,6 +932,17 @@ namespace RealmStudio
                             }
                         }
                     }
+                    else if (pathLowerLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                        {
+                            DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                            if (newDmc != null)
+                            {
+                                newRealmPathLowerLayer.MapLayerComponents.Add(newDmc);
+                            }
+                        }
+                    }
                 }
 
                 MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.PATHUPPERLAYER);
@@ -833,6 +958,17 @@ namespace RealmStudio
                             {
                                 gatheredPaths.Add(mp);
                                 break;
+                            }
+                        }
+                    }
+                    else if (pathUpperLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                        {
+                            DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                            if (newDmc != null)
+                            {
+                                newRealmPathUpperLayer.MapLayerComponents.Add(newDmc);
                             }
                         }
                     }
@@ -902,6 +1038,17 @@ namespace RealmStudio
                             gatheredLabels.Add(ml);
                         }
                     }
+                    else if (labelLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                        {
+                            DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                            if (newDmc != null)
+                            {
+                                newRealmLabelLayer.MapLayerComponents.Add(newDmc);
+                            }
+                        }
+                    }
                 }
 
                 foreach (MapLabel ml in gatheredLabels)
@@ -955,6 +1102,17 @@ namespace RealmStudio
                         if (selectedMapArea.IntersectsWith(mlBoundingRect))
                         {
                             gatheredBoxes.Add(box);
+                        }
+                    }
+                    else if (boxLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                        {
+                            DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                            if (newDmc != null)
+                            {
+                                newRealmBoxLayer.MapLayerComponents.Add(newDmc);
+                            }
                         }
                     }
                 }
@@ -1015,21 +1173,32 @@ namespace RealmStudio
                 MapLayer scaleLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.OVERLAYLAYER);
                 MapLayer newRealmScaleLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.OVERLAYLAYER);
 
-                // there is only one map scale
-                MapScale? mapScale = scaleLayer.MapLayerComponents.Cast<MapScale>().FirstOrDefault();
-
-                if (mapScale != null)
+                for (int i = 0; i < scaleLayer.MapLayerComponents.Count; i++)
                 {
-                    MapScale newScale = new(mapScale)
+                    if (scaleLayer.MapLayerComponents[i] is MapScale ms)
                     {
-                        // initial position of the scale is near the bottom-left corner of the map
-                        X = 100,
-                        Y = newRealmMap.MapHeight - 100,
-                        Width = (int)(mapScale.Width * scaleX),
-                        Height = (int)(mapScale.Height * scaleY),
-                    };
+                        MapScale newScale = new(ms)
+                        {
+                            // initial position of the scale is near the bottom-left corner of the map
+                            X = 100,
+                            Y = newRealmMap.MapHeight - 100,
+                            Width = (int)(ms.Width * scaleX),
+                            Height = (int)(ms.Height * scaleY),
+                        };
 
-                    newRealmScaleLayer.MapLayerComponents.Add(newScale);
+                        newRealmScaleLayer.MapLayerComponents.Add(newScale);
+                    }
+                    else if (scaleLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                        {
+                            DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                            if (newDmc != null)
+                            {
+                                newRealmScaleLayer.MapLayerComponents.Add(newDmc);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -1040,30 +1209,103 @@ namespace RealmStudio
                 MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.ABOVEOCEANGRIDLAYER);
                 MapLayer belowSymbolsGridLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.BELOWSYMBOLSGRIDLAYER);
 
-                // there is only one map grid                                
-                MapGrid? mapGrid = defaultGridLayer.MapLayerComponents.Cast<MapGrid>().FirstOrDefault();
-
-                mapGrid ??= aboveOceanGridLayer.MapLayerComponents.Cast<MapGrid>().FirstOrDefault();
-
-                mapGrid ??= belowSymbolsGridLayer.MapLayerComponents.Cast<MapGrid>().FirstOrDefault();
-
-                if (mapGrid != null)
+                for (int i = 0; i < defaultGridLayer.MapLayerComponents.Count; i++)
                 {
-                    MapGrid newGrid = new(mapGrid)
+                    if (defaultGridLayer.MapLayerComponents[i] is MapGrid mapGrid)
                     {
-                        ParentMap = newRealmMap,
-                        GridEnabled = true,
-                    };
+                        MapGrid newGrid = new(mapGrid)
+                        {
+                            ParentMap = newRealmMap,
+                            GridEnabled = true,
+                        };
 
-                    newGrid.GridPaint = new()
+                        newGrid.GridPaint = new()
+                        {
+                            Style = SKPaintStyle.Stroke,
+                            Color = newGrid.GridColor.ToSKColor(),
+                            StrokeWidth = newGrid.GridLineWidth,
+                            StrokeJoin = SKStrokeJoin.Bevel
+                        };
+
+                        MapBuilder.GetMapLayerByIndex(newRealmMap, newGrid.GridLayerIndex).MapLayerComponents.Add(newGrid);
+                    }
+                    else if (defaultGridLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
                     {
-                        Style = SKPaintStyle.Stroke,
-                        Color = newGrid.GridColor.ToSKColor(),
-                        StrokeWidth = newGrid.GridLineWidth,
-                        StrokeJoin = SKStrokeJoin.Bevel
-                    };
+                        if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                        {
+                            DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                            if (newDmc != null)
+                            {
+                                MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.Add(newDmc);
+                            }
+                        }
+                    }
+                }
 
-                    MapBuilder.GetMapLayerByIndex(newRealmMap, newGrid.GridLayerIndex).MapLayerComponents.Add(newGrid);
+                for (int i = 0; i < aboveOceanGridLayer.MapLayerComponents.Count; i++)
+                {
+                    if (aboveOceanGridLayer.MapLayerComponents[i] is MapGrid mapGrid)
+                    {
+                        MapGrid newGrid = new(mapGrid)
+                        {
+                            ParentMap = newRealmMap,
+                            GridEnabled = true,
+                        };
+
+                        newGrid.GridPaint = new()
+                        {
+                            Style = SKPaintStyle.Stroke,
+                            Color = newGrid.GridColor.ToSKColor(),
+                            StrokeWidth = newGrid.GridLineWidth,
+                            StrokeJoin = SKStrokeJoin.Bevel
+                        };
+
+                        MapBuilder.GetMapLayerByIndex(newRealmMap, newGrid.GridLayerIndex).MapLayerComponents.Add(newGrid);
+                    }
+                    else if (aboveOceanGridLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                        {
+                            DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                            if (newDmc != null)
+                            {
+                                MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.ABOVEOCEANGRIDLAYER).MapLayerComponents.Add(newDmc);
+                            }
+                        }
+                    }
+                }
+
+                for (int i = 0; i < belowSymbolsGridLayer.MapLayerComponents.Count; i++)
+                {
+                    if (belowSymbolsGridLayer.MapLayerComponents[i] is MapGrid mapGrid)
+                    {
+                        MapGrid newGrid = new(mapGrid)
+                        {
+                            ParentMap = newRealmMap,
+                            GridEnabled = true,
+                        };
+
+                        newGrid.GridPaint = new()
+                        {
+                            Style = SKPaintStyle.Stroke,
+                            Color = newGrid.GridColor.ToSKColor(),
+                            StrokeWidth = newGrid.GridLineWidth,
+                            StrokeJoin = SKStrokeJoin.Bevel
+                        };
+
+                        MapBuilder.GetMapLayerByIndex(newRealmMap, newGrid.GridLayerIndex).MapLayerComponents.Add(newGrid);
+                    }
+                    else if (belowSymbolsGridLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                        {
+                            DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                            if (newDmc != null)
+                            {
+                                MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.BELOWSYMBOLSGRIDLAYER).MapLayerComponents.Add(newDmc);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -1100,6 +1342,17 @@ namespace RealmStudio
 
                                 newRealmRegionLayer.MapLayerComponents.Add(newRegion);
                                 break;
+                            }
+                        }
+                    }
+                    else if (regionLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                        {
+                            DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                            if (newDmc != null)
+                            {
+                                newRealmRegionLayer.MapLayerComponents.Add(newDmc);
                             }
                         }
                     }
@@ -1150,18 +1403,72 @@ namespace RealmStudio
                 }
             }
 
+            if (includeDrawnShapes)
+            {
+                // get drawings
+                MapLayer drawingLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.DRAWINGLAYER);
+                MapLayer newRealmDrawingLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.DRAWINGLAYER);
+                for (int i = 0; i < drawingLayer.MapLayerComponents.Count; i++)
+                {
+                    if (drawingLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                        {
+                            DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                            if (newDmc != null)
+                            {
+                                newRealmDrawingLayer.MapLayerComponents.Add(newDmc);
+                            }
+                        }
+                    }
+                }
+            }
+
 
             // vignette
             MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.VIGNETTELAYER);
             MapLayer newRealmVignetteLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.VIGNETTELAYER);
 
-            foreach (MapVignette mv in vignetteLayer.MapLayerComponents.Cast<MapVignette>())
+            for (int i = 0; i < vignetteLayer.MapLayerComponents.Count; i++)
             {
-                mv.ParentMap = newRealmMap;
-                newRealmVignetteLayer.MapLayerComponents.Add(mv);
+                if (vignetteLayer.MapLayerComponents[i] is MapVignette mv)
+                {
+                    RealmStudioMainForm? mainForm = UtilityMethods.GetMainForm();
+
+                    if (mainForm != null)
+                    {
+                        MapVignette newVignette = new()
+                        {
+                            ParentMap = newRealmMap,
+                            VignetteColor = mv.VignetteColor,
+                            VignetteShape = mv.VignetteShape,
+                            VignetteStrength = mv.VignetteStrength,
+                            X = 0,
+                            Y = 0,
+                            Width = newRealmMap.MapWidth,
+                            Height = newRealmMap.MapHeight,
+                            VignetteRenderSurface = SKSurface.Create(mainForm.SKGLRenderControl.GRContext, false,
+                                        new SKImageInfo(newRealmMap.MapWidth, newRealmMap.MapHeight)),
+                        };
+
+                        newRealmVignetteLayer.MapLayerComponents.Add(newVignette);
+                    }
+                }
+                else if (vignetteLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    if (selectedMapArea.IntersectsWith(dmc.Bounds))
+                    {
+                        DrawnMapComponent? newDmc = DrawingManager.CreateScaledTransformedDrawnComponent(dmc, scaleX, scaleY, deltaX, deltaY);
+                        if (newDmc != null)
+                        {
+                            newRealmVignetteLayer.MapLayerComponents.Add(newDmc);
+                        }
+                    }
+                }
             }
 
             return newRealmMap;
+
         }
 
         internal static void ExportMapLayersAsZipFile(FileStream fileStream, RealmStudioMap map, RealmMapExportFormat exportFormat)

@@ -554,5 +554,341 @@ namespace RealmStudio
 
             }
         }
+
+        internal static DrawnMapComponent? CreateScaledTransformedDrawnComponent(DrawnMapComponent dmc, float scaleX, float scaleY, float deltaX, float deltaY)
+        {
+            DrawnMapComponent? newDmc = null;
+
+            if (dmc is DrawnArrow arrow)
+            {
+                DrawnArrow newDrawnArrow = new()
+                {
+                    TopLeft = new SKPoint(Math.Max(0, Math.Min(arrow.TopLeft.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(arrow.TopLeft.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    BottomRight = new SKPoint(Math.Max(0, Math.Min(arrow.BottomRight.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(arrow.BottomRight.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    Rotation = arrow.Rotation,
+                    Color = arrow.Color,
+                    FillColor = arrow.FillColor,
+                    BrushSize = arrow.BrushSize,
+                    FillType = arrow.FillType,
+                    IsSelected = false,
+                };
+
+                if (arrow.FillBitmap != null)
+                {
+                    newDrawnArrow.FillBitmap = (Bitmap?)arrow.FillBitmap.Clone();
+                }
+
+                if (newDrawnArrow.FillType == DrawingFillType.Texture && newDrawnArrow.FillBitmap != null)
+                {
+                    // if the fill type is texture, we need to create a shader from the bitmap
+                    SKShader fillShader = SKShader.CreateBitmap(newDrawnArrow.FillBitmap.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                    newDrawnArrow.Shader = fillShader;
+                }
+
+                newDmc = newDrawnArrow;
+            }
+            else if (dmc is DrawnDiamond diamond)
+            {
+                DrawnDiamond newDrawnDiamond = new()
+                {
+                    TopLeft = new SKPoint(Math.Max(0, Math.Min(diamond.TopLeft.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(diamond.TopLeft.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    BottomRight = new SKPoint(Math.Max(0, Math.Min(diamond.BottomRight.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(diamond.BottomRight.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    Rotation = diamond.Rotation,
+                    Color = diamond.Color,
+                    FillColor = diamond.FillColor,
+                    BrushSize = diamond.BrushSize,
+                    FillType = diamond.FillType,
+                    IsSelected = false,
+                };
+
+                if (diamond.FillBitmap != null)
+                {
+                    newDrawnDiamond.FillBitmap = (Bitmap?)diamond.FillBitmap.Clone();
+                }
+
+                if (newDrawnDiamond.FillType == DrawingFillType.Texture && newDrawnDiamond.FillBitmap != null)
+                {
+                    // if the fill type is texture, we need to create a shader from the bitmap
+                    SKShader fillShader = SKShader.CreateBitmap(newDrawnDiamond.FillBitmap.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                    newDrawnDiamond.Shader = fillShader;
+                }
+
+                newDmc = newDrawnDiamond;
+            }
+            else if (dmc is DrawnEllipse ellipse)
+            {
+                DrawnEllipse newDrawnEllipse = new()
+                {
+                    TopLeft = new SKPoint(Math.Max(0, Math.Min(ellipse.TopLeft.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(ellipse.TopLeft.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    BottomRight = new SKPoint(Math.Max(0, Math.Min(ellipse.BottomRight.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(ellipse.BottomRight.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    Rotation = ellipse.Rotation,
+                    Color = ellipse.Color,
+                    FillColor = ellipse.FillColor,
+                    BrushSize = ellipse.BrushSize,
+                    FillType = ellipse.FillType,
+                    IsSelected = false,
+                };
+
+                if (ellipse.FillBitmap != null)
+                {
+                    newDrawnEllipse.FillBitmap = (Bitmap?)ellipse.FillBitmap.Clone();
+                }
+
+                if (newDrawnEllipse.FillType == DrawingFillType.Texture && newDrawnEllipse.FillBitmap != null)
+                {
+                    // if the fill type is texture, we need to create a shader from the bitmap
+                    SKShader fillShader = SKShader.CreateBitmap(newDrawnEllipse.FillBitmap.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                    newDrawnEllipse.Shader = fillShader;
+                }
+
+                newDmc = newDrawnEllipse;
+            }
+            else if (dmc is DrawnFivePointStar fivePointStar)
+            {
+                DrawnFivePointStar newFivePointStar = new()
+                {
+                    Center = new SKPoint(Math.Max(0, Math.Min(fivePointStar.Center.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(fivePointStar.Center.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    Radius = fivePointStar.Radius * ((scaleX + scaleY) / 2),
+                    Rotation = fivePointStar.Rotation,
+                    Color = fivePointStar.Color,
+                    FillColor = fivePointStar.FillColor,
+                    BrushSize = fivePointStar.BrushSize,
+                    FillType = fivePointStar.FillType,
+                    IsSelected = false,
+                };
+
+                if (fivePointStar.FillBitmap != null)
+                {
+                    newFivePointStar.FillBitmap = (Bitmap?)fivePointStar.FillBitmap.Clone();
+                }
+
+                if (newFivePointStar.FillType == DrawingFillType.Texture && newFivePointStar.FillBitmap != null)
+                {
+                    // if the fill type is texture, we need to create a shader from the bitmap
+                    SKShader fillShader = SKShader.CreateBitmap(newFivePointStar.FillBitmap.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                    newFivePointStar.Shader = fillShader;
+                }
+
+                newDmc = newFivePointStar;
+            }
+            else if (dmc is DrawnRegularPolygon poly)
+            {
+                DrawnRegularPolygon newDrawnRegularPolygon = new()
+                {
+                    TopLeft = new SKPoint(Math.Max(0, Math.Min(poly.TopLeft.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(poly.TopLeft.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    BottomRight = new SKPoint(Math.Max(0, Math.Min(poly.BottomRight.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(poly.BottomRight.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    Sides = poly.Sides,
+                    Rotation = poly.Rotation,
+                    Color = poly.Color,
+                    FillColor = poly.FillColor,
+                    BrushSize = poly.BrushSize,
+                    FillType = poly.FillType,
+                    IsSelected = false,
+                };
+
+                if (poly.FillBitmap != null)
+                {
+                    newDrawnRegularPolygon.FillBitmap = (Bitmap?)poly.FillBitmap.Clone();
+                }
+
+                if (newDrawnRegularPolygon.FillType == DrawingFillType.Texture && newDrawnRegularPolygon.FillBitmap != null)
+                {
+                    // if the fill type is texture, we need to create a shader from the bitmap
+                    SKShader fillShader = SKShader.CreateBitmap(newDrawnRegularPolygon.FillBitmap.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                    newDrawnRegularPolygon.Shader = fillShader;
+                }
+
+                newDmc = newDrawnRegularPolygon;
+
+            }
+            else if (dmc is DrawnPolygon polygon)
+            {
+                DrawnPolygon newDrawnPolygon = new()
+                {
+                    Rotation = polygon.Rotation,
+                    Color = polygon.Color,
+                    FillColor = polygon.FillColor,
+                    BrushSize = polygon.BrushSize,
+                    FillType = polygon.FillType,
+                    IsSelected = false,
+                };
+
+                if (polygon.FillBitmap != null)
+                {
+                    newDrawnPolygon.FillBitmap = (Bitmap?)polygon.FillBitmap.Clone();
+                }
+
+                for (int i = 0; i < polygon.Points.Count; i++)
+                {
+                    newDrawnPolygon.Points.Add(new SKPoint(Math.Max(0, Math.Min(polygon.Points[i].X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(polygon.Points[i].Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))));
+                }
+
+                if (newDrawnPolygon.FillType == DrawingFillType.Texture && newDrawnPolygon.FillBitmap != null)
+                {
+                    // if the fill type is texture, we need to create a shader from the bitmap
+                    SKShader fillShader = SKShader.CreateBitmap(newDrawnPolygon.FillBitmap.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                    newDrawnPolygon.Shader = fillShader;
+                }
+
+                newDmc = newDrawnPolygon;
+            }
+            else if (dmc is DrawnRectangle rectangle)
+            {
+                DrawnRectangle newDrawnRectangle = new()
+                {
+                    TopLeft = new SKPoint(Math.Max(0, Math.Min(rectangle.TopLeft.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(rectangle.TopLeft.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    BottomRight = new SKPoint(Math.Max(0, Math.Min(rectangle.BottomRight.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(rectangle.BottomRight.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    Rotation = rectangle.Rotation,
+                    Color = rectangle.Color,
+                    FillColor = rectangle.FillColor,
+                    BrushSize = rectangle.BrushSize,
+                    FillType = rectangle.FillType,
+                    IsSelected = false,
+                    DrawRounded = rectangle.DrawRounded,
+                };
+
+                if (rectangle.FillBitmap != null)
+                {
+                    newDrawnRectangle.FillBitmap = (Bitmap?)rectangle.FillBitmap.Clone();
+                }
+
+                if (newDrawnRectangle.FillType == DrawingFillType.Texture && newDrawnRectangle.FillBitmap != null)
+                {
+                    // if the fill type is texture, we need to create a shader from the bitmap
+                    SKShader fillShader = SKShader.CreateBitmap(newDrawnRectangle.FillBitmap.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                    newDrawnRectangle.Shader = fillShader;
+                }
+
+                newDmc = newDrawnRectangle;
+            }
+            else if (dmc is DrawnSixPointStar sixPointStar)
+            {
+                DrawnSixPointStar newSixPointStar = new()
+                {
+                    Center = new SKPoint(Math.Max(0, Math.Min(sixPointStar.Center.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(sixPointStar.Center.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    Radius = sixPointStar.Radius * ((scaleX + scaleY) / 2),
+                    Rotation = sixPointStar.Rotation,
+                    Color = sixPointStar.Color,
+                    FillColor = sixPointStar.FillColor,
+                    BrushSize = sixPointStar.BrushSize,
+                    FillType = sixPointStar.FillType,
+                    IsSelected = false,
+                };
+
+                if (sixPointStar.FillBitmap != null)
+                {
+                    newSixPointStar.FillBitmap = (Bitmap?)sixPointStar.FillBitmap.Clone();
+                }
+
+                if (newSixPointStar.FillType == DrawingFillType.Texture && newSixPointStar.FillBitmap != null)
+                {
+                    // if the fill type is texture, we need to create a shader from the bitmap
+                    SKShader fillShader = SKShader.CreateBitmap(newSixPointStar.FillBitmap.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                    newSixPointStar.Shader = fillShader;
+                }
+
+                newDmc = newSixPointStar;
+            }
+            else if (dmc is DrawnStamp stamp)
+            {
+                DrawnStamp newDrawnStamp = new()
+                {
+                    TopLeft = new SKPoint(Math.Max(0, Math.Min(stamp.TopLeft.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(stamp.TopLeft.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    Rotation = stamp.Rotation,
+                    Scale = stamp.Scale * ((scaleX + scaleY) / 2),
+                    IsSelected = false,
+                    Opacity = stamp.Opacity,
+                };
+
+                if (stamp.StampBitmap != null)
+                {
+                    newDrawnStamp.StampBitmap = (SKBitmap?)stamp.StampBitmap.Copy();
+                }
+
+                newDmc = newDrawnStamp;
+            }
+            else if (dmc is DrawnTriangle triangle)
+            {
+                DrawnTriangle newDrawnTriangle = new()
+                {
+                    TopLeft = new SKPoint(Math.Max(0, Math.Min(triangle.TopLeft.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(triangle.TopLeft.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    BottomRight = new SKPoint(Math.Max(0, Math.Min(triangle.BottomRight.X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(triangle.BottomRight.Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))),
+                    Rotation = triangle.Rotation,
+                    Color = triangle.Color,
+                    FillColor = triangle.FillColor,
+                    BrushSize = triangle.BrushSize,
+                    FillType = triangle.FillType,
+                    IsSelected = false,
+                    DrawRight = triangle.DrawRight,
+                };
+
+                if (triangle.FillBitmap != null)
+                {
+                    newDrawnTriangle.FillBitmap = (Bitmap?)triangle.FillBitmap.Clone();
+                }
+
+                if (newDrawnTriangle.FillType == DrawingFillType.Texture && newDrawnTriangle.FillBitmap != null)
+                {
+                    // if the fill type is texture, we need to create a shader from the bitmap
+                    SKShader fillShader = SKShader.CreateBitmap(newDrawnTriangle.FillBitmap.ToSKBitmap(), SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+                    newDrawnTriangle.Shader = fillShader;
+                }
+
+                newDmc = newDrawnTriangle;
+            }
+            else if (dmc is DrawingErase erase)
+            {
+                DrawingErase newDrawingErase = new()
+                {
+                    BrushSize = (int)(erase.BrushSize * ((scaleX + scaleY) / 2)),
+                    IsSelected = false,
+                };
+
+                for (int i = 0; i < erase.Points.Count; i++)
+                {
+                    newDrawingErase.Points.Add(new SKPoint(Math.Max(0, Math.Min(erase.Points[i].X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(erase.Points[i].Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))));
+                }
+
+                newDmc = newDrawingErase;
+
+            }
+            else if (dmc is PaintedLine paintedLine)
+            {
+                PaintedLine newPaintedLine = new()
+                {
+                    Color = paintedLine.Color,
+                    FillType = paintedLine.FillType,
+                    Brush = paintedLine.Brush,
+                    ColorBrush = paintedLine.ColorBrush,
+                    BrushSize = (int)(paintedLine.BrushSize * ((scaleX + scaleY) / 2)),
+                    IsSelected = false,
+                };
+
+                for (int i = 0; i < paintedLine.Points.Count; i++)
+                {
+                    newPaintedLine.Points.Add(new SKPoint(Math.Max(0, Math.Min(paintedLine.Points[i].X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(paintedLine.Points[i].Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))));
+                }
+
+                newDmc = newPaintedLine;
+            }
+            else if (dmc is DrawnLine drawnLine)
+            {
+                DrawnLine newDrawnLine = new()
+                {
+                    Color = drawnLine.Color,
+                    BrushSize = (int)(drawnLine.BrushSize * ((scaleX + scaleY) / 2)),
+                    IsSelected = false,
+                };
+
+                for (int i = 0; i < drawnLine.Points.Count; i++)
+                {
+                    newDrawnLine.Points.Add(new SKPoint(Math.Max(0, Math.Min(drawnLine.Points[i].X * scaleX + deltaX, MapStateMediator.CurrentMap.MapWidth)), Math.Max(0, Math.Min(drawnLine.Points[i].Y * scaleY + deltaY, MapStateMediator.CurrentMap.MapHeight))));
+                }
+
+                newDmc = newDrawnLine;
+            }
+
+            return newDmc;
+        }
     }
 }

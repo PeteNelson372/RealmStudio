@@ -144,6 +144,7 @@ namespace RealmStudio
                     false,
                     false,
                     false,
+                    true,
                     true);
             }
         }
