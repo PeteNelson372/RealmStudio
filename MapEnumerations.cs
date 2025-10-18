@@ -83,6 +83,7 @@ namespace RealmStudio
         DrawingArrow,
         DrawingFivePointStar,
         DrawingSixPointStar,
+        DrawingPixelEdit,
     }
 
     public enum LandGradientDirection

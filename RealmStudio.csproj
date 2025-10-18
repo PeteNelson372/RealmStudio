@@ -9,7 +9,7 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>false</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>1.2025.0-alpha-3123</Version>
+    <Version>1.2025.0-alpha-3155</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
@@ -29,8 +29,8 @@
     <UseWPF>True</UseWPF>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <ApplicationIcon>realm_studio_icon_1024x1024_g3u_icon.ico</ApplicationIcon>
-    <AssemblyVersion>1.2025.289.37735</AssemblyVersion>
-    <FileVersion>1.2025.289.37735</FileVersion> 
+    <AssemblyVersion>1.2025.291.35749</AssemblyVersion>
+    <FileVersion>1.2025.291.35749</FileVersion> 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -160,6 +160,7 @@
     <PackageReference Include="AForge.Math" Version="2.2.5" />
     <PackageReference Include="Clipper2" Version="1.5.4" />
     <PackageReference Include="Cyotek.Windows.Forms.ColorPicker" Version="2.0.0-beta.7" />
+    <PackageReference Include="CyotekImageBox" Version="2.0.0-beta.2" />
     <PackageReference Include="Delaunator" Version="1.0.11" />
     <PackageReference Include="FontAwesome" Version="4.7.0" />
     <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />

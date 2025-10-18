@@ -27,6 +27,15 @@ namespace RealmStudio
 {
     internal sealed class PaintObjects
     {
+        public static readonly SKPaint CursorSquarePaint = new()
+        {
+            Style = SKPaintStyle.Stroke,
+            IsAntialias = true,
+            Color = SKColors.DarkRed,
+            StrokeWidth = 2,
+            PathEffect = SKPathEffect.CreateDash([5F, 5F], 10F)
+        };
+
         public static readonly SKPaint LandformSelectPaint = new()
         {
             Style = SKPaintStyle.Stroke,

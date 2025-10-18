@@ -259,6 +259,13 @@ namespace RealmStudio
                         }
                     }
                     break;
+                case MapDrawingMode.DrawingPixelEdit:
+                    {
+                        // draw a square cursor for pixel editing
+                        SKRect rect = new(point.X - 32, point.Y - 32, point.X + 32, point.Y + 32);
+                        canvas.DrawRect(rect, PaintObjects.CursorSquarePaint);
+                    }
+                    break;
                 default:
                     {
                         if (brushSize > 0)

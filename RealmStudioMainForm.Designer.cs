@@ -477,6 +477,8 @@
             toolStripSeparator8 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
             DrawingToolPanel = new Panel();
+            label113 = new Label();
+            DrawingShapeRotationTrack = new TrackBar();
             groupBox3 = new GroupBox();
             SixPointStarButton = new Button();
             FivePointStarButton = new Button();
@@ -669,8 +671,7 @@
             BackgroundToolPanel = new Panel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
-            label113 = new Label();
-            DrawingShapeRotationTrack = new TrackBar();
+            PixelEditButton = new FontAwesome.Sharp.IconToolStripButton();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -790,6 +791,7 @@
             ApplicationStatusStrip.SuspendLayout();
             RealmStudioMainMenuStrip.SuspendLayout();
             DrawingToolPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)DrawingShapeRotationTrack).BeginInit();
             groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DrawingStampOpacityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)DrawingStampRotationTrack).BeginInit();
@@ -842,7 +844,6 @@
             ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)DrawingShapeRotationTrack).BeginInit();
             this.SuspendLayout();
             // 
             // OceanTab
@@ -5821,7 +5822,7 @@
             DrawingToolStrip.Dock = DockStyle.None;
             DrawingToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             DrawingToolStrip.GripStyle = ToolStripGripStyle.Hidden;
-            DrawingToolStrip.Items.AddRange(new ToolStripItem[] { DrawingSelectButton, PencilDrawButton, PaintDrawButton, FillShapeButton, FillTypeDropdownButton, toolStripSeparator10, PlaceRectangleButton, PlaceEllipseButton, PlacePolygonButton, PlaceStampButton, EraseDrawingButton });
+            DrawingToolStrip.Items.AddRange(new ToolStripItem[] { DrawingSelectButton, PencilDrawButton, PaintDrawButton, FillShapeButton, FillTypeDropdownButton, toolStripSeparator10, PlaceRectangleButton, PlaceEllipseButton, PlacePolygonButton, PlaceStampButton, EraseDrawingButton, PixelEditButton });
             DrawingToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
             DrawingToolStrip.Location = new Point(158, 0);
             DrawingToolStrip.Name = "DrawingToolStrip";
@@ -5861,6 +5862,7 @@
             PencilDrawButton.Size = new Size(60, 60);
             PencilDrawButton.Text = "Draw";
             PencilDrawButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            PencilDrawButton.ToolTipText = "Draw Line";
             PencilDrawButton.Click += (this.PencilDrawButton_Click);
             // 
             // PaintDrawButton
@@ -5878,6 +5880,7 @@
             PaintDrawButton.Size = new Size(60, 60);
             PaintDrawButton.Text = "Paint";
             PaintDrawButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            PaintDrawButton.ToolTipText = "Paint with Color";
             PaintDrawButton.Click += (this.PaintDrawButton_Click);
             // 
             // FillShapeButton
@@ -5968,7 +5971,7 @@
             PlaceEllipseButton.Name = "PlaceEllipseButton";
             PlaceEllipseButton.Size = new Size(40, 40);
             PlaceEllipseButton.Text = "Ellipse";
-            PlaceEllipseButton.ToolTipText = "Place Ellipse";
+            PlaceEllipseButton.ToolTipText = "Draw Ellipse";
             PlaceEllipseButton.Click += (this.PlaceEllipseButton_Click);
             // 
             // PlacePolygonButton
@@ -5985,6 +5988,7 @@
             PlacePolygonButton.Name = "PlacePolygonButton";
             PlacePolygonButton.Size = new Size(40, 40);
             PlacePolygonButton.Text = "iconToolStripButton1";
+            PlacePolygonButton.ToolTipText = "Draw Polygon";
             PlacePolygonButton.Click += (this.PlacePolygonButton_Click);
             // 
             // PlaceStampButton
@@ -6001,6 +6005,7 @@
             PlaceStampButton.Name = "PlaceStampButton";
             PlaceStampButton.Size = new Size(40, 40);
             PlaceStampButton.Text = "Stamp";
+            PlaceStampButton.ToolTipText = "Place Stamp";
             PlaceStampButton.Click += (this.PlaceStampButton_Click);
             // 
             // EraseDrawingButton
@@ -6016,7 +6021,7 @@
             EraseDrawingButton.Margin = new Padding(0, 25, 0, 2);
             EraseDrawingButton.Name = "EraseDrawingButton";
             EraseDrawingButton.Size = new Size(40, 40);
-            EraseDrawingButton.Text = "iconToolStripButton1";
+            EraseDrawingButton.ToolTipText = "Erase";
             EraseDrawingButton.Click += (this.EraseDrawingButton_Click);
             // 
             // ShowDrawingLayerSwitch
@@ -7592,6 +7597,29 @@
             DrawingToolPanel.Name = "DrawingToolPanel";
             DrawingToolPanel.Size = new Size(152, 806);
             DrawingToolPanel.TabIndex = 26;
+            // 
+            // label113
+            // 
+            label113.AutoSize = true;
+            label113.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label113.ForeColor = SystemColors.ControlDarkDark;
+            label113.Location = new Point(17, 705);
+            label113.Name = "label113";
+            label113.Size = new Size(81, 13);
+            label113.TabIndex = 117;
+            label113.Text = "Shape Rotation";
+            // 
+            // DrawingShapeRotationTrack
+            // 
+            DrawingShapeRotationTrack.AutoSize = false;
+            DrawingShapeRotationTrack.BackColor = SystemColors.Control;
+            DrawingShapeRotationTrack.Location = new Point(10, 721);
+            DrawingShapeRotationTrack.Maximum = 359;
+            DrawingShapeRotationTrack.Name = "DrawingShapeRotationTrack";
+            DrawingShapeRotationTrack.Size = new Size(126, 20);
+            DrawingShapeRotationTrack.TabIndex = 116;
+            DrawingShapeRotationTrack.TickStyle = TickStyle.None;
+            DrawingShapeRotationTrack.Scroll += (this.DrawingShapeRotationTrack_Scroll);
             // 
             // groupBox3
             // 
@@ -10276,28 +10304,21 @@
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
             // 
-            // label113
+            // PixelEditButton
             // 
-            label113.AutoSize = true;
-            label113.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            label113.ForeColor = SystemColors.ControlDarkDark;
-            label113.Location = new Point(17, 705);
-            label113.Name = "label113";
-            label113.Size = new Size(81, 13);
-            label113.TabIndex = 117;
-            label113.Text = "Shape Rotation";
-            // 
-            // DrawingShapeRotationTrack
-            // 
-            DrawingShapeRotationTrack.AutoSize = false;
-            DrawingShapeRotationTrack.BackColor = SystemColors.Control;
-            DrawingShapeRotationTrack.Location = new Point(10, 721);
-            DrawingShapeRotationTrack.Maximum = 359;
-            DrawingShapeRotationTrack.Name = "DrawingShapeRotationTrack";
-            DrawingShapeRotationTrack.Size = new Size(126, 20);
-            DrawingShapeRotationTrack.TabIndex = 116;
-            DrawingShapeRotationTrack.TickStyle = TickStyle.None;
-            DrawingShapeRotationTrack.Scroll += (this.DrawingShapeRotationTrack_Scroll);
+            PixelEditButton.AutoSize = false;
+            PixelEditButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            PixelEditButton.IconChar = FontAwesome.Sharp.IconChar.TableCells;
+            PixelEditButton.IconColor = Color.Black;
+            PixelEditButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PixelEditButton.IconSize = 32;
+            PixelEditButton.ImageScaling = ToolStripItemImageScaling.None;
+            PixelEditButton.ImageTransparentColor = Color.Magenta;
+            PixelEditButton.Margin = new Padding(0, 25, 0, 2);
+            PixelEditButton.Name = "PixelEditButton";
+            PixelEditButton.Size = new Size(40, 40);
+            PixelEditButton.ToolTipText = "Pixel Edit";
+            PixelEditButton.Click += (this.PixelEditButton_Click);
             // 
             // RealmStudioMainForm
             // 
@@ -10489,6 +10510,7 @@
             RealmStudioMainMenuStrip.PerformLayout();
             DrawingToolPanel.ResumeLayout(false);
             DrawingToolPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)DrawingShapeRotationTrack).EndInit();
             groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)DrawingStampOpacityTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)DrawingStampRotationTrack).EndInit();
@@ -10548,7 +10570,6 @@
             ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).EndInit();
-            ((System.ComponentModel.ISupportInitialize)DrawingShapeRotationTrack).EndInit();
             this.ResumeLayout(false);
         }
 
@@ -11194,5 +11215,6 @@
         internal ToolStripStatusLabel DrawingLayerLabel;
         private Label label113;
         internal TrackBar DrawingShapeRotationTrack;
+        private FontAwesome.Sharp.IconToolStripButton PixelEditButton;
     }
 }

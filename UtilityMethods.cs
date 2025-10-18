@@ -187,11 +187,11 @@ namespace RealmStudio
                 "|All Files (*.*)|*.*";
         }
 
-        internal static Color SelectColor(RealmStudioMainForm realmStudioMainForm, MouseEventArgs e, Color backColor)
+        internal static Color SelectColor(Form form, MouseEventArgs e, Color backColor)
         {
             if (e.Button == MouseButtons.Left)
             {
-                Color selectedColor = SelectColorFromDialog(realmStudioMainForm, backColor);
+                Color selectedColor = SelectColorFromDialog(form, backColor);
                 return selectedColor;
             }
             else if (e.Button == MouseButtons.Right)
@@ -201,7 +201,7 @@ namespace RealmStudio
                     SelectedColor = backColor
                 };
 
-                colorQuickPick.ShowDialog(realmStudioMainForm);
+                colorQuickPick.ShowDialog(form);
 
                 if (colorQuickPick.SelectedColor != Color.Empty)
                 {

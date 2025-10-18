@@ -3810,6 +3810,48 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case MapDrawingMode.DrawingPixelEdit:
+                    {
+                        DrawnPixelEditForm pixelEditForm = new();
+
+                        SKSurface s = SKSurface.Create(new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight));
+                        s.Canvas.Clear();
+
+                        LandformManager.RemoveDeletedLandforms();
+
+                        MapRenderMethods.RenderMapForExport(MapStateMediator.CurrentMap, s.Canvas);
+
+                        Bitmap bitmap = s.Snapshot().ToBitmap();
+
+                        // Define the rectangle area to clone
+                        Rectangle cloneRect = new((int)MapStateMediator.CurrentCursorPoint.X - 32,
+                            (int)MapStateMediator.CurrentCursorPoint.Y - 32,
+                            64, 64); // x, y, width, height
+
+                        // Clone the specified area
+                        Bitmap clonedBitmap = bitmap.Clone(cloneRect, bitmap.PixelFormat);
+
+                        pixelEditForm.MapBitmap = clonedBitmap;
+                        pixelEditForm.TopLeft = new SKPoint(MapStateMediator.CurrentCursorPoint.X - 32, MapStateMediator.CurrentCursorPoint.Y - 32);
+
+                        if (pixelEditForm.ShowDialog(this) == DialogResult.OK)
+                        {
+                            DrawnPixelEdits drawnPixelEdits = new()
+                            {
+                                MapPixelEdits = [.. pixelEditForm.BitmapEdits],
+                            };
+
+                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                            Cmd_AddDrawnPixelEdits cmd = new(drawLayer, drawnPixelEdits);
+                            CommandManager.AddCommand(cmd);
+                            cmd.DoOperation();
+
+                            MapStateMediator.CurrentMap.IsSaved = false;
+                            SKGLRenderControl.Invalidate();
+                        }
+                    }
+                    break;
             }
         }
 
@@ -7607,7 +7649,13 @@ namespace RealmStudio
             DrawingMediator.DrawingShapeRotation = DrawingShapeRotationTrack.Value;
         }
 
+        private void PixelEditButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.DrawingPixelEdit, 0);
+        }
+
         #endregion
+
 
     }
 }
