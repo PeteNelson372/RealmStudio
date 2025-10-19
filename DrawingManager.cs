@@ -223,7 +223,7 @@ namespace RealmStudio
             }
         }
 
-        internal static DrawnMapComponent? SelectDrawnMapComponentAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
+        internal static DrawnMapComponent? SelectDrawnMapComponentAtPoint(SKPoint mapClickPoint)
         {
             DrawnMapComponent? selectedDrawnMapComponent = null;
 

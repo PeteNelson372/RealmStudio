@@ -3805,7 +3805,7 @@ namespace RealmStudio
                         Cursor = Cursors.Default;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
-                        MapStateMediator.SelectedDrawnMapComponent = DrawingManager.SelectDrawnMapComponentAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
+                        MapStateMediator.SelectedDrawnMapComponent = DrawingManager.SelectDrawnMapComponentAtPoint(MapStateMediator.CurrentCursorPoint);
 
                         SKGLRenderControl.Invalidate();
                     }

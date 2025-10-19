@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio
 {
-    internal class Cmd_AddDrawnPixelEdits(MapLayer mapLayer, DrawnPixelEdits drawnPixelEdits) : IMapOperation
+    internal sealed class Cmd_AddDrawnPixelEdits(MapLayer mapLayer, DrawnPixelEdits drawnPixelEdits) : IMapOperation
     {
         private readonly MapLayer mapLayer = mapLayer;
         private readonly DrawnPixelEdits dpe = drawnPixelEdits;
