@@ -31,7 +31,7 @@ using System.Xml.Serialization;
 
 namespace RealmStudio
 {
-    internal class DrawnPixelEdits : DrawnMapComponent, IXmlSerializable
+    public sealed class DrawnPixelEdits : DrawnMapComponent, IXmlSerializable
     {
         private List<Tuple<SKPoint, Color, Color>> _mapPixelEdits = [];
         public List<Tuple<SKPoint, Color, Color>> MapPixelEdits
@@ -142,6 +142,7 @@ namespace RealmStudio
                 writer.WriteAttributeString("TargetColor", edit.Item3.ToArgb().ToString("X8"));
                 writer.WriteEndElement();
             }
+            writer.WriteEndElement();
         }
     }
 }

@@ -59,7 +59,9 @@ namespace RealmStudio
             {
                 if (MapLayerComponents != null)
                 {
+                    LayerRect = new(0, 0, Width, Height);
                     canvas.ClipRect(LayerRect);
+
                     using (new SKAutoCanvasRestore(canvas))
                     {
                         foreach (var component in MapLayerComponents)

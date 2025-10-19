@@ -62,6 +62,7 @@ namespace RealmStudio
         [XmlArrayItem("DrawnStamp", Type = typeof(DrawnStamp))]
         [XmlArrayItem("DrawnTriangle", Type = typeof(DrawnTriangle))]
         [XmlArrayItem("PaintedLine", Type = typeof(PaintedLine))]
+        [XmlArrayItem("DrawnPixelEdits", Type = typeof(DrawnPixelEdits))]
 
         public List<MapComponent> MapLayerComponents { get; } = new List<MapComponent>(500);
 
