@@ -50,6 +50,7 @@
             AboutOkButton = new Button();
             BrookmontePictureBox = new PictureBox();
             pictureBox1 = new PictureBox();
+            RealmStudioMicrosoftStoreLinkLabel = new LinkLabel();
             AboutRealmStudioOverlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)GPL3LicensePictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)GithubPictureBox).BeginInit();
@@ -61,6 +62,7 @@
             // 
             AboutRealmStudioOverlay.BackColor = Color.FromArgb(244, 241, 243);
             AboutRealmStudioOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            AboutRealmStudioOverlay.Controls.Add(RealmStudioMicrosoftStoreLinkLabel);
             AboutRealmStudioOverlay.Controls.Add(BrookmoneWebsiteLinkLabel);
             AboutRealmStudioOverlay.Controls.Add(RealmStudioLatestReleaseLinkLabel);
             AboutRealmStudioOverlay.Controls.Add(PrivacyPolicyLinkLabel);
@@ -94,7 +96,7 @@
             AboutRealmStudioOverlay.Padding = new Padding(20, 56, 20, 16);
             AboutRealmStudioOverlay.RoundCorners = true;
             AboutRealmStudioOverlay.Sizable = true;
-            AboutRealmStudioOverlay.Size = new Size(634, 587);
+            AboutRealmStudioOverlay.Size = new Size(648, 632);
             AboutRealmStudioOverlay.SmartBounds = true;
             AboutRealmStudioOverlay.StartPosition = FormStartPosition.CenterParent;
             AboutRealmStudioOverlay.TabIndex = 0;
@@ -115,18 +117,18 @@
             // RealmStudioLatestReleaseLinkLabel
             // 
             RealmStudioLatestReleaseLinkLabel.AutoSize = true;
-            RealmStudioLatestReleaseLinkLabel.Location = new Point(28, 439);
+            RealmStudioLatestReleaseLinkLabel.Location = new Point(28, 565);
             RealmStudioLatestReleaseLinkLabel.Name = "RealmStudioLatestReleaseLinkLabel";
-            RealmStudioLatestReleaseLinkLabel.Size = new Size(153, 15);
+            RealmStudioLatestReleaseLinkLabel.Size = new Size(209, 15);
             RealmStudioLatestReleaseLinkLabel.TabIndex = 19;
             RealmStudioLatestReleaseLinkLabel.TabStop = true;
-            RealmStudioLatestReleaseLinkLabel.Text = "Realm Studio Latest Release";
+            RealmStudioLatestReleaseLinkLabel.Text = "Realm Studio Latest Release on Github";
             RealmStudioLatestReleaseLinkLabel.LinkClicked += RealmStudioLatestReleaseLinkLabel_LinkClicked;
             // 
             // PrivacyPolicyLinkLabel
             // 
             PrivacyPolicyLinkLabel.AutoSize = true;
-            PrivacyPolicyLinkLabel.Location = new Point(23, 545);
+            PrivacyPolicyLinkLabel.Location = new Point(28, 539);
             PrivacyPolicyLinkLabel.Name = "PrivacyPolicyLinkLabel";
             PrivacyPolicyLinkLabel.Size = new Size(153, 15);
             PrivacyPolicyLinkLabel.TabIndex = 18;
@@ -137,7 +139,7 @@
             // HelpFileLinkLabel
             // 
             HelpFileLinkLabel.AutoSize = true;
-            HelpFileLinkLabel.Location = new Point(23, 476);
+            HelpFileLinkLabel.Location = new Point(28, 444);
             HelpFileLinkLabel.Name = "HelpFileLinkLabel";
             HelpFileLinkLabel.Size = new Size(126, 15);
             HelpFileLinkLabel.TabIndex = 17;
@@ -148,18 +150,18 @@
             // RealmStudioSupportLink
             // 
             RealmStudioSupportLink.AutoSize = true;
-            RealmStudioSupportLink.Location = new Point(23, 499);
+            RealmStudioSupportLink.Location = new Point(28, 516);
             RealmStudioSupportLink.Name = "RealmStudioSupportLink";
-            RealmStudioSupportLink.Size = new Size(167, 15);
+            RealmStudioSupportLink.Size = new Size(154, 15);
             RealmStudioSupportLink.TabIndex = 16;
             RealmStudioSupportLink.TabStop = true;
-            RealmStudioSupportLink.Text = "Contact Realm Studio Support";
+            RealmStudioSupportLink.Text = "Email Realm Studio Support";
             RealmStudioSupportLink.LinkClicked += RealmStudioSupportLink_LinkClicked;
             // 
             // ReleaseNotesLink
             // 
             ReleaseNotesLink.AutoSize = true;
-            ReleaseNotesLink.Location = new Point(23, 522);
+            ReleaseNotesLink.Location = new Point(28, 476);
             ReleaseNotesLink.Name = "ReleaseNotesLink";
             ReleaseNotesLink.Size = new Size(80, 15);
             ReleaseNotesLink.TabIndex = 15;
@@ -206,12 +208,12 @@
             // 
             CreditsTextBox.BackColor = Color.FromArgb(244, 241, 243);
             CreditsTextBox.BorderStyle = BorderStyle.FixedSingle;
-            CreditsTextBox.Location = new Point(205, 364);
+            CreditsTextBox.Location = new Point(187, 364);
             CreditsTextBox.Multiline = true;
             CreditsTextBox.Name = "CreditsTextBox";
             CreditsTextBox.ReadOnly = true;
             CreditsTextBox.ScrollBars = ScrollBars.Vertical;
-            CreditsTextBox.Size = new Size(406, 127);
+            CreditsTextBox.Size = new Size(438, 127);
             CreditsTextBox.TabIndex = 11;
             CreditsTextBox.Text = resources.GetString("CreditsTextBox.Text");
             // 
@@ -220,7 +222,7 @@
             label6.AutoSize = true;
             label6.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label6.ForeColor = SystemColors.ControlDarkDark;
-            label6.Location = new Point(205, 340);
+            label6.Location = new Point(187, 340);
             label6.Name = "label6";
             label6.Size = new Size(184, 21);
             label6.TabIndex = 10;
@@ -230,12 +232,12 @@
             // 
             LicenseTextBox.BackColor = Color.FromArgb(244, 241, 243);
             LicenseTextBox.BorderStyle = BorderStyle.FixedSingle;
-            LicenseTextBox.Location = new Point(205, 179);
+            LicenseTextBox.Location = new Point(187, 179);
             LicenseTextBox.Multiline = true;
             LicenseTextBox.Name = "LicenseTextBox";
             LicenseTextBox.ReadOnly = true;
             LicenseTextBox.ScrollBars = ScrollBars.Vertical;
-            LicenseTextBox.Size = new Size(406, 138);
+            LicenseTextBox.Size = new Size(438, 138);
             LicenseTextBox.TabIndex = 9;
             LicenseTextBox.Text = resources.GetString("LicenseTextBox.Text");
             // 
@@ -244,7 +246,7 @@
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label5.ForeColor = SystemColors.ControlDarkDark;
-            label5.Location = new Point(205, 155);
+            label5.Location = new Point(187, 155);
             label5.Name = "label5";
             label5.Size = new Size(169, 21);
             label5.TabIndex = 8;
@@ -255,7 +257,7 @@
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label4.ForeColor = SystemColors.ControlDarkDark;
-            label4.Location = new Point(205, 122);
+            label4.Location = new Point(187, 122);
             label4.Name = "label4";
             label4.Size = new Size(314, 21);
             label4.TabIndex = 7;
@@ -266,7 +268,7 @@
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label3.ForeColor = SystemColors.ControlDarkDark;
-            label3.Location = new Point(205, 101);
+            label3.Location = new Point(187, 101);
             label3.Name = "label3";
             label3.Size = new Size(402, 21);
             label3.TabIndex = 6;
@@ -286,7 +288,7 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.ForeColor = SystemColors.ControlDarkDark;
-            label1.Location = new Point(205, 59);
+            label1.Location = new Point(191, 59);
             label1.Name = "label1";
             label1.Size = new Size(107, 21);
             label1.TabIndex = 3;
@@ -295,7 +297,7 @@
             // AboutOkButton
             // 
             AboutOkButton.ForeColor = SystemColors.ControlDarkDark;
-            AboutOkButton.Location = new Point(551, 508);
+            AboutOkButton.Location = new Point(565, 553);
             AboutOkButton.Name = "AboutOkButton";
             AboutOkButton.Size = new Size(60, 60);
             AboutOkButton.TabIndex = 2;
@@ -325,11 +327,22 @@
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
+            // RealmStudioMicrosoftStoreLinkLabel
+            // 
+            RealmStudioMicrosoftStoreLinkLabel.AutoSize = true;
+            RealmStudioMicrosoftStoreLinkLabel.Location = new Point(28, 589);
+            RealmStudioMicrosoftStoreLinkLabel.Name = "RealmStudioMicrosoftStoreLinkLabel";
+            RealmStudioMicrosoftStoreLinkLabel.Size = new Size(274, 15);
+            RealmStudioMicrosoftStoreLinkLabel.TabIndex = 21;
+            RealmStudioMicrosoftStoreLinkLabel.TabStop = true;
+            RealmStudioMicrosoftStoreLinkLabel.Text = "Realm Studio Latest Release on the Microsoft Store";
+            RealmStudioMicrosoftStoreLinkLabel.LinkClicked += RealmStudioMicrosoftStoreLinkLabel_LinkClicked;
+            // 
             // AboutRealmStudio
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(634, 587);
+            ClientSize = new Size(648, 632);
             Controls.Add(AboutRealmStudioOverlay);
             FormBorderStyle = FormBorderStyle.None;
             MinimumSize = new Size(261, 65);
@@ -369,5 +382,6 @@
         private LinkLabel PrivacyPolicyLinkLabel;
         private LinkLabel RealmStudioLatestReleaseLinkLabel;
         private LinkLabel BrookmoneWebsiteLinkLabel;
+        private LinkLabel RealmStudioMicrosoftStoreLinkLabel;
     }
 }

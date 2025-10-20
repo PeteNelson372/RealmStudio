@@ -172,6 +172,21 @@ namespace RealmStudio
             catch { }
         }
 
+        private void RealmStudioMicrosoftStoreLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "https://apps.microsoft.com/detail/xp8lcmjbk0zfxw?hl=en-US&gl=US",
+                UseShellExecute = true
+            };
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch { }
+        }
+
         private void BrookmontePictureBox_Click(object sender, EventArgs e)
         {
             var psi = new ProcessStartInfo

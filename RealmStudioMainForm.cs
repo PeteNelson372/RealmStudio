@@ -1263,7 +1263,7 @@ namespace RealmStudio
 
                 if (newReleaseVersion != null)
                 {
-                    string message = $"Realm Studio version {newReleaseVersion} is available for download from Github.\n\nThe About dialog has a link to the latest version.";
+                    string message = $"Realm Studio version {newReleaseVersion} is available for download from Github or the Microsoft Store.\n\nThe About dialog has a link to the latest version.";
                     MessageBox.Show(message, "New Version Available", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
