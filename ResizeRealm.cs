@@ -23,6 +23,7 @@
 ***************************************************************************************************************************/
 using RealmStudio.Properties;
 using SkiaSharp;
+using System.ComponentModel;
 
 namespace RealmStudio
 {
@@ -33,7 +34,9 @@ namespace RealmStudio
         private readonly RealmStudioMap currentMap;
         private SKRect selectedArea;
         private ResizeMapAnchorPoint anchorPoint = ResizeMapAnchorPoint.CenterZoomed;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool AspectRatioLocked { get; set; } = true;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public float MapAspectRatio { get; set; } = 1.0F;
 
         private bool WidthChanging;

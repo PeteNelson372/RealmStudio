@@ -1,4 +1,5 @@
-﻿/**************************************************************************************************************************
+﻿using System.ComponentModel;
+/**************************************************************************************************************************
 * Copyright 2024, Peter R. Nelson
 *
 * This file is part of the RealmStudio application. The RealmStudio application is intended
@@ -21,12 +22,14 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+
 namespace RealmStudio
 {
     public partial class ColorSelector : Form
     {
         private Color _color;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color SelectedColor
         {
             get

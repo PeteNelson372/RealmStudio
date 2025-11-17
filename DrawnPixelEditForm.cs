@@ -23,6 +23,7 @@
 ***************************************************************************************************************************/
 
 using SkiaSharp;
+using System.ComponentModel;
 
 namespace RealmStudio
 {
@@ -32,18 +33,21 @@ namespace RealmStudio
         private SKPoint _topLeft = new(0, 0);
         private List<Tuple<SKPoint, Color, Color>> _bitmapEdits = new();
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Bitmap? MapBitmap
         {
             get => _mapBitmap;
             set => _mapBitmap = value;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public SKPoint TopLeft
         {
             get => _topLeft;
             set => _topLeft = value;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<Tuple<SKPoint, Color, Color>> BitmapEdits
         {
             get => _bitmapEdits;

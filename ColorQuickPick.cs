@@ -1,9 +1,12 @@
-﻿namespace RealmStudio
+﻿using System.ComponentModel;
+
+namespace RealmStudio
 {
     public partial class ColorQuickPick : Form
     {
         private Color _selectedColor = Color.Empty;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color SelectedColor
         {
             get => _selectedColor;

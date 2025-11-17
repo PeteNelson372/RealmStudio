@@ -350,6 +350,7 @@
             PlacePolygonButton = new FontAwesome.Sharp.IconToolStripButton();
             PlaceStampButton = new FontAwesome.Sharp.IconToolStripButton();
             EraseDrawingButton = new FontAwesome.Sharp.IconToolStripButton();
+            PixelEditButton = new FontAwesome.Sharp.IconToolStripButton();
             ShowDrawingLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label11 = new Label();
             RealmStudioForm = new ReaLTaiizor.Forms.DungeonForm();
@@ -671,7 +672,7 @@
             BackgroundToolPanel = new Panel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
-            PixelEditButton = new FontAwesome.Sharp.IconToolStripButton();
+            WorlAnvilIntegrationButton = new Button();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -1926,7 +1927,6 @@
             // 
             CoastlineStyleList.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             CoastlineStyleList.FormattingEnabled = true;
-            CoastlineStyleList.ItemHeight = 15;
             CoastlineStyleList.Items.AddRange(new object[] { "None", "Uniform Band", "Uniform Blend", "Uniform Outline", "Three-Tiered", "Circular Pattern", "Dash Pattern", "Hatch Pattern" });
             CoastlineStyleList.Location = new Point(6, 151);
             CoastlineStyleList.Name = "CoastlineStyleList";
@@ -4537,7 +4537,6 @@
             // 
             LabelPresetsListBox.DisplayMember = "LabelPresetName";
             LabelPresetsListBox.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            LabelPresetsListBox.ItemHeight = 15;
             LabelPresetsListBox.Location = new Point(6, 26);
             LabelPresetsListBox.Name = "LabelPresetsListBox";
             LabelPresetsListBox.Size = new Size(136, 79);
@@ -5723,7 +5722,6 @@
             // 
             LayerListBox.Font = new Font("Segoe UI", 6.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             LayerListBox.FormattingEnabled = true;
-            LayerListBox.ItemHeight = 12;
             LayerListBox.Items.AddRange(new object[] { "BASE", "OCEANDRAWING", "WINDROSE", "ABOVEOCEANGRID", "COASTLINE", "LANDFORM", "LANDDRAWING", "WATER", "WATERDRAWING", "BELOWSYMBOLSGRID", "PATHLOWER", "SYMBOLS", "PATHUPPER", "REGION", "REGIONOVERLAY", "GRID", "BOXES", "LABELS", "OVERLAY", "FRAME", "USERDRAWING", "VIGNETTE" });
             LayerListBox.Location = new Point(0, 20);
             LayerListBox.Name = "LayerListBox";
@@ -6024,6 +6022,22 @@
             EraseDrawingButton.ToolTipText = "Erase";
             EraseDrawingButton.Click += (this.EraseDrawingButton_Click);
             // 
+            // PixelEditButton
+            // 
+            PixelEditButton.AutoSize = false;
+            PixelEditButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            PixelEditButton.IconChar = FontAwesome.Sharp.IconChar.TableCells;
+            PixelEditButton.IconColor = Color.Black;
+            PixelEditButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PixelEditButton.IconSize = 32;
+            PixelEditButton.ImageScaling = ToolStripItemImageScaling.None;
+            PixelEditButton.ImageTransparentColor = Color.Magenta;
+            PixelEditButton.Margin = new Padding(0, 25, 0, 2);
+            PixelEditButton.Name = "PixelEditButton";
+            PixelEditButton.Size = new Size(40, 40);
+            PixelEditButton.ToolTipText = "Pixel Edit";
+            PixelEditButton.Click += (this.PixelEditButton_Click);
+            // 
             // ShowDrawingLayerSwitch
             // 
             ShowDrawingLayerSwitch.Alpha = 50;
@@ -6079,6 +6093,7 @@
             RealmStudioForm.BackColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             RealmStudioForm.BorderColor = Color.FromArgb((int)(byte)38, (int)(byte)38, (int)(byte)38);
             RealmStudioForm.CausesValidation = false;
+            RealmStudioForm.Controls.Add(WorlAnvilIntegrationButton);
             RealmStudioForm.Controls.Add(NewVersionButton);
             RealmStudioForm.Controls.Add(Open3DViewButton);
             RealmStudioForm.Controls.Add(AreaSelectButton);
@@ -6172,9 +6187,9 @@
             Open3DViewButton.Name = "Open3DViewButton";
             Open3DViewButton.Size = new Size(32, 32);
             Open3DViewButton.TabIndex = 41;
-            Open3DViewButton.Text = "iconButton1";
             Open3DViewButton.UseVisualStyleBackColor = true;
             Open3DViewButton.Click += (this.Open3DViewButton_Click);
+            Open3DViewButton.MouseHover += (this.Open3DViewButton_MouseHover);
             // 
             // AreaSelectButton
             // 
@@ -6836,7 +6851,6 @@
             AddPresetColorButton.Size = new Size(24, 24);
             AddPresetColorButton.TabIndex = 36;
             AddPresetColorButton.UseVisualStyleBackColor = true;
-            AddPresetColorButton.Click += (this.AddPresetColorButton_Click);
             AddPresetColorButton.MouseHover += (this.AddPresetColorButton_MouseHover);
             AddPresetColorButton.MouseUp += (this.AddPresetColorButton_MouseUp);
             // 
@@ -10304,21 +10318,18 @@
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
             // 
-            // PixelEditButton
+            // WorlAnvilIntegrationButton
             // 
-            PixelEditButton.AutoSize = false;
-            PixelEditButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            PixelEditButton.IconChar = FontAwesome.Sharp.IconChar.TableCells;
-            PixelEditButton.IconColor = Color.Black;
-            PixelEditButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            PixelEditButton.IconSize = 32;
-            PixelEditButton.ImageScaling = ToolStripItemImageScaling.None;
-            PixelEditButton.ImageTransparentColor = Color.Magenta;
-            PixelEditButton.Margin = new Padding(0, 25, 0, 2);
-            PixelEditButton.Name = "PixelEditButton";
-            PixelEditButton.Size = new Size(40, 40);
-            PixelEditButton.ToolTipText = "Pixel Edit";
-            PixelEditButton.Click += (this.PixelEditButton_Click);
+            WorlAnvilIntegrationButton.BackgroundImage = (Image)resources.GetObject("WorlAnvilIntegrationButton.BackgroundImage");
+            WorlAnvilIntegrationButton.BackgroundImageLayout = ImageLayout.Zoom;
+            WorlAnvilIntegrationButton.FlatStyle = FlatStyle.Flat;
+            WorlAnvilIntegrationButton.Location = new Point(1386, 51);
+            WorlAnvilIntegrationButton.Name = "WorlAnvilIntegrationButton";
+            WorlAnvilIntegrationButton.Size = new Size(32, 32);
+            WorlAnvilIntegrationButton.TabIndex = 43;
+            WorlAnvilIntegrationButton.UseVisualStyleBackColor = true;
+            WorlAnvilIntegrationButton.Click += (this.WorlAnvilIntegrationButton_Click);
+            WorlAnvilIntegrationButton.MouseHover += (this.WorlAnvilIntegrationButton_MouseHover);
             // 
             // RealmStudioMainForm
             // 
@@ -11216,5 +11227,6 @@
         private Label label113;
         internal TrackBar DrawingShapeRotationTrack;
         private FontAwesome.Sharp.IconToolStripButton PixelEditButton;
+        private Button WorlAnvilIntegrationButton;
     }
 }

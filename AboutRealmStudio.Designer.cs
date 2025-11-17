@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutRealmStudio));
             AboutRealmStudioOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            RealmStudioMicrosoftStoreLinkLabel = new LinkLabel();
             BrookmoneWebsiteLinkLabel = new LinkLabel();
             RealmStudioLatestReleaseLinkLabel = new LinkLabel();
             PrivacyPolicyLinkLabel = new LinkLabel();
@@ -50,7 +51,6 @@
             AboutOkButton = new Button();
             BrookmontePictureBox = new PictureBox();
             pictureBox1 = new PictureBox();
-            RealmStudioMicrosoftStoreLinkLabel = new LinkLabel();
             AboutRealmStudioOverlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)GPL3LicensePictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)GithubPictureBox).BeginInit();
@@ -102,6 +102,17 @@
             AboutRealmStudioOverlay.TabIndex = 0;
             AboutRealmStudioOverlay.Text = "About Realm Studio";
             AboutRealmStudioOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // RealmStudioMicrosoftStoreLinkLabel
+            // 
+            RealmStudioMicrosoftStoreLinkLabel.AutoSize = true;
+            RealmStudioMicrosoftStoreLinkLabel.Location = new Point(28, 589);
+            RealmStudioMicrosoftStoreLinkLabel.Name = "RealmStudioMicrosoftStoreLinkLabel";
+            RealmStudioMicrosoftStoreLinkLabel.Size = new Size(274, 15);
+            RealmStudioMicrosoftStoreLinkLabel.TabIndex = 21;
+            RealmStudioMicrosoftStoreLinkLabel.TabStop = true;
+            RealmStudioMicrosoftStoreLinkLabel.Text = "Realm Studio Latest Release on the Microsoft Store";
+            RealmStudioMicrosoftStoreLinkLabel.LinkClicked += RealmStudioMicrosoftStoreLinkLabel_LinkClicked;
             // 
             // BrookmoneWebsiteLinkLabel
             // 
@@ -326,17 +337,6 @@
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
-            // 
-            // RealmStudioMicrosoftStoreLinkLabel
-            // 
-            RealmStudioMicrosoftStoreLinkLabel.AutoSize = true;
-            RealmStudioMicrosoftStoreLinkLabel.Location = new Point(28, 589);
-            RealmStudioMicrosoftStoreLinkLabel.Name = "RealmStudioMicrosoftStoreLinkLabel";
-            RealmStudioMicrosoftStoreLinkLabel.Size = new Size(274, 15);
-            RealmStudioMicrosoftStoreLinkLabel.TabIndex = 21;
-            RealmStudioMicrosoftStoreLinkLabel.TabStop = true;
-            RealmStudioMicrosoftStoreLinkLabel.Text = "Realm Studio Latest Release on the Microsoft Store";
-            RealmStudioMicrosoftStoreLinkLabel.LinkClicked += RealmStudioMicrosoftStoreLinkLabel_LinkClicked;
             // 
             // AboutRealmStudio
             // 

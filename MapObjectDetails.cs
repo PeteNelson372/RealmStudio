@@ -1,4 +1,5 @@
-﻿/**************************************************************************************************************************
+﻿using System.ComponentModel;
+/**************************************************************************************************************************
 * Copyright 2025, Peter R. Nelson
 *
 * This file is part of the RealmStudio application. The RealmStudio application is intended
@@ -21,6 +22,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+
 namespace RealmStudio
 {
     public partial class MapObjectDetails : Form
@@ -206,6 +208,7 @@ namespace RealmStudio
 
         private string _objectType = string.Empty;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string ObjectType
         {
             get => _objectType;
@@ -216,6 +219,7 @@ namespace RealmStudio
         }
 
         private List<string> _objectCharacteristics = [];
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<string> ObjectCharacteristics
         {
             get => _objectCharacteristics;

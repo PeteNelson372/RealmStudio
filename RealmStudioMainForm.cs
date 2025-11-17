@@ -29,6 +29,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.IO;
 using System.Timers;
+using WorldAnvilIntegrationLib;
 using ComboBox = System.Windows.Forms.ComboBox;
 
 namespace RealmStudio
@@ -477,10 +478,26 @@ namespace RealmStudio
             SKGLRenderControl.Invalidate();
         }
 
+        private void WorlAnvilIntegrationButton_Click(object sender, EventArgs e)
+        {
+            WorldAnvilIntegration worldAnvilIntegration = new();
+            worldAnvilIntegration.ShowDialog();
+        }
+
+        private void WorlAnvilIntegrationButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Open World Anvil Integration dialog", RealmStudioForm, new Point(WorlAnvilIntegrationButton.Left, WorlAnvilIntegrationButton.Top + 30), 3000);
+        }
+
         private void Open3DViewButton_Click(object sender, EventArgs e)
         {
             ThreeDView tdv = new("3D Model Viewer");
             tdv.Show();
+        }
+
+        private void Open3DViewButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Open 3D Viewer", RealmStudioForm, new Point(Open3DViewButton.Left, Open3DViewButton.Top + 30), 3000);
         }
 
         private void AreaSelectButton_Click(object sender, EventArgs e)
@@ -491,11 +508,6 @@ namespace RealmStudio
         private void AreaSelectButton_MouseHover(object sender, EventArgs e)
         {
             TOOLTIP.Show("Select map area", RealmStudioForm, new Point(AreaSelectButton.Left, AreaSelectButton.Top + 30), 3000);
-        }
-
-        private void AddPresetColorButton_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void AddPresetColorButton_MouseUp(object sender, MouseEventArgs e)
@@ -3284,7 +3296,7 @@ namespace RealmStudio
                             BrushSize = DrawingMediator.DrawingLineBrushSize,
                             ColorBrush = DrawingMediator.DrawingPaintBrush,
                             FillType = DrawingMediator.FillType,
-                            StrokeBitmap = ((Bitmap)DrawingFillTextureBox.Image).ToSKBitmap(),
+                            StrokeBitmap = ((Bitmap?)DrawingFillTextureBox.Image).ToSKBitmap(),
                         };
 
                         DrawingManager.CurrentPaintedLine = pl;
@@ -3335,7 +3347,7 @@ namespace RealmStudio
 
                         if (drawnRectangle.FillType == DrawingFillType.Texture)
                         {
-                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                            Bitmap? fillTexture = ((Bitmap?)DrawingFillTextureBox.Image);
 
                             if (fillTexture != null)
                             {
@@ -3374,7 +3386,7 @@ namespace RealmStudio
 
                         if (drawnRectangle.FillType == DrawingFillType.Texture)
                         {
-                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                            Bitmap? fillTexture = ((Bitmap?)DrawingFillTextureBox.Image);
 
                             if (fillTexture != null)
                             {
@@ -3413,7 +3425,7 @@ namespace RealmStudio
 
                         if (drawnEllipse.FillType == DrawingFillType.Texture)
                         {
-                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                            Bitmap? fillTexture = ((Bitmap?)DrawingFillTextureBox.Image);
 
                             if (fillTexture != null)
                             {
@@ -3454,7 +3466,7 @@ namespace RealmStudio
 
                             if (drawnPolygon.FillType == DrawingFillType.Texture)
                             {
-                                Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                                Bitmap? fillTexture = ((Bitmap?)DrawingFillTextureBox.Image);
 
                                 if (fillTexture != null)
                                 {
@@ -3510,7 +3522,7 @@ namespace RealmStudio
 
                         if (drawnTriangle.FillType == DrawingFillType.Texture)
                         {
-                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                            Bitmap? fillTexture = ((Bitmap?)DrawingFillTextureBox.Image);
 
                             if (fillTexture != null)
                             {
@@ -3550,7 +3562,7 @@ namespace RealmStudio
 
                         if (drawnTriangle.FillType == DrawingFillType.Texture)
                         {
-                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                            Bitmap? fillTexture = ((Bitmap?)DrawingFillTextureBox.Image);
 
                             if (fillTexture != null)
                             {
@@ -3590,7 +3602,7 @@ namespace RealmStudio
 
                         if (drawnPentagon.FillType == DrawingFillType.Texture)
                         {
-                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                            Bitmap? fillTexture = ((Bitmap?)DrawingFillTextureBox.Image);
 
                             if (fillTexture != null)
                             {
@@ -3630,7 +3642,7 @@ namespace RealmStudio
 
                         if (drawnHexagon.FillType == DrawingFillType.Texture)
                         {
-                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                            Bitmap? fillTexture = ((Bitmap?)DrawingFillTextureBox.Image);
 
                             if (fillTexture != null)
                             {
@@ -3669,7 +3681,7 @@ namespace RealmStudio
 
                         if (drawnDiamond.FillType == DrawingFillType.Texture)
                         {
-                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                            Bitmap? fillTexture = ((Bitmap?)DrawingFillTextureBox.Image);
 
                             if (fillTexture != null)
                             {
@@ -3708,7 +3720,7 @@ namespace RealmStudio
 
                         if (drawnArrow.FillType == DrawingFillType.Texture)
                         {
-                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                            Bitmap? fillTexture = ((Bitmap?)DrawingFillTextureBox.Image);
                             if (fillTexture != null)
                             {
                                 drawnArrow.FillBitmap = fillTexture;
@@ -3745,7 +3757,7 @@ namespace RealmStudio
 
                         if (drawnStar.FillType == DrawingFillType.Texture)
                         {
-                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                            Bitmap? fillTexture = ((Bitmap?)DrawingFillTextureBox.Image);
 
                             if (fillTexture != null)
                             {
@@ -3783,7 +3795,7 @@ namespace RealmStudio
 
                         if (drawnStar.FillType == DrawingFillType.Texture)
                         {
-                            Bitmap? fillTexture = ((Bitmap)DrawingFillTextureBox.Image);
+                            Bitmap? fillTexture = ((Bitmap?)DrawingFillTextureBox.Image);
 
                             if (fillTexture != null)
                             {
@@ -7655,6 +7667,18 @@ namespace RealmStudio
         }
 
         #endregion
+
+
+        private void UploadMapToolMenuItem_Click(object sender, EventArgs e)
+        {
+            WorldAnvilApiMethods worldAnvilApiMethods = new();
+
+            Task apiKeyTask = Task.Run(() => worldAnvilApiMethods.GetWorldAnvilAPIKey());
+
+            apiKeyTask.Wait();
+
+            MessageBox.Show("API KEY: " + worldAnvilApiMethods.WorldAnvilAPIKey);
+        }
 
 
     }

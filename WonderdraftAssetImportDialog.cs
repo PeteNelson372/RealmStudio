@@ -504,7 +504,7 @@ namespace RealmStudio
         {
             foreach (TreeNode node in rootNode.Nodes)
             {
-                if (((string)node.Tag) == tag)
+                if (node.Tag is string t && t == tag)
                 {
                     return node;
                 }

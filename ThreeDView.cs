@@ -28,6 +28,7 @@ using SharpAvi.Codecs;
 using SharpAvi.Output;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Timers;
@@ -116,7 +117,7 @@ namespace RealmStudio
             var camera = ThreeDViewer.HelixTKViewport.Camera;
             if (camera != null)
             {
-                initialCameraDistance = camera.Position.ToVector3D().Length;
+                initialCameraDistance = camera.Position.ToVector3().Length();
             }
 
             LocalStarTextureCombo.SelectedIndex = 0;
@@ -139,7 +140,7 @@ namespace RealmStudio
             var camera = ThreeDViewer.HelixTKViewport.Camera;
             if (camera != null)
             {
-                initialCameraDistance = camera.Position.ToVector3D().Length;
+                initialCameraDistance = camera.Position.ToVector3().Length();
             }
 
             LocalStarTextureCombo.SelectedIndex = 0;
@@ -188,11 +189,11 @@ namespace RealmStudio
             GridlinesModel.Children.Add(GridLines);
             ThreeDViewer.HelixTKViewport.Children.Add(GridlinesModel);
 
-            ThreeDViewer.HelixTKViewport.PanGesture = null;
+            ThreeDViewer.HelixTKViewport.PanGesture = default!;
             ThreeDViewer.HelixTKViewport.PanGesture2 = new System.Windows.Input.MouseGesture(System.Windows.Input.MouseAction.LeftClick);
 
-            ThreeDViewer.HelixTKViewport.RotateGesture = null;
-            ThreeDViewer.HelixTKViewport.RotateGesture2 = null;
+            ThreeDViewer.HelixTKViewport.RotateGesture = default!;
+            ThreeDViewer.HelixTKViewport.RotateGesture2 = default!;
             ThreeDViewer.HelixTKViewport.RotateGesture2 = new System.Windows.Input.MouseGesture(System.Windows.Input.MouseAction.RightClick);
 
             ThreeDViewer.HelixTKViewport.ZoomSensitivity = 1.0;
@@ -322,7 +323,7 @@ namespace RealmStudio
             if (camera == null || initialCameraDistance == 0)
                 return 100;
 
-            double currentDistance = camera.Position.ToVector3D().Length;
+            double currentDistance = camera.Position.ToVector3().Length();
             double zoomPercent = (initialCameraDistance / currentDistance) * 100;
 
             return zoomPercent;
@@ -330,8 +331,10 @@ namespace RealmStudio
 
         #endregion
 
+
         #region Animation
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool AnimationEnabled
         {
             get { return animationTimerEnabled; }
@@ -547,8 +550,11 @@ namespace RealmStudio
 
         private void ThreeDView_SizeChanged(object sender, EventArgs e)
         {
-            // fit to the view, but don't change current direction
-            ThreeDViewer.HelixTKViewport.FitView(ThreeDViewer.HelixTKViewport.Camera.LookDirection, ThreeDViewer.HelixTKViewport.Camera.UpDirection);
+            if (ThreeDViewer.HelixTKViewport.Camera != null)
+            {
+                // fit to the view, but don't change current direction
+                ThreeDViewer.HelixTKViewport.FitView(ThreeDViewer.HelixTKViewport.Camera.LookDirection, ThreeDViewer.HelixTKViewport.Camera.UpDirection);
+            }
         }
 
         private void ChangeAxesButton_Click(object sender, EventArgs e)

@@ -117,47 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CreditsTextBox.Text" xml:space="preserve">
-    <value>The source code for Realm Studio is found on Github at https://github.com/PeteNelson372/RealmStudio.
-
-Realm Studio uses the SkiaSharp (https://github.com/mono/SkiaSharp) implementation of the Google Skia (https://skia.org/) graphics library for rendering graphics.
-
-Realm Studio also uses libraries from:
-AForge (https://www.aforgenet.com/framework/)
-Clipper2 (https://www.angusj.com/clipper2/Docs/Overview.htm)
-Cyotek (https://www.cyotek.com/)
-Delaunator (https://github.com/nol1fe/delaunator-sharp)
-FontAwesome.Sharp (https://awesome-inc.github.io/FontAwesome.Sharp/)
-FontAwesome (https://fontawesome.com/)
-Helix Toolkit (https://github.com/helix-toolkit/helix-toolkit)
-log4net by the Apache Software Foundation (https://logging.apache.org/log4net/)
-RealTaiizor (https://github.com/Taiizor/ReaLTaiizor)
-SimplexNoise (https://github.com/WardBenjamin/SimplexNoise)
-SVG.Skia (https://github.com/wieslawsoltes/Svg.Skia)
-
-Several other libraries are included as transitive packages (packages that are used by the libraries that use directly). See the project pages for the libraries for their acknowledgements.
-
-Embedded fonts (those not installed on your computer) are redistributed and licensed under the SIL Open Font License. See https://openfontlicense.org/open-font-license-official-text/ 
-
-Realm Studio uses image assets from SVG Repo (https://www.svgrepo.com/vectors/map-marker/), Freepik (freepik.com), FreeImages (freeimages.com), and FlatIcon (flaticon.com). Credit is given to artists:
-efe_madrid, kjpargeter, Layerace, rawpixel (rawpixel.com), jvror, and Vector Stall (https://www.flaticon.com/authors/vector-stall).
-
-Planet textures are from various free and open sources, including
- - Solar System Scope (https://www.solarsystemscope.com/textures/).
- - NASA JPL (https://nasa3d.arc.nasa.gov/contributor?id=35)
- - DeviantArt, specifically
-     - Oleg Pluton: (https://www.deviantart.com/oleg-pluton/art/Deimos-texture-map-Upd-2024-772205702)
-     - Duc Nguyen (https://www.deviantart.com/ducn1567/art/Europa-Texture-2K-1014817839)
-
-Realm Studio also uses Wonderdraft assets imported from CartographyAssets (cartographyassets.com). See the Help file for information on importing assets into Realm Studio.</value>
-  </data>
-  <data name="LicenseTextBox.Text" xml:space="preserve">
-    <value>Realm Studio is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-Realm Studio is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program. The text of the GNU General Public License (GPL) is found in the LICENSE.txt file. If the LICENSE.txt file is not present or the text of the GNU GPL is not present in the LICENSE.txt file, see https://www.gnu.org/licenses/.
-
-For questions about the Realm Studio application or about licensing, please email support@brookmonte.com.</value>
-  </data>
 </root>

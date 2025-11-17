@@ -22,13 +22,17 @@
 *
 ***************************************************************************************************************************/
 using RealmStudio.Properties;
+using System.ComponentModel;
 
 namespace RealmStudio
 {
     public partial class RealmConfiguration : Form
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public RealmStudioMap Map { get; set; } = new();
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public float MapAspectRatio { get; set; } = 1.0F;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool AspectRatioLocked { get; set; } = true;
 
         private bool WidthChanging;

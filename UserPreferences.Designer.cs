@@ -29,6 +29,11 @@
         private void InitializeComponent()
         {
             PreferencesFormOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            WAIntegrationTooltipButton = new FontAwesome.Sharp.IconButton();
+            label13 = new Label();
+            EnableWAIntegrationSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label12 = new Label();
+            AutocheckUpdatesSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             ClipColoringTooltipButton = new FontAwesome.Sharp.IconButton();
             label11 = new Label();
             ClipColoringToLandformSwitch = new ReaLTaiizor.Controls.CyberSwitch();
@@ -74,8 +79,6 @@
             WH1024x768Radio = new RadioButton();
             label1 = new Label();
             MeasurementUnitsCombo = new ComboBox();
-            AutocheckUpdatesSwitch = new ReaLTaiizor.Controls.CyberSwitch();
-            label12 = new Label();
             PreferencesFormOverlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)AutosaveIntervalTrack).BeginInit();
             groupBox2.SuspendLayout();
@@ -85,6 +88,9 @@
             // 
             PreferencesFormOverlay.BackColor = Color.FromArgb(244, 241, 243);
             PreferencesFormOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            PreferencesFormOverlay.Controls.Add(WAIntegrationTooltipButton);
+            PreferencesFormOverlay.Controls.Add(label13);
+            PreferencesFormOverlay.Controls.Add(EnableWAIntegrationSwitch);
             PreferencesFormOverlay.Controls.Add(label12);
             PreferencesFormOverlay.Controls.Add(AutocheckUpdatesSwitch);
             PreferencesFormOverlay.Controls.Add(ClipColoringTooltipButton);
@@ -129,12 +135,125 @@
             PreferencesFormOverlay.Padding = new Padding(20, 56, 20, 16);
             PreferencesFormOverlay.RoundCorners = true;
             PreferencesFormOverlay.Sizable = false;
-            PreferencesFormOverlay.Size = new Size(557, 836);
+            PreferencesFormOverlay.Size = new Size(557, 860);
             PreferencesFormOverlay.SmartBounds = true;
             PreferencesFormOverlay.StartPosition = FormStartPosition.CenterParent;
             PreferencesFormOverlay.TabIndex = 0;
             PreferencesFormOverlay.Text = "Preferences";
             PreferencesFormOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // WAIntegrationTooltipButton
+            // 
+            WAIntegrationTooltipButton.FlatAppearance.BorderSize = 0;
+            WAIntegrationTooltipButton.FlatStyle = FlatStyle.Flat;
+            WAIntegrationTooltipButton.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
+            WAIntegrationTooltipButton.IconColor = Color.DeepSkyBlue;
+            WAIntegrationTooltipButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            WAIntegrationTooltipButton.IconSize = 20;
+            WAIntegrationTooltipButton.Location = new Point(250, 360);
+            WAIntegrationTooltipButton.Name = "WAIntegrationTooltipButton";
+            WAIntegrationTooltipButton.Size = new Size(24, 24);
+            WAIntegrationTooltipButton.TabIndex = 69;
+            WAIntegrationTooltipButton.UseVisualStyleBackColor = true;
+            WAIntegrationTooltipButton.MouseHover += WAIntegrationTooltipButton_MouseHover;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.ForeColor = SystemColors.ControlDarkDark;
+            label13.Location = new Point(29, 369);
+            label13.Name = "label13";
+            label13.Size = new Size(168, 15);
+            label13.TabIndex = 68;
+            label13.Text = "Enable World Anvil Integration";
+            // 
+            // EnableWAIntegrationSwitch
+            // 
+            EnableWAIntegrationSwitch.Alpha = 50;
+            EnableWAIntegrationSwitch.BackColor = Color.Transparent;
+            EnableWAIntegrationSwitch.Background = true;
+            EnableWAIntegrationSwitch.Background_WidthPen = 2F;
+            EnableWAIntegrationSwitch.BackgroundPen = false;
+            EnableWAIntegrationSwitch.Checked = false;
+            EnableWAIntegrationSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            EnableWAIntegrationSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            EnableWAIntegrationSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            EnableWAIntegrationSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            EnableWAIntegrationSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            EnableWAIntegrationSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            EnableWAIntegrationSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            EnableWAIntegrationSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            EnableWAIntegrationSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            EnableWAIntegrationSwitch.ColorValue = Color.ForestGreen;
+            EnableWAIntegrationSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            EnableWAIntegrationSwitch.Font = new Font("Arial", 11F);
+            EnableWAIntegrationSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            EnableWAIntegrationSwitch.Lighting = true;
+            EnableWAIntegrationSwitch.LinearGradient_Background = false;
+            EnableWAIntegrationSwitch.LinearGradient_Value = false;
+            EnableWAIntegrationSwitch.LinearGradientPen = false;
+            EnableWAIntegrationSwitch.Location = new Point(203, 364);
+            EnableWAIntegrationSwitch.Name = "EnableWAIntegrationSwitch";
+            EnableWAIntegrationSwitch.PenWidth = 10;
+            EnableWAIntegrationSwitch.RGB = false;
+            EnableWAIntegrationSwitch.Rounding = true;
+            EnableWAIntegrationSwitch.RoundingInt = 90;
+            EnableWAIntegrationSwitch.Size = new Size(41, 20);
+            EnableWAIntegrationSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            EnableWAIntegrationSwitch.TabIndex = 67;
+            EnableWAIntegrationSwitch.Tag = "Cyber";
+            EnableWAIntegrationSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            EnableWAIntegrationSwitch.Timer_RGB = 300;
+            EnableWAIntegrationSwitch.CheckedChanged += EnableWAIntegrationSwitch_CheckedChanged;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.ForeColor = SystemColors.ControlDarkDark;
+            label12.Location = new Point(16, 343);
+            label12.Name = "label12";
+            label12.Size = new Size(181, 15);
+            label12.TabIndex = 66;
+            label12.Text = "Automatically Check for Updates";
+            // 
+            // AutocheckUpdatesSwitch
+            // 
+            AutocheckUpdatesSwitch.Alpha = 50;
+            AutocheckUpdatesSwitch.BackColor = Color.Transparent;
+            AutocheckUpdatesSwitch.Background = true;
+            AutocheckUpdatesSwitch.Background_WidthPen = 2F;
+            AutocheckUpdatesSwitch.BackgroundPen = false;
+            AutocheckUpdatesSwitch.Checked = true;
+            AutocheckUpdatesSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
+            AutocheckUpdatesSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
+            AutocheckUpdatesSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
+            AutocheckUpdatesSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
+            AutocheckUpdatesSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
+            AutocheckUpdatesSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
+            AutocheckUpdatesSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
+            AutocheckUpdatesSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
+            AutocheckUpdatesSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
+            AutocheckUpdatesSwitch.ColorValue = Color.ForestGreen;
+            AutocheckUpdatesSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            AutocheckUpdatesSwitch.Font = new Font("Arial", 11F);
+            AutocheckUpdatesSwitch.ForeColor = Color.FromArgb(245, 245, 245);
+            AutocheckUpdatesSwitch.Lighting = true;
+            AutocheckUpdatesSwitch.LinearGradient_Background = false;
+            AutocheckUpdatesSwitch.LinearGradient_Value = false;
+            AutocheckUpdatesSwitch.LinearGradientPen = false;
+            AutocheckUpdatesSwitch.Location = new Point(203, 338);
+            AutocheckUpdatesSwitch.Name = "AutocheckUpdatesSwitch";
+            AutocheckUpdatesSwitch.PenWidth = 10;
+            AutocheckUpdatesSwitch.RGB = false;
+            AutocheckUpdatesSwitch.Rounding = true;
+            AutocheckUpdatesSwitch.RoundingInt = 90;
+            AutocheckUpdatesSwitch.Size = new Size(41, 20);
+            AutocheckUpdatesSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            AutocheckUpdatesSwitch.TabIndex = 65;
+            AutocheckUpdatesSwitch.Tag = "Cyber";
+            AutocheckUpdatesSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            AutocheckUpdatesSwitch.Timer_RGB = 300;
+            AutocheckUpdatesSwitch.CheckedChanged += AutocheckUpdatesSwitch_CheckedChanged;
             // 
             // ClipColoringTooltipButton
             // 
@@ -149,6 +268,7 @@
             ClipColoringTooltipButton.Size = new Size(24, 24);
             ClipColoringTooltipButton.TabIndex = 64;
             ClipColoringTooltipButton.UseVisualStyleBackColor = true;
+            ClipColoringTooltipButton.MouseHover += ClipColoringTooltipButton_MouseHover;
             // 
             // label11
             // 
@@ -203,7 +323,7 @@
             // 
             ClosePreferencesButton.DialogResult = DialogResult.Cancel;
             ClosePreferencesButton.ForeColor = SystemColors.ControlDarkDark;
-            ClosePreferencesButton.Location = new Point(474, 757);
+            ClosePreferencesButton.Location = new Point(474, 781);
             ClosePreferencesButton.Name = "ClosePreferencesButton";
             ClosePreferencesButton.Size = new Size(60, 60);
             ClosePreferencesButton.TabIndex = 61;
@@ -340,7 +460,7 @@
             // 
             label9.AutoSize = true;
             label9.ForeColor = SystemColors.ControlDarkDark;
-            label9.Location = new Point(99, 392);
+            label9.Location = new Point(99, 416);
             label9.Name = "label9";
             label9.Size = new Size(95, 15);
             label9.TabIndex = 51;
@@ -550,7 +670,7 @@
             groupBox2.Controls.Add(WH1600x1200Radio);
             groupBox2.Controls.Add(WH1280x1024Radio);
             groupBox2.Controls.Add(WH1024x768Radio);
-            groupBox2.Location = new Point(203, 392);
+            groupBox2.Location = new Point(203, 416);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(205, 425);
             groupBox2.TabIndex = 11;
@@ -772,60 +892,11 @@
             MeasurementUnitsCombo.TabIndex = 0;
             MeasurementUnitsCombo.SelectionChangeCommitted += MeasurementUnitsCombo_SelectionChangeCommitted;
             // 
-            // AutocheckUpdatesSwitch
-            // 
-            AutocheckUpdatesSwitch.Alpha = 50;
-            AutocheckUpdatesSwitch.BackColor = Color.Transparent;
-            AutocheckUpdatesSwitch.Background = true;
-            AutocheckUpdatesSwitch.Background_WidthPen = 2F;
-            AutocheckUpdatesSwitch.BackgroundPen = false;
-            AutocheckUpdatesSwitch.Checked = true;
-            AutocheckUpdatesSwitch.ColorBackground = Color.FromArgb(223, 219, 210);
-            AutocheckUpdatesSwitch.ColorBackground_1 = Color.FromArgb(37, 52, 68);
-            AutocheckUpdatesSwitch.ColorBackground_2 = Color.FromArgb(41, 63, 86);
-            AutocheckUpdatesSwitch.ColorBackground_Pen = Color.FromArgb(223, 219, 210);
-            AutocheckUpdatesSwitch.ColorBackground_Value_1 = Color.FromArgb(223, 219, 210);
-            AutocheckUpdatesSwitch.ColorBackground_Value_2 = Color.FromArgb(223, 219, 210);
-            AutocheckUpdatesSwitch.ColorLighting = Color.FromArgb(223, 219, 210);
-            AutocheckUpdatesSwitch.ColorPen_1 = Color.FromArgb(37, 52, 68);
-            AutocheckUpdatesSwitch.ColorPen_2 = Color.FromArgb(41, 63, 86);
-            AutocheckUpdatesSwitch.ColorValue = Color.ForestGreen;
-            AutocheckUpdatesSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            AutocheckUpdatesSwitch.Font = new Font("Arial", 11F);
-            AutocheckUpdatesSwitch.ForeColor = Color.FromArgb(245, 245, 245);
-            AutocheckUpdatesSwitch.Lighting = true;
-            AutocheckUpdatesSwitch.LinearGradient_Background = false;
-            AutocheckUpdatesSwitch.LinearGradient_Value = false;
-            AutocheckUpdatesSwitch.LinearGradientPen = false;
-            AutocheckUpdatesSwitch.Location = new Point(203, 338);
-            AutocheckUpdatesSwitch.Name = "AutocheckUpdatesSwitch";
-            AutocheckUpdatesSwitch.PenWidth = 10;
-            AutocheckUpdatesSwitch.RGB = false;
-            AutocheckUpdatesSwitch.Rounding = true;
-            AutocheckUpdatesSwitch.RoundingInt = 90;
-            AutocheckUpdatesSwitch.Size = new Size(41, 20);
-            AutocheckUpdatesSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            AutocheckUpdatesSwitch.TabIndex = 65;
-            AutocheckUpdatesSwitch.Tag = "Cyber";
-            AutocheckUpdatesSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            AutocheckUpdatesSwitch.Timer_RGB = 300;
-            AutocheckUpdatesSwitch.CheckedChanged += AutocheckUpdatesSwitch_CheckedChanged;
-            // 
-            // label12
-            // 
-            label12.AutoSize = true;
-            label12.ForeColor = SystemColors.ControlDarkDark;
-            label12.Location = new Point(16, 343);
-            label12.Name = "label12";
-            label12.Size = new Size(181, 15);
-            label12.TabIndex = 66;
-            label12.Text = "Automatically Check for Updates";
-            // 
             // UserPreferences
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(557, 836);
+            ClientSize = new Size(557, 860);
             Controls.Add(PreferencesFormOverlay);
             FormBorderStyle = FormBorderStyle.None;
             MinimumSize = new Size(261, 65);
@@ -891,5 +962,8 @@
         private ReaLTaiizor.Controls.CyberSwitch ClipColoringToLandformSwitch;
         private Label label12;
         private ReaLTaiizor.Controls.CyberSwitch AutocheckUpdatesSwitch;
+        private FontAwesome.Sharp.IconButton WAIntegrationTooltipButton;
+        private Label label13;
+        private ReaLTaiizor.Controls.CyberSwitch EnableWAIntegrationSwitch;
     }
 }

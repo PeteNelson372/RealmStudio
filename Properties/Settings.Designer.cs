@@ -166,5 +166,17 @@ namespace RealmStudio.Properties {
                 this["AutoCheckForUpdates"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableWAIntegration {
+            get {
+                return ((bool)(this["EnableWAIntegration"]));
+            }
+            set {
+                this["EnableWAIntegration"] = value;
+            }
+        }
     }
 }

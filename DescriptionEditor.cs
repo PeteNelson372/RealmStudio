@@ -1,4 +1,5 @@
-﻿/**************************************************************************************************************************
+﻿using System.ComponentModel;
+/**************************************************************************************************************************
 * Copyright 2025, Peter R. Nelson
 *
 * This file is part of the RealmStudio application. The RealmStudio application is intended
@@ -21,6 +22,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+
 namespace RealmStudio
 {
     public partial class DescriptionEditor : Form
@@ -36,6 +38,7 @@ namespace RealmStudio
 
         private string _descriptionText = string.Empty;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string DescriptionText
         {
             get => _descriptionText;

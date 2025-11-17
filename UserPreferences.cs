@@ -439,6 +439,18 @@ namespace RealmStudio
             TOOLTIP.Show(tt, this, new Point(AutosaveIntervalTooltipButton.Right - 30, AutosaveIntervalTooltipButton.Top - 20), 4000);
         }
 
+        private void ClipColoringTooltipButton_MouseHover(object sender, EventArgs e)
+        {
+            string tt = "Turning this preference off will allow painting of landform color outside the bounds of the landform.";
+            TOOLTIP.Show(tt, this, new Point(ClipColoringTooltipButton.Right - 30, ClipColoringTooltipButton.Top - 20), 4000);
+        }
+
+        private void WAIntegrationTooltipButton_MouseHover(object sender, EventArgs e)
+        {
+            string tt = "Turning on this preference will enable integration of Realm Studio with World Anvil. See the Help documentation for details.";
+            TOOLTIP.Show(tt, this, new Point(WAIntegrationTooltipButton.Right - 30, WAIntegrationTooltipButton.Top - 20), 4000);
+        }
+
         private void AutosaveRealmSwitch_Click(object sender, EventArgs e)
         {
             Settings.Default.RealmAutosave = AutosaveRealmSwitch.Checked;
@@ -448,6 +460,12 @@ namespace RealmStudio
         private void AutocheckUpdatesSwitch_CheckedChanged()
         {
             Settings.Default.AutoCheckForUpdates = AutocheckUpdatesSwitch.Checked;
+            Settings.Default.Save();
+        }
+
+        private void EnableWAIntegrationSwitch_CheckedChanged()
+        {
+            Settings.Default.EnableWAIntegration = EnableWAIntegrationSwitch.Checked;
             Settings.Default.Save();
         }
     }

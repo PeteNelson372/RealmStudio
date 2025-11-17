@@ -21,6 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using System.ComponentModel;
 using System.IO;
 
 namespace RealmStudio
@@ -31,6 +32,7 @@ namespace RealmStudio
         private MapTheme[] mapThemes = [];
         private readonly ThemeFilter themeFilter = new();
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public MapTheme? SettingsTheme { get; set; }
 
         public ThemeList()

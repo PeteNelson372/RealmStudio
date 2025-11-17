@@ -1,4 +1,5 @@
-﻿/**************************************************************************************************************************
+﻿using System.ComponentModel;
+/**************************************************************************************************************************
 * Copyright 2024, Peter R. Nelson
 *
 * This file is part of the RealmStudio application. The RealmStudio application is intended
@@ -21,6 +22,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+
 namespace RealmStudio
 {
     public partial class NameGeneratorConfiguration : Form
@@ -30,6 +32,7 @@ namespace RealmStudio
 
         public event EventHandler? NameGenerated;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string SelectedName { get; set; } = string.Empty;
 
         public NameGeneratorConfiguration()
