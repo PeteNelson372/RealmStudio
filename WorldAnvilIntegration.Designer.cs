@@ -94,6 +94,7 @@
             UserWorldsList.TabIndex = 10;
             UserWorldsList.UseCompatibleStateImageBehavior = false;
             UserWorldsList.View = View.Details;
+            UserWorldsList.SelectedIndexChanged += UserWorldsList_SelectedIndexChanged;
             // 
             // WorldTitle
             // 

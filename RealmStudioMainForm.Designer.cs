@@ -354,6 +354,7 @@
             ShowDrawingLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label11 = new Label();
             RealmStudioForm = new ReaLTaiizor.Forms.DungeonForm();
+            WorlAnvilIntegrationButton = new Button();
             NewVersionButton = new FontAwesome.Sharp.IconButton();
             Open3DViewButton = new FontAwesome.Sharp.IconButton();
             AreaSelectButton = new FontAwesome.Sharp.IconButton();
@@ -672,7 +673,6 @@
             BackgroundToolPanel = new Panel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
-            WorlAnvilIntegrationButton = new Button();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -6153,6 +6153,22 @@
             RealmStudioForm.Text = "Realm Studio";
             RealmStudioForm.TitleColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             // 
+            // WorlAnvilIntegrationButton
+            // 
+            WorlAnvilIntegrationButton.BackgroundImageLayout = ImageLayout.Zoom;
+            WorlAnvilIntegrationButton.FlatAppearance.BorderSize = 0;
+            WorlAnvilIntegrationButton.FlatStyle = FlatStyle.Flat;
+            WorlAnvilIntegrationButton.Font = new Font("Elephant", 8.999999F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
+            WorlAnvilIntegrationButton.ForeColor = Color.FromArgb((int)(byte)140, (int)(byte)10, (int)(byte)10);
+            WorlAnvilIntegrationButton.Location = new Point(1376, 56);
+            WorlAnvilIntegrationButton.Name = "WorlAnvilIntegrationButton";
+            WorlAnvilIntegrationButton.Size = new Size(40, 32);
+            WorlAnvilIntegrationButton.TabIndex = 43;
+            WorlAnvilIntegrationButton.Text = "WA";
+            WorlAnvilIntegrationButton.UseVisualStyleBackColor = true;
+            WorlAnvilIntegrationButton.Click += (this.WorlAnvilIntegrationButton_Click);
+            WorlAnvilIntegrationButton.MouseHover += (this.WorlAnvilIntegrationButton_MouseHover);
+            // 
             // NewVersionButton
             // 
             NewVersionButton.BackColor = Color.Transparent;
@@ -10318,19 +10334,6 @@
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
             // 
-            // WorlAnvilIntegrationButton
-            // 
-            WorlAnvilIntegrationButton.BackgroundImage = (Image)resources.GetObject("WorlAnvilIntegrationButton.BackgroundImage");
-            WorlAnvilIntegrationButton.BackgroundImageLayout = ImageLayout.Zoom;
-            WorlAnvilIntegrationButton.FlatStyle = FlatStyle.Flat;
-            WorlAnvilIntegrationButton.Location = new Point(1386, 51);
-            WorlAnvilIntegrationButton.Name = "WorlAnvilIntegrationButton";
-            WorlAnvilIntegrationButton.Size = new Size(32, 32);
-            WorlAnvilIntegrationButton.TabIndex = 43;
-            WorlAnvilIntegrationButton.UseVisualStyleBackColor = true;
-            WorlAnvilIntegrationButton.Click += (this.WorlAnvilIntegrationButton_Click);
-            WorlAnvilIntegrationButton.MouseHover += (this.WorlAnvilIntegrationButton_MouseHover);
-            // 
             // RealmStudioMainForm
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
@@ -11227,6 +11230,6 @@
         private Label label113;
         internal TrackBar DrawingShapeRotationTrack;
         private FontAwesome.Sharp.IconToolStripButton PixelEditButton;
-        private Button WorlAnvilIntegrationButton;
+        internal Button WorlAnvilIntegrationButton;
     }
 }

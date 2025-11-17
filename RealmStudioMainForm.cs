@@ -276,6 +276,11 @@ namespace RealmStudio
         {
             MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
 
+            MainMediator.WorldAnvilIntegrationEnabled = Settings.Default.EnableWAIntegration;
+
+            // force the UI to reflect the current World Anvil integration setting
+            MainMediator.EnableDisableWorldAnvilIntegration();
+
             SKGLRenderControl.CreateControl();
             SKGLRenderControl.Show();
             SKGLRenderControl.Select();

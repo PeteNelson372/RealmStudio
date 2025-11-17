@@ -34,6 +34,26 @@ namespace RealmStudio
 
         private void CloseButton_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiToken) ||
+                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) ||
+                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId))
+            {
+                DialogResult result = MessageBox.Show("World Anvil user id, API token, or API key are not set. Close Anyway?", "Incomplete Parameters", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.No)
+                {
+                    return;
+                }
+            }
+
+            if (string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WorldId))
+            {
+                DialogResult result = MessageBox.Show("No World Selected. Close Anyway?", "No World Selected", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.No)
+                {
+                    return;
+                }
+            }
+
             Close();
         }
 
@@ -48,15 +68,13 @@ namespace RealmStudio
             }
             else
             {
-                WorldAnvilApiMethods worldAnvilApiMethods = new();
-
-                Task apiKeyTask = Task.Run(() => worldAnvilApiMethods.GetWorldAnvilAPIKey());
+                Task apiKeyTask = Task.Run(() => IntegrationManager.WorldAnvilApi.GetWorldAnvilAPIKey());
 
                 apiKeyTask.Wait();
 
-                worldAnvilApiMethods.SetWorldAnvilCredentials(APITokenTextBox.Text);
+                IntegrationManager.WorldAnvilApi.SetWorldAnvilCredentials(APITokenTextBox.Text);
 
-                string? userId = worldAnvilApiMethods.GetUserIdentity();
+                string? userId = IntegrationManager.WorldAnvilApi.GetUserIdentity();
 
                 if (string.IsNullOrEmpty(userId))
                 {
@@ -64,7 +82,7 @@ namespace RealmStudio
                     return;
                 }
 
-                JsonDocument? user = worldAnvilApiMethods.GetUserById(userId, 2);
+                JsonDocument? user = IntegrationManager.WorldAnvilApi.GetUserById(userId, 2);
 
                 if (user is null)
                 {
@@ -85,7 +103,7 @@ namespace RealmStudio
                     UserNameLabel.Text = username;
                     UserIdLabel.Text = retrievedUserId;
 
-                    List<JsonDocument> userWorlds = worldAnvilApiMethods.ListWorldsForUser(retrievedUserId, 100, 0);
+                    List<JsonDocument> userWorlds = IntegrationManager.WorldAnvilApi.ListWorldsForUser(retrievedUserId, 100, 0);
 
                     UserWorldsList.Items.Clear();
 
@@ -101,13 +119,30 @@ namespace RealmStudio
                             UserWorldsList.Items.Add(item);
                         }
                     }
+
+                    IntegrationManager.WorldAnvilParameters.ApiToken = APITokenTextBox.Text;
+                    IntegrationManager.WorldAnvilParameters.ApiKey = IntegrationManager.WorldAnvilApi.WorldAnvilAPIKey;
+                    IntegrationManager.WorldAnvilParameters.WAUserId = retrievedUserId;
+                    IntegrationManager.WorldAnvilParameters.WAUsername = username;
                 }
                 else
                 {
                     MessageBox.Show("Invalid User Object", "The user object retrieved from the World Anvil API is invalid.", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 }
             }
+        }
+
+        private void UserWorldsList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (UserWorldsList.SelectedItems.Count == 0 || UserWorldsList.SelectedItems.Count > 1)
+            {
+                return;
+            }
+
+            ListViewItem selectedItem = UserWorldsList.SelectedItems[0];
+
+            IntegrationManager.WorldAnvilParameters.WorldTitle = selectedItem.Text;
+            IntegrationManager.WorldAnvilParameters.WorldId = selectedItem.SubItems[1].Text;
         }
     }
 }

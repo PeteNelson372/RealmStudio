@@ -37,6 +37,7 @@ namespace RealmStudio
         private static float _drawingZoom = 1.0f;
 
         private bool _overlayLayerEnabled = true;
+        private bool _waIntegrationEnabled;
 
         public MainFormUIMediator(RealmStudioMainForm mainForm)
         {
@@ -83,6 +84,12 @@ namespace RealmStudio
             set { SetPropertyField(nameof(OverlayLayerEnabled), ref _overlayLayerEnabled, value); }
         }
 
+        internal bool WorldAnvilIntegrationEnabled
+        {
+            get { return _waIntegrationEnabled; }
+            set { SetPropertyField(nameof(WorldAnvilIntegration), ref _waIntegrationEnabled, value); }
+        }
+
         #endregion
 
         #region Property Change Handler Methods
@@ -123,10 +130,16 @@ namespace RealmStudio
                             EnabledDisableOverlayLayer();
                         }
                         break;
-
+                    case "WorldAnvilIntegration":
+                        {
+                            EnableDisableWorldAnvilIntegration();
+                        }
+                        break;
                 }
             }));
         }
+
+
 
         #endregion
 
@@ -352,6 +365,21 @@ namespace RealmStudio
         internal void ShowHideFontSelectionPanel(bool visible)
         {
             MainForm.FontSelectionPanel.Visible = visible;
+        }
+
+        internal void EnableDisableWorldAnvilIntegration()
+        {
+            if (WorldAnvilIntegrationEnabled)
+            {
+                MainForm.WorlAnvilIntegrationButton.Visible = true;
+                MainForm.WorlAnvilIntegrationButton.Enabled = true;
+
+            }
+            else
+            {
+                MainForm.WorlAnvilIntegrationButton.Visible = false;
+                MainForm.WorlAnvilIntegrationButton.Enabled = false;
+            }
         }
 
         #endregion

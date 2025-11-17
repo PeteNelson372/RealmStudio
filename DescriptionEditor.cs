@@ -69,6 +69,15 @@ namespace RealmStudio
 
             switch (MapObjectType.Name)
             {
+                case "RealmStudioMap":
+                    {
+                        query = $"Generate a description for the fantasy map realm";
+                        if (!string.IsNullOrEmpty(MapObjectTypeValue))
+                        {
+                            query += $"Generate a description for the fantasy map '{MapObjectTypeValue}'";
+                        }
+                    }
+                    break;
                 case "Landform":
                     {
                         query = $"Generate a description for the fantasy map landform";
@@ -169,6 +178,9 @@ namespace RealmStudio
         {
             switch (MapObjectType.Name)
             {
+                case "RealmStudioMap":
+                    TOOLTIP.Show("Generate a description for the Realm using AI.", this, new Point(DescriptionAIButton.Left, DescriptionAIButton.Top - 20), 3000);
+                    break;
                 case "Landform":
                     TOOLTIP.Show("Generate a description for the Landform using AI.", this, new Point(DescriptionAIButton.Left, DescriptionAIButton.Top - 20), 3000);
                     break;
@@ -248,6 +260,9 @@ namespace RealmStudio
         {
             switch (MapObjectType.Name)
             {
+                case "RealmStudioMap":
+                    TOOLTIP.Show("Set the type and characteristics of the Realm.", this, new Point(MapObjectDetailButton.Left, MapObjectDetailButton.Top - 20), 3000);
+                    break;
                 case "Landform":
                     TOOLTIP.Show("Set the type and characteristics of the Landform.", this, new Point(MapObjectDetailButton.Left, MapObjectDetailButton.Top - 20), 3000);
                     break;

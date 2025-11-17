@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.VisualBasic;
+using System.ComponentModel;
 /**************************************************************************************************************************
 * Copyright 2025, Peter R. Nelson
 *
@@ -28,6 +29,8 @@ namespace RealmStudio
     public partial class MapObjectDetails : Form
     {
         private static readonly ToolTip TOOLTIP = new();
+
+        private readonly List<string> realmTypes = [];
 
         private readonly List<string> landformTypes =
         [
@@ -146,6 +149,24 @@ namespace RealmStudio
             "Prefecture",
             "Realm",
             "Dominion",
+            "Fantasy Realm",
+            "Kingdom",
+            "Empire",
+            "Duchy",
+            "Principality",
+            "Republic",
+            "Theocracy",
+            "Tribal Land",
+            "Confederation",
+            "Federation",
+            "Protectorate",
+            "Colony",
+            "Sultanate",
+            "Caliphate",
+            "City-State",
+            "Barony",
+            "Marches",
+            "Commonwealth",
 
             // Natural Land Regions
             "Desert",
@@ -234,7 +255,20 @@ namespace RealmStudio
         {
             InitializeComponent();
 
-            if (mapObjectType == typeof(Landform))
+            realmTypes.AddRange(landformTypes);
+            realmTypes.AddRange(regionTypes);
+            realmTypes.AddRange(waterFeatureTypes);
+
+            realmTypes = [.. realmTypes.Distinct()];
+
+            realmTypes.Sort();
+
+
+            if (mapObjectType == typeof(RealmStudioMap))
+            {
+                ObjectTypeCheckedList.Items.AddRange([.. realmTypes]);
+            }
+            else if (mapObjectType == typeof(Landform))
             {
                 ObjectTypeCheckedList.Items.AddRange([.. landformTypes]);
             }

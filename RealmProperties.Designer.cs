@@ -29,6 +29,11 @@
         private void InitializeComponent()
         {
             RealmPropertiesOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            LockNameButton = new FontAwesome.Sharp.IconButton();
+            GenerateRealmNameButton = new FontAwesome.Sharp.IconButton();
+            RealmDescriptionButton = new FontAwesome.Sharp.IconButton();
+            CloseRealmPropertiesButton = new Button();
+            ApplyChangesButton = new Button();
             RealmTypeLabel = new Label();
             RealmTypeLbl = new Label();
             MapFilePathLabel = new Label();
@@ -41,8 +46,6 @@
             NameTextbox = new TextBox();
             RealmGuidLabel = new Label();
             GuidLabel = new Label();
-            ApplyChangesButton = new Button();
-            CloseRealmPropertiesButton = new Button();
             RealmPropertiesOverlay.SuspendLayout();
             SuspendLayout();
             // 
@@ -50,6 +53,9 @@
             // 
             RealmPropertiesOverlay.BackColor = Color.FromArgb(244, 241, 243);
             RealmPropertiesOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            RealmPropertiesOverlay.Controls.Add(LockNameButton);
+            RealmPropertiesOverlay.Controls.Add(GenerateRealmNameButton);
+            RealmPropertiesOverlay.Controls.Add(RealmDescriptionButton);
             RealmPropertiesOverlay.Controls.Add(CloseRealmPropertiesButton);
             RealmPropertiesOverlay.Controls.Add(ApplyChangesButton);
             RealmPropertiesOverlay.Controls.Add(RealmTypeLabel);
@@ -78,12 +84,76 @@
             RealmPropertiesOverlay.Padding = new Padding(20, 56, 20, 16);
             RealmPropertiesOverlay.RoundCorners = true;
             RealmPropertiesOverlay.Sizable = false;
-            RealmPropertiesOverlay.Size = new Size(421, 321);
+            RealmPropertiesOverlay.Size = new Size(497, 321);
             RealmPropertiesOverlay.SmartBounds = true;
             RealmPropertiesOverlay.StartPosition = FormStartPosition.CenterParent;
             RealmPropertiesOverlay.TabIndex = 0;
             RealmPropertiesOverlay.Text = "Realm Properties";
             RealmPropertiesOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // LockNameButton
+            // 
+            LockNameButton.IconChar = FontAwesome.Sharp.IconChar.LockOpen;
+            LockNameButton.IconColor = SystemColors.ControlDarkDark;
+            LockNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            LockNameButton.IconSize = 14;
+            LockNameButton.Location = new Point(444, 85);
+            LockNameButton.Margin = new Padding(0);
+            LockNameButton.Name = "LockNameButton";
+            LockNameButton.Size = new Size(30, 28);
+            LockNameButton.TabIndex = 166;
+            LockNameButton.UseVisualStyleBackColor = true;
+            LockNameButton.Click += LockNameButton_Click;
+            // 
+            // GenerateRealmNameButton
+            // 
+            GenerateRealmNameButton.IconChar = FontAwesome.Sharp.IconChar.FileSignature;
+            GenerateRealmNameButton.IconColor = Color.Black;
+            GenerateRealmNameButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            GenerateRealmNameButton.IconSize = 20;
+            GenerateRealmNameButton.Location = new Point(411, 85);
+            GenerateRealmNameButton.Name = "GenerateRealmNameButton";
+            GenerateRealmNameButton.Size = new Size(30, 30);
+            GenerateRealmNameButton.TabIndex = 165;
+            GenerateRealmNameButton.UseVisualStyleBackColor = true;
+            GenerateRealmNameButton.Click += GenerateRealmNameButton_Click;
+            GenerateRealmNameButton.MouseHover += GenerateRealmNameButton_MouseHover;
+            // 
+            // RealmDescriptionButton
+            // 
+            RealmDescriptionButton.IconChar = FontAwesome.Sharp.IconChar.FileText;
+            RealmDescriptionButton.IconColor = Color.Black;
+            RealmDescriptionButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            RealmDescriptionButton.IconSize = 20;
+            RealmDescriptionButton.Location = new Point(455, 12);
+            RealmDescriptionButton.Name = "RealmDescriptionButton";
+            RealmDescriptionButton.Size = new Size(30, 30);
+            RealmDescriptionButton.TabIndex = 96;
+            RealmDescriptionButton.UseVisualStyleBackColor = true;
+            RealmDescriptionButton.Click += RealmDescriptionButton_Click;
+            RealmDescriptionButton.MouseHover += RealmDescriptionButton_MouseHover;
+            // 
+            // CloseRealmPropertiesButton
+            // 
+            CloseRealmPropertiesButton.DialogResult = DialogResult.Cancel;
+            CloseRealmPropertiesButton.ForeColor = SystemColors.ControlDarkDark;
+            CloseRealmPropertiesButton.Location = new Point(414, 242);
+            CloseRealmPropertiesButton.Name = "CloseRealmPropertiesButton";
+            CloseRealmPropertiesButton.Size = new Size(60, 60);
+            CloseRealmPropertiesButton.TabIndex = 93;
+            CloseRealmPropertiesButton.Text = "&Cancel";
+            CloseRealmPropertiesButton.UseVisualStyleBackColor = true;
+            // 
+            // ApplyChangesButton
+            // 
+            ApplyChangesButton.DialogResult = DialogResult.OK;
+            ApplyChangesButton.ForeColor = SystemColors.ControlDarkDark;
+            ApplyChangesButton.Location = new Point(348, 242);
+            ApplyChangesButton.Name = "ApplyChangesButton";
+            ApplyChangesButton.Size = new Size(60, 60);
+            ApplyChangesButton.TabIndex = 92;
+            ApplyChangesButton.Text = "&Apply";
+            ApplyChangesButton.UseVisualStyleBackColor = true;
             // 
             // RealmTypeLabel
             // 
@@ -91,7 +161,7 @@
             RealmTypeLabel.ForeColor = SystemColors.ControlDarkDark;
             RealmTypeLabel.Location = new Point(107, 201);
             RealmTypeLabel.Name = "RealmTypeLabel";
-            RealmTypeLabel.Size = new Size(286, 13);
+            RealmTypeLabel.Size = new Size(298, 13);
             RealmTypeLabel.TabIndex = 15;
             // 
             // RealmTypeLbl
@@ -101,7 +171,7 @@
             RealmTypeLbl.ForeColor = SystemColors.ControlDarkDark;
             RealmTypeLbl.Location = new Point(24, 201);
             RealmTypeLbl.Name = "RealmTypeLbl";
-            RealmTypeLbl.Size = new Size(64, 13);
+            RealmTypeLbl.Size = new Size(63, 13);
             RealmTypeLbl.TabIndex = 14;
             RealmTypeLbl.Text = "Realm Type";
             RealmTypeLbl.TextAlign = ContentAlignment.MiddleRight;
@@ -113,7 +183,7 @@
             MapFilePathLabel.ForeColor = SystemColors.ControlDarkDark;
             MapFilePathLabel.Location = new Point(107, 172);
             MapFilePathLabel.Name = "MapFilePathLabel";
-            MapFilePathLabel.Size = new Size(286, 13);
+            MapFilePathLabel.Size = new Size(298, 13);
             MapFilePathLabel.TabIndex = 13;
             // 
             // MapFilePathLbl
@@ -134,7 +204,7 @@
             MapAreaLabel.ForeColor = SystemColors.ControlDarkDark;
             MapAreaLabel.Location = new Point(107, 145);
             MapAreaLabel.Name = "MapAreaLabel";
-            MapAreaLabel.Size = new Size(286, 13);
+            MapAreaLabel.Size = new Size(298, 13);
             MapAreaLabel.TabIndex = 11;
             // 
             // MapAreaLbl
@@ -155,7 +225,7 @@
             MapSizeLabel.ForeColor = SystemColors.ControlDarkDark;
             MapSizeLabel.Location = new Point(107, 120);
             MapSizeLabel.Name = "MapSizeLabel";
-            MapSizeLabel.Size = new Size(286, 13);
+            MapSizeLabel.Size = new Size(298, 13);
             MapSizeLabel.TabIndex = 9;
             // 
             // MapSizeLbl
@@ -185,7 +255,7 @@
             // 
             NameTextbox.Location = new Point(107, 89);
             NameTextbox.Name = "NameTextbox";
-            NameTextbox.Size = new Size(286, 23);
+            NameTextbox.Size = new Size(298, 23);
             NameTextbox.TabIndex = 6;
             // 
             // RealmGuidLabel
@@ -209,33 +279,11 @@
             GuidLabel.Text = "Identifier";
             GuidLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // ApplyChangesButton
-            // 
-            ApplyChangesButton.DialogResult = DialogResult.OK;
-            ApplyChangesButton.ForeColor = SystemColors.ControlDarkDark;
-            ApplyChangesButton.Location = new Point(267, 236);
-            ApplyChangesButton.Name = "ApplyChangesButton";
-            ApplyChangesButton.Size = new Size(60, 60);
-            ApplyChangesButton.TabIndex = 92;
-            ApplyChangesButton.Text = "&Apply";
-            ApplyChangesButton.UseVisualStyleBackColor = true;
-            // 
-            // CloseRealmPropertiesButton
-            // 
-            CloseRealmPropertiesButton.DialogResult = DialogResult.Cancel;
-            CloseRealmPropertiesButton.ForeColor = SystemColors.ControlDarkDark;
-            CloseRealmPropertiesButton.Location = new Point(333, 236);
-            CloseRealmPropertiesButton.Name = "CloseRealmPropertiesButton";
-            CloseRealmPropertiesButton.Size = new Size(60, 60);
-            CloseRealmPropertiesButton.TabIndex = 93;
-            CloseRealmPropertiesButton.Text = "&Cancel";
-            CloseRealmPropertiesButton.UseVisualStyleBackColor = true;
-            // 
             // RealmProperties
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(421, 321);
+            ClientSize = new Size(497, 321);
             Controls.Add(RealmPropertiesOverlay);
             FormBorderStyle = FormBorderStyle.None;
             MinimumSize = new Size(261, 65);
@@ -265,5 +313,8 @@
         public TextBox NameTextbox;
         private Button ApplyChangesButton;
         private Button CloseRealmPropertiesButton;
+        private FontAwesome.Sharp.IconButton RealmDescriptionButton;
+        internal FontAwesome.Sharp.IconButton LockNameButton;
+        private FontAwesome.Sharp.IconButton GenerateRealmNameButton;
     }
 }

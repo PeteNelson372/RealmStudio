@@ -25,9 +25,16 @@ namespace RealmStudio
 {
     public partial class RealmProperties : Form
     {
+        private static readonly ToolTip TOOLTIP = new();
+
+        private RealmStudioMap _realm;
+        private bool NameLocked;
+
         public RealmProperties(RealmStudioMap realm)
         {
             InitializeComponent();
+
+            _realm = realm;
 
             RealmGuidLabel.Text = realm.MapGuid.ToString();
             NameTextbox.Text = realm.MapName;
@@ -35,6 +42,55 @@ namespace RealmStudio
             MapAreaLabel.Text = realm.MapAreaWidth.ToString() + "x" + realm.MapAreaHeight.ToString() + " " + realm.MapAreaUnits;
             MapFilePathLabel.Text = realm.MapPath;
             RealmTypeLabel.Text = realm.RealmType.ToString();
+        }
+
+        private void RealmDescriptionButton_Click(object sender, EventArgs e)
+        {
+            DescriptionEditor descriptionEditor = new(typeof(RealmStudioMap), NameTextbox.Text, _realm.RealmDescription);
+            descriptionEditor.DescriptionEditorOverlay.Text = "Realm Description Editor";
+
+            DialogResult r = descriptionEditor.ShowDialog(this);
+
+            if (r == DialogResult.OK)
+            {
+                _realm.RealmDescription = descriptionEditor.DescriptionText;
+            }
+        }
+
+        private void GenerateRealmNameButton_Click(object sender, EventArgs e)
+        {
+            if (NameLocked)
+            {
+                return; // Do not generate a new name if the name is locked
+            }
+
+            List<INameGenerator> generators = RealmStudioMainForm.NAME_GENERATOR_CONFIG.GetSelectedNameGenerators();
+            string generatedName = MapToolMethods.GenerateRandomPlaceName(generators);
+            NameTextbox.Text = generatedName;
+            _realm.MapName = generatedName;
+        }
+
+        private void GenerateRealmNameButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Generate Realm Name", this, new Point(GenerateRealmNameButton.Left, GenerateRealmNameButton.Top - 20), 3000);
+        }
+
+        private void LockNameButton_Click(object sender, EventArgs e)
+        {
+            NameLocked = !NameLocked;
+            if (NameLocked)
+            {
+                LockNameButton.IconChar = FontAwesome.Sharp.IconChar.Lock;
+            }
+            else
+            {
+                LockNameButton.IconChar = FontAwesome.Sharp.IconChar.LockOpen;
+            }
+        }
+
+        private void RealmDescriptionButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Edit Realm Description", this, new Point(RealmDescriptionButton.Left, RealmDescriptionButton.Top - 20), 3000);
         }
     }
 }

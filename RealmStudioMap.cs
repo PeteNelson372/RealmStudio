@@ -76,6 +76,9 @@ namespace RealmStudio
         public RealmMapType RealmType { get; set; } = RealmMapType.World;
 
         [XmlAttribute]
+        public string RealmDescription { get; set; } = string.Empty;
+
+        [XmlAttribute]
         public string MapTheme { get; set; } = string.Empty;
 
         [XmlArray("MapLayers")]

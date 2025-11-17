@@ -467,6 +467,12 @@ namespace RealmStudio
         {
             Settings.Default.EnableWAIntegration = EnableWAIntegrationSwitch.Checked;
             Settings.Default.Save();
+
+            if (MapStateMediator.MainUIMediator is not null)
+            {
+                MapStateMediator.MainUIMediator.WorldAnvilIntegrationEnabled = Settings.Default.EnableWAIntegration;
+            }
+
         }
     }
 }
