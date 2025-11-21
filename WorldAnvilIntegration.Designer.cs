@@ -32,7 +32,6 @@
             UserWorldsList = new ListView();
             WorldTitle = new ColumnHeader();
             WorldId = new ColumnHeader();
-            RememberUserAPITokenCheck = new CheckBox();
             UserIdLabel = new Label();
             label4 = new Label();
             UserNameLabel = new Label();
@@ -42,6 +41,7 @@
             label1 = new Label();
             APITokenTextBox = new TextBox();
             CloseButton = new Button();
+            ResetButton = new Button();
             WorldAnvilIntegrationOverlay.SuspendLayout();
             SuspendLayout();
             // 
@@ -49,8 +49,8 @@
             // 
             WorldAnvilIntegrationOverlay.BackColor = Color.FromArgb(244, 241, 243);
             WorldAnvilIntegrationOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            WorldAnvilIntegrationOverlay.Controls.Add(ResetButton);
             WorldAnvilIntegrationOverlay.Controls.Add(UserWorldsList);
-            WorldAnvilIntegrationOverlay.Controls.Add(RememberUserAPITokenCheck);
             WorldAnvilIntegrationOverlay.Controls.Add(UserIdLabel);
             WorldAnvilIntegrationOverlay.Controls.Add(label4);
             WorldAnvilIntegrationOverlay.Controls.Add(UserNameLabel);
@@ -73,9 +73,9 @@
             WorldAnvilIntegrationOverlay.Padding = new Padding(20, 56, 20, 16);
             WorldAnvilIntegrationOverlay.RoundCorners = true;
             WorldAnvilIntegrationOverlay.Sizable = true;
-            WorldAnvilIntegrationOverlay.Size = new Size(800, 450);
+            WorldAnvilIntegrationOverlay.Size = new Size(800, 427);
             WorldAnvilIntegrationOverlay.SmartBounds = true;
-            WorldAnvilIntegrationOverlay.StartPosition = FormStartPosition.WindowsDefaultLocation;
+            WorldAnvilIntegrationOverlay.StartPosition = FormStartPosition.CenterParent;
             WorldAnvilIntegrationOverlay.TabIndex = 0;
             WorldAnvilIntegrationOverlay.Text = "World Anvil Integration Parameters";
             WorldAnvilIntegrationOverlay.TitleColor = Color.FromArgb(223, 219, 210);
@@ -86,7 +86,7 @@
             UserWorldsList.FullRowSelect = true;
             UserWorldsList.GridLines = true;
             UserWorldsList.HeaderStyle = ColumnHeaderStyle.Nonclickable;
-            UserWorldsList.Location = new Point(137, 179);
+            UserWorldsList.Location = new Point(137, 151);
             UserWorldsList.MultiSelect = false;
             UserWorldsList.Name = "UserWorldsList";
             UserWorldsList.Size = new Size(588, 158);
@@ -106,22 +106,11 @@
             WorldId.Text = "World Identifier";
             WorldId.Width = 280;
             // 
-            // RememberUserAPITokenCheck
-            // 
-            RememberUserAPITokenCheck.AutoSize = true;
-            RememberUserAPITokenCheck.ForeColor = SystemColors.ControlDarkDark;
-            RememberUserAPITokenCheck.Location = new Point(137, 95);
-            RememberUserAPITokenCheck.Name = "RememberUserAPITokenCheck";
-            RememberUserAPITokenCheck.Size = new Size(188, 19);
-            RememberUserAPITokenCheck.TabIndex = 9;
-            RememberUserAPITokenCheck.Text = "Remember WA User API Token";
-            RememberUserAPITokenCheck.UseVisualStyleBackColor = true;
-            // 
             // UserIdLabel
             // 
             UserIdLabel.BorderStyle = BorderStyle.FixedSingle;
             UserIdLabel.ForeColor = SystemColors.ControlDarkDark;
-            UserIdLabel.Location = new Point(458, 126);
+            UserIdLabel.Location = new Point(458, 109);
             UserIdLabel.Name = "UserIdLabel";
             UserIdLabel.Size = new Size(267, 23);
             UserIdLabel.TabIndex = 8;
@@ -130,7 +119,7 @@
             // 
             label4.AutoSize = true;
             label4.ForeColor = SystemColors.ControlDarkDark;
-            label4.Location = new Point(408, 127);
+            label4.Location = new Point(408, 110);
             label4.Name = "label4";
             label4.Size = new Size(44, 15);
             label4.TabIndex = 7;
@@ -140,7 +129,7 @@
             // 
             UserNameLabel.BorderStyle = BorderStyle.FixedSingle;
             UserNameLabel.ForeColor = SystemColors.ControlDarkDark;
-            UserNameLabel.Location = new Point(137, 126);
+            UserNameLabel.Location = new Point(137, 109);
             UserNameLabel.Name = "UserNameLabel";
             UserNameLabel.Size = new Size(233, 23);
             UserNameLabel.TabIndex = 6;
@@ -149,7 +138,7 @@
             // 
             label2.AutoSize = true;
             label2.ForeColor = SystemColors.ControlDarkDark;
-            label2.Location = new Point(66, 127);
+            label2.Location = new Point(66, 110);
             label2.Name = "label2";
             label2.Size = new Size(65, 15);
             label2.TabIndex = 5;
@@ -178,12 +167,13 @@
             ValidateTokenButton.Text = "Validate";
             ValidateTokenButton.UseVisualStyleBackColor = true;
             ValidateTokenButton.Click += ValidateTokenButton_Click;
+            ValidateTokenButton.MouseHover += ValidateTokenButton_MouseHover;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.ForeColor = SystemColors.ControlDarkDark;
-            label1.Location = new Point(23, 66);
+            label1.Location = new Point(23, 70);
             label1.Name = "label1";
             label1.Size = new Size(108, 15);
             label1.TabIndex = 2;
@@ -199,7 +189,7 @@
             // CloseButton
             // 
             CloseButton.ForeColor = SystemColors.ControlDarkDark;
-            CloseButton.Location = new Point(717, 371);
+            CloseButton.Location = new Point(717, 348);
             CloseButton.Name = "CloseButton";
             CloseButton.Size = new Size(60, 60);
             CloseButton.TabIndex = 0;
@@ -207,18 +197,32 @@
             CloseButton.UseVisualStyleBackColor = true;
             CloseButton.Click += CloseButton_Click;
             // 
+            // ResetButton
+            // 
+            ResetButton.ForeColor = SystemColors.ControlDarkDark;
+            ResetButton.Location = new Point(650, 348);
+            ResetButton.Name = "ResetButton";
+            ResetButton.Size = new Size(60, 60);
+            ResetButton.TabIndex = 11;
+            ResetButton.Text = "Reset";
+            ResetButton.UseVisualStyleBackColor = true;
+            ResetButton.Click += ResetButton_Click;
+            ResetButton.MouseHover += ResetButton_MouseHover;
+            // 
             // WorldAnvilIntegration
             // 
             AcceptButton = CloseButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(800, 427);
             Controls.Add(WorldAnvilIntegrationOverlay);
             FormBorderStyle = FormBorderStyle.None;
             MinimumSize = new Size(261, 65);
             Name = "WorldAnvilIntegration";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "World Anvil Integration Parameters";
             TransparencyKey = Color.Fuchsia;
+            Shown += WorldAnvilIntegration_Shown;
             WorldAnvilIntegrationOverlay.ResumeLayout(false);
             WorldAnvilIntegrationOverlay.PerformLayout();
             ResumeLayout(false);
@@ -234,11 +238,11 @@
         private FontAwesome.Sharp.IconButton APITokenValidButton;
         private Label UserNameLabel;
         private Label label2;
-        private CheckBox RememberUserAPITokenCheck;
         private Label UserIdLabel;
         private Label label4;
         private ListView UserWorldsList;
         private ColumnHeader WorldTitle;
         private ColumnHeader WorldId;
+        private Button ResetButton;
     }
 }

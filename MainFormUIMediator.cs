@@ -371,14 +371,16 @@ namespace RealmStudio
         {
             if (WorldAnvilIntegrationEnabled)
             {
-                MainForm.WorlAnvilIntegrationButton.Visible = true;
-                MainForm.WorlAnvilIntegrationButton.Enabled = true;
-
+                MainForm.WorldAnvilIntegrationButton.Visible = true;
+                MainForm.WorldAnvilIntegrationButton.Enabled = true;
             }
             else
             {
-                MainForm.WorlAnvilIntegrationButton.Visible = false;
-                MainForm.WorlAnvilIntegrationButton.Enabled = false;
+                MainForm.WorldAnvilIntegrationButton.Visible = false;
+                MainForm.WorldAnvilIntegrationButton.Enabled = false;
+
+                MainForm.WorldAnvilMapButton.Visible = false;
+                MainForm.WorldAnvilMapButton.Enabled = false;
             }
         }
 

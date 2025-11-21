@@ -21,12 +21,15 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using RealmStudio.Properties;
 using System.Text.Json;
 using WorldAnvilIntegrationLib;
 namespace RealmStudio
 {
     public partial class WorldAnvilIntegration : Form
     {
+        private static readonly ToolTip TOOLTIP = new();
+
         public WorldAnvilIntegration()
         {
             InitializeComponent();
@@ -68,67 +71,7 @@ namespace RealmStudio
             }
             else
             {
-                Task apiKeyTask = Task.Run(() => IntegrationManager.WorldAnvilApi.GetWorldAnvilAPIKey());
-
-                apiKeyTask.Wait();
-
-                IntegrationManager.WorldAnvilApi.SetWorldAnvilCredentials(APITokenTextBox.Text);
-
-                string? userId = IntegrationManager.WorldAnvilApi.GetUserIdentity();
-
-                if (string.IsNullOrEmpty(userId))
-                {
-                    MessageBox.Show("Invalid User API Token", "The World Anvil API token provided is not valid.", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                JsonDocument? user = IntegrationManager.WorldAnvilApi.GetUserById(userId, 2);
-
-                if (user is null)
-                {
-                    MessageBox.Show("Invalid User API Token", "No World Anvil user could be retrieved using the provided World Anvil API token.", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                Dictionary<string, string> userFlatJson = WorldAnvilApiMethods.FlattenJson(user.RootElement);
-                userFlatJson.TryGetValue("/username", out string? username);
-
-                userFlatJson.TryGetValue("/id", out string? retrievedUserId);
-
-                if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(retrievedUserId))
-                {
-                    APITokenValidButton.IconChar = FontAwesome.Sharp.IconChar.Check;
-                    APITokenValidButton.IconColor = Color.ForestGreen;
-
-                    UserNameLabel.Text = username;
-                    UserIdLabel.Text = retrievedUserId;
-
-                    List<JsonDocument> userWorlds = IntegrationManager.WorldAnvilApi.ListWorldsForUser(retrievedUserId, 100, 0);
-
-                    UserWorldsList.Items.Clear();
-
-                    foreach (JsonDocument world in userWorlds)
-                    {
-                        Dictionary<string, string> worldFlatJson = WorldAnvilApiMethods.FlattenJson(world.RootElement);
-                        worldFlatJson.TryGetValue("/title", out string? worldTitle);
-                        worldFlatJson.TryGetValue("/id", out string? worldId);
-                        if (!string.IsNullOrEmpty(worldTitle) && !string.IsNullOrEmpty(worldId))
-                        {
-                            ListViewItem item = new(worldTitle);
-                            item.SubItems.Add(worldId);
-                            UserWorldsList.Items.Add(item);
-                        }
-                    }
-
-                    IntegrationManager.WorldAnvilParameters.ApiToken = APITokenTextBox.Text;
-                    IntegrationManager.WorldAnvilParameters.ApiKey = IntegrationManager.WorldAnvilApi.WorldAnvilAPIKey;
-                    IntegrationManager.WorldAnvilParameters.WAUserId = retrievedUserId;
-                    IntegrationManager.WorldAnvilParameters.WAUsername = username;
-                }
-                else
-                {
-                    MessageBox.Show("Invalid User Object", "The user object retrieved from the World Anvil API is invalid.", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                ValidateUserApiToken(APITokenTextBox.Text);
             }
         }
 
@@ -143,6 +86,167 @@ namespace RealmStudio
 
             IntegrationManager.WorldAnvilParameters.WorldTitle = selectedItem.Text;
             IntegrationManager.WorldAnvilParameters.WorldId = selectedItem.SubItems[1].Text;
+
+            if (MapStateMediator.MainUIMediator != null)
+            {
+                MapStateMediator.MainUIMediator.MainForm.WorldAnvilMapButton.Visible = true;
+                MapStateMediator.MainUIMediator.MainForm.WorldAnvilMapButton.Enabled = true;
+            }
+
+        }
+
+        private void ValidateTokenButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Validate the World Anvil User API Key with World Anvil", this, new Point(ValidateTokenButton.Left, ValidateTokenButton.Top - 20), 3000);
+        }
+
+        private bool ValidateUserApiToken(string userApiToken)
+        {
+            Task apiKeyTask = Task.Run(() => IntegrationManager.WorldAnvilApi.GetWorldAnvilAPIKey());
+
+            apiKeyTask.Wait();
+
+            string? userId = string.Empty;
+            try
+            {
+                IntegrationManager.WorldAnvilApi.SetWorldAnvilCredentials(userApiToken);
+                userId = IntegrationManager.WorldAnvilApi.GetUserIdentity();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error retrieving World Anvil API Key: " + ex.Message, "API Key Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                MessageBox.Show("Invalid User API Token", "The World Anvil API token provided is not valid.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            JsonDocument? user = IntegrationManager.WorldAnvilApi.GetUserById(userId, 2);
+
+            if (user is null)
+            {
+                MessageBox.Show("Invalid User API Token", "No World Anvil user could be retrieved using the provided World Anvil API token.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            Dictionary<string, string> userFlatJson = WorldAnvilApiMethods.FlattenJson(user.RootElement);
+            userFlatJson.TryGetValue("/username", out string? username);
+
+            userFlatJson.TryGetValue("/id", out string? retrievedUserId);
+
+            if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(retrievedUserId))
+            {
+                APITokenValidButton.IconChar = FontAwesome.Sharp.IconChar.Check;
+                APITokenValidButton.IconColor = Color.ForestGreen;
+
+                UserNameLabel.Text = username;
+                UserIdLabel.Text = retrievedUserId;
+
+                List<JsonDocument> userWorlds = IntegrationManager.WorldAnvilApi.ListWorldsForUser(retrievedUserId, 100, 0);
+
+                UserWorldsList.Items.Clear();
+
+                foreach (JsonDocument world in userWorlds)
+                {
+                    Dictionary<string, string> worldFlatJson = WorldAnvilApiMethods.FlattenJson(world.RootElement);
+                    worldFlatJson.TryGetValue("/title", out string? worldTitle);
+                    worldFlatJson.TryGetValue("/id", out string? worldId);
+                    if (!string.IsNullOrEmpty(worldTitle) && !string.IsNullOrEmpty(worldId))
+                    {
+                        ListViewItem item = new(worldTitle);
+                        item.SubItems.Add(worldId);
+                        UserWorldsList.Items.Add(item);
+                    }
+                }
+
+                IntegrationManager.WorldAnvilParameters.ApiToken = userApiToken;
+                IntegrationManager.WorldAnvilParameters.ApiKey = IntegrationManager.WorldAnvilApi.WorldAnvilAPIKey;
+                IntegrationManager.WorldAnvilParameters.WAUserId = retrievedUserId;
+                IntegrationManager.WorldAnvilParameters.WAUsername = username;
+
+                Settings.Default.WorldAnvilApiToken = userApiToken;
+                Settings.Default.Save();
+
+            }
+            else
+            {
+                MessageBox.Show("Invalid User Object", "The user object retrieved from the World Anvil API is invalid.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void WorldAnvilIntegration_Shown(object sender, EventArgs e)
+        {
+            APITokenValidButton.IconChar = FontAwesome.Sharp.IconChar.Cancel;
+            APITokenValidButton.IconColor = Color.Red;
+
+            if (!string.IsNullOrEmpty(Settings.Default.WorldAnvilApiToken))
+            {
+                if (ValidateUserApiToken(Settings.Default.WorldAnvilApiToken))
+                {
+                    APITokenTextBox.Text = IntegrationManager.WorldAnvilParameters.ApiToken;
+                    UserNameLabel.Text = IntegrationManager.WorldAnvilParameters.WAUsername;
+                    UserIdLabel.Text = IntegrationManager.WorldAnvilParameters.WAUserId;
+
+                    foreach (ListViewItem item in UserWorldsList.Items)
+                    {
+                        if (item.SubItems[1].Text == IntegrationManager.WorldAnvilParameters.WorldId)
+                        {
+                            item.Selected = true;
+                            item.Focused = true;
+                            item.EnsureVisible();
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    ResetWorldAnvilIntegrationParameters();
+                }
+            }
+        }
+
+        private void ResetButton_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to clear all World Anvil Integration parameters?", "Confirm Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                ResetWorldAnvilIntegrationParameters();
+            }
+        }
+
+        private void ResetButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Clear all World Anvil Integration Parameters", this, new Point(ResetButton.Left, ResetButton.Top - 20), 3000);
+        }
+
+        private void ResetWorldAnvilIntegrationParameters()
+        {
+            Settings.Default.WorldAnvilApiToken = string.Empty;
+
+            IntegrationManager.WorldAnvilParameters.WAUsername = string.Empty;
+            IntegrationManager.WorldAnvilParameters.WAUserId = string.Empty;
+            IntegrationManager.WorldAnvilParameters.ApiKey = string.Empty;
+            IntegrationManager.WorldAnvilParameters.ApiToken = string.Empty;
+            IntegrationManager.WorldAnvilParameters.WorldId = string.Empty;
+
+            MapStateMediator.MainUIMediator?.MainForm.WorldAnvilMapButton.Visible = false;
+            MapStateMediator.MainUIMediator?.MainForm.WorldAnvilMapButton.Enabled = false;
+
+            Settings.Default.Save();
+
+            UserWorldsList.Items.Clear();
+
+            APITokenValidButton.IconChar = FontAwesome.Sharp.IconChar.Cancel;
+            APITokenValidButton.IconColor = Color.Red;
+
+            APITokenTextBox.Text = Settings.Default.WorldAnvilApiToken;
+            UserNameLabel.Text = IntegrationManager.WorldAnvilParameters.WAUsername;
+            UserIdLabel.Text = IntegrationManager.WorldAnvilParameters.WAUserId;
         }
     }
 }

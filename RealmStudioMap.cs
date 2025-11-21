@@ -79,6 +79,21 @@ namespace RealmStudio
         public string RealmDescription { get; set; } = string.Empty;
 
         [XmlAttribute]
+        public Guid WorldAnvilMapId { get; set; } = Guid.Empty;
+
+        [XmlAttribute]
+        public string WorldAnvilMapTitle { get; set; } = string.Empty;
+
+        [XmlAttribute]
+        public Guid WorldAnvilWorldId { get; set; } = Guid.Empty;
+
+        [XmlAttribute]
+        public Guid WorldAnvilUserId { get; set; } = Guid.Empty;
+
+        [XmlAttribute]
+        public int WorldAnvilImageId { get; set; } = 0;
+
+        [XmlAttribute]
         public string MapTheme { get; set; } = string.Empty;
 
         [XmlArray("MapLayers")]

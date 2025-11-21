@@ -354,7 +354,8 @@
             ShowDrawingLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label11 = new Label();
             RealmStudioForm = new ReaLTaiizor.Forms.DungeonForm();
-            WorlAnvilIntegrationButton = new Button();
+            WorldAnvilMapButton = new FontAwesome.Sharp.IconButton();
+            WorldAnvilIntegrationButton = new Button();
             NewVersionButton = new FontAwesome.Sharp.IconButton();
             Open3DViewButton = new FontAwesome.Sharp.IconButton();
             AreaSelectButton = new FontAwesome.Sharp.IconButton();
@@ -6093,7 +6094,8 @@
             RealmStudioForm.BackColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             RealmStudioForm.BorderColor = Color.FromArgb((int)(byte)38, (int)(byte)38, (int)(byte)38);
             RealmStudioForm.CausesValidation = false;
-            RealmStudioForm.Controls.Add(WorlAnvilIntegrationButton);
+            RealmStudioForm.Controls.Add(WorldAnvilMapButton);
+            RealmStudioForm.Controls.Add(WorldAnvilIntegrationButton);
             RealmStudioForm.Controls.Add(NewVersionButton);
             RealmStudioForm.Controls.Add(Open3DViewButton);
             RealmStudioForm.Controls.Add(AreaSelectButton);
@@ -6153,21 +6155,39 @@
             RealmStudioForm.Text = "Realm Studio";
             RealmStudioForm.TitleColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             // 
-            // WorlAnvilIntegrationButton
+            // WorldAnvilMapButton
             // 
-            WorlAnvilIntegrationButton.BackgroundImageLayout = ImageLayout.Zoom;
-            WorlAnvilIntegrationButton.FlatAppearance.BorderSize = 0;
-            WorlAnvilIntegrationButton.FlatStyle = FlatStyle.Flat;
-            WorlAnvilIntegrationButton.Font = new Font("Elephant", 8.999999F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
-            WorlAnvilIntegrationButton.ForeColor = Color.FromArgb((int)(byte)140, (int)(byte)10, (int)(byte)10);
-            WorlAnvilIntegrationButton.Location = new Point(1376, 56);
-            WorlAnvilIntegrationButton.Name = "WorlAnvilIntegrationButton";
-            WorlAnvilIntegrationButton.Size = new Size(40, 32);
-            WorlAnvilIntegrationButton.TabIndex = 43;
-            WorlAnvilIntegrationButton.Text = "WA";
-            WorlAnvilIntegrationButton.UseVisualStyleBackColor = true;
-            WorlAnvilIntegrationButton.Click += (this.WorlAnvilIntegrationButton_Click);
-            WorlAnvilIntegrationButton.MouseHover += (this.WorlAnvilIntegrationButton_MouseHover);
+            WorldAnvilMapButton.Anchor = (AnchorStyles)(AnchorStyles.Top) | (AnchorStyles.Right);
+            WorldAnvilMapButton.FlatStyle = FlatStyle.Flat;
+            WorldAnvilMapButton.ForeColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            WorldAnvilMapButton.IconChar = FontAwesome.Sharp.IconChar.MapLocationDot;
+            WorldAnvilMapButton.IconColor = Color.FromArgb((int)(byte)140, (int)(byte)10, (int)(byte)10);
+            WorldAnvilMapButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            WorldAnvilMapButton.IconSize = 32;
+            WorldAnvilMapButton.Location = new Point(1349, 55);
+            WorldAnvilMapButton.Name = "WorldAnvilMapButton";
+            WorldAnvilMapButton.Size = new Size(32, 32);
+            WorldAnvilMapButton.TabIndex = 44;
+            WorldAnvilMapButton.UseVisualStyleBackColor = true;
+            WorldAnvilMapButton.Click += (this.WorldAnvilMapButton_Click);
+            WorldAnvilMapButton.MouseHover += (this.WorldAnvilMapButton_MouseHover);
+            // 
+            // WorldAnvilIntegrationButton
+            // 
+            WorldAnvilIntegrationButton.Anchor = (AnchorStyles)(AnchorStyles.Top) | (AnchorStyles.Right);
+            WorldAnvilIntegrationButton.BackgroundImageLayout = ImageLayout.Zoom;
+            WorldAnvilIntegrationButton.FlatAppearance.BorderSize = 0;
+            WorldAnvilIntegrationButton.FlatStyle = FlatStyle.Flat;
+            WorldAnvilIntegrationButton.Font = new Font("Elephant", 8.999999F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
+            WorldAnvilIntegrationButton.ForeColor = Color.FromArgb((int)(byte)140, (int)(byte)10, (int)(byte)10);
+            WorldAnvilIntegrationButton.Location = new Point(1384, 56);
+            WorldAnvilIntegrationButton.Name = "WorldAnvilIntegrationButton";
+            WorldAnvilIntegrationButton.Size = new Size(40, 32);
+            WorldAnvilIntegrationButton.TabIndex = 43;
+            WorldAnvilIntegrationButton.Text = "WA";
+            WorldAnvilIntegrationButton.UseVisualStyleBackColor = true;
+            WorldAnvilIntegrationButton.Click += (this.WorlAnvilIntegrationButton_Click);
+            WorldAnvilIntegrationButton.MouseHover += (this.WorlAnvilIntegrationButton_MouseHover);
             // 
             // NewVersionButton
             // 
@@ -11230,6 +11250,7 @@
         private Label label113;
         internal TrackBar DrawingShapeRotationTrack;
         private FontAwesome.Sharp.IconToolStripButton PixelEditButton;
-        internal Button WorlAnvilIntegrationButton;
+        internal Button WorldAnvilIntegrationButton;
+        internal FontAwesome.Sharp.IconButton WorldAnvilMapButton;
     }
 }

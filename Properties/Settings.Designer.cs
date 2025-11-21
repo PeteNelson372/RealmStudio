@@ -178,5 +178,17 @@ namespace RealmStudio.Properties {
                 this["EnableWAIntegration"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WorldAnvilApiToken {
+            get {
+                return ((string)(this["WorldAnvilApiToken"]));
+            }
+            set {
+                this["WorldAnvilApiToken"] = value;
+            }
+        }
     }
 }

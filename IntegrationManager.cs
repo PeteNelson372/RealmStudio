@@ -21,6 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using WorldAnvilIntegrationLib;
 
 namespace RealmStudio
@@ -29,5 +31,33 @@ namespace RealmStudio
     {
         public static WorldAnvilApiMethods WorldAnvilApi { get; } = new();
         public static WorldAnvilIntegrationParameters WorldAnvilParameters { get; } = new WorldAnvilIntegrationParameters();
+
+        public class JsonHelper
+        {
+            public JsonSerializerOptions CamelCaseIgnoreEmptyOptions = new()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,            // force lowercase field names
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,   // ignores nulls
+            };
+
+            public JsonHelper() => CamelCaseIgnoreEmptyOptions.Converters.Add(new IgnoreEmptyStringConverter());
+        }
+
+        public class IgnoreEmptyStringConverter : JsonConverter<string?>
+        {
+            public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+                => reader.GetString();
+
+            public override void Write(Utf8JsonWriter writer, string? value, JsonSerializerOptions options)
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    writer.WriteStringValue(value);
+                }
+                // If it's null or empty, do nothing — field will be skipped.
+            }
+        }
+
+        public static JsonHelper JsonSerializerHelper = new();
     }
 }

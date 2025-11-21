@@ -281,6 +281,9 @@ namespace RealmStudio
             // force the UI to reflect the current World Anvil integration setting
             MainMediator.EnableDisableWorldAnvilIntegration();
 
+            WorldAnvilMapButton.Visible = false;
+            WorldAnvilMapButton.Enabled = false;
+
             SKGLRenderControl.CreateControl();
             SKGLRenderControl.Show();
             SKGLRenderControl.Select();
@@ -486,12 +489,38 @@ namespace RealmStudio
         private void WorlAnvilIntegrationButton_Click(object sender, EventArgs e)
         {
             WorldAnvilIntegration worldAnvilIntegration = new();
-            worldAnvilIntegration.ShowDialog();
+            worldAnvilIntegration.ShowDialog(this);
         }
 
         private void WorlAnvilIntegrationButton_MouseHover(object sender, EventArgs e)
         {
-            TOOLTIP.Show("Open World Anvil Integration dialog", RealmStudioForm, new Point(WorlAnvilIntegrationButton.Left, WorlAnvilIntegrationButton.Top + 30), 3000);
+            TOOLTIP.Show("Open World Anvil Integration Parameters dialog", RealmStudioForm, new Point(WorldAnvilIntegrationButton.Left, WorldAnvilIntegrationButton.Top + 30), 3000);
+        }
+
+        private void WorldAnvilMapButton_Click(object sender, EventArgs e)
+        {
+            if (!MainMediator.WorldAnvilIntegrationEnabled)
+            {
+                MessageBox.Show("World Anvil Integration is not enabled. Please enable World Anvil Integration in the main toolbar before opening the World Anvil Map Integration dialog.", "World Anvil Integration Not Enabled", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiToken) ||
+                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) ||
+                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId) ||
+                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WorldId))
+            {
+                MessageBox.Show("World Anvil integration parameters are not set. Please set the World Anvil integration parameters before opening the World Anvil Map Integration dialog.", "World Anvil Integration Parameters Not Set", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                return;
+            }
+
+            WorldAnvilMapIntegration worldAnvilMapIntegration = new();
+            worldAnvilMapIntegration.ShowDialog(this);
+        }
+
+        private void WorldAnvilMapButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Open World Anvil Map Integration dialog", RealmStudioForm, new Point(WorldAnvilIntegrationButton.Left, WorldAnvilIntegrationButton.Top + 30), 3000);
         }
 
         private void Open3DViewButton_Click(object sender, EventArgs e)
