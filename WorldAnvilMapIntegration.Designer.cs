@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             WAMapIntegrationOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            CreateMapArticleButton = new FontAwesome.Sharp.IconButton();
             CreateMapButton = new FontAwesome.Sharp.IconButton();
             ImageIdValidButton = new FontAwesome.Sharp.IconButton();
             ValidateImageIdButton = new Button();
@@ -50,6 +51,7 @@
             // 
             WAMapIntegrationOverlay.BackColor = Color.FromArgb(244, 241, 243);
             WAMapIntegrationOverlay.BorderColor = Color.FromArgb(38, 38, 38);
+            WAMapIntegrationOverlay.Controls.Add(CreateMapArticleButton);
             WAMapIntegrationOverlay.Controls.Add(CreateMapButton);
             WAMapIntegrationOverlay.Controls.Add(ImageIdValidButton);
             WAMapIntegrationOverlay.Controls.Add(ValidateImageIdButton);
@@ -84,22 +86,41 @@
             WAMapIntegrationOverlay.Text = "World Anvil Map Integration";
             WAMapIntegrationOverlay.TitleColor = Color.FromArgb(223, 219, 210);
             // 
+            // CreateMapArticleButton
+            // 
+            CreateMapArticleButton.Enabled = false;
+            CreateMapArticleButton.Font = new Font("Segoe UI", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            CreateMapArticleButton.ForeColor = SystemColors.ControlDarkDark;
+            CreateMapArticleButton.IconChar = FontAwesome.Sharp.IconChar.FileUpload;
+            CreateMapArticleButton.IconColor = Color.FromArgb(140, 10, 10);
+            CreateMapArticleButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            CreateMapArticleButton.IconSize = 28;
+            CreateMapArticleButton.Location = new Point(349, 258);
+            CreateMapArticleButton.Name = "CreateMapArticleButton";
+            CreateMapArticleButton.Size = new Size(60, 60);
+            CreateMapArticleButton.TabIndex = 99;
+            CreateMapArticleButton.Text = "Article";
+            CreateMapArticleButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            CreateMapArticleButton.UseVisualStyleBackColor = true;
+            CreateMapArticleButton.Click += CreateMapArticleButton_Click;
+            CreateMapArticleButton.MouseEnter += CreateMapArticleButton_MouseEnter;
+            // 
             // CreateMapButton
             // 
             CreateMapButton.Enabled = false;
             CreateMapButton.Font = new Font("Segoe UI", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             CreateMapButton.ForeColor = SystemColors.ControlDarkDark;
             CreateMapButton.IconChar = FontAwesome.Sharp.IconChar.MapLocationDot;
-            CreateMapButton.IconColor = Color.ForestGreen;
+            CreateMapButton.IconColor = Color.FromArgb(140, 10, 10);
             CreateMapButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            CreateMapButton.IconSize = 36;
+            CreateMapButton.IconSize = 34;
             CreateMapButton.ImageAlign = ContentAlignment.BottomCenter;
             CreateMapButton.Location = new Point(415, 258);
             CreateMapButton.Name = "CreateMapButton";
             CreateMapButton.Size = new Size(60, 60);
             CreateMapButton.TabIndex = 21;
-            CreateMapButton.Text = "Add Map";
-            CreateMapButton.TextAlign = ContentAlignment.TopCenter;
+            CreateMapButton.Text = "Map";
+            CreateMapButton.TextImageRelation = TextImageRelation.TextAboveImage;
             CreateMapButton.UseVisualStyleBackColor = true;
             CreateMapButton.Click += CreateMapButton_Click;
             CreateMapButton.MouseHover += CreateMapButton_MouseHover;
@@ -150,7 +171,7 @@
             // 
             MapTitleLabel.AutoSize = true;
             MapTitleLabel.ForeColor = SystemColors.ControlDarkDark;
-            MapTitleLabel.Location = new Point(23, 91);
+            MapTitleLabel.Location = new Point(23, 96);
             MapTitleLabel.Name = "MapTitleLabel";
             MapTitleLabel.Size = new Size(57, 15);
             MapTitleLabel.TabIndex = 16;
@@ -158,7 +179,7 @@
             // 
             // MapTitleTextBox
             // 
-            MapTitleTextBox.Location = new Point(143, 88);
+            MapTitleTextBox.Location = new Point(143, 93);
             MapTitleTextBox.Name = "MapTitleTextBox";
             MapTitleTextBox.Size = new Size(286, 23);
             MapTitleTextBox.TabIndex = 15;
@@ -168,7 +189,7 @@
             MapUserIdLabel.BorderStyle = BorderStyle.FixedSingle;
             MapUserIdLabel.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             MapUserIdLabel.ForeColor = SystemColors.ControlDarkDark;
-            MapUserIdLabel.Location = new Point(143, 197);
+            MapUserIdLabel.Location = new Point(143, 202);
             MapUserIdLabel.Name = "MapUserIdLabel";
             MapUserIdLabel.Size = new Size(286, 23);
             MapUserIdLabel.TabIndex = 13;
@@ -178,7 +199,7 @@
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label4.ForeColor = SystemColors.ControlDarkDark;
-            label4.Location = new Point(23, 198);
+            label4.Location = new Point(23, 203);
             label4.Name = "label4";
             label4.Size = new Size(106, 13);
             label4.TabIndex = 12;
@@ -190,7 +211,7 @@
             MapWorldIdLabel.BorderStyle = BorderStyle.FixedSingle;
             MapWorldIdLabel.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             MapWorldIdLabel.ForeColor = SystemColors.ControlDarkDark;
-            MapWorldIdLabel.Location = new Point(143, 161);
+            MapWorldIdLabel.Location = new Point(143, 166);
             MapWorldIdLabel.Name = "MapWorldIdLabel";
             MapWorldIdLabel.Size = new Size(286, 23);
             MapWorldIdLabel.TabIndex = 11;
@@ -200,7 +221,7 @@
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label3.ForeColor = SystemColors.ControlDarkDark;
-            label3.Location = new Point(22, 162);
+            label3.Location = new Point(22, 167);
             label3.Name = "label3";
             label3.Size = new Size(115, 13);
             label3.TabIndex = 10;
@@ -212,7 +233,7 @@
             MapIdLabel.BorderStyle = BorderStyle.FixedSingle;
             MapIdLabel.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             MapIdLabel.ForeColor = SystemColors.ControlDarkDark;
-            MapIdLabel.Location = new Point(143, 124);
+            MapIdLabel.Location = new Point(143, 129);
             MapIdLabel.Name = "MapIdLabel";
             MapIdLabel.Size = new Size(286, 23);
             MapIdLabel.TabIndex = 7;
@@ -222,7 +243,7 @@
             MapGuidLabel.AutoSize = true;
             MapGuidLabel.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             MapGuidLabel.ForeColor = SystemColors.ControlDarkDark;
-            MapGuidLabel.Location = new Point(23, 125);
+            MapGuidLabel.Location = new Point(23, 130);
             MapGuidLabel.Name = "MapGuidLabel";
             MapGuidLabel.Size = new Size(80, 13);
             MapGuidLabel.TabIndex = 6;
@@ -274,5 +295,6 @@
         private Label label5;
         private TextBox MapImageIdTextBox;
         private FontAwesome.Sharp.IconButton CreateMapButton;
+        private FontAwesome.Sharp.IconButton CreateMapArticleButton;
     }
 }

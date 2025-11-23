@@ -285,5 +285,15 @@ namespace RealmStudio
                     break;
             }
         }
+
+        private void CreateDescriptionArticleButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CreateDescriptionArticleButton_MouseHover(object sender, EventArgs e)
+        {
+            TOOLTIP.Show("Open the World Anvil Article Integration dialog to create a World Anvil article.", this, new Point(CreateDescriptionArticleButton.Left, CreateDescriptionArticleButton.Top - 20), 3000);
+        }
     }
 }
