@@ -30,12 +30,12 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DescriptionEditor));
             DescriptionEditorOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            CreateDescriptionArticleButton = new FontAwesome.Sharp.IconButton();
             CharacteristicsLabel = new Label();
             MapObjectDetailButton = new FontAwesome.Sharp.IconButton();
             DescriptionAIButton = new FontAwesome.Sharp.IconButton();
             DescriptionTextbox = new TextBox();
             CloseDescriptionButton = new Button();
-            CreateDescriptionArticleButton = new FontAwesome.Sharp.IconButton();
             DescriptionEditorOverlay.SuspendLayout();
             SuspendLayout();
             // 
@@ -64,25 +64,43 @@
             DescriptionEditorOverlay.Sizable = true;
             DescriptionEditorOverlay.Size = new Size(598, 430);
             DescriptionEditorOverlay.SmartBounds = true;
-            DescriptionEditorOverlay.StartPosition = FormStartPosition.WindowsDefaultLocation;
+            DescriptionEditorOverlay.StartPosition = FormStartPosition.CenterParent;
             DescriptionEditorOverlay.TabIndex = 0;
             DescriptionEditorOverlay.Text = "Description";
             DescriptionEditorOverlay.TitleColor = Color.FromArgb(223, 219, 210);
             // 
+            // CreateDescriptionArticleButton
+            // 
+            CreateDescriptionArticleButton.Font = new Font("Segoe UI", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            CreateDescriptionArticleButton.ForeColor = SystemColors.ControlDarkDark;
+            CreateDescriptionArticleButton.IconChar = FontAwesome.Sharp.IconChar.FileUpload;
+            CreateDescriptionArticleButton.IconColor = Color.FromArgb(140, 10, 10);
+            CreateDescriptionArticleButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            CreateDescriptionArticleButton.IconSize = 28;
+            CreateDescriptionArticleButton.Location = new Point(155, 351);
+            CreateDescriptionArticleButton.Name = "CreateDescriptionArticleButton";
+            CreateDescriptionArticleButton.Size = new Size(60, 60);
+            CreateDescriptionArticleButton.TabIndex = 98;
+            CreateDescriptionArticleButton.Text = "Article";
+            CreateDescriptionArticleButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            CreateDescriptionArticleButton.UseVisualStyleBackColor = true;
+            CreateDescriptionArticleButton.Click += CreateDescriptionArticleButton_Click;
+            CreateDescriptionArticleButton.MouseHover += CreateDescriptionArticleButton_MouseHover;
+            // 
             // CharacteristicsLabel
             // 
             CharacteristicsLabel.AutoEllipsis = true;
+            CharacteristicsLabel.BackColor = SystemColors.ButtonFace;
             CharacteristicsLabel.ForeColor = SystemColors.ControlDarkDark;
-            CharacteristicsLabel.Location = new Point(155, 351);
+            CharacteristicsLabel.Location = new Point(221, 351);
             CharacteristicsLabel.Name = "CharacteristicsLabel";
-            CharacteristicsLabel.Size = new Size(323, 23);
+            CharacteristicsLabel.Size = new Size(288, 60);
             CharacteristicsLabel.TabIndex = 97;
-            CharacteristicsLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // MapObjectDetailButton
             // 
             MapObjectDetailButton.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
-            MapObjectDetailButton.IconColor = Color.Black;
+            MapObjectDetailButton.IconColor = SystemColors.Highlight;
             MapObjectDetailButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             MapObjectDetailButton.IconSize = 36;
             MapObjectDetailButton.Location = new Point(89, 351);
@@ -133,24 +151,6 @@
             CloseDescriptionButton.UseVisualStyleBackColor = true;
             CloseDescriptionButton.Click += CloseDescriptionButton_Click;
             // 
-            // CreateDescriptionArticleButton
-            // 
-            CreateDescriptionArticleButton.Font = new Font("Segoe UI", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            CreateDescriptionArticleButton.ForeColor = SystemColors.ControlDarkDark;
-            CreateDescriptionArticleButton.IconChar = FontAwesome.Sharp.IconChar.FileUpload;
-            CreateDescriptionArticleButton.IconColor = Color.FromArgb(140, 10, 10);
-            CreateDescriptionArticleButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            CreateDescriptionArticleButton.IconSize = 28;
-            CreateDescriptionArticleButton.Location = new Point(155, 351);
-            CreateDescriptionArticleButton.Name = "CreateDescriptionArticleButton";
-            CreateDescriptionArticleButton.Size = new Size(60, 60);
-            CreateDescriptionArticleButton.TabIndex = 98;
-            CreateDescriptionArticleButton.Text = "Article";
-            CreateDescriptionArticleButton.TextImageRelation = TextImageRelation.TextAboveImage;
-            CreateDescriptionArticleButton.UseVisualStyleBackColor = true;
-            CreateDescriptionArticleButton.Click += CreateDescriptionArticleButton_Click;
-            CreateDescriptionArticleButton.MouseHover += CreateDescriptionArticleButton_MouseHover;
-            // 
             // DescriptionEditor
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -160,6 +160,7 @@
             FormBorderStyle = FormBorderStyle.None;
             MinimumSize = new Size(261, 65);
             Name = "DescriptionEditor";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Description";
             TransparencyKey = Color.Fuchsia;
             DescriptionEditorOverlay.ResumeLayout(false);

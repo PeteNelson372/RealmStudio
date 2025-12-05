@@ -9,7 +9,7 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>false</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>1.2025.0-alpha-3230</Version>
+    <Version>1.2025.0-alpha-3293</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
@@ -29,8 +29,8 @@
     <UseWPF>True</UseWPF>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <ApplicationIcon>realm_studio_icon_1024x1024_g3u_icon.ico</ApplicationIcon>
-    <AssemblyVersion>1.2025.325.1693</AssemblyVersion>
-    <FileVersion>1.2025.325.1693</FileVersion> 
+    <AssemblyVersion>1.2025.339.1693</AssemblyVersion>
+    <FileVersion>1.2025.339.1693</FileVersion> 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -168,8 +168,8 @@
     <PackageReference Include="Delaunator" Version="1.0.11" />
     <PackageReference Include="FontAwesome" Version="4.7.0" />
     <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
-    <PackageReference Include="HelixToolkit" Version="3.1.1" />
-    <PackageReference Include="HelixToolkit.Wpf" Version="3.1.1" />
+    <PackageReference Include="HelixToolkit" Version="3.1.2" />
+    <PackageReference Include="HelixToolkit.Wpf" Version="3.1.2" />
     <PackageReference Include="HelixToolkit.Wpf.Input" Version="2.27.3" />
     <PackageReference Include="log4net" Version="3.2.0" />
     <PackageReference Include="ReaLTaiizor" Version="3.8.1.4" />

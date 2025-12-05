@@ -21,6 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using RealmStudio.WorldAnvilIntegration;
 using RealmStudio.Properties;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
@@ -488,7 +489,7 @@ namespace RealmStudio
 
         private void WorlAnvilIntegrationButton_Click(object sender, EventArgs e)
         {
-            WorldAnvilIntegration worldAnvilIntegration = new();
+            WorldAnvilIntegration.WorldAnvilIntegrationParams worldAnvilIntegration = new();
             worldAnvilIntegration.ShowDialog(this);
         }
 

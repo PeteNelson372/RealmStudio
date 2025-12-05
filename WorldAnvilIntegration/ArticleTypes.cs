@@ -21,18 +21,39 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+namespace RealmStudio.WorldAnvilIntegration
 {
-    public partial class WorldAnvilArticleIntegration : Form
+    public enum ArticleType
     {
-        public WorldAnvilArticleIntegration()
-        {
-            InitializeComponent();
-        }
-
-        private void CloseArticleIntegrationButton_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
+        Generic,
+        Building,
+        Character,
+        Country,
+        Military,
+        Deity,
+        Geography,
+        Item,
+        Organization,
+        Religion,
+        Species,
+        Vehicle,
+        Settlement,
+        Condition,
+        Conflict,
+        Document,
+        Culture,
+        Language,
+        Material,
+        MilitaryFormation,
+        Myth,
+        NaturalLaw,
+        Plot,
+        Profession,
+        Prose,
+        Title,
+        Spell,
+        Technology,
+        Tradition,
+        SessionReport,
     }
 }

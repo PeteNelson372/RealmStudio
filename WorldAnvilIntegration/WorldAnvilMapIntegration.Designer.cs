@@ -1,4 +1,4 @@
-﻿namespace RealmStudio
+﻿namespace RealmStudio.WorldAnvilIntegration
 {
     partial class WorldAnvilMapIntegration
     {

@@ -67,7 +67,7 @@
             MapObjectDetailsOverlay.Sizable = true;
             MapObjectDetailsOverlay.Size = new Size(388, 364);
             MapObjectDetailsOverlay.SmartBounds = true;
-            MapObjectDetailsOverlay.StartPosition = FormStartPosition.WindowsDefaultLocation;
+            MapObjectDetailsOverlay.StartPosition = FormStartPosition.CenterParent;
             MapObjectDetailsOverlay.TabIndex = 0;
             MapObjectDetailsOverlay.Text = "Object Characteristics";
             MapObjectDetailsOverlay.TitleColor = Color.FromArgb(223, 219, 210);
@@ -172,6 +172,7 @@
             FormBorderStyle = FormBorderStyle.None;
             MinimumSize = new Size(261, 65);
             Name = "MapObjectDetails";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Object Characteristics";
             TransparencyKey = Color.Fuchsia;
             MapObjectDetailsOverlay.ResumeLayout(false);

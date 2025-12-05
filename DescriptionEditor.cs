@@ -1,4 +1,7 @@
-﻿using System.ComponentModel;
+﻿using RealmStudio.WorldAnvilIntegration;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Windows.ApplicationModel;
 /**************************************************************************************************************************
 * Copyright 2025, Peter R. Nelson
 *
@@ -38,6 +41,8 @@ namespace RealmStudio
 
         private string _descriptionText = string.Empty;
 
+
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string DescriptionText
         {
@@ -55,6 +60,20 @@ namespace RealmStudio
             MapObjectName = mapObjectName;
             DescriptionText = existingDescription;
             DescriptionTextbox.Text = existingDescription;
+
+            if (string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiToken) ||
+                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) ||
+                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId) ||
+                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WorldId))
+            {
+                CreateDescriptionArticleButton.Enabled = false;
+                CreateDescriptionArticleButton.Visible = false;
+            }
+            else
+            {
+                CreateDescriptionArticleButton.Enabled = true;
+                CreateDescriptionArticleButton.Visible = true;
+            }
         }
 
         private void CloseDescriptionButton_Click(object sender, EventArgs e)
@@ -158,8 +177,8 @@ namespace RealmStudio
 
                 try
                 {
-                    Cursor = Cursors.WaitCursor;
-                    GetMapObjectDescription(query);
+                    DescriptionTextbox.Text = "Generating description. Please wait...";
+                    _ = GetMapObjectDescription(query);
                 }
                 catch (Exception ex)
                 {
@@ -168,10 +187,14 @@ namespace RealmStudio
                 finally
                 {
                     DescriptionTextbox.Refresh();
-                    Cursor = Cursors.Default;
                 }
-
             }
+        }
+
+        private void UpdateDescriptionTextbox(object? sender, EventArgs e)
+        {
+            DescriptionTextbox.Text += ".";
+            DescriptionTextbox.Refresh();
         }
 
         private void DescriptionAIButton_MouseHover(object sender, EventArgs e)
@@ -204,8 +227,15 @@ namespace RealmStudio
             }
         }
 
-        private async void GetMapObjectDescription(string query)
+        private async Task GetMapObjectDescription(string query)
         {
+            System.Windows.Forms.Timer DescriptionUpdateTimer = new();
+
+            DescriptionUpdateTimer.Tick += new EventHandler(UpdateDescriptionTextbox);
+            DescriptionUpdateTimer.Interval = 500; // 500 milliseconds
+
+            DescriptionUpdateTimer.Start();
+
             try
             {
                 string? token = await AiIntegration.GetJwtTokenAsync();
@@ -222,6 +252,7 @@ namespace RealmStudio
                         {
                             DescriptionText = description;
                             Invoke(() => DescriptionTextbox.Text = DescriptionText);
+                            Cursor = Cursors.Default;
                         }
                     }
                     else
@@ -236,7 +267,12 @@ namespace RealmStudio
             }
             catch (Exception ex)
             {
+                Cursor = Cursors.Default;
                 MessageBox.Show($"Error: {ex.Message}");
+            }
+            finally
+            {
+                DescriptionUpdateTimer.Stop();
             }
         }
 
@@ -288,7 +324,11 @@ namespace RealmStudio
 
         private void CreateDescriptionArticleButton_Click(object sender, EventArgs e)
         {
-
+            WorldAnvilArticleIntegration articleIntegrationForm = new();
+            articleIntegrationForm.WorldAnvilWorldId = IntegrationManager.WorldAnvilParameters.WorldId ?? string.Empty;
+            articleIntegrationForm.ArticleContent = DescriptionTextbox.Text;
+            articleIntegrationForm.ArticleTitle = MapObjectName;
+            articleIntegrationForm.ShowDialog(this);
         }
 
         private void CreateDescriptionArticleButton_MouseHover(object sender, EventArgs e)

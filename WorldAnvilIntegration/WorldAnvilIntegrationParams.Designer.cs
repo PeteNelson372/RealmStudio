@@ -1,6 +1,6 @@
-﻿namespace RealmStudio
+﻿namespace RealmStudio.WorldAnvilIntegration
 {
-    partial class WorldAnvilIntegration
+    partial class WorldAnvilIntegrationParams
     {
         /// <summary>
         /// Required designer variable.

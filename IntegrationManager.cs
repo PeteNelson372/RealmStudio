@@ -21,6 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using RealmStudio.WorldAnvilIntegration;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using WorldAnvilIntegrationLib;

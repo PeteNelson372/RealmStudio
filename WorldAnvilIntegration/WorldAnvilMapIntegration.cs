@@ -26,7 +26,7 @@ using System.IO;
 using System.Text.Json;
 using WorldAnvilIntegrationLib;
 
-namespace RealmStudio
+namespace RealmStudio.WorldAnvilIntegration
 {
     public partial class WorldAnvilMapIntegration : Form
     {
