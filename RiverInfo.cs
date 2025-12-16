@@ -103,7 +103,7 @@ namespace RealmStudio
 
         private void RiverDescriptionButton_Click(object sender, EventArgs e)
         {
-            DescriptionEditor descriptionEditor = new(typeof(River), NameTextbox.Text, River.MapRiverDescription);
+            DescriptionEditor descriptionEditor = new(River, River.MapRiverDescription);
             descriptionEditor.DescriptionEditorOverlay.Text = "River Description Editor";
 
             DialogResult r = descriptionEditor.ShowDialog(this);

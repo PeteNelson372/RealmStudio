@@ -46,7 +46,7 @@ namespace RealmStudio
 
         private void RealmDescriptionButton_Click(object sender, EventArgs e)
         {
-            DescriptionEditor descriptionEditor = new(typeof(RealmStudioMap), NameTextbox.Text, _realm.RealmDescription);
+            DescriptionEditor descriptionEditor = new(_realm, _realm.RealmDescription);
             descriptionEditor.DescriptionEditorOverlay.Text = "Realm Description Editor";
 
             DialogResult r = descriptionEditor.ShowDialog(this);

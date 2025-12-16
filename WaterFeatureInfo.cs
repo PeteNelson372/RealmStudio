@@ -92,7 +92,7 @@ namespace RealmStudio
 
         private void WaterFeatureDescriptionButton_Click(object sender, EventArgs e)
         {
-            DescriptionEditor descriptionEditor = new(typeof(WaterFeature), NameTextbox.Text, WaterFeature.WaterFeatureDescription);
+            DescriptionEditor descriptionEditor = new(WaterFeature, WaterFeature.WaterFeatureDescription);
             descriptionEditor.DescriptionEditorOverlay.Text = "Water Feature Description Editor";
 
             DialogResult r = descriptionEditor.ShowDialog(this);

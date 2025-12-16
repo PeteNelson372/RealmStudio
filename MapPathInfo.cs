@@ -314,7 +314,7 @@ namespace RealmStudio
 
         private void PathDescriptionButton_Click(object sender, EventArgs e)
         {
-            DescriptionEditor descriptionEditor = new(typeof(MapPath), NameTextbox.Text, MapPath.MapPathDescription);
+            DescriptionEditor descriptionEditor = new(MapPath, MapPath.MapPathDescription);
             descriptionEditor.DescriptionEditorOverlay.Text = "Path Description Editor";
 
             DialogResult r = descriptionEditor.ShowDialog(this);

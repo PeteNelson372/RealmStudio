@@ -94,6 +94,9 @@ namespace RealmStudio
         public int WorldAnvilImageId { get; set; } = 0;
 
         [XmlAttribute]
+        public string WorldAnvilArticleId { get; set; } = string.Empty;
+
+        [XmlAttribute]
         public string MapTheme { get; set; } = string.Empty;
 
         [XmlArray("MapLayers")]

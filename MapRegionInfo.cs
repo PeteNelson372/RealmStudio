@@ -173,7 +173,7 @@ namespace RealmStudio
 
         private void RegionDescriptionButton_Click(object sender, EventArgs e)
         {
-            DescriptionEditor descriptionEditor = new(typeof(MapRegion), NameTextbox.Text, MapRegion.RegionDescription);
+            DescriptionEditor descriptionEditor = new(MapRegion, MapRegion.RegionDescription);
             descriptionEditor.DescriptionEditorOverlay.Text = "Region Description Editor";
 
             DialogResult r = descriptionEditor.ShowDialog(this);

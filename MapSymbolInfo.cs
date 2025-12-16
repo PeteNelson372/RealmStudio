@@ -258,7 +258,7 @@ namespace RealmStudio
 
         private void MapSymbolDescriptionButton_Click(object sender, EventArgs e)
         {
-            DescriptionEditor descriptionEditor = new(typeof(MapSymbol), NameTextBox.Text, symbol.SymbolDescription);
+            DescriptionEditor descriptionEditor = new(symbol, symbol.SymbolDescription);
             descriptionEditor.DescriptionEditorOverlay.Text = "Map Symbol Description Editor";
 
             DialogResult r = descriptionEditor.ShowDialog(this);

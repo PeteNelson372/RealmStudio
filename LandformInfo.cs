@@ -313,7 +313,7 @@ namespace RealmStudio
 
         private void LandformDescriptionButton_Click(object sender, EventArgs e)
         {
-            DescriptionEditor descriptionEditor = new(typeof(Landform), NameTextbox.Text, Landform.LandformDescription);
+            DescriptionEditor descriptionEditor = new(Landform, Landform.LandformDescription);
             descriptionEditor.DescriptionEditorOverlay.Text = "Landform Description Editor";
 
             DialogResult r = descriptionEditor.ShowDialog(this);

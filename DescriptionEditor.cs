@@ -41,7 +41,10 @@ namespace RealmStudio
 
         private string _descriptionText = string.Empty;
 
+        private string _worldAnvilArticleId = string.Empty;
 
+        private MapComponent? _mapComponent;
+        private RealmStudioMap? _realmStudioMap;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string DescriptionText
@@ -53,11 +56,71 @@ namespace RealmStudio
             }
         }
 
-        public DescriptionEditor(Type mapObjectType, string mapObjectName, string existingDescription)
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public string WorldAnvilArticleId
+        {
+            get => _worldAnvilArticleId;
+            set
+            {
+                _worldAnvilArticleId = value;
+            }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public MapComponent? MapComponent
+        {
+            get => _mapComponent;
+            set
+            {
+                _mapComponent = value;
+            }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public RealmStudioMap? RealmStudioMap
+        {
+            get => _realmStudioMap;
+            set
+            {
+                _realmStudioMap = value;
+            }
+        }
+
+        public DescriptionEditor(MapComponent mapComponent, string existingDescription)
         {
             InitializeComponent();
+
+            MapComponent = mapComponent;
+            Type mapObjectType = mapComponent.GetType();
             MapObjectType = mapObjectType;
-            MapObjectName = mapObjectName;
+            MapObjectName = mapComponent.MapLayerComponents.FirstOrDefault()?.GetType().Name ?? mapObjectType.Name;
+            WorldAnvilArticleId = mapComponent.WorldAnvilArticleId;
+            DescriptionText = existingDescription;
+            DescriptionTextbox.Text = existingDescription;
+
+            if (string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiToken) ||
+                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) ||
+                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId) ||
+                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WorldId))
+            {
+                CreateDescriptionArticleButton.Enabled = false;
+                CreateDescriptionArticleButton.Visible = false;
+            }
+            else
+            {
+                CreateDescriptionArticleButton.Enabled = true;
+                CreateDescriptionArticleButton.Visible = true;
+            }
+        }
+
+        public DescriptionEditor(RealmStudioMap map, string existingDescription)
+        {
+            InitializeComponent();
+
+            Type mapObjectType = map.GetType();
+            MapObjectType = mapObjectType;
+            MapObjectName = map.MapName;
+            WorldAnvilArticleId = map.WorldAnvilArticleId;
             DescriptionText = existingDescription;
             DescriptionTextbox.Text = existingDescription;
 
@@ -328,7 +391,33 @@ namespace RealmStudio
             articleIntegrationForm.WorldAnvilWorldId = IntegrationManager.WorldAnvilParameters.WorldId ?? string.Empty;
             articleIntegrationForm.ArticleContent = DescriptionTextbox.Text;
             articleIntegrationForm.ArticleTitle = MapObjectName;
+            articleIntegrationForm.WorldAnvilArticleId = WorldAnvilArticleId;
+
+            if (!string.IsNullOrEmpty(WorldAnvilArticleId))
+            {
+                articleIntegrationForm.WorldAnvilArticleId = WorldAnvilArticleId;
+            }
+
             articleIntegrationForm.ShowDialog(this);
+
+            if (articleIntegrationForm.DialogResult != DialogResult.OK)
+            {
+                return;
+            }
+
+            if (MapComponent != null)
+            {
+                MapComponent.WorldAnvilArticleId = articleIntegrationForm.WorldAnvilArticleId;
+            }
+            else if (RealmStudioMap != null)
+            {
+                RealmStudioMap.WorldAnvilArticleId = articleIntegrationForm.WorldAnvilArticleId;
+            }
+            else
+            {
+                throw new InvalidOperationException("Either MapComponent or RealmStudioMap must be set.");
+            }
+
         }
 
         private void CreateDescriptionArticleButton_MouseHover(object sender, EventArgs e)

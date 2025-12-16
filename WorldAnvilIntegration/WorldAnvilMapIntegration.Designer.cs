@@ -103,7 +103,7 @@
             CreateMapArticleButton.TextImageRelation = TextImageRelation.TextAboveImage;
             CreateMapArticleButton.UseVisualStyleBackColor = true;
             CreateMapArticleButton.Click += CreateMapArticleButton_Click;
-            CreateMapArticleButton.MouseEnter += CreateMapArticleButton_MouseEnter;
+            CreateMapArticleButton.MouseHover += CreateMapArticleButton_MouseHover;
             // 
             // CreateMapButton
             // 

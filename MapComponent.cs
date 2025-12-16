@@ -78,6 +78,9 @@ namespace RealmStudio
         [XmlAttribute]
         public int Height { get; set; }
 
+        [XmlElement]
+        public string WorldAnvilArticleId { get; set; } = string.Empty;
+
         public bool IsSelected { get; set; }
 
         public abstract void Render(SKCanvas canvas);

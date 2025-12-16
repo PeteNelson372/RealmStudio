@@ -1,5 +1,7 @@
 ﻿using FontAwesome.Sharp;
 using System.ComponentModel;
+using System.Text.Json;
+using WorldAnvilIntegrationLib;
 /**************************************************************************************************************************
 * Copyright 2025, Peter R. Nelson
 *
@@ -34,7 +36,7 @@ namespace RealmStudio.WorldAnvilIntegration
         private string? _articleTitle;
         private ArticleType _articleType;
         private string? _worldAnvilWorldId;
-        private Guid? _worldAnvilArticleId;
+        private string? _worldAnvilArticleId = string.Empty;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal string? ArticleContent
@@ -61,7 +63,7 @@ namespace RealmStudio.WorldAnvilIntegration
             set { _worldAnvilWorldId = value; }
         }
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        internal Guid? WorldAnvilArticleId
+        internal string? WorldAnvilArticleId
         {
             get { return _worldAnvilArticleId; }
             set { _worldAnvilArticleId = value; }
@@ -89,7 +91,148 @@ namespace RealmStudio.WorldAnvilIntegration
 
         private void CreateDescriptionArticleButton_Click(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUsername) &&
+            !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId) &&
+            !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) &&
+            !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiToken) &&
+            !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WorldId))
+            {
+                if (string.IsNullOrWhiteSpace(ArticleTitleTextBox.Text))
+                {
+                    MessageBox.Show("Article title cannot be empty. Please enter a valid title.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
+                if (string.IsNullOrWhiteSpace(ArticleContentTextBox.Text))
+                {
+                    MessageBox.Show("Article content cannot be empty. Please enter valid content.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(WorldAnvilArticleId))
+                {
+                    CreateWorldAnvilArticle();
+                }
+                else
+                {
+                    UpdateWorldAnvilArticle();
+                }
+            }
+            else
+            {
+                MessageBox.Show("World Anvil integration parameters are not fully set. Please check your settings.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void UpdateWorldAnvilArticle()
+        {
+            try
+            {
+                WorldAnvilArticle? existingArticle = IntegrationManager.WorldAnvilApi.GetWorldAnvilArticleObjectById(WorldAnvilArticleId!, -1);
+
+                if (existingArticle != null && WorldAnvilArticleId != null)
+                {
+                    existingArticle.id = WorldAnvilArticleId;
+                    existingArticle.title = ArticleTitleTextBox.Text;
+                    existingArticle.content = ArticleContentTextBox.Text;
+                    existingArticle.entityClass = ArticleType.ToString();
+                    existingArticle.templateType = "article";
+                    existingArticle.world = new WorldAnvilWorld
+                    {
+                        id = IntegrationManager.WorldAnvilParameters.WorldId
+                    };
+
+                    string json = JsonSerializer.Serialize(existingArticle, IntegrationManager.JsonSerializerHelper.CamelCaseIgnoreEmptyOptions);
+
+                    // Parse the JSON text into a JsonDocument
+                    JsonDocument updatedArticle = JsonDocument.Parse(json);
+
+                    JsonElement articleRoot = updatedArticle.RootElement;
+                    Dictionary<string, string> articleFlatJson = WorldAnvilApiMethods.FlattenJson(articleRoot);
+
+                    articleFlatJson.TryGetValue("/title", out string? updatedArticleTitle);
+
+                    JsonDocument? responseDocument = IntegrationManager.WorldAnvilApi.UpdateArticle(WorldAnvilArticleId, updatedArticle);
+                    JsonElement updatedArticleRoot = responseDocument.RootElement;
+                    Dictionary<string, string> updatedArticleFlatJson = WorldAnvilApiMethods.FlattenJson(updatedArticleRoot);
+
+                    updatedArticleFlatJson.TryGetValue("/id", out string? updatedArticleId);
+
+                    if (Guid.TryParse(updatedArticleId, out Guid updatedArticleGuid))
+                    {
+                        if (updatedArticleGuid != Guid.Empty)
+                        {
+                            MessageBox.Show("World Anvil Article updated successfully.\nArticle Title: " + updatedArticleTitle + "\nArticle ID: " + updatedArticleId, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            WorldAnvilArticleId = updatedArticleId;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to update World Anvil Article.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("The selected World Anvil Article to be updated could not be found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while updating the World Anvil article: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void CreateWorldAnvilArticle()
+        {
+            try
+            {
+                WorldAnvilArticle article = new()
+                {
+                    title = ArticleTitleTextBox.Text,
+                    content = ArticleContentTextBox.Text,
+                    entityClass = ArticleType.ToString(),
+                    templateType = "article",
+                    world = new WorldAnvilWorld
+                    {
+                        id = IntegrationManager.WorldAnvilParameters.WorldId
+                    },
+                };
+
+                string json = JsonSerializer.Serialize(article, IntegrationManager.JsonSerializerHelper.CamelCaseIgnoreEmptyOptions);
+
+                // Parse the JSON text into a JsonDocument
+                JsonDocument createdArticle = JsonDocument.Parse(json);
+
+                JsonElement articleRoot = createdArticle.RootElement;
+                Dictionary<string, string> articleFlatJson = WorldAnvilApiMethods.FlattenJson(articleRoot);
+
+                articleFlatJson.TryGetValue("/title", out string? createdArticleTitle);
+
+                JsonDocument? responseDocument = IntegrationManager.WorldAnvilApi.CreateArticle(createdArticle);
+                JsonElement createdArticleRoot = responseDocument.RootElement;
+                Dictionary<string, string> createdArticleFlatJson = WorldAnvilApiMethods.FlattenJson(createdArticleRoot);
+
+                createdArticleFlatJson.TryGetValue("/id", out string? createdArticleId);
+
+                if (Guid.TryParse(createdArticleId, out Guid createdArticleGuid))
+                {
+                    if (createdArticleGuid != Guid.Empty)
+                    {
+                        MessageBox.Show("World Anvil Article created successfully.\nArticle Title: " + createdArticleTitle + "\nArticle ID: " + createdArticleId, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        WorldAnvilArticleId = createdArticleId;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to create World Anvil Article.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while creating the World Anvil article: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void CreateDescriptionArticleButton_MouseHover(object sender, EventArgs e)

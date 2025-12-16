@@ -9,7 +9,7 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>false</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>1.2025.0-alpha-3293</Version>
+    <Version>1.2025.0-alpha-3296</Version>
     <SignAssembly>False</SignAssembly>
     <StartupObject>RealmStudio.Program</StartupObject>
     <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
@@ -29,8 +29,8 @@
     <UseWPF>True</UseWPF>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <ApplicationIcon>realm_studio_icon_1024x1024_g3u_icon.ico</ApplicationIcon>
-    <AssemblyVersion>1.2025.339.1693</AssemblyVersion>
-    <FileVersion>1.2025.339.1693</FileVersion> 
+    <AssemblyVersion>1.2025.350.1693</AssemblyVersion>
+    <FileVersion>1.2025.350.1693</FileVersion> 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -182,7 +182,7 @@
     <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.119.1" />
     <PackageReference Include="SkiaSharp.Views.WPF" Version="3.119.1" />
     <PackageReference Include="Svg.Skia" Version="3.2.1" />
-    <PackageReference Include="System.Management" Version="10.0.0" />
+    <PackageReference Include="System.Management" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>

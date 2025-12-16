@@ -77,7 +77,7 @@ namespace RealmStudio.WorldAnvilIntegration
                                 CreateMapArticleButton.Enabled = false;
                             }
                         }
-                    }                    
+                    }
                 }
                 else
                 {
@@ -463,7 +463,7 @@ namespace RealmStudio.WorldAnvilIntegration
 
         }
 
-        private void CreateMapArticleButton_MouseEnter(object sender, EventArgs e)
+        private void CreateMapArticleButton_MouseHover(object sender, EventArgs e)
         {
 
         }
