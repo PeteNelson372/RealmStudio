@@ -252,7 +252,6 @@ namespace RealmStudio
                 cmd.DoOperation();
 
                 TOOLTIP.Show("Map Symbol painted", SymbolInfoGroup, new Point(StatusLabel.Left, StatusLabel.Top), 3000);
-
             }
         }
 

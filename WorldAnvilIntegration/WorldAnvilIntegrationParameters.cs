@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 namespace RealmStudio.WorldAnvilIntegration
 {
-    internal class WorldAnvilIntegrationParameters
+    internal sealed class WorldAnvilIntegrationParameters
     {
         private string? _apiToken;          // the Realm Studio user API token taken from the World Anvil User API Tokens page at https://www.worldanvil.com/api/auth/key
                                             // this token is used to retrieve the World Anvil user id and username from the World Anvil API /identity endpoint

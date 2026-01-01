@@ -122,7 +122,6 @@
             ArticleContentTextBox.Location = new Point(455, 181);
             ArticleContentTextBox.Multiline = true;
             ArticleContentTextBox.Name = "ArticleContentTextBox";
-            ArticleContentTextBox.ReadOnly = true;
             ArticleContentTextBox.ScrollBars = ScrollBars.Vertical;
             ArticleContentTextBox.Size = new Size(322, 166);
             ArticleContentTextBox.TabIndex = 104;

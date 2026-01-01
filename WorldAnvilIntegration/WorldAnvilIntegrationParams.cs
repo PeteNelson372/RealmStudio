@@ -102,9 +102,17 @@ public partial class WorldAnvilIntegrationParams : Form
 
     private bool ValidateUserApiToken(string userApiToken)
     {
-        Task apiKeyTask = Task.Run(() => IntegrationManager.WorldAnvilApi.GetWorldAnvilAPIKey());
+        try
+        {
+            Task apiKeyTask = Task.Run(() => IntegrationManager.WorldAnvilApi.GetWorldAnvilAPIKey());
 
-        apiKeyTask.Wait();
+            apiKeyTask.Wait();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Error getting World Anvil API Key: " + ex.Message, "API Key Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
 
         string? userId = string.Empty;
         try
@@ -114,7 +122,7 @@ public partial class WorldAnvilIntegrationParams : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Error retrieving World Anvil API Key: " + ex.Message, "API Key Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Error retrieving World Anvil user ID: " + ex.Message, "User ID Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
@@ -124,7 +132,7 @@ public partial class WorldAnvilIntegrationParams : Form
             return false;
         }
 
-        JsonDocument? user = IntegrationManager.WorldAnvilApi.GetUserById(userId, 2);
+        WorldAnvilUser? user = IntegrationManager.WorldAnvilApi.GetWorldAnvilUserObjectById(userId, 2);
 
         if (user is null)
         {
@@ -132,40 +140,32 @@ public partial class WorldAnvilIntegrationParams : Form
             return false;
         }
 
-        Dictionary<string, string> userFlatJson = WorldAnvilApiMethods.FlattenJson(user.RootElement);
-        userFlatJson.TryGetValue("/username", out string? username);
-
-        userFlatJson.TryGetValue("/id", out string? retrievedUserId);
-
-        if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(retrievedUserId))
+        if (!string.IsNullOrEmpty(user.username) && !string.IsNullOrEmpty(user.id))
         {
             APITokenValidButton.IconChar = FontAwesome.Sharp.IconChar.Check;
             APITokenValidButton.IconColor = Color.ForestGreen;
 
-            UserNameLabel.Text = username;
-            UserIdLabel.Text = retrievedUserId;
+            UserNameLabel.Text = user.username;
+            UserIdLabel.Text = user.id;
 
-            List<JsonDocument> userWorlds = IntegrationManager.WorldAnvilApi.ListWorldsForUser(retrievedUserId, 100, 0);
+            List<WorldAnvilWorld> userWorlds = IntegrationManager.WorldAnvilApi.ListWorldObjectsForUser(user.id, 100, 0);
 
             UserWorldsList.Items.Clear();
 
-            foreach (JsonDocument world in userWorlds)
+            foreach (WorldAnvilWorld world in userWorlds)
             {
-                Dictionary<string, string> worldFlatJson = WorldAnvilApiMethods.FlattenJson(world.RootElement);
-                worldFlatJson.TryGetValue("/title", out string? worldTitle);
-                worldFlatJson.TryGetValue("/id", out string? worldId);
-                if (!string.IsNullOrEmpty(worldTitle) && !string.IsNullOrEmpty(worldId))
+                if (!string.IsNullOrEmpty(world.title) && !string.IsNullOrEmpty(world.id))
                 {
-                    ListViewItem item = new(worldTitle);
-                    item.SubItems.Add(worldId);
+                    ListViewItem item = new(world.title);
+                    item.SubItems.Add(world.id);
                     UserWorldsList.Items.Add(item);
                 }
             }
 
             IntegrationManager.WorldAnvilParameters.ApiToken = userApiToken;
             IntegrationManager.WorldAnvilParameters.ApiKey = IntegrationManager.WorldAnvilApi.WorldAnvilAPIKey;
-            IntegrationManager.WorldAnvilParameters.WAUserId = retrievedUserId;
-            IntegrationManager.WorldAnvilParameters.WAUsername = username;
+            IntegrationManager.WorldAnvilParameters.WAUserId = user.id;
+            IntegrationManager.WorldAnvilParameters.WAUsername = user.username;
 
             Settings.Default.WorldAnvilApiToken = userApiToken;
             Settings.Default.Save();

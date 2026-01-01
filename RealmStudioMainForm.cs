@@ -2268,6 +2268,15 @@ namespace RealmStudio
 
                 DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
+
+                // if World Anvil integration is enabled, check if this map is linked to a World Anvil map
+                // and load descriptions, etc. from World Anvil
+
+                if (Settings.Default.EnableWAIntegration && !string.IsNullOrEmpty(Settings.Default.WorldAnvilApiToken))
+                {
+                    LoadWorldAnvilMapDataForCurrentMap();
+                }
+
                 SKGLRenderControl.Invalidate();
             }
             catch
@@ -2291,6 +2300,60 @@ namespace RealmStudio
             finally
             {
                 Cursor = Cursors.Default;
+            }
+        }
+
+        private static void LoadWorldAnvilMapDataForCurrentMap()
+        {
+            try
+            {
+                string WAApiToken = Settings.Default.WorldAnvilApiToken;
+
+                if (!string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUsername) &&
+                    !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId) &&
+                    !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) &&
+                    !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiToken) &&
+                    MapStateMediator.CurrentMap.WorldAnvilWorldId != Guid.Empty &&
+                    MapStateMediator.CurrentMap.WorldAnvilMapId != Guid.Empty)
+                {
+                    WorldAnvilUser? WAUser = IntegrationManager.WorldAnvilApi.GetWorldAnvilUserObjectById(
+                        IntegrationManager.WorldAnvilParameters.WAUserId, 0);
+
+                    if (WAUser != null)
+                    {
+                        Guid? WAMapId = MapStateMediator.CurrentMap.WorldAnvilMapId;
+                        string? waMapId = WAMapId?.ToString();
+
+                        if (WAMapId != null && WAMapId != Guid.Empty && !string.IsNullOrEmpty(waMapId))
+                        {
+                            WorldAnvilMap? waMap = IntegrationManager.WorldAnvilApi.GetWorldAnvilMapObjectById(waMapId, 0);
+                            if (waMap != null)
+                            {
+                                // load map description from World Anvil
+                                MapStateMediator.CurrentMap.RealmDescription = waMap.description ?? string.Empty;
+                            }
+
+                            foreach (Landform landform in MapStateMediator.CurrentMap.MapLayers[MapBuilder.LANDFORMLAYER].MapLayerComponents.OfType<Landform>())
+                            {
+                                if (!string.IsNullOrEmpty(landform.WorldAnvilArticleId))
+                                {
+                                    WorldAnvilArticle? waArticle = IntegrationManager.WorldAnvilApi.GetWorldAnvilArticleObjectById(landform.WorldAnvilArticleId, 0);
+                                    if (waArticle != null)
+                                    {
+                                        // load place description from World Anvil
+                                        landform.LandformDescription = waArticle.content ?? string.Empty;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                Program.LOGGER.Error(ex);
             }
         }
 
