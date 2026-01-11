@@ -21,8 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.WorldAnvilIntegration;
 using RealmStudio.Properties;
+using RealmStudio.WorldAnvilIntegration;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Diagnostics;
@@ -39,9 +39,6 @@ namespace RealmStudio
     {
         private readonly string RELEASE_STATE = "Pre-Release";
 
-        private int MAP_WIDTH = MapBuilder.MAP_DEFAULT_WIDTH;
-        private int MAP_HEIGHT = MapBuilder.MAP_DEFAULT_HEIGHT;
-
         private static System.Timers.Timer? LOCATION_UPDATE_TIMER;
 
         internal static readonly ToolTip TOOLTIP = new();
@@ -49,6 +46,8 @@ namespace RealmStudio
         public static readonly NameGeneratorConfiguration NAME_GENERATOR_CONFIG = new();
 
         private readonly AppSplashScreen SPLASH_SCREEN = new();
+
+        private readonly OpenCreateMap OPEN_CREATE_MAP_DIALOG = new();
 
         private static string MapCommandLinePath = string.Empty;
 
@@ -271,6 +270,11 @@ namespace RealmStudio
             }
 
             SPLASH_SCREEN.ShowDialog(this);
+
+            if (string.IsNullOrEmpty(MapCommandLinePath))
+            {
+                OPEN_CREATE_MAP_DIALOG.ShowDialog(this);
+            }
         }
 
         private void RealmStudioMainForm_Shown(object sender, EventArgs e)
@@ -305,21 +309,6 @@ namespace RealmStudio
 
             LogoPictureBox.Hide();
 
-            if (!string.IsNullOrEmpty(MapCommandLinePath))
-            {
-                OpenMap(MapCommandLinePath);
-            }
-            else
-            {
-                // this creates the MapStateMediator.CurrentMap
-                DialogResult result = OpenRealmConfigurationDialog();
-
-                if (result != DialogResult.OK)
-                {
-                    Application.Exit();
-                }
-            }
-
             MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
 
             PopulateControlsWithAssets(assetCount);
@@ -327,6 +316,35 @@ namespace RealmStudio
             LoadNameGeneratorConfigurationDialog();
 
             Activate();
+
+            if (!string.IsNullOrEmpty(MapCommandLinePath))
+            {
+                OpenMap(MapCommandLinePath);
+            }
+            else if (OPEN_CREATE_MAP_DIALOG.MapRoot != null)
+            {
+                try
+                {
+                    if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
+                    {
+                        OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
+                    }
+                    else
+                    {
+                        // create a new map
+                        CreateNewMap();
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Could not open or create selected map.");
+                    Application.Exit();
+                }
+            }
+            else
+            {
+                Application.Exit();
+            }
 
             ApplicationTimerManager.StartAutosaveTimer();
 
@@ -338,9 +356,176 @@ namespace RealmStudio
             }
 
             SKGLRenderControl.Invalidate();
-            Refresh();
 
             Cursor = Cursors.Default;
+        }
+
+        private void FinalizeOpenedMap()
+        {
+            ArgumentNullException.ThrowIfNull(OceanManager.OceanMediator);
+            ArgumentNullException.ThrowIfNull(FrameManager.FrameMediator);
+
+            MapRenderHScroll.Maximum = MapStateMediator.CurrentMap.MapWidth;
+            MapRenderVScroll.Maximum = MapStateMediator.CurrentMap.MapHeight;
+
+            MapRenderHScroll.Value = 0;
+            MapRenderVScroll.Value = 0;
+
+            if (string.IsNullOrEmpty(MapStateMediator.CurrentMap.MapTheme))
+            {
+                MapStateMediator.CurrentMap.MapTheme = AssetManager.DEFAULT_THEME_NAME;
+            }
+
+            MapTheme? theme = AssetManager.THEME_LIST.FirstOrDefault(t => t.ThemeName == MapStateMediator.CurrentMap.MapTheme);
+
+            if (theme != null)
+            {
+                // apply the theme to the map
+                ThemeFilter tf = new();
+                ThemeManager.ApplyTheme(theme, tf);
+            }
+
+
+            // theme is applied and map is loaded, so set any values in the map that are not set when it is loaded, and then
+            // set the UI controls to match the values in the map
+
+            // maps store scale and opacity values as the scale value;
+            // mediators store them as the values used to scale and set opacity of the bitmap
+            // the mediator translates trackbar value to/from the scale and opacity values for the bitmap
+
+            // *** INITIALIZE BACKGROUND ***
+            // set background texture index from the background texture bitmap
+            // set background texture name label to match the name in the map
+            // set background texture picture to match the picture in the map,
+            // set background texture scale trackbar and background mirror switch
+
+            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
+
+            if (baseLayer.MapLayerComponents.Count > 0)
+            {
+                BackgroundMediator.Initialize(
+                    BackgroundMediator.BackgroundTextureIndex,
+                    ((MapImage)baseLayer.MapLayerComponents[0]).Scale,
+                    ((MapImage)baseLayer.MapLayerComponents[0]).MirrorImage);
+            }
+
+            // *** INITIALIZE OCEAN ***
+            // set ocean texture index from the ocean texture bitmap
+            // set ocean texture name label to match the name in the map (done in Initialize)
+            // set ocean texture picture to match the picture in the map (done in Initialize)
+            // set ocean texture scale trackbar, ocean opacity trackbar, and ocean mirror switch
+            // set paint objects on LayerPaointStroke objects in the ocean drawing layer
+
+            MapLayer oceanLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
+            MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANDRAWINGLAYER);
+
+            if (oceanLayer.MapLayerComponents.Count > 0)
+            {
+                int oceanTextureIndex = -1;
+
+                if (string.IsNullOrEmpty(((MapImage)oceanLayer.MapLayerComponents[0]).ImageName) && theme != null && theme.OceanTexture != null)
+                {
+                    // no ocean texture selected; set to theme default
+                    ((MapImage)oceanLayer.MapLayerComponents[0]).ImageName = theme.OceanTexture.TextureName;
+                }
+
+                for (int i = 0; i < OceanManager.OceanMediator.OceanTextureList.Count; i++)
+                {
+                    if (OceanManager.OceanMediator.OceanTextureList[i].TextureName == ((MapImage)oceanLayer.MapLayerComponents[0]).ImageName)
+                    {
+                        oceanTextureIndex = i;
+                        break;
+                    }
+                }
+
+                OceanMediator.Initialize(
+                    oceanTextureIndex,
+                    ((MapImage)oceanLayer.MapLayerComponents[0]).ImageName,
+                    ((MapImage)oceanLayer.MapLayerComponents[0]).Scale,
+                    ((MapImage)oceanLayer.MapLayerComponents[0]).Opacity,
+                    ((MapImage)oceanLayer.MapLayerComponents[0]).MirrorImage);
+
+                OceanManager.ApplyOceanTexture();
+            }
+
+            // finalize loading of ocean drawing layer
+            for (int i = 0; i < oceanDrawingLayer.MapLayerComponents.Count; i++)
+            {
+                if (oceanDrawingLayer.MapLayerComponents[i] is LayerPaintStroke paintStroke)
+                {
+                    paintStroke.ParentMap = MapStateMediator.CurrentMap;
+
+                    if (!paintStroke.Erase)
+                    {
+                        paintStroke.ShaderPaint = PaintObjects.OceanPaint;
+                    }
+                    else
+                    {
+                        paintStroke.ShaderPaint = PaintObjects.OceanEraserPaint;
+                    }
+                }
+            }
+
+
+            // *** INITIALIZE LANDFORMS ***
+            // landform texture index and other UI control values come from the selected theme
+            LandformManager.FinalizeLandforms(SKGLRenderControl);
+
+            // *** INITIALIZE WATER FEATURES ***
+            // water feature UI control values come from the selected theme
+            WaterFeatureManager.FinalizeWaterFeatures();
+            WaterFeatureManager.FinalizeWindroses();
+
+            // *** INITIALIZE PATHS ***
+            // path UI control values come from the selected theme
+            PathManager.FinalizeMapPaths();
+
+            // *** INITIALIZE SYMBOLS ***
+            // symbol UI control values come from the selected theme
+            SymbolManager.FinalizeMapSymbols();
+
+            // *** INITIALIZE LABELS AND BOXES ***
+            // label UI control values come from the selected theme
+            BoxManager.FinalizeMapBoxes();
+
+            // *** INITIALIZE OVERLAYS ***
+            // *** FINALIZE MAP FRAME ***
+            MapStateMediator.CurrentMapFrame = (PlacedMapFrame?)FrameManager.GetComponentById(Guid.Empty);
+
+            if (MapStateMediator.CurrentMapFrame != null)
+            {
+                FrameManager.FrameMediator.Initialize(MapStateMediator.CurrentMapFrame.FrameScale,
+                    MapStateMediator.CurrentMapFrame.FrameTint,
+                    MapStateMediator.CurrentMapFrame.FrameEnabled);
+            }
+
+            // *** FINALIZE MAP GRID ***
+            MapGridManager.FinalizeMapGrid();
+
+            // *** FINALIZE MAP REGIONS ***
+            RegionManager.FinalizeMapRegions();
+
+            // *** FINALIZE MAP VIGNETTE ***
+            VignetteManager.FinalizeMapVignette();
+
+            HeightMapManager.ConvertMapImageToMapHeightMap(MapStateMediator.CurrentMap);
+
+            SetStatusText("Loaded: " + MapStateMediator.CurrentMap.MapName);
+
+            UpdateMapNameAndSize();
+
+            MapStateMediator.CurrentMap.IsSaved = true;
+
+            DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+
+            // if World Anvil integration is enabled, check if this map is linked to a World Anvil map
+            // and load descriptions, etc. from World Anvil
+
+            if (Settings.Default.EnableWAIntegration && !string.IsNullOrEmpty(Settings.Default.WorldAnvilApiToken))
+            {
+                LoadWorldAnvilMapDataForCurrentMap();
+            }
         }
 
         private void RealmStudioMainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -725,19 +910,97 @@ namespace RealmStudio
 
                     if (saveResult == DialogResult.OK)
                     {
-                        CreateNewMap();
+                        OPEN_CREATE_MAP_DIALOG.ShowDialog(this);
+
+                        if (OPEN_CREATE_MAP_DIALOG.MapRoot != null)
+                        {
+                            try
+                            {
+                                if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
+                                {
+                                    OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
+                                }
+                                else
+                                {
+                                    // create a new map
+                                    CreateNewMap();
+                                }
+                            }
+                            catch
+                            {
+                                MessageBox.Show("Could not open or create selected map.");
+                                Application.Exit();
+                            }
+                        }
+                        else
+                        {
+                            Application.Exit();
+                        }
+
                         Cursor = Cursors.Default;
                     }
                 }
                 else if (result == DialogResult.No)
                 {
-                    CreateNewMap();
+                    OPEN_CREATE_MAP_DIALOG.ShowDialog(this);
+
+                    if (OPEN_CREATE_MAP_DIALOG.MapRoot != null)
+                    {
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
+                            {
+                                OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
+                            }
+                            else
+                            {
+                                // create a new map
+                                CreateNewMap();
+                            }
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Could not open or create selected map.");
+                            Application.Exit();
+                        }
+                    }
+                    else
+                    {
+                        Application.Exit();
+                    }
+
                     Cursor = Cursors.Default;
                 }
             }
             else
             {
-                CreateNewMap();
+                OPEN_CREATE_MAP_DIALOG.ShowDialog(this);
+
+                if (OPEN_CREATE_MAP_DIALOG.MapRoot != null)
+                {
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
+                        {
+                            OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
+                        }
+                        else
+                        {
+                            // create a new map
+                            CreateNewMap();
+                        }
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Could not open or create selected map.");
+                        Application.Exit();
+                    }
+                }
+                else
+                {
+                    Application.Exit();
+                }
+
                 Cursor = Cursors.Default;
             }
         }
@@ -1044,14 +1307,8 @@ namespace RealmStudio
                 MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
                 MapStateMediator.CurrentMap = resizedMap;
 
-                // TODO: generalize
-                ScaleMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
-
-                MAP_WIDTH = MapStateMediator.CurrentMap.MapWidth;
-                MAP_HEIGHT = MapStateMediator.CurrentMap.MapHeight;
-
-                MapRenderHScroll.Maximum = MAP_WIDTH;
-                MapRenderVScroll.Maximum = MAP_HEIGHT;
+                MapRenderHScroll.Maximum = MapStateMediator.CurrentMap.MapWidth;
+                MapRenderVScroll.Maximum = MapStateMediator.CurrentMap.MapHeight;
 
                 MapRenderHScroll.Value = 0;
                 MapRenderVScroll.Value = 0;
@@ -1093,14 +1350,8 @@ namespace RealmStudio
                 MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
                 MapStateMediator.CurrentMap = detailMap;
 
-                // TODO: generalize
-                ScaleMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
-
-                MAP_WIDTH = MapStateMediator.CurrentMap.MapWidth;
-                MAP_HEIGHT = MapStateMediator.CurrentMap.MapHeight;
-
-                MapRenderHScroll.Maximum = MAP_WIDTH;
-                MapRenderVScroll.Maximum = MAP_HEIGHT;
+                MapRenderHScroll.Maximum = MapStateMediator.CurrentMap.MapWidth;
+                MapRenderVScroll.Maximum = MapStateMediator.CurrentMap.MapHeight;
 
                 MapRenderHScroll.Value = 0;
                 MapRenderVScroll.Value = 0;
@@ -1358,39 +1609,79 @@ namespace RealmStudio
 
         private void CreateNewMap()
         {
-            MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
+            ArgumentNullException.ThrowIfNull(FrameManager.FrameMediator);
+            ArgumentNullException.ThrowIfNull(OceanManager.OceanMediator);
 
-            // this creates the MapStateMediator.CurrentMap
-            DialogResult newResult = OpenRealmConfigurationDialog();
-
-            if (newResult == DialogResult.OK)
+            // open an existing map
+            try
             {
                 Cursor = Cursors.WaitCursor;
 
-                AssetManager.LOADING_STATUS_FORM.ResetLoadingProgress();
-                AssetManager.LOADING_STATUS_FORM.Show(this);
+                SetStatusText("Creating new map...");
 
-                MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
+                try
+                {
+                    MapStateMediator.CurrentMap = new(OPEN_CREATE_MAP_DIALOG.MapRoot);
 
-                BackgroundMediator.Reset();
-                LandformMediator.Reset();
-                OceanMediator.Reset();
-                PathMediator.Reset();
-                WaterFeatureMediator.Reset();
+                    if (MapStateMediator.CurrentMap != null)
+                    {
+                        SKImageInfo imageInfo = new(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
 
-                int assetCount = AssetManager.LoadAllAssets();
+                        if (MapStateMediator.CurrentMap.MapLayers.Count < MapBuilder.MAP_LAYER_COUNT)
+                        {
+                            if (MapStateMediator.CurrentMap.MapLayers.Count < MapBuilder.MAP_LAYER_COUNT)
+                            {
+                                MapBuilder.ConstructMissingLayersForMap(MapStateMediator.CurrentMap, SKGLRenderControl.GRContext);
+                            }
+                        }
 
-                PopulateControlsWithAssets(assetCount);
+                        foreach (MapLayer ml in MapStateMediator.CurrentMap.MapLayers)
+                        {
+                            ml.LayerSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, false, imageInfo);
 
-                AssetManager.LOADING_STATUS_FORM.Hide();
+                            if (LayerListBox.Items.Contains(ml.MapLayerName.ToUpperInvariant()))
+                            {
+                                // layer is drawable
+                                ml.Drawable = true;
+                            }
+                            else
+                            {
+                                // layer is not drawable
+                                ml.Drawable = false;
+                            }
+                        }
 
-                LogoPictureBox.Hide();
-                SKGLRenderControl.Show();
-                SKGLRenderControl.Select();
-                SKGLRenderControl.Refresh();
+                        DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Program.LOGGER.Error(ex);
+                    throw;
+                }
+
+                FinalizeOpenedMap();
+
                 SKGLRenderControl.Invalidate();
+            }
+            catch
+            {
+                MessageBox.Show("An error has occurred while creating the map.", "Error Creating Map", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
-                Activate();
+                MapStateMediator.CurrentMap = MapBuilder.CreateMap("", "DEFAULT", MapBuilder.MAP_DEFAULT_WIDTH, MapBuilder.MAP_DEFAULT_HEIGHT, SKGLRenderControl.GRContext);
+
+                VignetteManager.Delete();
+                VignetteManager.Create();
+
+                MapStateMediator.CurrentMap.IsSaved = false;
+
+                DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+                throw;
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
             }
         }
 
@@ -1421,55 +1712,6 @@ namespace RealmStudio
             LOCATION_UPDATE_TIMER?.Stop();
             LOCATION_UPDATE_TIMER?.Dispose();
             LOCATION_UPDATE_TIMER = null;
-        }
-
-        private DialogResult OpenRealmConfigurationDialog()
-        {
-            RealmConfiguration rcd = new();
-
-            rcd.Top = Top + (Height / 2) - (rcd.Height / 2);
-            rcd.Left = Left + (Width / 2) - (rcd.Width / 2);
-
-            DialogResult result = rcd.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                // create the map from the settings on the dialog
-                MapStateMediator.CurrentMap = MapBuilder.CreateMap(rcd.Map, SKGLRenderControl.GRContext);
-
-                // TODO: this should be generalized
-                ScaleMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
-
-                MAP_WIDTH = MapStateMediator.CurrentMap.MapWidth;
-                MAP_HEIGHT = MapStateMediator.CurrentMap.MapHeight;
-
-                MapRenderHScroll.Maximum = MAP_WIDTH;
-                MapRenderVScroll.Maximum = MAP_HEIGHT;
-
-                MapRenderHScroll.Value = 0;
-                MapRenderVScroll.Value = 0;
-
-                if (string.IsNullOrEmpty(MapStateMediator.CurrentMap.MapName))
-                {
-                    MapStateMediator.CurrentMap.MapName = "Default";
-                }
-
-                UpdateMapNameAndSize();
-
-                if (MapStateMediator.CurrentMap.MapLayers.Count < MapBuilder.MAP_LAYER_COUNT)
-                {
-                    MessageBox.Show("Application startup error. RealmStudio will close.");
-                    Application.Exit();
-                }
-
-                // create the map vignette and add it to the vignette layer
-                VignetteManager.Delete();
-                VignetteManager.Create();
-
-                DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
-            }
-
-            return result;
         }
 
         private void MainTabControl_SelectedIndexChanged(object sender, EventArgs e)
@@ -2082,10 +2324,6 @@ namespace RealmStudio
                     {
                         MapStateMediator.CurrentMap = openedMap;
 
-                        // TODO: this should be generalized (when the CurrentMap is assigned,
-                        // the ScaleUnitsText should automatically be updated)
-                        ScaleMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
-
                         SKImageInfo imageInfo = new(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
 
                         if (MapStateMediator.CurrentMap.MapLayers.Count < MapBuilder.MAP_LAYER_COUNT)
@@ -2125,157 +2363,7 @@ namespace RealmStudio
                     throw;
                 }
 
-                MapRenderHScroll.Maximum = MapStateMediator.CurrentMap.MapWidth;
-                MapRenderVScroll.Maximum = MapStateMediator.CurrentMap.MapHeight;
-
-                if (string.IsNullOrEmpty(MapStateMediator.CurrentMap.MapTheme))
-                {
-                    MapStateMediator.CurrentMap.MapTheme = AssetManager.DEFAULT_THEME_NAME;
-                }
-
-
-                MapTheme? theme = AssetManager.THEME_LIST.FirstOrDefault(t => t.ThemeName == MapStateMediator.CurrentMap.MapTheme);
-
-                if (theme != null)
-                {
-                    // apply the theme to the map
-                    ThemeFilter tf = new();
-                    ThemeManager.ApplyTheme(theme, tf);
-                }
-
-
-                // theme is applied and map is loaded, so set any values in the map that are not set when it is loaded, and then
-                // set the UI controls to match the values in the map
-
-                // maps store scale and opacity values as the scale value;
-                // mediators store them as the values used to scale and set opacity of the bitmap
-                // the mediator translates trackbar value to/from the scale and opacity values for the bitmap
-
-                // *** INITIALIZE BACKGROUND ***
-                // set background texture index from the background texture bitmap
-                // set background texture name label to match the name in the map
-                // set background texture picture to match the picture in the map,
-                // set background texture scale trackbar and background mirror switch
-
-                MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
-
-                if (baseLayer.MapLayerComponents.Count > 0)
-                {
-                    BackgroundMediator.Initialize(
-                        BackgroundMediator.BackgroundTextureIndex,
-                        ((MapImage)baseLayer.MapLayerComponents[0]).Scale,
-                        ((MapImage)baseLayer.MapLayerComponents[0]).MirrorImage);
-                }
-
-                // *** INITIALIZE OCEAN ***
-                // set ocean texture index from the ocean texture bitmap
-                // set ocean texture name label to match the name in the map (done in Initialize)
-                // set ocean texture picture to match the picture in the map (done in Initialize)
-                // set ocean texture scale trackbar, ocean opacity trackbar, and ocean mirror switch
-                // set paint objects on LayerPaointStroke objects in the ocean drawing layer
-
-                MapLayer oceanLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
-                MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANDRAWINGLAYER);
-
-                if (oceanLayer.MapLayerComponents.Count > 0)
-                {
-                    int oceanTextureIndex = 0;
-
-                    for (int i = 0; i < OceanManager.OceanMediator.OceanTextureList.Count; i++)
-                    {
-                        if (OceanManager.OceanMediator.OceanTextureList[i].TextureName == ((MapImage)oceanLayer.MapLayerComponents[0]).ImageName)
-                        {
-                            oceanTextureIndex = i;
-                            break;
-                        }
-                    }
-
-                    OceanMediator.Initialize(
-                        OceanMediator.OceanTextureIndex,
-                        ((MapImage)oceanLayer.MapLayerComponents[0]).ImageName,
-                        ((MapImage)oceanLayer.MapLayerComponents[0]).Scale,
-                        ((MapImage)oceanLayer.MapLayerComponents[0]).Opacity,
-                        ((MapImage)oceanLayer.MapLayerComponents[0]).MirrorImage);
-                }
-
-                // finalize loading of ocean drawing layer
-                for (int i = 0; i < oceanDrawingLayer.MapLayerComponents.Count; i++)
-                {
-                    if (oceanDrawingLayer.MapLayerComponents[i] is LayerPaintStroke paintStroke)
-                    {
-                        paintStroke.ParentMap = MapStateMediator.CurrentMap;
-
-                        if (!paintStroke.Erase)
-                        {
-                            paintStroke.ShaderPaint = PaintObjects.OceanPaint;
-                        }
-                        else
-                        {
-                            paintStroke.ShaderPaint = PaintObjects.OceanEraserPaint;
-                        }
-                    }
-                }
-
-
-                // *** INITIALIZE LANDFORMS ***
-                // landform texture index and other UI control values come from the selected theme
-                LandformManager.FinalizeLandforms(SKGLRenderControl);
-
-                // *** INITIALIZE WATER FEATURES ***
-                // water feature UI control values come from the selected theme
-                WaterFeatureManager.FinalizeWaterFeatures();
-                WaterFeatureManager.FinalizeWindroses();
-
-                // *** INITIALIZE PATHS ***
-                // path UI control values come from the selected theme
-                PathManager.FinalizeMapPaths();
-
-                // *** INITIALIZE SYMBOLS ***
-                // symbol UI control values come from the selected theme
-                SymbolManager.FinalizeMapSymbols();
-
-                // *** INITIALIZE LABELS AND BOXES ***
-                // label UI control values come from the selected theme
-                BoxManager.FinalizeMapBoxes();
-
-                // *** INITIALIZE OVERLAYS ***
-                // *** FINALIZE MAP FRAME ***
-                MapStateMediator.CurrentMapFrame = (PlacedMapFrame?)FrameManager.GetComponentById(Guid.Empty);
-
-                if (MapStateMediator.CurrentMapFrame != null)
-                {
-                    FrameManager.FrameMediator.Initialize(MapStateMediator.CurrentMapFrame.FrameScale,
-                        MapStateMediator.CurrentMapFrame.FrameTint,
-                        MapStateMediator.CurrentMapFrame.FrameEnabled);
-                }
-
-                // *** FINALIZE MAP GRID ***
-                MapGridManager.FinalizeMapGrid();
-
-                // *** FINALIZE MAP REGIONS ***
-                RegionManager.FinalizeMapRegions();
-
-                // *** FINALIZE MAP VIGNETTE ***
-                VignetteManager.FinalizeMapVignette();
-
-                HeightMapManager.ConvertMapImageToMapHeightMap(MapStateMediator.CurrentMap);
-
-                SetStatusText("Loaded: " + MapStateMediator.CurrentMap.MapName);
-
-                UpdateMapNameAndSize();
-
-                MapStateMediator.CurrentMap.IsSaved = true;
-
-                DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
-
-
-                // if World Anvil integration is enabled, check if this map is linked to a World Anvil map
-                // and load descriptions, etc. from World Anvil
-
-                if (Settings.Default.EnableWAIntegration && !string.IsNullOrEmpty(Settings.Default.WorldAnvilApiToken))
-                {
-                    LoadWorldAnvilMapDataForCurrentMap();
-                }
+                FinalizeOpenedMap();
 
                 SKGLRenderControl.Invalidate();
             }
@@ -2284,9 +2372,6 @@ namespace RealmStudio
                 MessageBox.Show("An error has occurred while opening the map. The map file may be corrupt.", "Error Loading Map", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
                 MapStateMediator.CurrentMap = MapBuilder.CreateMap("", "DEFAULT", MapBuilder.MAP_DEFAULT_WIDTH, MapBuilder.MAP_DEFAULT_HEIGHT, SKGLRenderControl.GRContext);
-
-                // TODO: generalize
-                ScaleMediator.ScaleUnitsText = MapStateMediator.CurrentMap.MapAreaUnits;
 
                 VignetteManager.Delete();
                 VignetteManager.Create();

@@ -68,6 +68,13 @@ namespace RealmStudio
 
                 if (oceanTextureLayer.MapLayerComponents.Count == 1 && textureBitmap != null && scale > 0.0F)
                 {
+                    MapImage? oceanImage = (MapImage?)oceanTextureLayer.MapLayerComponents[0];
+
+                    if (oceanImage == null || string.IsNullOrEmpty(oceanImage.ImageName))
+                    {
+                        return false;
+                    }
+
                     Bitmap resizedBitmap;
 
                     if (scale != 1.0F)

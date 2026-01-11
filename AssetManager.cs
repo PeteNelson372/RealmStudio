@@ -33,7 +33,6 @@ namespace RealmStudio
         // TODO: refactor AssetManager so map object managers are responsible
         // for loading assets for the map objects they manage
 
-
         public static Cursor? EYEDROPPER_CURSOR { get; set; }
 
         public static List<MapTexture> WATER_TEXTURE_LIST { get; set; } = [];

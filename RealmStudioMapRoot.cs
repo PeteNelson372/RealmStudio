@@ -1,5 +1,5 @@
 ﻿/**************************************************************************************************************************
-* Copyright 2024, Peter R. Nelson
+* Copyright 2026, Peter R. Nelson
 *
 * This file is part of the RealmStudio application. The RealmStudio application is intended
 * for creating fantasy maps for gaming and world building.
@@ -23,13 +23,10 @@
 ***************************************************************************************************************************/
 using System.Xml;
 using System.Xml.Serialization;
-
 namespace RealmStudio
 {
     [XmlRoot("map", Namespace = "RealmStudio", IsNullable = false)]
-    [XmlInclude(typeof(MapComponent))]
-    [XmlInclude(typeof(MapLayer))]
-    public class RealmStudioMap
+    public class RealmStudioMapRoot
     {
         [XmlIgnore]
         private int mapWidth = 0;
@@ -42,9 +39,6 @@ namespace RealmStudio
 
         [XmlIgnore]
         private float mapAreaHeight = 0;
-
-        [XmlIgnore]
-        private bool isSaved = true;
 
         [XmlAttribute]
         public Guid MapGuid { get; set; } = Guid.NewGuid();
@@ -76,34 +70,7 @@ namespace RealmStudio
         public RealmMapType RealmType { get; set; } = RealmMapType.World;
 
         [XmlAttribute]
-        public string RealmDescription { get; set; } = string.Empty;
-
-        [XmlAttribute]
-        public Guid WorldAnvilMapId { get; set; } = Guid.Empty;
-
-        [XmlAttribute]
-        public string WorldAnvilMapTitle { get; set; } = string.Empty;
-
-        [XmlAttribute]
-        public Guid WorldAnvilWorldId { get; set; } = Guid.Empty;
-
-        [XmlAttribute]
-        public Guid WorldAnvilUserId { get; set; } = Guid.Empty;
-
-        [XmlAttribute]
-        public int WorldAnvilImageId { get; set; } = 0;
-
-        [XmlAttribute]
-        public string WorldAnvilArticleId { get; set; } = string.Empty;
-
-        [XmlAttribute]
         public string MapTheme { get; set; } = string.Empty;
-
-        [XmlArray("MapLayers")]
-        public List<MapLayer> MapLayers { get; set; } = new(MapBuilder.MAP_LAYER_COUNT);
-
-        [XmlIgnore]
-        public bool IsSaved { get => isSaved; set => isSaved = value; }
 
         // MapPixelWidth and MapPixelHeight are the size of one pixel in MapAreaUnits
         [XmlIgnore]
@@ -111,29 +78,5 @@ namespace RealmStudio
 
         [XmlIgnore]
         public float MapPixelHeight { get; set; } = 0F;
-
-        public RealmStudioMap()
-        {
-        }
-
-        public RealmStudioMap(RealmStudioMapRoot? mapRoot)
-        {
-            if (mapRoot != null)
-            {
-                MapGuid = mapRoot.MapGuid;
-                MapName = mapRoot.MapName;
-                MapPath = mapRoot.MapPath;
-                MapWidth = mapRoot.MapWidth;
-                MapHeight = mapRoot.MapHeight;
-                MapAreaWidth = mapRoot.MapAreaWidth;
-                MapAreaHeight = mapRoot.MapAreaHeight;
-                RealmType = mapRoot.RealmType;
-                MapAreaUnits = mapRoot.MapAreaUnits;
-                MapTheme = mapRoot.MapTheme;
-                MapPixelHeight = mapRoot.MapPixelHeight;
-                MapPixelWidth = mapRoot.MapPixelWidth;
-                IsSaved = false;
-            }
-        }
     }
 }

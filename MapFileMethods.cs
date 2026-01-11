@@ -41,6 +41,43 @@ namespace RealmStudio
             Program.LOGGER.Error("Exception on Load. Unknown Attribute: " + attr.Name + "\t" + attr.Value);
         }
 
+        internal static RealmStudioMapRoot? OpenMapRoot(string mapPath)
+        {
+            XmlSerializer? serializer = new(typeof(RealmStudioMapRoot));
+            
+            // If the XML document has been altered with unknown
+            // nodes or attributes, handle them with the
+            // UnknownNode and UnknownAttribute events.
+            serializer.UnknownNode += new XmlNodeEventHandler(Serializer_UnknownNode);
+            serializer.UnknownAttribute += new XmlAttributeEventHandler(Serializer_UnknownAttribute);
+            
+            // A FileStream is needed to read the XML document.            
+            FileStream fs = new(mapPath, FileMode.Open);
+            using XmlReader reader = XmlReader.Create(fs);
+
+            // Declares an object variable of the type to be deserialized.
+            RealmStudioMapRoot? mapRoot;
+            try
+            {
+                // Uses the Deserialize method to restore the object's state
+                // with data from the XML document. */
+                mapRoot = serializer.Deserialize(reader) as RealmStudioMapRoot;
+            }
+            catch (Exception ex)
+            {
+                Program.LOGGER.Error("Exception deserializing " + mapPath + ": " + ex.Message);
+                mapRoot = null;
+                throw;
+            }
+            finally
+            {
+                serializer = null;
+                fs.Dispose();
+            }
+
+            return mapRoot;
+        }
+
         internal static RealmStudioMap? OpenMap(string mapPath)
         {
             XmlSerializer? serializer = new(typeof(RealmStudioMap));
@@ -64,10 +101,7 @@ namespace RealmStudio
                 // with data from the XML document. */
                 map = serializer.Deserialize(reader) as RealmStudioMap;
 
-                if (map != null)
-                {
-                    map.IsSaved = false;
-                }
+                map?.IsSaved = false;
             }
             catch (Exception ex)
             {
