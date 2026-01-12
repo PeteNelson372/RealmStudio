@@ -29,7 +29,7 @@ namespace RealmStudio
     [XmlRoot("map", Namespace = "RealmStudio", IsNullable = false)]
     [XmlInclude(typeof(MapComponent))]
     [XmlInclude(typeof(MapLayer))]
-    public class RealmStudioMap
+    public class RealmStudioMap : IRealmStudioMapGroup
     {
         [XmlIgnore]
         private int mapWidth = 0;

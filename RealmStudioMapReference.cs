@@ -1,5 +1,5 @@
 ﻿/**************************************************************************************************************************
-* Copyright 2026, Peter R. Nelson
+* Copyright 2024, Peter R. Nelson
 *
 * This file is part of the RealmStudio application. The RealmStudio application is intended
 * for creating fantasy maps for gaming and world building.
@@ -21,25 +21,13 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using System.Xml;
 using System.Xml.Serialization;
+
 namespace RealmStudio
 {
-    [XmlRoot("map", Namespace = "RealmStudio", IsNullable = false)]
-    public class RealmStudioMapRoot : IRealmStudioMapGroup
+    [XmlRoot("RealmStudioMapReference", Namespace = "RealmStudio", IsNullable = false)]
+    public class RealmStudioMapReference
     {
-        [XmlIgnore]
-        private int mapWidth = 0;
-
-        [XmlIgnore]
-        private int mapHeight = 0;
-
-        [XmlIgnore]
-        private float mapAreaWidth = 0;
-
-        [XmlIgnore]
-        private float mapAreaHeight = 0;
-
         [XmlAttribute]
         public Guid MapGuid { get; set; } = Guid.NewGuid();
 
@@ -48,35 +36,5 @@ namespace RealmStudio
 
         [XmlAttribute]
         public string MapPath { get; set; } = "";
-
-        // MapHeight and MapWidth are the size of the map in pixels (e.g. 1200 x 800)
-        [XmlAttribute]
-        public int MapWidth { get => mapWidth; set => mapWidth = value; }
-
-        [XmlAttribute]
-        public int MapHeight { get => mapHeight; set => mapHeight = value; }
-
-        // MapAreaWidth and MapAreaHeight are the size of the map in MapUnits (e.g. 1000 miles x 500 miles)
-        [XmlAttribute]
-        public float MapAreaWidth { get => mapAreaWidth; set => mapAreaWidth = value; }
-
-        [XmlAttribute]
-        public float MapAreaHeight { get => mapAreaHeight; set => mapAreaHeight = value; }
-
-        [XmlAttribute]
-        public string MapAreaUnits { get; set; } = string.Empty;
-
-        [XmlAttribute]
-        public RealmMapType RealmType { get; set; } = RealmMapType.World;
-
-        [XmlAttribute]
-        public string MapTheme { get; set; } = string.Empty;
-
-        // MapPixelWidth and MapPixelHeight are the size of one pixel in MapAreaUnits
-        [XmlIgnore]
-        public float MapPixelWidth { get; set; } = 0F;
-
-        [XmlIgnore]
-        public float MapPixelHeight { get; set; } = 0F;
     }
 }

@@ -223,6 +223,7 @@ namespace RealmStudio
                             StrokeShader.Dispose();
                             SKPoint gradientCenter = new(point.StrokeLocation.X, point.StrokeLocation.Y);
                             StrokeShader = SKShader.CreateRadialGradient(gradientCenter, BrushRadius, [StrokeColor, StrokeColor.WithAlpha(0)], SKShaderTileMode.Clamp);
+                            ShaderPaint.Shader = StrokeShader;
                         }
 
                         if (PaintBrush == ColorPaintBrush.PatternBrush1

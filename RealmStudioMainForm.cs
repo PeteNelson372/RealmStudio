@@ -258,6 +258,8 @@ namespace RealmStudio
 
             LogoPictureBox.Hide();
 
+            OPEN_CREATE_MAP_DIALOG.LoadCreatedMaps();
+
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 
             if (version != null)
@@ -315,7 +317,7 @@ namespace RealmStudio
             PopulateFontPanelUI();
             LoadNameGeneratorConfigurationDialog();
 
-            Activate();
+            Invalidate();
 
             if (!string.IsNullOrEmpty(MapCommandLinePath))
             {
@@ -613,8 +615,8 @@ namespace RealmStudio
 
         private void OpenButton_Click(object sender, EventArgs e)
         {
-            // open a map
-            OpenExistingMap();
+            // open or create a map
+            OpenOrCreateMap();
         }
 
         private void NewVersionButton_Click(object sender, EventArgs e)
@@ -899,140 +901,7 @@ namespace RealmStudio
 
         private void NewToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!MapStateMediator.CurrentMap.IsSaved)
-            {
-                DialogResult result =
-                    MessageBox.Show("The map has not been saved. Do you want to save the map?", "Save Map", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-
-                if (result == DialogResult.Yes)
-                {
-                    DialogResult saveResult = SaveMap();
-
-                    if (saveResult == DialogResult.OK)
-                    {
-                        OPEN_CREATE_MAP_DIALOG.ShowDialog(this);
-
-                        if (OPEN_CREATE_MAP_DIALOG.MapRoot != null)
-                        {
-                            try
-                            {
-                                if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
-                                {
-                                    OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
-                                }
-                                else
-                                {
-                                    // create a new map
-                                    CreateNewMap();
-                                }
-                            }
-                            catch
-                            {
-                                MessageBox.Show("Could not open or create selected map.");
-                                Application.Exit();
-                            }
-                        }
-                        else
-                        {
-                            Application.Exit();
-                        }
-
-                        Cursor = Cursors.Default;
-                    }
-                }
-                else if (result == DialogResult.No)
-                {
-                    OPEN_CREATE_MAP_DIALOG.ShowDialog(this);
-
-                    if (OPEN_CREATE_MAP_DIALOG.MapRoot != null)
-                    {
-                        try
-                        {
-                            if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
-                            {
-                                OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
-                            }
-                            else
-                            {
-                                // create a new map
-                                CreateNewMap();
-                            }
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Could not open or create selected map.");
-                            Application.Exit();
-                        }
-                    }
-                    else
-                    {
-                        Application.Exit();
-                    }
-
-                    Cursor = Cursors.Default;
-                }
-            }
-            else
-            {
-                OPEN_CREATE_MAP_DIALOG.ShowDialog(this);
-
-                if (OPEN_CREATE_MAP_DIALOG.MapRoot != null)
-                {
-                    try
-                    {
-                        if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
-                        {
-                            OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
-                        }
-                        else
-                        {
-                            // create a new map
-                            CreateNewMap();
-                        }
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Could not open or create selected map.");
-                        Application.Exit();
-                    }
-                }
-                else
-                {
-                    Application.Exit();
-                }
-
-                Cursor = Cursors.Default;
-            }
-        }
-
-        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!MapStateMediator.CurrentMap.IsSaved)
-            {
-                DialogResult result =
-                    MessageBox.Show("The map has not been saved. Do you want to save the map?", "Save Map", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-
-                if (result == DialogResult.Yes)
-                {
-                    DialogResult saveResult = SaveMap();
-
-                    if (saveResult == DialogResult.OK)
-                    {
-                        OpenExistingMap();
-                        Cursor = Cursors.Default;
-                    }
-                }
-                else if (result == DialogResult.No)
-                {
-                    OpenExistingMap();
-                    Cursor = Cursors.Default;
-                }
-            }
-            else
-            {
-                OpenExistingMap();
-                Cursor = Cursors.Default;
-            }
+            OpenOrCreateMap();
         }
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2261,42 +2130,112 @@ namespace RealmStudio
             return result;
         }
 
-        private void OpenExistingMap()
+        private void OpenOrCreateMap()
         {
-            try
+            if (!MapStateMediator.CurrentMap.IsSaved)
             {
-                OpenFileDialog ofd = new()
-                {
-                    Title = "Open or Create Map",
-                    DefaultExt = "rsmapx",
-                    Filter = "Realm Studio map files (*.rsmapx)|*.rsmapx|All files (*.*)|*.*",
-                    CheckFileExists = true,
-                    RestoreDirectory = true,
-                    ShowHelp = false,           // enabling the help button causes the dialog not to display files
-                    Multiselect = false
-                };
+                DialogResult result =
+                    MessageBox.Show("The map has not been saved. Do you want to save the map?", "Save Map", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
-                if (ofd.ShowDialog(this) == DialogResult.OK)
+                if (result == DialogResult.Yes)
                 {
-                    if (ofd.FileName != "")
+                    DialogResult saveResult = SaveMap();
+
+                    if (saveResult == DialogResult.OK)
+                    {
+                        OPEN_CREATE_MAP_DIALOG.ShowDialog(this);
+
+                        if (OPEN_CREATE_MAP_DIALOG.MapRoot != null)
+                        {
+                            try
+                            {
+                                if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
+                                {
+                                    OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
+                                }
+                                else
+                                {
+                                    // create a new map
+                                    CreateNewMap();
+                                }
+                            }
+                            catch
+                            {
+                                MessageBox.Show("Could not open or create selected map.");
+                                Application.Exit();
+                            }
+                        }
+                        else
+                        {
+                            Application.Exit();
+                        }
+
+                        Cursor = Cursors.Default;
+                    }
+                }
+                else if (result == DialogResult.No)
+                {
+                    OPEN_CREATE_MAP_DIALOG.ShowDialog(this);
+
+                    if (OPEN_CREATE_MAP_DIALOG.MapRoot != null)
                     {
                         try
                         {
-                            OpenMap(ofd.FileName);
+                            if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
+                            {
+                                OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
+                            }
+                            else
+                            {
+                                // create a new map
+                                CreateNewMap();
+                            }
                         }
-                        catch (Exception ex)
+                        catch
                         {
-                            Program.LOGGER.Error(ex);
-                            throw;
+                            MessageBox.Show("Could not open or create selected map.");
+                            Application.Exit();
                         }
-
-                        UpdateMapNameAndSize();
-                        SKGLRenderControl.Invalidate();
-                        Refresh();
                     }
+                    else
+                    {
+                        Application.Exit();
+                    }
+
+                    Cursor = Cursors.Default;
                 }
             }
-            catch { }
+            else
+            {
+                OPEN_CREATE_MAP_DIALOG.ShowDialog(this);
+
+                if (OPEN_CREATE_MAP_DIALOG.MapRoot != null)
+                {
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
+                        {
+                            OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
+                        }
+                        else
+                        {
+                            // create a new map
+                            CreateNewMap();
+                        }
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Could not open or create selected map.");
+                        Application.Exit();
+                    }
+                }
+                else
+                {
+                    Application.Exit();
+                }
+
+                Cursor = Cursors.Default;
+            }
         }
 
         private void OpenMap(string mapFilePath)
@@ -2351,6 +2290,11 @@ namespace RealmStudio
                         }
 
                         DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+
+
+                        RealmSetComboBox.Items.Clear();
+                        RealmSetComboBox.Items.Add(openedMap.MapName);
+                        RealmSetComboBox.SelectedIndex = 0;
                     }
                     else
                     {
@@ -7863,6 +7807,80 @@ namespace RealmStudio
             MessageBox.Show("API KEY: " + worldAnvilApiMethods.WorldAnvilAPIKey);
         }
 
+    }
 
+    public class CustomMapSetToolStripRenderer : ToolStripProfessionalRenderer
+    {
+        protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
+        {
+            using var brush = new SolidBrush(e.ToolStrip.BackColor);
+            e.Graphics.FillRectangle(brush, e.AffectedBounds);
+        }
+
+        protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
+        {
+            // Overpaint ONLY the default border area (1px)
+            using var brush = new SolidBrush(e.ToolStrip.BackColor);
+
+            var ts = e.ToolStrip;
+
+            // Bottom border
+            e.Graphics.FillRectangle(
+                brush,
+                0,
+                ts.Height - 1,
+                ts.Width,
+                1);
+
+            // Right border
+            e.Graphics.FillRectangle(
+                brush,
+                ts.Width - 1,
+                0,
+                1,
+                ts.Height);
+        }
+
+        protected override void OnRenderButtonBackground(ToolStripItemRenderEventArgs e)
+        {
+            if (e.Item is not ToolStripButton btn)
+                return;
+
+            var g = e.Graphics;
+            var rect = new Rectangle(Point.Empty, btn.Size);
+
+            Color backColor = SystemColors.ButtonFace;
+            Color borderColor = SystemColors.ControlDark;
+
+            if (btn.Pressed || btn.Checked)
+            {
+                backColor = SystemColors.ButtonHighlight;
+            }
+            else if (btn.Selected)
+            {
+                backColor = SystemColors.ButtonHighlight;
+            }
+
+            using var backBrush = new SolidBrush(backColor);
+            g.FillRectangle(backBrush, rect);
+
+            // Draw border inside bounds
+            using var pen = new Pen(borderColor);
+            g.DrawRectangle(pen, 0, 0, rect.Width - 1, rect.Height - 1);
+        }
+
+        protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
+        {
+            e.TextColor = SystemColors.ControlDarkDark;
+            base.OnRenderItemText(e);
+        }
+
+        protected override void OnRenderItemImage(ToolStripItemImageRenderEventArgs e)
+        {
+            e.Graphics.InterpolationMode =
+                System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+
+            base.OnRenderItemImage(e);
+        }
     }
 }

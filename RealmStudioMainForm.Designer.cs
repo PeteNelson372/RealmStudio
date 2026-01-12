@@ -354,6 +354,7 @@
             ShowDrawingLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label11 = new Label();
             RealmStudioForm = new ReaLTaiizor.Forms.DungeonForm();
+            RealmSetComboBox = new ReaLTaiizor.Controls.DungeonComboBox();
             WorldAnvilMapButton = new FontAwesome.Sharp.IconButton();
             WorldAnvilIntegrationButton = new Button();
             NewVersionButton = new FontAwesome.Sharp.IconButton();
@@ -436,7 +437,6 @@
             RealmStudioMainMenuStrip = new MenuStrip();
             FileToolStripMenuItem = new ToolStripMenuItem();
             NewToolStripMenuItem = new ToolStripMenuItem();
-            OpenToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator = new ToolStripSeparator();
             SaveToolStripMenuItem = new ToolStripMenuItem();
             SaveAsToolStripMenuItem = new ToolStripMenuItem();
@@ -5352,6 +5352,7 @@
             // 
             // RegionHelpRichText
             // 
+            RegionHelpRichText.BackColor = SystemColors.Control;
             RegionHelpRichText.BorderStyle = BorderStyle.None;
             RegionHelpRichText.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             RegionHelpRichText.ForeColor = SystemColors.ControlDarkDark;
@@ -6094,6 +6095,7 @@
             RealmStudioForm.BackColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             RealmStudioForm.BorderColor = Color.FromArgb((int)(byte)38, (int)(byte)38, (int)(byte)38);
             RealmStudioForm.CausesValidation = false;
+            RealmStudioForm.Controls.Add(RealmSetComboBox);
             RealmStudioForm.Controls.Add(WorldAnvilMapButton);
             RealmStudioForm.Controls.Add(WorldAnvilIntegrationButton);
             RealmStudioForm.Controls.Add(NewVersionButton);
@@ -6154,6 +6156,33 @@
             RealmStudioForm.TabStop = false;
             RealmStudioForm.Text = "Realm Studio";
             RealmStudioForm.TitleColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            // 
+            // RealmSetComboBox
+            // 
+            RealmSetComboBox.BackColor = Color.FromArgb((int)(byte)246, (int)(byte)246, (int)(byte)246);
+            RealmSetComboBox.ColorA = Color.FromArgb((int)(byte)246, (int)(byte)132, (int)(byte)85);
+            RealmSetComboBox.ColorB = Color.FromArgb((int)(byte)231, (int)(byte)108, (int)(byte)57);
+            RealmSetComboBox.ColorC = Color.FromArgb((int)(byte)242, (int)(byte)241, (int)(byte)240);
+            RealmSetComboBox.ColorD = Color.FromArgb((int)(byte)253, (int)(byte)252, (int)(byte)252);
+            RealmSetComboBox.ColorE = Color.FromArgb((int)(byte)239, (int)(byte)237, (int)(byte)236);
+            RealmSetComboBox.ColorF = Color.FromArgb((int)(byte)180, (int)(byte)180, (int)(byte)180);
+            RealmSetComboBox.ColorG = Color.FromArgb((int)(byte)119, (int)(byte)119, (int)(byte)118);
+            RealmSetComboBox.ColorH = Color.FromArgb((int)(byte)224, (int)(byte)222, (int)(byte)220);
+            RealmSetComboBox.ColorI = Color.FromArgb((int)(byte)250, (int)(byte)249, (int)(byte)249);
+            RealmSetComboBox.DrawMode = DrawMode.OwnerDrawFixed;
+            RealmSetComboBox.DropDownHeight = 100;
+            RealmSetComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            RealmSetComboBox.Font = new Font("Segoe UI", 10F);
+            RealmSetComboBox.ForeColor = Color.FromArgb((int)(byte)76, (int)(byte)76, (int)(byte)97);
+            RealmSetComboBox.FormattingEnabled = true;
+            RealmSetComboBox.HoverSelectionColor = Color.Empty;
+            RealmSetComboBox.IntegralHeight = false;
+            RealmSetComboBox.ItemHeight = 20;
+            RealmSetComboBox.Location = new Point(631, 54);
+            RealmSetComboBox.Name = "RealmSetComboBox";
+            RealmSetComboBox.Size = new Size(311, 26);
+            RealmSetComboBox.StartIndex = 0;
+            RealmSetComboBox.TabIndex = 46;
             // 
             // WorldAnvilMapButton
             // 
@@ -7294,7 +7323,7 @@
             // 
             // FileToolStripMenuItem
             // 
-            FileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { NewToolStripMenuItem, OpenToolStripMenuItem, toolStripSeparator, SaveToolStripMenuItem, SaveAsToolStripMenuItem, toolStripSeparator1, ExportMapMenuItem, toolStripSeparator6, PrintToolStripMenuItem, toolStripSeparator2, ExitToolStripMenuItem });
+            FileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { NewToolStripMenuItem, toolStripSeparator, SaveToolStripMenuItem, SaveAsToolStripMenuItem, toolStripSeparator1, ExportMapMenuItem, toolStripSeparator6, PrintToolStripMenuItem, toolStripSeparator2, ExitToolStripMenuItem });
             FileToolStripMenuItem.Name = "FileToolStripMenuItem";
             FileToolStripMenuItem.Size = new Size(37, 20);
             FileToolStripMenuItem.Text = "&File";
@@ -7305,24 +7334,14 @@
             NewToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             NewToolStripMenuItem.Name = "NewToolStripMenuItem";
             NewToolStripMenuItem.ShortcutKeys = (Keys)(Keys.Control) | (Keys.N);
-            NewToolStripMenuItem.Size = new Size(146, 22);
-            NewToolStripMenuItem.Text = "&New";
+            NewToolStripMenuItem.Size = new Size(175, 22);
+            NewToolStripMenuItem.Text = "&New/Open";
             NewToolStripMenuItem.Click += (this.NewToolStripMenuItem_Click);
-            // 
-            // OpenToolStripMenuItem
-            // 
-            OpenToolStripMenuItem.Image = (Image)resources.GetObject("OpenToolStripMenuItem.Image");
-            OpenToolStripMenuItem.ImageTransparentColor = Color.Magenta;
-            OpenToolStripMenuItem.Name = "OpenToolStripMenuItem";
-            OpenToolStripMenuItem.ShortcutKeys = (Keys)(Keys.Control) | (Keys.O);
-            OpenToolStripMenuItem.Size = new Size(146, 22);
-            OpenToolStripMenuItem.Text = "&Open";
-            OpenToolStripMenuItem.Click += (this.OpenToolStripMenuItem_Click);
             // 
             // toolStripSeparator
             // 
             toolStripSeparator.Name = "toolStripSeparator";
-            toolStripSeparator.Size = new Size(143, 6);
+            toolStripSeparator.Size = new Size(172, 6);
             // 
             // SaveToolStripMenuItem
             // 
@@ -7330,21 +7349,21 @@
             SaveToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
             SaveToolStripMenuItem.ShortcutKeys = (Keys)(Keys.Control) | (Keys.S);
-            SaveToolStripMenuItem.Size = new Size(146, 22);
+            SaveToolStripMenuItem.Size = new Size(175, 22);
             SaveToolStripMenuItem.Text = "&Save";
             SaveToolStripMenuItem.Click += (this.SaveToolStripMenuItem_Click);
             // 
             // SaveAsToolStripMenuItem
             // 
             SaveAsToolStripMenuItem.Name = "SaveAsToolStripMenuItem";
-            SaveAsToolStripMenuItem.Size = new Size(146, 22);
+            SaveAsToolStripMenuItem.Size = new Size(175, 22);
             SaveAsToolStripMenuItem.Text = "Save &As";
             SaveAsToolStripMenuItem.Click += (this.SaveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(143, 6);
+            toolStripSeparator1.Size = new Size(172, 6);
             // 
             // ExportMapMenuItem
             // 
@@ -7352,14 +7371,14 @@
             ExportMapMenuItem.IconColor = Color.Black;
             ExportMapMenuItem.IconFont = FontAwesome.Sharp.IconFont.Auto;
             ExportMapMenuItem.Name = "ExportMapMenuItem";
-            ExportMapMenuItem.Size = new Size(146, 22);
+            ExportMapMenuItem.Size = new Size(175, 22);
             ExportMapMenuItem.Text = "&Export...";
             ExportMapMenuItem.Click += (this.ExportMapMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
             toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new Size(143, 6);
+            toolStripSeparator6.Size = new Size(172, 6);
             // 
             // PrintToolStripMenuItem
             // 
@@ -7367,19 +7386,19 @@
             PrintToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             PrintToolStripMenuItem.Name = "PrintToolStripMenuItem";
             PrintToolStripMenuItem.ShortcutKeys = (Keys)(Keys.Control) | (Keys.P);
-            PrintToolStripMenuItem.Size = new Size(146, 22);
+            PrintToolStripMenuItem.Size = new Size(175, 22);
             PrintToolStripMenuItem.Text = "&Print";
             PrintToolStripMenuItem.Click += (this.PrintToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(143, 6);
+            toolStripSeparator2.Size = new Size(172, 6);
             // 
             // ExitToolStripMenuItem
             // 
             ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-            ExitToolStripMenuItem.Size = new Size(146, 22);
+            ExitToolStripMenuItem.Size = new Size(175, 22);
             ExitToolStripMenuItem.Text = "E&xit";
             ExitToolStripMenuItem.Click += (this.ExitToolStripMenuItem_Click);
             // 
@@ -10613,7 +10632,6 @@
         private MenuStrip RealmStudioMainMenuStrip;
         private ToolStripMenuItem FileToolStripMenuItem;
         private ToolStripMenuItem NewToolStripMenuItem;
-        private ToolStripMenuItem OpenToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator;
         private ToolStripMenuItem SaveToolStripMenuItem;
         private ToolStripMenuItem SaveAsToolStripMenuItem;
@@ -11252,5 +11270,6 @@
         private FontAwesome.Sharp.IconToolStripButton PixelEditButton;
         internal Button WorldAnvilIntegrationButton;
         internal FontAwesome.Sharp.IconButton WorldAnvilMapButton;
+        private ReaLTaiizor.Controls.DungeonComboBox RealmSetComboBox;
     }
 }

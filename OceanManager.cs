@@ -53,6 +53,15 @@ namespace RealmStudio
 
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
 
+            for (int i = 0; i < OceanManager.OceanMediator.OceanTextureList.Count; i++)
+            {
+                if (OceanMediator.OceanTextureList[i].TextureName == ((MapImage)oceanTextureLayer.MapLayerComponents[0]).ImageName)
+                {
+                    OceanMediator.OceanTextureIndex = i;
+                    break;
+                }
+            }
+
             Bitmap? textureBitmap = OceanMediator.OceanTextureList[OceanMediator.OceanTextureIndex].TextureBitmap;
             float scale = OceanMediator.OceanTextureScale;
             bool mirrorBackground = OceanMediator.MirrorOceanTexture;

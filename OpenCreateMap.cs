@@ -24,7 +24,6 @@
 using RealmStudio.Properties;
 using System.ComponentModel;
 using System.IO;
-using System.Security.Cryptography;
 
 namespace RealmStudio
 {
@@ -38,7 +37,9 @@ namespace RealmStudio
         private bool WidthChanging;
         private bool HeightChanging;
 
-        private readonly List<RealmStudioMapRoot> CurrentMaps = [];
+        private readonly List<IRealmStudioMapGroup> CurrentMapGroups = [];
+
+        private Task? _loadTask;
 
         private RealmStudioMapRoot? _mapRoot;
 
@@ -124,10 +125,11 @@ namespace RealmStudio
 
             string defaultMapDirectory = Settings.Default.DefaultRealmDirectory;
 
-            CurrentMaps.Clear();
+            CurrentMapGroups.Clear();
 
             var files = from file in Directory.EnumerateFiles(defaultMapDirectory, "*.*", SearchOption.TopDirectoryOnly).Order()
-                        where file.Contains(".rsmapx")
+                        where file.EndsWith(".rsmapx", StringComparison.InvariantCultureIgnoreCase)
+                            || file.EndsWith(".rssetx", StringComparison.InvariantCultureIgnoreCase)
                         select new
                         {
                             File = file
@@ -137,23 +139,29 @@ namespace RealmStudio
             {
                 try
                 {
-                    RealmStudioMapRoot? map = LoadRealmStudioMapRootFromFile(f.File);
-                    if (map != null)
+                    if (f.File.EndsWith(".rsmapx", StringComparison.OrdinalIgnoreCase))
                     {
-                        CurrentMaps.Add(map);
+                        RealmStudioMapRoot? map = LoadRealmStudioMapRootFromFile(f.File);
+                        if (map != null)
+                        {
+                            CurrentMapGroups.Add(map);
+                        }
                     }
+                    else if (f.File.EndsWith(".rssetx", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // TODO: Load map sets
+                        //List<RealmStudioMapRoot>? maps = MapFileMethods.OpenMapSet(f.File);
+                    }
+
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Ignore errors loading maps
+                    // Ignore errors loading maps and map sets
+                    Program.LOGGER.Error($"Error loading map or map set file: {f.File}", ex);
                 }
             }
 
-            MapFileListBox.Items.Clear();
-            for (int i = 0; i < CurrentMaps.Count; i++)
-            {
-                MapFileListBox.Items.Add(CurrentMaps[i].MapName);
-            }
+
 
             Cursor.Current = Cursors.Default;
         }
@@ -165,8 +173,9 @@ namespace RealmStudio
                 RealmStudioMapRoot? map = MapFileMethods.OpenMapRoot(file);
                 return map!;
             }
-            catch
+            catch (Exception ex)
             {
+                Program.LOGGER.Error($"Error loading map file: {file}", ex);
                 if (showErrors)
                 {
                     MessageBox.Show($"Error loading map file: {file}. The map file may be corrupted.", "Error Loading Map", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -834,34 +843,59 @@ namespace RealmStudio
 
         private void MapFileListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            RealmStudioMapRoot selectedMap = CurrentMaps[MapFileListBox.SelectedIndex];
-
-            if (selectedMap != null)
+            if (CurrentMapGroups[MapFileListBox.SelectedIndex] is RealmStudioMapRoot)
             {
-                MapRoot = selectedMap;
+                RealmStudioMapRoot selectedMap = (RealmStudioMapRoot)CurrentMapGroups[MapFileListBox.SelectedIndex];
 
-                List<string> mapData = new()
+                if (selectedMap != null)
                 {
-                    $"Name: {selectedMap.MapName}",
-                    $"Type: {selectedMap.RealmType}",
-                    $"Size: {selectedMap.MapWidth} x {selectedMap.MapHeight} pixels",
-                    $"Path: {selectedMap.MapPath}",
-                    $"Created: {File.GetCreationTime(selectedMap.MapPath).ToString()}"
-                };
+                    MapRoot = selectedMap;
 
-                MapInfoTextBox.Lines = [.. mapData];
+                    List<string> mapData =
+                    [
+                        $"Name: {selectedMap.MapName}",
+                        $"Type: {selectedMap.RealmType}",
+                        $"Map Size: {selectedMap.MapWidth} x {selectedMap.MapHeight} pixels",
+                        $"Path: {selectedMap.MapPath}",
+                        $"File Size: {new FileInfo(selectedMap.MapPath).Length} bytes",
+                        $"Created: {File.GetCreationTime(selectedMap.MapPath).ToString()}"
+                    ];
+
+                    MapInfoTextBox.Lines = [.. mapData];
+                }
+                else
+                {
+                    MapRoot = new RealmStudioMapRoot();
+                    MapInfoTextBox.Lines = [];
+                }
             }
-            else
+            else if (CurrentMapGroups[MapFileListBox.SelectedIndex] is RealmStudioMapSet)
             {
-                MapRoot = new RealmStudioMapRoot();
-                MapInfoTextBox.Lines = [];
+                // TODO: Handle map sets
             }
         }
 
+        public void LoadCreatedMaps()
+        {
+            _loadTask = Task.Run(() => LoadCreatedMapsFromDefaultDirectory());
+        }   
+
         private void OpenCreateMap_Shown(object sender, EventArgs e)
         {
-            this.Refresh();
-            Task.WaitAll(LoadCreatedMapsFromDefaultDirectory());
+            _loadTask?.GetAwaiter().GetResult();
+
+            MapFileListBox.Items.Clear();
+            for (int i = 0; i < CurrentMapGroups.Count; i++)
+            {
+                if (CurrentMapGroups[i] is RealmStudioMapRoot)
+                {
+                    MapFileListBox.Items.Add(((RealmStudioMapRoot)CurrentMapGroups[i]).MapName);
+                }
+                else if (CurrentMapGroups[i] is RealmStudioMapSet)
+                {
+                    //MapFileListBox.Items.Add($"{((RealmStudioMapSet)CurrentMapGroups[i]).SetName} (Map Set)");
+                }
+            }
         }
 
         private void OpenMapIconButton_Click(object sender, EventArgs e)
@@ -870,25 +904,32 @@ namespace RealmStudio
             {
                 OpenFileDialog ofd = new()
                 {
-                    Title = "Select Map",
+                    Title = "Select Realm Studio File",
                     DefaultExt = "rsmapx",
-                    Filter = "Realm Studio map files (*.rsmapx)|*.rsmapx|All files (*.*)|*.*",
                     CheckFileExists = true,
                     RestoreDirectory = true,
                     ShowHelp = false,           // enabling the help button causes the dialog not to display files
-                    Multiselect = false
+                    Multiselect = false,
+                    Filter =
+                        "Realm Studio Map (*.rsmapx)|*.rsmapx|" +
+                        "Realm Studio Set (*.rssetx)|*.rssetx|" +
+                        "All Files (*.*)|*.*",
+
+                    FilterIndex = 1
                 };
 
                 if (ofd.ShowDialog(this) == DialogResult.OK)
                 {
-                    if (ofd.FileName != "")
+                    if (!string.IsNullOrEmpty(ofd.FileName))
                     {
-                        RealmStudioMapRoot? loadedMap = LoadRealmStudioMapRootFromFile(ofd.FileName, true);
-
-                        if (loadedMap != null)
+                        if (ofd.FileName.EndsWith(".rsmapx", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            MapInfoTextBox.Lines = [];
-                            List<string> mapData = new()
+                            RealmStudioMapRoot? loadedMap = LoadRealmStudioMapRootFromFile(ofd.FileName, true);
+
+                            if (loadedMap != null)
+                            {
+                                MapInfoTextBox.Lines = [];
+                                List<string> mapData = new()
                             {
                                 $"Name: {loadedMap.MapName}",
                                 $"Type: {loadedMap.RealmType}",
@@ -897,11 +938,16 @@ namespace RealmStudio
                                 $"Created: {File.GetCreationTime(loadedMap.MapPath)}"
                             };
 
-                            MapInfoTextBox.Lines = [.. mapData];
+                                MapInfoTextBox.Lines = [.. mapData];
+                            }
+                            else
+                            {
+                                MapInfoTextBox.Lines = [];
+                            }
                         }
-                        else
+                        else if (ofd.FileName.EndsWith(".rssetx", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            MapInfoTextBox.Lines = [];
+                            // TODO: Load map sets
                         }
                     }
                 }

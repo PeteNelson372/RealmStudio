@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OpenCreateMap));
             OpenCreateMapOverlay = new ReaLTaiizor.Forms.DungeonForm();
+            CreateButton = new Button();
             CancelConfigButton = new Button();
             OpenButton = new Button();
             CreateNewMapGroupBox = new GroupBox();
@@ -92,7 +93,6 @@
             OpenMapIconButton = new FontAwesome.Sharp.IconButton();
             MapInfoTextBox = new TextBox();
             MapFileListBox = new ListBox();
-            CreateButton = new Button();
             OpenCreateMapOverlay.SuspendLayout();
             CreateNewMapGroupBox.SuspendLayout();
             groupBox4.SuspendLayout();
@@ -142,6 +142,18 @@
             OpenCreateMapOverlay.TabIndex = 0;
             OpenCreateMapOverlay.Text = "Create or Select Map";
             OpenCreateMapOverlay.TitleColor = Color.FromArgb(223, 219, 210);
+            // 
+            // CreateButton
+            // 
+            CreateButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            CreateButton.ForeColor = SystemColors.ControlDarkDark;
+            CreateButton.Location = new Point(509, 669);
+            CreateButton.Name = "CreateButton";
+            CreateButton.Size = new Size(60, 60);
+            CreateButton.TabIndex = 26;
+            CreateButton.Text = "&Create";
+            CreateButton.UseVisualStyleBackColor = true;
+            CreateButton.Click += CreateButton_Click;
             // 
             // CancelConfigButton
             // 
@@ -933,6 +945,7 @@
             // MapInfoTextBox
             // 
             MapInfoTextBox.BorderStyle = BorderStyle.FixedSingle;
+            MapInfoTextBox.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             MapInfoTextBox.Location = new Point(6, 495);
             MapInfoTextBox.Multiline = true;
             MapInfoTextBox.Name = "MapInfoTextBox";
@@ -950,18 +963,6 @@
             MapFileListBox.Size = new Size(333, 424);
             MapFileListBox.TabIndex = 0;
             MapFileListBox.SelectedIndexChanged += MapFileListBox_SelectedIndexChanged;
-            // 
-            // CreateButton
-            // 
-            CreateButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            CreateButton.ForeColor = SystemColors.ControlDarkDark;
-            CreateButton.Location = new Point(509, 669);
-            CreateButton.Name = "CreateButton";
-            CreateButton.Size = new Size(60, 60);
-            CreateButton.TabIndex = 26;
-            CreateButton.Text = "&Create";
-            CreateButton.UseVisualStyleBackColor = true;
-            CreateButton.Click += CreateButton_Click;
             // 
             // OpenCreateMap
             // 
