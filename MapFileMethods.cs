@@ -118,6 +118,44 @@ namespace RealmStudio
             return map;
         }
 
+        internal static RealmStudioMapSet? OpenMapSet(string mapSetPath)
+        {
+            XmlSerializer? serializer = new(typeof(RealmStudioMapSet));
+
+            // If the XML document has been altered with unknown
+            // nodes or attributes, handle them with the
+            // UnknownNode and UnknownAttribute events.
+            serializer.UnknownNode += new XmlNodeEventHandler(Serializer_UnknownNode);
+            serializer.UnknownAttribute += new XmlAttributeEventHandler(Serializer_UnknownAttribute);
+
+            // A FileStream is needed to read the XML document.            
+            FileStream fs = new(mapSetPath, FileMode.Open);
+            using XmlReader reader = XmlReader.Create(fs);
+
+            // Declares an object variable of the type to be deserialized.
+            RealmStudioMapSet? mapSet;
+
+            try
+            {
+                // Uses the Deserialize method to restore the object's state
+                // with data from the XML document. */
+                mapSet = serializer.Deserialize(reader) as RealmStudioMapSet;
+            }
+            catch (Exception ex)
+            {
+                Program.LOGGER.Error("Exception deserializing " + mapSetPath + ": " + ex.Message);
+                mapSet = null;
+                throw;
+            }
+            finally
+            {
+                serializer = null;
+                fs.Dispose();
+            }
+
+            return mapSet;
+        }
+
         internal static void SaveMap(RealmStudioMap map)
         {
             using TextWriter? writer = new StreamWriter(map.MapPath);
@@ -132,6 +170,23 @@ namespace RealmStudio
             catch (Exception ex)
             {
                 Program.LOGGER.Error("Exception serializing " + map.MapPath + " Message: " + ex.Message);
+                throw;
+            }
+        }
+
+        internal static void SaveMapSet(RealmStudioMapSet mapSet)
+        {
+            using TextWriter? writer = new StreamWriter(mapSet.MapSetPath);
+            XmlSerializer? serializer = new(typeof(RealmStudioMapSet));
+
+            try
+            {
+                // Serializes the map and closes the TextWriter.
+                serializer.Serialize(writer, mapSet);
+            }
+            catch (Exception ex)
+            {
+                Program.LOGGER.Error("Exception serializing " + mapSet.MapSetPath + " Message: " + ex.Message);
                 throw;
             }
         }

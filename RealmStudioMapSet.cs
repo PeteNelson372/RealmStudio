@@ -29,6 +29,24 @@ namespace RealmStudio
     [XmlInclude(typeof(RealmStudioMapReference))]
     public class RealmStudioMapSet : IRealmStudioMapGroup
     {
+        [XmlIgnore]
+        private int _mapWidth = 0;
+
+        [XmlIgnore]
+        private int _mapHeight = 0;
+
+        [XmlIgnore]
+        private float _mapAreaWidth = 0;
+
+        [XmlIgnore]
+        private float _mapAreaHeight = 0;
+
+        [XmlIgnore]
+        private string _mapAreaUnits = string.Empty;
+
+        [XmlIgnore]
+        private string? _defaultThemeName;
+
         [XmlAttribute]
         public Guid MapSetGuid { get; set; } = Guid.NewGuid();
 
@@ -36,7 +54,32 @@ namespace RealmStudio
         public string MapSetName { get; set; } = "";
 
         [XmlAttribute]
+        public RealmMapType MapSetType { get; set; } = RealmMapType.World;
+
+        [XmlAttribute]
         public string MapSetPath { get; set; } = "";
+
+        [XmlAttribute]
+        public int DefaultMapWidth { get => _mapWidth; set => _mapWidth = value; }
+
+        [XmlAttribute]
+        public int DefaultMapHeight { get => _mapHeight; set => _mapHeight = value; }
+
+        [XmlAttribute]
+        public string DefaultMapAreaUnits
+        {
+            get => _mapAreaUnits;
+            set => _mapAreaUnits = value;
+        }
+
+        [XmlAttribute]
+        public float DefaultMapAreaWidth { get => _mapAreaWidth; set => _mapAreaWidth = value; }
+
+        [XmlAttribute]
+        public float DefaultMapAreaHeight { get => _mapAreaHeight; set => _mapAreaHeight = value; }
+
+        [XmlAttribute]
+        public string? DefaultThemeName { get => _defaultThemeName; set => _defaultThemeName = value; }
 
         [XmlArray("MapSet")]
         public List<RealmStudioMapReference> SetMaps { get; set; } = [];

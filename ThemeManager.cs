@@ -145,6 +145,7 @@ namespace RealmStudio
         internal static void ApplyTheme(MapTheme theme, ThemeFilter themeFilter)
         {
             if (theme == null || themeFilter == null) return;
+            if (MapStateMediator.CurrentMap == null) return;
 
             ArgumentNullException.ThrowIfNull(BackgroundManager.BackgroundMediator);
             ArgumentNullException.ThrowIfNull(VignetteManager.VignetteMediator);

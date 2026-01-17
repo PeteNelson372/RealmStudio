@@ -39,6 +39,21 @@ namespace RealmStudio
         private bool _overlayLayerEnabled = true;
         private bool _waIntegrationEnabled;
 
+        private TabPage? _backGroundTabPage;
+        private TabPage? _oceanTabPage;
+        private TabPage? _landformTabPage;
+        private TabPage? _waterFeaturesTabPage;
+        private TabPage? _pathsTabPage;
+        private TabPage? _symbolsTabPage;
+        private TabPage? _labelsTabPage;
+        private TabPage? _overlaysTabPage;
+        private TabPage? _regionsTabPage;
+        private TabPage? _drawingTabPage;
+        private TabPage? _interiorTabPage;
+        private TabPage? _dungeonTabPage;
+        private TabPage? _shipTabPage;
+        private TabPage? _planetTabPage;
+
         public MainFormUIMediator(RealmStudioMainForm mainForm)
         {
             _mainForm = mainForm;
@@ -88,6 +103,90 @@ namespace RealmStudio
         {
             get { return _waIntegrationEnabled; }
             set { SetPropertyField(nameof(WorldAnvilIntegration), ref _waIntegrationEnabled, value); }
+        }
+
+        internal TabPage? BackGroundTabPage
+        {
+            get { return _backGroundTabPage; }
+            set { SetPropertyField(nameof(BackGroundTabPage), ref _backGroundTabPage, value); }
+        }
+
+        internal TabPage? OceanTabPage
+        {
+            get { return _oceanTabPage; }
+            set { SetPropertyField(nameof(OceanTabPage), ref _oceanTabPage, value); }
+        }
+
+        internal TabPage? LandformTabPage
+        {
+            get { return _landformTabPage; }
+            set { SetPropertyField(nameof(LandformTabPage), ref _landformTabPage, value); }
+        }
+
+        internal TabPage? WaterFeaturesTabPage
+        {
+            get { return _waterFeaturesTabPage; }
+            set { SetPropertyField(nameof(WaterFeaturesTabPage), ref _waterFeaturesTabPage, value); }
+        }
+
+        internal TabPage? PathsTabPage
+        {
+            get { return _pathsTabPage; }
+            set { SetPropertyField(nameof(PathsTabPage), ref _pathsTabPage, value); }
+        }
+
+        internal TabPage? SymbolsTabPage
+        {
+            get { return _symbolsTabPage; }
+            set { SetPropertyField(nameof(SymbolsTabPage), ref _symbolsTabPage, value); }
+        }
+
+        internal TabPage? LabelsTabPage
+        {
+            get { return _labelsTabPage; }
+            set { SetPropertyField(nameof(LabelsTabPage), ref _labelsTabPage, value); }
+        }
+
+        internal TabPage? OverlaysTabPage
+        {
+            get { return _overlaysTabPage; }
+            set { SetPropertyField(nameof(OverlaysTabPage), ref _overlaysTabPage, value); }
+        }
+
+        internal TabPage? RegionsTabPage
+        {
+            get { return _regionsTabPage; }
+            set { SetPropertyField(nameof(RegionsTabPage), ref _regionsTabPage, value); }
+        }
+
+        internal TabPage? DrawingTabPage
+        {
+            get { return _drawingTabPage; }
+            set { SetPropertyField(nameof(DrawingTabPage), ref _drawingTabPage, value); }
+        }
+
+        internal TabPage? InteriorTabPage
+        {
+            get { return _interiorTabPage; }
+            set { SetPropertyField(nameof(InteriorTabPage), ref _interiorTabPage, value); }
+        }
+
+        internal TabPage? DungeonTabPage
+        {
+            get { return _dungeonTabPage; }
+            set { SetPropertyField(nameof(DungeonTabPage), ref _dungeonTabPage, value); }
+        }
+
+        internal TabPage? ShipTabPage
+        {
+            get { return _shipTabPage; }
+            set { SetPropertyField(nameof(ShipTabPage), ref _shipTabPage, value); }
+        }
+
+        internal TabPage? PlanetTabPage
+        {
+            get { return _planetTabPage; }
+            set { SetPropertyField(nameof(PlanetTabPage), ref _planetTabPage, value); }
         }
 
         #endregion
@@ -167,6 +266,128 @@ namespace RealmStudio
                 (e.Y / MapStateMediator.MainUIMediator.DrawingZoom) - MapStateMediator.ScrollPoint.Y);
 
             return cursorPoint;
+        }
+
+        internal void ConfigureMainTab()
+        {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
+            for (int i = MainForm.MainTab.TabPages.Count - 1; i >= 1; i--)
+            {
+                if (MainForm.MainTab.TabPages[i] == OceanTabPage ||
+                    MainForm.MainTab.TabPages[i] == LandformTabPage ||
+                    MainForm.MainTab.TabPages[i] == InteriorTabPage ||
+                    MainForm.MainTab.TabPages[i] == DungeonTabPage ||
+                    MainForm.MainTab.TabPages[i] == PlanetTabPage ||
+                    MainForm.MainTab.TabPages[i] == ShipTabPage)
+                {
+                    MainForm.MainTab.TabPages.RemoveAt(i);
+                }
+            }
+
+            switch (MapStateMediator.CurrentMap.RealmType)
+            {
+                case RealmMapType.World:
+                    {
+                        if (OceanTabPage != null && LandformTabPage != null)
+                        {
+                            MainForm.MainTab.TabPages.Insert(1, OceanTabPage);
+                            MainForm.MainTab.TabPages.Insert(2, LandformTabPage);
+                        }
+                    }
+                    break;
+                case RealmMapType.Region:
+                    {
+                        if (OceanTabPage != null && LandformTabPage != null)
+                        {
+                            MainForm.MainTab.TabPages.Insert(1, OceanTabPage);
+                            MainForm.MainTab.TabPages.Insert(2, LandformTabPage);
+                        }
+                    }
+                    break;
+                case RealmMapType.City:
+                    {
+                        if (OceanTabPage != null && LandformTabPage != null)
+                        {
+                            MainForm.MainTab.TabPages.Insert(1, OceanTabPage);
+                            MainForm.MainTab.TabPages.Insert(2, LandformTabPage);
+                        }
+                    }
+                    break;
+                case RealmMapType.Interior:
+                    {
+                        // shouldn't happen
+                    }
+                    break;
+                case RealmMapType.Dungeon:
+                    {
+                        // shouldn't happen
+                    }
+                    break;
+                case RealmMapType.SolarSystem:
+                    {
+                        // shouldn't happen
+                    }
+                    break;
+                case RealmMapType.Ship:
+                    {
+                        // shouldn't happen
+                    }
+                    break;
+                case RealmMapType.Other:
+                    {
+                        if (OceanTabPage != null && LandformTabPage != null)
+                        {
+                            MainForm.MainTab.TabPages.Insert(1, OceanTabPage);
+                            MainForm.MainTab.TabPages.Insert(2, LandformTabPage);
+                        }
+                    }
+                    break;
+                case RealmMapType.InteriorFloor:
+                    {
+                        if (InteriorTabPage != null)
+                        {
+                            MainForm.MainTab.TabPages.Insert(2, InteriorTabPage);
+                        }
+                    }
+                    break;
+                case RealmMapType.DungeonLevel:
+                    {
+                        if (DungeonTabPage != null)
+                        {
+                            MainForm.MainTab.TabPages.Insert(2, DungeonTabPage);
+                        }
+                    }
+                    break;
+                case RealmMapType.ShipDeck:
+                    {
+                        if (ShipTabPage != null)
+                        {
+                            MainForm.MainTab.TabPages.Insert(2, ShipTabPage);
+                        }
+                    }
+                    break;
+                case RealmMapType.SolarSystemBody:
+                    {
+                        if (PlanetTabPage != null)
+                        {
+                            MainForm.MainTab.TabPages.Insert(2, PlanetTabPage);
+                        }
+                    }
+                    break;
+                default:
+                    {
+                        if (OceanTabPage != null && LandformTabPage != null)
+                        {
+                            MainForm.MainTab.TabPages.Insert(1, OceanTabPage);
+                            MainForm.MainTab.TabPages.Insert(2, LandformTabPage);
+                        }
+                    }
+                    break;
+            }
         }
 
         internal void SetDrawingMode(MapDrawingMode newDrawingMode, int newBrushSize = -1)

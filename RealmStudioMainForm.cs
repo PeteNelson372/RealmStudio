@@ -221,6 +221,7 @@ namespace RealmStudio
             // but in some cases, changes to the current map (and maybe to other objects)
             // result in UI changes that the map object mediators don't know about
 
+            MapStateMediator.MainUIMediator = MainMediator;
             MapStateMediator.BoxUIMediator = BoxMediator;
             MapStateMediator.FrameUIMediator = FrameMediator;
             MapStateMediator.GridUIMediator = GridMediator;
@@ -245,6 +246,30 @@ namespace RealmStudio
         *******************************************************************************************************/
         private void RealmStudioMainForm_Load(object sender, EventArgs e)
         {
+            MainMediator.BackGroundTabPage = MainTab.TabPages[0];
+            MainMediator.OceanTabPage = MainTab.TabPages[1];
+            MainMediator.LandformTabPage = MainTab.TabPages[2];
+            MainMediator.WaterFeaturesTabPage = MainTab.TabPages[3];
+            MainMediator.PathsTabPage = MainTab.TabPages[4];
+            MainMediator.SymbolsTabPage = MainTab.TabPages[5];
+            MainMediator.LabelsTabPage = MainTab.TabPages[6];
+            MainMediator.OverlaysTabPage = MainTab.TabPages[7];
+            MainMediator.RegionsTabPage = MainTab.TabPages[8];
+            MainMediator.DrawingTabPage = MainTab.TabPages[9];
+            MainMediator.InteriorTabPage = MainTab.TabPages[10];
+            MainMediator.DungeonTabPage = MainTab.TabPages[11];
+            MainMediator.ShipTabPage = MainTab.TabPages[12];
+            MainMediator.PlanetTabPage = MainTab.TabPages[13];
+
+            MainTab.TabPages.RemoveAt(13);
+            MainTab.TabPages.RemoveAt(12);
+            MainTab.TabPages.RemoveAt(11);
+            MainTab.TabPages.RemoveAt(10);
+
+            MainTab.TabPages.RemoveAt(2);
+            MainTab.TabPages.RemoveAt(1);
+
+
             BackgroundToolPanel.Visible = true;
             OceanToolPanel.Visible = false;
             LandToolPanel.Visible = false;
@@ -321,31 +346,19 @@ namespace RealmStudio
 
             if (!string.IsNullOrEmpty(MapCommandLinePath))
             {
-                OpenMap(MapCommandLinePath);
-            }
-            else if (OPEN_CREATE_MAP_DIALOG.MapRoot != null)
-            {
-                try
+                if (MapCommandLinePath.EndsWith(UtilityMethods.REALM_STUDIO_MAP_FILE_EXTENSION, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
-                    {
-                        OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
-                    }
-                    else
-                    {
-                        // create a new map
-                        CreateNewMap();
-                    }
+                    OpenMap(MapCommandLinePath);
                 }
-                catch
+                else if (MapCommandLinePath.EndsWith(UtilityMethods.REALM_STUDIO_MAPSET_FILE_EXTENSION, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    MessageBox.Show("Could not open or create selected map.");
-                    Application.Exit();
+                    OpenMapSet(MapCommandLinePath);
                 }
+
             }
             else
             {
-                Application.Exit();
+                OpenOrCreateMapOrMapSet();
             }
 
             ApplicationTimerManager.StartAutosaveTimer();
@@ -360,6 +373,49 @@ namespace RealmStudio
             SKGLRenderControl.Invalidate();
 
             Cursor = Cursors.Default;
+        }
+
+        private void OpenOrCreateMapOrMapSet()
+        {
+            try
+            {
+                if (OPEN_CREATE_MAP_DIALOG.MapSet != null && OPEN_CREATE_MAP_DIALOG.MapRoot == null)
+                {
+                    // open or create a map set
+                    if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapSet.MapSetPath))
+                    {
+                        OpenMapSet(OPEN_CREATE_MAP_DIALOG.MapSet);
+                    }
+                    else
+                    {
+                        CreateNewMapSet(OPEN_CREATE_MAP_DIALOG.MapSet);
+                    }
+                }
+                else if (OPEN_CREATE_MAP_DIALOG.MapRoot != null && OPEN_CREATE_MAP_DIALOG.MapSet == null)
+                {
+                    // open or create a map
+                    if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
+                    {
+                        OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
+                    }
+                    else
+                    {
+                        // create a new map
+                        CreateNewMap(OPEN_CREATE_MAP_DIALOG.MapRoot);
+                    }
+                }
+                else
+                {
+                    // error
+                    MessageBox.Show("Application error. Map or map set not selected.", "Application Error", MessageBoxButtons.OK);
+                    Application.Exit();
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Could not open or create selected map.", "Application Error", MessageBoxButtons.OK);
+                Application.Exit();
+            }
         }
 
         private void FinalizeOpenedMap()
@@ -1476,12 +1532,12 @@ namespace RealmStudio
             MapStateMediator.PreviousMouseLocation = e.Location.ToSKPoint();
         }
 
-        private void CreateNewMap()
+        private void CreateNewMap(RealmStudioMapRoot mapRoot)
         {
             ArgumentNullException.ThrowIfNull(FrameManager.FrameMediator);
             ArgumentNullException.ThrowIfNull(OceanManager.OceanMediator);
 
-            // open an existing map
+            // create new map
             try
             {
                 Cursor = Cursors.WaitCursor;
@@ -1490,7 +1546,7 @@ namespace RealmStudio
 
                 try
                 {
-                    MapStateMediator.CurrentMap = new(OPEN_CREATE_MAP_DIALOG.MapRoot);
+                    MapStateMediator.CurrentMap = new(mapRoot);
 
                     if (MapStateMediator.CurrentMap != null)
                     {
@@ -1551,6 +1607,113 @@ namespace RealmStudio
             finally
             {
                 Cursor = Cursors.Default;
+            }
+        }
+
+        private void CreateNewMapSet(RealmStudioMapSet mapSet)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(mapSet.MapSetName))
+                {
+                    mapSet.MapSetName = "DefaultMapSet";
+                }
+
+                if (string.IsNullOrEmpty(mapSet.MapSetPath))
+                {
+                    if (mapSet.MapSetName == "DefaultMapSet")
+                    {
+                        string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                        mapSet.MapSetPath = Settings.Default.DefaultRealmDirectory + Path.DirectorySeparatorChar + mapSet.MapSetName + "_" + timestamp + UtilityMethods.REALM_STUDIO_MAPSET_FILE_EXTENSION;
+                    }
+                    else
+                    {
+                        mapSet.MapSetPath = Settings.Default.DefaultRealmDirectory + Path.DirectorySeparatorChar + mapSet.MapSetName + UtilityMethods.REALM_STUDIO_MAPSET_FILE_EXTENSION;
+                    }
+                }
+
+                if (mapSet.MapSetGuid == Guid.Empty)
+                {
+                    mapSet.MapSetGuid = Guid.NewGuid();
+                }
+
+                // create the initial map of the map set
+
+                RealmStudioMapRoot initialSetMap = new();
+                initialSetMap.MapGuid = Guid.NewGuid();
+                initialSetMap.MapWidth = mapSet.DefaultMapWidth > 0 ? mapSet.DefaultMapWidth : MapBuilder.MAP_DEFAULT_WIDTH;
+                initialSetMap.MapHeight = mapSet.DefaultMapHeight > 0 ? mapSet.DefaultMapHeight : MapBuilder.MAP_DEFAULT_HEIGHT;
+
+                // MapAreaWidth and MapAreaHeight are the size of the map in MapAreaUnits (e.g. 1000 miles x 500 miles)
+                initialSetMap.MapAreaWidth = mapSet.DefaultMapAreaWidth > 0 ? mapSet.DefaultMapAreaWidth : 100;
+                float mapAspectRatio = ((float)initialSetMap.MapWidth / initialSetMap.MapHeight);
+                initialSetMap.MapAreaHeight = ((float)initialSetMap.MapAreaWidth / mapAspectRatio);
+
+                // MapPixelWidth and MapPixelHeight are the size of one pixel in MapAreaUnits
+                initialSetMap.MapPixelWidth = initialSetMap.MapAreaWidth / initialSetMap.MapWidth;
+                initialSetMap.MapPixelHeight = initialSetMap.MapAreaHeight / initialSetMap.MapHeight;
+
+                initialSetMap.MapAreaUnits = mapSet.DefaultMapAreaUnits;
+
+                initialSetMap.MapTheme = mapSet.DefaultThemeName != null ? mapSet.DefaultThemeName : AssetManager.CURRENT_THEME != null ? AssetManager.CURRENT_THEME.ThemeName : AssetManager.DEFAULT_THEME_NAME;
+
+                switch (mapSet.MapSetType)
+                {
+                    case RealmMapType.Dungeon:
+                        initialSetMap.RealmType = RealmMapType.DungeonLevel;
+                        initialSetMap.MapName = mapSet.MapSetName + " Level 1";
+                        break;
+                    case RealmMapType.Interior:
+                        initialSetMap.RealmType = RealmMapType.InteriorFloor;
+                        initialSetMap.MapName = mapSet.MapSetName + " Floor 1";
+                        break;
+                    case RealmMapType.SolarSystem:
+                        initialSetMap.RealmType = RealmMapType.SolarSystemBody;
+                        initialSetMap.MapName = mapSet.MapSetName + " Planet 1";
+                        break;
+                    case RealmMapType.Ship:
+                        initialSetMap.RealmType = RealmMapType.ShipDeck;
+                        initialSetMap.MapName = mapSet.MapSetName + " Deck 1";
+                        break;
+                    default:
+                        initialSetMap.RealmType = RealmMapType.Other;
+                        initialSetMap.MapName = mapSet.MapSetName + " Layer 1";
+                        break;
+                }
+
+                initialSetMap.MapPath = Settings.Default.DefaultRealmDirectory + Path.DirectorySeparatorChar + initialSetMap.MapName + UtilityMethods.REALM_STUDIO_MAP_FILE_EXTENSION;
+
+                // create the map reference and map root for the initial map
+                RealmStudioMapReference mapRef = new()
+                {
+                    MapGuid = initialSetMap.MapGuid,
+                    MapName = initialSetMap.MapName,
+                    MapPath = initialSetMap.MapPath,
+                    RealmType = initialSetMap.RealmType
+                };
+
+                mapSet.SetMaps.Add(mapRef);
+
+                // create and serialize the initial map
+                // CreateNewMap creates the MapLayer and assigns it as MapStateMediator.CurrentMap
+                CreateNewMap(initialSetMap);
+
+                MapStateMediator.CurrentMap.IsSaved = false;
+
+                // serialize the map
+                SaveMap();
+
+                // serialize the map set                
+                MapFileMethods.SaveMapSet(mapSet);
+
+                MapStateMediator.CurrentMapSet = mapSet;
+
+                RealmSetComboBox.Items.Clear();
+                RealmSetComboBox.Items.Add(MapStateMediator.CurrentMap.MapName);
+            }
+            catch (Exception ex)
+            {
+                Program.LOGGER.Error(ex);
             }
         }
 
@@ -1639,7 +1802,6 @@ namespace RealmStudio
                     break;
                 case 4:
                     PathToolPanel.Visible = true;
-                    //PathMediator.NotifyUpdate(null);
                     BackgroundToolPanel.Visible = false;
                     break;
                 case 5:
@@ -2074,13 +2236,13 @@ namespace RealmStudio
         {
             SaveFileDialog sfd = new()
             {
-                DefaultExt = "rsmapx",
+                DefaultExt = UtilityMethods.REALM_STUDIO_MAP_FILE_EXTENSION,
                 CheckWriteAccess = true,
                 ExpandedMode = true,
                 AddExtension = true,
                 SupportMultiDottedExtensions = false,
                 AddToRecent = true,
-                Filter = "Realm Studio Map|*.rsmapx",
+                Filter = "Realm Studio Map|*" + UtilityMethods.REALM_STUDIO_MAP_FILE_EXTENSION,
                 Title = "Save Map",
             };
 
@@ -2145,30 +2307,7 @@ namespace RealmStudio
                     {
                         OPEN_CREATE_MAP_DIALOG.ShowDialog(this);
 
-                        if (OPEN_CREATE_MAP_DIALOG.MapRoot != null)
-                        {
-                            try
-                            {
-                                if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
-                                {
-                                    OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
-                                }
-                                else
-                                {
-                                    // create a new map
-                                    CreateNewMap();
-                                }
-                            }
-                            catch
-                            {
-                                MessageBox.Show("Could not open or create selected map.");
-                                Application.Exit();
-                            }
-                        }
-                        else
-                        {
-                            Application.Exit();
-                        }
+                        OpenOrCreateMapOrMapSet();
 
                         Cursor = Cursors.Default;
                     }
@@ -2177,30 +2316,7 @@ namespace RealmStudio
                 {
                     OPEN_CREATE_MAP_DIALOG.ShowDialog(this);
 
-                    if (OPEN_CREATE_MAP_DIALOG.MapRoot != null)
-                    {
-                        try
-                        {
-                            if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
-                            {
-                                OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
-                            }
-                            else
-                            {
-                                // create a new map
-                                CreateNewMap();
-                            }
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Could not open or create selected map.");
-                            Application.Exit();
-                        }
-                    }
-                    else
-                    {
-                        Application.Exit();
-                    }
+                    OpenOrCreateMapOrMapSet();
 
                     Cursor = Cursors.Default;
                 }
@@ -2211,23 +2327,7 @@ namespace RealmStudio
 
                 if (OPEN_CREATE_MAP_DIALOG.MapRoot != null)
                 {
-                    try
-                    {
-                        if (!string.IsNullOrEmpty(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath))
-                        {
-                            OpenMap(OPEN_CREATE_MAP_DIALOG.MapRoot.MapPath);
-                        }
-                        else
-                        {
-                            // create a new map
-                            CreateNewMap();
-                        }
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Could not open or create selected map.");
-                        Application.Exit();
-                    }
+                    OpenOrCreateMapOrMapSet();
                 }
                 else
                 {
@@ -2330,6 +2430,33 @@ namespace RealmStudio
             {
                 Cursor = Cursors.Default;
             }
+        }
+
+        private void OpenMapSet(string mapSetPath)
+        {
+            try
+            {
+                RealmStudioMapSet? mapSet = MapFileMethods.OpenMapSet(mapSetPath);
+
+                if (mapSet != null)
+                {
+                    foreach (RealmStudioMapReference mapRef in mapSet.SetMaps)
+                    {
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.LOGGER.Error(ex.Message);
+            }
+
+        }
+
+        private void OpenMapSet(RealmStudioMapSet mapSet)
+        {
+            MessageBox.Show("Opening map set:" + mapSet.MapSetName, "Map Set", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            OpenMapSet(mapSet.MapSetPath);
         }
 
         private static void LoadWorldAnvilMapDataForCurrentMap()

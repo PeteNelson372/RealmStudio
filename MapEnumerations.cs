@@ -21,6 +21,9 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using System.ComponentModel;
+using System.Reflection;
+
 namespace RealmStudio
 {
     public enum MapDrawingMode
@@ -205,15 +208,33 @@ namespace RealmStudio
 
     public enum RealmMapType
     {
+        [Description("World")]
         World,
+        [Description("Region")]
         Region,
+        [Description("City")]
         City,
+        [Description("Interior")]
         Interior,
+        [Description("Dungeon")]
         Dungeon,
+        [Description("Solar System")]
         SolarSystem,
+        [Description("Ship")]
         Ship,
-        Other
+        [Description("Other Realm Type")]
+        Other,
+        [Description("Interior Floor")]
+        InteriorFloor,
+        [Description("Dungeon Level")]
+        DungeonLevel,
+        [Description("Ship Deck")]
+        ShipDeck,
+        [Description("Solar System Body")]
+        SolarSystemBody
     }
+
+
 
     public enum FontPanelOpener
     {
@@ -329,5 +350,30 @@ namespace RealmStudio
         Polygon,
         Stamp,
         Text
+    }
+
+    public static class EnumerationExtensions
+    {
+        public static string? GetDescription(this Enum value)
+        {
+            Type type = value.GetType();
+            string? name = Enum.GetName(type, value);
+            if (name != null)
+            {
+                FieldInfo? field = type.GetField(name);
+                if (field != null)
+                {
+                    if (Attribute.GetCustomAttribute(field,
+                             typeof(DescriptionAttribute)) is DescriptionAttribute attr)
+                    {
+                        return attr.Description;
+                    }
+                }
+
+                return name;
+            }
+
+            return null;
+        }
     }
 }

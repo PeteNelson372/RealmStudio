@@ -71,28 +71,37 @@
             WH1280x1024Radio = new RadioButton();
             WH1024x768Radio = new RadioButton();
             RealmTypeGroupBox = new GroupBox();
-            pictureBox8 = new PictureBox();
+            ShipDeckPictureBox = new PictureBox();
+            ShipDeckRadioButton = new RadioButton();
+            SolarSystemBodyPictureBox = new PictureBox();
+            SolarSystemBodyRadioButton = new RadioButton();
+            DungeonLevelPictureBox = new PictureBox();
+            DungeonLevelRadioButton = new RadioButton();
+            InteriorFloorPictureBox = new PictureBox();
+            InteriorFloorRadioButton = new RadioButton();
+            CityPictureBox = new PictureBox();
             CityRadioButton = new RadioButton();
-            pictureBox7 = new PictureBox();
+            OtherPictureBox = new PictureBox();
             OtherRadioButton = new RadioButton();
-            pictureBox6 = new PictureBox();
+            ShipPictureBox = new PictureBox();
             ShipRadioButton = new RadioButton();
-            pictureBox5 = new PictureBox();
+            SolarSystemPictureBox = new PictureBox();
             SolarSystemRadioButton = new RadioButton();
-            pictureBox4 = new PictureBox();
+            DungeonPictureBox = new PictureBox();
             DungeonRadioButton = new RadioButton();
-            pictureBox3 = new PictureBox();
+            InteriorPictureBox = new PictureBox();
             InteriorRadioButton = new RadioButton();
-            pictureBox2 = new PictureBox();
+            RegionPictureBox = new PictureBox();
             RegionRadioButton = new RadioButton();
-            pictureBox1 = new PictureBox();
+            WorldPictureBox = new PictureBox();
             WorldRadioButton = new RadioButton();
             OpenExistingMapGroup = new GroupBox();
+            MapFileListView = new ListView();
+            MapName = new ColumnHeader();
             ClearSelectedMapButton = new FontAwesome.Sharp.IconButton();
             label6 = new Label();
             OpenMapIconButton = new FontAwesome.Sharp.IconButton();
             MapInfoTextBox = new TextBox();
-            MapFileListBox = new ListBox();
             OpenCreateMapOverlay.SuspendLayout();
             CreateNewMapGroupBox.SuspendLayout();
             groupBox4.SuspendLayout();
@@ -103,14 +112,18 @@
             ((System.ComponentModel.ISupportInitialize)HeightUpDown).BeginInit();
             groupBox2.SuspendLayout();
             RealmTypeGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox8).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox7).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)ShipDeckPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SolarSystemBodyPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DungeonLevelPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)InteriorFloorPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)CityPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)OtherPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)ShipPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)SolarSystemPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DungeonPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)InteriorPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)RegionPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WorldPictureBox).BeginInit();
             OpenExistingMapGroup.SuspendLayout();
             SuspendLayout();
             // 
@@ -118,7 +131,6 @@
             // 
             OpenCreateMapOverlay.BackColor = Color.FromArgb(244, 241, 243);
             OpenCreateMapOverlay.BorderColor = Color.FromArgb(38, 38, 38);
-            OpenCreateMapOverlay.Controls.Add(CreateButton);
             OpenCreateMapOverlay.Controls.Add(CancelConfigButton);
             OpenCreateMapOverlay.Controls.Add(OpenButton);
             OpenCreateMapOverlay.Controls.Add(CreateNewMapGroupBox);
@@ -136,7 +148,7 @@
             OpenCreateMapOverlay.Padding = new Padding(20, 56, 20, 16);
             OpenCreateMapOverlay.RoundCorners = true;
             OpenCreateMapOverlay.Sizable = true;
-            OpenCreateMapOverlay.Size = new Size(877, 748);
+            OpenCreateMapOverlay.Size = new Size(1106, 697);
             OpenCreateMapOverlay.SmartBounds = true;
             OpenCreateMapOverlay.StartPosition = FormStartPosition.CenterScreen;
             OpenCreateMapOverlay.TabIndex = 0;
@@ -147,7 +159,7 @@
             // 
             CreateButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             CreateButton.ForeColor = SystemColors.ControlDarkDark;
-            CreateButton.Location = new Point(509, 669);
+            CreateButton.Location = new Point(622, 548);
             CreateButton.Name = "CreateButton";
             CreateButton.Size = new Size(60, 60);
             CreateButton.TabIndex = 26;
@@ -159,7 +171,7 @@
             // 
             CancelConfigButton.DialogResult = DialogResult.Cancel;
             CancelConfigButton.ForeColor = SystemColors.ControlDarkDark;
-            CancelConfigButton.Location = new Point(794, 669);
+            CancelConfigButton.Location = new Point(1023, 613);
             CancelConfigButton.Name = "CancelConfigButton";
             CancelConfigButton.Size = new Size(60, 60);
             CancelConfigButton.TabIndex = 25;
@@ -171,7 +183,7 @@
             // 
             OpenButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             OpenButton.ForeColor = SystemColors.ControlDarkDark;
-            OpenButton.Location = new Point(728, 669);
+            OpenButton.Location = new Point(957, 613);
             OpenButton.Name = "OpenButton";
             OpenButton.Size = new Size(60, 60);
             OpenButton.TabIndex = 3;
@@ -181,6 +193,7 @@
             // 
             // CreateNewMapGroupBox
             // 
+            CreateNewMapGroupBox.Controls.Add(CreateButton);
             CreateNewMapGroupBox.Controls.Add(RealmNameTextBox);
             CreateNewMapGroupBox.Controls.Add(groupBox4);
             CreateNewMapGroupBox.Controls.Add(groupBox5);
@@ -190,7 +203,7 @@
             CreateNewMapGroupBox.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             CreateNewMapGroupBox.Location = new Point(23, 59);
             CreateNewMapGroupBox.Name = "CreateNewMapGroupBox";
-            CreateNewMapGroupBox.Size = new Size(480, 670);
+            CreateNewMapGroupBox.Size = new Size(694, 614);
             CreateNewMapGroupBox.TabIndex = 2;
             CreateNewMapGroupBox.TabStop = false;
             CreateNewMapGroupBox.Text = "Create New Map";
@@ -201,7 +214,7 @@
             // 
             // 
             RealmNameTextBox.CustomButton.Image = null;
-            RealmNameTextBox.CustomButton.Location = new Point(425, 1);
+            RealmNameTextBox.CustomButton.Location = new Point(419, 1);
             RealmNameTextBox.CustomButton.Name = "";
             RealmNameTextBox.CustomButton.Size = new Size(27, 27);
             RealmNameTextBox.CustomButton.Style = ReaLTaiizor.Enum.Poison.ColorStyle.Blue;
@@ -220,7 +233,7 @@
             RealmNameTextBox.SelectionLength = 0;
             RealmNameTextBox.SelectionStart = 0;
             RealmNameTextBox.ShortcutsEnabled = true;
-            RealmNameTextBox.Size = new Size(453, 29);
+            RealmNameTextBox.Size = new Size(447, 29);
             RealmNameTextBox.TabIndex = 23;
             RealmNameTextBox.UseSelectable = true;
             RealmNameTextBox.WaterMark = "Enter Realm Name";
@@ -236,9 +249,9 @@
             groupBox4.Controls.Add(label7);
             groupBox4.Controls.Add(MapAreaWidthUpDown);
             groupBox4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox4.Location = new Point(6, 534);
+            groupBox4.Location = new Point(236, 411);
             groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(223, 117);
+            groupBox4.Size = new Size(213, 117);
             groupBox4.TabIndex = 22;
             groupBox4.TabStop = false;
             groupBox4.Text = "Realm Map Area";
@@ -270,14 +283,14 @@
             MapAreaUnitCombo.Items.AddRange(new object[] { "Centimeters", "Inches", "Feet", "Yards", "Meters", "Kilometers", "Miles", "Astronomical Units (AU)", "Light Years", "Parsecs" });
             MapAreaUnitCombo.Location = new Point(114, 26);
             MapAreaUnitCombo.Name = "MapAreaUnitCombo";
-            MapAreaUnitCombo.Size = new Size(103, 23);
+            MapAreaUnitCombo.Size = new Size(77, 23);
             MapAreaUnitCombo.TabIndex = 4;
             // 
             // label4
             // 
             label4.AutoSize = true;
             label4.ForeColor = SystemColors.ControlDarkDark;
-            label4.Location = new Point(20, 26);
+            label4.Location = new Point(20, 29);
             label4.Name = "label4";
             label4.Size = new Size(88, 15);
             label4.TabIndex = 3;
@@ -287,7 +300,7 @@
             // 
             label7.AutoSize = true;
             label7.ForeColor = SystemColors.ControlDarkDark;
-            label7.Location = new Point(15, 57);
+            label7.Location = new Point(14, 57);
             label7.Name = "label7";
             label7.Size = new Size(94, 15);
             label7.TabIndex = 2;
@@ -299,7 +312,7 @@
             MapAreaWidthUpDown.Maximum = new decimal(new int[] { 1000000000, 0, 0, 0 });
             MapAreaWidthUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             MapAreaWidthUpDown.Name = "MapAreaWidthUpDown";
-            MapAreaWidthUpDown.Size = new Size(103, 23);
+            MapAreaWidthUpDown.Size = new Size(77, 23);
             MapAreaWidthUpDown.TabIndex = 1;
             MapAreaWidthUpDown.TextAlign = HorizontalAlignment.Center;
             MapAreaWidthUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
@@ -309,9 +322,9 @@
             // 
             groupBox5.Controls.Add(MapThemeList);
             groupBox5.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox5.Location = new Point(6, 412);
+            groupBox5.Location = new Point(240, 76);
             groupBox5.Name = "groupBox5";
-            groupBox5.Size = new Size(223, 116);
+            groupBox5.Size = new Size(213, 194);
             groupBox5.TabIndex = 21;
             groupBox5.TabStop = false;
             groupBox5.Text = "Realm Map Theme";
@@ -321,7 +334,7 @@
             MapThemeList.FormattingEnabled = true;
             MapThemeList.Location = new Point(6, 22);
             MapThemeList.Name = "MapThemeList";
-            MapThemeList.Size = new Size(211, 79);
+            MapThemeList.Size = new Size(201, 154);
             MapThemeList.TabIndex = 0;
             MapThemeList.SelectedIndexChanged += MapThemeList_SelectedIndexChanged;
             // 
@@ -336,7 +349,7 @@
             groupBox3.Controls.Add(WidthUpDown);
             groupBox3.Controls.Add(HeightUpDown);
             groupBox3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox3.Location = new Point(246, 76);
+            groupBox3.Location = new Point(236, 289);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new Size(213, 116);
             groupBox3.TabIndex = 19;
@@ -454,9 +467,9 @@
             groupBox2.Controls.Add(WH1280x1024Radio);
             groupBox2.Controls.Add(WH1024x768Radio);
             groupBox2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox2.Location = new Point(246, 198);
+            groupBox2.Location = new Point(469, 79);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(213, 453);
+            groupBox2.Size = new Size(213, 449);
             groupBox2.TabIndex = 11;
             groupBox2.TabStop = false;
             groupBox2.Text = "Realm Map Size Presets";
@@ -657,39 +670,152 @@
             // 
             // RealmTypeGroupBox
             // 
-            RealmTypeGroupBox.Controls.Add(pictureBox8);
+            RealmTypeGroupBox.Controls.Add(ShipDeckPictureBox);
+            RealmTypeGroupBox.Controls.Add(ShipDeckRadioButton);
+            RealmTypeGroupBox.Controls.Add(SolarSystemBodyPictureBox);
+            RealmTypeGroupBox.Controls.Add(SolarSystemBodyRadioButton);
+            RealmTypeGroupBox.Controls.Add(DungeonLevelPictureBox);
+            RealmTypeGroupBox.Controls.Add(DungeonLevelRadioButton);
+            RealmTypeGroupBox.Controls.Add(InteriorFloorPictureBox);
+            RealmTypeGroupBox.Controls.Add(InteriorFloorRadioButton);
+            RealmTypeGroupBox.Controls.Add(CityPictureBox);
             RealmTypeGroupBox.Controls.Add(CityRadioButton);
-            RealmTypeGroupBox.Controls.Add(pictureBox7);
+            RealmTypeGroupBox.Controls.Add(OtherPictureBox);
             RealmTypeGroupBox.Controls.Add(OtherRadioButton);
-            RealmTypeGroupBox.Controls.Add(pictureBox6);
+            RealmTypeGroupBox.Controls.Add(ShipPictureBox);
             RealmTypeGroupBox.Controls.Add(ShipRadioButton);
-            RealmTypeGroupBox.Controls.Add(pictureBox5);
+            RealmTypeGroupBox.Controls.Add(SolarSystemPictureBox);
             RealmTypeGroupBox.Controls.Add(SolarSystemRadioButton);
-            RealmTypeGroupBox.Controls.Add(pictureBox4);
+            RealmTypeGroupBox.Controls.Add(DungeonPictureBox);
             RealmTypeGroupBox.Controls.Add(DungeonRadioButton);
-            RealmTypeGroupBox.Controls.Add(pictureBox3);
+            RealmTypeGroupBox.Controls.Add(InteriorPictureBox);
             RealmTypeGroupBox.Controls.Add(InteriorRadioButton);
-            RealmTypeGroupBox.Controls.Add(pictureBox2);
+            RealmTypeGroupBox.Controls.Add(RegionPictureBox);
             RealmTypeGroupBox.Controls.Add(RegionRadioButton);
-            RealmTypeGroupBox.Controls.Add(pictureBox1);
+            RealmTypeGroupBox.Controls.Add(WorldPictureBox);
             RealmTypeGroupBox.Controls.Add(WorldRadioButton);
             RealmTypeGroupBox.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             RealmTypeGroupBox.Location = new Point(6, 76);
             RealmTypeGroupBox.Name = "RealmTypeGroupBox";
-            RealmTypeGroupBox.Size = new Size(223, 330);
+            RealmTypeGroupBox.Size = new Size(224, 532);
             RealmTypeGroupBox.TabIndex = 2;
             RealmTypeGroupBox.TabStop = false;
             RealmTypeGroupBox.Text = "Realm Type";
             // 
-            // pictureBox8
+            // ShipDeckPictureBox
             // 
-            pictureBox8.BackgroundImage = (Image)resources.GetObject("pictureBox8.BackgroundImage");
-            pictureBox8.BackgroundImageLayout = ImageLayout.Zoom;
-            pictureBox8.Location = new Point(6, 98);
-            pictureBox8.Name = "pictureBox8";
-            pictureBox8.Size = new Size(32, 32);
-            pictureBox8.TabIndex = 15;
-            pictureBox8.TabStop = false;
+            ShipDeckPictureBox.BackgroundImage = (Image)resources.GetObject("ShipDeckPictureBox.BackgroundImage");
+            ShipDeckPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            ShipDeckPictureBox.Location = new Point(27, 405);
+            ShipDeckPictureBox.Name = "ShipDeckPictureBox";
+            ShipDeckPictureBox.Size = new Size(32, 32);
+            ShipDeckPictureBox.TabIndex = 32;
+            ShipDeckPictureBox.TabStop = false;
+            ShipDeckPictureBox.Click += ShipDeckPictureBox_Click;
+            // 
+            // ShipDeckRadioButton
+            // 
+            ShipDeckRadioButton.BackgroundImageLayout = ImageLayout.Zoom;
+            ShipDeckRadioButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ShipDeckRadioButton.ForeColor = SystemColors.ControlDarkDark;
+            ShipDeckRadioButton.ImageAlign = ContentAlignment.MiddleLeft;
+            ShipDeckRadioButton.Location = new Point(65, 405);
+            ShipDeckRadioButton.Name = "ShipDeckRadioButton";
+            ShipDeckRadioButton.Size = new Size(110, 32);
+            ShipDeckRadioButton.TabIndex = 31;
+            ShipDeckRadioButton.TabStop = true;
+            ShipDeckRadioButton.Text = "Ship Deck";
+            ShipDeckRadioButton.UseVisualStyleBackColor = true;
+            ShipDeckRadioButton.Click += ShipDeckRadioButton_Click;
+            // 
+            // SolarSystemBodyPictureBox
+            // 
+            SolarSystemBodyPictureBox.BackgroundImage = (Image)resources.GetObject("SolarSystemBodyPictureBox.BackgroundImage");
+            SolarSystemBodyPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            SolarSystemBodyPictureBox.Location = new Point(27, 329);
+            SolarSystemBodyPictureBox.Name = "SolarSystemBodyPictureBox";
+            SolarSystemBodyPictureBox.Size = new Size(32, 32);
+            SolarSystemBodyPictureBox.TabIndex = 30;
+            SolarSystemBodyPictureBox.TabStop = false;
+            SolarSystemBodyPictureBox.Click += SolarSystemBodyPictureBox_Click;
+            // 
+            // SolarSystemBodyRadioButton
+            // 
+            SolarSystemBodyRadioButton.BackgroundImageLayout = ImageLayout.Zoom;
+            SolarSystemBodyRadioButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SolarSystemBodyRadioButton.ForeColor = SystemColors.ControlDarkDark;
+            SolarSystemBodyRadioButton.ImageAlign = ContentAlignment.MiddleLeft;
+            SolarSystemBodyRadioButton.Location = new Point(65, 331);
+            SolarSystemBodyRadioButton.Name = "SolarSystemBodyRadioButton";
+            SolarSystemBodyRadioButton.Size = new Size(126, 32);
+            SolarSystemBodyRadioButton.TabIndex = 29;
+            SolarSystemBodyRadioButton.TabStop = true;
+            SolarSystemBodyRadioButton.Text = "Solar System Body";
+            SolarSystemBodyRadioButton.UseVisualStyleBackColor = true;
+            SolarSystemBodyRadioButton.Click += SolarSystemBodyRadioButton_Click;
+            // 
+            // DungeonLevelPictureBox
+            // 
+            DungeonLevelPictureBox.BackgroundImage = (Image)resources.GetObject("DungeonLevelPictureBox.BackgroundImage");
+            DungeonLevelPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            DungeonLevelPictureBox.Location = new Point(27, 251);
+            DungeonLevelPictureBox.Name = "DungeonLevelPictureBox";
+            DungeonLevelPictureBox.Size = new Size(32, 32);
+            DungeonLevelPictureBox.TabIndex = 28;
+            DungeonLevelPictureBox.TabStop = false;
+            DungeonLevelPictureBox.Click += DungeonLevelPictureBox_Click;
+            // 
+            // DungeonLevelRadioButton
+            // 
+            DungeonLevelRadioButton.BackgroundImageLayout = ImageLayout.Zoom;
+            DungeonLevelRadioButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            DungeonLevelRadioButton.ForeColor = SystemColors.ControlDarkDark;
+            DungeonLevelRadioButton.ImageAlign = ContentAlignment.MiddleLeft;
+            DungeonLevelRadioButton.Location = new Point(65, 252);
+            DungeonLevelRadioButton.Name = "DungeonLevelRadioButton";
+            DungeonLevelRadioButton.Size = new Size(105, 32);
+            DungeonLevelRadioButton.TabIndex = 27;
+            DungeonLevelRadioButton.TabStop = true;
+            DungeonLevelRadioButton.Text = "Dungeon Level";
+            DungeonLevelRadioButton.UseVisualStyleBackColor = true;
+            DungeonLevelRadioButton.Click += DungeonLevelRadioButton_Click;
+            // 
+            // InteriorFloorPictureBox
+            // 
+            InteriorFloorPictureBox.BackgroundImage = (Image)resources.GetObject("InteriorFloorPictureBox.BackgroundImage");
+            InteriorFloorPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            InteriorFloorPictureBox.Location = new Point(27, 174);
+            InteriorFloorPictureBox.Name = "InteriorFloorPictureBox";
+            InteriorFloorPictureBox.Size = new Size(32, 32);
+            InteriorFloorPictureBox.TabIndex = 17;
+            InteriorFloorPictureBox.TabStop = false;
+            InteriorFloorPictureBox.Click += InteriorFloorPictureBox_Click;
+            // 
+            // InteriorFloorRadioButton
+            // 
+            InteriorFloorRadioButton.BackgroundImageLayout = ImageLayout.Zoom;
+            InteriorFloorRadioButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            InteriorFloorRadioButton.ForeColor = SystemColors.ControlDarkDark;
+            InteriorFloorRadioButton.ImageAlign = ContentAlignment.MiddleLeft;
+            InteriorFloorRadioButton.Location = new Point(67, 174);
+            InteriorFloorRadioButton.Name = "InteriorFloorRadioButton";
+            InteriorFloorRadioButton.Size = new Size(97, 32);
+            InteriorFloorRadioButton.TabIndex = 16;
+            InteriorFloorRadioButton.TabStop = true;
+            InteriorFloorRadioButton.Text = "Interior Floor";
+            InteriorFloorRadioButton.UseVisualStyleBackColor = true;
+            InteriorFloorRadioButton.Click += InteriorFloorRadioButton_Click;
+            // 
+            // CityPictureBox
+            // 
+            CityPictureBox.BackgroundImage = (Image)resources.GetObject("CityPictureBox.BackgroundImage");
+            CityPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            CityPictureBox.Location = new Point(6, 98);
+            CityPictureBox.Name = "CityPictureBox";
+            CityPictureBox.Size = new Size(32, 32);
+            CityPictureBox.TabIndex = 15;
+            CityPictureBox.TabStop = false;
+            CityPictureBox.Click += CityPictureBox_Click;
             // 
             // CityRadioButton
             // 
@@ -706,15 +832,16 @@
             CityRadioButton.UseVisualStyleBackColor = true;
             CityRadioButton.Click += CityRadioButton_Click;
             // 
-            // pictureBox7
+            // OtherPictureBox
             // 
-            pictureBox7.BackgroundImage = (Image)resources.GetObject("pictureBox7.BackgroundImage");
-            pictureBox7.BackgroundImageLayout = ImageLayout.Zoom;
-            pictureBox7.Location = new Point(6, 288);
-            pictureBox7.Name = "pictureBox7";
-            pictureBox7.Size = new Size(32, 32);
-            pictureBox7.TabIndex = 13;
-            pictureBox7.TabStop = false;
+            OtherPictureBox.BackgroundImage = (Image)resources.GetObject("OtherPictureBox.BackgroundImage");
+            OtherPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            OtherPictureBox.Location = new Point(6, 443);
+            OtherPictureBox.Name = "OtherPictureBox";
+            OtherPictureBox.Size = new Size(32, 32);
+            OtherPictureBox.TabIndex = 13;
+            OtherPictureBox.TabStop = false;
+            OtherPictureBox.Click += OtherPictureBox_Click;
             // 
             // OtherRadioButton
             // 
@@ -722,7 +849,7 @@
             OtherRadioButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             OtherRadioButton.ForeColor = SystemColors.ControlDarkDark;
             OtherRadioButton.ImageAlign = ContentAlignment.MiddleLeft;
-            OtherRadioButton.Location = new Point(46, 288);
+            OtherRadioButton.Location = new Point(44, 443);
             OtherRadioButton.Name = "OtherRadioButton";
             OtherRadioButton.Size = new Size(110, 32);
             OtherRadioButton.TabIndex = 12;
@@ -731,15 +858,16 @@
             OtherRadioButton.UseVisualStyleBackColor = true;
             OtherRadioButton.Click += OtherRadioButton_Click;
             // 
-            // pictureBox6
+            // ShipPictureBox
             // 
-            pictureBox6.BackgroundImage = (Image)resources.GetObject("pictureBox6.BackgroundImage");
-            pictureBox6.BackgroundImageLayout = ImageLayout.Zoom;
-            pictureBox6.Location = new Point(6, 250);
-            pictureBox6.Name = "pictureBox6";
-            pictureBox6.Size = new Size(32, 32);
-            pictureBox6.TabIndex = 11;
-            pictureBox6.TabStop = false;
+            ShipPictureBox.BackgroundImage = (Image)resources.GetObject("ShipPictureBox.BackgroundImage");
+            ShipPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            ShipPictureBox.Location = new Point(6, 367);
+            ShipPictureBox.Name = "ShipPictureBox";
+            ShipPictureBox.Size = new Size(32, 32);
+            ShipPictureBox.TabIndex = 11;
+            ShipPictureBox.TabStop = false;
+            ShipPictureBox.Click += ShipPictureBox_Click;
             // 
             // ShipRadioButton
             // 
@@ -747,7 +875,7 @@
             ShipRadioButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             ShipRadioButton.ForeColor = SystemColors.ControlDarkDark;
             ShipRadioButton.ImageAlign = ContentAlignment.MiddleLeft;
-            ShipRadioButton.Location = new Point(46, 250);
+            ShipRadioButton.Location = new Point(44, 367);
             ShipRadioButton.Name = "ShipRadioButton";
             ShipRadioButton.Size = new Size(110, 32);
             ShipRadioButton.TabIndex = 10;
@@ -756,15 +884,16 @@
             ShipRadioButton.UseVisualStyleBackColor = true;
             ShipRadioButton.Click += ShipRadioButton_Click;
             // 
-            // pictureBox5
+            // SolarSystemPictureBox
             // 
-            pictureBox5.BackgroundImage = (Image)resources.GetObject("pictureBox5.BackgroundImage");
-            pictureBox5.BackgroundImageLayout = ImageLayout.Zoom;
-            pictureBox5.Location = new Point(6, 212);
-            pictureBox5.Name = "pictureBox5";
-            pictureBox5.Size = new Size(32, 32);
-            pictureBox5.TabIndex = 9;
-            pictureBox5.TabStop = false;
+            SolarSystemPictureBox.BackgroundImage = (Image)resources.GetObject("SolarSystemPictureBox.BackgroundImage");
+            SolarSystemPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            SolarSystemPictureBox.Location = new Point(6, 289);
+            SolarSystemPictureBox.Name = "SolarSystemPictureBox";
+            SolarSystemPictureBox.Size = new Size(32, 32);
+            SolarSystemPictureBox.TabIndex = 9;
+            SolarSystemPictureBox.TabStop = false;
+            SolarSystemPictureBox.Click += SolarSystemPictureBox_Click;
             // 
             // SolarSystemRadioButton
             // 
@@ -772,7 +901,7 @@
             SolarSystemRadioButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             SolarSystemRadioButton.ForeColor = SystemColors.ControlDarkDark;
             SolarSystemRadioButton.ImageAlign = ContentAlignment.MiddleLeft;
-            SolarSystemRadioButton.Location = new Point(46, 212);
+            SolarSystemRadioButton.Location = new Point(44, 291);
             SolarSystemRadioButton.Name = "SolarSystemRadioButton";
             SolarSystemRadioButton.Size = new Size(110, 32);
             SolarSystemRadioButton.TabIndex = 8;
@@ -781,15 +910,16 @@
             SolarSystemRadioButton.UseVisualStyleBackColor = true;
             SolarSystemRadioButton.Click += SolarSystemRadioButton_Click;
             // 
-            // pictureBox4
+            // DungeonPictureBox
             // 
-            pictureBox4.BackgroundImage = (Image)resources.GetObject("pictureBox4.BackgroundImage");
-            pictureBox4.BackgroundImageLayout = ImageLayout.Zoom;
-            pictureBox4.Location = new Point(6, 174);
-            pictureBox4.Name = "pictureBox4";
-            pictureBox4.Size = new Size(32, 32);
-            pictureBox4.TabIndex = 7;
-            pictureBox4.TabStop = false;
+            DungeonPictureBox.BackgroundImage = (Image)resources.GetObject("DungeonPictureBox.BackgroundImage");
+            DungeonPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            DungeonPictureBox.Location = new Point(6, 212);
+            DungeonPictureBox.Name = "DungeonPictureBox";
+            DungeonPictureBox.Size = new Size(32, 32);
+            DungeonPictureBox.TabIndex = 7;
+            DungeonPictureBox.TabStop = false;
+            DungeonPictureBox.Click += DungeonPictureBox_Click;
             // 
             // DungeonRadioButton
             // 
@@ -797,7 +927,7 @@
             DungeonRadioButton.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             DungeonRadioButton.ForeColor = SystemColors.ControlDarkDark;
             DungeonRadioButton.ImageAlign = ContentAlignment.MiddleLeft;
-            DungeonRadioButton.Location = new Point(46, 174);
+            DungeonRadioButton.Location = new Point(44, 213);
             DungeonRadioButton.Name = "DungeonRadioButton";
             DungeonRadioButton.Size = new Size(87, 32);
             DungeonRadioButton.TabIndex = 6;
@@ -806,15 +936,16 @@
             DungeonRadioButton.UseVisualStyleBackColor = true;
             DungeonRadioButton.Click += DungeonRadioButton_Click;
             // 
-            // pictureBox3
+            // InteriorPictureBox
             // 
-            pictureBox3.BackgroundImage = (Image)resources.GetObject("pictureBox3.BackgroundImage");
-            pictureBox3.BackgroundImageLayout = ImageLayout.Zoom;
-            pictureBox3.Location = new Point(6, 136);
-            pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(32, 32);
-            pictureBox3.TabIndex = 5;
-            pictureBox3.TabStop = false;
+            InteriorPictureBox.BackgroundImage = (Image)resources.GetObject("InteriorPictureBox.BackgroundImage");
+            InteriorPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            InteriorPictureBox.Location = new Point(6, 136);
+            InteriorPictureBox.Name = "InteriorPictureBox";
+            InteriorPictureBox.Size = new Size(32, 32);
+            InteriorPictureBox.TabIndex = 5;
+            InteriorPictureBox.TabStop = false;
+            InteriorPictureBox.Click += InteriorPictureBox_Click;
             // 
             // InteriorRadioButton
             // 
@@ -831,15 +962,16 @@
             InteriorRadioButton.UseVisualStyleBackColor = true;
             InteriorRadioButton.Click += InteriorRadioButton_Click;
             // 
-            // pictureBox2
+            // RegionPictureBox
             // 
-            pictureBox2.BackgroundImage = (Image)resources.GetObject("pictureBox2.BackgroundImage");
-            pictureBox2.BackgroundImageLayout = ImageLayout.Zoom;
-            pictureBox2.Location = new Point(6, 60);
-            pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(32, 32);
-            pictureBox2.TabIndex = 3;
-            pictureBox2.TabStop = false;
+            RegionPictureBox.BackgroundImage = (Image)resources.GetObject("RegionPictureBox.BackgroundImage");
+            RegionPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            RegionPictureBox.Location = new Point(6, 60);
+            RegionPictureBox.Name = "RegionPictureBox";
+            RegionPictureBox.Size = new Size(32, 32);
+            RegionPictureBox.TabIndex = 3;
+            RegionPictureBox.TabStop = false;
+            RegionPictureBox.Click += RegionPictureBox_Click;
             // 
             // RegionRadioButton
             // 
@@ -856,15 +988,16 @@
             RegionRadioButton.UseVisualStyleBackColor = true;
             RegionRadioButton.Click += RegionRadioButton_Click;
             // 
-            // pictureBox1
+            // WorldPictureBox
             // 
-            pictureBox1.BackgroundImage = (Image)resources.GetObject("pictureBox1.BackgroundImage");
-            pictureBox1.BackgroundImageLayout = ImageLayout.Zoom;
-            pictureBox1.Location = new Point(6, 22);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(32, 32);
-            pictureBox1.TabIndex = 1;
-            pictureBox1.TabStop = false;
+            WorldPictureBox.BackgroundImage = (Image)resources.GetObject("WorldPictureBox.BackgroundImage");
+            WorldPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            WorldPictureBox.Location = new Point(6, 22);
+            WorldPictureBox.Name = "WorldPictureBox";
+            WorldPictureBox.Size = new Size(32, 32);
+            WorldPictureBox.TabIndex = 1;
+            WorldPictureBox.TabStop = false;
+            WorldPictureBox.Click += WorldPictureBox_Click;
             // 
             // WorldRadioButton
             // 
@@ -883,18 +1016,37 @@
             // 
             // OpenExistingMapGroup
             // 
+            OpenExistingMapGroup.Controls.Add(MapFileListView);
             OpenExistingMapGroup.Controls.Add(ClearSelectedMapButton);
             OpenExistingMapGroup.Controls.Add(label6);
             OpenExistingMapGroup.Controls.Add(OpenMapIconButton);
             OpenExistingMapGroup.Controls.Add(MapInfoTextBox);
-            OpenExistingMapGroup.Controls.Add(MapFileListBox);
             OpenExistingMapGroup.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            OpenExistingMapGroup.Location = new Point(509, 59);
+            OpenExistingMapGroup.Location = new Point(738, 62);
             OpenExistingMapGroup.Name = "OpenExistingMapGroup";
-            OpenExistingMapGroup.Size = new Size(345, 604);
+            OpenExistingMapGroup.Size = new Size(345, 545);
             OpenExistingMapGroup.TabIndex = 0;
             OpenExistingMapGroup.TabStop = false;
             OpenExistingMapGroup.Text = "Open Existing Map";
+            // 
+            // MapFileListView
+            // 
+            MapFileListView.BorderStyle = BorderStyle.FixedSingle;
+            MapFileListView.Columns.AddRange(new ColumnHeader[] { MapName });
+            MapFileListView.FullRowSelect = true;
+            MapFileListView.HeaderStyle = ColumnHeaderStyle.None;
+            MapFileListView.Location = new Point(6, 27);
+            MapFileListView.MultiSelect = false;
+            MapFileListView.Name = "MapFileListView";
+            MapFileListView.Size = new Size(333, 315);
+            MapFileListView.TabIndex = 6;
+            MapFileListView.UseCompatibleStateImageBehavior = false;
+            MapFileListView.View = View.Details;
+            MapFileListView.SelectedIndexChanged += MapFileListView_SelectedIndexChanged;
+            // 
+            // MapName
+            // 
+            MapName.Width = 320;
             // 
             // ClearSelectedMapButton
             // 
@@ -904,7 +1056,7 @@
             ClearSelectedMapButton.IconColor = Color.Black;
             ClearSelectedMapButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             ClearSelectedMapButton.IconSize = 24;
-            ClearSelectedMapButton.Location = new Point(279, 535);
+            ClearSelectedMapButton.Location = new Point(273, 439);
             ClearSelectedMapButton.Name = "ClearSelectedMapButton";
             ClearSelectedMapButton.Size = new Size(60, 60);
             ClearSelectedMapButton.TabIndex = 5;
@@ -918,11 +1070,11 @@
             // 
             label6.AutoSize = true;
             label6.ForeColor = SystemColors.ControlDarkDark;
-            label6.Location = new Point(6, 470);
+            label6.Location = new Point(6, 350);
             label6.Name = "label6";
-            label6.Size = new Size(89, 17);
+            label6.Size = new Size(160, 17);
             label6.TabIndex = 4;
-            label6.Text = "Selected Map";
+            label6.Text = "Selected Map or Map Set";
             // 
             // OpenMapIconButton
             // 
@@ -932,7 +1084,7 @@
             OpenMapIconButton.IconColor = Color.Black;
             OpenMapIconButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             OpenMapIconButton.IconSize = 20;
-            OpenMapIconButton.Location = new Point(279, 469);
+            OpenMapIconButton.Location = new Point(273, 373);
             OpenMapIconButton.Name = "OpenMapIconButton";
             OpenMapIconButton.Size = new Size(60, 60);
             OpenMapIconButton.TabIndex = 3;
@@ -946,23 +1098,13 @@
             // 
             MapInfoTextBox.BorderStyle = BorderStyle.FixedSingle;
             MapInfoTextBox.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            MapInfoTextBox.Location = new Point(6, 495);
+            MapInfoTextBox.Location = new Point(6, 375);
             MapInfoTextBox.Multiline = true;
             MapInfoTextBox.Name = "MapInfoTextBox";
             MapInfoTextBox.ReadOnly = true;
             MapInfoTextBox.ScrollBars = ScrollBars.Both;
-            MapInfoTextBox.Size = new Size(267, 94);
+            MapInfoTextBox.Size = new Size(261, 150);
             MapInfoTextBox.TabIndex = 2;
-            // 
-            // MapFileListBox
-            // 
-            MapFileListBox.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            MapFileListBox.FormattingEnabled = true;
-            MapFileListBox.Location = new Point(6, 27);
-            MapFileListBox.Name = "MapFileListBox";
-            MapFileListBox.Size = new Size(333, 424);
-            MapFileListBox.TabIndex = 0;
-            MapFileListBox.SelectedIndexChanged += MapFileListBox_SelectedIndexChanged;
             // 
             // OpenCreateMap
             // 
@@ -970,7 +1112,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = CancelConfigButton;
-            ClientSize = new Size(877, 748);
+            ClientSize = new Size(1106, 697);
             Controls.Add(OpenCreateMapOverlay);
             FormBorderStyle = FormBorderStyle.None;
             MinimumSize = new Size(261, 65);
@@ -995,14 +1137,18 @@
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
             RealmTypeGroupBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)pictureBox8).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox7).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ShipDeckPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SolarSystemBodyPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DungeonLevelPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)InteriorFloorPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)CityPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)OtherPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ShipPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)SolarSystemPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DungeonPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)InteriorPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)RegionPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WorldPictureBox).EndInit();
             OpenExistingMapGroup.ResumeLayout(false);
             OpenExistingMapGroup.PerformLayout();
             ResumeLayout(false);
@@ -1012,22 +1158,21 @@
 
         private ReaLTaiizor.Forms.DungeonForm OpenCreateMapOverlay;
         private GroupBox OpenExistingMapGroup;
-        private ListBox MapFileListBox;
         private GroupBox CreateNewMapGroupBox;
         private GroupBox RealmTypeGroupBox;
         private RadioButton WorldRadioButton;
-        private PictureBox pictureBox1;
-        private PictureBox pictureBox2;
+        private PictureBox WorldPictureBox;
+        private PictureBox RegionPictureBox;
         private RadioButton RegionRadioButton;
-        private PictureBox pictureBox3;
+        private PictureBox InteriorPictureBox;
         private RadioButton InteriorRadioButton;
-        private PictureBox pictureBox4;
+        private PictureBox DungeonPictureBox;
         private RadioButton DungeonRadioButton;
-        private PictureBox pictureBox5;
+        private PictureBox SolarSystemPictureBox;
         private RadioButton SolarSystemRadioButton;
-        private PictureBox pictureBox6;
+        private PictureBox ShipPictureBox;
         private RadioButton ShipRadioButton;
-        private PictureBox pictureBox7;
+        private PictureBox OtherPictureBox;
         private RadioButton OtherRadioButton;
         private GroupBox groupBox2;
         private RadioButton WH7680x4320Radio;
@@ -1066,7 +1211,7 @@
         private Label label7;
         private NumericUpDown MapAreaWidthUpDown;
         private ReaLTaiizor.Controls.PoisonTextBox RealmNameTextBox;
-        private PictureBox pictureBox8;
+        private PictureBox CityPictureBox;
         private RadioButton CityRadioButton;
         private TextBox MapInfoTextBox;
         private FontAwesome.Sharp.IconButton OpenMapIconButton;
@@ -1074,5 +1219,15 @@
         private Button CancelConfigButton;
         private FontAwesome.Sharp.IconButton ClearSelectedMapButton;
         private Button CreateButton;
+        private ListView MapFileListView;
+        private ColumnHeader MapName;
+        private PictureBox InteriorFloorPictureBox;
+        private RadioButton InteriorFloorRadioButton;
+        private PictureBox DungeonLevelPictureBox;
+        private RadioButton DungeonLevelRadioButton;
+        private PictureBox SolarSystemBodyPictureBox;
+        private RadioButton SolarSystemBodyRadioButton;
+        private PictureBox ShipDeckPictureBox;
+        private RadioButton ShipDeckRadioButton;
     }
 }

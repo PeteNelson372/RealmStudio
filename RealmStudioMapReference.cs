@@ -36,5 +36,8 @@ namespace RealmStudio
 
         [XmlAttribute]
         public string MapPath { get; set; } = "";
+
+        [XmlAttribute]
+        public RealmMapType RealmType { get; set; } = RealmMapType.World;
     }
 }

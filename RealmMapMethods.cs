@@ -132,7 +132,7 @@ namespace RealmStudio
             string fileNameNoExtension = Path.GetFileNameWithoutExtension(filepath);
             string saveTime = DateTime.Now.ToFileTimeUtc().ToString();
 
-            string saveFilename = fileNameNoExtension + "_" + saveTime + ".rsmapx";
+            string saveFilename = fileNameNoExtension + "_" + saveTime + UtilityMethods.REALM_STUDIO_MAP_FILE_EXTENSION;
             string autosaveFullPath = autosaveDirectory + Path.DirectorySeparatorChar + saveFilename;
 
             File.Copy(filepath, autosaveFullPath, true);
@@ -161,7 +161,7 @@ namespace RealmStudio
 
                 string saveTime = DateTime.Now.ToFileTimeUtc().ToString();
 
-                autosaveFilename += "_" + saveTime + ".rsmapx";
+                autosaveFilename += "_" + saveTime + UtilityMethods.REALM_STUDIO_MAP_FILE_EXTENSION;
 
                 string autosaveFullPath = autosaveDirectory + Path.DirectorySeparatorChar + autosaveFilename;
 
@@ -1753,8 +1753,21 @@ namespace RealmStudio
 
             s.Canvas.Clear();
 
-            // TODO: drawing layer
-            //MapRenderMethods.RenderDrawingForExport(CURRENT_MAP, s.Canvas);
+            // drawing layer
+            MapRenderMethods.RenderDrawingForExport(map, s.Canvas);
+            bitmap = s.Snapshot().ToBitmap();
+            bitmapBytes = (byte[]?)converter.ConvertTo(bitmap, typeof(byte[]));
+
+            if (bitmapBytes != null)
+            {
+                var fileName = "drawing" + "." + exportFormat.ToString().ToLowerInvariant();
+                var zipArchiveEntry = archive.CreateEntry(fileName, CompressionLevel.Fastest);
+
+                using var zipStream = zipArchiveEntry.Open();
+                zipStream.Write(bitmapBytes, 0, bitmapBytes.Length);
+            }
+
+            s.Canvas.Clear();
 
             // vignette layer
             MapRenderMethods.RenderVignetteForExport(map, s.Canvas);
@@ -1861,7 +1874,7 @@ namespace RealmStudio
                     && File.Exists(oldestFilePath)
                     && oldestFilePath.Contains("autosave")
                     && oldestFilePath.StartsWith(autosaveDirectory)
-                    && oldestFilePath.EndsWith(".rsmapx"))
+                    && oldestFilePath.EndsWith(UtilityMethods.REALM_STUDIO_MAP_FILE_EXTENSION))
                 {
                     try
                     {

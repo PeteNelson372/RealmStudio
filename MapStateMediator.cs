@@ -30,7 +30,8 @@ namespace RealmStudio
     {
         public static event PropertyChangedEventHandler? PropertyChanged;
 
-        private static RealmStudioMap _currentMap = new();
+        private static RealmStudioMap? _currentMap;
+        private static RealmStudioMapSet? _currentMapSet;
 
         private static MainFormUIMediator? _mainFormUIMediator;
 
@@ -94,17 +95,23 @@ namespace RealmStudio
         private static readonly double _basePaintEventInterval = 10.0;
         private static readonly int _backupCount = 5;
 
-        internal MapStateMediator()
+        static MapStateMediator()
         {
             PropertyChanged += MapStateMediator_PropertyChanged;
         }
 
         #region Property Setters/Getters
 
-        internal static RealmStudioMap CurrentMap
+        internal static RealmStudioMap? CurrentMap
         {
             get { return _currentMap; }
             set { SetPropertyField(nameof(CurrentMap), ref _currentMap, value); }
+        }
+
+        internal static RealmStudioMapSet? CurrentMapSet
+        {
+            get { return _currentMapSet; }
+            set { SetPropertyField(nameof(CurrentMapSet), ref _currentMapSet, value); }
         }
 
         // mediators
@@ -423,10 +430,10 @@ namespace RealmStudio
             {
                 case "CurrentMap":
                     {
-                        if (ScaleUIMediator != null)
-                        {
-                            ScaleUIMediator.ScaleUnitsText = CurrentMap.MapAreaUnits;
-                        }
+                        MainUIMediator?.ConfigureMainTab();
+                        MainUIMediator?.MainForm.MainTab.Invalidate();
+
+                        ScaleUIMediator?.ScaleUnitsText = CurrentMap?.MapAreaUnits;
                     }
                     break;
                 default:
@@ -479,12 +486,16 @@ namespace RealmStudio
             CurrentMapRegion = null;
             CurrentWindrose = null;
 
-            // clear the work layers
-            MapBuilder.GetMapLayerByIndex(CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
-            MapBuilder.GetMapLayerByIndex(CurrentMap, MapBuilder.WORKLAYER2).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            if (CurrentMap != null)
+            {
+                // clear the work layers
+                MapBuilder.GetMapLayerByIndex(CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                MapBuilder.GetMapLayerByIndex(CurrentMap, MapBuilder.WORKLAYER2).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-            // unselect anything selected
-            RealmMapMethods.DeselectAllMapComponents(CurrentMap, null);
+                // unselect anything selected
+                RealmMapMethods.DeselectAllMapComponents(CurrentMap, null);
+            }
+
 
             // dispose of any label text box that is drawn
             LabelManager.LabelMediator.RemoveTextBox();
@@ -492,7 +503,6 @@ namespace RealmStudio
             // clear all selections
             PreviousSelectedRealmArea = SKRect.Empty;
             SelectedRealmArea = SKRect.Empty;
-            MapBuilder.GetMapLayerByIndex(CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
             MainUIMediator.ShowHideFontSelectionPanel(false);
         }
@@ -500,6 +510,11 @@ namespace RealmStudio
         internal static void DeleteSelectedMapObjects()
         {
             ArgumentNullException.ThrowIfNull(MainUIMediator);
+
+            if (CurrentMap == null)
+            {
+                return;
+            }
 
             switch (MainUIMediator.CurrentDrawingMode)
             {
@@ -582,8 +597,6 @@ namespace RealmStudio
                     break;
             }
         }
-
-
 
         #endregion
     }

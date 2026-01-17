@@ -30,6 +30,9 @@ namespace RealmStudio
 {
     internal sealed class UtilityMethods
     {
+        public static readonly string REALM_STUDIO_MAP_FILE_EXTENSION = ".rsmapx";
+        public static readonly string REALM_STUDIO_MAPSET_FILE_EXTENSION = ".rssetx";
+
         public static readonly string DEFAULT_REALM_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             + Path.DirectorySeparatorChar
             + "RealmStudio"

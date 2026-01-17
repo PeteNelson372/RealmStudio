@@ -37,9 +37,12 @@ namespace RealmStudio
         private bool WidthChanging;
         private bool HeightChanging;
 
+        // a map group can be either a map or a map set
         private readonly List<IRealmStudioMapGroup> CurrentMapGroups = [];
 
         private Task? _loadTask;
+
+        private RealmStudioMapSet? _mapSet;
 
         private RealmStudioMapRoot? _mapRoot;
 
@@ -48,6 +51,13 @@ namespace RealmStudio
         {
             get { return _mapRoot; }
             set { _mapRoot = value; }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        internal RealmStudioMapSet? MapSet
+        {
+            get { return _mapSet; }
+            set { _mapSet = value; }
         }
 
         public OpenCreateMap()
@@ -112,6 +122,16 @@ namespace RealmStudio
                     }
                 }
             }
+
+            ImageList imageList = new()
+            {
+                ImageSize = new Size(16, 16) // Small icons
+            };
+
+            imageList.Images.Add("map", Properties.Resources.maps);
+            imageList.Images.Add("mapset", Properties.Resources.atlas);
+
+            MapFileListView.SmallImageList = imageList;
         }
 
         private async Task LoadCreatedMapsFromDefaultDirectory()
@@ -121,6 +141,7 @@ namespace RealmStudio
             if (string.IsNullOrEmpty(Settings.Default.DefaultRealmDirectory))
             {
                 Settings.Default.DefaultRealmDirectory = UtilityMethods.DEFAULT_REALM_FOLDER;
+                Settings.Default.Save();
             }
 
             string defaultMapDirectory = Settings.Default.DefaultRealmDirectory;
@@ -128,8 +149,8 @@ namespace RealmStudio
             CurrentMapGroups.Clear();
 
             var files = from file in Directory.EnumerateFiles(defaultMapDirectory, "*.*", SearchOption.TopDirectoryOnly).Order()
-                        where file.EndsWith(".rsmapx", StringComparison.InvariantCultureIgnoreCase)
-                            || file.EndsWith(".rssetx", StringComparison.InvariantCultureIgnoreCase)
+                        where file.EndsWith(UtilityMethods.REALM_STUDIO_MAP_FILE_EXTENSION, StringComparison.InvariantCultureIgnoreCase)
+                            || file.EndsWith(UtilityMethods.REALM_STUDIO_MAPSET_FILE_EXTENSION, StringComparison.InvariantCultureIgnoreCase)
                         select new
                         {
                             File = file
@@ -139,7 +160,7 @@ namespace RealmStudio
             {
                 try
                 {
-                    if (f.File.EndsWith(".rsmapx", StringComparison.OrdinalIgnoreCase))
+                    if (f.File.EndsWith(UtilityMethods.REALM_STUDIO_MAP_FILE_EXTENSION, StringComparison.OrdinalIgnoreCase))
                     {
                         RealmStudioMapRoot? map = LoadRealmStudioMapRootFromFile(f.File);
                         if (map != null)
@@ -147,10 +168,14 @@ namespace RealmStudio
                             CurrentMapGroups.Add(map);
                         }
                     }
-                    else if (f.File.EndsWith(".rssetx", StringComparison.OrdinalIgnoreCase))
+                    else if (f.File.EndsWith(UtilityMethods.REALM_STUDIO_MAPSET_FILE_EXTENSION, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        // TODO: Load map sets
-                        //List<RealmStudioMapRoot>? maps = MapFileMethods.OpenMapSet(f.File);
+                        // Load map sets
+                        RealmStudioMapSet? loadedMapSet = LoadRealmStudioMapSetFromFile(f.File, true);
+                        if (loadedMapSet != null)
+                        {
+                            CurrentMapGroups.Add(loadedMapSet);
+                        }
                     }
 
                 }
@@ -179,6 +204,24 @@ namespace RealmStudio
                 if (showErrors)
                 {
                     MessageBox.Show($"Error loading map file: {file}. The map file may be corrupted.", "Error Loading Map", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                return null;
+            }
+        }
+
+        private static RealmStudioMapSet? LoadRealmStudioMapSetFromFile(string file, bool showErrors = false)
+        {
+            try
+            {
+                RealmStudioMapSet? mapSet = MapFileMethods.OpenMapSet(file);
+                return mapSet;
+            }
+            catch (Exception ex)
+            {
+                Program.LOGGER.Error($"Error loading map set: {file}", ex);
+                if (showErrors)
+                {
+                    MessageBox.Show($"Error loading map set: {file}. The map set file may be corrupted.", "Error Loading Map", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 return null;
             }
@@ -592,190 +635,6 @@ namespace RealmStudio
             }
         }
 
-        private void WorldRadioButton_Click(object sender, EventArgs e)
-        {
-            if (WorldRadioButton.Checked)
-            {
-                MapRoot?.RealmType = RealmMapType.World;
-
-                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
-                if (!string.IsNullOrEmpty(measurementUnits))
-                {
-                    if (measurementUnits == "US Customary")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
-                        MapRoot?.MapAreaUnits = "Miles";
-                    }
-                    else if (measurementUnits == "Metric")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
-                        MapRoot?.MapAreaUnits = "Kilometers";
-                    }
-                }
-            }
-        }
-
-        private void RegionRadioButton_Click(object sender, EventArgs e)
-        {
-            if (RegionRadioButton.Checked)
-            {
-                MapRoot?.RealmType = RealmMapType.Region;
-
-                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
-                if (!string.IsNullOrEmpty(measurementUnits))
-                {
-                    if (measurementUnits == "US Customary")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
-                        MapRoot?.MapAreaUnits = "Miles";
-                    }
-                    else if (measurementUnits == "Metric")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
-                        MapRoot?.MapAreaUnits = "Kilometers";
-                    }
-                }
-            }
-        }
-
-        private void CityRadioButton_Click(object sender, EventArgs e)
-        {
-            if (CityRadioButton.Checked)
-            {
-                MapRoot?.RealmType = RealmMapType.City;
-
-                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
-                if (!string.IsNullOrEmpty(measurementUnits))
-                {
-                    if (measurementUnits == "US Customary")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
-                        MapRoot?.MapAreaUnits = "Miles";
-                    }
-                    else if (measurementUnits == "Metric")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
-                        MapRoot?.MapAreaUnits = "Kilometers";
-                    }
-                }
-            }
-        }
-
-        private void InteriorRadioButton_Click(object sender, EventArgs e)
-        {
-            if (InteriorRadioButton.Checked)
-            {
-                MapRoot?.RealmType = RealmMapType.Interior;
-
-                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
-                if (!string.IsNullOrEmpty(measurementUnits))
-                {
-                    if (measurementUnits == "US Customary")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 2;  // feet
-                        MapRoot?.MapAreaUnits = "Feet";
-                    }
-                    else if (measurementUnits == "Metric")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 4;  // Meters
-                        MapRoot?.MapAreaUnits = "Meters";
-                    }
-                }
-            }
-        }
-
-        private void DungeonRadioButton_Click(object sender, EventArgs e)
-        {
-            if (DungeonRadioButton.Checked)
-            {
-                MapRoot?.RealmType = RealmMapType.Dungeon;
-
-                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
-                if (!string.IsNullOrEmpty(measurementUnits))
-                {
-                    if (measurementUnits == "US Customary")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 2;  // feet
-                        MapRoot?.MapAreaUnits = "Feet";
-                    }
-                    else if (measurementUnits == "Metric")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 4;  // Meters
-                        MapRoot?.MapAreaUnits = "Meters";
-                    }
-                }
-            }
-        }
-
-        private void SolarSystemRadioButton_Click(object sender, EventArgs e)
-        {
-            if (SolarSystemRadioButton.Checked)
-            {
-                MapRoot?.RealmType = RealmMapType.SolarSystem;
-
-                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
-                if (!string.IsNullOrEmpty(measurementUnits))
-                {
-                    if (measurementUnits == "US Customary")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
-                        MapRoot?.MapAreaUnits = "Miles";
-                    }
-                    else if (measurementUnits == "Metric")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
-                        MapRoot?.MapAreaUnits = "Kilometers";
-                    }
-                }
-            }
-        }
-
-        private void ShipRadioButton_Click(object sender, EventArgs e)
-        {
-            if (ShipRadioButton.Checked)
-            {
-                MapRoot?.RealmType = RealmMapType.Ship;
-
-                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
-                if (!string.IsNullOrEmpty(measurementUnits))
-                {
-                    if (measurementUnits == "US Customary")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 2;  // feet
-                        MapRoot?.MapAreaUnits = "Feet";
-                    }
-                    else if (measurementUnits == "Metric")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 4;  // Meters
-                        MapRoot?.MapAreaUnits = "Meters";
-                    }
-                }
-            }
-        }
-
-        private void OtherRadioButton_Click(object sender, EventArgs e)
-        {
-            if (OtherRadioButton.Checked)
-            {
-                MapRoot?.RealmType = RealmMapType.Other;
-
-                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
-                if (!string.IsNullOrEmpty(measurementUnits))
-                {
-                    if (measurementUnits == "US Customary")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
-                        MapRoot?.MapAreaUnits = "Miles";
-                    }
-                    else if (measurementUnits == "Metric")
-                    {
-                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
-                        MapRoot?.MapAreaUnits = "Kilometers";
-                    }
-                }
-            }
-        }
-
         private void LockAspectRatioButton_Click(object sender, EventArgs e)
         {
             AspectRatioLocked = !AspectRatioLocked;
@@ -841,59 +700,37 @@ namespace RealmStudio
             }
         }
 
-        private void MapFileListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (CurrentMapGroups[MapFileListBox.SelectedIndex] is RealmStudioMapRoot)
-            {
-                RealmStudioMapRoot selectedMap = (RealmStudioMapRoot)CurrentMapGroups[MapFileListBox.SelectedIndex];
-
-                if (selectedMap != null)
-                {
-                    MapRoot = selectedMap;
-
-                    List<string> mapData =
-                    [
-                        $"Name: {selectedMap.MapName}",
-                        $"Type: {selectedMap.RealmType}",
-                        $"Map Size: {selectedMap.MapWidth} x {selectedMap.MapHeight} pixels",
-                        $"Path: {selectedMap.MapPath}",
-                        $"File Size: {new FileInfo(selectedMap.MapPath).Length} bytes",
-                        $"Created: {File.GetCreationTime(selectedMap.MapPath).ToString()}"
-                    ];
-
-                    MapInfoTextBox.Lines = [.. mapData];
-                }
-                else
-                {
-                    MapRoot = new RealmStudioMapRoot();
-                    MapInfoTextBox.Lines = [];
-                }
-            }
-            else if (CurrentMapGroups[MapFileListBox.SelectedIndex] is RealmStudioMapSet)
-            {
-                // TODO: Handle map sets
-            }
-        }
-
         public void LoadCreatedMaps()
         {
             _loadTask = Task.Run(() => LoadCreatedMapsFromDefaultDirectory());
-        }   
+        }
 
         private void OpenCreateMap_Shown(object sender, EventArgs e)
         {
             _loadTask?.GetAwaiter().GetResult();
 
-            MapFileListBox.Items.Clear();
+            MapFileListView.Items.Clear();
+
+
             for (int i = 0; i < CurrentMapGroups.Count; i++)
             {
-                if (CurrentMapGroups[i] is RealmStudioMapRoot)
+                if (CurrentMapGroups[i] is RealmStudioMapRoot maproot)
                 {
-                    MapFileListBox.Items.Add(((RealmStudioMapRoot)CurrentMapGroups[i]).MapName);
+                    ListViewItem lvItem = new($"{maproot.MapName}")
+                    {
+                        ImageKey = "map"
+                    };
+
+                    MapFileListView.Items.Add(lvItem);
                 }
-                else if (CurrentMapGroups[i] is RealmStudioMapSet)
+                else if (CurrentMapGroups[i] is RealmStudioMapSet mapset)
                 {
-                    //MapFileListBox.Items.Add($"{((RealmStudioMapSet)CurrentMapGroups[i]).SetName} (Map Set)");
+                    ListViewItem lvItem = new($"{mapset.MapSetName}")
+                    {
+                        ImageKey = "mapset"
+                    };
+
+                    MapFileListView.Items.Add(lvItem);
                 }
             }
         }
@@ -905,7 +742,7 @@ namespace RealmStudio
                 OpenFileDialog ofd = new()
                 {
                     Title = "Select Realm Studio File",
-                    DefaultExt = "rsmapx",
+                    DefaultExt = UtilityMethods.REALM_STUDIO_MAP_FILE_EXTENSION,
                     CheckFileExists = true,
                     RestoreDirectory = true,
                     ShowHelp = false,           // enabling the help button causes the dialog not to display files
@@ -922,7 +759,7 @@ namespace RealmStudio
                 {
                     if (!string.IsNullOrEmpty(ofd.FileName))
                     {
-                        if (ofd.FileName.EndsWith(".rsmapx", StringComparison.InvariantCultureIgnoreCase))
+                        if (ofd.FileName.EndsWith(UtilityMethods.REALM_STUDIO_MAP_FILE_EXTENSION, StringComparison.InvariantCultureIgnoreCase))
                         {
                             RealmStudioMapRoot? loadedMap = LoadRealmStudioMapRootFromFile(ofd.FileName, true);
 
@@ -945,9 +782,39 @@ namespace RealmStudio
                                 MapInfoTextBox.Lines = [];
                             }
                         }
-                        else if (ofd.FileName.EndsWith(".rssetx", StringComparison.InvariantCultureIgnoreCase))
+                        else if (ofd.FileName.EndsWith(UtilityMethods.REALM_STUDIO_MAPSET_FILE_EXTENSION, StringComparison.InvariantCultureIgnoreCase))
                         {
-                            // TODO: Load map sets
+                            // Load map sets
+                            RealmStudioMapSet? loadedMapSet = LoadRealmStudioMapSetFromFile(ofd.FileName, true);
+
+                            if (loadedMapSet != null)
+                            {
+                                MapInfoTextBox.Lines = [];
+                                List<string> mapSetData = new()
+                                {
+                                    $"Name: {loadedMapSet.MapSetName}",
+                                    $"Path: {loadedMapSet.MapSetPath}",
+                                    $"Number of Maps: {loadedMapSet.SetMaps.Count}",
+                                    $"Created: {File.GetCreationTime(loadedMapSet.MapSetPath)}"
+                                };
+
+                                string mapHeader = "Maps in Set:";
+                                string mapData = "";
+                                foreach (var mapRef in loadedMapSet.SetMaps)
+                                {
+                                    mapData += $"\n - Map Name: {mapRef.MapName}";
+                                    mapData += $"\n   Type: {mapRef.RealmType}";
+                                    mapData += $"\n   Path: {mapRef.MapPath}";
+                                }
+
+                                mapSetData.Add(mapHeader + mapData);
+
+                                MapInfoTextBox.Lines = [.. mapSetData];
+                            }
+                            else
+                            {
+                                MapInfoTextBox.Lines = [];
+                            }
                         }
                     }
                 }
@@ -980,38 +847,493 @@ namespace RealmStudio
 
         private void CreateButton_Click(object sender, EventArgs e)
         {
-            if (DialogResult.Yes == MessageBox.Show("Create new Realm Studio map with selected parameters?", "Create Map?", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
-            {
-                MapRoot = new()
-                {
-                    MapWidth = (int)WidthUpDown.Value,
-                    MapHeight = (int)HeightUpDown.Value,
-                    MapAreaWidth = (float)MapAreaWidthUpDown.Value,
-                    MapAreaHeight = float.Parse(MapAreaHeightLabel.Text),
-                    MapName = RealmNameTextBox.Text.Trim(),
-                    MapPath = "",
-                    MapTheme = MapThemeList.SelectedItem != null ? MapThemeList.SelectedItem.ToString() ?? "" : "",
-                    RealmType = WorldRadioButton.Checked ? RealmMapType.World :
+            RealmMapType selectedRealmType = WorldRadioButton.Checked ? RealmMapType.World :
                                  RegionRadioButton.Checked ? RealmMapType.Region :
                                  CityRadioButton.Checked ? RealmMapType.City :
                                  InteriorRadioButton.Checked ? RealmMapType.Interior :
+                                 InteriorFloorRadioButton.Checked ? RealmMapType.InteriorFloor :
                                  DungeonRadioButton.Checked ? RealmMapType.Dungeon :
+                                 DungeonLevelRadioButton.Checked ? RealmMapType.DungeonLevel :
                                  SolarSystemRadioButton.Checked ? RealmMapType.SolarSystem :
+                                 SolarSystemBodyRadioButton.Checked ? RealmMapType.SolarSystemBody :
                                  ShipRadioButton.Checked ? RealmMapType.Ship :
+                                 ShipDeckRadioButton.Checked ? RealmMapType.ShipDeck :
                                  OtherRadioButton.Checked ? RealmMapType.Other :
-                                 RealmMapType.World
-                };
+                                 RealmMapType.Other;
 
-                MapRoot.MapPixelWidth = MapRoot.MapAreaWidth / MapRoot.MapWidth;
-                MapRoot.MapPixelHeight = MapRoot.MapAreaHeight / MapRoot.MapHeight;
-
-                if (MapAreaUnitCombo.SelectedItem != null)
+            if (selectedRealmType == RealmMapType.World
+                || selectedRealmType == RealmMapType.Region
+                || selectedRealmType == RealmMapType.City
+                || selectedRealmType == RealmMapType.InteriorFloor
+                || selectedRealmType == RealmMapType.DungeonLevel
+                || selectedRealmType == RealmMapType.ShipDeck
+                || selectedRealmType == RealmMapType.SolarSystemBody
+                || selectedRealmType == RealmMapType.Other)
+            {
+                if (DialogResult.Yes == MessageBox.Show("Create new " + selectedRealmType.GetDescription() + " map with selected parameters?", "Create " + selectedRealmType.GetDescription() + " Map?", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
                 {
-                    MapRoot.MapAreaUnits = MapAreaUnitCombo.SelectedItem.ToString() ?? "Miles";
+                    MapSet = null;
+
+                    MapRoot = new()
+                    {
+                        MapWidth = (int)WidthUpDown.Value,
+                        MapHeight = (int)HeightUpDown.Value,
+                        MapAreaWidth = (float)MapAreaWidthUpDown.Value,
+                        MapAreaHeight = float.Parse(MapAreaHeightLabel.Text),
+                        MapName = RealmNameTextBox.Text.Trim(),
+                        MapPath = "",
+                        MapTheme = MapThemeList.SelectedItem != null ? MapThemeList.SelectedItem.ToString() ?? "" : "",
+                        RealmType = selectedRealmType
+                    };
+
+                    MapRoot.MapPixelWidth = MapRoot.MapAreaWidth / MapRoot.MapWidth;
+                    MapRoot.MapPixelHeight = MapRoot.MapAreaHeight / MapRoot.MapHeight;
+
+                    if (MapAreaUnitCombo.SelectedItem != null)
+                    {
+                        MapRoot.MapAreaUnits = MapAreaUnitCombo.SelectedItem.ToString() ?? "Miles";
+                    }
+
+                    Close();
+                }
+            }
+            else if (selectedRealmType == RealmMapType.Interior
+                || selectedRealmType == RealmMapType.Dungeon
+                || selectedRealmType == RealmMapType.SolarSystem
+                || selectedRealmType == RealmMapType.Ship)
+            {
+                if (DialogResult.Yes == MessageBox.Show("Create new " + selectedRealmType.GetDescription() + " map set with selected parameters?", "Create " + selectedRealmType.GetDescription() + " Map Set?", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+                {
+                    MapRoot = null;
+
+                    MapSet = new()
+                    {
+                        MapSetName = RealmNameTextBox.Text.Trim(),
+                        MapSetType = selectedRealmType,
+                        MapSetGuid = Guid.NewGuid(),
+                        DefaultMapWidth = (int)WidthUpDown.Value,
+                        DefaultMapHeight = (int)HeightUpDown.Value,
+                        DefaultMapAreaWidth = (float)MapAreaWidthUpDown.Value,
+                        DefaultMapAreaHeight = float.Parse(MapAreaHeightLabel.Text),
+                        DefaultMapAreaUnits = MapAreaUnitCombo.SelectedItem != null ? MapAreaUnitCombo.SelectedItem.ToString() ?? "Miles" : "Miles",
+                        DefaultThemeName = MapThemeList.SelectedItem as string ?? AssetManager.CURRENT_THEME?.ThemeName ?? string.Empty,
+                        MapSetPath = "",
+                        SetMaps = []
+                    };
+
+                    Close();
+                }
+            }
+        }
+
+        private void MapFileListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (MapFileListView.SelectedItems.Count == 0)
+                {
+                    return;
                 }
 
-                Close();
+                int selectedIndex = MapFileListView.SelectedIndices[0];
+
+                if (CurrentMapGroups[selectedIndex] is RealmStudioMapRoot selectedMap)
+                {
+                    if (selectedMap != null)
+                    {
+                        MapRoot = selectedMap;
+                        MapSet = null;
+
+                        List<string> mapData =
+                        [
+                            $"Name: {selectedMap.MapName}",
+                            $"Type: {selectedMap.RealmType}",
+                            $"Map Size: {selectedMap.MapWidth} x {selectedMap.MapHeight} pixels",
+                            $"Path: {selectedMap.MapPath}",
+                            $"File Size: {new FileInfo(selectedMap.MapPath).Length} bytes",
+                            $"Created: {File.GetCreationTime(selectedMap.MapPath)}"
+                        ];
+
+                        MapInfoTextBox.Lines = [.. mapData];
+                    }
+                    else
+                    {
+                        MapRoot = new RealmStudioMapRoot();
+                        MapInfoTextBox.Lines = [];
+                    }
+                }
+                else if (CurrentMapGroups[selectedIndex] is RealmStudioMapSet selectedMapSet)
+                {
+                    if (selectedMapSet != null)
+                    {
+                        MapRoot = null;
+                        MapSet = selectedMapSet;
+
+                        MapInfoTextBox.Lines = [];
+                        List<string> mapSetData =
+                                    [
+                                        $"Name: {selectedMapSet.MapSetName}",
+                                        $"Path: {selectedMapSet.MapSetPath}",
+                                        $"Number of Maps: {selectedMapSet.SetMaps.Count}",
+                                        $"Created: {File.GetCreationTime(selectedMapSet.MapSetPath)}",
+                                        "Maps in Set:",
+                                ];
+
+                        foreach (var mapRef in selectedMapSet.SetMaps)
+                        {
+                            mapSetData.Add($" - Map Name: {mapRef.MapName}");
+                            mapSetData.Add($"   Type: {mapRef.RealmType}");
+                            mapSetData.Add($"   Path: {mapRef.MapPath}");
+                        }
+
+                        MapInfoTextBox.Lines = [.. mapSetData];
+                    }
+                    else
+                    {
+                        MapInfoTextBox.Lines = [];
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                Program.LOGGER.Error("Error selecting map from list", ex);
+            }
+        }
+
+        private void WorldRadioButton_Click(object sender, EventArgs e)
+        {
+            if (WorldRadioButton.Checked)
+            {
+                MapRoot?.RealmType = RealmMapType.World;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
+                        MapRoot?.MapAreaUnits = "Miles";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
+                        MapRoot?.MapAreaUnits = "Kilometers";
+                    }
+                }
+            }
+        }
+
+        private void WorldPictureBox_Click(object sender, EventArgs e)
+        {
+            WorldRadioButton.Checked = !WorldRadioButton.Checked;
+        }
+
+        private void RegionRadioButton_Click(object sender, EventArgs e)
+        {
+            if (RegionRadioButton.Checked)
+            {
+                MapRoot?.RealmType = RealmMapType.Region;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
+                        MapRoot?.MapAreaUnits = "Miles";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
+                        MapRoot?.MapAreaUnits = "Kilometers";
+                    }
+                }
+            }
+        }
+
+        private void RegionPictureBox_Click(object sender, EventArgs e)
+        {
+            RegionRadioButton.Checked = !RegionRadioButton.Checked;
+        }
+
+        private void CityRadioButton_Click(object sender, EventArgs e)
+        {
+            if (CityRadioButton.Checked)
+            {
+                MapRoot?.RealmType = RealmMapType.City;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
+                        MapRoot?.MapAreaUnits = "Miles";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
+                        MapRoot?.MapAreaUnits = "Kilometers";
+                    }
+                }
+            }
+        }
+
+        private void CityPictureBox_Click(object sender, EventArgs e)
+        {
+            CityRadioButton.Checked = !CityRadioButton.Checked;
+        }
+
+        private void InteriorRadioButton_Click(object sender, EventArgs e)
+        {
+            if (InteriorRadioButton.Checked)
+            {
+                MapSet?.MapSetType = RealmMapType.Interior;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 2;  // feet
+                        MapSet?.DefaultMapAreaUnits = "Feet";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 4;  // Meters
+                        MapSet?.DefaultMapAreaUnits = "Meters";
+                    }
+                }
+            }
+        }
+
+        private void InteriorPictureBox_Click(object sender, EventArgs e)
+        {
+            InteriorRadioButton.Checked = !InteriorRadioButton.Checked;
+        }
+
+        private void InteriorFloorRadioButton_Click(object sender, EventArgs e)
+        {
+            if (InteriorFloorRadioButton.Checked)
+            {
+                MapRoot?.RealmType = RealmMapType.InteriorFloor;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 2;  // feet
+                        MapSet?.DefaultMapAreaUnits = "Feet";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 4;  // Meters
+                        MapSet?.DefaultMapAreaUnits = "Meters";
+                    }
+                }
+            }
+        }
+
+        private void InteriorFloorPictureBox_Click(object sender, EventArgs e)
+        {
+            InteriorFloorRadioButton.Checked = !InteriorFloorRadioButton.Checked;
+        }
+
+        private void DungeonRadioButton_Click(object sender, EventArgs e)
+        {
+            if (DungeonRadioButton.Checked)
+            {
+                MapSet?.MapSetType = RealmMapType.Dungeon;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 2;  // feet
+                        MapSet?.DefaultMapAreaUnits = "Feet";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 4;  // Meters
+                        MapSet?.DefaultMapAreaUnits = "Meters";
+                    }
+                }
+            }
+        }
+
+        private void DungeonPictureBox_Click(object sender, EventArgs e)
+        {
+            DungeonRadioButton.Checked = !DungeonRadioButton.Checked;
+        }
+
+        private void DungeonLevelRadioButton_Click(object sender, EventArgs e)
+        {
+            if (DungeonLevelRadioButton.Checked)
+            {
+                MapRoot?.RealmType = RealmMapType.DungeonLevel;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 2;  // feet
+                        MapRoot?.MapAreaUnits = "Feet";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 4;  // Meters
+                        MapRoot?.MapAreaUnits = "Meters";
+                    }
+                }
+            }
+        }
+
+        private void DungeonLevelPictureBox_Click(object sender, EventArgs e)
+        {
+            DungeonLevelRadioButton.Checked = !DungeonLevelRadioButton.Checked;
+        }
+
+        private void SolarSystemRadioButton_Click(object sender, EventArgs e)
+        {
+            if (SolarSystemRadioButton.Checked)
+            {
+                MapSet?.MapSetType = RealmMapType.SolarSystem;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
+                        MapRoot?.MapAreaUnits = "Miles";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
+                        MapRoot?.MapAreaUnits = "Kilometers";
+                    }
+                }
+            }
+        }
+
+        private void SolarSystemPictureBox_Click(object sender, EventArgs e)
+        {
+            SolarSystemRadioButton.Checked = !SolarSystemRadioButton.Checked;
+        }
+
+        private void SolarSystemBodyRadioButton_Click(object sender, EventArgs e)
+        {
+            if (SolarSystemBodyRadioButton.Checked)
+            {
+                MapRoot?.RealmType = RealmMapType.SolarSystemBody;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
+                        MapRoot?.MapAreaUnits = "Miles";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
+                        MapRoot?.MapAreaUnits = "Kilometers";
+                    }
+                }
+            }
+        }
+
+        private void SolarSystemBodyPictureBox_Click(object sender, EventArgs e)
+        {
+            SolarSystemBodyRadioButton.Checked = !SolarSystemBodyRadioButton.Checked;
+        }
+
+        private void ShipRadioButton_Click(object sender, EventArgs e)
+        {
+            if (ShipRadioButton.Checked)
+            {
+                MapSet?.MapSetType = RealmMapType.Ship;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 2;  // feet
+                        MapRoot?.MapAreaUnits = "Feet";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 4;  // Meters
+                        MapRoot?.MapAreaUnits = "Meters";
+                    }
+                }
+            }
+        }
+
+        private void ShipPictureBox_Click(object sender, EventArgs e)
+        {
+            ShipRadioButton.Checked = !ShipRadioButton.Checked;
+        }
+
+        private void ShipDeckRadioButton_Click(object sender, EventArgs e)
+        {
+            if (ShipDeckRadioButton.Checked)
+            {
+                MapRoot?.RealmType = RealmMapType.Ship;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 2;  // feet
+                        MapRoot?.MapAreaUnits = "Feet";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 4;  // Meters
+                        MapRoot?.MapAreaUnits = "Meters";
+                    }
+                }
+            }
+        }
+
+        private void ShipDeckPictureBox_Click(object sender, EventArgs e)
+        {
+            ShipDeckRadioButton.Checked = !ShipDeckRadioButton.Checked;
+        }
+
+        private void OtherRadioButton_Click(object sender, EventArgs e)
+        {
+            if (OtherRadioButton.Checked)
+            {
+                MapRoot?.RealmType = RealmMapType.Other;
+
+                string measurementUnits = Settings.Default.MeasurementUnits.Trim();
+                if (!string.IsNullOrEmpty(measurementUnits))
+                {
+                    if (measurementUnits == "US Customary")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 6;  // miles
+                        MapRoot?.MapAreaUnits = "Miles";
+                    }
+                    else if (measurementUnits == "Metric")
+                    {
+                        MapAreaUnitCombo.SelectedIndex = 5;  // Kilometers
+                        MapRoot?.MapAreaUnits = "Kilometers";
+                    }
+                }
+            }
+        }
+
+        private void OtherPictureBox_Click(object sender, EventArgs e)
+        {
+            OtherRadioButton.Checked = !OtherRadioButton.Checked;
         }
     }
 }

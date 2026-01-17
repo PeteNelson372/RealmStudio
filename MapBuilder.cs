@@ -462,6 +462,11 @@ namespace RealmStudio
 
         public static void DisposeMap(RealmStudioMap map)
         {
+            if (map == null)
+            {
+                return;
+            }
+
             foreach (var layer in map.MapLayers)
             {
                 if (layer.MapLayerName == "landform")
