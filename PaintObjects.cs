@@ -59,6 +59,29 @@ namespace RealmStudio
             IsAntialias = false,
         };
 
+        public static readonly SKPaint InteriorFloorColorPaint = new()
+        {
+            Style = SKPaintStyle.Fill,
+            IsAntialias = true,
+        };
+
+        public static readonly SKPaint InteriorFloorColorEraserPaint = new()
+        {
+            Color = SKColors.Transparent,
+            Style = SKPaintStyle.Fill,
+            BlendMode = SKBlendMode.Src,
+            IsAntialias = false,
+        };
+
+        public static readonly SKPaint InteriorFloorSelectPaint = new()
+        {
+            Style = SKPaintStyle.Stroke,
+            IsAntialias = true,
+            Color = SKColors.Coral,
+            StrokeWidth = 2,
+            PathEffect = SKPathEffect.CreateDash([5F, 5F], 10F),
+        };
+
         public static readonly SKPaint LandformAreaSelectPaint = new()
         {
             Style = SKPaintStyle.Stroke,

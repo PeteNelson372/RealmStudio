@@ -50,6 +50,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(LandformMediator);
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             Landform newLandform = new()
             {
@@ -263,6 +264,7 @@ namespace RealmStudio
         public static void FillMapWithLandForm(SKGLControl glControl)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.None, 0);
 
@@ -401,6 +403,7 @@ namespace RealmStudio
         internal static void BuildLandformTextureAndShaders(Landform landform)
         {
             ArgumentNullException.ThrowIfNull(LandformMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (landform.LandformTexture != null)
             {
@@ -490,6 +493,7 @@ namespace RealmStudio
         internal static void FinalizeLandforms(SKGLControl glControl)
         {
             ArgumentNullException.ThrowIfNull(LandformMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             // finalize loading of landforms
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
@@ -575,6 +579,7 @@ namespace RealmStudio
 
         internal static void RemoveLayerPaintStrokesFromLandformLayer()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
 
             for (int i = landformLayer.MapLayerComponents.Count - 1; i >= 0; i--)
@@ -588,6 +593,7 @@ namespace RealmStudio
 
         internal static Landform? GetLandformIntersectingCircle(SKPoint mapPoint, int circleRadius)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
             using SKPath circlePath = new();
             circlePath.AddCircle(mapPoint.X, mapPoint.Y, circleRadius);
 
@@ -612,6 +618,7 @@ namespace RealmStudio
 
         internal static void EraseFromLandform(RealmStudioMap map, SKPoint zoomedScrolledPoint, int brushRadius)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
             Landform? erasedLandform = GetLandformIntersectingCircle(zoomedScrolledPoint, brushRadius);
 
             if (erasedLandform != null)
@@ -638,6 +645,8 @@ namespace RealmStudio
 
         internal static void RemoveDeletedLandforms()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             // TODO: what should be done about water features and other objects drawn on top of the landform?
             for (int i = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
@@ -653,6 +662,8 @@ namespace RealmStudio
 
         internal static Landform? SelectLandformAtPoint(SKPoint mapClickPoint)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             Landform? selectedLandform = null;
 
             List<MapComponent> landformComponents = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
@@ -707,6 +718,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
             ArgumentNullException.ThrowIfNull(LandformMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.None, 0);
 
@@ -725,6 +737,7 @@ namespace RealmStudio
         internal static void ClearAllLandforms()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             DialogResult confirmResult = MessageBox.Show("This action will clear all landform drawing and any drawn landforms.\nPlease confirm.", "Clear All?", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
@@ -745,6 +758,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
             ArgumentNullException.ThrowIfNull(LandformMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (MapStateMediator.CurrentLayerPaintStroke == null)
             {
@@ -793,6 +807,7 @@ namespace RealmStudio
         internal static void StartColorErasing(SKGLControl glRenderControl)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (MapStateMediator.CurrentLayerPaintStroke == null)
             {

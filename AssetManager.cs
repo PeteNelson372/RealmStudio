@@ -251,6 +251,17 @@ namespace RealmStudio
 
                     MapStateMediator.PathUIMediator.PathTextureList.Add(t);
                 }
+                else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Floor"))
+                {
+                    MapTexture t = new(assetName, path);
+
+                    if (t.TexturePath != null && t.TextureBitmap == null)
+                    {
+                        t.TextureBitmap = new Bitmap(t.TexturePath);
+                    }
+
+                    MapStateMediator.InteriorUIMediator.InteriorFloorTextureList.Add(t);
+                }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Vectors\\Path"))
                 {
                     MapVector v = new(assetName, path);
@@ -385,6 +396,7 @@ namespace RealmStudio
             ArgumentNullException.ThrowIfNull(OceanManager.OceanMediator);
             ArgumentNullException.ThrowIfNull(PathManager.PathMediator);
             ArgumentNullException.ThrowIfNull(DrawingManager.DrawingMediator);
+            ArgumentNullException.ThrowIfNull(InteriorManager.InteriorMediator);
 
             HATCH_TEXTURE_LIST.Clear();
             BRUSH_LIST.Clear();
@@ -399,6 +411,8 @@ namespace RealmStudio
             PathManager.PathMediator.PathVectorList.Clear();
 
             DrawingManager.DrawingMediator.DrawingTextureList.Clear();
+
+            InteriorManager.InteriorMediator.InteriorFloorTextureList.Clear();
 
             LabelPresetManager.ClearLabelPresets();
 

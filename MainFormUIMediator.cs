@@ -513,6 +513,7 @@ namespace RealmStudio
                 MapDrawingMode.DrawingFivePointStar => "Draw 5-Point Star",
                 MapDrawingMode.DrawingSixPointStar => "Draw 6-Point Star",
                 MapDrawingMode.DrawingSelect => "Select Drawn Object",
+                MapDrawingMode.InteriorFloorPaint => "Paint Interior Floor",
                 _ => "Undefined",
             };
 

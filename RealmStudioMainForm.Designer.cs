@@ -353,7 +353,81 @@
             PixelEditButton = new FontAwesome.Sharp.IconToolStripButton();
             ShowDrawingLayerSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label11 = new Label();
+            InteriorFloorTab = new TabPage();
+            groupBox6 = new GroupBox();
+            label118 = new Label();
+            trackBar2 = new TrackBar();
+            label123 = new Label();
+            trackBar4 = new TrackBar();
+            label127 = new Label();
+            cyberSwitch1 = new ReaLTaiizor.Controls.CyberSwitch();
+            label129 = new Label();
+            label130 = new Label();
+            iconButton4 = new FontAwesome.Sharp.IconButton();
+            iconButton5 = new FontAwesome.Sharp.IconButton();
+            pictureBox2 = new PictureBox();
+            iconButton6 = new FontAwesome.Sharp.IconButton();
+            label131 = new Label();
+            trackBar5 = new TrackBar();
+            groupBox4 = new GroupBox();
+            checkBox1 = new CheckBox();
+            label122 = new Label();
+            iconButton1 = new FontAwesome.Sharp.IconButton();
+            InteriorFloorTextureNameLabel = new Label();
+            PreviousFloorTextureButton = new FontAwesome.Sharp.IconButton();
+            NextFloorTextureButton = new FontAwesome.Sharp.IconButton();
+            InteriorFloorTexturePreviewPicture = new PictureBox();
+            label126 = new Label();
+            trackBar3 = new TrackBar();
+            InteriorToolStrip = new ToolStrip();
+            InteriorSelectButton = new FontAwesome.Sharp.IconToolStripButton();
+            InteriorPaintFloorButton = new FontAwesome.Sharp.IconToolStripButton();
+            InteriorDrawWallButton = new FontAwesome.Sharp.IconToolStripButton();
+            InteriorEraseButton = new FontAwesome.Sharp.IconToolStripButton();
+            InteriorFillButton = new FontAwesome.Sharp.IconToolStripButton();
+            InteriorClearButton = new FontAwesome.Sharp.IconToolStripButton();
+            ShowInteriorFloorSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label117 = new Label();
+            DungeonLevelTab = new TabPage();
+            DungeonToolStrip = new ToolStrip();
+            iconToolStripButton6 = new FontAwesome.Sharp.IconToolStripButton();
+            iconToolStripButton7 = new FontAwesome.Sharp.IconToolStripButton();
+            iconToolStripButton8 = new FontAwesome.Sharp.IconToolStripButton();
+            iconToolStripButton9 = new FontAwesome.Sharp.IconToolStripButton();
+            iconToolStripButton10 = new FontAwesome.Sharp.IconToolStripButton();
+            label119 = new Label();
+            ShowDungeonLevelSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label116 = new Label();
+            ShipDeckTab = new TabPage();
+            ShipToolStrip = new ToolStrip();
+            iconToolStripButton11 = new FontAwesome.Sharp.IconToolStripButton();
+            iconToolStripButton12 = new FontAwesome.Sharp.IconToolStripButton();
+            iconToolStripButton13 = new FontAwesome.Sharp.IconToolStripButton();
+            iconToolStripButton14 = new FontAwesome.Sharp.IconToolStripButton();
+            iconToolStripButton15 = new FontAwesome.Sharp.IconToolStripButton();
+            label120 = new Label();
+            ShowShipDeckSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label115 = new Label();
+            PlanetTab = new TabPage();
+            PlanetToolStrip = new ToolStrip();
+            iconToolStripButton16 = new FontAwesome.Sharp.IconToolStripButton();
+            iconToolStripButton17 = new FontAwesome.Sharp.IconToolStripButton();
+            iconToolStripButton18 = new FontAwesome.Sharp.IconToolStripButton();
+            iconToolStripButton19 = new FontAwesome.Sharp.IconToolStripButton();
+            iconToolStripButton20 = new FontAwesome.Sharp.IconToolStripButton();
+            label121 = new Label();
+            ShowPlanetSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label114 = new Label();
             RealmStudioForm = new ReaLTaiizor.Forms.DungeonForm();
+            InteriorToolPanel = new Panel();
+            InteriorGridGroupBox = new GroupBox();
+            AlignGridSwitch = new Label();
+            cyberSwitch2 = new ReaLTaiizor.Controls.CyberSwitch();
+            ShowInteriorGridSwitch = new Label();
+            cyberSwitch3 = new ReaLTaiizor.Controls.CyberSwitch();
+            label125 = new Label();
+            trackBar1 = new TrackBar();
+            DungeonToolPanel = new Panel();
             NextMapButton = new FontAwesome.Sharp.IconButton();
             RealmSetComboBox = new ReaLTaiizor.Controls.DungeonComboBox();
             WorldAnvilMapButton = new FontAwesome.Sharp.IconButton();
@@ -480,6 +554,7 @@
             CheckForNewReleaseToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator8 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
+            BackgroundToolPanel = new Panel();
             DrawingToolPanel = new Panel();
             label113 = new Label();
             DrawingShapeRotationTrack = new TrackBar();
@@ -672,25 +747,10 @@
             OceanBrushSizeTrack = new TrackBar();
             label57 = new Label();
             OceanPaintColorSelectButton = new FontAwesome.Sharp.IconButton();
-            BackgroundToolPanel = new Panel();
+            PlanetToolPanel = new Panel();
+            ShipToolPanel = new Panel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
-            DungeonLevelTab = new TabPage();
-            InteriorFloorTab = new TabPage();
-            ShipDeckTab = new TabPage();
-            PlanetTab = new TabPage();
-            ShowPlanetSwitch = new ReaLTaiizor.Controls.CyberSwitch();
-            label114 = new Label();
-            ShowShipDeckSwitch = new ReaLTaiizor.Controls.CyberSwitch();
-            label115 = new Label();
-            ShowDungeonLevelSwitch = new ReaLTaiizor.Controls.CyberSwitch();
-            label116 = new Label();
-            ShowInteriorFloorSwitch = new ReaLTaiizor.Controls.CyberSwitch();
-            label117 = new Label();
-            label118 = new Label();
-            label119 = new Label();
-            label120 = new Label();
-            label121 = new Label();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -787,7 +847,26 @@
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)LineBrushSizeTrack).BeginInit();
             DrawingToolStrip.SuspendLayout();
+            InteriorFloorTab.SuspendLayout();
+            groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar4).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar5).BeginInit();
+            groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)InteriorFloorTexturePreviewPicture).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar3).BeginInit();
+            InteriorToolStrip.SuspendLayout();
+            DungeonLevelTab.SuspendLayout();
+            DungeonToolStrip.SuspendLayout();
+            ShipDeckTab.SuspendLayout();
+            ShipToolStrip.SuspendLayout();
+            PlanetTab.SuspendLayout();
+            PlanetToolStrip.SuspendLayout();
             RealmStudioForm.SuspendLayout();
+            InteriorToolPanel.SuspendLayout();
+            InteriorGridGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
             FontSelectionPanel.SuspendLayout();
             groupBox5.SuspendLayout();
             MapScaleCreatorPanel.SuspendLayout();
@@ -863,10 +942,6 @@
             ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).BeginInit();
-            DungeonLevelTab.SuspendLayout();
-            InteriorFloorTab.SuspendLayout();
-            ShipDeckTab.SuspendLayout();
-            PlanetTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // OceanTab
@@ -882,7 +957,7 @@
             OceanTab.Location = new Point(48, 4);
             OceanTab.Name = "OceanTab";
             OceanTab.Padding = new Padding(3);
-            OceanTab.Size = new Size(208, 878);
+            OceanTab.Size = new Size(237, 878);
             OceanTab.TabIndex = 1;
             OceanTab.Text = "Ocean";
             // 
@@ -1482,7 +1557,7 @@
             MainTab.Multiline = true;
             MainTab.Name = "MainTab";
             MainTab.SelectedIndex = 0;
-            MainTab.Size = new Size(260, 886);
+            MainTab.Size = new Size(289, 886);
             MainTab.SizeMode = TabSizeMode.Fixed;
             MainTab.TabIndex = 4;
             MainTab.SelectedIndexChanged += (this.MainTabControl_SelectedIndexChanged);
@@ -1499,7 +1574,7 @@
             BackgroundTab.Location = new Point(48, 4);
             BackgroundTab.Name = "BackgroundTab";
             BackgroundTab.Padding = new Padding(3);
-            BackgroundTab.Size = new Size(208, 878);
+            BackgroundTab.Size = new Size(237, 878);
             BackgroundTab.TabIndex = 0;
             BackgroundTab.Text = "Background";
             // 
@@ -1756,7 +1831,7 @@
             BackgroundToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
             BackgroundToolStrip.Location = new Point(158, 0);
             BackgroundToolStrip.Name = "BackgroundToolStrip";
-            BackgroundToolStrip.Size = new Size(72, 878);
+            BackgroundToolStrip.Size = new Size(68, 878);
             BackgroundToolStrip.TabIndex = 16;
             BackgroundToolStrip.Text = "LandformTools";
             // 
@@ -1860,7 +1935,7 @@
             LandTab.Controls.Add(HeightMapToolsPanel);
             LandTab.Location = new Point(48, 4);
             LandTab.Name = "LandTab";
-            LandTab.Size = new Size(208, 878);
+            LandTab.Size = new Size(237, 878);
             LandTab.TabIndex = 2;
             LandTab.Text = "Land";
             // 
@@ -2645,9 +2720,9 @@
             WaterTab.Controls.Add(WaterToolStrip);
             WaterTab.Controls.Add(ShowWaterLayerSwitch);
             WaterTab.Controls.Add(label5);
-            WaterTab.Location = new Point(26, 4);
+            WaterTab.Location = new Point(48, 4);
             WaterTab.Name = "WaterTab";
-            WaterTab.Size = new Size(230, 878);
+            WaterTab.Size = new Size(237, 878);
             WaterTab.TabIndex = 3;
             WaterTab.Text = "Water";
             // 
@@ -3156,9 +3231,9 @@
             PathTab.Controls.Add(PathToolStrip);
             PathTab.Controls.Add(ShowPathLayerSwitch);
             PathTab.Controls.Add(label6);
-            PathTab.Location = new Point(26, 4);
+            PathTab.Location = new Point(48, 4);
             PathTab.Name = "PathTab";
-            PathTab.Size = new Size(230, 878);
+            PathTab.Size = new Size(237, 878);
             PathTab.TabIndex = 4;
             PathTab.Text = "Paths";
             // 
@@ -3558,9 +3633,9 @@
             SymbolTab.Controls.Add(SymbolToolStrip);
             SymbolTab.Controls.Add(ShowSymbolLayerSwitch);
             SymbolTab.Controls.Add(label7);
-            SymbolTab.Location = new Point(26, 4);
+            SymbolTab.Location = new Point(48, 4);
             SymbolTab.Name = "SymbolTab";
-            SymbolTab.Size = new Size(230, 878);
+            SymbolTab.Size = new Size(237, 878);
             SymbolTab.TabIndex = 9;
             SymbolTab.Text = "Symbols";
             // 
@@ -4254,9 +4329,9 @@
             LabelTab.Controls.Add(LabelToolStrip);
             LabelTab.Controls.Add(ShowLabelLayerSwitch);
             LabelTab.Controls.Add(label8);
-            LabelTab.Location = new Point(26, 4);
+            LabelTab.Location = new Point(48, 4);
             LabelTab.Name = "LabelTab";
-            LabelTab.Size = new Size(230, 878);
+            LabelTab.Size = new Size(237, 878);
             LabelTab.TabIndex = 5;
             LabelTab.Text = "Labels";
             // 
@@ -4716,9 +4791,9 @@
             OverlayTab.Controls.Add(OverlayToolStrip);
             OverlayTab.Controls.Add(ShowOverlayLayerSwitch);
             OverlayTab.Controls.Add(label9);
-            OverlayTab.Location = new Point(26, 4);
+            OverlayTab.Location = new Point(48, 4);
             OverlayTab.Name = "OverlayTab";
-            OverlayTab.Size = new Size(230, 878);
+            OverlayTab.Size = new Size(237, 878);
             OverlayTab.TabIndex = 6;
             OverlayTab.Text = "Overlays";
             // 
@@ -5369,9 +5444,9 @@
             RegionTab.Controls.Add(RegionToolStrip);
             RegionTab.Controls.Add(ShowRegionLayerSwitch);
             RegionTab.Controls.Add(label10);
-            RegionTab.Location = new Point(26, 4);
+            RegionTab.Location = new Point(48, 4);
             RegionTab.Name = "RegionTab";
-            RegionTab.Size = new Size(230, 878);
+            RegionTab.Size = new Size(237, 878);
             RegionTab.TabIndex = 7;
             RegionTab.Text = "Regions";
             // 
@@ -5617,9 +5692,9 @@
             DrawingTab.Controls.Add(DrawingToolStrip);
             DrawingTab.Controls.Add(ShowDrawingLayerSwitch);
             DrawingTab.Controls.Add(label11);
-            DrawingTab.Location = new Point(26, 4);
+            DrawingTab.Location = new Point(48, 4);
             DrawingTab.Name = "DrawingTab";
-            DrawingTab.Size = new Size(230, 878);
+            DrawingTab.Size = new Size(237, 878);
             DrawingTab.TabIndex = 8;
             DrawingTab.Text = "Drawing";
             // 
@@ -6115,11 +6190,1065 @@
             label11.TabIndex = 19;
             label11.Text = "Show";
             // 
+            // InteriorFloorTab
+            // 
+            InteriorFloorTab.BackColor = SystemColors.Control;
+            InteriorFloorTab.Controls.Add(groupBox6);
+            InteriorFloorTab.Controls.Add(groupBox4);
+            InteriorFloorTab.Controls.Add(InteriorToolStrip);
+            InteriorFloorTab.Controls.Add(ShowInteriorFloorSwitch);
+            InteriorFloorTab.Controls.Add(label117);
+            InteriorFloorTab.Location = new Point(48, 4);
+            InteriorFloorTab.Name = "InteriorFloorTab";
+            InteriorFloorTab.Size = new Size(237, 878);
+            InteriorFloorTab.TabIndex = 11;
+            InteriorFloorTab.Text = "Interior";
+            // 
+            // groupBox6
+            // 
+            groupBox6.BackColor = Color.Transparent;
+            groupBox6.Controls.Add(label118);
+            groupBox6.Controls.Add(trackBar2);
+            groupBox6.Controls.Add(label123);
+            groupBox6.Controls.Add(trackBar4);
+            groupBox6.Controls.Add(label127);
+            groupBox6.Controls.Add(cyberSwitch1);
+            groupBox6.Controls.Add(label129);
+            groupBox6.Controls.Add(label130);
+            groupBox6.Controls.Add(iconButton4);
+            groupBox6.Controls.Add(iconButton5);
+            groupBox6.Controls.Add(pictureBox2);
+            groupBox6.Controls.Add(iconButton6);
+            groupBox6.Controls.Add(label131);
+            groupBox6.Controls.Add(trackBar5);
+            groupBox6.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
+            groupBox6.ForeColor = SystemColors.ControlText;
+            groupBox6.Location = new Point(10, 36);
+            groupBox6.Name = "groupBox6";
+            groupBox6.Size = new Size(148, 470);
+            groupBox6.TabIndex = 25;
+            groupBox6.TabStop = false;
+            groupBox6.Text = "Wall";
+            // 
+            // label118
+            // 
+            label118.AutoSize = true;
+            label118.BackColor = Color.Transparent;
+            label118.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label118.ForeColor = SystemColors.ControlDarkDark;
+            label118.Location = new Point(6, 409);
+            label118.Name = "label118";
+            label118.Size = new Size(34, 15);
+            label118.TabIndex = 32;
+            label118.Text = "Scale";
+            // 
+            // trackBar2
+            // 
+            trackBar2.AutoSize = false;
+            trackBar2.Location = new Point(2, 432);
+            trackBar2.Maximum = 200;
+            trackBar2.Name = "trackBar2";
+            trackBar2.Size = new Size(136, 20);
+            trackBar2.TabIndex = 31;
+            trackBar2.TickStyle = TickStyle.None;
+            trackBar2.Value = 100;
+            // 
+            // label123
+            // 
+            label123.AutoSize = true;
+            label123.BackColor = Color.Transparent;
+            label123.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label123.ForeColor = SystemColors.ControlDarkDark;
+            label123.Location = new Point(0, 367);
+            label123.Name = "label123";
+            label123.Size = new Size(48, 15);
+            label123.TabIndex = 30;
+            label123.Text = "Opacity";
+            // 
+            // trackBar4
+            // 
+            trackBar4.AutoSize = false;
+            trackBar4.BackColor = SystemColors.Control;
+            trackBar4.Location = new Point(0, 385);
+            trackBar4.Maximum = 255;
+            trackBar4.Name = "trackBar4";
+            trackBar4.Size = new Size(136, 20);
+            trackBar4.TabIndex = 29;
+            trackBar4.TickStyle = TickStyle.None;
+            trackBar4.Value = 255;
+            // 
+            // label127
+            // 
+            label127.AutoSize = true;
+            label127.BackColor = Color.Transparent;
+            label127.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label127.ForeColor = SystemColors.ControlDarkDark;
+            label127.Location = new Point(6, 138);
+            label127.Name = "label127";
+            label127.Size = new Size(90, 15);
+            label127.TabIndex = 28;
+            label127.Text = "Edit Path Points";
+            // 
+            // cyberSwitch1
+            // 
+            cyberSwitch1.Alpha = 50;
+            cyberSwitch1.BackColor = Color.Transparent;
+            cyberSwitch1.Background = true;
+            cyberSwitch1.Background_WidthPen = 2F;
+            cyberSwitch1.BackgroundPen = false;
+            cyberSwitch1.Checked = false;
+            cyberSwitch1.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch1.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            cyberSwitch1.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            cyberSwitch1.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch1.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch1.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch1.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch1.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            cyberSwitch1.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            cyberSwitch1.ColorValue = Color.ForestGreen;
+            cyberSwitch1.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            cyberSwitch1.Font = new Font("Arial", 11F);
+            cyberSwitch1.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
+            cyberSwitch1.Lighting = true;
+            cyberSwitch1.LinearGradient_Background = false;
+            cyberSwitch1.LinearGradient_Value = false;
+            cyberSwitch1.LinearGradientPen = false;
+            cyberSwitch1.Location = new Point(6, 156);
+            cyberSwitch1.Name = "cyberSwitch1";
+            cyberSwitch1.PenWidth = 10;
+            cyberSwitch1.RGB = false;
+            cyberSwitch1.Rounding = true;
+            cyberSwitch1.RoundingInt = 90;
+            cyberSwitch1.Size = new Size(41, 20);
+            cyberSwitch1.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            cyberSwitch1.TabIndex = 27;
+            cyberSwitch1.Tag = "Cyber";
+            cyberSwitch1.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            cyberSwitch1.Timer_RGB = 300;
+            // 
+            // label129
+            // 
+            label129.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label129.Location = new Point(6, 345);
+            label129.Name = "label129";
+            label129.Size = new Size(136, 15);
+            label129.TabIndex = 24;
+            label129.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // label130
+            // 
+            label130.AutoSize = true;
+            label130.BackColor = Color.Transparent;
+            label130.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label130.ForeColor = SystemColors.ControlDarkDark;
+            label130.Location = new Point(6, 188);
+            label130.Name = "label130";
+            label130.Size = new Size(45, 15);
+            label130.TabIndex = 23;
+            label130.Text = "Texture";
+            // 
+            // iconButton4
+            // 
+            iconButton4.FlatStyle = FlatStyle.Flat;
+            iconButton4.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            iconButton4.IconChar = FontAwesome.Sharp.IconChar.AngleLeft;
+            iconButton4.IconColor = Color.Black;
+            iconButton4.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton4.IconSize = 24;
+            iconButton4.Location = new Point(6, 318);
+            iconButton4.Name = "iconButton4";
+            iconButton4.Size = new Size(24, 24);
+            iconButton4.TabIndex = 22;
+            iconButton4.TextImageRelation = TextImageRelation.TextBeforeImage;
+            iconButton4.UseVisualStyleBackColor = true;
+            // 
+            // iconButton5
+            // 
+            iconButton5.FlatStyle = FlatStyle.Flat;
+            iconButton5.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            iconButton5.IconChar = FontAwesome.Sharp.IconChar.AngleRight;
+            iconButton5.IconColor = Color.Black;
+            iconButton5.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton5.IconSize = 24;
+            iconButton5.Location = new Point(118, 318);
+            iconButton5.Name = "iconButton5";
+            iconButton5.Size = new Size(24, 24);
+            iconButton5.TabIndex = 21;
+            iconButton5.TextImageRelation = TextImageRelation.TextBeforeImage;
+            iconButton5.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Location = new Point(6, 206);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(136, 136);
+            pictureBox2.SizeMode = PictureBoxSizeMode.CenterImage;
+            pictureBox2.TabIndex = 20;
+            pictureBox2.TabStop = false;
+            // 
+            // iconButton6
+            // 
+            iconButton6.BackColor = Color.FromArgb((int)(byte)75, (int)(byte)49, (int)(byte)26);
+            iconButton6.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            iconButton6.ForeColor = SystemColors.HighlightText;
+            iconButton6.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            iconButton6.IconColor = Color.Tan;
+            iconButton6.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton6.Location = new Point(6, 67);
+            iconButton6.Name = "iconButton6";
+            iconButton6.Size = new Size(136, 60);
+            iconButton6.TabIndex = 19;
+            iconButton6.Text = "Click to Select";
+            iconButton6.UseVisualStyleBackColor = false;
+            // 
+            // label131
+            // 
+            label131.AutoSize = true;
+            label131.BackColor = Color.Transparent;
+            label131.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label131.ForeColor = SystemColors.ControlDarkDark;
+            label131.Location = new Point(6, 23);
+            label131.Name = "label131";
+            label131.Size = new Size(39, 15);
+            label131.TabIndex = 18;
+            label131.Text = "Width";
+            // 
+            // trackBar5
+            // 
+            trackBar5.AutoSize = false;
+            trackBar5.BackColor = SystemColors.Control;
+            trackBar5.Location = new Point(6, 41);
+            trackBar5.Maximum = 128;
+            trackBar5.Minimum = 1;
+            trackBar5.Name = "trackBar5";
+            trackBar5.Size = new Size(136, 20);
+            trackBar5.TabIndex = 0;
+            trackBar5.TickStyle = TickStyle.None;
+            trackBar5.Value = 8;
+            // 
+            // groupBox4
+            // 
+            groupBox4.BackColor = Color.Transparent;
+            groupBox4.Controls.Add(checkBox1);
+            groupBox4.Controls.Add(label122);
+            groupBox4.Controls.Add(iconButton1);
+            groupBox4.Controls.Add(InteriorFloorTextureNameLabel);
+            groupBox4.Controls.Add(PreviousFloorTextureButton);
+            groupBox4.Controls.Add(NextFloorTextureButton);
+            groupBox4.Controls.Add(InteriorFloorTexturePreviewPicture);
+            groupBox4.Controls.Add(label126);
+            groupBox4.Controls.Add(trackBar3);
+            groupBox4.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
+            groupBox4.ForeColor = SystemColors.ControlText;
+            groupBox4.Location = new Point(10, 515);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new Size(148, 348);
+            groupBox4.TabIndex = 24;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "Interior Floor";
+            // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Checked = true;
+            checkBox1.CheckState = CheckState.Checked;
+            checkBox1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            checkBox1.ForeColor = SystemColors.ControlDarkDark;
+            checkBox1.Location = new Point(6, 164);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(82, 19);
+            checkBox1.TabIndex = 28;
+            checkBox1.Text = "Texture Fill";
+            checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // label122
+            // 
+            label122.AutoSize = true;
+            label122.BackColor = Color.Transparent;
+            label122.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label122.ForeColor = SystemColors.ControlDarkDark;
+            label122.Location = new Point(3, 77);
+            label122.Name = "label122";
+            label122.Size = new Size(103, 15);
+            label122.TabIndex = 27;
+            label122.Text = "Background Color";
+            // 
+            // iconButton1
+            // 
+            iconButton1.BackColor = Color.White;
+            iconButton1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            iconButton1.ForeColor = SystemColors.ControlDarkDark;
+            iconButton1.IconChar = FontAwesome.Sharp.IconChar.Palette;
+            iconButton1.IconColor = Color.Tan;
+            iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton1.Location = new Point(3, 95);
+            iconButton1.Name = "iconButton1";
+            iconButton1.Size = new Size(136, 60);
+            iconButton1.TabIndex = 25;
+            iconButton1.Text = "Click to Select";
+            iconButton1.UseVisualStyleBackColor = false;
+            // 
+            // InteriorFloorTextureNameLabel
+            // 
+            InteriorFloorTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            InteriorFloorTextureNameLabel.Location = new Point(3, 324);
+            InteriorFloorTextureNameLabel.Name = "InteriorFloorTextureNameLabel";
+            InteriorFloorTextureNameLabel.Size = new Size(136, 15);
+            InteriorFloorTextureNameLabel.TabIndex = 24;
+            InteriorFloorTextureNameLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // PreviousFloorTextureButton
+            // 
+            PreviousFloorTextureButton.FlatStyle = FlatStyle.Flat;
+            PreviousFloorTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            PreviousFloorTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleLeft;
+            PreviousFloorTextureButton.IconColor = Color.Black;
+            PreviousFloorTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PreviousFloorTextureButton.IconSize = 24;
+            PreviousFloorTextureButton.Location = new Point(3, 295);
+            PreviousFloorTextureButton.Name = "PreviousFloorTextureButton";
+            PreviousFloorTextureButton.Size = new Size(24, 24);
+            PreviousFloorTextureButton.TabIndex = 22;
+            PreviousFloorTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
+            PreviousFloorTextureButton.UseVisualStyleBackColor = true;
+            PreviousFloorTextureButton.Click += (this.PreviousFloorTextureButton_Click);
+            // 
+            // NextFloorTextureButton
+            // 
+            NextFloorTextureButton.FlatStyle = FlatStyle.Flat;
+            NextFloorTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            NextFloorTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleRight;
+            NextFloorTextureButton.IconColor = Color.Black;
+            NextFloorTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            NextFloorTextureButton.IconSize = 24;
+            NextFloorTextureButton.Location = new Point(115, 295);
+            NextFloorTextureButton.Name = "NextFloorTextureButton";
+            NextFloorTextureButton.Size = new Size(24, 24);
+            NextFloorTextureButton.TabIndex = 21;
+            NextFloorTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
+            NextFloorTextureButton.UseVisualStyleBackColor = true;
+            NextFloorTextureButton.Click += (this.NextFloorTextureButton_Click);
+            // 
+            // InteriorFloorTexturePreviewPicture
+            // 
+            InteriorFloorTexturePreviewPicture.Location = new Point(3, 183);
+            InteriorFloorTexturePreviewPicture.Name = "InteriorFloorTexturePreviewPicture";
+            InteriorFloorTexturePreviewPicture.Size = new Size(136, 136);
+            InteriorFloorTexturePreviewPicture.TabIndex = 20;
+            InteriorFloorTexturePreviewPicture.TabStop = false;
+            // 
+            // label126
+            // 
+            label126.AutoSize = true;
+            label126.BackColor = Color.Transparent;
+            label126.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label126.ForeColor = SystemColors.ControlDarkDark;
+            label126.Location = new Point(6, 31);
+            label126.Name = "label126";
+            label126.Size = new Size(60, 15);
+            label126.TabIndex = 18;
+            label126.Text = "Brush Size";
+            // 
+            // trackBar3
+            // 
+            trackBar3.AutoSize = false;
+            trackBar3.BackColor = SystemColors.Control;
+            trackBar3.Location = new Point(6, 47);
+            trackBar3.Maximum = 512;
+            trackBar3.Minimum = 4;
+            trackBar3.Name = "trackBar3";
+            trackBar3.Size = new Size(136, 20);
+            trackBar3.TabIndex = 0;
+            trackBar3.TickStyle = TickStyle.None;
+            trackBar3.Value = 64;
+            // 
+            // InteriorToolStrip
+            // 
+            InteriorToolStrip.AllowMerge = false;
+            InteriorToolStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
+            InteriorToolStrip.AutoSize = false;
+            InteriorToolStrip.BackColor = SystemColors.Control;
+            InteriorToolStrip.Dock = DockStyle.None;
+            InteriorToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            InteriorToolStrip.GripStyle = ToolStripGripStyle.Hidden;
+            InteriorToolStrip.Items.AddRange(new ToolStripItem[] { InteriorSelectButton, InteriorPaintFloorButton, InteriorDrawWallButton, InteriorEraseButton, InteriorFillButton, InteriorClearButton });
+            InteriorToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
+            InteriorToolStrip.Location = new Point(158, 0);
+            InteriorToolStrip.Name = "InteriorToolStrip";
+            InteriorToolStrip.Size = new Size(72, 878);
+            InteriorToolStrip.TabIndex = 22;
+            InteriorToolStrip.Text = "LandformTools";
+            // 
+            // InteriorSelectButton
+            // 
+            InteriorSelectButton.AutoSize = false;
+            InteriorSelectButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            InteriorSelectButton.ForeColor = SystemColors.ControlDarkDark;
+            InteriorSelectButton.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
+            InteriorSelectButton.IconColor = Color.Black;
+            InteriorSelectButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            InteriorSelectButton.IconSize = 24;
+            InteriorSelectButton.ImageScaling = ToolStripItemImageScaling.None;
+            InteriorSelectButton.ImageTransparentColor = Color.Magenta;
+            InteriorSelectButton.Margin = new Padding(0, 25, 0, 2);
+            InteriorSelectButton.Name = "InteriorSelectButton";
+            InteriorSelectButton.Size = new Size(60, 60);
+            InteriorSelectButton.Text = "Select";
+            InteriorSelectButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // InteriorPaintFloorButton
+            // 
+            InteriorPaintFloorButton.AutoSize = false;
+            InteriorPaintFloorButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            InteriorPaintFloorButton.ForeColor = SystemColors.ControlDarkDark;
+            InteriorPaintFloorButton.IconChar = FontAwesome.Sharp.IconChar.Paintbrush;
+            InteriorPaintFloorButton.IconColor = Color.Black;
+            InteriorPaintFloorButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            InteriorPaintFloorButton.IconSize = 24;
+            InteriorPaintFloorButton.ImageScaling = ToolStripItemImageScaling.None;
+            InteriorPaintFloorButton.ImageTransparentColor = Color.Magenta;
+            InteriorPaintFloorButton.Margin = new Padding(0, 25, 0, 2);
+            InteriorPaintFloorButton.Name = "InteriorPaintFloorButton";
+            InteriorPaintFloorButton.Size = new Size(60, 60);
+            InteriorPaintFloorButton.Text = "Paint";
+            InteriorPaintFloorButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            InteriorPaintFloorButton.Click += (this.InteriorPaintFloorButton_Click);
+            // 
+            // InteriorDrawWallButton
+            // 
+            InteriorDrawWallButton.AutoSize = false;
+            InteriorDrawWallButton.ForeColor = SystemColors.ControlDarkDark;
+            InteriorDrawWallButton.IconChar = FontAwesome.Sharp.IconChar.PenRuler;
+            InteriorDrawWallButton.IconColor = Color.Black;
+            InteriorDrawWallButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            InteriorDrawWallButton.IconSize = 24;
+            InteriorDrawWallButton.ImageScaling = ToolStripItemImageScaling.None;
+            InteriorDrawWallButton.ImageTransparentColor = Color.Magenta;
+            InteriorDrawWallButton.Margin = new Padding(0, 25, 0, 2);
+            InteriorDrawWallButton.Name = "InteriorDrawWallButton";
+            InteriorDrawWallButton.Size = new Size(60, 60);
+            InteriorDrawWallButton.Text = "Draw";
+            InteriorDrawWallButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // InteriorEraseButton
+            // 
+            InteriorEraseButton.AutoSize = false;
+            InteriorEraseButton.ForeColor = SystemColors.ControlDarkDark;
+            InteriorEraseButton.IconChar = FontAwesome.Sharp.IconChar.Eraser;
+            InteriorEraseButton.IconColor = Color.Black;
+            InteriorEraseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            InteriorEraseButton.IconSize = 24;
+            InteriorEraseButton.ImageScaling = ToolStripItemImageScaling.None;
+            InteriorEraseButton.ImageTransparentColor = Color.Magenta;
+            InteriorEraseButton.Margin = new Padding(0, 25, 0, 2);
+            InteriorEraseButton.Name = "InteriorEraseButton";
+            InteriorEraseButton.Size = new Size(60, 60);
+            InteriorEraseButton.Text = "Erase";
+            InteriorEraseButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // InteriorFillButton
+            // 
+            InteriorFillButton.AutoSize = false;
+            InteriorFillButton.ForeColor = SystemColors.ControlDarkDark;
+            InteriorFillButton.IconChar = FontAwesome.Sharp.IconChar.Fill;
+            InteriorFillButton.IconColor = Color.Black;
+            InteriorFillButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            InteriorFillButton.IconSize = 24;
+            InteriorFillButton.ImageScaling = ToolStripItemImageScaling.None;
+            InteriorFillButton.ImageTransparentColor = Color.Magenta;
+            InteriorFillButton.Margin = new Padding(0, 50, 0, 2);
+            InteriorFillButton.Name = "InteriorFillButton";
+            InteriorFillButton.Size = new Size(60, 60);
+            InteriorFillButton.Text = "Fill";
+            InteriorFillButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // InteriorClearButton
+            // 
+            InteriorClearButton.AutoSize = false;
+            InteriorClearButton.ForeColor = SystemColors.ControlDarkDark;
+            InteriorClearButton.IconChar = FontAwesome.Sharp.IconChar.Square;
+            InteriorClearButton.IconColor = Color.Black;
+            InteriorClearButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            InteriorClearButton.IconSize = 24;
+            InteriorClearButton.ImageScaling = ToolStripItemImageScaling.None;
+            InteriorClearButton.ImageTransparentColor = Color.Magenta;
+            InteriorClearButton.Name = "InteriorClearButton";
+            InteriorClearButton.Size = new Size(60, 60);
+            InteriorClearButton.Text = "Clear";
+            InteriorClearButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // ShowInteriorFloorSwitch
+            // 
+            ShowInteriorFloorSwitch.Alpha = 50;
+            ShowInteriorFloorSwitch.BackColor = Color.Transparent;
+            ShowInteriorFloorSwitch.Background = true;
+            ShowInteriorFloorSwitch.Background_WidthPen = 2F;
+            ShowInteriorFloorSwitch.BackgroundPen = false;
+            ShowInteriorFloorSwitch.Checked = true;
+            ShowInteriorFloorSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowInteriorFloorSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowInteriorFloorSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowInteriorFloorSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowInteriorFloorSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowInteriorFloorSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowInteriorFloorSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowInteriorFloorSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowInteriorFloorSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowInteriorFloorSwitch.ColorValue = Color.ForestGreen;
+            ShowInteriorFloorSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowInteriorFloorSwitch.Font = new Font("Arial", 11F);
+            ShowInteriorFloorSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
+            ShowInteriorFloorSwitch.Lighting = true;
+            ShowInteriorFloorSwitch.LinearGradient_Background = false;
+            ShowInteriorFloorSwitch.LinearGradient_Value = false;
+            ShowInteriorFloorSwitch.LinearGradientPen = false;
+            ShowInteriorFloorSwitch.Location = new Point(6, 6);
+            ShowInteriorFloorSwitch.Name = "ShowInteriorFloorSwitch";
+            ShowInteriorFloorSwitch.PenWidth = 10;
+            ShowInteriorFloorSwitch.RGB = false;
+            ShowInteriorFloorSwitch.RightToLeft = RightToLeft.No;
+            ShowInteriorFloorSwitch.Rounding = true;
+            ShowInteriorFloorSwitch.RoundingInt = 90;
+            ShowInteriorFloorSwitch.Size = new Size(35, 20);
+            ShowInteriorFloorSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowInteriorFloorSwitch.TabIndex = 20;
+            ShowInteriorFloorSwitch.Tag = "Cyber";
+            ShowInteriorFloorSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowInteriorFloorSwitch.Timer_RGB = 300;
+            ShowInteriorFloorSwitch.CheckedChanged += (this.ShowInteriorFloorSwitch_CheckedChanged);
+            // 
+            // label117
+            // 
+            label117.AutoSize = true;
+            label117.BackColor = Color.Transparent;
+            label117.ForeColor = Color.Black;
+            label117.Location = new Point(45, 9);
+            label117.Name = "label117";
+            label117.Size = new Size(37, 15);
+            label117.TabIndex = 19;
+            label117.Text = "Show";
+            // 
+            // DungeonLevelTab
+            // 
+            DungeonLevelTab.BackColor = SystemColors.Control;
+            DungeonLevelTab.Controls.Add(DungeonToolStrip);
+            DungeonLevelTab.Controls.Add(label119);
+            DungeonLevelTab.Controls.Add(ShowDungeonLevelSwitch);
+            DungeonLevelTab.Controls.Add(label116);
+            DungeonLevelTab.Location = new Point(48, 4);
+            DungeonLevelTab.Name = "DungeonLevelTab";
+            DungeonLevelTab.Size = new Size(237, 878);
+            DungeonLevelTab.TabIndex = 10;
+            DungeonLevelTab.Text = "Dungeon";
+            // 
+            // DungeonToolStrip
+            // 
+            DungeonToolStrip.AllowMerge = false;
+            DungeonToolStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
+            DungeonToolStrip.AutoSize = false;
+            DungeonToolStrip.BackColor = SystemColors.Control;
+            DungeonToolStrip.Dock = DockStyle.None;
+            DungeonToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            DungeonToolStrip.GripStyle = ToolStripGripStyle.Hidden;
+            DungeonToolStrip.Items.AddRange(new ToolStripItem[] { iconToolStripButton6, iconToolStripButton7, iconToolStripButton8, iconToolStripButton9, iconToolStripButton10 });
+            DungeonToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
+            DungeonToolStrip.Location = new Point(158, 0);
+            DungeonToolStrip.Name = "DungeonToolStrip";
+            DungeonToolStrip.Size = new Size(72, 878);
+            DungeonToolStrip.TabIndex = 23;
+            DungeonToolStrip.Text = "LandformTools";
+            // 
+            // iconToolStripButton6
+            // 
+            iconToolStripButton6.AutoSize = false;
+            iconToolStripButton6.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            iconToolStripButton6.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton6.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
+            iconToolStripButton6.IconColor = Color.Black;
+            iconToolStripButton6.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton6.IconSize = 24;
+            iconToolStripButton6.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton6.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton6.Margin = new Padding(0, 25, 0, 2);
+            iconToolStripButton6.Name = "iconToolStripButton6";
+            iconToolStripButton6.Size = new Size(60, 60);
+            iconToolStripButton6.Text = "Select";
+            iconToolStripButton6.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // iconToolStripButton7
+            // 
+            iconToolStripButton7.AutoSize = false;
+            iconToolStripButton7.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            iconToolStripButton7.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton7.IconChar = FontAwesome.Sharp.IconChar.Paintbrush;
+            iconToolStripButton7.IconColor = Color.Black;
+            iconToolStripButton7.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton7.IconSize = 24;
+            iconToolStripButton7.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton7.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton7.Margin = new Padding(0, 25, 0, 2);
+            iconToolStripButton7.Name = "iconToolStripButton7";
+            iconToolStripButton7.Size = new Size(60, 60);
+            iconToolStripButton7.Text = "Paint";
+            iconToolStripButton7.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // iconToolStripButton8
+            // 
+            iconToolStripButton8.AutoSize = false;
+            iconToolStripButton8.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton8.IconChar = FontAwesome.Sharp.IconChar.Eraser;
+            iconToolStripButton8.IconColor = Color.Black;
+            iconToolStripButton8.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton8.IconSize = 24;
+            iconToolStripButton8.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton8.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton8.Margin = new Padding(0, 25, 0, 2);
+            iconToolStripButton8.Name = "iconToolStripButton8";
+            iconToolStripButton8.Size = new Size(60, 60);
+            iconToolStripButton8.Text = "Erase";
+            iconToolStripButton8.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // iconToolStripButton9
+            // 
+            iconToolStripButton9.AutoSize = false;
+            iconToolStripButton9.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton9.IconChar = FontAwesome.Sharp.IconChar.Fill;
+            iconToolStripButton9.IconColor = Color.Black;
+            iconToolStripButton9.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton9.IconSize = 24;
+            iconToolStripButton9.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton9.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton9.Margin = new Padding(0, 50, 0, 2);
+            iconToolStripButton9.Name = "iconToolStripButton9";
+            iconToolStripButton9.Size = new Size(60, 60);
+            iconToolStripButton9.Text = "Fill";
+            iconToolStripButton9.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // iconToolStripButton10
+            // 
+            iconToolStripButton10.AutoSize = false;
+            iconToolStripButton10.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton10.IconChar = FontAwesome.Sharp.IconChar.Square;
+            iconToolStripButton10.IconColor = Color.Black;
+            iconToolStripButton10.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton10.IconSize = 24;
+            iconToolStripButton10.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton10.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton10.Name = "iconToolStripButton10";
+            iconToolStripButton10.Size = new Size(60, 60);
+            iconToolStripButton10.Text = "Clear";
+            iconToolStripButton10.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // label119
+            // 
+            label119.AutoSize = true;
+            label119.ForeColor = SystemColors.ControlDarkDark;
+            label119.Location = new Point(47, 47);
+            label119.Name = "label119";
+            label119.Size = new Size(87, 15);
+            label119.TabIndex = 22;
+            label119.Text = "Dungeon Level";
+            // 
+            // ShowDungeonLevelSwitch
+            // 
+            ShowDungeonLevelSwitch.Alpha = 50;
+            ShowDungeonLevelSwitch.BackColor = Color.Transparent;
+            ShowDungeonLevelSwitch.Background = true;
+            ShowDungeonLevelSwitch.Background_WidthPen = 2F;
+            ShowDungeonLevelSwitch.BackgroundPen = false;
+            ShowDungeonLevelSwitch.Checked = true;
+            ShowDungeonLevelSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowDungeonLevelSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowDungeonLevelSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowDungeonLevelSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowDungeonLevelSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowDungeonLevelSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowDungeonLevelSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowDungeonLevelSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowDungeonLevelSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowDungeonLevelSwitch.ColorValue = Color.ForestGreen;
+            ShowDungeonLevelSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowDungeonLevelSwitch.Font = new Font("Arial", 11F);
+            ShowDungeonLevelSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
+            ShowDungeonLevelSwitch.Lighting = true;
+            ShowDungeonLevelSwitch.LinearGradient_Background = false;
+            ShowDungeonLevelSwitch.LinearGradient_Value = false;
+            ShowDungeonLevelSwitch.LinearGradientPen = false;
+            ShowDungeonLevelSwitch.Location = new Point(6, 6);
+            ShowDungeonLevelSwitch.Name = "ShowDungeonLevelSwitch";
+            ShowDungeonLevelSwitch.PenWidth = 10;
+            ShowDungeonLevelSwitch.RGB = false;
+            ShowDungeonLevelSwitch.RightToLeft = RightToLeft.No;
+            ShowDungeonLevelSwitch.Rounding = true;
+            ShowDungeonLevelSwitch.RoundingInt = 90;
+            ShowDungeonLevelSwitch.Size = new Size(35, 20);
+            ShowDungeonLevelSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowDungeonLevelSwitch.TabIndex = 18;
+            ShowDungeonLevelSwitch.Tag = "Cyber";
+            ShowDungeonLevelSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowDungeonLevelSwitch.Timer_RGB = 300;
+            // 
+            // label116
+            // 
+            label116.AutoSize = true;
+            label116.BackColor = Color.Transparent;
+            label116.ForeColor = Color.Black;
+            label116.Location = new Point(47, 10);
+            label116.Name = "label116";
+            label116.Size = new Size(37, 15);
+            label116.TabIndex = 17;
+            label116.Text = "Show";
+            // 
+            // ShipDeckTab
+            // 
+            ShipDeckTab.BackColor = SystemColors.Control;
+            ShipDeckTab.Controls.Add(ShipToolStrip);
+            ShipDeckTab.Controls.Add(label120);
+            ShipDeckTab.Controls.Add(ShowShipDeckSwitch);
+            ShipDeckTab.Controls.Add(label115);
+            ShipDeckTab.Location = new Point(48, 4);
+            ShipDeckTab.Name = "ShipDeckTab";
+            ShipDeckTab.Size = new Size(237, 878);
+            ShipDeckTab.TabIndex = 12;
+            ShipDeckTab.Text = "Ship";
+            // 
+            // ShipToolStrip
+            // 
+            ShipToolStrip.AllowMerge = false;
+            ShipToolStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
+            ShipToolStrip.AutoSize = false;
+            ShipToolStrip.BackColor = SystemColors.Control;
+            ShipToolStrip.Dock = DockStyle.None;
+            ShipToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            ShipToolStrip.GripStyle = ToolStripGripStyle.Hidden;
+            ShipToolStrip.Items.AddRange(new ToolStripItem[] { iconToolStripButton11, iconToolStripButton12, iconToolStripButton13, iconToolStripButton14, iconToolStripButton15 });
+            ShipToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
+            ShipToolStrip.Location = new Point(158, 0);
+            ShipToolStrip.Name = "ShipToolStrip";
+            ShipToolStrip.Size = new Size(72, 878);
+            ShipToolStrip.TabIndex = 24;
+            ShipToolStrip.Text = "LandformTools";
+            // 
+            // iconToolStripButton11
+            // 
+            iconToolStripButton11.AutoSize = false;
+            iconToolStripButton11.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            iconToolStripButton11.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton11.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
+            iconToolStripButton11.IconColor = Color.Black;
+            iconToolStripButton11.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton11.IconSize = 24;
+            iconToolStripButton11.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton11.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton11.Margin = new Padding(0, 25, 0, 2);
+            iconToolStripButton11.Name = "iconToolStripButton11";
+            iconToolStripButton11.Size = new Size(60, 60);
+            iconToolStripButton11.Text = "Select";
+            iconToolStripButton11.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // iconToolStripButton12
+            // 
+            iconToolStripButton12.AutoSize = false;
+            iconToolStripButton12.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            iconToolStripButton12.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton12.IconChar = FontAwesome.Sharp.IconChar.Paintbrush;
+            iconToolStripButton12.IconColor = Color.Black;
+            iconToolStripButton12.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton12.IconSize = 24;
+            iconToolStripButton12.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton12.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton12.Margin = new Padding(0, 25, 0, 2);
+            iconToolStripButton12.Name = "iconToolStripButton12";
+            iconToolStripButton12.Size = new Size(60, 60);
+            iconToolStripButton12.Text = "Paint";
+            iconToolStripButton12.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // iconToolStripButton13
+            // 
+            iconToolStripButton13.AutoSize = false;
+            iconToolStripButton13.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton13.IconChar = FontAwesome.Sharp.IconChar.Eraser;
+            iconToolStripButton13.IconColor = Color.Black;
+            iconToolStripButton13.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton13.IconSize = 24;
+            iconToolStripButton13.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton13.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton13.Margin = new Padding(0, 25, 0, 2);
+            iconToolStripButton13.Name = "iconToolStripButton13";
+            iconToolStripButton13.Size = new Size(60, 60);
+            iconToolStripButton13.Text = "Erase";
+            iconToolStripButton13.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // iconToolStripButton14
+            // 
+            iconToolStripButton14.AutoSize = false;
+            iconToolStripButton14.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton14.IconChar = FontAwesome.Sharp.IconChar.Fill;
+            iconToolStripButton14.IconColor = Color.Black;
+            iconToolStripButton14.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton14.IconSize = 24;
+            iconToolStripButton14.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton14.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton14.Margin = new Padding(0, 50, 0, 2);
+            iconToolStripButton14.Name = "iconToolStripButton14";
+            iconToolStripButton14.Size = new Size(60, 60);
+            iconToolStripButton14.Text = "Fill";
+            iconToolStripButton14.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // iconToolStripButton15
+            // 
+            iconToolStripButton15.AutoSize = false;
+            iconToolStripButton15.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton15.IconChar = FontAwesome.Sharp.IconChar.Square;
+            iconToolStripButton15.IconColor = Color.Black;
+            iconToolStripButton15.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton15.IconSize = 24;
+            iconToolStripButton15.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton15.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton15.Name = "iconToolStripButton15";
+            iconToolStripButton15.Size = new Size(60, 60);
+            iconToolStripButton15.Text = "Clear";
+            iconToolStripButton15.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // label120
+            // 
+            label120.AutoSize = true;
+            label120.ForeColor = SystemColors.ControlDarkDark;
+            label120.Location = new Point(47, 47);
+            label120.Name = "label120";
+            label120.Size = new Size(61, 15);
+            label120.TabIndex = 23;
+            label120.Text = "Ship Deck";
+            // 
+            // ShowShipDeckSwitch
+            // 
+            ShowShipDeckSwitch.Alpha = 50;
+            ShowShipDeckSwitch.BackColor = Color.Transparent;
+            ShowShipDeckSwitch.Background = true;
+            ShowShipDeckSwitch.Background_WidthPen = 2F;
+            ShowShipDeckSwitch.BackgroundPen = false;
+            ShowShipDeckSwitch.Checked = true;
+            ShowShipDeckSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowShipDeckSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowShipDeckSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowShipDeckSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowShipDeckSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowShipDeckSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowShipDeckSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowShipDeckSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowShipDeckSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowShipDeckSwitch.ColorValue = Color.ForestGreen;
+            ShowShipDeckSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowShipDeckSwitch.Font = new Font("Arial", 11F);
+            ShowShipDeckSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
+            ShowShipDeckSwitch.Lighting = true;
+            ShowShipDeckSwitch.LinearGradient_Background = false;
+            ShowShipDeckSwitch.LinearGradient_Value = false;
+            ShowShipDeckSwitch.LinearGradientPen = false;
+            ShowShipDeckSwitch.Location = new Point(6, 6);
+            ShowShipDeckSwitch.Name = "ShowShipDeckSwitch";
+            ShowShipDeckSwitch.PenWidth = 10;
+            ShowShipDeckSwitch.RGB = false;
+            ShowShipDeckSwitch.RightToLeft = RightToLeft.No;
+            ShowShipDeckSwitch.Rounding = true;
+            ShowShipDeckSwitch.RoundingInt = 90;
+            ShowShipDeckSwitch.Size = new Size(35, 20);
+            ShowShipDeckSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowShipDeckSwitch.TabIndex = 16;
+            ShowShipDeckSwitch.Tag = "Cyber";
+            ShowShipDeckSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowShipDeckSwitch.Timer_RGB = 300;
+            // 
+            // label115
+            // 
+            label115.AutoSize = true;
+            label115.BackColor = Color.Transparent;
+            label115.ForeColor = Color.Black;
+            label115.Location = new Point(47, 9);
+            label115.Name = "label115";
+            label115.Size = new Size(37, 15);
+            label115.TabIndex = 15;
+            label115.Text = "Show";
+            // 
+            // PlanetTab
+            // 
+            PlanetTab.BackColor = SystemColors.Control;
+            PlanetTab.Controls.Add(PlanetToolStrip);
+            PlanetTab.Controls.Add(label121);
+            PlanetTab.Controls.Add(ShowPlanetSwitch);
+            PlanetTab.Controls.Add(label114);
+            PlanetTab.Location = new Point(48, 4);
+            PlanetTab.Name = "PlanetTab";
+            PlanetTab.Size = new Size(237, 878);
+            PlanetTab.TabIndex = 13;
+            PlanetTab.Text = "Planet";
+            // 
+            // PlanetToolStrip
+            // 
+            PlanetToolStrip.AllowMerge = false;
+            PlanetToolStrip.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Left);
+            PlanetToolStrip.AutoSize = false;
+            PlanetToolStrip.BackColor = SystemColors.Control;
+            PlanetToolStrip.Dock = DockStyle.None;
+            PlanetToolStrip.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            PlanetToolStrip.GripStyle = ToolStripGripStyle.Hidden;
+            PlanetToolStrip.Items.AddRange(new ToolStripItem[] { iconToolStripButton16, iconToolStripButton17, iconToolStripButton18, iconToolStripButton19, iconToolStripButton20 });
+            PlanetToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
+            PlanetToolStrip.Location = new Point(158, 0);
+            PlanetToolStrip.Name = "PlanetToolStrip";
+            PlanetToolStrip.Size = new Size(72, 878);
+            PlanetToolStrip.TabIndex = 25;
+            PlanetToolStrip.Text = "LandformTools";
+            // 
+            // iconToolStripButton16
+            // 
+            iconToolStripButton16.AutoSize = false;
+            iconToolStripButton16.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            iconToolStripButton16.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton16.IconChar = FontAwesome.Sharp.IconChar.MousePointer;
+            iconToolStripButton16.IconColor = Color.Black;
+            iconToolStripButton16.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton16.IconSize = 24;
+            iconToolStripButton16.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton16.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton16.Margin = new Padding(0, 25, 0, 2);
+            iconToolStripButton16.Name = "iconToolStripButton16";
+            iconToolStripButton16.Size = new Size(60, 60);
+            iconToolStripButton16.Text = "Select";
+            iconToolStripButton16.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // iconToolStripButton17
+            // 
+            iconToolStripButton17.AutoSize = false;
+            iconToolStripButton17.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            iconToolStripButton17.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton17.IconChar = FontAwesome.Sharp.IconChar.Paintbrush;
+            iconToolStripButton17.IconColor = Color.Black;
+            iconToolStripButton17.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton17.IconSize = 24;
+            iconToolStripButton17.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton17.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton17.Margin = new Padding(0, 25, 0, 2);
+            iconToolStripButton17.Name = "iconToolStripButton17";
+            iconToolStripButton17.Size = new Size(60, 60);
+            iconToolStripButton17.Text = "Paint";
+            iconToolStripButton17.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // iconToolStripButton18
+            // 
+            iconToolStripButton18.AutoSize = false;
+            iconToolStripButton18.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton18.IconChar = FontAwesome.Sharp.IconChar.Eraser;
+            iconToolStripButton18.IconColor = Color.Black;
+            iconToolStripButton18.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton18.IconSize = 24;
+            iconToolStripButton18.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton18.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton18.Margin = new Padding(0, 25, 0, 2);
+            iconToolStripButton18.Name = "iconToolStripButton18";
+            iconToolStripButton18.Size = new Size(60, 60);
+            iconToolStripButton18.Text = "Erase";
+            iconToolStripButton18.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // iconToolStripButton19
+            // 
+            iconToolStripButton19.AutoSize = false;
+            iconToolStripButton19.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton19.IconChar = FontAwesome.Sharp.IconChar.Fill;
+            iconToolStripButton19.IconColor = Color.Black;
+            iconToolStripButton19.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton19.IconSize = 24;
+            iconToolStripButton19.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton19.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton19.Margin = new Padding(0, 50, 0, 2);
+            iconToolStripButton19.Name = "iconToolStripButton19";
+            iconToolStripButton19.Size = new Size(60, 60);
+            iconToolStripButton19.Text = "Fill";
+            iconToolStripButton19.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // iconToolStripButton20
+            // 
+            iconToolStripButton20.AutoSize = false;
+            iconToolStripButton20.ForeColor = SystemColors.ControlDarkDark;
+            iconToolStripButton20.IconChar = FontAwesome.Sharp.IconChar.Square;
+            iconToolStripButton20.IconColor = Color.Black;
+            iconToolStripButton20.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconToolStripButton20.IconSize = 24;
+            iconToolStripButton20.ImageScaling = ToolStripItemImageScaling.None;
+            iconToolStripButton20.ImageTransparentColor = Color.Magenta;
+            iconToolStripButton20.Name = "iconToolStripButton20";
+            iconToolStripButton20.Size = new Size(60, 60);
+            iconToolStripButton20.Text = "Clear";
+            iconToolStripButton20.TextImageRelation = TextImageRelation.TextAboveImage;
+            // 
+            // label121
+            // 
+            label121.AutoSize = true;
+            label121.ForeColor = SystemColors.ControlDarkDark;
+            label121.Location = new Point(47, 44);
+            label121.Name = "label121";
+            label121.Size = new Size(106, 15);
+            label121.TabIndex = 24;
+            label121.Text = "Solar System Body";
+            // 
+            // ShowPlanetSwitch
+            // 
+            ShowPlanetSwitch.Alpha = 50;
+            ShowPlanetSwitch.BackColor = Color.Transparent;
+            ShowPlanetSwitch.Background = true;
+            ShowPlanetSwitch.Background_WidthPen = 2F;
+            ShowPlanetSwitch.BackgroundPen = false;
+            ShowPlanetSwitch.Checked = true;
+            ShowPlanetSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowPlanetSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowPlanetSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowPlanetSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowPlanetSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowPlanetSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowPlanetSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowPlanetSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowPlanetSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowPlanetSwitch.ColorValue = Color.ForestGreen;
+            ShowPlanetSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowPlanetSwitch.Font = new Font("Arial", 11F);
+            ShowPlanetSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
+            ShowPlanetSwitch.Lighting = true;
+            ShowPlanetSwitch.LinearGradient_Background = false;
+            ShowPlanetSwitch.LinearGradient_Value = false;
+            ShowPlanetSwitch.LinearGradientPen = false;
+            ShowPlanetSwitch.Location = new Point(6, 6);
+            ShowPlanetSwitch.Name = "ShowPlanetSwitch";
+            ShowPlanetSwitch.PenWidth = 10;
+            ShowPlanetSwitch.RGB = false;
+            ShowPlanetSwitch.RightToLeft = RightToLeft.No;
+            ShowPlanetSwitch.Rounding = true;
+            ShowPlanetSwitch.RoundingInt = 90;
+            ShowPlanetSwitch.Size = new Size(35, 20);
+            ShowPlanetSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowPlanetSwitch.TabIndex = 14;
+            ShowPlanetSwitch.Tag = "Cyber";
+            ShowPlanetSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowPlanetSwitch.Timer_RGB = 300;
+            // 
+            // label114
+            // 
+            label114.AutoSize = true;
+            label114.BackColor = Color.Transparent;
+            label114.ForeColor = Color.Black;
+            label114.Location = new Point(47, 11);
+            label114.Name = "label114";
+            label114.Size = new Size(37, 15);
+            label114.TabIndex = 13;
+            label114.Text = "Show";
+            // 
             // RealmStudioForm
             // 
             RealmStudioForm.BackColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             RealmStudioForm.BorderColor = Color.FromArgb((int)(byte)38, (int)(byte)38, (int)(byte)38);
             RealmStudioForm.CausesValidation = false;
+            RealmStudioForm.Controls.Add(InteriorToolPanel);
+            RealmStudioForm.Controls.Add(DungeonToolPanel);
             RealmStudioForm.Controls.Add(NextMapButton);
             RealmStudioForm.Controls.Add(RealmSetComboBox);
             RealmStudioForm.Controls.Add(WorldAnvilMapButton);
@@ -6152,6 +7281,7 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(RealmStudioMainMenuStrip);
+            RealmStudioForm.Controls.Add(BackgroundToolPanel);
             RealmStudioForm.Controls.Add(DrawingToolPanel);
             RealmStudioForm.Controls.Add(RegionToolPanel);
             RealmStudioForm.Controls.Add(OverlayToolPanel);
@@ -6161,7 +7291,8 @@
             RealmStudioForm.Controls.Add(WaterToolPanel);
             RealmStudioForm.Controls.Add(LandToolPanel);
             RealmStudioForm.Controls.Add(OceanToolPanel);
-            RealmStudioForm.Controls.Add(BackgroundToolPanel);
+            RealmStudioForm.Controls.Add(PlanetToolPanel);
+            RealmStudioForm.Controls.Add(ShipToolPanel);
             RealmStudioForm.Dock = DockStyle.Fill;
             RealmStudioForm.FillEdgeColorA = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
             RealmStudioForm.FillEdgeColorB = Color.FromArgb((int)(byte)69, (int)(byte)68, (int)(byte)63);
@@ -6182,6 +7313,168 @@
             RealmStudioForm.TabStop = false;
             RealmStudioForm.Text = "Realm Studio";
             RealmStudioForm.TitleColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            // 
+            // InteriorToolPanel
+            // 
+            InteriorToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
+            InteriorToolPanel.BackColor = SystemColors.Control;
+            InteriorToolPanel.Controls.Add(InteriorGridGroupBox);
+            InteriorToolPanel.Location = new Point(1421, 90);
+            InteriorToolPanel.Margin = new Padding(0);
+            InteriorToolPanel.Name = "InteriorToolPanel";
+            InteriorToolPanel.Size = new Size(152, 806);
+            InteriorToolPanel.TabIndex = 49;
+            // 
+            // InteriorGridGroupBox
+            // 
+            InteriorGridGroupBox.Controls.Add(AlignGridSwitch);
+            InteriorGridGroupBox.Controls.Add(cyberSwitch2);
+            InteriorGridGroupBox.Controls.Add(ShowInteriorGridSwitch);
+            InteriorGridGroupBox.Controls.Add(cyberSwitch3);
+            InteriorGridGroupBox.Controls.Add(label125);
+            InteriorGridGroupBox.Controls.Add(trackBar1);
+            InteriorGridGroupBox.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
+            InteriorGridGroupBox.Location = new Point(7, 22);
+            InteriorGridGroupBox.Name = "InteriorGridGroupBox";
+            InteriorGridGroupBox.Size = new Size(139, 130);
+            InteriorGridGroupBox.TabIndex = 24;
+            InteriorGridGroupBox.TabStop = false;
+            InteriorGridGroupBox.Text = "Grid";
+            // 
+            // AlignGridSwitch
+            // 
+            AlignGridSwitch.AutoSize = true;
+            AlignGridSwitch.BackColor = Color.Transparent;
+            AlignGridSwitch.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            AlignGridSwitch.ForeColor = SystemColors.ControlDarkDark;
+            AlignGridSwitch.Location = new Point(51, 100);
+            AlignGridSwitch.Name = "AlignGridSwitch";
+            AlignGridSwitch.Size = new Size(74, 15);
+            AlignGridSwitch.TabIndex = 24;
+            AlignGridSwitch.Text = "Align to Grid";
+            // 
+            // cyberSwitch2
+            // 
+            cyberSwitch2.Alpha = 50;
+            cyberSwitch2.BackColor = Color.Transparent;
+            cyberSwitch2.Background = true;
+            cyberSwitch2.Background_WidthPen = 2F;
+            cyberSwitch2.BackgroundPen = false;
+            cyberSwitch2.Checked = true;
+            cyberSwitch2.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch2.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            cyberSwitch2.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            cyberSwitch2.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch2.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch2.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch2.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch2.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            cyberSwitch2.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            cyberSwitch2.ColorValue = Color.ForestGreen;
+            cyberSwitch2.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            cyberSwitch2.Font = new Font("Arial", 11F);
+            cyberSwitch2.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
+            cyberSwitch2.Lighting = true;
+            cyberSwitch2.LinearGradient_Background = false;
+            cyberSwitch2.LinearGradient_Value = false;
+            cyberSwitch2.LinearGradientPen = false;
+            cyberSwitch2.Location = new Point(4, 95);
+            cyberSwitch2.Name = "cyberSwitch2";
+            cyberSwitch2.PenWidth = 10;
+            cyberSwitch2.RGB = false;
+            cyberSwitch2.Rounding = true;
+            cyberSwitch2.RoundingInt = 90;
+            cyberSwitch2.Size = new Size(41, 20);
+            cyberSwitch2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            cyberSwitch2.TabIndex = 23;
+            cyberSwitch2.Tag = "Cyber";
+            cyberSwitch2.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            cyberSwitch2.Timer_RGB = 300;
+            // 
+            // ShowInteriorGridSwitch
+            // 
+            ShowInteriorGridSwitch.AutoSize = true;
+            ShowInteriorGridSwitch.BackColor = Color.Transparent;
+            ShowInteriorGridSwitch.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            ShowInteriorGridSwitch.ForeColor = SystemColors.ControlDarkDark;
+            ShowInteriorGridSwitch.Location = new Point(51, 74);
+            ShowInteriorGridSwitch.Name = "ShowInteriorGridSwitch";
+            ShowInteriorGridSwitch.Size = new Size(61, 15);
+            ShowInteriorGridSwitch.TabIndex = 22;
+            ShowInteriorGridSwitch.Text = "Show Grid";
+            // 
+            // cyberSwitch3
+            // 
+            cyberSwitch3.Alpha = 50;
+            cyberSwitch3.BackColor = Color.Transparent;
+            cyberSwitch3.Background = true;
+            cyberSwitch3.Background_WidthPen = 2F;
+            cyberSwitch3.BackgroundPen = false;
+            cyberSwitch3.Checked = true;
+            cyberSwitch3.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch3.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            cyberSwitch3.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            cyberSwitch3.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch3.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch3.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch3.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            cyberSwitch3.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            cyberSwitch3.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            cyberSwitch3.ColorValue = Color.ForestGreen;
+            cyberSwitch3.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            cyberSwitch3.Font = new Font("Arial", 11F);
+            cyberSwitch3.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
+            cyberSwitch3.Lighting = true;
+            cyberSwitch3.LinearGradient_Background = false;
+            cyberSwitch3.LinearGradient_Value = false;
+            cyberSwitch3.LinearGradientPen = false;
+            cyberSwitch3.Location = new Point(6, 69);
+            cyberSwitch3.Name = "cyberSwitch3";
+            cyberSwitch3.PenWidth = 10;
+            cyberSwitch3.RGB = false;
+            cyberSwitch3.Rounding = true;
+            cyberSwitch3.RoundingInt = 90;
+            cyberSwitch3.Size = new Size(41, 20);
+            cyberSwitch3.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            cyberSwitch3.TabIndex = 21;
+            cyberSwitch3.Tag = "Cyber";
+            cyberSwitch3.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            cyberSwitch3.Timer_RGB = 300;
+            // 
+            // label125
+            // 
+            label125.AutoSize = true;
+            label125.BackColor = Color.Transparent;
+            label125.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label125.ForeColor = SystemColors.ControlDarkDark;
+            label125.Location = new Point(6, 26);
+            label125.Name = "label125";
+            label125.Size = new Size(27, 15);
+            label125.TabIndex = 20;
+            label125.Text = "Size";
+            // 
+            // trackBar1
+            // 
+            trackBar1.AutoSize = false;
+            trackBar1.BackColor = SystemColors.Control;
+            trackBar1.Location = new Point(6, 44);
+            trackBar1.Maximum = 16;
+            trackBar1.Minimum = 2;
+            trackBar1.Name = "trackBar1";
+            trackBar1.Size = new Size(126, 20);
+            trackBar1.TabIndex = 19;
+            trackBar1.TickStyle = TickStyle.None;
+            trackBar1.Value = 4;
+            // 
+            // DungeonToolPanel
+            // 
+            DungeonToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
+            DungeonToolPanel.BackColor = SystemColors.Control;
+            DungeonToolPanel.Location = new Point(1421, 90);
+            DungeonToolPanel.Margin = new Padding(0);
+            DungeonToolPanel.Name = "DungeonToolPanel";
+            DungeonToolPanel.Size = new Size(152, 806);
+            DungeonToolPanel.TabIndex = 48;
             // 
             // NextMapButton
             // 
@@ -7674,6 +8967,16 @@
             AboutToolStripMenuItem.Size = new Size(194, 22);
             AboutToolStripMenuItem.Text = "&About...";
             AboutToolStripMenuItem.Click += (this.AboutToolStripMenuItem_Click);
+            // 
+            // BackgroundToolPanel
+            // 
+            BackgroundToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
+            BackgroundToolPanel.BackColor = SystemColors.Control;
+            BackgroundToolPanel.Location = new Point(1421, 90);
+            BackgroundToolPanel.Margin = new Padding(0);
+            BackgroundToolPanel.Name = "BackgroundToolPanel";
+            BackgroundToolPanel.Size = new Size(152, 806);
+            BackgroundToolPanel.TabIndex = 15;
             // 
             // DrawingToolPanel
             // 
@@ -10368,15 +11671,25 @@
             OceanPaintColorSelectButton.UseVisualStyleBackColor = false;
             OceanPaintColorSelectButton.MouseUp += (this.OceanPaintColorSelectButton_MouseUp);
             // 
-            // BackgroundToolPanel
+            // PlanetToolPanel
             // 
-            BackgroundToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
-            BackgroundToolPanel.BackColor = SystemColors.Control;
-            BackgroundToolPanel.Location = new Point(1421, 90);
-            BackgroundToolPanel.Margin = new Padding(0);
-            BackgroundToolPanel.Name = "BackgroundToolPanel";
-            BackgroundToolPanel.Size = new Size(152, 806);
-            BackgroundToolPanel.TabIndex = 15;
+            PlanetToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
+            PlanetToolPanel.BackColor = SystemColors.Control;
+            PlanetToolPanel.Location = new Point(1421, 90);
+            PlanetToolPanel.Margin = new Padding(0);
+            PlanetToolPanel.Name = "PlanetToolPanel";
+            PlanetToolPanel.Size = new Size(152, 806);
+            PlanetToolPanel.TabIndex = 51;
+            // 
+            // ShipToolPanel
+            // 
+            ShipToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
+            ShipToolPanel.BackColor = SystemColors.Control;
+            ShipToolPanel.Location = new Point(1421, 90);
+            ShipToolPanel.Margin = new Padding(0);
+            ShipToolPanel.Name = "ShipToolPanel";
+            ShipToolPanel.Size = new Size(152, 806);
+            ShipToolPanel.TabIndex = 50;
             // 
             // materialCheckBox1
             // 
@@ -10411,294 +11724,6 @@
             materialCheckBox2.Text = "materialCheckBox2";
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
-            // 
-            // DungeonLevelTab
-            // 
-            DungeonLevelTab.BackColor = SystemColors.Control;
-            DungeonLevelTab.Controls.Add(label119);
-            DungeonLevelTab.Controls.Add(ShowDungeonLevelSwitch);
-            DungeonLevelTab.Controls.Add(label116);
-            DungeonLevelTab.Location = new Point(48, 4);
-            DungeonLevelTab.Name = "DungeonLevelTab";
-            DungeonLevelTab.Size = new Size(208, 878);
-            DungeonLevelTab.TabIndex = 10;
-            DungeonLevelTab.Text = "Dungeon";
-            // 
-            // InteriorFloorTab
-            // 
-            InteriorFloorTab.BackColor = SystemColors.Control;
-            InteriorFloorTab.Controls.Add(label118);
-            InteriorFloorTab.Controls.Add(ShowInteriorFloorSwitch);
-            InteriorFloorTab.Controls.Add(label117);
-            InteriorFloorTab.Location = new Point(48, 4);
-            InteriorFloorTab.Name = "InteriorFloorTab";
-            InteriorFloorTab.Size = new Size(208, 878);
-            InteriorFloorTab.TabIndex = 11;
-            InteriorFloorTab.Text = "Interior";
-            // 
-            // ShipDeckTab
-            // 
-            ShipDeckTab.BackColor = SystemColors.Control;
-            ShipDeckTab.Controls.Add(label120);
-            ShipDeckTab.Controls.Add(ShowShipDeckSwitch);
-            ShipDeckTab.Controls.Add(label115);
-            ShipDeckTab.Location = new Point(48, 4);
-            ShipDeckTab.Name = "ShipDeckTab";
-            ShipDeckTab.Size = new Size(208, 878);
-            ShipDeckTab.TabIndex = 12;
-            ShipDeckTab.Text = "Ship";
-            // 
-            // PlanetTab
-            // 
-            PlanetTab.BackColor = SystemColors.Control;
-            PlanetTab.Controls.Add(label121);
-            PlanetTab.Controls.Add(ShowPlanetSwitch);
-            PlanetTab.Controls.Add(label114);
-            PlanetTab.Location = new Point(48, 4);
-            PlanetTab.Name = "PlanetTab";
-            PlanetTab.Size = new Size(208, 878);
-            PlanetTab.TabIndex = 13;
-            PlanetTab.Text = "Planet";
-            // 
-            // ShowPlanetSwitch
-            // 
-            ShowPlanetSwitch.Alpha = 50;
-            ShowPlanetSwitch.BackColor = Color.Transparent;
-            ShowPlanetSwitch.Background = true;
-            ShowPlanetSwitch.Background_WidthPen = 2F;
-            ShowPlanetSwitch.BackgroundPen = false;
-            ShowPlanetSwitch.Checked = true;
-            ShowPlanetSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowPlanetSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            ShowPlanetSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            ShowPlanetSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowPlanetSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowPlanetSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowPlanetSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowPlanetSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            ShowPlanetSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            ShowPlanetSwitch.ColorValue = Color.ForestGreen;
-            ShowPlanetSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            ShowPlanetSwitch.Font = new Font("Arial", 11F);
-            ShowPlanetSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
-            ShowPlanetSwitch.Lighting = true;
-            ShowPlanetSwitch.LinearGradient_Background = false;
-            ShowPlanetSwitch.LinearGradient_Value = false;
-            ShowPlanetSwitch.LinearGradientPen = false;
-            ShowPlanetSwitch.Location = new Point(6, 6);
-            ShowPlanetSwitch.Name = "ShowPlanetSwitch";
-            ShowPlanetSwitch.PenWidth = 10;
-            ShowPlanetSwitch.RGB = false;
-            ShowPlanetSwitch.RightToLeft = RightToLeft.No;
-            ShowPlanetSwitch.Rounding = true;
-            ShowPlanetSwitch.RoundingInt = 90;
-            ShowPlanetSwitch.Size = new Size(35, 20);
-            ShowPlanetSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            ShowPlanetSwitch.TabIndex = 14;
-            ShowPlanetSwitch.Tag = "Cyber";
-            ShowPlanetSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            ShowPlanetSwitch.Timer_RGB = 300;
-            // 
-            // label114
-            // 
-            label114.AutoSize = true;
-            label114.BackColor = Color.Transparent;
-            label114.ForeColor = Color.Black;
-            label114.Location = new Point(47, 11);
-            label114.Name = "label114";
-            label114.Size = new Size(37, 15);
-            label114.TabIndex = 13;
-            label114.Text = "Show";
-            // 
-            // ShowShipDeckSwitch
-            // 
-            ShowShipDeckSwitch.Alpha = 50;
-            ShowShipDeckSwitch.BackColor = Color.Transparent;
-            ShowShipDeckSwitch.Background = true;
-            ShowShipDeckSwitch.Background_WidthPen = 2F;
-            ShowShipDeckSwitch.BackgroundPen = false;
-            ShowShipDeckSwitch.Checked = true;
-            ShowShipDeckSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowShipDeckSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            ShowShipDeckSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            ShowShipDeckSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowShipDeckSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowShipDeckSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowShipDeckSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowShipDeckSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            ShowShipDeckSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            ShowShipDeckSwitch.ColorValue = Color.ForestGreen;
-            ShowShipDeckSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            ShowShipDeckSwitch.Font = new Font("Arial", 11F);
-            ShowShipDeckSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
-            ShowShipDeckSwitch.Lighting = true;
-            ShowShipDeckSwitch.LinearGradient_Background = false;
-            ShowShipDeckSwitch.LinearGradient_Value = false;
-            ShowShipDeckSwitch.LinearGradientPen = false;
-            ShowShipDeckSwitch.Location = new Point(6, 6);
-            ShowShipDeckSwitch.Name = "ShowShipDeckSwitch";
-            ShowShipDeckSwitch.PenWidth = 10;
-            ShowShipDeckSwitch.RGB = false;
-            ShowShipDeckSwitch.RightToLeft = RightToLeft.No;
-            ShowShipDeckSwitch.Rounding = true;
-            ShowShipDeckSwitch.RoundingInt = 90;
-            ShowShipDeckSwitch.Size = new Size(35, 20);
-            ShowShipDeckSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            ShowShipDeckSwitch.TabIndex = 16;
-            ShowShipDeckSwitch.Tag = "Cyber";
-            ShowShipDeckSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            ShowShipDeckSwitch.Timer_RGB = 300;
-            // 
-            // label115
-            // 
-            label115.AutoSize = true;
-            label115.BackColor = Color.Transparent;
-            label115.ForeColor = Color.Black;
-            label115.Location = new Point(47, 9);
-            label115.Name = "label115";
-            label115.Size = new Size(37, 15);
-            label115.TabIndex = 15;
-            label115.Text = "Show";
-            // 
-            // ShowDungeonLevelSwitch
-            // 
-            ShowDungeonLevelSwitch.Alpha = 50;
-            ShowDungeonLevelSwitch.BackColor = Color.Transparent;
-            ShowDungeonLevelSwitch.Background = true;
-            ShowDungeonLevelSwitch.Background_WidthPen = 2F;
-            ShowDungeonLevelSwitch.BackgroundPen = false;
-            ShowDungeonLevelSwitch.Checked = true;
-            ShowDungeonLevelSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowDungeonLevelSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            ShowDungeonLevelSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            ShowDungeonLevelSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowDungeonLevelSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowDungeonLevelSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowDungeonLevelSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowDungeonLevelSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            ShowDungeonLevelSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            ShowDungeonLevelSwitch.ColorValue = Color.ForestGreen;
-            ShowDungeonLevelSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            ShowDungeonLevelSwitch.Font = new Font("Arial", 11F);
-            ShowDungeonLevelSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
-            ShowDungeonLevelSwitch.Lighting = true;
-            ShowDungeonLevelSwitch.LinearGradient_Background = false;
-            ShowDungeonLevelSwitch.LinearGradient_Value = false;
-            ShowDungeonLevelSwitch.LinearGradientPen = false;
-            ShowDungeonLevelSwitch.Location = new Point(6, 6);
-            ShowDungeonLevelSwitch.Name = "ShowDungeonLevelSwitch";
-            ShowDungeonLevelSwitch.PenWidth = 10;
-            ShowDungeonLevelSwitch.RGB = false;
-            ShowDungeonLevelSwitch.RightToLeft = RightToLeft.No;
-            ShowDungeonLevelSwitch.Rounding = true;
-            ShowDungeonLevelSwitch.RoundingInt = 90;
-            ShowDungeonLevelSwitch.Size = new Size(35, 20);
-            ShowDungeonLevelSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            ShowDungeonLevelSwitch.TabIndex = 18;
-            ShowDungeonLevelSwitch.Tag = "Cyber";
-            ShowDungeonLevelSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            ShowDungeonLevelSwitch.Timer_RGB = 300;
-            // 
-            // label116
-            // 
-            label116.AutoSize = true;
-            label116.BackColor = Color.Transparent;
-            label116.ForeColor = Color.Black;
-            label116.Location = new Point(47, 10);
-            label116.Name = "label116";
-            label116.Size = new Size(37, 15);
-            label116.TabIndex = 17;
-            label116.Text = "Show";
-            // 
-            // ShowInteriorFloorSwitch
-            // 
-            ShowInteriorFloorSwitch.Alpha = 50;
-            ShowInteriorFloorSwitch.BackColor = Color.Transparent;
-            ShowInteriorFloorSwitch.Background = true;
-            ShowInteriorFloorSwitch.Background_WidthPen = 2F;
-            ShowInteriorFloorSwitch.BackgroundPen = false;
-            ShowInteriorFloorSwitch.Checked = true;
-            ShowInteriorFloorSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowInteriorFloorSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            ShowInteriorFloorSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            ShowInteriorFloorSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowInteriorFloorSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowInteriorFloorSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowInteriorFloorSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowInteriorFloorSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            ShowInteriorFloorSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            ShowInteriorFloorSwitch.ColorValue = Color.ForestGreen;
-            ShowInteriorFloorSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            ShowInteriorFloorSwitch.Font = new Font("Arial", 11F);
-            ShowInteriorFloorSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
-            ShowInteriorFloorSwitch.Lighting = true;
-            ShowInteriorFloorSwitch.LinearGradient_Background = false;
-            ShowInteriorFloorSwitch.LinearGradient_Value = false;
-            ShowInteriorFloorSwitch.LinearGradientPen = false;
-            ShowInteriorFloorSwitch.Location = new Point(6, 6);
-            ShowInteriorFloorSwitch.Name = "ShowInteriorFloorSwitch";
-            ShowInteriorFloorSwitch.PenWidth = 10;
-            ShowInteriorFloorSwitch.RGB = false;
-            ShowInteriorFloorSwitch.RightToLeft = RightToLeft.No;
-            ShowInteriorFloorSwitch.Rounding = true;
-            ShowInteriorFloorSwitch.RoundingInt = 90;
-            ShowInteriorFloorSwitch.Size = new Size(35, 20);
-            ShowInteriorFloorSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            ShowInteriorFloorSwitch.TabIndex = 20;
-            ShowInteriorFloorSwitch.Tag = "Cyber";
-            ShowInteriorFloorSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            ShowInteriorFloorSwitch.Timer_RGB = 300;
-            // 
-            // label117
-            // 
-            label117.AutoSize = true;
-            label117.BackColor = Color.Transparent;
-            label117.ForeColor = Color.Black;
-            label117.Location = new Point(47, 10);
-            label117.Name = "label117";
-            label117.Size = new Size(37, 15);
-            label117.TabIndex = 19;
-            label117.Text = "Show";
-            // 
-            // label118
-            // 
-            label118.AutoSize = true;
-            label118.ForeColor = SystemColors.ControlDarkDark;
-            label118.Location = new Point(47, 46);
-            label118.Name = "label118";
-            label118.Size = new Size(76, 15);
-            label118.TabIndex = 21;
-            label118.Text = "Interior Floor";
-            // 
-            // label119
-            // 
-            label119.AutoSize = true;
-            label119.ForeColor = SystemColors.ControlDarkDark;
-            label119.Location = new Point(47, 47);
-            label119.Name = "label119";
-            label119.Size = new Size(87, 15);
-            label119.TabIndex = 22;
-            label119.Text = "Dungeon Level";
-            // 
-            // label120
-            // 
-            label120.AutoSize = true;
-            label120.ForeColor = SystemColors.ControlDarkDark;
-            label120.Location = new Point(47, 47);
-            label120.Name = "label120";
-            label120.Size = new Size(61, 15);
-            label120.TabIndex = 23;
-            label120.Text = "Ship Deck";
-            // 
-            // label121
-            // 
-            label121.AutoSize = true;
-            label121.ForeColor = SystemColors.ControlDarkDark;
-            label121.Location = new Point(47, 44);
-            label121.Name = "label121";
-            label121.Size = new Size(106, 15);
-            label121.TabIndex = 24;
-            label121.Text = "Solar System Body";
             // 
             // RealmStudioMainForm
             // 
@@ -10858,8 +11883,38 @@
             ((System.ComponentModel.ISupportInitialize)LineBrushSizeTrack).EndInit();
             DrawingToolStrip.ResumeLayout(false);
             DrawingToolStrip.PerformLayout();
+            InteriorFloorTab.ResumeLayout(false);
+            InteriorFloorTab.PerformLayout();
+            groupBox6.ResumeLayout(false);
+            groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar4).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar5).EndInit();
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)InteriorFloorTexturePreviewPicture).EndInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar3).EndInit();
+            InteriorToolStrip.ResumeLayout(false);
+            InteriorToolStrip.PerformLayout();
+            DungeonLevelTab.ResumeLayout(false);
+            DungeonLevelTab.PerformLayout();
+            DungeonToolStrip.ResumeLayout(false);
+            DungeonToolStrip.PerformLayout();
+            ShipDeckTab.ResumeLayout(false);
+            ShipDeckTab.PerformLayout();
+            ShipToolStrip.ResumeLayout(false);
+            ShipToolStrip.PerformLayout();
+            PlanetTab.ResumeLayout(false);
+            PlanetTab.PerformLayout();
+            PlanetToolStrip.ResumeLayout(false);
+            PlanetToolStrip.PerformLayout();
             RealmStudioForm.ResumeLayout(false);
             RealmStudioForm.PerformLayout();
+            InteriorToolPanel.ResumeLayout(false);
+            InteriorGridGroupBox.ResumeLayout(false);
+            InteriorGridGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
             FontSelectionPanel.ResumeLayout(false);
             groupBox5.ResumeLayout(false);
             MapScaleCreatorPanel.ResumeLayout(false);
@@ -10950,14 +12005,6 @@
             ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).EndInit();
-            DungeonLevelTab.ResumeLayout(false);
-            DungeonLevelTab.PerformLayout();
-            InteriorFloorTab.ResumeLayout(false);
-            InteriorFloorTab.PerformLayout();
-            ShipDeckTab.ResumeLayout(false);
-            ShipDeckTab.PerformLayout();
-            PlanetTab.ResumeLayout(false);
-            PlanetTab.PerformLayout();
             this.ResumeLayout(false);
         }
 
@@ -11619,9 +12666,69 @@
         private Label label115;
         internal ReaLTaiizor.Controls.CyberSwitch ShowInteriorFloorSwitch;
         private Label label117;
-        private Label label118;
         private Label label119;
         private Label label120;
         private Label label121;
+        private ToolStrip InteriorToolStrip;
+        internal FontAwesome.Sharp.IconToolStripButton InteriorSelectButton;
+        internal FontAwesome.Sharp.IconToolStripButton InteriorPaintFloorButton;
+        internal FontAwesome.Sharp.IconToolStripButton InteriorEraseButton;
+        internal FontAwesome.Sharp.IconToolStripButton InteriorFillButton;
+        internal FontAwesome.Sharp.IconToolStripButton InteriorClearButton;
+        private ToolStrip DungeonToolStrip;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton6;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton7;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton8;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton9;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton10;
+        private ToolStrip ShipToolStrip;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton11;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton12;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton13;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton14;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton15;
+        private ToolStrip PlanetToolStrip;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton16;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton17;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton18;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton19;
+        internal FontAwesome.Sharp.IconToolStripButton iconToolStripButton20;
+        private Panel ShipToolPanel;
+        private Panel InteriorToolPanel;
+        private Panel DungeonToolPanel;
+        private Panel PlanetToolPanel;
+        private GroupBox groupBox4;
+        internal CheckBox checkBox1;
+        private Label label122;
+        internal FontAwesome.Sharp.IconButton iconButton1;
+        internal Label InteriorFloorTextureNameLabel;
+        internal FontAwesome.Sharp.IconButton PreviousFloorTextureButton;
+        internal FontAwesome.Sharp.IconButton NextFloorTextureButton;
+        internal PictureBox InteriorFloorTexturePreviewPicture;
+        private Label label126;
+        internal TrackBar trackBar3;
+        private GroupBox groupBox6;
+        private Label label118;
+        internal TrackBar trackBar2;
+        private Label label123;
+        internal TrackBar trackBar4;
+        private Label label127;
+        internal ReaLTaiizor.Controls.CyberSwitch cyberSwitch1;
+        internal Label label129;
+        private Label label130;
+        internal FontAwesome.Sharp.IconButton iconButton4;
+        internal FontAwesome.Sharp.IconButton iconButton5;
+        internal PictureBox pictureBox2;
+        internal FontAwesome.Sharp.IconButton iconButton6;
+        private Label label131;
+        internal TrackBar trackBar5;
+        private GroupBox InteriorGridGroupBox;
+        private Label AlignGridSwitch;
+        internal ReaLTaiizor.Controls.CyberSwitch cyberSwitch2;
+        private Label ShowInteriorGridSwitch;
+        internal ReaLTaiizor.Controls.CyberSwitch cyberSwitch3;
+        private Label label125;
+        internal TrackBar trackBar1;
+        private FontAwesome.Sharp.IconToolStripButton InteriorDrawWallButton;
     }
 }

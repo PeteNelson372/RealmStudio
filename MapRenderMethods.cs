@@ -21,6 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using ReaLTaiizor.Controls;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
@@ -33,17 +34,39 @@ namespace RealmStudio
             // background
             RenderBackground(map, renderCanvas, scrollPoint);
 
-            // ocean layers
-            RenderOcean(map, renderCanvas, scrollPoint);
+            switch (map.RealmType)
+            {
+                case RealmMapType.InteriorFloor:
+                    // lower grid layer
+                    RenderLowerGrid(map, renderCanvas, scrollPoint);
 
-            // wind roses
-            RenderWindroses(map, renderCanvas, scrollPoint);
+                    // landforms
+                    RenderInteriorFloors(map, renderCanvas, scrollPoint);
 
-            // lower grid layer (above ocean)
-            RenderLowerGrid(map, renderCanvas, scrollPoint);
+                    break;
+                case RealmMapType.DungeonLevel:
 
-            // landforms
-            RenderLandforms(map, renderCanvas, scrollPoint);
+                    break;
+                case RealmMapType.ShipDeck:
+
+                    break;
+                case RealmMapType.SolarSystemBody:
+
+                    break;
+                default:
+                    // ocean layers
+                    RenderOcean(map, renderCanvas, scrollPoint);
+
+                    // wind roses
+                    RenderWindroses(map, renderCanvas, scrollPoint);
+
+                    // lower grid layer (above ocean)
+                    RenderLowerGrid(map, renderCanvas, scrollPoint);
+
+                    // landforms
+                    RenderLandforms(map, renderCanvas, scrollPoint);
+                    break;
+            }
 
             // water features
             RenderWaterFeatures(map, renderCanvas, scrollPoint);
@@ -93,17 +116,39 @@ namespace RealmStudio
             // background
             RenderBackgroundForExport(map, renderCanvas);
 
-            // ocean layers
-            RenderOceanForExport(map, renderCanvas);
+            switch (map.RealmType)
+            {
+                case RealmMapType.InteriorFloor:
+                    // lower grid layer
+                    RenderLowerGridForExport(map, renderCanvas);
 
-            // wind roses
-            RenderWindrosesForExport(map, renderCanvas);
+                    // landforms
+                    RenderInteriorFloorsForExport(map, renderCanvas);
 
-            // lower grid layer (above ocean)
-            RenderLowerGridForExport(map, renderCanvas);
+                    break;
+                case RealmMapType.DungeonLevel:
 
-            // landforms
-            RenderLandformsForExport(map, renderCanvas);
+                    break;
+                case RealmMapType.ShipDeck:
+
+                    break;
+                case RealmMapType.SolarSystemBody:
+
+                    break;
+                default:
+                    // ocean layers
+                    RenderOceanForExport(map, renderCanvas);
+
+                    // wind roses
+                    RenderWindrosesForExport(map, renderCanvas);
+
+                    // lower grid layer (above ocean)
+                    RenderLowerGridForExport(map, renderCanvas);
+
+                    // landforms
+                    RenderLandformsForExport(map, renderCanvas);
+                    break;
+            }
 
             // water features
             RenderWaterFeaturesForExport(map, renderCanvas);
@@ -582,6 +627,120 @@ namespace RealmStudio
 
             renderCanvas.DrawBitmap(b2, new SKPoint(0, 0));
         }
+
+        internal static void RenderInteriorFloors(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint)
+        {
+            // render interior floors
+            MapLayer interiorFloorLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.INTERIORLAYER);
+            MapLayer interiorFloorOutlineLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.INTERIOROUTLINELAYER);
+
+            if (interiorFloorLayer.LayerSurface == null || interiorFloorOutlineLayer.LayerSurface == null) return;
+
+            interiorFloorOutlineLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+            interiorFloorLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+
+            if (interiorFloorLayer.ShowLayer && interiorFloorOutlineLayer.ShowLayer)
+            {
+                // only render if both layers are visible
+                MapStateMediator.CurrentInteriorFloor?.Render(interiorFloorLayer.LayerSurface.Canvas);
+
+                for (int i = 0; i < interiorFloorLayer.MapLayerComponents.Count; i++)
+                {
+                    if (interiorFloorLayer.MapLayerComponents[i] is InteriorFloor f)
+                    {
+                        if (!f.IsDeleted)
+                        {
+                            f.Render(interiorFloorLayer.LayerSurface.Canvas);
+
+                            if (f.IsSelected)
+                            {
+                                // draw an outline around the interior floor to show that it is selected
+                                f.ContourPath.GetBounds(out SKRect boundRect);
+                                using SKPath boundsPath = new();
+                                boundsPath.AddRect(boundRect);
+
+                                interiorFloorLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.InteriorFloorSelectPaint);
+                            }
+                        }
+                    }
+                    else if (interiorFloorLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        dmc.Render(interiorFloorLayer.LayerSurface.Canvas);
+                    }
+                }
+
+                for (int i = 0; i < interiorFloorOutlineLayer.MapLayerComponents.Count; i++)
+                {
+                    if (interiorFloorOutlineLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                    {
+                        dmc.Render(interiorFloorOutlineLayer.LayerSurface.Canvas);
+                    }
+                }
+
+                renderCanvas.DrawSurface(interiorFloorOutlineLayer.LayerSurface, scrollPoint);
+                renderCanvas.DrawSurface(interiorFloorLayer.LayerSurface, scrollPoint);
+
+                // interior floor drawing (color painting over floor)
+                MapLayer interiorFloorDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.INTERIORDRAWINGLAYER);
+
+                if (interiorFloorDrawingLayer.LayerSurface != null)
+                {
+                    interiorFloorDrawingLayer.LayerSurface.Canvas.Clear(SKColors.Transparent);
+                    interiorFloorDrawingLayer.Render(interiorFloorDrawingLayer.LayerSurface.Canvas);
+                    renderCanvas.DrawSurface(interiorFloorDrawingLayer.LayerSurface, scrollPoint);
+                }
+            }
+        }
+
+        internal static void RenderInteriorFloorsForExport(RealmStudioMap map, SKCanvas renderCanvas)
+        {
+            // render interior floors
+            MapLayer interiorFloorLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.INTERIORLAYER);
+            MapLayer interiorFloorOutlineLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.INTERIOROUTLINELAYER);
+
+            using SKBitmap b = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+            using SKCanvas canvas = new(b);
+
+            canvas.Clear(SKColors.Transparent);
+
+            for (int i = 0; i < interiorFloorLayer.MapLayerComponents.Count; i++)
+            {
+                if (interiorFloorLayer.MapLayerComponents[i] is InteriorFloor f)
+                {
+                    f.Render(canvas);
+                }
+                else if (interiorFloorLayer.MapLayerComponents[i] is LayerPaintStroke lps)
+                {
+                    // eraser strokes
+                    lps.Render(canvas);
+                }
+                else if (interiorFloorLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    dmc.Render(canvas);
+                }
+            }
+
+            renderCanvas.DrawBitmap(b, new SKPoint(0, 0));
+
+            for (int i = 0; i < interiorFloorOutlineLayer.MapLayerComponents.Count; i++)
+            {
+                if (interiorFloorOutlineLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
+                {
+                    dmc.Render(canvas);
+                }
+            }
+
+            // interior floor drawing (color painting over floor)
+            MapLayer interiorFloorDrawingLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.INTERIORDRAWINGLAYER);
+
+            using SKBitmap b2 = new(new SKImageInfo(map.MapWidth, map.MapHeight));
+            using SKCanvas canvas2 = new(b2);
+
+            interiorFloorDrawingLayer.Render(canvas2);
+
+            renderCanvas.DrawBitmap(b2, new SKPoint(0, 0));
+        }
+
 
         internal static void RenderHeightMap(RealmStudioMap map, SKCanvas renderCanvas, SKPoint scrollPoint, SKRect? selectedArea)
         {

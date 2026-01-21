@@ -49,6 +49,7 @@ namespace RealmStudio
         private static VignetteUIMediator? _vignetteUIMediator;
         private static WaterFeatureUIMediator? _waterFeatureUIMediator;
         private static WindroseUIMediator? _windroseUIMediator;
+        private static InteriorUIMediator? _interiorUIMediator;
 
         private static TimerManager? _applicationTimerManager;
 
@@ -64,6 +65,7 @@ namespace RealmStudio
         private static MapRegion? _currentMapRegion;
         private static LayerPaintStroke? _currentPaintStroke;
         private static PlacedMapFrame? _currentMapFrame;
+        private static InteriorFloor? _currentInteriorFloor;
 
         // objects that are currently selected
         private static Landform? _selectedLandform;
@@ -79,6 +81,7 @@ namespace RealmStudio
         private static DrawnMapComponent? _selectedDrawnMapComponent;
         private static SKRect _selectedRealmArea = SKRect.Empty;
         private static SKRect _previousSelectedRealmArea = SKRect.Empty;
+        private static InteriorFloor? _selectedInteriorFloor;
 
         // mouse cursor points
         private static SKPoint _scrollPoint = new(0, 0);
@@ -206,6 +209,12 @@ namespace RealmStudio
             set { _windroseUIMediator = value; }
         }
 
+        internal static InteriorUIMediator? InteriorUIMediator
+        {
+            get { return _interiorUIMediator; }
+            set { _interiorUIMediator = value; }
+        }
+
         internal static TimerManager? ApplicationTimerManager
         {
             get { return _applicationTimerManager; }
@@ -275,6 +284,12 @@ namespace RealmStudio
         {
             get { return _currentMapFrame; }
             set { _currentMapFrame = value; }
+        }
+
+        internal static InteriorFloor? CurrentInteriorFloor
+        {
+            get { return _currentInteriorFloor; }
+            set { _currentInteriorFloor = value; }
         }
 
         internal static Landform? SelectedLandform
@@ -352,6 +367,12 @@ namespace RealmStudio
         {
             get { return _previousSelectedRealmArea; }
             set { _previousSelectedRealmArea = value; }
+        }
+
+        internal static InteriorFloor? SelectedInteriorFloor
+        {
+            get { return _selectedInteriorFloor; }
+            set { _selectedInteriorFloor = value; }
         }
 
         internal static SKPoint ScrollPoint

@@ -74,6 +74,9 @@ namespace RealmStudio
         // UI mediator for MapGrid
         private MapGridUIMediator GridMediator { get; set; }
 
+        // UI mediator for Interior Floors
+        private InteriorUIMediator InteriorMediator { get; set; }
+
         // UI mediator for Labels
         private LabelUIMediator LabelMediator { get; set; }
 
@@ -172,6 +175,9 @@ namespace RealmStudio
             GridMediator = new MapGridUIMediator(this);
             MapGridManager.GridUIMediator = GridMediator;
 
+            InteriorMediator = new InteriorUIMediator(this);
+            InteriorManager.InteriorMediator = InteriorMediator;
+
             LabelMediator = new LabelUIMediator(this);
             LabelManager.LabelMediator = LabelMediator;
 
@@ -225,6 +231,7 @@ namespace RealmStudio
             MapStateMediator.BoxUIMediator = BoxMediator;
             MapStateMediator.FrameUIMediator = FrameMediator;
             MapStateMediator.GridUIMediator = GridMediator;
+            MapStateMediator.InteriorUIMediator = InteriorMediator;
             MapStateMediator.LandformUIMediator = LandformMediator;
             MapStateMediator.MeasureUIMediator = MeasureMediator;
             MapStateMediator.PathUIMediator = PathMediator;
@@ -280,6 +287,7 @@ namespace RealmStudio
             OverlayToolPanel.Visible = false;
             RegionToolPanel.Visible = false;
             DrawingToolPanel.Visible = false;
+            InteriorToolPanel.Visible = false;
 
             LogoPictureBox.Hide();
 
@@ -306,7 +314,10 @@ namespace RealmStudio
 
         private void RealmStudioMainForm_Shown(object sender, EventArgs e)
         {
-            MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
+            if (MapStateMediator.CurrentMap != null)
+            {
+                MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
+            }
 
             MainMediator.WorldAnvilIntegrationEnabled = Settings.Default.EnableWAIntegration;
 
@@ -422,6 +433,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(OceanManager.OceanMediator);
             ArgumentNullException.ThrowIfNull(FrameManager.FrameMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapRenderHScroll.Maximum = MapStateMediator.CurrentMap.MapWidth;
             MapRenderVScroll.Maximum = MapStateMediator.CurrentMap.MapHeight;
@@ -605,7 +617,7 @@ namespace RealmStudio
             NAME_GENERATOR_CONFIG.Close();
 
             // save the map
-            if (!MapStateMediator.CurrentMap.IsSaved)
+            if (MapStateMediator.CurrentMap != null && !MapStateMediator.CurrentMap.IsSaved)
             {
                 DialogResult result =
                     MessageBox.Show("The map has not been saved. Do you want to save the map?", "Exit Application", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
@@ -632,7 +644,10 @@ namespace RealmStudio
             }
             else
             {
-                MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
+                if (MapStateMediator.CurrentMap != null)
+                {
+                    MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
+                }
             }
         }
 
@@ -715,6 +730,11 @@ namespace RealmStudio
 
         private void ZoomToFitButton_Click(object sender, EventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             float horizontalAspect = (float)SKGLRenderControl.Width / MapStateMediator.CurrentMap.MapWidth;
             float verticalAspect = (float)SKGLRenderControl.Height / MapStateMediator.CurrentMap.MapHeight;
 
@@ -962,7 +982,7 @@ namespace RealmStudio
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap.IsSaved)
+            if (MapStateMediator.CurrentMap == null || MapStateMediator.CurrentMap.IsSaved)
             {
                 return;
             }
@@ -1002,6 +1022,11 @@ namespace RealmStudio
 
         private void ExportMapMenuItem_Click(object sender, EventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             RealmExportDialog exportDialog = new();
 
             DialogResult exportresult = exportDialog.ShowDialog();
@@ -1072,12 +1097,22 @@ namespace RealmStudio
 
         private void PrintToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             PrintPreview printPreview = new(MapStateMediator.CurrentMap);
             printPreview.ShowDialog();
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             if (!MapStateMediator.CurrentMap.IsSaved)
             {
                 DialogResult result =
@@ -1124,6 +1159,11 @@ namespace RealmStudio
 
         private void CutToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             if (MapStateMediator.SelectedRealmArea != SKRect.Empty)
             {
                 // get all objects within the selected area and cut them
@@ -1164,6 +1204,11 @@ namespace RealmStudio
 
         private void ThemeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             // show the theme list dialog
             ThemeList themeList = new();
 
@@ -1193,6 +1238,11 @@ namespace RealmStudio
 
         private void MapPropertiesMenuItem_Click(object sender, EventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             RealmProperties propertiesDialog = new(MapStateMediator.CurrentMap);
             DialogResult result = propertiesDialog.ShowDialog();
 
@@ -1205,6 +1255,11 @@ namespace RealmStudio
 
         private void ChangeMapSizeMenuItem_Click(object sender, EventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             if (!MapStateMediator.CurrentMap.IsSaved)
             {
                 DialogResult result =
@@ -1248,6 +1303,11 @@ namespace RealmStudio
 
         private void CreateDetailMapMenuItem_Click(object sender, EventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             if (!MapStateMediator.CurrentMap.IsSaved)
             {
                 DialogResult result =
@@ -1291,6 +1351,11 @@ namespace RealmStudio
 
         private void TraceToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             try
             {
                 OpenFileDialog ofd = new()
@@ -1359,6 +1424,11 @@ namespace RealmStudio
 
         private void RenderAsHeightMapMenuItem_CheckedChanged(object sender, EventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             if (RenderAsHeightMapMenuItem.Checked)
             {
                 MainMediator.SetDrawingMode(MapDrawingMode.HeightMapPaint, 0);
@@ -1505,6 +1575,11 @@ namespace RealmStudio
 
         private void PanMap(MouseEventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             // pan the map when middle button (mouse wheel) is held down and dragged
             if (MapStateMediator.PreviousMouseLocation == SKPoint.Empty)
             {
@@ -1698,6 +1773,11 @@ namespace RealmStudio
                 // CreateNewMap creates the MapLayer and assigns it as MapStateMediator.CurrentMap
                 CreateNewMap(initialSetMap);
 
+                if (MapStateMediator.CurrentMap == null)
+                {
+                    throw new Exception("Failed to create initial map for map set.");
+                }
+
                 MapStateMediator.CurrentMap.IsSaved = false;
 
                 // serialize the map
@@ -1762,74 +1842,179 @@ namespace RealmStudio
             RegionToolPanel.Visible = false;
             DrawingToolPanel.Visible = false;
             HeightMapToolsPanel.Visible = false;
+            DungeonToolPanel.Visible = false;
+            InteriorToolPanel.Visible = false;
+            PlanetToolPanel.Visible = false;
+            ShipToolPanel.Visible = false;
 
-            switch (MainTab.SelectedIndex)
+            if (MapStateMediator.CurrentMap == null)
             {
-                case 0:
-                    BackgroundToolPanel.Visible = true;
-                    BackgroundMediator.NotifyUpdate(null);
-                    break;
-                case 1:
-                    OceanToolPanel.Visible = true;
-                    OceanMediator.NotifyUpdate(null);
-                    BackgroundToolPanel.Visible = false;
-                    break;
-                case 2:
-                    BackgroundToolPanel.Visible = false;
-                    LandformMediator.NotifyUpdate(null);
+                return;
+            }
 
-                    if (RenderAsHeightMapMenuItem.Checked)
+            switch (MapStateMediator.CurrentMap.RealmType)
+            {
+                case RealmMapType.World:
+                case RealmMapType.Region:
+                case RealmMapType.City:
+                case RealmMapType.Other:
                     {
-                        MainMediator.SetDrawingMode(MapDrawingMode.HeightMapPaint, 0);
+                        switch (MainTab.SelectedIndex)
+                        {
+                            case 0:
+                                BackgroundToolPanel.Visible = true;
+                                BackgroundMediator.NotifyUpdate(null);
+                                break;
+                            case 1:
+                                OceanToolPanel.Visible = true;
+                                OceanMediator.NotifyUpdate(null);
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                            case 2:
+                                BackgroundToolPanel.Visible = false;
+                                LandformMediator.NotifyUpdate(null);
 
-                        LandToolPanel.Visible = false;
-                        LandToolStrip.Visible = false;
-                        BackgroundToolPanel.Visible = true;
-                        HeightMapToolsPanel.Visible = true;
+                                if (RenderAsHeightMapMenuItem.Checked)
+                                {
+                                    MainMediator.SetDrawingMode(MapDrawingMode.HeightMapPaint, 0);
+
+                                    LandToolPanel.Visible = false;
+                                    LandToolStrip.Visible = false;
+                                    BackgroundToolPanel.Visible = true;
+                                    HeightMapToolsPanel.Visible = true;
+                                }
+                                else
+                                {
+                                    LandToolPanel.Visible = true;
+                                    LandToolStrip.Visible = true;
+                                    BackgroundToolPanel.Visible = false;
+                                    HeightMapToolsPanel.Visible = false;
+                                }
+                                break;
+                            case 3:
+                                WaterToolPanel.Visible = true;
+                                WaterFeatureMediator.NotifyUpdate(null);
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                            case 4:
+                                PathToolPanel.Visible = true;
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                            case 5:
+                                SymbolToolPanel.Visible = true;
+                                SymbolMediator.NotifyUpdate(null);
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                            case 6:
+                                LabelToolPanel.Visible = true;
+                                LabelMediator.NotifyUpdate(null);
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                            case 7:
+                                OverlayToolPanel.Visible = true;
+                                FrameMediator.NotifyUpdate(null);
+                                GridMediator.NotifyUpdate(null);
+                                ScaleMediator.NotifyUpdate(null);
+                                MeasureMediator.NotifyUpdate(null);
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                            case 8:
+                                RegionToolPanel.Visible = true;
+                                RegionMediator.NotifyUpdate(null);
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                            case 9:
+                                DrawingToolPanel.Visible = true;
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                        }
+
                     }
-                    else
+                    break;
+
+                case RealmMapType.DungeonLevel:
+                case RealmMapType.InteriorFloor:
+                case RealmMapType.ShipDeck:
+                case RealmMapType.SolarSystemBody:
                     {
-                        LandToolPanel.Visible = true;
-                        LandToolStrip.Visible = true;
-                        BackgroundToolPanel.Visible = false;
-                        HeightMapToolsPanel.Visible = false;
+                        switch (MainTab.SelectedIndex)
+                        {
+                            case 0:
+                                BackgroundToolPanel.Visible = true;
+                                BackgroundMediator.NotifyUpdate(null);
+                                break;
+                            case 1:
+                                WaterToolPanel.Visible = true;
+                                WaterFeatureMediator.NotifyUpdate(null);
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                            case 2:
+                                switch (MapStateMediator.CurrentMap.RealmType)
+                                {
+                                    case RealmMapType.DungeonLevel:
+                                        DungeonToolPanel.Visible = true;
+                                        //DungeonMediator.NotifyUpdate(null);
+                                        break;
+                                    case RealmMapType.InteriorFloor:
+                                        InteriorToolPanel.Visible = true;
+                                        InteriorMediator.NotifyUpdate(null);
+                                        break;
+                                    case RealmMapType.SolarSystemBody:
+                                        PlanetToolPanel.Visible = true;
+                                        //SolarSystemMediator.NotifyUpdate(null);
+                                        break;
+                                    case RealmMapType.ShipDeck:
+                                        ShipToolPanel.Visible = true;
+                                        //ShipMediator.NotifyUpdate(null);
+                                        break;
+                                    default:
+
+                                        break;
+                                }
+
+                                BackgroundToolPanel.Visible = false;
+                                LandToolPanel.Visible = false;
+                                LandToolStrip.Visible = false;
+                                BackgroundToolPanel.Visible = false;
+                                HeightMapToolsPanel.Visible = false;
+                                break;
+                            case 3:
+                                PathToolPanel.Visible = true;
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                            case 4:
+                                SymbolToolPanel.Visible = true;
+                                SymbolMediator.NotifyUpdate(null);
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                            case 5:
+                                LabelToolPanel.Visible = true;
+                                LabelMediator.NotifyUpdate(null);
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                            case 6:
+                                OverlayToolPanel.Visible = true;
+                                FrameMediator.NotifyUpdate(null);
+                                GridMediator.NotifyUpdate(null);
+                                ScaleMediator.NotifyUpdate(null);
+                                MeasureMediator.NotifyUpdate(null);
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                            case 7:
+                                RegionToolPanel.Visible = true;
+                                RegionMediator.NotifyUpdate(null);
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                            case 8:
+                                DrawingToolPanel.Visible = true;
+                                BackgroundToolPanel.Visible = false;
+                                break;
+                        }
                     }
+
                     break;
-                case 3:
-                    WaterToolPanel.Visible = true;
-                    WaterFeatureMediator.NotifyUpdate(null);
-                    BackgroundToolPanel.Visible = false;
-                    break;
-                case 4:
-                    PathToolPanel.Visible = true;
-                    BackgroundToolPanel.Visible = false;
-                    break;
-                case 5:
-                    SymbolToolPanel.Visible = true;
-                    SymbolMediator.NotifyUpdate(null);
-                    BackgroundToolPanel.Visible = false;
-                    break;
-                case 6:
-                    LabelToolPanel.Visible = true;
-                    LabelMediator.NotifyUpdate(null);
-                    BackgroundToolPanel.Visible = false;
-                    break;
-                case 7:
-                    OverlayToolPanel.Visible = true;
-                    FrameMediator.NotifyUpdate(null);
-                    GridMediator.NotifyUpdate(null);
-                    ScaleMediator.NotifyUpdate(null);
-                    MeasureMediator.NotifyUpdate(null);
-                    BackgroundToolPanel.Visible = false;
-                    break;
-                case 8:
-                    RegionToolPanel.Visible = true;
-                    RegionMediator.NotifyUpdate(null);
-                    BackgroundToolPanel.Visible = false;
-                    break;
-                case 9:
-                    DrawingToolPanel.Visible = true;
-                    BackgroundToolPanel.Visible = false;
+                default:
+
                     break;
             }
 
@@ -1898,6 +2083,10 @@ namespace RealmStudio
             // drawing texture
             DrawingFillTextureBox.Image = DrawingMediator.DrawingTextureList[DrawingMediator.DrawingTextureIndex].TextureBitmap;
             DrawingFillTextureNameLabel.Text = DrawingMediator.DrawingTextureList[DrawingMediator.DrawingTextureIndex].TextureName;
+
+            // interior floor texture
+            InteriorFloorTexturePreviewPicture.Image = InteriorMediator.InteriorFloorTextureList[InteriorMediator.InteriorFloorTextureIndex].TextureBitmap;
+            InteriorFloorTextureNameLabel.Text = InteriorMediator.InteriorFloorTextureList[InteriorMediator.InteriorFloorTextureIndex].TextureName;
         }
 
         public void LoadNameGeneratorConfigurationDialog()
@@ -1977,6 +2166,11 @@ namespace RealmStudio
 
         private void UpdateMapNameAndSize()
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             MapNameLabel.Text = MapStateMediator.CurrentMap.MapName;
             MapSizeLabel.Text = "Map Size: " + MapStateMediator.CurrentMap.MapWidth.ToString() + " x " + MapStateMediator.CurrentMap.MapHeight.ToString();
 
@@ -1985,6 +2179,11 @@ namespace RealmStudio
 
         private void ExportMapAsImage(RealmMapExportFormat exportFormat, bool upscale = false)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             SaveFileDialog ofd = new()
             {
                 Title = "Export Map",
@@ -2064,6 +2263,11 @@ namespace RealmStudio
 
         private void ExportMapAsLayers(RealmMapExportFormat exportFormat)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             SaveFileDialog ofd = new()
             {
                 Title = "Export Map",
@@ -2122,6 +2326,11 @@ namespace RealmStudio
 
         private void ExportHeightMap(RealmMapExportFormat exportFormat)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             SaveFileDialog ofd = new()
             {
                 Title = "Export Map",
@@ -2195,6 +2404,11 @@ namespace RealmStudio
 
         private DialogResult SaveMap()
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return DialogResult.Abort;
+            }
+
             if (MapStateMediator.CurrentMap.IsSaved)
             {
                 return DialogResult.OK;
@@ -2234,6 +2448,11 @@ namespace RealmStudio
 
         private DialogResult SaveMapAs()
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return DialogResult.Abort;
+            }
+
             SaveFileDialog sfd = new()
             {
                 DefaultExt = UtilityMethods.REALM_STUDIO_MAP_FILE_EXTENSION,
@@ -2294,7 +2513,7 @@ namespace RealmStudio
 
         private void OpenOrCreateMap()
         {
-            if (!MapStateMediator.CurrentMap.IsSaved)
+            if (MapStateMediator.CurrentMap != null && !MapStateMediator.CurrentMap.IsSaved)
             {
                 DialogResult result =
                     MessageBox.Show("The map has not been saved. Do you want to save the map?", "Save Map", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
@@ -2352,7 +2571,10 @@ namespace RealmStudio
 
                 try
                 {
-                    MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
+                    if (MapStateMediator.CurrentMap != null)
+                    {
+                        MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
+                    }
 
                     // make a backup of the map to be opened in case it fails on open
                     RealmMapMethods.SaveRealmFileBackup(mapFilePath);
@@ -2442,7 +2664,7 @@ namespace RealmStudio
                 {
                     foreach (RealmStudioMapReference mapRef in mapSet.SetMaps)
                     {
-
+                        // TODO: open map references in map set and add to the list of maps in the UI
                     }
                 }
             }
@@ -2461,6 +2683,11 @@ namespace RealmStudio
 
         private static void LoadWorldAnvilMapDataForCurrentMap()
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             try
             {
                 string WAApiToken = Settings.Default.WorldAnvilApiToken;
@@ -3172,6 +3399,11 @@ namespace RealmStudio
 
         private void LeftButtonMouseDownHandler(int brushSize)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             // has the map scale been clicked?
             MapStateMediator.SelectedMapScale = MapScaleManager.SelectMapScale(MapStateMediator.CurrentCursorPoint);
 
@@ -4118,6 +4350,24 @@ namespace RealmStudio
                         }
                     }
                     break;
+                case MapDrawingMode.InteriorFloorPaint:
+                    {
+                        MapStateMediator.CurrentMap.IsSaved = false;
+
+                        Cursor = Cursors.Cross;
+
+                        InteriorFloor? newFloor = InteriorManager.CreateNewInteriorFloor(MapStateMediator.CurrentMap, null, SKRect.Empty);
+
+                        // TODO: take into account floor grid and snap to grid settings
+                        if (newFloor != null)
+                        {
+                            MapStateMediator.CurrentInteriorFloor = newFloor;
+                            MapStateMediator.CurrentInteriorFloor.DrawPath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, brushSize / 2);
+                        }
+
+                        SKGLRenderControl.Refresh();
+                    }
+                    break;
             }
         }
 
@@ -4136,6 +4386,11 @@ namespace RealmStudio
 
         private void RightButtonMouseDownHandler()
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             switch (MainMediator.CurrentDrawingMode)
             {
                 case MapDrawingMode.LabelSelect:
@@ -4213,6 +4468,11 @@ namespace RealmStudio
 
         private void LeftButtonMouseMoveHandler()
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             Cursor = Cursors.Default;
 
             switch (MainMediator.CurrentDrawingMode)
@@ -4920,6 +5180,31 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                     break;
+                case MapDrawingMode.InteriorFloorPaint:
+                    {
+                        if (MapStateMediator.CurrentInteriorFloor != null
+                            && MapStateMediator.CurrentCursorPoint.X > 0 && MapStateMediator.CurrentCursorPoint.X < MapStateMediator.CurrentMap.MapWidth
+                            && MapStateMediator.CurrentCursorPoint.Y > 0 && MapStateMediator.CurrentCursorPoint.Y < MapStateMediator.CurrentMap.MapHeight)
+                        {
+                            MapStateMediator.CurrentMap.IsSaved = false;
+                            MapStateMediator.CurrentInteriorFloor.IsModified = true;
+
+                            // TODO: take into account floor grid size and snap to grid settings
+                            MapStateMediator.CurrentInteriorFloor.DrawPath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, MainMediator.SelectedBrushSize / 2);
+
+                            Task.Run(() => InteriorManager.CreateAllPathsFromDrawnPath(MapStateMediator.CurrentMap, MapStateMediator.CurrentInteriorFloor));
+
+                            //bool createPathsWhilePainting = Settings.Default.CalculateContoursWhilePainting;
+
+                            //if (createPathsWhilePainting)
+                            //{
+                            //    // compute contour path and inner and outer paths in a separate thread
+                            //}
+                        }
+
+                        SKGLRenderControl.Refresh();
+                    }
+                    break;
             }
 
         }
@@ -5012,6 +5297,11 @@ namespace RealmStudio
 
         private void LeftButtonMouseUpHandler(MouseEventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             ApplicationTimerManager.SymbolAreaBrushTimerEnabled = false;
 
             switch (MainMediator.CurrentDrawingMode)
@@ -5687,6 +5977,18 @@ namespace RealmStudio
                         }
                     }
                     break;
+                case MapDrawingMode.InteriorFloorPaint:
+                    if (MapStateMediator.CurrentInteriorFloor != null)
+                    {
+                        Cmd_AddNewInteriorFloor cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentInteriorFloor);
+                        CommandManager.AddCommand(cmd);
+                        cmd.DoOperation();
+
+                        InteriorManager.MergeInteriorFloors(MapStateMediator.CurrentMap);
+
+                        MapStateMediator.CurrentInteriorFloor = null;
+                    }
+                    break;
             }
         }
 
@@ -5705,6 +6007,11 @@ namespace RealmStudio
 
         private void RightButtonMouseUpHandler(object sender, MouseEventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             switch (MainMediator.CurrentDrawingMode)
             {
                 case MapDrawingMode.LandformSelect:
@@ -5814,6 +6121,11 @@ namespace RealmStudio
         *******************************************************************************************************/
         private void ShowBaseLayerSwitch_CheckedChanged()
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
             baseLayer.ShowLayer = ShowBaseLayerSwitch.Checked;
             SKGLRenderControl.Invalidate();
@@ -5848,6 +6160,11 @@ namespace RealmStudio
 
         private void ClearBackgroundButton_Click(object sender, EventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             MapStateMediator.CurrentMap.IsSaved = false;
             BackgroundManager.ClearBackgroundTexture();
             SKGLRenderControl.Invalidate();
@@ -7837,6 +8154,11 @@ namespace RealmStudio
 
         private void LayerListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+            {
+                return;
+            }
+
             string? selectedLayerName = LayerListBox.SelectedItem as string;
 
             if (!string.IsNullOrEmpty(selectedLayerName))
@@ -7922,92 +8244,59 @@ namespace RealmStudio
 
         #endregion
 
-
-        private void UploadMapToolMenuItem_Click(object sender, EventArgs e)
+        #region Interior Tab Event Handlers
+        /******************************************************************************************************* 
+        * INTERIOR TAB EVENT HANDLERS
+        *******************************************************************************************************/
+        private void ShowInteriorFloorSwitch_CheckedChanged()
         {
-            WorldAnvilApiMethods worldAnvilApiMethods = new();
-
-            Task apiKeyTask = Task.Run(() => worldAnvilApiMethods.GetWorldAnvilAPIKey());
-
-            apiKeyTask.Wait();
-
-            MessageBox.Show("API KEY: " + worldAnvilApiMethods.WorldAnvilAPIKey);
+            InteriorMediator.ShowInteriorLayers = ShowInteriorFloorSwitch.Checked;
         }
 
-    }
-
-    public class CustomMapSetToolStripRenderer : ToolStripProfessionalRenderer
-    {
-        protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
+        private void NextFloorTextureButton_Click(object sender, EventArgs e)
         {
-            using var brush = new SolidBrush(e.ToolStrip.BackColor);
-            e.Graphics.FillRectangle(brush, e.AffectedBounds);
+            InteriorMediator.InteriorFloorTextureIndex++;
         }
 
-        protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
+        private void PreviousFloorTextureButton_Click(object sender, EventArgs e)
         {
-            // Overpaint ONLY the default border area (1px)
-            using var brush = new SolidBrush(e.ToolStrip.BackColor);
-
-            var ts = e.ToolStrip;
-
-            // Bottom border
-            e.Graphics.FillRectangle(
-                brush,
-                0,
-                ts.Height - 1,
-                ts.Width,
-                1);
-
-            // Right border
-            e.Graphics.FillRectangle(
-                brush,
-                ts.Width - 1,
-                0,
-                1,
-                ts.Height);
+            InteriorMediator.InteriorFloorTextureIndex--;
         }
 
-        protected override void OnRenderButtonBackground(ToolStripItemRenderEventArgs e)
+        private void InteriorPaintFloorButton_Click(object sender, EventArgs e)
         {
-            if (e.Item is not ToolStripButton btn)
-                return;
-
-            var g = e.Graphics;
-            var rect = new Rectangle(Point.Empty, btn.Size);
-
-            Color backColor = SystemColors.ButtonFace;
-            Color borderColor = SystemColors.ControlDark;
-
-            if (btn.Pressed || btn.Checked)
-            {
-                backColor = SystemColors.ButtonHighlight;
-            }
-            else if (btn.Selected)
-            {
-                backColor = SystemColors.ButtonHighlight;
-            }
-
-            using var backBrush = new SolidBrush(backColor);
-            g.FillRectangle(backBrush, rect);
-
-            // Draw border inside bounds
-            using var pen = new Pen(borderColor);
-            g.DrawRectangle(pen, 0, 0, rect.Width - 1, rect.Height - 1);
+            MainMediator.SetDrawingMode(MapDrawingMode.InteriorFloorPaint, InteriorMediator.InteriorBrushSize);
         }
 
-        protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
-        {
-            e.TextColor = SystemColors.ControlDarkDark;
-            base.OnRenderItemText(e);
-        }
+        #endregion
 
-        protected override void OnRenderItemImage(ToolStripItemImageRenderEventArgs e)
-        {
-            e.Graphics.InterpolationMode =
-                System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+        #region Dungeon Tab Event Handlers
+        /******************************************************************************************************* 
+        * DUNGEON TAB EVENT HANDLERS
+        *******************************************************************************************************/
 
-            base.OnRenderItemImage(e);
-        }
+        #endregion
+
+        #region Ship Tab Event Handlers
+        /******************************************************************************************************* 
+        * SHIP TAB EVENT HANDLERS
+        *******************************************************************************************************/
+
+        #endregion
+
+        #region Planet Tab Event Handlers
+        /******************************************************************************************************* 
+        * PLANET TAB EVENT HANDLERS
+        *******************************************************************************************************/
+
+        #endregion
+
+        #region World Anvil Integration Event Handlers
+        /******************************************************************************************************* 
+        * WORLD ANVIL INTEGRATION EVENT HANDLERS
+        *******************************************************************************************************/
+
+        #endregion
+
     }
 }

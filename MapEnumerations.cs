@@ -87,6 +87,10 @@ namespace RealmStudio
         DrawingFivePointStar,
         DrawingSixPointStar,
         DrawingPixelEdit,
+        InteriorSelect,
+        InteriorFloorPaint,
+        InteriorFloorErase,
+        InteriorWallDraw,
     }
 
     public enum LandGradientDirection

@@ -61,6 +61,23 @@ namespace RealmStudio
         public const int WORKLAYER = 27;
         public const int WORKLAYER2 = 28;
 
+        // landform layers are reused for interior, dungeon, shipdeck, and planet maps
+        public const int INTERIOROUTLINELAYER = 6;
+        public const int INTERIORLAYER = 7;
+        public const int INTERIORDRAWINGLAYER = 8;
+
+        public const int DUNGEONOUTLINELAYER = 6;
+        public const int DUNGEONLAYER = 7;
+        public const int DUNGEONDRAWINGLAYER = 8;
+
+        public const int SHIPDECKOUTLINELAYER = 6;
+        public const int SHIPDECKLAYER = 7;
+        public const int SHIPDECKDRAWINGLAYER = 8;
+
+        public const int PLANETOUTLINELAYER = 6;
+        public const int PLANETLAYER = 7;
+        public const int PLANETDRAWINGLAYER = 8;
+
         public static readonly int MAP_LAYER_COUNT = WORKLAYER2 + 1;
 
         // layer static methods
@@ -183,14 +200,59 @@ namespace RealmStudio
             layer = ConstructMapLayer("aboveoceangrid", ABOVEOCEANGRIDLAYER, map.MapWidth, map.MapHeight, true, grContext);
             map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("coastline", LANDCOASTLINELAYER, map.MapWidth, map.MapHeight, true, grContext);
-            map.MapLayers.Add(layer);
+            switch (map.RealmType)
+            {
+                case RealmMapType.InteriorFloor:
+                    layer = ConstructMapLayer("interioroutline", INTERIOROUTLINELAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("landform", LANDFORMLAYER, map.MapWidth, map.MapHeight, true, grContext);
-            map.MapLayers.Add(layer);
+                    layer = ConstructMapLayer("interior", INTERIORLAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
 
-            layer = ConstructMapLayer("landdrawing", LANDDRAWINGLAYER, map.MapWidth, map.MapHeight, true, grContext);
-            map.MapLayers.Add(layer);
+                    layer = ConstructMapLayer("interiordrawing", INTERIORLAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
+                    break;
+                case RealmMapType.DungeonLevel:
+                    layer = ConstructMapLayer("dungeonoutline", DUNGEONOUTLINELAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
+
+                    layer = ConstructMapLayer("dungeon", DUNGEONLAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
+
+                    layer = ConstructMapLayer("dungeondrawing", DUNGEONDRAWINGLAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
+                    break;
+                case RealmMapType.ShipDeck:
+                    layer = ConstructMapLayer("shipdeckoutline", SHIPDECKOUTLINELAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
+
+                    layer = ConstructMapLayer("shipdeck", SHIPDECKLAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
+
+                    layer = ConstructMapLayer("shipdeckdrawing", SHIPDECKDRAWINGLAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
+                    break;
+                case RealmMapType.SolarSystemBody:
+                    layer = ConstructMapLayer("planetoutline", PLANETOUTLINELAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
+
+                    layer = ConstructMapLayer("planet", PLANETLAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
+
+                    layer = ConstructMapLayer("planetdrawing", PLANETDRAWINGLAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
+                    break;
+                default:
+                    layer = ConstructMapLayer("coastline", LANDCOASTLINELAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
+
+                    layer = ConstructMapLayer("landform", LANDFORMLAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
+
+                    layer = ConstructMapLayer("landdrawing", LANDDRAWINGLAYER, map.MapWidth, map.MapHeight, true, grContext);
+                    map.MapLayers.Add(layer);
+                    break;
+            }
 
             layer = ConstructMapLayer("water", WATERLAYER, map.MapWidth, map.MapHeight, true, grContext);
             map.MapLayers.Add(layer);
