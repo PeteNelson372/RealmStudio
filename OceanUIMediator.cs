@@ -224,6 +224,7 @@ namespace RealmStudio
         private void UpdateOceanUI(string? changedPropertyName)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
@@ -519,6 +520,8 @@ namespace RealmStudio
 
         private void UpdateOceanTextureComboBox()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (OceanTextureIndex < 0)
             {
                 OceanTextureIndex = 0;

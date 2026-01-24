@@ -140,6 +140,8 @@ namespace RealmStudio
 
         private void FramePictureBox_MouseClick(object sender, EventArgs e)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (((System.Windows.Forms.MouseEventArgs)e).Button == MouseButtons.Left)
             {
                 if (RealmStudioMainForm.ModifierKeys == Keys.None)

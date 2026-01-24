@@ -270,6 +270,8 @@ namespace RealmStudio
 
         internal static void ShowHeightMap3DModel()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             SKBitmap? heightMapBitmap = HeightMapManager.GetBitmapForThreeDView(MapStateMediator.CurrentMap, MapStateMediator.SelectedLandform, MapStateMediator.SelectedRealmArea);
             if (heightMapBitmap != null)
             {

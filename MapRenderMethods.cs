@@ -311,6 +311,24 @@ namespace RealmStudio
                         canvas.DrawRect(rect, PaintObjects.CursorSquarePaint);
                     }
                     break;
+                case MapDrawingMode.InteriorFloorPaint:
+                    {
+                        ArgumentNullException.ThrowIfNull(MapStateMediator.InteriorUIMediator);
+                        if (MapStateMediator.InteriorUIMediator.AlignToGrid)
+                        {
+                            // take into account floor grid size and align to grid setting
+                            int xPos = (int)(point.X / MapStateMediator.InteriorUIMediator.AlignmentGridSize) * MapStateMediator.InteriorUIMediator.AlignmentGridSize;
+                            int yPos = (int)(point.Y / MapStateMediator.InteriorUIMediator.AlignmentGridSize) * MapStateMediator.InteriorUIMediator.AlignmentGridSize;
+
+                            SKRect rect = new(xPos, yPos, xPos + brushSize, yPos + brushSize);
+                            canvas.DrawRect(rect, PaintObjects.CursorCirclePaint);
+                        }
+                        else
+                        {
+                            canvas.DrawCircle(point, brushSize / 2, PaintObjects.CursorCirclePaint);
+                        }
+                    }
+                    break;
                 default:
                     {
                         if (brushSize > 0)

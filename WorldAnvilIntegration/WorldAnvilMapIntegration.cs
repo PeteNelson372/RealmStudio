@@ -45,6 +45,8 @@ namespace RealmStudio.WorldAnvilIntegration
 
         private void CreateMapButton_Click(object sender, EventArgs e)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (MapStateMediator.CurrentMap.WorldAnvilImageId != 0 && MapStateMediator.CurrentMap.WorldAnvilMapId != Guid.Empty)
             {
                 // get image data and map data and update existing map
@@ -102,7 +104,7 @@ namespace RealmStudio.WorldAnvilIntegration
             else
             {
                 // create new map
-                CreateNewMap();
+                CreateNewMapInWorldAnvil();
             }
 
         }
@@ -112,8 +114,10 @@ namespace RealmStudio.WorldAnvilIntegration
             TOOLTIP.Show("Create or update the Map object in World Anvil.\nThe map image must be validated before creating the World Anvil Map object.", this, new Point(ValidateImageIdButton.Left, ValidateImageIdButton.Top - 20), 3000);
         }
 
-        private void CreateNewMap()
+        private void CreateNewMapInWorldAnvil()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (!string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUsername) &&
                 !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId) &&
                 !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) &&
@@ -188,6 +192,8 @@ namespace RealmStudio.WorldAnvilIntegration
 
         private void UpdateMap()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (!string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUsername) &&
                 !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId) &&
                 !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) &&

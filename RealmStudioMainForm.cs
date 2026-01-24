@@ -4352,6 +4352,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.InteriorFloorPaint:
                     {
+                        ArgumentNullException.ThrowIfNull(MapStateMediator.InteriorUIMediator);
                         MapStateMediator.CurrentMap.IsSaved = false;
 
                         Cursor = Cursors.Cross;
@@ -4362,7 +4363,25 @@ namespace RealmStudio
                         if (newFloor != null)
                         {
                             MapStateMediator.CurrentInteriorFloor = newFloor;
-                            MapStateMediator.CurrentInteriorFloor.DrawPath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, brushSize / 2);
+
+                            float xPos = MapStateMediator.CurrentCursorPoint.X;
+                            float yPos = MapStateMediator.CurrentCursorPoint.Y;
+
+                            if (MapStateMediator.InteriorUIMediator.AlignToGrid)
+                            {
+                                MainMediator.SelectedBrushSize = MapStateMediator.InteriorUIMediator.AlignmentGridSize;
+
+                                // take into account floor grid size and align to grid setting
+                                xPos = (int)(xPos / MapStateMediator.InteriorUIMediator.AlignmentGridSize) * MapStateMediator.InteriorUIMediator.AlignmentGridSize;
+                                yPos = (int)(yPos / MapStateMediator.InteriorUIMediator.AlignmentGridSize) * MapStateMediator.InteriorUIMediator.AlignmentGridSize;
+
+                                SKRect rect = new(xPos, yPos, xPos + MainMediator.SelectedBrushSize, yPos + MainMediator.SelectedBrushSize);
+                                MapStateMediator.CurrentInteriorFloor.DrawPath.AddRect(rect);
+                            }
+                            else
+                            {
+                                MapStateMediator.CurrentInteriorFloor.DrawPath.AddCircle(xPos, yPos, MainMediator.SelectedBrushSize / 2);
+                            }
                         }
 
                         SKGLRenderControl.Refresh();
@@ -5182,6 +5201,8 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.InteriorFloorPaint:
                     {
+                        ArgumentNullException.ThrowIfNull(MapStateMediator.InteriorUIMediator);
+
                         if (MapStateMediator.CurrentInteriorFloor != null
                             && MapStateMediator.CurrentCursorPoint.X > 0 && MapStateMediator.CurrentCursorPoint.X < MapStateMediator.CurrentMap.MapWidth
                             && MapStateMediator.CurrentCursorPoint.Y > 0 && MapStateMediator.CurrentCursorPoint.Y < MapStateMediator.CurrentMap.MapHeight)
@@ -5189,17 +5210,24 @@ namespace RealmStudio
                             MapStateMediator.CurrentMap.IsSaved = false;
                             MapStateMediator.CurrentInteriorFloor.IsModified = true;
 
-                            // TODO: take into account floor grid size and snap to grid settings
-                            MapStateMediator.CurrentInteriorFloor.DrawPath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, MainMediator.SelectedBrushSize / 2);
+                            float xPos = MapStateMediator.CurrentCursorPoint.X;
+                            float yPos = MapStateMediator.CurrentCursorPoint.Y;
+
+                            if (MapStateMediator.InteriorUIMediator.AlignToGrid)
+                            {
+                                // take into account floor grid size and align to grid setting
+                                xPos = (int)(xPos / MapStateMediator.InteriorUIMediator.AlignmentGridSize) * MapStateMediator.InteriorUIMediator.AlignmentGridSize;
+                                yPos = (int)(yPos / MapStateMediator.InteriorUIMediator.AlignmentGridSize) * MapStateMediator.InteriorUIMediator.AlignmentGridSize;
+
+                                SKRect rect = new(xPos, yPos, xPos + MainMediator.SelectedBrushSize, yPos + MainMediator.SelectedBrushSize);
+                                MapStateMediator.CurrentInteriorFloor.DrawPath.AddRect(rect);
+                            }
+                            else
+                            {
+                                MapStateMediator.CurrentInteriorFloor.DrawPath.AddCircle(xPos, yPos, MainMediator.SelectedBrushSize / 2);
+                            }
 
                             Task.Run(() => InteriorManager.CreateAllPathsFromDrawnPath(MapStateMediator.CurrentMap, MapStateMediator.CurrentInteriorFloor));
-
-                            //bool createPathsWhilePainting = Settings.Default.CalculateContoursWhilePainting;
-
-                            //if (createPathsWhilePainting)
-                            //{
-                            //    // compute contour path and inner and outer paths in a separate thread
-                            //}
                         }
 
                         SKGLRenderControl.Refresh();
@@ -8265,9 +8293,27 @@ namespace RealmStudio
 
         private void InteriorPaintFloorButton_Click(object sender, EventArgs e)
         {
+            if (InteriorMediator.AlignToGrid)
+            {
+                InteriorMediator.InteriorBrushSize = AlignmentGridSizeTrack.Value;
+            }
             MainMediator.SetDrawingMode(MapDrawingMode.InteriorFloorPaint, InteriorMediator.InteriorBrushSize);
         }
 
+        private void ShowAlignmentGridSwitch_CheckedChanged()
+        {
+            InteriorMediator.ShowAlignmentGrid = ShowAlignmentGridSwitch.Checked;
+        }
+
+        private void AlignToGridSwitch_CheckedChanged()
+        {
+            InteriorMediator.AlignToGrid = AlignToGridSwitch.Checked;
+        }
+
+        private void AlignmentGridSizeTrack_Scroll(object sender, EventArgs e)
+        {
+            InteriorMediator.AlignmentGridSize = AlignmentGridSizeTrack.Value;
+        }
         #endregion
 
         #region Dungeon Tab Event Handlers
@@ -8297,6 +8343,7 @@ namespace RealmStudio
         *******************************************************************************************************/
 
         #endregion
+
 
     }
 }

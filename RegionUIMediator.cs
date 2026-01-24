@@ -122,6 +122,8 @@ namespace RealmStudio
 
         private void UpdateRegionUI()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
                 MainForm.RegionColorSelectButton.BackColor = RegionColor;

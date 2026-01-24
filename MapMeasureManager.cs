@@ -40,6 +40,7 @@ namespace RealmStudio
         public static IMapComponent? Create()
         {
             ArgumentNullException.ThrowIfNull(MeasureUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             // make sure there is only one measure object
             Delete();
@@ -59,6 +60,8 @@ namespace RealmStudio
 
         public static bool Delete()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).MapLayerComponents.Clear();
             MapStateMediator.CurrentMapMeasure = null;
             return true;
@@ -66,6 +69,8 @@ namespace RealmStudio
 
         public static IMapComponent? GetComponentById(Guid componentGuid)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapScale? component = null;
 
             foreach (MapScale ms in MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).MapLayerComponents.Cast<MapScale>())
@@ -118,6 +123,8 @@ namespace RealmStudio
 
         internal static void DrawMapMeasureOnWorkLayer(MapMeasure mapMeasure, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapLayer workLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER);
             workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
@@ -171,6 +178,8 @@ namespace RealmStudio
 
         internal static void EndMapMeasure(MapMeasure mapMeasure, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             mapMeasure.MeasurePoints.Add(zoomedScrolledPoint);
 
             float lineLength = SKPoint.Distance(previousPoint, zoomedScrolledPoint);

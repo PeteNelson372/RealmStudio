@@ -565,6 +565,8 @@ namespace RealmStudio
 
         internal void EnabledDisableOverlayLayer()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapLayer overlayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OVERLAYLAYER);
             overlayLayer.ShowLayer = OverlayLayerEnabled;
 

@@ -42,6 +42,7 @@ namespace RealmStudio
         public static IMapComponent Create()
         {
             ArgumentNullException.ThrowIfNull(GridUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             Delete();
 
@@ -79,6 +80,8 @@ namespace RealmStudio
 
         public static bool Delete()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             // there is only one grid, so find it in the layers it could be in and delete it
 
             for (int i = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
@@ -113,6 +116,8 @@ namespace RealmStudio
 
         public static IMapComponent? GetComponentById(Guid componentGuid)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapGrid? component = null;
 
             foreach (MapGrid mg in MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.Cast<MapGrid>())
@@ -179,6 +184,7 @@ namespace RealmStudio
         internal static void FinalizeMapGrid()
         {
             ArgumentNullException.ThrowIfNull(GridUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             // finalize loading of grid
             MapGrid? currentMapGrid = null;

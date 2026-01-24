@@ -129,6 +129,8 @@ namespace RealmStudio
 
         public static bool Delete()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             DrawnMapComponent? dmc = FindSelectedDrawnMapComponent(MapStateMediator.CurrentMap);
 
             if (dmc != null)
@@ -150,6 +152,8 @@ namespace RealmStudio
         public static bool Update()
         {
             ArgumentNullException.ThrowIfNull(DrawingMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             DrawnMapComponent? dmc = FindSelectedDrawnMapComponent(MapStateMediator.CurrentMap);
 
             if (dmc != null)
@@ -199,6 +203,7 @@ namespace RealmStudio
         internal static void PlaceStampAtCursor(SKPoint currentCursorPoint)
         {
             ArgumentNullException.ThrowIfNull(DrawingMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (DrawingMediator.DrawingStampBitmap != null &&
                 DrawingMediator.DrawingStampBitmap.Width > 0 &&
@@ -225,6 +230,8 @@ namespace RealmStudio
 
         internal static DrawnMapComponent? SelectDrawnMapComponentAtPoint(SKPoint mapClickPoint)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             DrawnMapComponent? selectedDrawnMapComponent = null;
 
             List<MapComponent>? drawnMapComponents = DrawingLayer?.MapLayerComponents;
@@ -253,6 +260,8 @@ namespace RealmStudio
 
         internal static DrawnMapComponent? FindSelectedDrawnMapComponent(RealmStudioMap map)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             DrawnMapComponent? selectedDrawnMapComponent = null;
 
             MapLayer drawLayer = DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
@@ -274,6 +283,8 @@ namespace RealmStudio
 
         internal static void MoveDrawnComponent(DrawnMapComponent? dmc, float deltaX, float deltaY)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (dmc != null)
             {
                 if (dmc is DrawnArrow arrow)
@@ -333,6 +344,8 @@ namespace RealmStudio
 
         internal static void MoveDrawnComponent(DrawnMapComponent? dmc, ComponentMoveDirection direction)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (dmc != null)
             {
                 switch (direction)
@@ -557,6 +570,8 @@ namespace RealmStudio
 
         internal static DrawnMapComponent? CreateScaledTransformedDrawnComponent(DrawnMapComponent dmc, float scaleX, float scaleY, float deltaX, float deltaY)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             DrawnMapComponent? newDmc = null;
 
             if (dmc is DrawnArrow arrow)

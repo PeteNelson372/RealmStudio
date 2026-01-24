@@ -235,6 +235,7 @@ namespace RealmStudio
         private void UpdateDrawingUI(string? changedPropertyName)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MainForm.SelectPaintColorButton.BackColor = DrawingLineColor;
             MainForm.SelectFillColorButton.BackColor = DrawingFillColor;
@@ -469,6 +470,8 @@ namespace RealmStudio
 
         private void UpdateDrawingTexturePictureBox()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (DrawingTextureIndex < 0)
             {
                 DrawingTextureIndex = 0;

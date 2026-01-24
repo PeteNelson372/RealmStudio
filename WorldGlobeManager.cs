@@ -31,6 +31,8 @@ namespace RealmStudio
 
         internal static void ShowWorldGlobe()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             SKBitmap worldTexture = new(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
             using SKCanvas canvas = new(worldTexture);
 

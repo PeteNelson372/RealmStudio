@@ -114,6 +114,8 @@ namespace RealmStudio
 
         public static bool Delete()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (MapStateMediator.CurrentMapRegion != null)
             {
                 Cmd_DeleteMapRegion cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion);
@@ -217,6 +219,8 @@ namespace RealmStudio
 
         internal static void MoveSelectedRegionInRenderOrder(ComponentMoveDirection direction)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (MapStateMediator.CurrentMapRegion != null)
             {
                 // find the selected region in the Region Layer MapComponents
@@ -259,6 +263,8 @@ namespace RealmStudio
 
         internal static void FinalizeMapRegions()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             // finalize loading of regions
             MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.REGIONLAYER);
             for (int i = 0; i < regionLayer.MapLayerComponents.Count; i++)
@@ -275,6 +281,7 @@ namespace RealmStudio
         internal static void SnapRegionToLandformCoastline()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             // find the closest point to the current point
             // on the contour path of a coastline;
@@ -395,6 +402,7 @@ namespace RealmStudio
         internal static void EndMapRegion()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapRegionPoint mrp = new(MapStateMediator.CurrentCursorPoint);
             MapStateMediator.CurrentMapRegion.MapRegionPoints.Add(mrp);
@@ -409,6 +417,7 @@ namespace RealmStudio
         internal static void DrawRegionOnWorkLayer()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapLayer workLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER);
             workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
@@ -473,6 +482,8 @@ namespace RealmStudio
 
         internal static void DrawCoastlinePointOnWorkLayer2()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             // find the closest point to the current point
             // on the contour path of a coastline;
             // if the nearest point on the coastline
@@ -547,6 +558,7 @@ namespace RealmStudio
         internal static void DrawRegionPointOnWorkLayer()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
@@ -593,6 +605,7 @@ namespace RealmStudio
         internal static bool DeleteSelectedRegionPoint(MapRegion currentMapRegion)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             foreach (MapRegionPoint mrp in MapStateMediator.CurrentMapRegion.MapRegionPoints)
             {

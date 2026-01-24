@@ -174,6 +174,8 @@ namespace RealmStudio
 
         internal void DrawBoxOnWorkLayer(SKPoint zoomedScrolledPoint, SKPoint previousPoint)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             SKRect boxRect = new(previousPoint.X, previousPoint.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
 
             if (Box != null && MapStateMediator.SelectedPlacedMapBox != null && boxRect.Width > 0 && boxRect.Height > 0)

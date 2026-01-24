@@ -103,6 +103,8 @@ namespace RealmStudio
 
         public static bool Delete()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (MapStateMediator.SelectedMapSymbol != null)
             {
                 Cmd_RemoveSymbol cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapSymbol);
@@ -119,6 +121,8 @@ namespace RealmStudio
 
         internal static void PlaceSymbolOnMap(MapSymbol? mapSymbol, SKBitmap? bitmap, SKPoint cursorPoint)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (mapSymbol != null && bitmap != null)
             {
                 MapStateMediator.CurrentMap.IsSaved = false;
@@ -143,6 +147,8 @@ namespace RealmStudio
 
         internal static void PlaceVectorSymbolOnMap(MapSymbol? mapSymbol, SKBitmap vectorBitmap, SKPoint cursorPoint)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (mapSymbol != null)
             {
                 MapStateMediator.CurrentMap.IsSaved = false;
@@ -178,6 +184,8 @@ namespace RealmStudio
 
         internal static void RemovePlacedSymbolsFromArea(SKPoint centerPoint, float eraserCircleRadius)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             Cmd_RemoveSymbolsFromArea cmd = new(MapStateMediator.CurrentMap, eraserCircleRadius, centerPoint);
             CommandManager.AddCommand(cmd);
             cmd.DoOperation();
@@ -357,6 +365,8 @@ namespace RealmStudio
 
         internal static bool CanPlaceSymbol(SKPoint cursorPoint, float placementDensityRadius)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             // if there are any symbols within the placementDensityRadius around the cursor point, then the symbol cannot be placed at the cursor point
 
             bool canPlace = true;
@@ -381,6 +391,8 @@ namespace RealmStudio
 
         internal static void ColorSymbolsInArea(SKPoint colorCursorPoint, int colorBrushRadius, Color[] symbolColors, bool randomizeColors)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             List<MapComponent> components = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER).MapLayerComponents;
 
             foreach (MapComponent component in components)
@@ -589,6 +601,8 @@ namespace RealmStudio
 
         internal static void FinalizeMapSymbols()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             // finalize loading of symbols
             MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER);
 
@@ -628,6 +642,8 @@ namespace RealmStudio
 
         internal static void MoveSelectedSymbolInRenderOrder(ComponentMoveDirection direction, int amount = 1, bool toTopBottom = false)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (MapStateMediator.SelectedMapSymbol != null)
             {
                 // find the selected symbol in the Symbol Layer MapComponents
@@ -974,6 +990,7 @@ namespace RealmStudio
         internal static void ColorSymbolAtPoint()
         {
             ArgumentNullException.ThrowIfNull(SymbolMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapSymbol? symbolAtPoint = SymbolUIMediator.SelectMapSymbolAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint.ToDrawingPoint());
 

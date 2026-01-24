@@ -194,6 +194,8 @@ namespace RealmStudio
 
         internal void UpdatePathUI(string? changedPropertyName)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
                 MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
@@ -237,6 +239,8 @@ namespace RealmStudio
 
         private void UpdatePathTextureComboBox()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (PathTextureIndex < 0)
             {
                 PathTextureIndex = 0;
@@ -373,6 +377,7 @@ namespace RealmStudio
         internal void SelectOrEditPaths()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapStateMediator.MainUIMediator.SelectedBrushSize = 0;
 
@@ -500,6 +505,8 @@ namespace RealmStudio
 
         internal static MapPath? SelectMapPathAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapPath? selectedMapPath = null;
 
             List<MapComponent> mapPathUpperComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER).MapLayerComponents;
@@ -568,6 +575,8 @@ namespace RealmStudio
 
         internal static void ClearPathPointSelection()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
             foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
             {
@@ -585,6 +594,8 @@ namespace RealmStudio
 
         internal static void SetShowPathPoints()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
             foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
             {

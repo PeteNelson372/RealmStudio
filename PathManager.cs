@@ -90,6 +90,8 @@ namespace RealmStudio
 
         public static bool Delete()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (MapStateMediator.SelectedMapPath != null)
             {
                 Cmd_RemoveMapPath cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapPath);
@@ -107,6 +109,8 @@ namespace RealmStudio
 
         public static void ConstructPathPaint(MapPath mapPath)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (mapPath.PathPaint != null) return;
 
             float strokeWidth = mapPath.PathWidth;
@@ -831,6 +835,8 @@ namespace RealmStudio
 
         public static void FinalizeMapPaths()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
             MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
 
@@ -1051,6 +1057,8 @@ namespace RealmStudio
 
         internal static void RemovePathPoint()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (MapStateMediator.SelectedMapPath != null && MapStateMediator.SelectedMapPathPoint != null)
             {
                 Cmd_RemovePathPoint cmd = new(MapStateMediator.SelectedMapPath, MapStateMediator.SelectedMapPathPoint);

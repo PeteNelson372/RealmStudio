@@ -39,6 +39,8 @@ namespace RealmStudio
 
         internal static void ClearComponentSelection()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             SelectedMapComponents.Clear();
             MapStateMediator.PreviousSelectedRealmArea = SKRect.Empty;
             MapStateMediator.SelectedRealmArea = SKRect.Empty;
@@ -47,6 +49,8 @@ namespace RealmStudio
 
         internal static void CopySelectedComponents()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (MapStateMediator.SelectedRealmArea != SKRect.Empty)
             {
                 // get all objects within the selected area and copy them
@@ -65,6 +69,8 @@ namespace RealmStudio
 
         internal static void CutSelectedComponents()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             Cmd_CutOrCopyFromArea cmd = new(MapStateMediator.CurrentMap, SelectedMapComponents, MapStateMediator.SelectedRealmArea, true);
             CommandManager.AddCommand(cmd);
             cmd.DoOperation();
@@ -76,6 +82,8 @@ namespace RealmStudio
 
         internal static void PasteSelectedComponentsAtPoint(SKPoint zoomedScrolledPoint)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (SelectedMapComponents.Count > 0)
             {
                 Cmd_PasteSelectedComponents cmd = new(MapStateMediator.CurrentMap, SelectedMapComponents, MapStateMediator.PreviousSelectedRealmArea, zoomedScrolledPoint);

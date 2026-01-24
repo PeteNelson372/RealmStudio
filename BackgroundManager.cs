@@ -48,6 +48,7 @@ namespace RealmStudio
         public static bool Update()
         {
             ArgumentNullException.ThrowIfNull(BackgroundMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
             Bitmap? textureBitmap = BackgroundMediator.BackgroundTextureList[BackgroundMediator.BackgroundTextureIndex].TextureBitmap;
@@ -105,6 +106,8 @@ namespace RealmStudio
 
         internal static void ApplyBackgroundTexture(Bitmap? textureBitmap, float scale, bool mirrorBackground)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
 
             if (baseLayer.MapLayerComponents.Count < 1 && textureBitmap != null && scale > 0.0F && scale <= 1.0F)
@@ -133,6 +136,8 @@ namespace RealmStudio
 
         internal static void ClearBackgroundTexture()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapLayer backgroundLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
 
             if (backgroundLayer.MapLayerComponents.Count > 0)

@@ -356,20 +356,18 @@
             InteriorFloorTab = new TabPage();
             groupBox6 = new GroupBox();
             label118 = new Label();
-            trackBar2 = new TrackBar();
-            label123 = new Label();
-            trackBar4 = new TrackBar();
             label127 = new Label();
             cyberSwitch1 = new ReaLTaiizor.Controls.CyberSwitch();
-            label129 = new Label();
             label130 = new Label();
             iconButton4 = new FontAwesome.Sharp.IconButton();
             iconButton5 = new FontAwesome.Sharp.IconButton();
-            pictureBox2 = new PictureBox();
+            WallTexturePreviewPicture = new PictureBox();
             iconButton6 = new FontAwesome.Sharp.IconButton();
             label131 = new Label();
             trackBar5 = new TrackBar();
             groupBox4 = new GroupBox();
+            label123 = new Label();
+            InteriorFloorTextureScaleTrack = new TrackBar();
             checkBox1 = new CheckBox();
             label122 = new Label();
             iconButton1 = new FontAwesome.Sharp.IconButton();
@@ -422,11 +420,11 @@
             InteriorToolPanel = new Panel();
             InteriorGridGroupBox = new GroupBox();
             AlignGridSwitch = new Label();
-            cyberSwitch2 = new ReaLTaiizor.Controls.CyberSwitch();
+            AlignToGridSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             ShowInteriorGridSwitch = new Label();
-            cyberSwitch3 = new ReaLTaiizor.Controls.CyberSwitch();
+            ShowAlignmentGridSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label125 = new Label();
-            trackBar1 = new TrackBar();
+            AlignmentGridSizeTrack = new TrackBar();
             DungeonToolPanel = new Panel();
             NextMapButton = new FontAwesome.Sharp.IconButton();
             RealmSetComboBox = new ReaLTaiizor.Controls.DungeonComboBox();
@@ -751,6 +749,8 @@
             ShipToolPanel = new Panel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
+            WallTextureNameLabel = new Label();
+            WallTextureScaleTrack = new TrackBar();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -849,11 +849,10 @@
             DrawingToolStrip.SuspendLayout();
             InteriorFloorTab.SuspendLayout();
             groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)trackBar4).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WallTexturePreviewPicture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBar5).BeginInit();
             groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)InteriorFloorTextureScaleTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)InteriorFloorTexturePreviewPicture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBar3).BeginInit();
             InteriorToolStrip.SuspendLayout();
@@ -866,7 +865,7 @@
             RealmStudioForm.SuspendLayout();
             InteriorToolPanel.SuspendLayout();
             InteriorGridGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)AlignmentGridSizeTrack).BeginInit();
             FontSelectionPanel.SuspendLayout();
             groupBox5.SuspendLayout();
             MapScaleCreatorPanel.SuspendLayout();
@@ -942,6 +941,7 @@
             ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WallTextureScaleTrack).BeginInit();
             this.SuspendLayout();
             // 
             // OceanTab
@@ -1831,7 +1831,7 @@
             BackgroundToolStrip.LayoutStyle = ToolStripLayoutStyle.VerticalStackWithOverflow;
             BackgroundToolStrip.Location = new Point(158, 0);
             BackgroundToolStrip.Name = "BackgroundToolStrip";
-            BackgroundToolStrip.Size = new Size(68, 878);
+            BackgroundToolStrip.Size = new Size(72, 878);
             BackgroundToolStrip.TabIndex = 16;
             BackgroundToolStrip.Text = "LandformTools";
             // 
@@ -6207,17 +6207,15 @@
             // groupBox6
             // 
             groupBox6.BackColor = Color.Transparent;
+            groupBox6.Controls.Add(WallTextureScaleTrack);
+            groupBox6.Controls.Add(WallTextureNameLabel);
             groupBox6.Controls.Add(label118);
-            groupBox6.Controls.Add(trackBar2);
-            groupBox6.Controls.Add(label123);
-            groupBox6.Controls.Add(trackBar4);
             groupBox6.Controls.Add(label127);
             groupBox6.Controls.Add(cyberSwitch1);
-            groupBox6.Controls.Add(label129);
             groupBox6.Controls.Add(label130);
             groupBox6.Controls.Add(iconButton4);
             groupBox6.Controls.Add(iconButton5);
-            groupBox6.Controls.Add(pictureBox2);
+            groupBox6.Controls.Add(WallTexturePreviewPicture);
             groupBox6.Controls.Add(iconButton6);
             groupBox6.Controls.Add(label131);
             groupBox6.Controls.Add(trackBar5);
@@ -6225,7 +6223,7 @@
             groupBox6.ForeColor = SystemColors.ControlText;
             groupBox6.Location = new Point(10, 36);
             groupBox6.Name = "groupBox6";
-            groupBox6.Size = new Size(148, 470);
+            groupBox6.Size = new Size(148, 417);
             groupBox6.TabIndex = 25;
             groupBox6.TabStop = false;
             groupBox6.Text = "Wall";
@@ -6236,46 +6234,11 @@
             label118.BackColor = Color.Transparent;
             label118.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             label118.ForeColor = SystemColors.ControlDarkDark;
-            label118.Location = new Point(6, 409);
+            label118.Location = new Point(6, 371);
             label118.Name = "label118";
             label118.Size = new Size(34, 15);
             label118.TabIndex = 32;
             label118.Text = "Scale";
-            // 
-            // trackBar2
-            // 
-            trackBar2.AutoSize = false;
-            trackBar2.Location = new Point(2, 432);
-            trackBar2.Maximum = 200;
-            trackBar2.Name = "trackBar2";
-            trackBar2.Size = new Size(136, 20);
-            trackBar2.TabIndex = 31;
-            trackBar2.TickStyle = TickStyle.None;
-            trackBar2.Value = 100;
-            // 
-            // label123
-            // 
-            label123.AutoSize = true;
-            label123.BackColor = Color.Transparent;
-            label123.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            label123.ForeColor = SystemColors.ControlDarkDark;
-            label123.Location = new Point(0, 367);
-            label123.Name = "label123";
-            label123.Size = new Size(48, 15);
-            label123.TabIndex = 30;
-            label123.Text = "Opacity";
-            // 
-            // trackBar4
-            // 
-            trackBar4.AutoSize = false;
-            trackBar4.BackColor = SystemColors.Control;
-            trackBar4.Location = new Point(0, 385);
-            trackBar4.Maximum = 255;
-            trackBar4.Name = "trackBar4";
-            trackBar4.Size = new Size(136, 20);
-            trackBar4.TabIndex = 29;
-            trackBar4.TickStyle = TickStyle.None;
-            trackBar4.Value = 255;
             // 
             // label127
             // 
@@ -6327,15 +6290,6 @@
             cyberSwitch1.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             cyberSwitch1.Timer_RGB = 300;
             // 
-            // label129
-            // 
-            label129.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            label129.Location = new Point(6, 345);
-            label129.Name = "label129";
-            label129.Size = new Size(136, 15);
-            label129.TabIndex = 24;
-            label129.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // label130
             // 
             label130.AutoSize = true;
@@ -6378,14 +6332,14 @@
             iconButton5.TextImageRelation = TextImageRelation.TextBeforeImage;
             iconButton5.UseVisualStyleBackColor = true;
             // 
-            // pictureBox2
+            // WallTexturePreviewPicture
             // 
-            pictureBox2.Location = new Point(6, 206);
-            pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(136, 136);
-            pictureBox2.SizeMode = PictureBoxSizeMode.CenterImage;
-            pictureBox2.TabIndex = 20;
-            pictureBox2.TabStop = false;
+            WallTexturePreviewPicture.Location = new Point(6, 206);
+            WallTexturePreviewPicture.Name = "WallTexturePreviewPicture";
+            WallTexturePreviewPicture.Size = new Size(136, 136);
+            WallTexturePreviewPicture.SizeMode = PictureBoxSizeMode.CenterImage;
+            WallTexturePreviewPicture.TabIndex = 20;
+            WallTexturePreviewPicture.TabStop = false;
             // 
             // iconButton6
             // 
@@ -6430,6 +6384,8 @@
             // groupBox4
             // 
             groupBox4.BackColor = Color.Transparent;
+            groupBox4.Controls.Add(label123);
+            groupBox4.Controls.Add(InteriorFloorTextureScaleTrack);
             groupBox4.Controls.Add(checkBox1);
             groupBox4.Controls.Add(label122);
             groupBox4.Controls.Add(iconButton1);
@@ -6441,12 +6397,35 @@
             groupBox4.Controls.Add(trackBar3);
             groupBox4.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             groupBox4.ForeColor = SystemColors.ControlText;
-            groupBox4.Location = new Point(10, 515);
+            groupBox4.Location = new Point(10, 462);
             groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(148, 348);
+            groupBox4.Size = new Size(148, 403);
             groupBox4.TabIndex = 24;
             groupBox4.TabStop = false;
             groupBox4.Text = "Interior Floor";
+            // 
+            // label123
+            // 
+            label123.AutoSize = true;
+            label123.BackColor = Color.Transparent;
+            label123.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label123.ForeColor = SystemColors.ControlDarkDark;
+            label123.Location = new Point(6, 349);
+            label123.Name = "label123";
+            label123.Size = new Size(34, 15);
+            label123.TabIndex = 34;
+            label123.Text = "Scale";
+            // 
+            // InteriorFloorTextureScaleTrack
+            // 
+            InteriorFloorTextureScaleTrack.AutoSize = false;
+            InteriorFloorTextureScaleTrack.Location = new Point(3, 367);
+            InteriorFloorTextureScaleTrack.Maximum = 200;
+            InteriorFloorTextureScaleTrack.Name = "InteriorFloorTextureScaleTrack";
+            InteriorFloorTextureScaleTrack.Size = new Size(136, 20);
+            InteriorFloorTextureScaleTrack.TabIndex = 33;
+            InteriorFloorTextureScaleTrack.TickStyle = TickStyle.None;
+            InteriorFloorTextureScaleTrack.Value = 100;
             // 
             // checkBox1
             // 
@@ -7328,11 +7307,11 @@
             // InteriorGridGroupBox
             // 
             InteriorGridGroupBox.Controls.Add(AlignGridSwitch);
-            InteriorGridGroupBox.Controls.Add(cyberSwitch2);
+            InteriorGridGroupBox.Controls.Add(AlignToGridSwitch);
             InteriorGridGroupBox.Controls.Add(ShowInteriorGridSwitch);
-            InteriorGridGroupBox.Controls.Add(cyberSwitch3);
+            InteriorGridGroupBox.Controls.Add(ShowAlignmentGridSwitch);
             InteriorGridGroupBox.Controls.Add(label125);
-            InteriorGridGroupBox.Controls.Add(trackBar1);
+            InteriorGridGroupBox.Controls.Add(AlignmentGridSizeTrack);
             InteriorGridGroupBox.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             InteriorGridGroupBox.Location = new Point(7, 22);
             InteriorGridGroupBox.Name = "InteriorGridGroupBox";
@@ -7353,43 +7332,43 @@
             AlignGridSwitch.TabIndex = 24;
             AlignGridSwitch.Text = "Align to Grid";
             // 
-            // cyberSwitch2
+            // AlignToGridSwitch
             // 
-            cyberSwitch2.Alpha = 50;
-            cyberSwitch2.BackColor = Color.Transparent;
-            cyberSwitch2.Background = true;
-            cyberSwitch2.Background_WidthPen = 2F;
-            cyberSwitch2.BackgroundPen = false;
-            cyberSwitch2.Checked = true;
-            cyberSwitch2.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            cyberSwitch2.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            cyberSwitch2.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            cyberSwitch2.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            cyberSwitch2.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            cyberSwitch2.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            cyberSwitch2.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            cyberSwitch2.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            cyberSwitch2.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            cyberSwitch2.ColorValue = Color.ForestGreen;
-            cyberSwitch2.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            cyberSwitch2.Font = new Font("Arial", 11F);
-            cyberSwitch2.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
-            cyberSwitch2.Lighting = true;
-            cyberSwitch2.LinearGradient_Background = false;
-            cyberSwitch2.LinearGradient_Value = false;
-            cyberSwitch2.LinearGradientPen = false;
-            cyberSwitch2.Location = new Point(4, 95);
-            cyberSwitch2.Name = "cyberSwitch2";
-            cyberSwitch2.PenWidth = 10;
-            cyberSwitch2.RGB = false;
-            cyberSwitch2.Rounding = true;
-            cyberSwitch2.RoundingInt = 90;
-            cyberSwitch2.Size = new Size(41, 20);
-            cyberSwitch2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            cyberSwitch2.TabIndex = 23;
-            cyberSwitch2.Tag = "Cyber";
-            cyberSwitch2.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            cyberSwitch2.Timer_RGB = 300;
+            AlignToGridSwitch.Alpha = 50;
+            AlignToGridSwitch.BackColor = Color.Transparent;
+            AlignToGridSwitch.Background = true;
+            AlignToGridSwitch.Background_WidthPen = 2F;
+            AlignToGridSwitch.BackgroundPen = false;
+            AlignToGridSwitch.Checked = true;
+            AlignToGridSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AlignToGridSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            AlignToGridSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            AlignToGridSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AlignToGridSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AlignToGridSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AlignToGridSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AlignToGridSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            AlignToGridSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            AlignToGridSwitch.ColorValue = Color.ForestGreen;
+            AlignToGridSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            AlignToGridSwitch.Font = new Font("Arial", 11F);
+            AlignToGridSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
+            AlignToGridSwitch.Lighting = true;
+            AlignToGridSwitch.LinearGradient_Background = false;
+            AlignToGridSwitch.LinearGradient_Value = false;
+            AlignToGridSwitch.LinearGradientPen = false;
+            AlignToGridSwitch.Location = new Point(4, 95);
+            AlignToGridSwitch.Name = "AlignToGridSwitch";
+            AlignToGridSwitch.PenWidth = 10;
+            AlignToGridSwitch.RGB = false;
+            AlignToGridSwitch.Rounding = true;
+            AlignToGridSwitch.RoundingInt = 90;
+            AlignToGridSwitch.Size = new Size(41, 20);
+            AlignToGridSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            AlignToGridSwitch.TabIndex = 23;
+            AlignToGridSwitch.Tag = "Cyber";
+            AlignToGridSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            AlignToGridSwitch.Timer_RGB = 300;
             // 
             // ShowInteriorGridSwitch
             // 
@@ -7403,43 +7382,43 @@
             ShowInteriorGridSwitch.TabIndex = 22;
             ShowInteriorGridSwitch.Text = "Show Grid";
             // 
-            // cyberSwitch3
+            // ShowAlignmentGridSwitch
             // 
-            cyberSwitch3.Alpha = 50;
-            cyberSwitch3.BackColor = Color.Transparent;
-            cyberSwitch3.Background = true;
-            cyberSwitch3.Background_WidthPen = 2F;
-            cyberSwitch3.BackgroundPen = false;
-            cyberSwitch3.Checked = true;
-            cyberSwitch3.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            cyberSwitch3.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            cyberSwitch3.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            cyberSwitch3.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            cyberSwitch3.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            cyberSwitch3.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            cyberSwitch3.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            cyberSwitch3.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            cyberSwitch3.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            cyberSwitch3.ColorValue = Color.ForestGreen;
-            cyberSwitch3.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            cyberSwitch3.Font = new Font("Arial", 11F);
-            cyberSwitch3.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
-            cyberSwitch3.Lighting = true;
-            cyberSwitch3.LinearGradient_Background = false;
-            cyberSwitch3.LinearGradient_Value = false;
-            cyberSwitch3.LinearGradientPen = false;
-            cyberSwitch3.Location = new Point(6, 69);
-            cyberSwitch3.Name = "cyberSwitch3";
-            cyberSwitch3.PenWidth = 10;
-            cyberSwitch3.RGB = false;
-            cyberSwitch3.Rounding = true;
-            cyberSwitch3.RoundingInt = 90;
-            cyberSwitch3.Size = new Size(41, 20);
-            cyberSwitch3.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            cyberSwitch3.TabIndex = 21;
-            cyberSwitch3.Tag = "Cyber";
-            cyberSwitch3.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            cyberSwitch3.Timer_RGB = 300;
+            ShowAlignmentGridSwitch.Alpha = 50;
+            ShowAlignmentGridSwitch.BackColor = Color.Transparent;
+            ShowAlignmentGridSwitch.Background = true;
+            ShowAlignmentGridSwitch.Background_WidthPen = 2F;
+            ShowAlignmentGridSwitch.BackgroundPen = false;
+            ShowAlignmentGridSwitch.Checked = true;
+            ShowAlignmentGridSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowAlignmentGridSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowAlignmentGridSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowAlignmentGridSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowAlignmentGridSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowAlignmentGridSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowAlignmentGridSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowAlignmentGridSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowAlignmentGridSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowAlignmentGridSwitch.ColorValue = Color.ForestGreen;
+            ShowAlignmentGridSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowAlignmentGridSwitch.Font = new Font("Arial", 11F);
+            ShowAlignmentGridSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
+            ShowAlignmentGridSwitch.Lighting = true;
+            ShowAlignmentGridSwitch.LinearGradient_Background = false;
+            ShowAlignmentGridSwitch.LinearGradient_Value = false;
+            ShowAlignmentGridSwitch.LinearGradientPen = false;
+            ShowAlignmentGridSwitch.Location = new Point(6, 69);
+            ShowAlignmentGridSwitch.Name = "ShowAlignmentGridSwitch";
+            ShowAlignmentGridSwitch.PenWidth = 10;
+            ShowAlignmentGridSwitch.RGB = false;
+            ShowAlignmentGridSwitch.Rounding = true;
+            ShowAlignmentGridSwitch.RoundingInt = 90;
+            ShowAlignmentGridSwitch.Size = new Size(41, 20);
+            ShowAlignmentGridSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowAlignmentGridSwitch.TabIndex = 21;
+            ShowAlignmentGridSwitch.Tag = "Cyber";
+            ShowAlignmentGridSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowAlignmentGridSwitch.Timer_RGB = 300;
             // 
             // label125
             // 
@@ -7453,18 +7432,18 @@
             label125.TabIndex = 20;
             label125.Text = "Size";
             // 
-            // trackBar1
+            // AlignmentGridSizeTrack
             // 
-            trackBar1.AutoSize = false;
-            trackBar1.BackColor = SystemColors.Control;
-            trackBar1.Location = new Point(6, 44);
-            trackBar1.Maximum = 16;
-            trackBar1.Minimum = 2;
-            trackBar1.Name = "trackBar1";
-            trackBar1.Size = new Size(126, 20);
-            trackBar1.TabIndex = 19;
-            trackBar1.TickStyle = TickStyle.None;
-            trackBar1.Value = 4;
+            AlignmentGridSizeTrack.AutoSize = false;
+            AlignmentGridSizeTrack.BackColor = SystemColors.Control;
+            AlignmentGridSizeTrack.Location = new Point(6, 44);
+            AlignmentGridSizeTrack.Maximum = 16;
+            AlignmentGridSizeTrack.Minimum = 2;
+            AlignmentGridSizeTrack.Name = "AlignmentGridSizeTrack";
+            AlignmentGridSizeTrack.Size = new Size(126, 20);
+            AlignmentGridSizeTrack.TabIndex = 19;
+            AlignmentGridSizeTrack.TickStyle = TickStyle.None;
+            AlignmentGridSizeTrack.Value = 4;
             // 
             // DungeonToolPanel
             // 
@@ -11725,6 +11704,26 @@
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
             // 
+            // WallTextureNameLabel
+            // 
+            WallTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            WallTextureNameLabel.Location = new Point(3, 345);
+            WallTextureNameLabel.Name = "WallTextureNameLabel";
+            WallTextureNameLabel.Size = new Size(136, 15);
+            WallTextureNameLabel.TabIndex = 33;
+            WallTextureNameLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // WallTextureScaleTrack
+            // 
+            WallTextureScaleTrack.AutoSize = false;
+            WallTextureScaleTrack.Location = new Point(0, 389);
+            WallTextureScaleTrack.Maximum = 200;
+            WallTextureScaleTrack.Name = "WallTextureScaleTrack";
+            WallTextureScaleTrack.Size = new Size(136, 20);
+            WallTextureScaleTrack.TabIndex = 34;
+            WallTextureScaleTrack.TickStyle = TickStyle.None;
+            WallTextureScaleTrack.Value = 100;
+            // 
             // RealmStudioMainForm
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
@@ -11887,12 +11886,11 @@
             InteriorFloorTab.PerformLayout();
             groupBox6.ResumeLayout(false);
             groupBox6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)trackBar4).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WallTexturePreviewPicture).EndInit();
             ((System.ComponentModel.ISupportInitialize)trackBar5).EndInit();
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)InteriorFloorTextureScaleTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)InteriorFloorTexturePreviewPicture).EndInit();
             ((System.ComponentModel.ISupportInitialize)trackBar3).EndInit();
             InteriorToolStrip.ResumeLayout(false);
@@ -11914,7 +11912,7 @@
             InteriorToolPanel.ResumeLayout(false);
             InteriorGridGroupBox.ResumeLayout(false);
             InteriorGridGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)AlignmentGridSizeTrack).EndInit();
             FontSelectionPanel.ResumeLayout(false);
             groupBox5.ResumeLayout(false);
             MapScaleCreatorPanel.ResumeLayout(false);
@@ -12005,6 +12003,7 @@
             ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WallTextureScaleTrack).EndInit();
             this.ResumeLayout(false);
         }
 
@@ -12709,26 +12708,26 @@
         internal TrackBar trackBar3;
         private GroupBox groupBox6;
         private Label label118;
-        internal TrackBar trackBar2;
-        private Label label123;
-        internal TrackBar trackBar4;
         private Label label127;
         internal ReaLTaiizor.Controls.CyberSwitch cyberSwitch1;
-        internal Label label129;
         private Label label130;
         internal FontAwesome.Sharp.IconButton iconButton4;
         internal FontAwesome.Sharp.IconButton iconButton5;
-        internal PictureBox pictureBox2;
+        internal PictureBox WallTexturePreviewPicture;
         internal FontAwesome.Sharp.IconButton iconButton6;
         private Label label131;
         internal TrackBar trackBar5;
         private GroupBox InteriorGridGroupBox;
         private Label AlignGridSwitch;
-        internal ReaLTaiizor.Controls.CyberSwitch cyberSwitch2;
+        internal ReaLTaiizor.Controls.CyberSwitch AlignToGridSwitch;
         private Label ShowInteriorGridSwitch;
-        internal ReaLTaiizor.Controls.CyberSwitch cyberSwitch3;
+        internal ReaLTaiizor.Controls.CyberSwitch ShowAlignmentGridSwitch;
         private Label label125;
-        internal TrackBar trackBar1;
+        internal TrackBar AlignmentGridSizeTrack;
         private FontAwesome.Sharp.IconToolStripButton InteriorDrawWallButton;
+        private Label label123;
+        internal TrackBar InteriorFloorTextureScaleTrack;
+        internal TrackBar WallTextureScaleTrack;
+        internal Label WallTextureNameLabel;
     }
 }

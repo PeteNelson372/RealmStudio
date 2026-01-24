@@ -242,6 +242,8 @@ namespace RealmStudio
 
         private void UpdateSymbolUI(string? changedPropertyName)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             // this methods updates the Main Form Symbol Tab UI
             // based on the property that has changed
 
@@ -791,6 +793,8 @@ namespace RealmStudio
         #region static Map Symbol UI methods
         internal static MapSymbol? SelectMapSymbolAtPoint(RealmStudioMap map, PointF mapClickPoint)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapSymbol? selectedSymbol = null;
 
             List<MapComponent> mapSymbolComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER).MapLayerComponents;

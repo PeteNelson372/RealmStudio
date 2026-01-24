@@ -52,6 +52,10 @@ namespace RealmStudio
         private int _wallOutlineWidth = 2;
         private bool _useTextureBackground = true;
 
+        private bool _showAlignmentGrid;
+        private int _alignmentGridSize = 12;
+        private bool _alignToGrid;
+
         private Color _customColor1 = Color.White;
         private Color _customColor2 = Color.White;
         private Color _customColor3 = Color.White;
@@ -162,6 +166,24 @@ namespace RealmStudio
             get { return _interiorWallTextureList; }
         }
 
+        internal bool ShowAlignmentGrid
+        {
+            get { return _showAlignmentGrid; }
+            set { SetPropertyField(nameof(ShowAlignmentGrid), ref _showAlignmentGrid, value); }
+        }
+
+        internal int AlignmentGridSize
+        {
+            get { return _alignmentGridSize; }
+            set { SetPropertyField(nameof(AlignmentGridSize), ref _alignmentGridSize, value); }
+        }
+
+        internal bool AlignToGrid
+        {
+            get { return _alignToGrid; }
+            set { SetPropertyField(nameof(AlignToGrid), ref _alignToGrid, value); }
+        }
+
 
         public Color CustomColor1
         {
@@ -218,14 +240,16 @@ namespace RealmStudio
 
         public void NotifyUpdate(string? changedPropertyName)
         {
-            UpdateLandformUI(changedPropertyName);
-            LandformManager.Update();
+            UpdateInteriorUI(changedPropertyName);
+            InteriorManager.Update();
             MainForm.SKGLRenderControl.Invalidate();
         }
 
-        private void UpdateLandformUI(string? changedPropertyName)
+        private void UpdateInteriorUI(string? changedPropertyName)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.GridUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
@@ -258,6 +282,63 @@ namespace RealmStudio
                         case "InteriorFloorTextureIndex":
                             {
                                 UpdateInteriorFloorTexture();
+                            }
+                            break;
+                        case "ShowAlignmentGrid":
+                            {
+                                MapStateMediator.MainUIMediator.SelectedBrushSize = AlignmentGridSize;
+                                MapLayer gridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER);
+
+                                if (ShowAlignmentGrid)
+                                {
+                                    gridLayer.ShowLayer = true;
+                                    AlignmentGrid alignmentGrid = new()
+                                    {
+                                        GridSize = AlignmentGridSize,
+                                        GridLayerIndex = MapBuilder.DEFAULTGRIDLAYER,
+                                        GridEnabled = true,
+                                        ParentMap = MapStateMediator.CurrentMap,
+                                        Height = MapStateMediator.CurrentMap.MapHeight,
+                                        Width = MapStateMediator.CurrentMap.MapWidth
+                                    };
+
+                                    gridLayer.MapLayerComponents.Add(alignmentGrid);
+                                }
+                                else
+                                {
+                                    for (int i = gridLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+                                    {
+                                        if (gridLayer.MapLayerComponents[i] is AlignmentGrid)
+                                        {
+                                            gridLayer.MapLayerComponents.RemoveAt(i);
+                                        }
+                                    }
+
+                                    gridLayer.ShowLayer = MapStateMediator.GridUIMediator.GridEnabled;
+                                }
+
+                                MainForm.SKGLRenderControl.Invalidate();
+                            }
+                            break;
+                        case "AlignToGrid":
+                            {
+                                MapStateMediator.MainUIMediator.SelectedBrushSize = AlignmentGridSize;
+                            }
+                            break;
+                        case "AlignmentGridSize":
+                            {
+                                MapLayer gridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER);
+
+                                MapStateMediator.MainUIMediator.SelectedBrushSize = AlignmentGridSize;
+
+                                foreach (IMapComponent component in gridLayer.MapLayerComponents)
+                                {
+                                    if (component is AlignmentGrid alignmentGrid)
+                                    {
+                                        alignmentGrid.GridSize = AlignmentGridSize;
+                                    }
+                                }
+                                MainForm.SKGLRenderControl.Invalidate();
                             }
                             break;
                     }

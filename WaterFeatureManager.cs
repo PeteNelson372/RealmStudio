@@ -1021,6 +1021,8 @@ namespace RealmStudio
 
         internal static void FinalizeWaterFeatures()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             // finalize loading of water features and rivers
             MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WATERLAYER);
 
@@ -1063,6 +1065,8 @@ namespace RealmStudio
 
         internal static void FinalizeWindroses()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             // finalize loading of wind roses
             MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WINDROSELAYER);
             for (int i = 0; i < windroseLayer.MapLayerComponents.Count; i++)
@@ -1153,6 +1157,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
             ArgumentNullException.ThrowIfNull(WaterFeatureMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (MapStateMediator.CurrentLayerPaintStroke == null)
             {
@@ -1211,6 +1216,7 @@ namespace RealmStudio
         internal static void StartColorErasing(SKGLControl glRenderControl)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (MapStateMediator.CurrentLayerPaintStroke == null)
             {
@@ -1233,6 +1239,8 @@ namespace RealmStudio
 
         internal static void AddWaterFeatureToMap()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (MapStateMediator.CurrentWaterFeature != null)
             {
                 Cmd_AddNewWaterFeature cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentWaterFeature);
@@ -1261,6 +1269,8 @@ namespace RealmStudio
 
         internal static void DeleteRiver(River r)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             Cmd_RemoveWaterFeature cmd = new(MapStateMediator.CurrentMap, r);
             CommandManager.AddCommand(cmd);
             cmd.DoOperation();
@@ -1271,6 +1281,8 @@ namespace RealmStudio
 
         internal static void DeleteWaterFeature(IWaterFeature? selectedWaterFeature)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (selectedWaterFeature != null)
             {
                 Cmd_RemoveWaterFeature cmd = new(MapStateMediator.CurrentMap, selectedWaterFeature);

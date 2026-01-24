@@ -40,6 +40,7 @@ namespace RealmStudio
         public static IMapComponent? Create()
         {
             ArgumentNullException.ThrowIfNull(BoxMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (BoxMediator.Box == null || BoxMediator.Box.BoxBitmap == null) return null;
 
@@ -83,6 +84,8 @@ namespace RealmStudio
 
         public static bool Delete()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (MapStateMediator.SelectedPlacedMapBox == null) return false;
 
             Cmd_DeleteLabelBox cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedPlacedMapBox);
@@ -96,6 +99,8 @@ namespace RealmStudio
 
         public static IMapComponent? GetComponentById(Guid componentGuid)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             List<MapComponent> mapLabelComponents = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap,
                 MapBuilder.BOXLAYER).MapLayerComponents;
 
@@ -130,6 +135,8 @@ namespace RealmStudio
 
         internal static PlacedMapBox? SelectMapBoxAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             PlacedMapBox? selectedBox = null;
 
             List<MapComponent> mapLabelComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BOXLAYER).MapLayerComponents;
@@ -214,6 +221,8 @@ namespace RealmStudio
 
         internal static void FinalizeMapBoxes()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             // finalize loading of placed map boxes
             MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BOXLAYER);
 

@@ -33,7 +33,7 @@ namespace RealmStudio
         public static WorldAnvilApiMethods WorldAnvilApi { get; } = new();
         public static WorldAnvilIntegrationParameters WorldAnvilParameters { get; } = new WorldAnvilIntegrationParameters();
 
-        public class JsonHelper
+        public sealed class JsonHelper
         {
             public JsonSerializerOptions CamelCaseIgnoreEmptyOptions = new()
             {

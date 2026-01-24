@@ -29,6 +29,7 @@ namespace RealmStudio
         internal static void HandleKey(Keys keyCode)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             switch (keyCode)
             {

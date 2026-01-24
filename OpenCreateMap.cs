@@ -27,7 +27,7 @@ using System.IO;
 
 namespace RealmStudio
 {
-    internal partial class OpenCreateMap : Form
+    internal sealed partial class OpenCreateMap : Form
     {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public float MapAspectRatio { get; set; } = 1.0F;

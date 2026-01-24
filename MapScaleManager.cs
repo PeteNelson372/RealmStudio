@@ -16,6 +16,7 @@ namespace RealmStudio
         public static IMapComponent? Create()
         {
             ArgumentNullException.ThrowIfNull(ScaleMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapScale mapScale = new()
             {
@@ -46,6 +47,8 @@ namespace RealmStudio
 
         public static bool Delete()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             // TODO: create and use IMapOperation command class for deleting the scale
 
             for (int i = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OVERLAYLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
@@ -61,6 +64,8 @@ namespace RealmStudio
 
         public static IMapComponent? GetComponentById(Guid componentGuid)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapScale? mapScale = null;
 
             for (int i = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OVERLAYLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
@@ -116,6 +121,8 @@ namespace RealmStudio
 
         internal static MapScale? SelectMapScale(SKPoint zoomedScrolledPoint)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapScale? mapScale = null;
 
             for (int i = 0; i < MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OVERLAYLAYER).MapLayerComponents.Count; i++)

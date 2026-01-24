@@ -210,6 +210,7 @@ namespace RealmStudio
         internal void LabelTextBox_KeyPress(object? sender, EventArgs e)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (sender != null)
             {
@@ -402,6 +403,8 @@ namespace RealmStudio
 
         private void EnableDisableLabelAndBoxLayer()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapLayer labellLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LABELLAYER);
             labellLayer.ShowLayer = Enabled;
 
@@ -411,6 +414,8 @@ namespace RealmStudio
 
         internal static MapLabel? SelectLabelAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapLabel? selectedLabel = null;
 
             List<MapComponent> mapLabelComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LABELLAYER).MapLayerComponents;
@@ -435,6 +440,8 @@ namespace RealmStudio
 
         internal void SelectLabelOrBox()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapLabel? selectedLabel = SelectLabelAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint);
 
             if (selectedLabel != null)

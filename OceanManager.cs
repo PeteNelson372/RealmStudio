@@ -50,6 +50,7 @@ namespace RealmStudio
         public static bool Update()
         {
             ArgumentNullException.ThrowIfNull(OceanMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
 
@@ -137,6 +138,7 @@ namespace RealmStudio
         internal static void ApplyOceanTexture()
         {
             ArgumentNullException.ThrowIfNull(OceanMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapStateMediator.CurrentMap.IsSaved = false;
 
@@ -207,6 +209,8 @@ namespace RealmStudio
 
         internal static void ClearOceanColor()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
 
             if (oceanTextureOverlayLayer.MapLayerComponents.Count > 0)
@@ -222,6 +226,7 @@ namespace RealmStudio
         internal static void FillOceanColor()
         {
             ArgumentNullException.ThrowIfNull(OceanMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapStateMediator.CurrentMap.IsSaved = false;
 
@@ -241,6 +246,8 @@ namespace RealmStudio
 
         internal static void RemoveOceanTexture()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapStateMediator.CurrentMap.IsSaved = false;
 
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
@@ -259,6 +266,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
             ArgumentNullException.ThrowIfNull(OceanMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (MapStateMediator.CurrentLayerPaintStroke == null)
             {
@@ -307,6 +315,7 @@ namespace RealmStudio
         internal static void StartColorErasing(SKGLControl glRenderControl)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (MapStateMediator.CurrentLayerPaintStroke == null)
             {

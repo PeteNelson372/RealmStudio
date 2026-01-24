@@ -40,6 +40,7 @@ namespace RealmStudio
         public static IMapComponent? Create()
         {
             ArgumentNullException.ThrowIfNull(VignetteMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapLayer? vignetteLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.VIGNETTELAYER);
             RealmStudioMainForm? mainForm = UtilityMethods.GetMainForm();
@@ -66,6 +67,8 @@ namespace RealmStudio
 
         public static bool Delete()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.VIGNETTELAYER).MapLayerComponents.Clear();
             return true;
         }
@@ -78,6 +81,7 @@ namespace RealmStudio
         public static bool Update()
         {
             ArgumentNullException.ThrowIfNull(VignetteMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             for (int i = 0; i < MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.VIGNETTELAYER).MapLayerComponents.Count; i++)
             {
@@ -97,6 +101,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(VignetteMediator);
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
 
             // finalize loading of vignette

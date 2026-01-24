@@ -41,6 +41,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
             ArgumentNullException.ThrowIfNull(WindroseMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (MapStateMediator.MainUIMediator.CurrentDrawingMode == MapDrawingMode.PlaceWindrose)
             {
@@ -111,6 +112,8 @@ namespace RealmStudio
 
         internal static void AddWindrowseAtCurrentPoint()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             if (MapStateMediator.CurrentWindrose != null)
             {
                 MapStateMediator.CurrentWindrose.X = (int)MapStateMediator.CurrentCursorPoint.X;
@@ -126,6 +129,8 @@ namespace RealmStudio
 
         internal static void RemoveAllWindroses()
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             for (int i = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WINDROSELAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
                 if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WINDROSELAYER).MapLayerComponents[i] is MapWindrose)

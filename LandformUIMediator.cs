@@ -255,6 +255,7 @@ namespace RealmStudio
         private void UpdateLandformUI(string? changedPropertyName)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MainForm.Invoke(new MethodInvoker(delegate ()
             {

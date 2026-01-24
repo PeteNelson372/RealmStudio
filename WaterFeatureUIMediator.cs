@@ -261,6 +261,7 @@ namespace RealmStudio
         internal void UpdateWatureFeatureUI(string? changedPropertyName)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
@@ -526,6 +527,8 @@ namespace RealmStudio
 
         internal MapComponent? SelectWaterFeatureAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             MapComponent? selectedWaterFeature = null;
 
             List<MapComponent> waterFeatureComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER).MapLayerComponents;

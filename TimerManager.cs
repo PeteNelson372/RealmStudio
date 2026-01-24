@@ -143,6 +143,8 @@ namespace RealmStudio
 
         private void AutosaveTimerEventHandler(object? sender, ElapsedEventArgs e)
         {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
             try
             {
                 RealmMapMethods.PruneOldBackupsOfMap(MapStateMediator.CurrentMap, MapStateMediator.BackupCount);
