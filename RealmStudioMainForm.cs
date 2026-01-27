@@ -2084,6 +2084,10 @@ namespace RealmStudio
             DrawingFillTextureBox.Image = DrawingMediator.DrawingTextureList[DrawingMediator.DrawingTextureIndex].TextureBitmap;
             DrawingFillTextureNameLabel.Text = DrawingMediator.DrawingTextureList[DrawingMediator.DrawingTextureIndex].TextureName;
 
+            // interior wall texture
+            WallTexturePreviewPicture.Image = InteriorMediator.InteriorWallTextureList[InteriorMediator.InteriorWallTextureIndex].TextureBitmap;
+            WallTextureNameLabel.Text = InteriorMediator.InteriorWallTextureList[InteriorMediator.InteriorWallTextureIndex].TextureName;
+
             // interior floor texture
             InteriorFloorTexturePreviewPicture.Image = InteriorMediator.InteriorFloorTextureList[InteriorMediator.InteriorFloorTextureIndex].TextureBitmap;
             InteriorFloorTextureNameLabel.Text = InteriorMediator.InteriorFloorTextureList[InteriorMediator.InteriorFloorTextureIndex].TextureName;
@@ -4359,7 +4363,6 @@ namespace RealmStudio
 
                         InteriorFloor? newFloor = InteriorManager.CreateNewInteriorFloor(MapStateMediator.CurrentMap, null, SKRect.Empty);
 
-                        // TODO: take into account floor grid and snap to grid settings
                         if (newFloor != null)
                         {
                             MapStateMediator.CurrentInteriorFloor = newFloor;
@@ -4385,6 +4388,21 @@ namespace RealmStudio
                         }
 
                         SKGLRenderControl.Refresh();
+                    }
+                    break;
+                case MapDrawingMode.InteriorWallDraw:
+                    {
+                        Cursor = Cursors.Cross;
+                        MapStateMediator.CurrentMap.IsSaved = false;
+                        MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
+
+                        if (MapStateMediator.CurrentInteriorWall == null)
+                        {
+                            // create a new wall
+                            // TODO: align to grid
+                            MapStateMediator.CurrentInteriorWall = (InteriorWall?)InteriorManager.CreateWall();
+                            SKGLRenderControl.Invalidate();
+                        }
                     }
                     break;
             }
@@ -5233,6 +5251,19 @@ namespace RealmStudio
                         SKGLRenderControl.Refresh();
                     }
                     break;
+                case MapDrawingMode.InteriorWallDraw:
+                    {
+                        MapStateMediator.CurrentMap.IsSaved = false;
+                        Cursor = Cursors.Cross;
+                        const int minimumWallPointCount = 5;
+
+                        SKPoint newWallPoint = InteriorManager.GetNewWallPoint(MapStateMediator.CurrentInteriorWall, ModifierKeys, SELECTED_PATH_ANGLE, MapStateMediator.CurrentCursorPoint, minimumWallPointCount);
+
+                        InteriorManager.AddNewWallPoint(MapStateMediator.CurrentInteriorWall, newWallPoint);
+
+                        SKGLRenderControl.Invalidate();
+                    }
+                    break;
             }
 
         }
@@ -6015,6 +6046,21 @@ namespace RealmStudio
                         InteriorManager.MergeInteriorFloors(MapStateMediator.CurrentMap);
 
                         MapStateMediator.CurrentInteriorFloor = null;
+                    }
+                    break;
+                case MapDrawingMode.InteriorWallDraw:
+                    if (MapStateMediator.CurrentInteriorWall != null)
+                    {
+                        MapStateMediator.CurrentInteriorWall.BoundaryPath = InteriorManager.GenerateWallBoundaryPath(MapStateMediator.CurrentInteriorWall.WallPoints);
+
+                        Cmd_AddNewInteriorWall cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentInteriorWall);
+                        CommandManager.AddCommand(cmd);
+                        cmd.DoOperation();
+
+                        MapStateMediator.CurrentInteriorWall = null;
+                        SELECTED_PATH_ANGLE = -1;
+
+                        MapStateMediator.CurrentMap.IsSaved = false;
                     }
                     break;
             }
@@ -8281,6 +8327,16 @@ namespace RealmStudio
             InteriorMediator.ShowInteriorLayers = ShowInteriorFloorSwitch.Checked;
         }
 
+        private void PreviousWallTextureButton_Click(object sender, EventArgs e)
+        {
+            InteriorMediator.InteriorWallTextureIndex--;
+        }
+
+        private void NextWallTextureButton_Click(object sender, EventArgs e)
+        {
+            InteriorMediator.InteriorWallTextureIndex++;
+        }
+
         private void NextFloorTextureButton_Click(object sender, EventArgs e)
         {
             InteriorMediator.InteriorFloorTextureIndex++;
@@ -8314,33 +8370,16 @@ namespace RealmStudio
         {
             InteriorMediator.AlignmentGridSize = AlignmentGridSizeTrack.Value;
         }
-        #endregion
 
-        #region Dungeon Tab Event Handlers
-        /******************************************************************************************************* 
-        * DUNGEON TAB EVENT HANDLERS
-        *******************************************************************************************************/
+        private void WallWidthTrack_Scroll(object sender, EventArgs e)
+        {
+            InteriorMediator.WallThickness = WallWidthTrack.Value;
+        }
 
-        #endregion
-
-        #region Ship Tab Event Handlers
-        /******************************************************************************************************* 
-        * SHIP TAB EVENT HANDLERS
-        *******************************************************************************************************/
-
-        #endregion
-
-        #region Planet Tab Event Handlers
-        /******************************************************************************************************* 
-        * PLANET TAB EVENT HANDLERS
-        *******************************************************************************************************/
-
-        #endregion
-
-        #region World Anvil Integration Event Handlers
-        /******************************************************************************************************* 
-        * WORLD ANVIL INTEGRATION EVENT HANDLERS
-        *******************************************************************************************************/
+        private void InteriorDrawWallButton_Click(object sender, EventArgs e)
+        {
+            MainMediator.SetDrawingMode(MapDrawingMode.InteriorWallDraw, 0);
+        }
 
         #endregion
 

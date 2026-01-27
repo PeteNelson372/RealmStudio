@@ -40,7 +40,7 @@ namespace RealmStudio
                     // lower grid layer
                     RenderLowerGrid(map, renderCanvas, scrollPoint);
 
-                    // landforms
+                    // interior floors
                     RenderInteriorFloors(map, renderCanvas, scrollPoint);
 
                     break;
@@ -818,6 +818,11 @@ namespace RealmStudio
                     MapStateMediator.CurrentMapPath.Render(pathLowerLayer.LayerSurface.Canvas);
                 }
 
+                if (MapStateMediator.CurrentInteriorWall != null && !MapStateMediator.CurrentInteriorWall.DrawOverSymbols)
+                {
+                    MapStateMediator.CurrentInteriorWall.Render(pathLowerLayer.LayerSurface.Canvas);
+                }
+
                 for (int i = 0; i < pathLowerLayer.MapLayerComponents.Count; i++)
                 {
                     if (pathLowerLayer.MapLayerComponents[i] is MapPath mp)
@@ -840,6 +845,29 @@ namespace RealmStudio
                                 }
 
                                 pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathControlPointOutlinePaint);
+                            }
+                        }
+                    }
+                    else if (pathLowerLayer.MapLayerComponents[i] is InteriorWall wall)
+                    {
+                        wall.Render(pathLowerLayer.LayerSurface.Canvas);
+
+                        if (wall.ShowWallPoints)
+                        {
+                            List<LinePoint> controlPoints = wall.GetWallControlPoints();
+
+                            foreach (LinePoint p in controlPoints)
+                            {
+                                if (p.IsSelected)
+                                {
+                                    pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.LineSegmentPoint.X, p.LineSegmentPoint.Y, 4.0F, PaintObjects.MapPathSelectedControlPointPaint);
+                                }
+                                else
+                                {
+                                    pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.LineSegmentPoint.X, p.LineSegmentPoint.Y, 4.0F, PaintObjects.MapPathControlPointPaint);
+                                }
+
+                                pathLowerLayer.LayerSurface.Canvas.DrawCircle(p.LineSegmentPoint.X, p.LineSegmentPoint.Y, 4.0F, PaintObjects.MapPathControlPointOutlinePaint);
                             }
                         }
                     }
@@ -876,6 +904,22 @@ namespace RealmStudio
                                 }
                             }
                         }
+                        else if (pathLowerLayer.MapLayerComponents[i] is InteriorWall wall)
+                        {
+                            if (wall.IsSelected)
+                            {
+                                if (wall.BoundaryPath != null)
+                                {
+                                    // only one wall can be selected
+                                    // draw an outline around the wall to show that it is selected
+                                    wall.BoundaryPath.GetBounds(out SKRect boundRect);
+                                    using SKPath boundsPath = new();
+                                    boundsPath.AddRect(boundRect);
+                                    selectionLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.MapPathSelectPaint);
+                                    break;
+                                }
+                            }
+                        }
                     }
 
                     renderCanvas.DrawSurface(selectionLayer.LayerSurface, scrollPoint);
@@ -896,6 +940,10 @@ namespace RealmStudio
                 if (pathLowerLayer.MapLayerComponents[i] is MapPath mp)
                 {
                     mp.Render(canvas);
+                }
+                else if (pathLowerLayer.MapLayerComponents[i] is InteriorWall wall)
+                {
+                    wall.Render(canvas);
                 }
                 else if (pathLowerLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
                 {
@@ -921,6 +969,11 @@ namespace RealmStudio
                     MapStateMediator.CurrentMapPath.Render(pathUpperLayer.LayerSurface.Canvas);
                 }
 
+                if (MapStateMediator.CurrentInteriorWall != null && MapStateMediator.CurrentInteriorWall.DrawOverSymbols)
+                {
+                    MapStateMediator.CurrentInteriorWall.Render(pathUpperLayer.LayerSurface.Canvas);
+                }
+
                 for (int i = 0; i < pathUpperLayer.MapLayerComponents.Count; i++)
                 {
                     if (pathUpperLayer.MapLayerComponents[i] is MapPath mp)
@@ -943,6 +996,29 @@ namespace RealmStudio
                                 }
 
                                 pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.MapPoint.X, p.MapPoint.Y, 4.0F, PaintObjects.MapPathControlPointOutlinePaint);
+                            }
+                        }
+                    }
+                    else if (pathUpperLayer.MapLayerComponents[i] is InteriorWall wall)
+                    {
+                        wall.Render(pathUpperLayer.LayerSurface.Canvas);
+
+                        if (wall.ShowWallPoints)
+                        {
+                            List<LinePoint> controlPoints = wall.GetWallControlPoints();
+
+                            foreach (LinePoint p in controlPoints)
+                            {
+                                if (p.IsSelected)
+                                {
+                                    pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.LineSegmentPoint.X, p.LineSegmentPoint.Y, 4.0F, PaintObjects.MapPathSelectedControlPointPaint);
+                                }
+                                else
+                                {
+                                    pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.LineSegmentPoint.X, p.LineSegmentPoint.Y, 4.0F, PaintObjects.MapPathControlPointPaint);
+                                }
+
+                                pathUpperLayer.LayerSurface.Canvas.DrawCircle(p.LineSegmentPoint.X, p.LineSegmentPoint.Y, 4.0F, PaintObjects.MapPathControlPointOutlinePaint);
                             }
                         }
                     }
@@ -979,6 +1055,22 @@ namespace RealmStudio
                                 }
                             }
                         }
+                        else if (pathUpperLayer.MapLayerComponents[i] is InteriorWall wall)
+                        {
+                            if (wall.IsSelected)
+                            {
+                                if (wall.BoundaryPath != null)
+                                {
+                                    // only one wall can be selected
+                                    // draw an outline around the wall to show that it is selected
+                                    wall.BoundaryPath.GetBounds(out SKRect boundRect);
+                                    using SKPath boundsPath = new();
+                                    boundsPath.AddRect(boundRect);
+                                    selectionLayer.LayerSurface.Canvas.DrawPath(boundsPath, PaintObjects.MapPathSelectPaint);
+                                    break;
+                                }
+                            }
+                        }
                     }
 
                     renderCanvas.DrawSurface(selectionLayer.LayerSurface, scrollPoint);
@@ -999,6 +1091,10 @@ namespace RealmStudio
                 if (pathUpperLayer.MapLayerComponents[i] is MapPath mp)
                 {
                     mp.Render(canvas);
+                }
+                else if (pathUpperLayer.MapLayerComponents[i] is InteriorWall wall)
+                {
+                    wall.Render(canvas);
                 }
                 else if (pathUpperLayer.MapLayerComponents[i] is DrawnMapComponent dmc)
                 {

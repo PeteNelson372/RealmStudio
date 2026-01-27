@@ -284,6 +284,11 @@ namespace RealmStudio
                                 UpdateInteriorFloorTexture();
                             }
                             break;
+                        case "InteriorWallTextureIndex":
+                            {
+                                UpdateInteriorWallTexture();
+                            }
+                            break;
                         case "ShowAlignmentGrid":
                             {
                                 MapStateMediator.MainUIMediator.SelectedBrushSize = AlignmentGridSize;
@@ -403,6 +408,24 @@ namespace RealmStudio
 
             MainForm.InteriorFloorTexturePreviewPicture.Image = InteriorFloorTextureList[InteriorFloorTextureIndex].TextureBitmap;
             MainForm.InteriorFloorTextureNameLabel.Text = InteriorFloorTextureList[InteriorFloorTextureIndex].TextureName;
+        }
+
+        private void UpdateInteriorWallTexture()
+        {
+            if (InteriorWallTextureIndex < 0)
+            {
+                InteriorWallTextureIndex = 0;
+            }
+            if (InteriorWallTextureIndex > InteriorWallTextureList.Count - 1)
+            {
+                InteriorWallTextureIndex = InteriorWallTextureList.Count - 1;
+            }
+            if (InteriorWallTextureList[InteriorWallTextureIndex].TextureBitmap == null)
+            {
+                InteriorWallTextureList[InteriorWallTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(InteriorWallTextureList[InteriorWallTextureIndex].TexturePath);
+            }
+            MainForm.WallTexturePreviewPicture.Image = InteriorWallTextureList[InteriorWallTextureIndex].TextureBitmap;
+            MainForm.WallTextureNameLabel.Text = InteriorWallTextureList[InteriorWallTextureIndex].TextureName;
         }
 
 

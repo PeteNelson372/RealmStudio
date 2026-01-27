@@ -355,16 +355,18 @@
             label11 = new Label();
             InteriorFloorTab = new TabPage();
             groupBox6 = new GroupBox();
+            WallTextureScaleTrack = new TrackBar();
+            WallTextureNameLabel = new Label();
             label118 = new Label();
             label127 = new Label();
             cyberSwitch1 = new ReaLTaiizor.Controls.CyberSwitch();
             label130 = new Label();
-            iconButton4 = new FontAwesome.Sharp.IconButton();
-            iconButton5 = new FontAwesome.Sharp.IconButton();
+            PreviousWallTextureButton = new FontAwesome.Sharp.IconButton();
+            NextWallTextureButton = new FontAwesome.Sharp.IconButton();
             WallTexturePreviewPicture = new PictureBox();
             iconButton6 = new FontAwesome.Sharp.IconButton();
             label131 = new Label();
-            trackBar5 = new TrackBar();
+            WallWidthTrack = new TrackBar();
             groupBox4 = new GroupBox();
             label123 = new Label();
             InteriorFloorTextureScaleTrack = new TrackBar();
@@ -749,8 +751,6 @@
             ShipToolPanel = new Panel();
             materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
-            WallTextureNameLabel = new Label();
-            WallTextureScaleTrack = new TrackBar();
             OceanTab = new TabPage();
             OceanTab.SuspendLayout();
             WindroseGroup.SuspendLayout();
@@ -849,8 +849,9 @@
             DrawingToolStrip.SuspendLayout();
             InteriorFloorTab.SuspendLayout();
             groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)WallTextureScaleTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)WallTexturePreviewPicture).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)trackBar5).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WallWidthTrack).BeginInit();
             groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)InteriorFloorTextureScaleTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)InteriorFloorTexturePreviewPicture).BeginInit();
@@ -941,7 +942,6 @@
             ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)WallTextureScaleTrack).BeginInit();
             this.SuspendLayout();
             // 
             // OceanTab
@@ -6213,12 +6213,12 @@
             groupBox6.Controls.Add(label127);
             groupBox6.Controls.Add(cyberSwitch1);
             groupBox6.Controls.Add(label130);
-            groupBox6.Controls.Add(iconButton4);
-            groupBox6.Controls.Add(iconButton5);
+            groupBox6.Controls.Add(PreviousWallTextureButton);
+            groupBox6.Controls.Add(NextWallTextureButton);
             groupBox6.Controls.Add(WallTexturePreviewPicture);
             groupBox6.Controls.Add(iconButton6);
             groupBox6.Controls.Add(label131);
-            groupBox6.Controls.Add(trackBar5);
+            groupBox6.Controls.Add(WallWidthTrack);
             groupBox6.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             groupBox6.ForeColor = SystemColors.ControlText;
             groupBox6.Location = new Point(10, 36);
@@ -6227,6 +6227,26 @@
             groupBox6.TabIndex = 25;
             groupBox6.TabStop = false;
             groupBox6.Text = "Wall";
+            // 
+            // WallTextureScaleTrack
+            // 
+            WallTextureScaleTrack.AutoSize = false;
+            WallTextureScaleTrack.Location = new Point(0, 389);
+            WallTextureScaleTrack.Maximum = 200;
+            WallTextureScaleTrack.Name = "WallTextureScaleTrack";
+            WallTextureScaleTrack.Size = new Size(136, 20);
+            WallTextureScaleTrack.TabIndex = 34;
+            WallTextureScaleTrack.TickStyle = TickStyle.None;
+            WallTextureScaleTrack.Value = 100;
+            // 
+            // WallTextureNameLabel
+            // 
+            WallTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            WallTextureNameLabel.Location = new Point(3, 345);
+            WallTextureNameLabel.Name = "WallTextureNameLabel";
+            WallTextureNameLabel.Size = new Size(136, 15);
+            WallTextureNameLabel.TabIndex = 33;
+            WallTextureNameLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label118
             // 
@@ -6302,35 +6322,37 @@
             label130.TabIndex = 23;
             label130.Text = "Texture";
             // 
-            // iconButton4
+            // PreviousWallTextureButton
             // 
-            iconButton4.FlatStyle = FlatStyle.Flat;
-            iconButton4.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            iconButton4.IconChar = FontAwesome.Sharp.IconChar.AngleLeft;
-            iconButton4.IconColor = Color.Black;
-            iconButton4.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton4.IconSize = 24;
-            iconButton4.Location = new Point(6, 318);
-            iconButton4.Name = "iconButton4";
-            iconButton4.Size = new Size(24, 24);
-            iconButton4.TabIndex = 22;
-            iconButton4.TextImageRelation = TextImageRelation.TextBeforeImage;
-            iconButton4.UseVisualStyleBackColor = true;
+            PreviousWallTextureButton.FlatStyle = FlatStyle.Flat;
+            PreviousWallTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            PreviousWallTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleLeft;
+            PreviousWallTextureButton.IconColor = Color.Black;
+            PreviousWallTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            PreviousWallTextureButton.IconSize = 24;
+            PreviousWallTextureButton.Location = new Point(6, 318);
+            PreviousWallTextureButton.Name = "PreviousWallTextureButton";
+            PreviousWallTextureButton.Size = new Size(24, 24);
+            PreviousWallTextureButton.TabIndex = 22;
+            PreviousWallTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
+            PreviousWallTextureButton.UseVisualStyleBackColor = true;
+            PreviousWallTextureButton.Click += (this.PreviousWallTextureButton_Click);
             // 
-            // iconButton5
+            // NextWallTextureButton
             // 
-            iconButton5.FlatStyle = FlatStyle.Flat;
-            iconButton5.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            iconButton5.IconChar = FontAwesome.Sharp.IconChar.AngleRight;
-            iconButton5.IconColor = Color.Black;
-            iconButton5.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton5.IconSize = 24;
-            iconButton5.Location = new Point(118, 318);
-            iconButton5.Name = "iconButton5";
-            iconButton5.Size = new Size(24, 24);
-            iconButton5.TabIndex = 21;
-            iconButton5.TextImageRelation = TextImageRelation.TextBeforeImage;
-            iconButton5.UseVisualStyleBackColor = true;
+            NextWallTextureButton.FlatStyle = FlatStyle.Flat;
+            NextWallTextureButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            NextWallTextureButton.IconChar = FontAwesome.Sharp.IconChar.AngleRight;
+            NextWallTextureButton.IconColor = Color.Black;
+            NextWallTextureButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            NextWallTextureButton.IconSize = 24;
+            NextWallTextureButton.Location = new Point(118, 318);
+            NextWallTextureButton.Name = "NextWallTextureButton";
+            NextWallTextureButton.Size = new Size(24, 24);
+            NextWallTextureButton.TabIndex = 21;
+            NextWallTextureButton.TextImageRelation = TextImageRelation.TextBeforeImage;
+            NextWallTextureButton.UseVisualStyleBackColor = true;
+            NextWallTextureButton.Click += (this.NextWallTextureButton_Click);
             // 
             // WallTexturePreviewPicture
             // 
@@ -6368,18 +6390,19 @@
             label131.TabIndex = 18;
             label131.Text = "Width";
             // 
-            // trackBar5
+            // WallWidthTrack
             // 
-            trackBar5.AutoSize = false;
-            trackBar5.BackColor = SystemColors.Control;
-            trackBar5.Location = new Point(6, 41);
-            trackBar5.Maximum = 128;
-            trackBar5.Minimum = 1;
-            trackBar5.Name = "trackBar5";
-            trackBar5.Size = new Size(136, 20);
-            trackBar5.TabIndex = 0;
-            trackBar5.TickStyle = TickStyle.None;
-            trackBar5.Value = 8;
+            WallWidthTrack.AutoSize = false;
+            WallWidthTrack.BackColor = SystemColors.Control;
+            WallWidthTrack.Location = new Point(6, 41);
+            WallWidthTrack.Maximum = 32;
+            WallWidthTrack.Minimum = 1;
+            WallWidthTrack.Name = "WallWidthTrack";
+            WallWidthTrack.Size = new Size(136, 20);
+            WallWidthTrack.TabIndex = 0;
+            WallWidthTrack.TickStyle = TickStyle.None;
+            WallWidthTrack.Value = 8;
+            WallWidthTrack.Scroll += (this.WallWidthTrack_Scroll);
             // 
             // groupBox4
             // 
@@ -6609,6 +6632,7 @@
             InteriorDrawWallButton.Size = new Size(60, 60);
             InteriorDrawWallButton.Text = "Draw";
             InteriorDrawWallButton.TextImageRelation = TextImageRelation.TextAboveImage;
+            InteriorDrawWallButton.Click += (this.InteriorDrawWallButton_Click);
             // 
             // InteriorEraseButton
             // 
@@ -7339,7 +7363,7 @@
             AlignToGridSwitch.Background = true;
             AlignToGridSwitch.Background_WidthPen = 2F;
             AlignToGridSwitch.BackgroundPen = false;
-            AlignToGridSwitch.Checked = true;
+            AlignToGridSwitch.Checked = false;
             AlignToGridSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             AlignToGridSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
             AlignToGridSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
@@ -7369,6 +7393,7 @@
             AlignToGridSwitch.Tag = "Cyber";
             AlignToGridSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             AlignToGridSwitch.Timer_RGB = 300;
+            AlignToGridSwitch.CheckedChanged += (this.AlignToGridSwitch_CheckedChanged);
             // 
             // ShowInteriorGridSwitch
             // 
@@ -7389,7 +7414,7 @@
             ShowAlignmentGridSwitch.Background = true;
             ShowAlignmentGridSwitch.Background_WidthPen = 2F;
             ShowAlignmentGridSwitch.BackgroundPen = false;
-            ShowAlignmentGridSwitch.Checked = true;
+            ShowAlignmentGridSwitch.Checked = false;
             ShowAlignmentGridSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             ShowAlignmentGridSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
             ShowAlignmentGridSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
@@ -7419,6 +7444,7 @@
             ShowAlignmentGridSwitch.Tag = "Cyber";
             ShowAlignmentGridSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ShowAlignmentGridSwitch.Timer_RGB = 300;
+            ShowAlignmentGridSwitch.CheckedChanged += (this.ShowAlignmentGridSwitch_CheckedChanged);
             // 
             // label125
             // 
@@ -7444,6 +7470,7 @@
             AlignmentGridSizeTrack.TabIndex = 19;
             AlignmentGridSizeTrack.TickStyle = TickStyle.None;
             AlignmentGridSizeTrack.Value = 4;
+            AlignmentGridSizeTrack.Scroll += (this.AlignmentGridSizeTrack_Scroll);
             // 
             // DungeonToolPanel
             // 
@@ -11704,26 +11731,6 @@
             materialCheckBox2.UseAccentColor = false;
             materialCheckBox2.UseVisualStyleBackColor = true;
             // 
-            // WallTextureNameLabel
-            // 
-            WallTextureNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            WallTextureNameLabel.Location = new Point(3, 345);
-            WallTextureNameLabel.Name = "WallTextureNameLabel";
-            WallTextureNameLabel.Size = new Size(136, 15);
-            WallTextureNameLabel.TabIndex = 33;
-            WallTextureNameLabel.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // WallTextureScaleTrack
-            // 
-            WallTextureScaleTrack.AutoSize = false;
-            WallTextureScaleTrack.Location = new Point(0, 389);
-            WallTextureScaleTrack.Maximum = 200;
-            WallTextureScaleTrack.Name = "WallTextureScaleTrack";
-            WallTextureScaleTrack.Size = new Size(136, 20);
-            WallTextureScaleTrack.TabIndex = 34;
-            WallTextureScaleTrack.TickStyle = TickStyle.None;
-            WallTextureScaleTrack.Value = 100;
-            // 
             // RealmStudioMainForm
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
@@ -11886,8 +11893,9 @@
             InteriorFloorTab.PerformLayout();
             groupBox6.ResumeLayout(false);
             groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)WallTextureScaleTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)WallTexturePreviewPicture).EndInit();
-            ((System.ComponentModel.ISupportInitialize)trackBar5).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WallWidthTrack).EndInit();
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)InteriorFloorTextureScaleTrack).EndInit();
@@ -12003,7 +12011,6 @@
             ((System.ComponentModel.ISupportInitialize)OceanBrushVelocityTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)OceanEraserSizeTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)OceanBrushSizeTrack).EndInit();
-            ((System.ComponentModel.ISupportInitialize)WallTextureScaleTrack).EndInit();
             this.ResumeLayout(false);
         }
 
@@ -12711,12 +12718,12 @@
         private Label label127;
         internal ReaLTaiizor.Controls.CyberSwitch cyberSwitch1;
         private Label label130;
-        internal FontAwesome.Sharp.IconButton iconButton4;
-        internal FontAwesome.Sharp.IconButton iconButton5;
+        internal FontAwesome.Sharp.IconButton PreviousWallTextureButton;
+        internal FontAwesome.Sharp.IconButton NextWallTextureButton;
         internal PictureBox WallTexturePreviewPicture;
         internal FontAwesome.Sharp.IconButton iconButton6;
         private Label label131;
-        internal TrackBar trackBar5;
+        internal TrackBar WallWidthTrack;
         private GroupBox InteriorGridGroupBox;
         private Label AlignGridSwitch;
         internal ReaLTaiizor.Controls.CyberSwitch AlignToGridSwitch;

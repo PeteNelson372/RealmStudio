@@ -66,6 +66,7 @@ namespace RealmStudio
         private static LayerPaintStroke? _currentPaintStroke;
         private static PlacedMapFrame? _currentMapFrame;
         private static InteriorFloor? _currentInteriorFloor;
+        private static InteriorWall? _currentInteriorWall;
 
         // objects that are currently selected
         private static Landform? _selectedLandform;
@@ -290,6 +291,12 @@ namespace RealmStudio
         {
             get { return _currentInteriorFloor; }
             set { _currentInteriorFloor = value; }
+        }
+
+        internal static InteriorWall? CurrentInteriorWall
+        {
+            get { return _currentInteriorWall; }
+            set { _currentInteriorWall = value; }
         }
 
         internal static Landform? SelectedLandform

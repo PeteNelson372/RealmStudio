@@ -262,6 +262,17 @@ namespace RealmStudio
 
                     MapStateMediator.InteriorUIMediator.InteriorFloorTextureList.Add(t);
                 }
+                else if (Path.GetDirectoryName(f.File).EndsWith("Textures\\Wall"))
+                {
+                    MapTexture t = new(assetName, path);
+
+                    if (t.TexturePath != null && t.TextureBitmap == null)
+                    {
+                        t.TextureBitmap = new Bitmap(t.TexturePath);
+                    }
+
+                    MapStateMediator.InteriorUIMediator.InteriorWallTextureList.Add(t);
+                }
                 else if (Path.GetDirectoryName(f.File).EndsWith("Vectors\\Path"))
                 {
                     MapVector v = new(assetName, path);
@@ -413,6 +424,7 @@ namespace RealmStudio
             DrawingManager.DrawingMediator.DrawingTextureList.Clear();
 
             InteriorManager.InteriorMediator.InteriorFloorTextureList.Clear();
+            InteriorManager.InteriorMediator.InteriorWallTextureList.Clear();
 
             LabelPresetManager.ClearLabelPresets();
 

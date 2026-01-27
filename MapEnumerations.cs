@@ -91,6 +91,8 @@ namespace RealmStudio
         InteriorFloorPaint,
         InteriorFloorErase,
         InteriorWallDraw,
+        InteriorWallEdit,
+        InteriorWallErase,
     }
 
     public enum LandGradientDirection
@@ -143,6 +145,7 @@ namespace RealmStudio
         BorderAndTexturePath,
         RoundTowerWall,
         SquareTowerWall,
+        SolidWall,
     }
 
     public enum ParallelDirection

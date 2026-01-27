@@ -25,6 +25,7 @@ using AForge.Imaging.Filters;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Imaging;
+using Windows.Devices.Geolocation;
 
 
 namespace RealmStudio
@@ -77,6 +78,27 @@ namespace RealmStudio
             BuildFloorTextureAndShaders(newFloor);
 
             return newFloor;
+        }
+
+        public static IMapComponent? CreateWall()
+        {
+            ArgumentNullException.ThrowIfNull(InteriorMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
+            InteriorWall newWall = new()
+            {
+                ParentMap = MapStateMediator.CurrentMap,
+                WallBackgroundColor = InteriorMediator.WallBackgroundColor,
+                WallOutlineColor = InteriorMediator.WallOutlineColor,
+                WallWidth = InteriorMediator.WallThickness,
+            };
+
+            newWall.WallPoints.Add(new LinePoint(MapStateMediator.CurrentCursorPoint));
+
+            ConstructWallPaint(newWall);
+
+            return newWall;
         }
 
         public static bool Update()
@@ -680,6 +702,513 @@ namespace RealmStudio
         internal static void StopColorErasing()
         {
             MapStateMediator.CurrentLayerPaintStroke = null;
+        }
+
+        internal static List<LinePoint> GetParallelPathPoints(List<LinePoint> points, float distance, ParallelDirection location)
+        {
+            List<LinePoint> parallelPoints = [];
+
+            //float d = (location == ParallelDirection.Below) ? distance : -distance;
+            float offsetAngle = (location == ParallelDirection.Above) ? 90 : -90;
+
+            SKPoint maxXPoint = new(-1.0F, 0);
+            SKPoint maxYPoint = new(0, -1.0F);
+
+            SKPoint minXPoint = new(65535.0F, 0);
+            SKPoint minYPoint = new(0, 65535.0F);
+
+            for (int i = 0; i < points.Count - 1; i++)
+            {
+                SKPoint newPoint;
+
+                if (i == 0)
+                {
+                    float lineAngle = DrawingMethods.CalculateAngleBetweenPoints(points[i].LineSegmentPoint, points[i + 1].LineSegmentPoint);
+                    float circleRadius = (float)Math.Sqrt(distance * distance + distance * distance);
+                    newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle + offsetAngle, points[i].LineSegmentPoint);
+                    parallelPoints.Add(new LinePoint(newPoint));
+
+                    if (newPoint.X > maxXPoint.X)
+                    {
+                        maxXPoint = newPoint;
+                    }
+
+                    if (newPoint.Y < minYPoint.Y)
+                    {
+                        minYPoint = newPoint;
+                    }
+
+                    if (newPoint.X < minXPoint.X)
+                    {
+                        minXPoint = newPoint;
+                    }
+
+                    if (newPoint.Y > maxYPoint.Y)
+                    {
+                        maxYPoint = newPoint;
+                    }
+                }
+                else
+                {
+                    float lineAngle1 = DrawingMethods.CalculateAngleBetweenPoints(points[i - 1].LineSegmentPoint, points[i].LineSegmentPoint);
+                    float lineAngle2 = DrawingMethods.CalculateAngleBetweenPoints(points[i].LineSegmentPoint, points[i + 1].LineSegmentPoint);
+
+                    float angleDifference = (float)((lineAngle2 - lineAngle1 >= 0) ? Math.Round(lineAngle2 - lineAngle1) : Math.Round((lineAngle2 - lineAngle1) + 360.0F));
+                    float circleRadius = (float)Math.Sqrt(distance * distance + distance * distance);
+
+                    if (angleDifference == 0.0F)
+                    {
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle1 + offsetAngle, points[i + 1].LineSegmentPoint);
+                        parallelPoints.Add(new LinePoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference > 0.0F && angleDifference < 90.0F)
+                    {
+                        //1
+                        float circleAngle = lineAngle1 + offsetAngle + (angleDifference / 2.0F);
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, circleAngle, points[i + 1].LineSegmentPoint);
+                        parallelPoints.Add(new LinePoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference == 90.0F)
+                    {
+                        // edge case - do not add a point if the lines are 90 degrees from each other
+                    }
+                    else if (angleDifference > 90.0F && angleDifference < 180.0F)
+                    {
+                        //2
+                        float circleAngle = lineAngle1 + offsetAngle + (angleDifference / 2.0F);
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, circleAngle, points[i + 1].LineSegmentPoint);
+                        parallelPoints.Add(new LinePoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference == 180.0F) //====================================
+                    {
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle1 + offsetAngle, points[i + 1].LineSegmentPoint);
+                        parallelPoints.Add(new LinePoint(newPoint));
+                    }
+                    else if (angleDifference > 180.0F && angleDifference < 270.0F)
+                    {
+                        //3
+                        float circleAngle = lineAngle1 - offsetAngle + (angleDifference / 2.0F);
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, circleAngle, points[i + 1].LineSegmentPoint);
+                        parallelPoints.Add(new LinePoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference == 270.0F)
+                    {
+                        // edge case - do not add a point if the lines are 270 degrees from each other
+                    }
+                    else if (angleDifference > 270.0F && angleDifference < 360.0F)
+                    {
+                        //4
+                        float circleAngle = lineAngle1 - offsetAngle + (angleDifference / 2.0F);
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, circleAngle, points[i + 1].LineSegmentPoint);
+                        parallelPoints.Add(new LinePoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                    else if (angleDifference == 360.0F)
+                    {
+                        newPoint = DrawingMethods.PointOnCircle(circleRadius, lineAngle1 + offsetAngle, points[i + 1].LineSegmentPoint);
+                        parallelPoints.Add(new LinePoint(newPoint));
+
+                        if (newPoint.X > maxXPoint.X)
+                        {
+                            maxXPoint = newPoint;
+                        }
+
+                        if (newPoint.Y < minYPoint.Y)
+                        {
+                            minYPoint = newPoint;
+                        }
+                    }
+                }
+            }
+
+            // remove points that cause loops in the parallel path when
+            // the path has a sharp turn in it; this is done by finding the
+            // point where the lines in the path intersect, then removing
+            // the points that are outside the lines (X value is greater
+            // than the intersection point X value and Y value is less than
+            // the intersection point Y value)
+
+            // this algorithm doesn't work consistently, so it is
+            // commented out; need to figure out a reliable algorithm
+            // for removing the loops, maybe by taking into account the
+            // "direction" of the line?
+            //
+            // it may be that looking at whether the original path line (set
+            // of points) is above/below or left/right of the parallel line
+            // (set of points) will give the information needed to know
+            // if loops need to be culled or not; however, how to know which
+            // points should be culled still has to be determined
+
+            /*
+            bool pointsRemoved = false;
+
+            if (parallelPoints.Count > 3)
+            {
+                // get the intersection between the lines
+                // Line AB represented as a1x + b1y = c1
+                // Line CD represented as a2x + b2y = c2 
+                // A is parallelPoints[0].MapPoint
+                // B is maxXPoint
+                // C is minYPoint
+                // D is parallelPoints.Last().MapPoint
+
+                double a1 = maxXPoint.Y - parallelPoints[0].MapPoint.Y;
+                double b1 = parallelPoints[0].MapPoint.X - maxXPoint.X;
+                double c1 = a1 * (parallelPoints[0].MapPoint.X) + b1 * (parallelPoints[0].MapPoint.Y);
+
+                // Line CD represented as a2x + b2y = c2 
+                double a2 = parallelPoints.Last().MapPoint.Y - minYPoint.Y;
+                double b2 = minYPoint.X - parallelPoints.Last().MapPoint.X;
+                double c2 = a2 * (minYPoint.X) + b2 * (minYPoint.Y);
+
+                double determinant = a1 * b2 - a2 * b1;
+
+                SKPoint intersectionPoint = SKPoint.Empty;
+
+                if (determinant != 0)
+                {
+                    double x = (b2 * c1 - b1 * c2) / determinant;
+                    double y = (a1 * c2 - a2 * c1) / determinant;
+
+                    intersectionPoint = new SKPoint((float)x, (float)y);
+                }
+
+                if (!intersectionPoint.IsEmpty)
+                {
+                    for (int i = parallelPoints.Count - 1; i >= 0; i--)
+                    {
+                        if (parallelPoints[i].MapPoint.X > intersectionPoint.X
+                            && parallelPoints[i].MapPoint.Y <= intersectionPoint.Y)
+                        {
+                            parallelPoints.RemoveAt(i);
+                            pointsRemoved = true;
+                        }
+                    }
+                }
+            }
+
+            if (parallelPoints.Count > 3 && !pointsRemoved)
+            {
+                // A is parallelPoints[0].MapPoint
+                // B is minYPoint
+                // C is minXPoint
+                // D is parallelPoints.Last().MapPoint
+
+                double a1 = minYPoint.Y - parallelPoints[0].MapPoint.Y;
+                double b1 = parallelPoints[0].MapPoint.X - minYPoint.X;
+                double c1 = a1 * (parallelPoints[0].MapPoint.X) + b1 * (parallelPoints[0].MapPoint.Y);
+
+                // Line CD represented as a2x + b2y = c2 
+                double a2 = parallelPoints.Last().MapPoint.Y - minXPoint.Y;
+                double b2 = minXPoint.X - parallelPoints.Last().MapPoint.X;
+                double c2 = a2 * (minXPoint.X) + b2 * (minXPoint.Y);
+
+                double determinant = a1 * b2 - a2 * b1;
+
+                SKPoint intersectionPoint = SKPoint.Empty;
+
+                if (determinant != 0)
+                {
+                    double x = (b2 * c1 - b1 * c2) / determinant;
+                    double y = (a1 * c2 - a2 * c1) / determinant;
+
+                    intersectionPoint = new SKPoint((float)x, (float)y);
+                }
+
+                if (!intersectionPoint.IsEmpty)
+                {
+                    for (int i = parallelPoints.Count - 1; i >= 0; i--)
+                    {
+                        if (parallelPoints[i].MapPoint.X < intersectionPoint.X
+                            && parallelPoints[i].MapPoint.Y <= intersectionPoint.Y)
+                        {
+                            parallelPoints.RemoveAt(i);
+                        }
+                    }
+                }
+            }
+            */
+
+            return parallelPoints;
+        }
+
+        internal static void DrawBezierCurvesFromPoints(SKCanvas canvas, List<LinePoint> curvePoints, SKPaint paint)
+        {
+            if (curvePoints.Count > 2)
+            {
+                using SKPath path = new();
+                path.MoveTo(curvePoints[0].LineSegmentPoint);
+
+                for (int j = 0; j < curvePoints.Count - 2; j += 3)
+                {
+                    path.CubicTo(curvePoints[j].LineSegmentPoint, curvePoints[j + 1].LineSegmentPoint, curvePoints[j + 2].LineSegmentPoint);
+                }
+
+                canvas.DrawPath(path, paint);
+            }
+        }
+
+        internal static void DrawLineFromPoints(SKCanvas canvas, List<LinePoint> linePoints, SKPaint paint)
+        {
+            if (linePoints.Count > 0)
+            {
+                using SKPath path = new();
+                path.MoveTo(linePoints[0].LineSegmentPoint);
+
+                for (int j = 1; j < linePoints.Count - 1; j++)
+                {
+                    path.LineTo(linePoints[j].LineSegmentPoint);
+                }
+
+                canvas.DrawPath(path, paint);
+            }
+        }
+
+        internal static void AddNewWallPoint(InteriorWall? wall, SKPoint newWallPoint)
+        {
+            // make the spacing between points consistent
+            float spacing = 4.0F;
+
+            if (wall != null)
+            {
+                if (SKPoint.Distance(wall.WallPoints.Last().LineSegmentPoint, newWallPoint) >= wall.WallWidth / spacing)
+                {
+                    wall.WallPoints.Add(new LinePoint(newWallPoint));
+                }
+            }
+        }
+
+        internal static SKPoint GetNewWallPoint(InteriorWall? wall, Keys modifierKeys, float selectedWallAngle, SKPoint zoomedScrolledPoint, int minimumWallPointCount)
+        {
+            SKPoint newWallPoint = zoomedScrolledPoint;
+            LinePoint? firstPoint = wall?.WallPoints.First();
+
+            if (modifierKeys == Keys.Shift && wall?.WallPoints.Count > minimumWallPointCount)
+            {
+                // draw straight path, clamped to 5 degree angles
+                if (firstPoint != null)
+                {
+                    if (selectedWallAngle == -1)
+                    {
+                        selectedWallAngle = DrawingMethods.Get5DegreePathAngle(firstPoint.LineSegmentPoint, zoomedScrolledPoint);
+                    }
+
+                    float distance = SKPoint.Distance(firstPoint.LineSegmentPoint, zoomedScrolledPoint);
+                    newWallPoint = DrawingMethods.PointOnCircle(distance, selectedWallAngle, firstPoint.LineSegmentPoint);
+                }
+            }
+            else if (modifierKeys == Keys.Control)
+            {
+                // draw straight horizontal or vertical path
+                if (firstPoint != null)
+                {
+                    if (selectedWallAngle == -1)
+                    {
+                        selectedWallAngle = DrawingMethods.CalculateAngleBetweenPoints(firstPoint.LineSegmentPoint, zoomedScrolledPoint, true); ;
+                    }
+
+                    // clamp the line to straight horizontal or straight vertical
+                    // by forcing the new point X or Y coordinate to be the
+                    // same as the first point of the path
+                    newWallPoint = DrawingMethods.ForceHorizontalVerticalLine(newWallPoint, firstPoint.LineSegmentPoint, selectedWallAngle);
+                }
+            }
+
+            return newWallPoint;
+        }
+
+        public static SKPath GenerateWallBoundaryPath(List<LinePoint> points)
+        {
+            SKPath path = new();
+
+            if (points.Count < 3) return path;
+
+            path.MoveTo(points[0].LineSegmentPoint);
+
+            for (int j = 0; j < points.Count - 2; j += 3)
+            {
+                path.CubicTo(points[j].LineSegmentPoint, points[j + 1].LineSegmentPoint , points[j + 2].LineSegmentPoint);
+            }
+
+            path.GetBounds(out SKRect pathBounds);
+
+            if (pathBounds.Width < 5.0F)
+            {
+                pathBounds.Inflate(5.0F, 0);
+            }
+
+            if (pathBounds.Height < 5.0F)
+            {
+                pathBounds.Inflate(0, 5.0F);
+            }
+
+            path.Reset();
+            path.AddRect(pathBounds, SKPathDirection.Clockwise);
+
+            return path;
+        }
+
+        public static void ConstructWallPaint(InteriorWall wall)
+        {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
+            if (wall.WallPaint != null) return;
+
+            float strokeWidth = wall.WallWidth;
+
+            switch (wall.WallType)
+            {
+                case PathType.ThickSolidLinePath:
+                    strokeWidth = wall.WallWidth * 1.5F;
+                    break;
+            }
+
+            SKPaint wallPaint = new()
+            {
+                Color = Extensions.ToSKColor(wall.WallBackgroundColor),
+                StrokeWidth = strokeWidth,
+                Style = SKPaintStyle.Stroke,
+                StrokeCap = SKStrokeCap.Round,
+                StrokeJoin = SKStrokeJoin.Round,
+                StrokeMiter = 1.0F,
+                IsAntialias = true,
+            };
+
+            // load the texture bitmap if needed
+            if (wall.WallTexture != null && !string.IsNullOrEmpty(wall.WallTexture.TexturePath) && wall.WallTexture.TextureBitmap == null)
+            {
+                wall.WallTexture.TextureBitmap = (Bitmap?)Bitmap.FromFile(wall.WallTexture.TexturePath);
+            }
+
+            switch (wall.WallType)
+            {
+                case PathType.LineAndDashesPath:
+                case PathType.BorderedGradientPath:
+                case PathType.BorderedLightSolidPath:
+                    wallPaint.StrokeCap = SKStrokeCap.Butt;
+                    break;
+                case PathType.TexturedPath:
+                    if (wall.WallTexture != null && wall.WallTexture.TextureBitmap != null)
+                    {
+                        // scale and set opacity of the texture
+                        // resize the bitmap, but maintain aspect ratio
+                        using Bitmap resizedBitmap = DrawingMethods.ScaleBitmap(wall.WallTexture.TextureBitmap,
+                            (int)(MapStateMediator.CurrentMap.MapWidth * wall.WallTextureScale), (int)(MapStateMediator.CurrentMap.MapHeight * wall.WallTextureScale));
+
+                        using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, wall.WallTextureOpacity / 255.0F);
+
+                        // construct a shader from the selected wall texture
+                        wallPaint.Shader = SKShader.CreateBitmap(b.ToSKBitmap(), SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                    }
+
+                    wallPaint.Style = SKPaintStyle.Stroke;
+                    break;
+                case PathType.BorderAndTexturePath:
+                    wallPaint.StrokeCap = SKStrokeCap.Round;
+
+                    if (wall.WallTexture != null && wall.WallTexture.TextureBitmap != null)
+                    {
+                        // scale and set opacity of the texture
+                        // resize the bitmap, but maintain aspect ratio
+                        using Bitmap resizedBitmap = DrawingMethods.ScaleBitmap(wall.WallTexture.TextureBitmap,
+                            (int)(MapStateMediator.CurrentMap.MapWidth * wall.WallTextureScale), (int)(MapStateMediator.CurrentMap.MapHeight * wall.WallTextureScale));
+
+                        using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, wall.WallTextureOpacity / 255.0F);
+
+                        // construct a shader from the selected wall texture
+                        wallPaint.Shader = SKShader.CreateBitmap(b.ToSKBitmap(), SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                    }
+
+                    wallPaint.Style = SKPaintStyle.Stroke;
+                    break;
+                case PathType.RoundTowerWall:
+                    wallPaint.StrokeCap = SKStrokeCap.Round;
+
+                    if (wall.WallTexture != null && wall.WallTexture.TextureBitmap != null)
+                    {
+                        // scale and set opacity of the texture
+                        // resize the bitmap, but maintain aspect ratio
+                        using Bitmap resizedBitmap = DrawingMethods.ScaleBitmap(wall.WallTexture.TextureBitmap,
+                            (int)(MapStateMediator.CurrentMap.MapWidth * wall.WallTextureScale), (int)(MapStateMediator.CurrentMap.MapHeight * wall.WallTextureScale));
+
+                        using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, wall.WallTextureOpacity / 255.0F);
+
+                        // construct a shader from the selected wall texture
+                        wallPaint.Shader = SKShader.CreateBitmap(b.ToSKBitmap(), SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                    }
+
+                    wallPaint.Style = SKPaintStyle.Stroke;
+                    break;
+                case PathType.SquareTowerWall:
+                    wallPaint.StrokeCap = SKStrokeCap.Round;
+
+                    if (wall.WallTexture != null && wall.WallTexture.TextureBitmap != null)
+                    {
+                        // scale and set opacity of the texture
+                        // resize the bitmap, but maintain aspect ratio
+                        using Bitmap resizedBitmap = DrawingMethods.ScaleBitmap(wall.WallTexture.TextureBitmap,
+                            (int)(MapStateMediator.CurrentMap.MapWidth * wall.WallTextureScale), (int)(MapStateMediator.CurrentMap.MapHeight * wall.WallTextureScale));
+
+                        using Bitmap b = DrawingMethods.SetBitmapOpacity(resizedBitmap, wall.WallTextureOpacity / 255.0F);
+
+                        // construct a shader from the selected wall texture
+                        wallPaint.Shader = SKShader.CreateBitmap(b.ToSKBitmap(), SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                    }
+
+                    wallPaint.Style = SKPaintStyle.Stroke;
+                    break;
+            }
+
+            wall.WallPaint = wallPaint;
         }
     }
 }

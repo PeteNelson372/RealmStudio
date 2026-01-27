@@ -946,44 +946,6 @@ namespace RealmStudio
             selectedPath.BoundaryPath = GenerateMapPathBoundaryPath(selectedPath.PathPoints);
         }
 
-        internal static float Get5DegreePathAngle(SKPoint mapPoint, SKPoint zoomedScrolledPoint)
-        {
-            float lineAngle = DrawingMethods.CalculateAngleBetweenPoints(mapPoint, zoomedScrolledPoint, true);
-
-            lineAngle = (float)(Math.Round(lineAngle / 5, MidpointRounding.AwayFromZero) * 5);
-
-            return lineAngle;
-        }
-
-        internal static SKPoint ForceHorizontalVerticalLine(SKPoint pathPoint, SKPoint firstPoint, float pathAngle)
-        {
-            // clamp the line to straight horizontal or straight vertical
-            // by forcing the new point X or Y coordinate to be the
-            // same as the first point of the path
-            if (pathAngle >= 0 && pathAngle < 45)
-            {
-                pathPoint.Y = firstPoint.Y;
-            }
-            else if (pathAngle >= 45 && pathAngle < 135)
-            {
-                pathPoint.X = firstPoint.X;
-            }
-            else if (pathAngle >= 135 && pathAngle < 225)
-            {
-                pathPoint.Y = firstPoint.Y;
-            }
-            else if (pathAngle >= 225 && pathAngle < 315)
-            {
-                pathPoint.X = firstPoint.X;
-            }
-            else if (pathAngle >= 315 && pathAngle < 360)
-            {
-                pathPoint.Y = firstPoint.Y;
-            }
-
-            return pathPoint;
-        }
-
         internal static void AddNewPathPoint(MapPath? mapPath, SKPoint newPathPoint)
         {
             // make the spacing between points consistent
@@ -1016,7 +978,7 @@ namespace RealmStudio
                 {
                     if (selectedPathAngle == -1)
                     {
-                        selectedPathAngle = Get5DegreePathAngle(firstPoint.MapPoint, zoomedScrolledPoint);
+                        selectedPathAngle = DrawingMethods.Get5DegreePathAngle(firstPoint.MapPoint, zoomedScrolledPoint);
                     }
 
                     float distance = SKPoint.Distance(firstPoint.MapPoint, zoomedScrolledPoint);
@@ -1036,7 +998,7 @@ namespace RealmStudio
                     // clamp the line to straight horizontal or straight vertical
                     // by forcing the new point X or Y coordinate to be the
                     // same as the first point of the path
-                    newPathPoint = ForceHorizontalVerticalLine(newPathPoint, firstPoint.MapPoint, selectedPathAngle);
+                    newPathPoint = DrawingMethods.ForceHorizontalVerticalLine(newPathPoint, firstPoint.MapPoint, selectedPathAngle);
                 }
             }
 
