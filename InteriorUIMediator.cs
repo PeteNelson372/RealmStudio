@@ -46,10 +46,13 @@ namespace RealmStudio
         private int _interiorEraserSize = 64;
         private int _interiorPaintBrushSize = 20;
         private int _interiorPaintEraserSize = 20;
-        private Color _wallOutlineColor = Color.FromArgb(62, 55, 40);
-        private Color _wallBackgroundColor = Color.White;
+        private Color _wallOutlineColor = ColorTranslator.FromHtml("#4B311A");
+        private Color _wallBackgroundColor = ColorTranslator.FromHtml("#4B311A");
         private int _wallThickness = 4;
         private int _wallOutlineWidth = 2;
+
+        private float _wallTextureScale = 1.0f;
+
         private bool _useTextureBackground = true;
 
         private bool _showAlignmentGrid;
@@ -135,6 +138,12 @@ namespace RealmStudio
         {
             get { return _wallOutlineWidth; }
             set { SetPropertyField(nameof(WallOutlineWidth), ref _wallOutlineWidth, value); }
+        }
+
+        internal float WallTextureScale
+        {
+            get { return _wallTextureScale; }
+            set { SetPropertyField(nameof(WallTextureScale), ref _wallTextureScale, value); }
         }
 
         internal bool UseTextureBackground

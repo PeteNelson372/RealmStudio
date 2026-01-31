@@ -92,6 +92,8 @@ namespace RealmStudio
                 WallBackgroundColor = InteriorMediator.WallBackgroundColor,
                 WallOutlineColor = InteriorMediator.WallOutlineColor,
                 WallWidth = InteriorMediator.WallThickness,
+                WallTexture = InteriorMediator.InteriorWallTextureList[InteriorMediator.InteriorWallTextureIndex],
+                WallTextureScale = InteriorMediator.WallTextureScale,
             };
 
             newWall.WallPoints.Add(new LinePoint(MapStateMediator.CurrentCursorPoint));
@@ -1117,8 +1119,8 @@ namespace RealmStudio
                 Color = Extensions.ToSKColor(wall.WallBackgroundColor),
                 StrokeWidth = strokeWidth,
                 Style = SKPaintStyle.Stroke,
-                StrokeCap = SKStrokeCap.Round,
-                StrokeJoin = SKStrokeJoin.Round,
+                StrokeCap = SKStrokeCap.Butt,
+                StrokeJoin = SKStrokeJoin.Bevel,
                 StrokeMiter = 1.0F,
                 IsAntialias = true,
             };

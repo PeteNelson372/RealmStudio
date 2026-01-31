@@ -36,7 +36,7 @@ namespace RealmStudio
         public string WallName { get; set; } = "";
         public string WallDescription { get; set; } = string.Empty;
         public List<LinePoint> WallPoints { get; set; } = [];
-        public PathType WallType { get; set; } = PathType.SolidWall;
+        public PathType WallType { get; set; } = PathType.BorderAndTexturePath;
         public Color WallOutlineColor { get; set; } = ColorTranslator.FromHtml("#4B311A");
         public Color WallBackgroundColor { get; set; } = ColorTranslator.FromHtml("#4B311A");
         public float WallWidth { get; set; } = 8;
@@ -79,6 +79,8 @@ namespace RealmStudio
 
         public override void Render(SKCanvas canvas)
         {
+            ArgumentNullException.ThrowIfNull(WallPaint);
+
             if (ParentMap == null) return;
 
             List<LinePoint> distinctWallPoints = [.. WallPoints.Distinct(new LinePointComparer())];
@@ -205,34 +207,13 @@ namespace RealmStudio
 
                         borderPaint.StrokeWidth = WallPaint.StrokeWidth * 0.2F;
 
-                        List<LinePoint> parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.5F, ParallelDirection.Above);
+                        List<LinePoint> parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.45F, ParallelDirection.Above);
                         InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
 
-                        parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.5F, ParallelDirection.Below);
+                        parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.45F, ParallelDirection.Below);
                         InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
                     }
 
-                    break;
-                case PathType.RailroadTracksPath:
-                    {
-                        using SKPaint trackPaint = WallPaint.Clone();
-                        trackPaint.StrokeWidth = WallPaint.StrokeWidth * 0.2F;
-
-                        InteriorManager.DrawLineFromPoints(canvas, distinctWallPoints, trackPaint);
-
-                        List<LinePoint> parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.8F, ParallelDirection.Above);
-                        InteriorManager.DrawLineFromPoints(canvas, parallelPoints, trackPaint);
-
-                        float[] intervals = [WallWidth / 4.0F, WallWidth, WallWidth / 4.0F, WallWidth];
-
-                        SKPathEffect pathLineEffect = SKPathEffect.CreateDash(intervals, 0);
-                        trackPaint.PathEffect = pathLineEffect;
-                        trackPaint.StrokeWidth = WallWidth * 1.5F;
-                        trackPaint.StrokeCap = SKStrokeCap.Butt;
-
-                        List<LinePoint> crossTiePoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.4F, ParallelDirection.Above);
-                        InteriorManager.DrawLineFromPoints(canvas, crossTiePoints, trackPaint);
-                    }
                     break;
                 case PathType.RoundTowerWall:
                     {

@@ -419,15 +419,6 @@
             ShowPlanetSwitch = new ReaLTaiizor.Controls.CyberSwitch();
             label114 = new Label();
             RealmStudioForm = new ReaLTaiizor.Forms.DungeonForm();
-            InteriorToolPanel = new Panel();
-            InteriorGridGroupBox = new GroupBox();
-            AlignGridSwitch = new Label();
-            AlignToGridSwitch = new ReaLTaiizor.Controls.CyberSwitch();
-            ShowInteriorGridSwitch = new Label();
-            ShowAlignmentGridSwitch = new ReaLTaiizor.Controls.CyberSwitch();
-            label125 = new Label();
-            AlignmentGridSizeTrack = new TrackBar();
-            DungeonToolPanel = new Panel();
             NextMapButton = new FontAwesome.Sharp.IconButton();
             RealmSetComboBox = new ReaLTaiizor.Controls.DungeonComboBox();
             WorldAnvilMapButton = new FontAwesome.Sharp.IconButton();
@@ -554,6 +545,43 @@
             CheckForNewReleaseToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator8 = new ToolStripSeparator();
             AboutToolStripMenuItem = new ToolStripMenuItem();
+            InteriorToolPanel = new Panel();
+            groupBox8 = new GroupBox();
+            label124 = new Label();
+            WallTowerSizeUpDown = new NumericUpDown();
+            label128 = new Label();
+            WallTowerDistanceUpDown = new NumericUpDown();
+            WallSquareTowerRadioButton = new RadioButton();
+            WallRoundTowerRadioButton = new RadioButton();
+            WallBorderSolidPictureBox = new PictureBox();
+            WallBorderGradientPictureBox = new PictureBox();
+            WallBlackBorderPictureBox = new PictureBox();
+            WallThickLinePictureBox = new PictureBox();
+            WallDoubleLinePictureBox = new PictureBox();
+            WallDashDotDotPictureBox = new PictureBox();
+            WallDashDotPictureBox = new PictureBox();
+            WallDashLinePictureBox = new PictureBox();
+            WallDottedLinePictureBox = new PictureBox();
+            WallSolidLinePictureBox = new PictureBox();
+            WallBorderTextureRadioButton = new RadioButton();
+            WallDoubleLineRadioButton = new RadioButton();
+            WallBorderSolidRadioPath = new RadioButton();
+            WallBorderGradientRadioButton = new RadioButton();
+            WallBlackBorderRadioPath = new RadioButton();
+            WallThickLineRadioButton = new RadioButton();
+            WallDashDotDotRadioButton = new RadioButton();
+            WallDashDotRadioButton = new RadioButton();
+            WallDashLineRadioButton = new RadioButton();
+            WallDottedLineRadioButton = new RadioButton();
+            WallSolidLineRadioButton = new RadioButton();
+            InteriorGridGroupBox = new GroupBox();
+            AlignGridSwitch = new Label();
+            AlignToGridSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            ShowInteriorGridSwitch = new Label();
+            ShowAlignmentGridSwitch = new ReaLTaiizor.Controls.CyberSwitch();
+            label125 = new Label();
+            AlignmentGridSizeTrack = new TrackBar();
+            DungeonToolPanel = new Panel();
             BackgroundToolPanel = new Panel();
             DrawingToolPanel = new Panel();
             label113 = new Label();
@@ -864,9 +892,6 @@
             PlanetTab.SuspendLayout();
             PlanetToolStrip.SuspendLayout();
             RealmStudioForm.SuspendLayout();
-            InteriorToolPanel.SuspendLayout();
-            InteriorGridGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)AlignmentGridSizeTrack).BeginInit();
             FontSelectionPanel.SuspendLayout();
             groupBox5.SuspendLayout();
             MapScaleCreatorPanel.SuspendLayout();
@@ -888,6 +913,22 @@
             MapStatusStrip.SuspendLayout();
             ApplicationStatusStrip.SuspendLayout();
             RealmStudioMainMenuStrip.SuspendLayout();
+            InteriorToolPanel.SuspendLayout();
+            groupBox8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)WallTowerSizeUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WallTowerDistanceUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WallBorderSolidPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WallBorderGradientPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WallBlackBorderPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WallThickLinePictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WallDoubleLinePictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WallDashDotDotPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WallDashDotPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WallDashLinePictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WallDottedLinePictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)WallSolidLinePictureBox).BeginInit();
+            InteriorGridGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)AlignmentGridSizeTrack).BeginInit();
             DrawingToolPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DrawingShapeRotationTrack).BeginInit();
             groupBox3.SuspendLayout();
@@ -6238,6 +6279,7 @@
             WallTextureScaleTrack.TabIndex = 34;
             WallTextureScaleTrack.TickStyle = TickStyle.None;
             WallTextureScaleTrack.Value = 100;
+            WallTextureScaleTrack.Scroll += (this.WallTextureScaleTrack_Scroll);
             // 
             // WallTextureNameLabel
             // 
@@ -7250,8 +7292,6 @@
             RealmStudioForm.BackColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
             RealmStudioForm.BorderColor = Color.FromArgb((int)(byte)38, (int)(byte)38, (int)(byte)38);
             RealmStudioForm.CausesValidation = false;
-            RealmStudioForm.Controls.Add(InteriorToolPanel);
-            RealmStudioForm.Controls.Add(DungeonToolPanel);
             RealmStudioForm.Controls.Add(NextMapButton);
             RealmStudioForm.Controls.Add(RealmSetComboBox);
             RealmStudioForm.Controls.Add(WorldAnvilMapButton);
@@ -7284,6 +7324,8 @@
             RealmStudioForm.Controls.Add(ApplicationStatusStrip);
             RealmStudioForm.Controls.Add(ApplicationControlBox);
             RealmStudioForm.Controls.Add(RealmStudioMainMenuStrip);
+            RealmStudioForm.Controls.Add(InteriorToolPanel);
+            RealmStudioForm.Controls.Add(DungeonToolPanel);
             RealmStudioForm.Controls.Add(BackgroundToolPanel);
             RealmStudioForm.Controls.Add(DrawingToolPanel);
             RealmStudioForm.Controls.Add(RegionToolPanel);
@@ -7316,171 +7358,6 @@
             RealmStudioForm.TabStop = false;
             RealmStudioForm.Text = "Realm Studio";
             RealmStudioForm.TitleColor = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            // 
-            // InteriorToolPanel
-            // 
-            InteriorToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
-            InteriorToolPanel.BackColor = SystemColors.Control;
-            InteriorToolPanel.Controls.Add(InteriorGridGroupBox);
-            InteriorToolPanel.Location = new Point(1421, 90);
-            InteriorToolPanel.Margin = new Padding(0);
-            InteriorToolPanel.Name = "InteriorToolPanel";
-            InteriorToolPanel.Size = new Size(152, 806);
-            InteriorToolPanel.TabIndex = 49;
-            // 
-            // InteriorGridGroupBox
-            // 
-            InteriorGridGroupBox.Controls.Add(AlignGridSwitch);
-            InteriorGridGroupBox.Controls.Add(AlignToGridSwitch);
-            InteriorGridGroupBox.Controls.Add(ShowInteriorGridSwitch);
-            InteriorGridGroupBox.Controls.Add(ShowAlignmentGridSwitch);
-            InteriorGridGroupBox.Controls.Add(label125);
-            InteriorGridGroupBox.Controls.Add(AlignmentGridSizeTrack);
-            InteriorGridGroupBox.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
-            InteriorGridGroupBox.Location = new Point(7, 22);
-            InteriorGridGroupBox.Name = "InteriorGridGroupBox";
-            InteriorGridGroupBox.Size = new Size(139, 130);
-            InteriorGridGroupBox.TabIndex = 24;
-            InteriorGridGroupBox.TabStop = false;
-            InteriorGridGroupBox.Text = "Grid";
-            // 
-            // AlignGridSwitch
-            // 
-            AlignGridSwitch.AutoSize = true;
-            AlignGridSwitch.BackColor = Color.Transparent;
-            AlignGridSwitch.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            AlignGridSwitch.ForeColor = SystemColors.ControlDarkDark;
-            AlignGridSwitch.Location = new Point(51, 100);
-            AlignGridSwitch.Name = "AlignGridSwitch";
-            AlignGridSwitch.Size = new Size(74, 15);
-            AlignGridSwitch.TabIndex = 24;
-            AlignGridSwitch.Text = "Align to Grid";
-            // 
-            // AlignToGridSwitch
-            // 
-            AlignToGridSwitch.Alpha = 50;
-            AlignToGridSwitch.BackColor = Color.Transparent;
-            AlignToGridSwitch.Background = true;
-            AlignToGridSwitch.Background_WidthPen = 2F;
-            AlignToGridSwitch.BackgroundPen = false;
-            AlignToGridSwitch.Checked = false;
-            AlignToGridSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            AlignToGridSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            AlignToGridSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            AlignToGridSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            AlignToGridSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            AlignToGridSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            AlignToGridSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            AlignToGridSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            AlignToGridSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            AlignToGridSwitch.ColorValue = Color.ForestGreen;
-            AlignToGridSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            AlignToGridSwitch.Font = new Font("Arial", 11F);
-            AlignToGridSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
-            AlignToGridSwitch.Lighting = true;
-            AlignToGridSwitch.LinearGradient_Background = false;
-            AlignToGridSwitch.LinearGradient_Value = false;
-            AlignToGridSwitch.LinearGradientPen = false;
-            AlignToGridSwitch.Location = new Point(4, 95);
-            AlignToGridSwitch.Name = "AlignToGridSwitch";
-            AlignToGridSwitch.PenWidth = 10;
-            AlignToGridSwitch.RGB = false;
-            AlignToGridSwitch.Rounding = true;
-            AlignToGridSwitch.RoundingInt = 90;
-            AlignToGridSwitch.Size = new Size(41, 20);
-            AlignToGridSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            AlignToGridSwitch.TabIndex = 23;
-            AlignToGridSwitch.Tag = "Cyber";
-            AlignToGridSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            AlignToGridSwitch.Timer_RGB = 300;
-            AlignToGridSwitch.CheckedChanged += (this.AlignToGridSwitch_CheckedChanged);
-            // 
-            // ShowInteriorGridSwitch
-            // 
-            ShowInteriorGridSwitch.AutoSize = true;
-            ShowInteriorGridSwitch.BackColor = Color.Transparent;
-            ShowInteriorGridSwitch.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            ShowInteriorGridSwitch.ForeColor = SystemColors.ControlDarkDark;
-            ShowInteriorGridSwitch.Location = new Point(51, 74);
-            ShowInteriorGridSwitch.Name = "ShowInteriorGridSwitch";
-            ShowInteriorGridSwitch.Size = new Size(61, 15);
-            ShowInteriorGridSwitch.TabIndex = 22;
-            ShowInteriorGridSwitch.Text = "Show Grid";
-            // 
-            // ShowAlignmentGridSwitch
-            // 
-            ShowAlignmentGridSwitch.Alpha = 50;
-            ShowAlignmentGridSwitch.BackColor = Color.Transparent;
-            ShowAlignmentGridSwitch.Background = true;
-            ShowAlignmentGridSwitch.Background_WidthPen = 2F;
-            ShowAlignmentGridSwitch.BackgroundPen = false;
-            ShowAlignmentGridSwitch.Checked = false;
-            ShowAlignmentGridSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowAlignmentGridSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            ShowAlignmentGridSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            ShowAlignmentGridSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowAlignmentGridSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowAlignmentGridSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowAlignmentGridSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
-            ShowAlignmentGridSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
-            ShowAlignmentGridSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
-            ShowAlignmentGridSwitch.ColorValue = Color.ForestGreen;
-            ShowAlignmentGridSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
-            ShowAlignmentGridSwitch.Font = new Font("Arial", 11F);
-            ShowAlignmentGridSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
-            ShowAlignmentGridSwitch.Lighting = true;
-            ShowAlignmentGridSwitch.LinearGradient_Background = false;
-            ShowAlignmentGridSwitch.LinearGradient_Value = false;
-            ShowAlignmentGridSwitch.LinearGradientPen = false;
-            ShowAlignmentGridSwitch.Location = new Point(6, 69);
-            ShowAlignmentGridSwitch.Name = "ShowAlignmentGridSwitch";
-            ShowAlignmentGridSwitch.PenWidth = 10;
-            ShowAlignmentGridSwitch.RGB = false;
-            ShowAlignmentGridSwitch.Rounding = true;
-            ShowAlignmentGridSwitch.RoundingInt = 90;
-            ShowAlignmentGridSwitch.Size = new Size(41, 20);
-            ShowAlignmentGridSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            ShowAlignmentGridSwitch.TabIndex = 21;
-            ShowAlignmentGridSwitch.Tag = "Cyber";
-            ShowAlignmentGridSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            ShowAlignmentGridSwitch.Timer_RGB = 300;
-            ShowAlignmentGridSwitch.CheckedChanged += (this.ShowAlignmentGridSwitch_CheckedChanged);
-            // 
-            // label125
-            // 
-            label125.AutoSize = true;
-            label125.BackColor = Color.Transparent;
-            label125.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            label125.ForeColor = SystemColors.ControlDarkDark;
-            label125.Location = new Point(6, 26);
-            label125.Name = "label125";
-            label125.Size = new Size(27, 15);
-            label125.TabIndex = 20;
-            label125.Text = "Size";
-            // 
-            // AlignmentGridSizeTrack
-            // 
-            AlignmentGridSizeTrack.AutoSize = false;
-            AlignmentGridSizeTrack.BackColor = SystemColors.Control;
-            AlignmentGridSizeTrack.Location = new Point(6, 44);
-            AlignmentGridSizeTrack.Maximum = 16;
-            AlignmentGridSizeTrack.Minimum = 2;
-            AlignmentGridSizeTrack.Name = "AlignmentGridSizeTrack";
-            AlignmentGridSizeTrack.Size = new Size(126, 20);
-            AlignmentGridSizeTrack.TabIndex = 19;
-            AlignmentGridSizeTrack.TickStyle = TickStyle.None;
-            AlignmentGridSizeTrack.Value = 4;
-            AlignmentGridSizeTrack.Scroll += (this.AlignmentGridSizeTrack_Scroll);
-            // 
-            // DungeonToolPanel
-            // 
-            DungeonToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
-            DungeonToolPanel.BackColor = SystemColors.Control;
-            DungeonToolPanel.Location = new Point(1421, 90);
-            DungeonToolPanel.Margin = new Padding(0);
-            DungeonToolPanel.Name = "DungeonToolPanel";
-            DungeonToolPanel.Size = new Size(152, 806);
-            DungeonToolPanel.TabIndex = 48;
             // 
             // NextMapButton
             // 
@@ -8973,6 +8850,531 @@
             AboutToolStripMenuItem.Size = new Size(194, 22);
             AboutToolStripMenuItem.Text = "&About...";
             AboutToolStripMenuItem.Click += (this.AboutToolStripMenuItem_Click);
+            // 
+            // InteriorToolPanel
+            // 
+            InteriorToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
+            InteriorToolPanel.BackColor = SystemColors.Control;
+            InteriorToolPanel.Controls.Add(groupBox8);
+            InteriorToolPanel.Controls.Add(InteriorGridGroupBox);
+            InteriorToolPanel.Location = new Point(1421, 90);
+            InteriorToolPanel.Margin = new Padding(0);
+            InteriorToolPanel.Name = "InteriorToolPanel";
+            InteriorToolPanel.Size = new Size(152, 806);
+            InteriorToolPanel.TabIndex = 49;
+            // 
+            // groupBox8
+            // 
+            groupBox8.Controls.Add(label124);
+            groupBox8.Controls.Add(WallTowerSizeUpDown);
+            groupBox8.Controls.Add(label128);
+            groupBox8.Controls.Add(WallTowerDistanceUpDown);
+            groupBox8.Controls.Add(WallSquareTowerRadioButton);
+            groupBox8.Controls.Add(WallRoundTowerRadioButton);
+            groupBox8.Controls.Add(WallBorderSolidPictureBox);
+            groupBox8.Controls.Add(WallBorderGradientPictureBox);
+            groupBox8.Controls.Add(WallBlackBorderPictureBox);
+            groupBox8.Controls.Add(WallThickLinePictureBox);
+            groupBox8.Controls.Add(WallDoubleLinePictureBox);
+            groupBox8.Controls.Add(WallDashDotDotPictureBox);
+            groupBox8.Controls.Add(WallDashDotPictureBox);
+            groupBox8.Controls.Add(WallDashLinePictureBox);
+            groupBox8.Controls.Add(WallDottedLinePictureBox);
+            groupBox8.Controls.Add(WallSolidLinePictureBox);
+            groupBox8.Controls.Add(WallBorderTextureRadioButton);
+            groupBox8.Controls.Add(WallDoubleLineRadioButton);
+            groupBox8.Controls.Add(WallBorderSolidRadioPath);
+            groupBox8.Controls.Add(WallBorderGradientRadioButton);
+            groupBox8.Controls.Add(WallBlackBorderRadioPath);
+            groupBox8.Controls.Add(WallThickLineRadioButton);
+            groupBox8.Controls.Add(WallDashDotDotRadioButton);
+            groupBox8.Controls.Add(WallDashDotRadioButton);
+            groupBox8.Controls.Add(WallDashLineRadioButton);
+            groupBox8.Controls.Add(WallDottedLineRadioButton);
+            groupBox8.Controls.Add(WallSolidLineRadioButton);
+            groupBox8.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
+            groupBox8.Location = new Point(7, 168);
+            groupBox8.Name = "groupBox8";
+            groupBox8.Size = new Size(139, 468);
+            groupBox8.TabIndex = 106;
+            groupBox8.TabStop = false;
+            groupBox8.Text = "Wall Style";
+            // 
+            // label124
+            // 
+            label124.AutoSize = true;
+            label124.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label124.ForeColor = SystemColors.ControlDarkDark;
+            label124.Location = new Point(4, 410);
+            label124.Name = "label124";
+            label124.Size = new Size(62, 15);
+            label124.TabIndex = 131;
+            label124.Text = "Tower Size";
+            // 
+            // WallTowerSizeUpDown
+            // 
+            WallTowerSizeUpDown.DecimalPlaces = 1;
+            WallTowerSizeUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            WallTowerSizeUpDown.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
+            WallTowerSizeUpDown.Location = new Point(4, 428);
+            WallTowerSizeUpDown.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
+            WallTowerSizeUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            WallTowerSizeUpDown.Name = "WallTowerSizeUpDown";
+            WallTowerSizeUpDown.Size = new Size(59, 23);
+            WallTowerSizeUpDown.TabIndex = 130;
+            WallTowerSizeUpDown.TextAlign = HorizontalAlignment.Center;
+            WallTowerSizeUpDown.Value = new decimal(new int[] { 12, 0, 0, 65536 });
+            // 
+            // label128
+            // 
+            label128.AutoSize = true;
+            label128.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label128.ForeColor = SystemColors.ControlDarkDark;
+            label128.Location = new Point(4, 366);
+            label128.Name = "label128";
+            label128.Size = new Size(87, 15);
+            label128.TabIndex = 129;
+            label128.Text = "Tower Distance";
+            // 
+            // WallTowerDistanceUpDown
+            // 
+            WallTowerDistanceUpDown.DecimalPlaces = 1;
+            WallTowerDistanceUpDown.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            WallTowerDistanceUpDown.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
+            WallTowerDistanceUpDown.Location = new Point(4, 384);
+            WallTowerDistanceUpDown.Name = "WallTowerDistanceUpDown";
+            WallTowerDistanceUpDown.Size = new Size(59, 23);
+            WallTowerDistanceUpDown.TabIndex = 128;
+            WallTowerDistanceUpDown.TextAlign = HorizontalAlignment.Center;
+            WallTowerDistanceUpDown.Value = new decimal(new int[] { 10, 0, 0, 0 });
+            // 
+            // WallSquareTowerRadioButton
+            // 
+            WallSquareTowerRadioButton.AutoSize = true;
+            WallSquareTowerRadioButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            WallSquareTowerRadioButton.ForeColor = SystemColors.ControlDarkDark;
+            WallSquareTowerRadioButton.Location = new Point(4, 330);
+            WallSquareTowerRadioButton.Name = "WallSquareTowerRadioButton";
+            WallSquareTowerRadioButton.Size = new Size(135, 19);
+            WallSquareTowerRadioButton.TabIndex = 127;
+            WallSquareTowerRadioButton.TabStop = true;
+            WallSquareTowerRadioButton.Text = "Wall (Square Towers)";
+            WallSquareTowerRadioButton.UseVisualStyleBackColor = true;
+            WallSquareTowerRadioButton.CheckedChanged += (this.WallSquareTowerRadioButton_CheckedChanged);
+            // 
+            // WallRoundTowerRadioButton
+            // 
+            WallRoundTowerRadioButton.AutoSize = true;
+            WallRoundTowerRadioButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            WallRoundTowerRadioButton.ForeColor = SystemColors.ControlDarkDark;
+            WallRoundTowerRadioButton.Location = new Point(4, 305);
+            WallRoundTowerRadioButton.Name = "WallRoundTowerRadioButton";
+            WallRoundTowerRadioButton.Size = new Size(134, 19);
+            WallRoundTowerRadioButton.TabIndex = 126;
+            WallRoundTowerRadioButton.TabStop = true;
+            WallRoundTowerRadioButton.Text = "Wall (Round Towers)";
+            WallRoundTowerRadioButton.UseVisualStyleBackColor = true;
+            WallRoundTowerRadioButton.CheckedChanged += (this.WallRoundTowerRadioButton_CheckedChanged);
+            // 
+            // WallBorderSolidPictureBox
+            // 
+            WallBorderSolidPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            WallBorderSolidPictureBox.Image = (Image)resources.GetObject("WallBorderSolidPictureBox.Image");
+            WallBorderSolidPictureBox.InitialImage = null;
+            WallBorderSolidPictureBox.Location = new Point(19, 257);
+            WallBorderSolidPictureBox.Name = "WallBorderSolidPictureBox";
+            WallBorderSolidPictureBox.Size = new Size(106, 18);
+            WallBorderSolidPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            WallBorderSolidPictureBox.TabIndex = 125;
+            WallBorderSolidPictureBox.TabStop = false;
+            WallBorderSolidPictureBox.Click += (this.WallBorderSolidPictureBox_Click);
+            // 
+            // WallBorderGradientPictureBox
+            // 
+            WallBorderGradientPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            WallBorderGradientPictureBox.Image = (Image)resources.GetObject("WallBorderGradientPictureBox.Image");
+            WallBorderGradientPictureBox.InitialImage = null;
+            WallBorderGradientPictureBox.Location = new Point(19, 232);
+            WallBorderGradientPictureBox.Name = "WallBorderGradientPictureBox";
+            WallBorderGradientPictureBox.Size = new Size(106, 18);
+            WallBorderGradientPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            WallBorderGradientPictureBox.TabIndex = 124;
+            WallBorderGradientPictureBox.TabStop = false;
+            WallBorderGradientPictureBox.Click += (this.WallBorderGradientPictureBox_Click);
+            // 
+            // WallBlackBorderPictureBox
+            // 
+            WallBlackBorderPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            WallBlackBorderPictureBox.Image = (Image)resources.GetObject("WallBlackBorderPictureBox.Image");
+            WallBlackBorderPictureBox.InitialImage = null;
+            WallBlackBorderPictureBox.Location = new Point(19, 205);
+            WallBlackBorderPictureBox.Name = "WallBlackBorderPictureBox";
+            WallBlackBorderPictureBox.Size = new Size(106, 18);
+            WallBlackBorderPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            WallBlackBorderPictureBox.TabIndex = 123;
+            WallBlackBorderPictureBox.TabStop = false;
+            WallBlackBorderPictureBox.Click += (this.WallBlackBorderPictureBox_Click);
+            // 
+            // WallThickLinePictureBox
+            // 
+            WallThickLinePictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            WallThickLinePictureBox.Image = (Image)resources.GetObject("WallThickLinePictureBox.Image");
+            WallThickLinePictureBox.InitialImage = null;
+            WallThickLinePictureBox.Location = new Point(19, 181);
+            WallThickLinePictureBox.Name = "WallThickLinePictureBox";
+            WallThickLinePictureBox.Size = new Size(106, 18);
+            WallThickLinePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            WallThickLinePictureBox.TabIndex = 122;
+            WallThickLinePictureBox.TabStop = false;
+            WallThickLinePictureBox.Click += (this.WallThickLinePictureBox_Click);
+            // 
+            // WallDoubleLinePictureBox
+            // 
+            WallDoubleLinePictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            WallDoubleLinePictureBox.Image = (Image)resources.GetObject("WallDoubleLinePictureBox.Image");
+            WallDoubleLinePictureBox.InitialImage = null;
+            WallDoubleLinePictureBox.Location = new Point(19, 154);
+            WallDoubleLinePictureBox.Name = "WallDoubleLinePictureBox";
+            WallDoubleLinePictureBox.Size = new Size(106, 18);
+            WallDoubleLinePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            WallDoubleLinePictureBox.TabIndex = 121;
+            WallDoubleLinePictureBox.TabStop = false;
+            WallDoubleLinePictureBox.Click += (this.WallDoubleLinePictureBox_Click);
+            // 
+            // WallDashDotDotPictureBox
+            // 
+            WallDashDotDotPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            WallDashDotDotPictureBox.Image = (Image)resources.GetObject("WallDashDotDotPictureBox.Image");
+            WallDashDotDotPictureBox.InitialImage = null;
+            WallDashDotDotPictureBox.Location = new Point(19, 129);
+            WallDashDotDotPictureBox.Name = "WallDashDotDotPictureBox";
+            WallDashDotDotPictureBox.Size = new Size(106, 18);
+            WallDashDotDotPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            WallDashDotDotPictureBox.TabIndex = 120;
+            WallDashDotDotPictureBox.TabStop = false;
+            WallDashDotDotPictureBox.Click += (this.WallDashDotDotPictureBox_Click);
+            // 
+            // WallDashDotPictureBox
+            // 
+            WallDashDotPictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            WallDashDotPictureBox.Image = (Image)resources.GetObject("WallDashDotPictureBox.Image");
+            WallDashDotPictureBox.InitialImage = null;
+            WallDashDotPictureBox.Location = new Point(19, 104);
+            WallDashDotPictureBox.Name = "WallDashDotPictureBox";
+            WallDashDotPictureBox.Size = new Size(106, 18);
+            WallDashDotPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            WallDashDotPictureBox.TabIndex = 119;
+            WallDashDotPictureBox.TabStop = false;
+            WallDashDotPictureBox.Click += (this.WallDashDotPictureBox_Click);
+            // 
+            // WallDashLinePictureBox
+            // 
+            WallDashLinePictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            WallDashLinePictureBox.Image = (Image)resources.GetObject("WallDashLinePictureBox.Image");
+            WallDashLinePictureBox.InitialImage = null;
+            WallDashLinePictureBox.Location = new Point(19, 79);
+            WallDashLinePictureBox.Name = "WallDashLinePictureBox";
+            WallDashLinePictureBox.Size = new Size(106, 18);
+            WallDashLinePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            WallDashLinePictureBox.TabIndex = 118;
+            WallDashLinePictureBox.TabStop = false;
+            WallDashLinePictureBox.Click += (this.WallDashLinePictureBox_Click);
+            // 
+            // WallDottedLinePictureBox
+            // 
+            WallDottedLinePictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            WallDottedLinePictureBox.Image = (Image)resources.GetObject("WallDottedLinePictureBox.Image");
+            WallDottedLinePictureBox.InitialImage = null;
+            WallDottedLinePictureBox.Location = new Point(19, 53);
+            WallDottedLinePictureBox.Name = "WallDottedLinePictureBox";
+            WallDottedLinePictureBox.Size = new Size(106, 18);
+            WallDottedLinePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            WallDottedLinePictureBox.TabIndex = 117;
+            WallDottedLinePictureBox.TabStop = false;
+            WallDottedLinePictureBox.Click += (this.WallDottedLinePictureBox_Click);
+            // 
+            // WallSolidLinePictureBox
+            // 
+            WallSolidLinePictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+            WallSolidLinePictureBox.Image = (Image)resources.GetObject("WallSolidLinePictureBox.Image");
+            WallSolidLinePictureBox.InitialImage = null;
+            WallSolidLinePictureBox.Location = new Point(19, 29);
+            WallSolidLinePictureBox.Name = "WallSolidLinePictureBox";
+            WallSolidLinePictureBox.Size = new Size(106, 18);
+            WallSolidLinePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            WallSolidLinePictureBox.TabIndex = 116;
+            WallSolidLinePictureBox.TabStop = false;
+            WallSolidLinePictureBox.Click += (this.WallSolidLinePictureBox_Click);
+            // 
+            // WallBorderTextureRadioButton
+            // 
+            WallBorderTextureRadioButton.AutoSize = true;
+            WallBorderTextureRadioButton.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            WallBorderTextureRadioButton.ForeColor = SystemColors.ControlDarkDark;
+            WallBorderTextureRadioButton.Location = new Point(4, 281);
+            WallBorderTextureRadioButton.Name = "WallBorderTextureRadioButton";
+            WallBorderTextureRadioButton.Size = new Size(124, 19);
+            WallBorderTextureRadioButton.TabIndex = 115;
+            WallBorderTextureRadioButton.Text = "Border and Texture";
+            WallBorderTextureRadioButton.UseVisualStyleBackColor = true;
+            WallBorderTextureRadioButton.CheckedChanged += (this.WallBorderTextureRadioButton_CheckedChanged);
+            // 
+            // WallDoubleLineRadioButton
+            // 
+            WallDoubleLineRadioButton.AutoSize = true;
+            WallDoubleLineRadioButton.Location = new Point(4, 159);
+            WallDoubleLineRadioButton.Name = "WallDoubleLineRadioButton";
+            WallDoubleLineRadioButton.Size = new Size(14, 13);
+            WallDoubleLineRadioButton.TabIndex = 114;
+            WallDoubleLineRadioButton.UseVisualStyleBackColor = true;
+            WallDoubleLineRadioButton.CheckedChanged += (this.WallDoubleLineRadioButton_CheckedChanged);
+            // 
+            // WallBorderSolidRadioPath
+            // 
+            WallBorderSolidRadioPath.AutoSize = true;
+            WallBorderSolidRadioPath.Location = new Point(4, 262);
+            WallBorderSolidRadioPath.Name = "WallBorderSolidRadioPath";
+            WallBorderSolidRadioPath.Size = new Size(14, 13);
+            WallBorderSolidRadioPath.TabIndex = 113;
+            WallBorderSolidRadioPath.UseVisualStyleBackColor = true;
+            WallBorderSolidRadioPath.CheckedChanged += (this.WallBorderSolidRadioPath_CheckedChanged);
+            // 
+            // WallBorderGradientRadioButton
+            // 
+            WallBorderGradientRadioButton.AutoSize = true;
+            WallBorderGradientRadioButton.Location = new Point(4, 237);
+            WallBorderGradientRadioButton.Name = "WallBorderGradientRadioButton";
+            WallBorderGradientRadioButton.Size = new Size(14, 13);
+            WallBorderGradientRadioButton.TabIndex = 112;
+            WallBorderGradientRadioButton.UseVisualStyleBackColor = true;
+            WallBorderGradientRadioButton.CheckedChanged += (this.WallBorderGradientRadioButton_CheckedChanged);
+            // 
+            // WallBlackBorderRadioPath
+            // 
+            WallBlackBorderRadioPath.AutoSize = true;
+            WallBlackBorderRadioPath.Location = new Point(4, 211);
+            WallBlackBorderRadioPath.Name = "WallBlackBorderRadioPath";
+            WallBlackBorderRadioPath.Size = new Size(14, 13);
+            WallBlackBorderRadioPath.TabIndex = 111;
+            WallBlackBorderRadioPath.UseVisualStyleBackColor = true;
+            WallBlackBorderRadioPath.CheckedChanged += (this.WallBlackBorderRadioPath_CheckedChanged);
+            // 
+            // WallThickLineRadioButton
+            // 
+            WallThickLineRadioButton.AutoSize = true;
+            WallThickLineRadioButton.Location = new Point(4, 186);
+            WallThickLineRadioButton.Name = "WallThickLineRadioButton";
+            WallThickLineRadioButton.Size = new Size(14, 13);
+            WallThickLineRadioButton.TabIndex = 110;
+            WallThickLineRadioButton.UseVisualStyleBackColor = true;
+            WallThickLineRadioButton.CheckedChanged += (this.WallThickLineRadioButton_CheckedChanged);
+            // 
+            // WallDashDotDotRadioButton
+            // 
+            WallDashDotDotRadioButton.AutoSize = true;
+            WallDashDotDotRadioButton.Location = new Point(4, 134);
+            WallDashDotDotRadioButton.Name = "WallDashDotDotRadioButton";
+            WallDashDotDotRadioButton.Size = new Size(14, 13);
+            WallDashDotDotRadioButton.TabIndex = 109;
+            WallDashDotDotRadioButton.UseVisualStyleBackColor = true;
+            WallDashDotDotRadioButton.CheckedChanged += (this.WallDashDotDotRadioButton_CheckedChanged);
+            // 
+            // WallDashDotRadioButton
+            // 
+            WallDashDotRadioButton.AutoSize = true;
+            WallDashDotRadioButton.Location = new Point(4, 109);
+            WallDashDotRadioButton.Name = "WallDashDotRadioButton";
+            WallDashDotRadioButton.Size = new Size(14, 13);
+            WallDashDotRadioButton.TabIndex = 108;
+            WallDashDotRadioButton.UseVisualStyleBackColor = true;
+            WallDashDotRadioButton.CheckedChanged += (this.WallDashDotRadioButton_CheckedChanged);
+            // 
+            // WallDashLineRadioButton
+            // 
+            WallDashLineRadioButton.AutoSize = true;
+            WallDashLineRadioButton.Location = new Point(4, 84);
+            WallDashLineRadioButton.Name = "WallDashLineRadioButton";
+            WallDashLineRadioButton.Size = new Size(14, 13);
+            WallDashLineRadioButton.TabIndex = 107;
+            WallDashLineRadioButton.UseVisualStyleBackColor = true;
+            WallDashLineRadioButton.CheckedChanged += (this.WallDashLineRadioButton_CheckedChanged);
+            // 
+            // WallDottedLineRadioButton
+            // 
+            WallDottedLineRadioButton.AutoSize = true;
+            WallDottedLineRadioButton.Location = new Point(4, 59);
+            WallDottedLineRadioButton.Name = "WallDottedLineRadioButton";
+            WallDottedLineRadioButton.Size = new Size(14, 13);
+            WallDottedLineRadioButton.TabIndex = 106;
+            WallDottedLineRadioButton.UseVisualStyleBackColor = true;
+            WallDottedLineRadioButton.CheckedChanged += (this.WallDottedLineRadioButton_CheckedChanged);
+            // 
+            // WallSolidLineRadioButton
+            // 
+            WallSolidLineRadioButton.AutoSize = true;
+            WallSolidLineRadioButton.BackgroundImageLayout = ImageLayout.Stretch;
+            WallSolidLineRadioButton.Checked = true;
+            WallSolidLineRadioButton.Location = new Point(4, 34);
+            WallSolidLineRadioButton.Name = "WallSolidLineRadioButton";
+            WallSolidLineRadioButton.Size = new Size(14, 13);
+            WallSolidLineRadioButton.TabIndex = 105;
+            WallSolidLineRadioButton.TabStop = true;
+            WallSolidLineRadioButton.UseVisualStyleBackColor = true;
+            WallSolidLineRadioButton.CheckedChanged += (this.WallSolidLineRadioButton_CheckedChanged);
+            // 
+            // InteriorGridGroupBox
+            // 
+            InteriorGridGroupBox.Controls.Add(AlignGridSwitch);
+            InteriorGridGroupBox.Controls.Add(AlignToGridSwitch);
+            InteriorGridGroupBox.Controls.Add(ShowInteriorGridSwitch);
+            InteriorGridGroupBox.Controls.Add(ShowAlignmentGridSwitch);
+            InteriorGridGroupBox.Controls.Add(label125);
+            InteriorGridGroupBox.Controls.Add(AlignmentGridSizeTrack);
+            InteriorGridGroupBox.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
+            InteriorGridGroupBox.Location = new Point(7, 22);
+            InteriorGridGroupBox.Name = "InteriorGridGroupBox";
+            InteriorGridGroupBox.Size = new Size(139, 130);
+            InteriorGridGroupBox.TabIndex = 24;
+            InteriorGridGroupBox.TabStop = false;
+            InteriorGridGroupBox.Text = "Grid";
+            // 
+            // AlignGridSwitch
+            // 
+            AlignGridSwitch.AutoSize = true;
+            AlignGridSwitch.BackColor = Color.Transparent;
+            AlignGridSwitch.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            AlignGridSwitch.ForeColor = SystemColors.ControlDarkDark;
+            AlignGridSwitch.Location = new Point(51, 100);
+            AlignGridSwitch.Name = "AlignGridSwitch";
+            AlignGridSwitch.Size = new Size(74, 15);
+            AlignGridSwitch.TabIndex = 24;
+            AlignGridSwitch.Text = "Align to Grid";
+            // 
+            // AlignToGridSwitch
+            // 
+            AlignToGridSwitch.Alpha = 50;
+            AlignToGridSwitch.BackColor = Color.Transparent;
+            AlignToGridSwitch.Background = true;
+            AlignToGridSwitch.Background_WidthPen = 2F;
+            AlignToGridSwitch.BackgroundPen = false;
+            AlignToGridSwitch.Checked = false;
+            AlignToGridSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AlignToGridSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            AlignToGridSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            AlignToGridSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AlignToGridSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AlignToGridSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AlignToGridSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            AlignToGridSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            AlignToGridSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            AlignToGridSwitch.ColorValue = Color.ForestGreen;
+            AlignToGridSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            AlignToGridSwitch.Font = new Font("Arial", 11F);
+            AlignToGridSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
+            AlignToGridSwitch.Lighting = true;
+            AlignToGridSwitch.LinearGradient_Background = false;
+            AlignToGridSwitch.LinearGradient_Value = false;
+            AlignToGridSwitch.LinearGradientPen = false;
+            AlignToGridSwitch.Location = new Point(4, 95);
+            AlignToGridSwitch.Name = "AlignToGridSwitch";
+            AlignToGridSwitch.PenWidth = 10;
+            AlignToGridSwitch.RGB = false;
+            AlignToGridSwitch.Rounding = true;
+            AlignToGridSwitch.RoundingInt = 90;
+            AlignToGridSwitch.Size = new Size(41, 20);
+            AlignToGridSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            AlignToGridSwitch.TabIndex = 23;
+            AlignToGridSwitch.Tag = "Cyber";
+            AlignToGridSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            AlignToGridSwitch.Timer_RGB = 300;
+            AlignToGridSwitch.CheckedChanged += (this.AlignToGridSwitch_CheckedChanged);
+            // 
+            // ShowInteriorGridSwitch
+            // 
+            ShowInteriorGridSwitch.AutoSize = true;
+            ShowInteriorGridSwitch.BackColor = Color.Transparent;
+            ShowInteriorGridSwitch.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            ShowInteriorGridSwitch.ForeColor = SystemColors.ControlDarkDark;
+            ShowInteriorGridSwitch.Location = new Point(51, 74);
+            ShowInteriorGridSwitch.Name = "ShowInteriorGridSwitch";
+            ShowInteriorGridSwitch.Size = new Size(61, 15);
+            ShowInteriorGridSwitch.TabIndex = 22;
+            ShowInteriorGridSwitch.Text = "Show Grid";
+            // 
+            // ShowAlignmentGridSwitch
+            // 
+            ShowAlignmentGridSwitch.Alpha = 50;
+            ShowAlignmentGridSwitch.BackColor = Color.Transparent;
+            ShowAlignmentGridSwitch.Background = true;
+            ShowAlignmentGridSwitch.Background_WidthPen = 2F;
+            ShowAlignmentGridSwitch.BackgroundPen = false;
+            ShowAlignmentGridSwitch.Checked = false;
+            ShowAlignmentGridSwitch.ColorBackground = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowAlignmentGridSwitch.ColorBackground_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowAlignmentGridSwitch.ColorBackground_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowAlignmentGridSwitch.ColorBackground_Pen = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowAlignmentGridSwitch.ColorBackground_Value_1 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowAlignmentGridSwitch.ColorBackground_Value_2 = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowAlignmentGridSwitch.ColorLighting = Color.FromArgb((int)(byte)223, (int)(byte)219, (int)(byte)210);
+            ShowAlignmentGridSwitch.ColorPen_1 = Color.FromArgb((int)(byte)37, (int)(byte)52, (int)(byte)68);
+            ShowAlignmentGridSwitch.ColorPen_2 = Color.FromArgb((int)(byte)41, (int)(byte)63, (int)(byte)86);
+            ShowAlignmentGridSwitch.ColorValue = Color.ForestGreen;
+            ShowAlignmentGridSwitch.CyberSwitchStyle = ReaLTaiizor.Enum.Cyber.StateStyle.Custom;
+            ShowAlignmentGridSwitch.Font = new Font("Arial", 11F);
+            ShowAlignmentGridSwitch.ForeColor = Color.FromArgb((int)(byte)245, (int)(byte)245, (int)(byte)245);
+            ShowAlignmentGridSwitch.Lighting = true;
+            ShowAlignmentGridSwitch.LinearGradient_Background = false;
+            ShowAlignmentGridSwitch.LinearGradient_Value = false;
+            ShowAlignmentGridSwitch.LinearGradientPen = false;
+            ShowAlignmentGridSwitch.Location = new Point(6, 69);
+            ShowAlignmentGridSwitch.Name = "ShowAlignmentGridSwitch";
+            ShowAlignmentGridSwitch.PenWidth = 10;
+            ShowAlignmentGridSwitch.RGB = false;
+            ShowAlignmentGridSwitch.Rounding = true;
+            ShowAlignmentGridSwitch.RoundingInt = 90;
+            ShowAlignmentGridSwitch.Size = new Size(41, 20);
+            ShowAlignmentGridSwitch.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            ShowAlignmentGridSwitch.TabIndex = 21;
+            ShowAlignmentGridSwitch.Tag = "Cyber";
+            ShowAlignmentGridSwitch.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            ShowAlignmentGridSwitch.Timer_RGB = 300;
+            ShowAlignmentGridSwitch.CheckedChanged += (this.ShowAlignmentGridSwitch_CheckedChanged);
+            // 
+            // label125
+            // 
+            label125.AutoSize = true;
+            label125.BackColor = Color.Transparent;
+            label125.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
+            label125.ForeColor = SystemColors.ControlDarkDark;
+            label125.Location = new Point(6, 26);
+            label125.Name = "label125";
+            label125.Size = new Size(27, 15);
+            label125.TabIndex = 20;
+            label125.Text = "Size";
+            // 
+            // AlignmentGridSizeTrack
+            // 
+            AlignmentGridSizeTrack.AutoSize = false;
+            AlignmentGridSizeTrack.BackColor = SystemColors.Control;
+            AlignmentGridSizeTrack.Location = new Point(6, 44);
+            AlignmentGridSizeTrack.Maximum = 16;
+            AlignmentGridSizeTrack.Minimum = 2;
+            AlignmentGridSizeTrack.Name = "AlignmentGridSizeTrack";
+            AlignmentGridSizeTrack.Size = new Size(126, 20);
+            AlignmentGridSizeTrack.TabIndex = 19;
+            AlignmentGridSizeTrack.TickStyle = TickStyle.None;
+            AlignmentGridSizeTrack.Value = 4;
+            AlignmentGridSizeTrack.Scroll += (this.AlignmentGridSizeTrack_Scroll);
+            // 
+            // DungeonToolPanel
+            // 
+            DungeonToolPanel.Anchor = (AnchorStyles)((AnchorStyles.Top) | (AnchorStyles.Bottom)) | (AnchorStyles.Right);
+            DungeonToolPanel.BackColor = SystemColors.Control;
+            DungeonToolPanel.Location = new Point(1421, 90);
+            DungeonToolPanel.Margin = new Padding(0);
+            DungeonToolPanel.Name = "DungeonToolPanel";
+            DungeonToolPanel.Size = new Size(152, 806);
+            DungeonToolPanel.TabIndex = 48;
             // 
             // BackgroundToolPanel
             // 
@@ -11917,10 +12319,6 @@
             PlanetToolStrip.PerformLayout();
             RealmStudioForm.ResumeLayout(false);
             RealmStudioForm.PerformLayout();
-            InteriorToolPanel.ResumeLayout(false);
-            InteriorGridGroupBox.ResumeLayout(false);
-            InteriorGridGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)AlignmentGridSizeTrack).EndInit();
             FontSelectionPanel.ResumeLayout(false);
             groupBox5.ResumeLayout(false);
             MapScaleCreatorPanel.ResumeLayout(false);
@@ -11949,6 +12347,24 @@
             ApplicationStatusStrip.PerformLayout();
             RealmStudioMainMenuStrip.ResumeLayout(false);
             RealmStudioMainMenuStrip.PerformLayout();
+            InteriorToolPanel.ResumeLayout(false);
+            groupBox8.ResumeLayout(false);
+            groupBox8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)WallTowerSizeUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WallTowerDistanceUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WallBorderSolidPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WallBorderGradientPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WallBlackBorderPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WallThickLinePictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WallDoubleLinePictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WallDashDotDotPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WallDashDotPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WallDashLinePictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WallDottedLinePictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)WallSolidLinePictureBox).EndInit();
+            InteriorGridGroupBox.ResumeLayout(false);
+            InteriorGridGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)AlignmentGridSizeTrack).EndInit();
             DrawingToolPanel.ResumeLayout(false);
             DrawingToolPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)DrawingShapeRotationTrack).EndInit();
@@ -12736,5 +13152,33 @@
         internal TrackBar InteriorFloorTextureScaleTrack;
         internal TrackBar WallTextureScaleTrack;
         internal Label WallTextureNameLabel;
+        private GroupBox groupBox8;
+        internal PictureBox WallBorderSolidPictureBox;
+        internal PictureBox WallBorderGradientPictureBox;
+        internal PictureBox WallBlackBorderPictureBox;
+        internal PictureBox WallThickLinePictureBox;
+        internal PictureBox WallDoubleLinePictureBox;
+        internal PictureBox WallDashDotDotPictureBox;
+        internal PictureBox WallDashDotPictureBox;
+        internal PictureBox WallDashLinePictureBox;
+        internal PictureBox WallDottedLinePictureBox;
+        internal PictureBox WallSolidLinePictureBox;
+        internal RadioButton WallBorderTextureRadioButton;
+        internal RadioButton WallDoubleLineRadioButton;
+        internal RadioButton WallBorderSolidRadioPath;
+        internal RadioButton WallBorderGradientRadioButton;
+        internal RadioButton WallBlackBorderRadioPath;
+        internal RadioButton WallThickLineRadioButton;
+        internal RadioButton WallDashDotDotRadioButton;
+        internal RadioButton WallDashDotRadioButton;
+        internal RadioButton WallDashLineRadioButton;
+        internal RadioButton WallDottedLineRadioButton;
+        internal RadioButton WallSolidLineRadioButton;
+        private Label label124;
+        private NumericUpDown WallTowerSizeUpDown;
+        private Label label128;
+        private NumericUpDown WallTowerDistanceUpDown;
+        internal RadioButton WallSquareTowerRadioButton;
+        internal RadioButton WallRoundTowerRadioButton;
     }
 }

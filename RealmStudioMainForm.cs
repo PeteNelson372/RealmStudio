@@ -3931,7 +3931,6 @@ namespace RealmStudio
                         DrawingManager.CurrentDrawnEllipse = drawnEllipse;
                         DrawingManager.CurrentDrawnEllipse.Render(canvas);
 
-
                         SKGLRenderControl.Invalidate();
                     }
                     break;
@@ -8337,6 +8336,11 @@ namespace RealmStudio
             InteriorMediator.InteriorWallTextureIndex++;
         }
 
+        private void WallTextureScaleTrack_Scroll(object sender, EventArgs e)
+        {
+            InteriorMediator.WallTextureScale = WallTextureScaleTrack.Value / 100.0F;
+        }
+
         private void NextFloorTextureButton_Click(object sender, EventArgs e)
         {
             InteriorMediator.InteriorFloorTextureIndex++;
@@ -8381,7 +8385,124 @@ namespace RealmStudio
             MainMediator.SetDrawingMode(MapDrawingMode.InteriorWallDraw, 0);
         }
 
+        private void WallSolidLineRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallDottedLineRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallDashLineRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallDashDotRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallDashDotDotRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallDoubleLineRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallThickLineRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallBlackBorderRadioPath_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallBorderGradientRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallBorderSolidRadioPath_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallBorderTextureRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallRoundTowerRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallSquareTowerRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallSolidLinePictureBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallDottedLinePictureBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallDashLinePictureBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallDashDotPictureBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallDashDotDotPictureBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallDoubleLinePictureBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallThickLinePictureBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallBlackBorderPictureBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallBorderGradientPictureBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WallBorderSolidPictureBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
         #endregion
+
+
 
 
     }
