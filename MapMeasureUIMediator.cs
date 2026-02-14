@@ -22,25 +22,15 @@
 *
 ***************************************************************************************************************************/
 
-using System.ComponentModel;
-
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class MapMeasureUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class MapMeasureUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
         private MapStateMediator? _mapState;
         private Color _mapMeasureColor = Color.FromArgb(191, 138, 26, 0);
         private bool _useScaleUnits = true;
         private bool _measureArea;
 
-        public MapMeasureUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += MapMeasureUIMediator_PropertyChanged;
-        }
 
         #region Property Setters/Getters
 
@@ -78,27 +68,17 @@ namespace RealmStudio
         #endregion
 
         #region Property Change Handler Methods
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
 
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            UpdateMapMeasureUI();
-            MapMeasureManager.Update();
-            MainForm.SKGLRenderControl.Invalidate();
-        }
-
+        /*
         private void UpdateMapMeasureUI()
         {
             MainForm.Invoke(new MethodInvoker(delegate ()
@@ -106,31 +86,19 @@ namespace RealmStudio
                 MainForm.SelectMeasureColorButton.BackColor = MapMeasureColor;
             }));
         }
-
-        #endregion
-
-        #region Event Handlers
-
-        private void MapMeasureUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
-
+        */
         #endregion
 
         #region Map Measure UI Methods
 
+        /*
         internal void Reset()
         {
             MapMeasureColor = Color.FromArgb(191, 138, 26, 0);
             UseScaleUnits = true;
             MeasureArea = false;
         }
+        */
 
         #endregion
     }

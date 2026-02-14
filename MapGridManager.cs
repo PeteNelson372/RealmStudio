@@ -24,9 +24,11 @@
 
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
+    /*
     internal sealed class MapGridManager : IMapComponentManager
     {
         private static MapGridUIMediator? _mapGridUIMediator;
@@ -72,7 +74,7 @@ namespace RealmStudio
                 StrokeJoin = SKStrokeJoin.Bevel
             };
 
-            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, newGrid.GridLayerIndex).MapLayerComponents.Add(newGrid);
+            //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, newGrid.GridLayerIndex).MapLayerComponents.Add(newGrid);
             MapStateMediator.CurrentMapGrid = newGrid;
 
             return MapStateMediator.CurrentMapGrid;
@@ -84,6 +86,7 @@ namespace RealmStudio
 
             // there is only one grid, so find it in the layers it could be in and delete it
 
+            
             for (int i = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
                 if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents[i] is MapGrid)
@@ -110,6 +113,7 @@ namespace RealmStudio
                     break;
                 }
             }
+            
 
             return true;
         }
@@ -120,6 +124,7 @@ namespace RealmStudio
 
             MapGrid? component = null;
 
+            
             foreach (MapGrid mg in MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER).MapLayerComponents.Cast<MapGrid>())
             {
                 if (mg.GridGuid.ToString() == componentGuid.ToString())
@@ -146,6 +151,8 @@ namespace RealmStudio
                     break;
                 }
             }
+
+            
 
             return component;
         }
@@ -188,6 +195,8 @@ namespace RealmStudio
 
             // finalize loading of grid
             MapGrid? currentMapGrid = null;
+
+            
 
             MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER);
             for (int i = 0; i < defaultGridLayer.MapLayerComponents.Count; i++)
@@ -240,6 +249,10 @@ namespace RealmStudio
 
                 MapStateMediator.CurrentMapGrid = currentMapGrid;
             }
+
+            
         }
     }
+
+    */
 }

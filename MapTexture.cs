@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using System.Xml.Serialization;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class MapTexture
     {

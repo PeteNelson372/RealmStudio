@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddLabel(RealmStudioMap map, MapLabel label) : IMapOperation
     {
@@ -30,21 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LABELLAYER);
-            labelLayer.MapLayerComponents.Add(Label);
+
         }
 
         public void UndoOperation()
         {
-            MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LABELLAYER);
 
-            for (int i = labelLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (labelLayer.MapLayerComponents[i] is MapLabel l && l.LabelGuid.ToString() == Label.LabelGuid.ToString())
-                {
-                    labelLayer.MapLayerComponents.RemoveAt(i);
-                }
-            }
         }
     }
 }

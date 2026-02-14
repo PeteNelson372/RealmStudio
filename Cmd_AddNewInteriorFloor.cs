@@ -21,9 +21,9 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
-
-namespace RealmStudio
+using RealmStudioX.Properties;
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddNewInteriorFloor(RealmStudioMap map, InteriorFloor newInteriorFloor) : IMapOperation
     {
@@ -32,32 +32,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            bool createPathsWhilePainting = Settings.Default.CalculateContoursWhilePainting;
 
-            if (!createPathsWhilePainting)
-            {
-                // compute contour path and inner and outer paths in a separate thread
-                InteriorManager.CreateAllPathsFromDrawnPath(Map, NewInteriorFloor);
-            }
-
-            NewInteriorFloor.IsModified = true;
-
-            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.INTERIORLAYER).MapLayerComponents.Add(NewInteriorFloor);
         }
 
         public void UndoOperation()
         {
-            for (int i = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.INTERIORLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (MapBuilder.GetMapLayerByIndex(Map, MapBuilder.INTERIORLAYER).MapLayerComponents[i] is InteriorFloor f)
-                {
-                    if (f.InteriorFloorGuid.ToString() == NewInteriorFloor.InteriorFloorGuid.ToString())
-                    {
-                        MapBuilder.GetMapLayerByIndex(Map, MapBuilder.INTERIORLAYER).MapLayerComponents.RemoveAt(i);
-                        break;
-                    }
-                }
-            }
+
         }
     }
 }

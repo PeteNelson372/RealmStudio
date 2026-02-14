@@ -24,8 +24,9 @@
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Data;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public sealed partial class MapSymbolInfo : Form
     {
@@ -44,6 +45,7 @@ namespace RealmStudio
             Map = map;
             this.symbol = symbol;
 
+            /*
             foreach (MapSymbolCollection symbolCollection in AssetManager.MAP_SYMBOL_COLLECTIONS)
             {
                 if (symbolCollection.GetCollectionPath() == symbol.CollectionPath)
@@ -52,6 +54,7 @@ namespace RealmStudio
                     break;
                 }
             }
+            */
 
             NameTextBox.Text = this.symbol.Name;
             SymbolNameLabel.Text = this.symbol.SymbolName;
@@ -89,7 +92,7 @@ namespace RealmStudio
                 UseCustomColorsRadio.Checked = true;
             }
 
-            AddTagsToListBox(AssetManager.SYMBOL_TAGS);
+            //AddTagsToListBox(AssetManager.SYMBOL_TAGS);
 
             foreach (string tag in this.symbol.SymbolTags)
             {
@@ -132,7 +135,7 @@ namespace RealmStudio
                 if (!string.IsNullOrEmpty(newTag))
                 {
                     AddTagToTagList(newTag);
-                    AssetManager.AddSymbolTag(newTag);
+                    //AssetManager.AddSymbolTag(newTag);
 
                     if (collection != null)
                     {
@@ -247,9 +250,9 @@ namespace RealmStudio
 
             if (symbol.IsGrayscale || symbol.UseCustomColors)
             {
-                Cmd_PaintSymbol cmd = new(symbol, paintColor1, paintColor1, paintColor2, paintColor3);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_PaintSymbol cmd = new(symbol, paintColor1, paintColor1, paintColor2, paintColor3);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
 
                 TOOLTIP.Show("Map Symbol painted", SymbolInfoGroup, new Point(StatusLabel.Left, StatusLabel.Top), 3000);
             }

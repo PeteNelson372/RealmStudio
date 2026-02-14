@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RealmStudio.Properties {
+namespace RealmStudioX.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

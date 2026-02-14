@@ -26,7 +26,7 @@ using WorldAnvilIntegrationLib;
 *
 ***************************************************************************************************************************/
 
-namespace RealmStudio.WorldAnvilIntegration
+namespace RealmStudioX.WorldAnvilIntegration
 {
     public partial class WorldAnvilArticleIntegration : Form
     {
@@ -76,7 +76,7 @@ namespace RealmStudio.WorldAnvilIntegration
 
         public DialogResult ShowDialog(Form parent)
         {
-            WorldAnvilWorldId = IntegrationManager.WorldAnvilParameters.WorldId;
+            WorldAnvilWorldId = IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId.ToString();
             MapWorldIdLabel.Text = WorldAnvilWorldId;
             ArticleTitleTextBox.Text = ArticleTitle;
             ArticleContentTextBox.Text = ArticleContent;
@@ -95,7 +95,7 @@ namespace RealmStudio.WorldAnvilIntegration
             !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId) &&
             !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) &&
             !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiToken) &&
-            !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WorldId))
+            IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId != Guid.Empty)
             {
                 if (string.IsNullOrWhiteSpace(ArticleTitleTextBox.Text))
                 {
@@ -140,7 +140,7 @@ namespace RealmStudio.WorldAnvilIntegration
                     existingArticle.templateType = "article";
                     existingArticle.world = new WorldAnvilWorld
                     {
-                        id = IntegrationManager.WorldAnvilParameters.WorldId
+                        id = IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId.ToString(),
                     };
 
                     string json = JsonSerializer.Serialize(existingArticle, IntegrationManager.JsonSerializerHelper.CamelCaseIgnoreEmptyOptions);
@@ -196,7 +196,7 @@ namespace RealmStudio.WorldAnvilIntegration
                     templateType = "article",
                     world = new WorldAnvilWorld
                     {
-                        id = IntegrationManager.WorldAnvilParameters.WorldId
+                        id = IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId.ToString(),
                     },
                 };
 

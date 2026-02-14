@@ -24,7 +24,7 @@
 using SkiaSharp;
 using System.Xml.Serialization;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     [XmlRoot("mapframe", Namespace = "RealmStudio", IsNullable = false)]
     public class MapFrame

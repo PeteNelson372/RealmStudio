@@ -26,7 +26,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class AiIntegration
     {

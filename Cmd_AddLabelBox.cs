@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddLabelBox(RealmStudioMap map, PlacedMapBox mapBox) : IMapOperation
     {
@@ -30,12 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER).MapLayerComponents.Add(MapBox);
+
         }
 
         public void UndoOperation()
         {
-            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER).MapLayerComponents.Remove(MapBox);
+
         }
     }
 }

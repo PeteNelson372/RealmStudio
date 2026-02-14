@@ -26,8 +26,9 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Extensions = SkiaSharp.Views.Desktop.Extensions;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class InteriorWall : MapComponent, IXmlSerializable
     {
@@ -93,8 +94,8 @@ namespace RealmStudio
                         blackBorderPaint.StrokeWidth = WallPaint.StrokeWidth * 1.2F;
                         blackBorderPaint.Color = SKColors.Black;
 
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, blackBorderPaint);
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, WallPaint);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, blackBorderPaint);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, WallPaint);
                     }
                     break;
                 case PathType.BorderedGradientPath:
@@ -103,40 +104,40 @@ namespace RealmStudio
                         borderPaint.StrokeWidth = WallPaint.StrokeWidth * 0.2F;
                         borderPaint.Color = SKColors.Black;
 
-                        List<LinePoint> parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.2F, ParallelDirection.Below);
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
+                        //List<LinePoint> parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.2F, ParallelDirection.Below);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
 
                         using SKPaint linePaint1 = WallPaint.Clone();
                         linePaint1.StrokeWidth = WallPaint.StrokeWidth * 0.2F;
                         Color clr = Color.FromArgb(154, WallOutlineColor);
                         linePaint1.Color = Extensions.ToSKColor(clr);
 
-                        parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.4F, ParallelDirection.Below);
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint1);
+                        //parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.4F, ParallelDirection.Below);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint1);
 
                         using SKPaint linePaint2 = WallPaint.Clone();
                         linePaint2.StrokeWidth = WallPaint.StrokeWidth * 0.2F;
                         clr = Color.FromArgb(102, WallOutlineColor);
                         linePaint2.Color = Extensions.ToSKColor(clr);
 
-                        parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.6F, ParallelDirection.Below);
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint2);
+                        //parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.6F, ParallelDirection.Below);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint2);
 
                         using SKPaint linePaint3 = WallPaint.Clone();
                         linePaint3.StrokeWidth = WallPaint.StrokeWidth * 0.2F;
                         clr = Color.FromArgb(51, WallOutlineColor);
                         linePaint3.Color = Extensions.ToSKColor(clr);
 
-                        parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.8F, ParallelDirection.Below);
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint3);
+                        //parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.8F, ParallelDirection.Below);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint3);
 
                         using SKPaint linePaint4 = WallPaint.Clone();
                         linePaint4.StrokeWidth = WallPaint.StrokeWidth * 0.2F;
                         clr = Color.FromArgb(25, WallOutlineColor);
                         linePaint4.Color = Extensions.ToSKColor(clr);
 
-                        parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth, ParallelDirection.Below);
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint4);
+                        //parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth, ParallelDirection.Below);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint4);
                     }
                     break;
                 case PathType.BorderedLightSolidPath:
@@ -145,15 +146,15 @@ namespace RealmStudio
                         borderPaint.StrokeWidth = WallPaint.StrokeWidth * 0.2F;
                         borderPaint.Color = SKColors.Black;
 
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, borderPaint);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, borderPaint);
 
                         using SKPaint linePaint1 = WallPaint.Clone();
                         linePaint1.StrokeWidth = WallPaint.StrokeWidth * 0.8F;
                         Color clr = Color.FromArgb(102, WallOutlineColor);
                         linePaint1.Color = Extensions.ToSKColor(clr);
 
-                        List<LinePoint> parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.2F, ParallelDirection.Below);
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint1);
+                        //List<LinePoint> parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.2F, ParallelDirection.Below);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, linePaint1);
                     }
                     break;
                 case PathType.DoubleSolidBorderPath:
@@ -161,10 +162,10 @@ namespace RealmStudio
                         using SKPaint borderPaint = WallPaint.Clone();
                         borderPaint.StrokeWidth = WallPaint.StrokeWidth * 0.2F;
 
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, borderPaint);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, borderPaint);
 
-                        List<LinePoint> parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth, ParallelDirection.Above);
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
+                        //List<LinePoint> parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth, ParallelDirection.Above);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
                     }
                     break;
                 case PathType.LineAndDashesPath:
@@ -172,7 +173,7 @@ namespace RealmStudio
                         using SKPaint borderPaint = WallPaint.Clone();
                         borderPaint.StrokeWidth = WallPaint.StrokeWidth * 0.2F;
 
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, borderPaint);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, borderPaint);
 
                         float[] intervals = [WallWidth, WallWidth];
 
@@ -180,8 +181,8 @@ namespace RealmStudio
                         pathLineEffect = SKPathEffect.CreateDash(intervals, 0);
                         borderPaint.PathEffect = pathLineEffect;
 
-                        List<LinePoint> parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth, ParallelDirection.Above);
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
+                        //List<LinePoint> parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth, ParallelDirection.Above);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
                     }
                     break;
                 case PathType.ShortIrregularDashPath:
@@ -195,23 +196,23 @@ namespace RealmStudio
                         borderPaint.StrokeWidth = WallPaint.StrokeWidth;
                         borderPaint.StrokeCap = SKStrokeCap.Butt;
 
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, borderPaint);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, borderPaint);
                     }
                     break;
                 case PathType.BorderAndTexturePath:
                     {
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, WallPaint);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, WallPaint);
 
                         using SKPaint borderPaint = WallPaint.Clone();
                         borderPaint.Shader = null;
 
                         borderPaint.StrokeWidth = WallPaint.StrokeWidth * 0.2F;
 
-                        List<LinePoint> parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.45F, ParallelDirection.Above);
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
+                        //List<LinePoint> parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.45F, ParallelDirection.Above);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
 
-                        parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.45F, ParallelDirection.Below);
-                        InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
+                        //parallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.45F, ParallelDirection.Below);
+                        //InteriorManager.DrawBezierCurvesFromPoints(canvas, parallelPoints, borderPaint);
                     }
 
                     break;
@@ -230,8 +231,8 @@ namespace RealmStudio
                             IsAntialias = true,
                         };
 
-                        List<LinePoint> aboveParallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.5F, ParallelDirection.Above);
-                        List<LinePoint> belowParallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.5F, ParallelDirection.Below);
+                        //List<LinePoint> aboveParallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.5F, ParallelDirection.Above);
+                        //List<LinePoint> belowParallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.5F, ParallelDirection.Below);
 
                         canvas.DrawCircle(distinctWallPoints[0].LineSegmentPoint, WallWidth * WallTowerSize, WallPaint);
                         canvas.DrawCircle(distinctWallPoints[0].LineSegmentPoint, WallWidth * WallTowerSize * 1.01F, borderPaint);
@@ -247,6 +248,7 @@ namespace RealmStudio
 
                             canvas.DrawLine(distinctWallPoints[i - 1].LineSegmentPoint, distinctWallPoints[i].LineSegmentPoint, WallPaint);
 
+                            /*
                             if (i > 0 && i < aboveParallelPoints.Count - 1
                                 && i < belowParallelPoints.Count - 1
                                 && aboveParallelPoints.Count > 2
@@ -255,6 +257,7 @@ namespace RealmStudio
                                 canvas.DrawLine(aboveParallelPoints[i - 1].LineSegmentPoint, aboveParallelPoints[i].LineSegmentPoint, borderPaint);
                                 canvas.DrawLine(belowParallelPoints[i - 1].LineSegmentPoint, belowParallelPoints[i].LineSegmentPoint, borderPaint);
                             }
+                            */
 
                             if (towerPoint != SKPoint.Empty)
                             {
@@ -289,8 +292,8 @@ namespace RealmStudio
                             IsAntialias = true,
                         };
 
-                        List<LinePoint> aboveParallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.5F, ParallelDirection.Above);
-                        List<LinePoint> belowParallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.5F, ParallelDirection.Below);
+                        //List<LinePoint> aboveParallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.5F, ParallelDirection.Above);
+                        //List<LinePoint> belowParallelPoints = InteriorManager.GetParallelPathPoints(distinctWallPoints, WallPaint.StrokeWidth * 0.5F, ParallelDirection.Below);
 
                         float lineAngle = DrawingMethods.CalculateAngleBetweenPoints(distinctWallPoints[0].LineSegmentPoint, distinctWallPoints[1].LineSegmentPoint, true);
 
@@ -318,6 +321,7 @@ namespace RealmStudio
 
                             canvas.DrawLine(distinctWallPoints[i - 1].LineSegmentPoint, distinctWallPoints[i].LineSegmentPoint, WallPaint);
 
+                            /*
                             if (i > 0 && i < aboveParallelPoints.Count - 1
                                 && i < belowParallelPoints.Count - 1
                                 && aboveParallelPoints.Count > 2
@@ -326,6 +330,7 @@ namespace RealmStudio
                                 canvas.DrawLine(aboveParallelPoints[i - 1].LineSegmentPoint, aboveParallelPoints[i].LineSegmentPoint, borderPaint);
                                 canvas.DrawLine(belowParallelPoints[i - 1].LineSegmentPoint, belowParallelPoints[i].LineSegmentPoint, borderPaint);
                             }
+                            */
 
                             if (towerPoint != SKPoint.Empty)
                             {
@@ -362,7 +367,7 @@ namespace RealmStudio
                     }
                     break;
                 default:
-                    InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, WallPaint);
+                    //InteriorManager.DrawBezierCurvesFromPoints(canvas, distinctWallPoints, WallPaint);
                     break;
             }
         }

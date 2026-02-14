@@ -28,8 +28,9 @@ using SimplexNoise;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Diagnostics;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class ShapeGenerator
     {
@@ -218,6 +219,7 @@ namespace RealmStudio
             }
 
             // get island shaping functions
+            /*
             List<LandformShapingFunction> islandShapingFunctions = AssetManager.LANDFORM_SHAPING_FUNCTIONS.FindAll(x => x.LandformShapeType == GeneratedLandformType.Island);
 
             if (islandShapingFunctions.Count > 0)
@@ -267,6 +269,7 @@ namespace RealmStudio
                     return islandBitmap;
                 }
             }
+            */
 
             return null;
         }
@@ -325,6 +328,7 @@ namespace RealmStudio
             }
 
             // get shaping function bitmaps for selected landform type
+            /*
             List<LandformShapingFunction> shapingFunctions
                 = AssetManager.LANDFORM_SHAPING_FUNCTIONS.FindAll(x => x.LandformShapeType == selectedLandformType);
 
@@ -433,6 +437,7 @@ namespace RealmStudio
                     return landformBitmap;
                 }
             }
+            */
 
             return null;
         }

@@ -29,8 +29,9 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Extensions = SkiaSharp.Views.Desktop.Extensions;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class MapRegion : MapComponent, IXmlSerializable
     {

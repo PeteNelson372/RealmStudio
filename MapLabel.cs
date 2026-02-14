@@ -29,7 +29,7 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class MapLabel : MapComponent, IXmlSerializable
     {
@@ -351,14 +351,14 @@ namespace RealmStudio
                         catch
                         {
                             // couldn't create the font, so try to find it in the list of embedded fonts
-                            for (int i = 0; i < LabelManager.EMBEDDED_FONTS.Families.Length; i++)
-                            {
-                                if (LabelManager.EMBEDDED_FONTS.Families[i].Name == ff)
-                                {
-                                    labelFont = new Font(LabelManager.EMBEDDED_FONTS.Families[i], fontsize, FontStyle.Regular, GraphicsUnit.Point);
-                                    break;
-                                }
-                            }
+                            //for (int i = 0; i < LabelManager.EMBEDDED_FONTS.Families.Length; i++)
+                            //{
+                            //    if (LabelManager.EMBEDDED_FONTS.Families[i].Name == ff)
+                            //    {
+                            //        labelFont = new Font(LabelManager.EMBEDDED_FONTS.Families[i], fontsize, FontStyle.Regular, GraphicsUnit.Point);
+                            //        break;
+                            //    }
+                            //}
                         }
                     }
                 }
@@ -387,12 +387,12 @@ namespace RealmStudio
                 LabelPath = SKPath.ParseSvgPathData(labelPath);
             }
 
-            SKFont skLabelFont = LabelManager.GetSkLabelFont(LabelFont);
-            SKPaint paint = LabelManager.CreateLabelPaint(LabelColor);
+            //SKFont skLabelFont = LabelManager.GetSkLabelFont(LabelFont);
+            //SKPaint paint = LabelManager.CreateLabelPaint(LabelColor);
 
-            LabelPaint = paint;
-            LabelSKFont.Dispose();
-            LabelSKFont = skLabelFont;
+            //LabelPaint = paint;
+            //LabelSKFont.Dispose();
+            //LabelSKFont = skLabelFont;
 
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8604 // Possible null reference argument.

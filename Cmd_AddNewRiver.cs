@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddNewRiver(RealmStudioMap map, River newRiver) : IMapOperation
     {
@@ -30,22 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WATERLAYER).MapLayerComponents.Add(NewRiver);
+
         }
 
         public void UndoOperation()
         {
-            for (int i = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WATERLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WATERLAYER).MapLayerComponents[i] is River r)
-                {
-                    if (r.MapRiverGuid.ToString() == NewRiver.MapRiverGuid.ToString())
-                    {
-                        MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WATERLAYER).MapLayerComponents.RemoveAt(i);
-                        break;
-                    }
-                }
-            }
+
         }
     }
 }

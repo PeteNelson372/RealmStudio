@@ -28,8 +28,9 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public sealed class PaintedLine : DrawnMapComponent, IXmlSerializable, IDisposable
     {
@@ -77,19 +78,19 @@ namespace RealmStudio
 
                 if (_colorbrush == ColorPaintBrush.PatternBrush1)
                 {
-                    Brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush1");
+                    //Brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush1");
                 }
                 else if (_colorbrush == ColorPaintBrush.PatternBrush2)
                 {
-                    Brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush2");
+                    //Brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush2");
                 }
                 else if (_colorbrush == ColorPaintBrush.PatternBrush3)
                 {
-                    Brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush3");
+                    //Brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush3");
                 }
                 else if (_colorbrush == ColorPaintBrush.PatternBrush4)
                 {
-                    Brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush4"); ;
+                    //Brush = AssetManager.BRUSH_LIST.Find(x => x.BrushName == "Pattern Brush4"); ;
                 }
 
                 if (Brush != null && Brush.BrushBitmap == null)

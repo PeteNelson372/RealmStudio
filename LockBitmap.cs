@@ -24,7 +24,7 @@
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class LockBitmap(Bitmap source)
     {

@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddNewInteriorWall(RealmStudioMap map, InteriorWall newWall) : IMapOperation
     {
@@ -30,47 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            // Add the new interior wall to the appropriate layer; walls are added to path layers
-            if (NewInteriorWall.DrawOverSymbols)
-            {
-                MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHUPPERLAYER).MapLayerComponents.Add(NewInteriorWall);
-            }
-            else
-            {
-                MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHLOWERLAYER).MapLayerComponents.Add(NewInteriorWall);
-            }
+
         }
 
         public void UndoOperation()
         {
-            if (NewInteriorWall.DrawOverSymbols)
-            {
-                for (int i = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHUPPERLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
-                {
-                    if (MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHUPPERLAYER).MapLayerComponents[i] is MapPath mp)
-                    {
-                        if (mp.MapPathGuid.ToString() == NewInteriorWall.WallGuid.ToString())
-                        {
-                            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHUPPERLAYER).MapLayerComponents.RemoveAt(i);
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                for (int i = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHLOWERLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
-                {
-                    if (MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHLOWERLAYER).MapLayerComponents[i] is MapPath mp)
-                    {
-                        if (mp.MapPathGuid.ToString() == NewInteriorWall.WallGuid.ToString())
-                        {
-                            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHLOWERLAYER).MapLayerComponents.RemoveAt(i);
-                            break;
-                        }
-                    }
-                }
-            }
+
         }
     }
 }

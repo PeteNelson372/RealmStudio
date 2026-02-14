@@ -21,12 +21,12 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
+using RealmStudioX.Properties;
 using System.IO;
 using System.Text.Json;
 using WorldAnvilIntegrationLib;
 
-namespace RealmStudio.WorldAnvilIntegration
+namespace RealmStudioX.WorldAnvilIntegration
 {
     public partial class WorldAnvilMapIntegration : Form
     {
@@ -45,9 +45,10 @@ namespace RealmStudio.WorldAnvilIntegration
 
         private void CreateMapButton_Click(object sender, EventArgs e)
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
-            if (MapStateMediator.CurrentMap.WorldAnvilImageId != 0 && MapStateMediator.CurrentMap.WorldAnvilMapId != Guid.Empty)
+            /*
+            if (MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilImageId != 0 && MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilMapId != Guid.Empty)
             {
                 // get image data and map data and update existing map
                 if (!int.TryParse(MapImageIdTextBox.Text, out int mapImageId))
@@ -56,7 +57,7 @@ namespace RealmStudio.WorldAnvilIntegration
                     return;
                 }
 
-                if (mapImageId != MapStateMediator.CurrentMap.WorldAnvilImageId)
+                if (mapImageId != MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilImageId)
                 {
                     CreateMapButton.Enabled = false;
                     CreateMapArticleButton.Enabled = false;
@@ -86,7 +87,7 @@ namespace RealmStudio.WorldAnvilIntegration
                     string apiToken = Settings.Default.WorldAnvilApiToken;
                     if (!string.IsNullOrEmpty(apiToken))
                     {
-                        if (ValidateMapImageId(apiToken, MapStateMediator.CurrentMap.WorldAnvilImageId))
+                        if (ValidateMapImageId(apiToken, MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilImageId))
                         {
                             CreateMapButton.Enabled = true;
                             CreateMapArticleButton.Enabled = true;
@@ -106,7 +107,7 @@ namespace RealmStudio.WorldAnvilIntegration
                 // create new map
                 CreateNewMapInWorldAnvil();
             }
-
+            */
         }
 
         private void CreateMapButton_MouseHover(object sender, EventArgs e)
@@ -114,6 +115,7 @@ namespace RealmStudio.WorldAnvilIntegration
             TOOLTIP.Show("Create or update the Map object in World Anvil.\nThe map image must be validated before creating the World Anvil Map object.", this, new Point(ValidateImageIdButton.Left, ValidateImageIdButton.Top - 20), 3000);
         }
 
+        /*
         private void CreateNewMapInWorldAnvil()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
@@ -122,7 +124,7 @@ namespace RealmStudio.WorldAnvilIntegration
                 !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId) &&
                 !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) &&
                 !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiToken) &&
-                !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WorldId))
+                IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId != Guid.Empty)
             {
                 try
                 {
@@ -134,7 +136,7 @@ namespace RealmStudio.WorldAnvilIntegration
 
                         world = new WorldAnvilWorld
                         {
-                            id = IntegrationManager.WorldAnvilParameters.WorldId
+                            id = IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId.ToString(),
                         },
 
                         image = new WorldAnvilImage
@@ -165,11 +167,11 @@ namespace RealmStudio.WorldAnvilIntegration
                         if (createdMapGuid != Guid.Empty)
                         {
                             MessageBox.Show("World Anvil Map object created successfully.\nMap Title: " + createdMapTitle + "\nMap ID: " + createdMapId, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            MapStateMediator.CurrentMap.WorldAnvilMapId = createdMapGuid;
-                            MapStateMediator.CurrentMap.WorldAnvilMapTitle = createdMapTitle ?? string.Empty;
-                            MapStateMediator.CurrentMap.WorldAnvilImageId = validatedImageId;
-                            MapStateMediator.CurrentMap.WorldAnvilUserId = Guid.Parse(IntegrationManager.WorldAnvilParameters.WAUserId);
-                            MapStateMediator.CurrentMap.WorldAnvilWorldId = Guid.Parse(IntegrationManager.WorldAnvilParameters.WorldId);
+                            MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilMapId = createdMapGuid;
+                            MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilMapTitle = createdMapTitle ?? string.Empty;
+                            MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilImageId = validatedImageId;
+                            MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilUserId = Guid.Parse(IntegrationManager.WorldAnvilParameters.WAUserId);
+                            MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilWorldId = IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId;
                             MapIdLabel.Text = createdMapId;
                             MapTitleTextBox.Text = createdMapTitle;
                         }
@@ -189,7 +191,9 @@ namespace RealmStudio.WorldAnvilIntegration
                 MessageBox.Show("World Anvil integration parameters are missing or invalid. Please validate the World Anvil API token on the World Anvil Integration dialog.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        */
 
+        /*
         private void UpdateMap()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
@@ -198,7 +202,7 @@ namespace RealmStudio.WorldAnvilIntegration
                 !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId) &&
                 !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) &&
                 !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiToken) &&
-                !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WorldId))
+                IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId != Guid.Empty)
             {
                 try
                 {
@@ -206,12 +210,12 @@ namespace RealmStudio.WorldAnvilIntegration
 
                     WorldAnvilMap map = new()
                     {
-                        id = MapStateMediator.CurrentMap.WorldAnvilMapId.ToString(),
+                        id = MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilMapId.ToString(),
                         title = mapTitle,
 
                         world = new WorldAnvilWorld
                         {
-                            id = IntegrationManager.WorldAnvilParameters.WorldId
+                            id = IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId.ToString()
                         },
 
                         image = new WorldAnvilImage
@@ -243,11 +247,11 @@ namespace RealmStudio.WorldAnvilIntegration
                         if (updatedMapGuid != Guid.Empty && updatedMapImageId == validatedImageId && updatedMapTitle == MapTitleTextBox.Text)
                         {
                             MessageBox.Show("World Anvil Map object updated successfully.\nMap Title: " + updatedMapTitle + "\nMap ID: " + updatedMapId, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            MapStateMediator.CurrentMap.WorldAnvilMapId = updatedMapGuid;
-                            MapStateMediator.CurrentMap.WorldAnvilMapTitle = updatedMapTitle ?? string.Empty;
-                            MapStateMediator.CurrentMap.WorldAnvilImageId = validatedImageId;
-                            MapStateMediator.CurrentMap.WorldAnvilUserId = Guid.Parse(IntegrationManager.WorldAnvilParameters.WAUserId);
-                            MapStateMediator.CurrentMap.WorldAnvilWorldId = Guid.Parse(IntegrationManager.WorldAnvilParameters.WorldId);
+                            MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilMapId = updatedMapGuid;
+                            MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilMapTitle = updatedMapTitle ?? string.Empty;
+                            MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilImageId = validatedImageId;
+                            MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilUserId = Guid.Parse(IntegrationManager.WorldAnvilParameters.WAUserId);
+                            MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilWorldId = IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId;
                             MapIdLabel.Text = updatedMapId;
                             MapTitleTextBox.Text = updatedMapTitle;
                         }
@@ -267,6 +271,7 @@ namespace RealmStudio.WorldAnvilIntegration
                 MessageBox.Show("World Anvil integration parameters are missing or invalid. Please validate the World Anvil API token on the World Anvil Integration dialog.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        */
 
         private void ValidateImageIdButton_Click(object sender, EventArgs e)
         {
@@ -323,36 +328,37 @@ namespace RealmStudio.WorldAnvilIntegration
         {
             CreateMapButton.Enabled = false;
 
+            /*
             try
             {
-                if (MapStateMediator.CurrentMap != null && MapStateMediator.CurrentMap.WorldAnvilMapId != Guid.Empty)
+                if (MapStateMediator.CurrentMap != null && MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilMapId != Guid.Empty)
                 {
-                    MapIdLabel.Text = MapStateMediator.CurrentMap.WorldAnvilMapId.ToString();
+                    MapIdLabel.Text = MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilMapId.ToString();
                 }
 
-                if (MapStateMediator.CurrentMap != null && MapStateMediator.CurrentMap.WorldAnvilWorldId != Guid.Empty)
+                if (MapStateMediator.CurrentMap != null && MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilWorldId != Guid.Empty)
                 {
-                    MapWorldIdLabel.Text = MapStateMediator.CurrentMap.WorldAnvilWorldId.ToString();
+                    MapWorldIdLabel.Text = MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilWorldId.ToString();
                 }
 
-                if (MapStateMediator.CurrentMap != null && MapStateMediator.CurrentMap.WorldAnvilUserId != Guid.Empty)
+                if (MapStateMediator.CurrentMap != null && MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilUserId != Guid.Empty)
                 {
-                    MapUserIdLabel.Text = MapStateMediator.CurrentMap.WorldAnvilUserId.ToString();
+                    MapUserIdLabel.Text = MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilUserId.ToString();
                 }
 
-                if (MapStateMediator.CurrentMap != null && !string.IsNullOrEmpty(MapStateMediator.CurrentMap.WorldAnvilMapTitle))
+                if (MapStateMediator.CurrentMap != null && !string.IsNullOrEmpty(MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilMapTitle))
                 {
-                    MapTitleTextBox.Text = MapStateMediator.CurrentMap.WorldAnvilMapTitle;
+                    MapTitleTextBox.Text = MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilMapTitle;
                 }
 
-                if (MapStateMediator.CurrentMap != null && MapStateMediator.CurrentMap.WorldAnvilImageId != 0)
+                if (MapStateMediator.CurrentMap != null && MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilImageId != 0)
                 {
-                    MapImageIdTextBox.Text = MapStateMediator.CurrentMap.WorldAnvilImageId.ToString();
+                    MapImageIdTextBox.Text = MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilImageId.ToString();
 
                     string apiToken = Settings.Default.WorldAnvilApiToken;
                     if (!string.IsNullOrEmpty(apiToken))
                     {
-                        if (ValidateMapImageId(apiToken, MapStateMediator.CurrentMap.WorldAnvilImageId))
+                        if (ValidateMapImageId(apiToken, MapStateMediator.CurrentMap.WorldAnvilIntegrationParams.WorldAnvilImageId))
                         {
                             CreateMapButton.Enabled = true;
                             CreateMapArticleButton.Enabled = true;
@@ -369,6 +375,7 @@ namespace RealmStudio.WorldAnvilIntegration
             {
                 MessageBox.Show("Error loading World Anvil Map data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            */
         }
 
         private bool ValidateMapImageId(string userApiToken, int mapImageId)

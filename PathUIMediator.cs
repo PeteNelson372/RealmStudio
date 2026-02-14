@@ -21,19 +21,12 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
-using System.ComponentModel;
-using System.IO;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class PathUIMediator : IUIMediatorObserver
+    internal sealed class PathUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
-        private MapStateMediator? _mapState;
-
         private readonly List<MapTexture> _pathTextureList = [];
         private readonly List<MapVector> _pathVectorList = [];
 
@@ -51,19 +44,8 @@ namespace RealmStudio
 
         private int _pathTextureIndex;
 
-        internal PathUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += PathUIMediator_PropertyChanged;
-        }
 
         #region Property Setter/Getters
-
-        internal MapStateMediator? MapState
-        {
-            get { return _mapState; }
-            set { _mapState = value; }
-        }
 
         // path UI properties
 
@@ -167,37 +149,23 @@ namespace RealmStudio
 
         #region Property Change Handler Methods
 
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
-
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            if (MapStateMediator.CurrentMap != null)
-            {
-                UpdatePathUI(changedPropertyName);
-                PathManager.Update();
-
-                MainForm.SKGLRenderControl.Invalidate();
-            }
-        }
-
+        /*
         internal void UpdatePathUI(string? changedPropertyName)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
+               
                 MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
                 MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
 
@@ -232,8 +200,9 @@ namespace RealmStudio
                         // selected path texture scale should be changed in the UI
                         //MainForm.PathTextureScaleTrack.Value = (int)(PathTextureScale * 100.0f);
                         UpdatePathTextureComboBox();
-                    }
+                    }                
                 }
+                
             }));
         }
 
@@ -289,25 +258,12 @@ namespace RealmStudio
                 }
             }
         }
-
-        #endregion
-
-        #region EventHandlers
-
-        private void PathUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
-
+        */
         #endregion
 
         #region Path UI methods
 
+        /*
         internal void Reset()
         {
             PathType = PathType.SolidLinePath;
@@ -381,6 +337,8 @@ namespace RealmStudio
 
             MapStateMediator.MainUIMediator.SelectedBrushSize = 0;
 
+            
+
             if (MapStateMediator.MainUIMediator.CurrentDrawingMode == MapDrawingMode.PathSelect)
             {
                 if (EditPathPoints)
@@ -497,18 +455,23 @@ namespace RealmStudio
             }
 
             MapStateMediator.MainUIMediator.SetDrawingMode(MapStateMediator.MainUIMediator.CurrentDrawingMode, MapStateMediator.MainUIMediator.SelectedBrushSize);
+
+            
         }
 
+        */
         #endregion
 
         #region Static Map Path UI methods
 
+        /*
         internal static MapPath? SelectMapPathAtPoint(RealmStudioMap map, SKPoint mapClickPoint)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapPath? selectedMapPath = null;
 
+            
             List<MapComponent> mapPathUpperComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHUPPERLAYER).MapLayerComponents;
 
             for (int i = 0; i < mapPathUpperComponents.Count; i++)
@@ -570,6 +533,9 @@ namespace RealmStudio
             }
 
             RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, selectedMapPath);
+
+            
+
             return selectedMapPath;
         }
 
@@ -577,6 +543,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            
             MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
             foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
             {
@@ -590,12 +557,14 @@ namespace RealmStudio
                 mp.IsSelected = false;
                 mp.ShowPathPoints = false;
             }
+            
         }
 
         internal static void SetShowPathPoints()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            
             MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
             foreach (MapPath mp in pathUpperLayer.MapLayerComponents.Cast<MapPath>())
             {
@@ -613,6 +582,7 @@ namespace RealmStudio
                     mp.ShowPathPoints = true;
                 }
             }
+            
         }
 
         internal void EnableDisablePathSelection()
@@ -669,7 +639,7 @@ namespace RealmStudio
 
             MapStateMediator.MainUIMediator.SetDrawingMode(MapStateMediator.MainUIMediator.CurrentDrawingMode, MapStateMediator.MainUIMediator.SelectedBrushSize);
         }
-
+        */
         #endregion
     }
 }

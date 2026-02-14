@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public abstract class DrawnMapComponent : MapComponent
     {

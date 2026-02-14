@@ -21,50 +21,44 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using System.ComponentModel;
+using RealmStudioShapeRenderingLib;
+using SkiaSharp;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class LandformUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    public sealed class LandformUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
-
         private readonly List<MapTexture> _landTextureList = [];
         private int _landformTextureIndex;
+        private string _landformTextureId = string.Empty;
 
         private bool _showLandformLayers = true;
 
         private ColorPaintBrush _landPaintBrush = ColorPaintBrush.SoftBrush;
 
-        private Color _landPaintColor = Color.FromArgb(128, 230, 208, 171);
+        private float _landShadingDepth = 200F;
+
+        private SKColor _landPaintColor = new(128, 230, 208, 171);
         private int _landformBrushSize = 64;
         private int _landformEraserSize = 64;
         private int _landPaintBrushSize = 20;
         private int _landPaintEraserSize = 20;
-        private Color _landOutlineColor = Color.FromArgb(62, 55, 40);
-        private Color _landBackgroundColor = Color.White;
-        private Color _coastlineColor = Color.FromArgb(187, 156, 195, 183);
-        private string _coastlineStyle = "Dash Pattern";
+        private SKColor _landOutlineColor = new(62, 55, 40);
+        private SKColor _landBackgroundColor = new(140, 180, 120);
+        private SKColor _coastlineColor = new(187, 156, 195, 183);
+        private LandformCoastlineStyle _coastlineStyle = LandformCoastlineStyle.DashPattern;
         private int _coastlineEffectDistance;
         private int _landOutlineWidth = 2;
         private bool _useTextureBackground = true;
 
-        private Color _customColor1 = Color.White;
-        private Color _customColor2 = Color.White;
-        private Color _customColor3 = Color.White;
-        private Color _customColor4 = Color.White;
-        private Color _customColor5 = Color.White;
-        private Color _customColor6 = Color.White;
+        private SKColor _customColor1 = SKColors.White;
+        private SKColor _customColor2 = SKColors.White;
+        private SKColor _customColor3 = SKColors.White;
+        private SKColor _customColor4 = SKColors.White;
+        private SKColor _customColor5 = SKColors.White;
+        private SKColor _customColor6 = SKColors.White;
 
         private GeneratedLandformType _generatedLandformType = GeneratedLandformType.Region;
-
-        public LandformUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += LandformUIMediator_PropertyChanged;
-        }
 
         #region Property Setters/Getters
 
@@ -80,55 +74,61 @@ namespace RealmStudio
             set { SetPropertyField(nameof(LandPaintBrush), ref _landPaintBrush, value); }
         }
 
-        internal Color LandPaintColor
+        internal float LandShadingDepth
+        {
+            get { return _landShadingDepth; }
+            set { SetPropertyField(nameof(LandShadingDepth), ref _landShadingDepth, value); }
+        }
+
+        internal SKColor LandPaintColor
         {
             get { return _landPaintColor; }
             set
             {
-                if (value != Color.Empty)
+                if (value != SKColor.Empty)
                 {
                     SetPropertyField(nameof(LandPaintColor), ref _landPaintColor, value);
                 }
             }
         }
 
-        internal Color LandOutlineColor
+        internal SKColor LandOutlineColor
         {
             get { return _landOutlineColor; }
             set
             {
-                if (value != Color.Empty)
+                if (value != SKColor.Empty)
                 {
                     SetPropertyField(nameof(LandOutlineColor), ref _landOutlineColor, value);
                 }
             }
         }
 
-        internal Color LandBackgroundColor
+        internal SKColor LandBackgroundColor
         {
             get { return _landBackgroundColor; }
             set
             {
-                if (value != Color.Empty)
+                if (value != SKColor.Empty)
                 {
                     SetPropertyField(nameof(LandBackgroundColor), ref _landBackgroundColor, value);
                 }
             }
         }
 
-        internal Color CoastlineColor
+        internal SKColor CoastlineColor
         {
             get { return _coastlineColor; }
             set
             {
-                if (value != Color.Empty)
+                if (value != SKColor.Empty)
                 {
                     SetPropertyField(nameof(CoastlineColor), ref _coastlineColor, value);
                 }
             }
         }
 
-        internal string CoastlineStyle
+        internal LandformCoastlineStyle CoastlineStyle
         {
             get { return _coastlineStyle; }
             set { SetPropertyField(nameof(CoastlineStyle), ref _coastlineStyle, value); }
@@ -186,43 +186,49 @@ namespace RealmStudio
             get { return _landTextureList; }
         }
 
+        internal string LandformTextureId
+        {
+            get { return _landformTextureId; }
+            set { SetPropertyField(nameof(LandformTextureId), ref _landformTextureId, value); }
+        }
+
         internal GeneratedLandformType LandformGenerationType
         {
             get { return _generatedLandformType; }
             set { SetPropertyField(nameof(LandformGenerationType), ref _generatedLandformType, value); }
         }
 
-        public Color CustomColor1
+        public SKColor CustomColor1
         {
             get { return _customColor1; }
             set { SetPropertyField(nameof(CustomColor1), ref _customColor1, value); }
         }
 
-        public Color CustomColor2
+        public SKColor CustomColor2
         {
             get { return _customColor2; }
             set { SetPropertyField(nameof(CustomColor2), ref _customColor2, value); }
         }
 
-        public Color CustomColor3
+        public SKColor CustomColor3
         {
             get { return _customColor3; }
             set { SetPropertyField(nameof(CustomColor3), ref _customColor3, value); }
         }
 
-        public Color CustomColor4
+        public SKColor CustomColor4
         {
             get { return _customColor4; }
             set { SetPropertyField(nameof(CustomColor4), ref _customColor4, value); }
         }
 
-        public Color CustomColor5
+        public SKColor CustomColor5
         {
             get { return _customColor5; }
             set { SetPropertyField(nameof(CustomColor5), ref _customColor5, value); }
         }
 
-        public Color CustomColor6
+        public SKColor CustomColor6
         {
             get { return _customColor6; }
             set { SetPropertyField(nameof(CustomColor6), ref _customColor6, value); }
@@ -231,27 +237,19 @@ namespace RealmStudio
         #endregion
 
         #region Property Change Handler Methods
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
 
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            UpdateLandformUI(changedPropertyName);
-            LandformManager.Update();
-            MainForm.SKGLRenderControl.Invalidate();
-        }
+        #endregion
 
+        /*
         private void UpdateLandformUI(string? changedPropertyName)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
@@ -392,7 +390,7 @@ namespace RealmStudio
 
                 if (MapStateMediator.CurrentLandform != null)
                 {
-                    MapStateMediator.CurrentLandform.FillWithTexture = UseTextureBackground;
+                    MapStateMediator.CurrentLandform.Shading.FillWithTexture = UseTextureBackground;
                 }
 
                 if (!string.IsNullOrEmpty(changedPropertyName))
@@ -401,13 +399,13 @@ namespace RealmStudio
                     {
                         case "ShowLandformLayers":
                             {
-                                MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDCOASTLINELAYER);
-                                MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
-                                MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDDRAWINGLAYER);
+                                //MapLayer landCoastlineLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDCOASTLINELAYER);
+                                //MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
+                                //MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDDRAWINGLAYER);
 
-                                landCoastlineLayer.ShowLayer = ShowLandformLayers;
-                                landformLayer.ShowLayer = ShowLandformLayers;
-                                landDrawingLayer.ShowLayer = ShowLandformLayers;
+                                //landCoastlineLayer.ShowLayer = ShowLandformLayers;
+                                //landformLayer.ShowLayer = ShowLandformLayers;
+                                //landDrawingLayer.ShowLayer = ShowLandformLayers;
                             }
                             break;
                         case "LandformTextureIndex":
@@ -458,7 +456,7 @@ namespace RealmStudio
                             {
                                 for (int i = 0; i < MainForm.CoastlineStyleList.Items.Count; i++)
                                 {
-                                    if (MainForm.CoastlineStyleList.Items[i].ToString() == CoastlineStyle)
+                                    if (MainForm.CoastlineStyleList.Items[i].ToString() == CoastlineStyle.GetDescription())
                                     {
                                         MainForm.CoastlineStyleList.SelectedIndex = i;
                                         break;
@@ -547,7 +545,7 @@ namespace RealmStudio
             LandOutlineColor = Color.FromArgb(62, 55, 40);
             LandBackgroundColor = Color.White;
             CoastlineColor = Color.FromArgb(187, 156, 195, 183);
-            CoastlineStyle = "Dash Pattern";
+            CoastlineStyle = LandformCoastlineStyle.DashPattern;
             CoastlineEffectDistance = 16;
             LandOutlineWidth = 2;
             UseTextureBackground = true;
@@ -598,5 +596,7 @@ namespace RealmStudio
         }
 
         #endregion
+
+        */
     }
 }

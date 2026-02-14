@@ -21,16 +21,10 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using System.ComponentModel;
-
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class BackgroundUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    public sealed class BackgroundUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
-        private MapStateMediator? _mapState;
 
         private readonly List<MapTexture> _backgroundTextureList = [];
         private int _backgroundTextureIndex;
@@ -39,19 +33,7 @@ namespace RealmStudio
         private float _backgroundTextureScale = 1.0F;
         private bool _mirrorBackgroundTexture;
 
-        public BackgroundUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += BackgroundUIMediator_PropertyChanged;
-        }
-
         #region Property Setters/Getters
-
-        public MapStateMediator? MapState
-        {
-            get { return _mapState; }
-            set { _mapState = value; }
-        }
 
         internal bool ShowBackground
         {
@@ -86,60 +68,22 @@ namespace RealmStudio
 
 
         #region Property Change Handler Methods
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
 
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            UpdateBackgroundUI(changedPropertyName);
-            BackgroundManager.Update();
-            MainForm.SKGLRenderControl.Invalidate();
-        }
-
-        private void UpdateBackgroundUI(string? changedPropertyName)
-        {
-            MainForm.Invoke(new MethodInvoker(delegate ()
-            {
-                if (changedPropertyName != null)
-                {
-                    if (changedPropertyName == "BackgroundTextureIndex")
-                    {
-                        UpdateBackgroundTexturePictureBox();
-                    }
-                }
-
-            }));
-        }
-
         #endregion
 
-        #region Event Handlers
-
-        private void BackgroundUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
-
-        #endregion
 
         #region Background UI methods
 
+        /*
         internal void Initialize(int backgroundTextureIndex, float backgroundTextureScale, bool mirrorBackground)
         {
             _backgroundTextureIndex = backgroundTextureIndex;
@@ -180,6 +124,7 @@ namespace RealmStudio
             MainForm.BackgroundTextureBox.Image = BackgroundTextureList[BackgroundTextureIndex].TextureBitmap;
             MainForm.BackgroundTextureNameLabel.Text = BackgroundTextureList[BackgroundTextureIndex].TextureName;
         }
+        */
 
         #endregion
     }

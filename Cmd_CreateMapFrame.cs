@@ -21,7 +21,9 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+
+namespace RealmStudioX
 {
     internal sealed class Cmd_CreateMapFrame(RealmStudioMap map, MapFrame? frame) : IMapOperation
     {
@@ -31,22 +33,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            StoredFrame = Frame;
-            FrameManager.Create();
+
         }
 
         public void UndoOperation()
         {
-            if (StoredFrame != null)
-            {
-                Frame = StoredFrame;
 
-                FrameManager.Create();
-            }
-            else
-            {
-                MapBuilder.GetMapLayerByIndex(Map, MapBuilder.FRAMELAYER).MapLayerComponents.Clear();
-            }
         }
     }
 }

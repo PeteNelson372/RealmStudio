@@ -1,0 +1,215 @@
+
+        internal void SetDrawingMode(MapDrawingMode newDrawingMode, int newBrushSize = -1)
+        {
+            CurrentDrawingMode = newDrawingMode;
+
+            MainForm.RoundRectButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.TriangleButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.RightTriangleButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.DiamondButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.PentagonButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.HexagonButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.ArrowButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.FivePointStarButton.FlatAppearance.BorderColor = Color.LightGray;
+            MainForm.SixPointStarButton.FlatAppearance.BorderColor = Color.LightGray;
+
+            if (newDrawingMode == MapDrawingMode.DrawingRoundedRectangle)
+            {
+                MainForm.RoundRectButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingTriangle)
+            {
+                MainForm.TriangleButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingRightTriangle)
+            {
+                MainForm.RightTriangleButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingDiamond)
+            {
+                MainForm.DiamondButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingPentagon)
+            {
+                MainForm.PentagonButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingHexagon)
+            {
+                MainForm.HexagonButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingArrow)
+            {
+                MainForm.ArrowButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingFivePointStar)
+            {
+                MainForm.FivePointStarButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+            else if (newDrawingMode == MapDrawingMode.DrawingSixPointStar)
+            {
+                MainForm.SixPointStarButton.FlatAppearance.BorderColor = Color.DarkSeaGreen;
+            }
+
+            SetDrawingModeLabel();
+
+            if (newBrushSize >= 0)
+            {
+                SelectedBrushSize = newBrushSize;
+            }
+
+            MainForm.SKGLRenderControl.Focus();
+        }
+
+        internal void SetDrawingModeLabel()
+        {
+            string modeText = "Drawing Mode: ";
+
+            modeText += CurrentDrawingMode switch
+            {
+                MapDrawingMode.None => "None",
+                MapDrawingMode.LandPaint => "Paint Landform",
+                MapDrawingMode.LandErase => "Erase Landform",
+                MapDrawingMode.LandColorErase => "Erase Landform Color",
+                MapDrawingMode.LandColor => "Color Landform",
+                MapDrawingMode.OceanErase => "Erase Ocean",
+                MapDrawingMode.OceanPaint => "Paint Ocean",
+                MapDrawingMode.ColorSelect => "Select Color",
+                MapDrawingMode.LandformSelect => "Select Landform",
+                MapDrawingMode.LandformHeightMapSelect => "Select Landform",
+                MapDrawingMode.WaterPaint => "Paint Water Feature",
+                MapDrawingMode.WaterErase => "Erase Water Feature",
+                MapDrawingMode.WaterColor => "Color Water Feature",
+                MapDrawingMode.WaterColorErase => "Erase Water Feature Color",
+                MapDrawingMode.LakePaint => "Paint Lake",
+                MapDrawingMode.RiverPaint => "Paint River",
+                MapDrawingMode.RiverEdit => "Edit River",
+                MapDrawingMode.WaterFeatureSelect => "Select Water Feature",
+                MapDrawingMode.PathPaint => "Draw Path",
+                MapDrawingMode.PathSelect => "Select Path",
+                MapDrawingMode.PathEdit => "Edit Path",
+                MapDrawingMode.SymbolErase => "Erase Symbol",
+                MapDrawingMode.SymbolPlace => "Place Symbol",
+                MapDrawingMode.SymbolSelect => "Select Symbol",
+                MapDrawingMode.SymbolColor => "Color Symbol",
+                MapDrawingMode.DrawBezierLabelPath => "Draw Curve Label Path",
+                MapDrawingMode.DrawArcLabelPath => "Draw Arc Label Path",
+                MapDrawingMode.DrawLabel => "Place Label",
+                MapDrawingMode.LabelSelect => "Select Label",
+                MapDrawingMode.DrawBox => "Draw Box",
+                MapDrawingMode.PlaceWindrose => "Place Windrose",
+                MapDrawingMode.SelectMapScale => "Move Map Scale",
+                MapDrawingMode.DrawMapMeasure => "Draw Map Measure",
+                MapDrawingMode.RegionPaint => "Draw Region",
+                MapDrawingMode.RegionSelect => "Select Region",
+                MapDrawingMode.RealmAreaSelect => "Select Area",
+                MapDrawingMode.HeightMapPaint => "Paint Height Map",
+                MapDrawingMode.MapHeightIncrease => "Increase Map Height",
+                MapDrawingMode.MapHeightDecrease => "Decrease Map Height",
+                MapDrawingMode.DrawingLine => "Draw Line",
+                MapDrawingMode.DrawingErase => "Erase",
+                MapDrawingMode.DrawingPaint => "Paint",
+                MapDrawingMode.DrawingRectangle => "Draw Rectangle",
+                MapDrawingMode.DrawingEllipse => "Draw Ellipse",
+                MapDrawingMode.DrawingPolygon => "Draw Polygon",
+                MapDrawingMode.DrawingStamp => "Stamp",
+                MapDrawingMode.DrawingDiamond => "Draw Diamond",
+                MapDrawingMode.DrawingRoundedRectangle => "Draw Rounded Rectangle",
+                MapDrawingMode.DrawingTriangle => "Draw Triangle",
+                MapDrawingMode.DrawingRightTriangle => "Draw Right Triangle",
+                MapDrawingMode.DrawingHexagon => "Draw Hexagon",
+                MapDrawingMode.DrawingPentagon => "Draw Pentagon",
+                MapDrawingMode.DrawingArrow => "Draw Arrow",
+                MapDrawingMode.DrawingFivePointStar => "Draw 5-Point Star",
+                MapDrawingMode.DrawingSixPointStar => "Draw 6-Point Star",
+                MapDrawingMode.DrawingSelect => "Select Drawn Object",
+                MapDrawingMode.InteriorFloorPaint => "Paint Interior Floor",
+                _ => "Undefined",
+            };
+
+            modeText += ". Selected Brush: ";
+
+            switch (MapStateMediator.SelectedColorPaintBrush)
+            {
+                case ColorPaintBrush.SoftBrush:
+                    modeText += "Soft Brush";
+                    break;
+                case ColorPaintBrush.HardBrush:
+                    modeText += "Hard Brush";
+                    break;
+                case ColorPaintBrush.PatternBrush1:
+                    modeText += "Pattern 1";
+                    break;
+                case ColorPaintBrush.PatternBrush2:
+                    modeText += "Pattern 2";
+                    break;
+                case ColorPaintBrush.PatternBrush3:
+                    modeText += "Pattern 3";
+                    break;
+                case ColorPaintBrush.PatternBrush4:
+                    modeText += "Pattern 4";
+                    break;
+                case ColorPaintBrush.None:
+                    break;
+                default:
+                    modeText += "None";
+                    break;
+            }
+
+            MainForm.DrawingModeLabel.Text = modeText;
+            MainForm.ApplicationStatusStrip.Refresh();
+        }
+
+        internal void SetDrawingLayerLabel(string labelText)
+        {
+            MainForm.DrawingLayerLabel.Text = labelText.ToUpperInvariant();
+            MainForm.ApplicationStatusStrip.Refresh();
+        }
+
+        #region UI Update Methods
+
+        internal void EnabledDisableOverlayLayer()
+        {
+            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
+            MapLayer overlayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OVERLAYLAYER);
+            overlayLayer.ShowLayer = OverlayLayerEnabled;
+
+            MapLayer frameLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER);
+            frameLayer.ShowLayer = OverlayLayerEnabled;
+
+            MapLayer aboveOceanGridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.ABOVEOCEANGRIDLAYER);
+            aboveOceanGridLayer.ShowLayer = OverlayLayerEnabled;
+
+            MapLayer belowSymbolsGridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BELOWSYMBOLSGRIDLAYER);
+            belowSymbolsGridLayer.ShowLayer = OverlayLayerEnabled;
+
+            MapLayer defaultGridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER);
+            defaultGridLayer.ShowLayer = OverlayLayerEnabled;
+
+            MapLayer measureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER);
+            measureLayer.ShowLayer = OverlayLayerEnabled;
+        }
+
+        internal void ShowHideFontSelectionPanel(bool visible)
+        {
+            MainForm.FontSelectionPanel.Visible = visible;
+        }
+
+        internal void EnableDisableWorldAnvilIntegration()
+        {
+            if (WorldAnvilIntegrationEnabled)
+            {
+                MainForm.WorldAnvilIntegrationButton.Visible = true;
+                MainForm.WorldAnvilIntegrationButton.Enabled = true;
+            }
+            else
+            {
+                MainForm.WorldAnvilIntegrationButton.Visible = false;
+                MainForm.WorldAnvilIntegrationButton.Enabled = false;
+
+                MainForm.WorldAnvilMapButton.Visible = false;
+                MainForm.WorldAnvilMapButton.Enabled = false;
+            }
+        }
+
+        #endregion

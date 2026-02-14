@@ -29,7 +29,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using SKCanvas = SkiaSharp.SKCanvas;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class MapHeightMap : MapComponent, IXmlSerializable
     {

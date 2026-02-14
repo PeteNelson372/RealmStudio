@@ -21,17 +21,13 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using RealmStudioShapeRenderingLib;
 using SkiaSharp;
-using System.ComponentModel;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class DrawingUIMediator : IUIMediatorObserver, INotifyPropertyChanged, IDisposable
+    internal sealed class DrawingUIMediator : UiMediatorBase, IUIMediatorObserver, IDisposable
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
-
         private int _drawingLineBrushSize = 4;
         private Color _drawingLineColor = Color.Black;
         private Color _drawingFillColor = Color.White;
@@ -67,12 +63,6 @@ namespace RealmStudio
         private float _drawingShapeRotation;
 
         private bool disposedValue;
-
-        public DrawingUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += DrawingUIMediator_PropertyChanged;
-        }
 
         #region Property Setters/Getters
 
@@ -197,41 +187,19 @@ namespace RealmStudio
 
         #endregion
 
-        #region Event Handlers
-        private void DrawingUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
-
-        #endregion
 
         #region Property Change Handler Methods
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
 
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            UpdateDrawingUI(changedPropertyName);
-            DrawingManager.Update();
-            MainForm.SKGLRenderControl.Invalidate();
-        }
-
+        /*
         private void UpdateDrawingUI(string? changedPropertyName)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
@@ -456,18 +424,20 @@ namespace RealmStudio
                     }
                     else if (changedPropertyName == "ShowDrawingLayer")
                     {
-                        MapLayer drawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
-                        drawingLayer.ShowLayer = ShowDrawingLayer;
+                        //MapLayer drawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                        //drawingLayer.ShowLayer = ShowDrawingLayer;
                     }
                 }
 
             }));
         }
 
+        */
         #endregion
 
         #region Drawing UI Methods
 
+        /*
         private void UpdateDrawingTexturePictureBox()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
@@ -506,6 +476,7 @@ namespace RealmStudio
                 }
             }
         }
+        */
 
         public void Dispose(bool disposing)
         {

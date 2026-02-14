@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using OpenTK.Mathematics;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class ObjModelParser
     {

@@ -21,18 +21,12 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
-using System.ComponentModel;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class WaterFeatureUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class WaterFeatureUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
-        private MapStateMediator? _mapState;
-
         private readonly List<MapTexture> _waterTextureList = [];
 
         private bool _showWaterFeatureLayers = true;
@@ -47,6 +41,7 @@ namespace RealmStudio
         private Color _waterPaintColor = Color.FromArgb(128, 145, 203, 184);
         private int _waterColorBrushSize = 20;
         private int _waterColorEraserSize = 20;
+        private float _waterCurrentBrushVelocity;
 
         // river UI values
         private bool _editRiverPoints;
@@ -63,19 +58,8 @@ namespace RealmStudio
         private Color _customColor7 = Color.White;
         private Color _customColor8 = Color.White;
 
-        internal WaterFeatureUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += WaterFeatureUIMediator_PropertyChanged;
-        }
 
         #region Property Setter/Getters
-
-        internal MapStateMediator? MapState
-        {
-            get { return _mapState; }
-            set { _mapState = value; }
-        }
 
         // Water Feature UI properties
         internal List<MapTexture> WaterTextureList
@@ -156,6 +140,12 @@ namespace RealmStudio
             set { SetPropertyField(nameof(WaterColorEraserSize), ref _waterColorEraserSize, value); }
         }
 
+        internal float WaterCurrentBrushVelocity
+        {
+            get { return _waterCurrentBrushVelocity; }
+            set { SetPropertyField(nameof(WaterCurrentBrushVelocity), ref _waterCurrentBrushVelocity, value); }
+        }
+
         // River property setters/getters
         internal bool EditRiverPoints
         {
@@ -232,32 +222,16 @@ namespace RealmStudio
 
         #region Property Change Handler Methods
 
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
-
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            if (MapStateMediator.CurrentMap != null)
-            {
-                UpdateWatureFeatureUI(changedPropertyName);
-                UpdateRiverUI();
-                WaterFeatureManager.Update();
-
-                MainForm.SKGLRenderControl.Invalidate();
-            }
-        }
-
+        /*
         internal void UpdateWatureFeatureUI(string? changedPropertyName)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
@@ -265,6 +239,7 @@ namespace RealmStudio
 
             MainForm.Invoke(new MethodInvoker(delegate ()
             {
+                
                 MapLayer waterLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WATERLAYER);
                 MapLayer waterDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WATERDRAWINGLAYER);
 
@@ -462,6 +437,7 @@ namespace RealmStudio
                     }
 
                 }
+                
             }));
         }
 
@@ -474,24 +450,13 @@ namespace RealmStudio
             }));
         }
 
-        #endregion
-
-        #region EventHandlers
-
-        private void WaterFeatureUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
+        */
 
         #endregion
 
         #region Water Feature UI methods
 
+        /*
         internal void Reset()
         {
             WaterTextureList.Clear();
@@ -531,6 +496,7 @@ namespace RealmStudio
 
             MapComponent? selectedWaterFeature = null;
 
+            
             List<MapComponent> waterFeatureComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WATERLAYER).MapLayerComponents;
 
             for (int i = 0; i < waterFeatureComponents.Count; i++)
@@ -579,6 +545,7 @@ namespace RealmStudio
             }
 
             RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, selectedWaterFeature);
+            
             return selectedWaterFeature;
         }
         private void SetRenderRiverTexture()
@@ -604,12 +571,7 @@ namespace RealmStudio
             Color waterColor = ColorTranslator.FromHtml(htmlColor);
             WaterPaintColor = waterColor;
         }
-
-        #endregion
-
-        #region Static Water Feature UI methods
-
-
+        */
         #endregion
     }
 }

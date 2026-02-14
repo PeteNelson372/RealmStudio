@@ -21,12 +21,12 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
+using RealmStudioX.Properties;
 using System.Globalization;
 using System.IO;
 using System.Text.Json.Nodes;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class WonderdraftUserFolderImportDialog : Form
     {

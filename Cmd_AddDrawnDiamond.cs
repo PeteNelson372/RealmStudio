@@ -21,7 +21,9 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddDrawnDiamond(MapLayer mapLayer, DrawnDiamond drawnDiamond) : IMapOperation
     {
@@ -30,22 +32,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            mapLayer.MapLayerComponents.Add(dd);
+
         }
 
         public void UndoOperation()
         {
-            for (int i = mapLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (mapLayer.MapLayerComponents[i] is DrawnDiamond drawnDiamond)
-                {
-                    if (drawnDiamond.DrawnComponentGuid.ToString() == dd.DrawnComponentGuid.ToString())
-                    {
-                        mapLayer.MapLayerComponents.RemoveAt(i);
-                        break;
-                    }
-                }
-            }
+
         }
     }
 }

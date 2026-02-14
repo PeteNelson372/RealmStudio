@@ -1,12 +1,9 @@
-﻿using System.ComponentModel;
+﻿using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class OceanUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class OceanUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
         private MapStateMediator? _mapState;
 
         private readonly List<MapTexture> _oceanTextureList = [];
@@ -36,11 +33,6 @@ namespace RealmStudio
         private Color _customColor7 = Color.White;
         private Color _customColor8 = Color.White;
 
-        public OceanUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += OceanUIMediator_PropertyChanged;
-        }
 
         #region Property Setters/Getters
 
@@ -200,27 +192,17 @@ namespace RealmStudio
         #endregion
 
         #region Property Change Handler Methods
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
 
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            UpdateOceanUI(changedPropertyName);
-            OceanManager.Update();
-            MainForm.SKGLRenderControl.Invalidate();
-        }
-
+        /*
         private void UpdateOceanUI(string? changedPropertyName)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
@@ -363,13 +345,13 @@ namespace RealmStudio
                     {
                         case "ShowOceanLayers":
                             {
-                                MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
-                                MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
-                                MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANDRAWINGLAYER);
+                                //MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
+                                //MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
+                                //MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANDRAWINGLAYER);
 
-                                oceanTextureLayer.ShowLayer = ShowOceanLayers;
-                                oceanTextureOverlayLayer.ShowLayer = ShowOceanLayers;
-                                oceanDrawingLayer.ShowLayer = ShowOceanLayers;
+                                //oceanTextureLayer.ShowLayer = ShowOceanLayers;
+                                //oceanTextureOverlayLayer.ShowLayer = ShowOceanLayers;
+                                //oceanDrawingLayer.ShowLayer = ShowOceanLayers;
                             }
                             break;
                         case "OceanTextureName":
@@ -453,23 +435,13 @@ namespace RealmStudio
             }));
         }
 
-        #endregion
-
-        #region Event Handlers
-        private void OceanUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
+        */
 
         #endregion
 
         #region Ocean UI Methods
 
+        /*
         internal void Initialize(int oceanTextureIndex, string imageName, float textureScale, float textureOpacity, bool mirrorTexture)
         {
             _oceanTextureIndex = oceanTextureIndex;
@@ -579,6 +551,7 @@ namespace RealmStudio
             OceanPaintColor = oceanColor;
         }
 
+        */
         #endregion
     }
 }

@@ -21,7 +21,9 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddInteriorFloorPaintStroke(RealmStudioMap map, LayerPaintStroke paintStroke) : IMapOperation
     {
@@ -30,24 +32,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapLayer interiorDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.INTERIORDRAWINGLAYER);
-            interiorDrawingLayer.MapLayerComponents.Add(PaintStroke);
+
         }
 
         public void UndoOperation()
         {
-            MapLayer interiorDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.INTERIORDRAWINGLAYER);
 
-            for (int i = interiorDrawingLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (interiorDrawingLayer.MapLayerComponents[i] is LayerPaintStroke l && l.StrokeId.ToString() == PaintStroke.StrokeId.ToString())
-                {
-                    l.RenderComponent = false;
-                    l.RenderSurface?.Dispose();
-                    l.RenderSurface = null;
-                    interiorDrawingLayer.MapLayerComponents.RemoveAt(i);
-                }
-            }
         }
     }
 }

@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddDrawnRegularPolygon(MapLayer mapLayer, DrawnRegularPolygon drawnRegularPolygon) : IMapOperation
     {
@@ -30,22 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            mapLayer.MapLayerComponents.Add(drp);
+
         }
 
         public void UndoOperation()
         {
-            for (int i = mapLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (mapLayer.MapLayerComponents[i] is DrawnRegularPolygon drawnRegularPolygon)
-                {
-                    if (drawnRegularPolygon.DrawnComponentGuid.ToString() == drp.DrawnComponentGuid.ToString())
-                    {
-                        mapLayer.MapLayerComponents.RemoveAt(i);
-                        break;
-                    }
-                }
-            }
+
         }
     }
 }

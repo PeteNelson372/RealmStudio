@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddOceanPaintStroke(RealmStudioMap map, LayerPaintStroke paintStroke) : IMapOperation
     {
@@ -30,24 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.OCEANDRAWINGLAYER);
-            oceanDrawingLayer.MapLayerComponents.Add(PaintStroke);
+
         }
 
         public void UndoOperation()
         {
-            MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.OCEANDRAWINGLAYER);
 
-            for (int i = oceanDrawingLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (oceanDrawingLayer.MapLayerComponents[i] is LayerPaintStroke l && l.StrokeId.ToString() == PaintStroke.StrokeId.ToString())
-                {
-                    l.RenderComponent = false;
-                    l.RenderSurface?.Dispose();
-                    l.RenderSurface = null;
-                    oceanDrawingLayer.MapLayerComponents.RemoveAt(i);
-                }
-            }
         }
     }
 }

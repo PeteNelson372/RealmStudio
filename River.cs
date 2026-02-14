@@ -28,8 +28,9 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class River : MapComponent, IWaterFeature, IXmlSerializable
     {
@@ -99,6 +100,7 @@ namespace RealmStudio
 
         public override void Render(SKCanvas canvas)
         {
+            /*
             if (ParentMap == null || RiverBoundaryPath == null
                 || ShorelinePath == null || Gradient1Path == null || ShallowWaterPath == null)
             {
@@ -161,6 +163,8 @@ namespace RealmStudio
 
                 canvas.DrawPath(ShallowWaterPath, RiverShallowWaterPaint);
             }
+
+            */
         }
 
         public List<MapRiverPoint> GetRiverControlPoints()

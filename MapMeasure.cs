@@ -23,8 +23,9 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class MapMeasure : MapComponent
     {
@@ -130,6 +131,7 @@ namespace RealmStudio
 
         public void RenderDistanceLabel(SKCanvas? canvas, SKPoint labelPoint, float distance)
         {
+            /*
             SKFont measureValueSkFont = new(SKTypeface.FromFamilyName(MeasureValueFont.FontFamily.Name), (MeasureValueFont.Size * 4.0F) / 3.0F);
 
             if (UseMapUnits && !string.IsNullOrEmpty(Map.MapAreaUnits))
@@ -146,10 +148,12 @@ namespace RealmStudio
                 canvas?.DrawText(lblText, labelPoint, SKTextAlign.Center, measureValueSkFont, MeasureValueOutlinePaint);
                 canvas?.DrawText(lblText, labelPoint, SKTextAlign.Center, measureValueSkFont, MeasureValuePaint);
             }
+            */
         }
 
         public void RenderAreaLabel(SKCanvas? canvas, SKPoint labelPoint, float measuredArea)
         {
+            /*
             SKFont measureValueSkFont = new(SKTypeface.FromFamilyName(MeasureValueFont.FontFamily.Name), (MeasureValueFont.Size * 4.0F) / 3.0F);
 
             if (UseMapUnits && !string.IsNullOrEmpty(Map.MapAreaUnits))
@@ -166,6 +170,7 @@ namespace RealmStudio
                 canvas?.DrawText(labelString, labelPoint, SKTextAlign.Center, measureValueSkFont, MeasureValueOutlinePaint);
                 canvas?.DrawText(labelString, labelPoint, SKTextAlign.Center, measureValueSkFont, MeasureValuePaint);
             }
+            */
         }
     }
 }

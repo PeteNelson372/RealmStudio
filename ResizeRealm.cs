@@ -21,11 +21,12 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
+using RealmStudioX.Properties;
 using SkiaSharp;
 using System.ComponentModel;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class ResizeRealm : Form
     {

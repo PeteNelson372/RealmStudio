@@ -21,21 +21,10 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using FontAwesome.Sharp;
-using SkiaSharp.Views.Desktop;
-using System.ComponentModel;
-
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class SymbolUIMediator : IUIMediatorObserver
+    internal sealed class SymbolUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
-        private MapStateMediator? _mapState;
-        private TableLayoutPanel _symbolTable;
-        private readonly Panel _symbolToolPanel;
-
         // symbol UI values
         private bool _enabled = true;
         private bool _symbolScaleLocked;
@@ -55,32 +44,7 @@ namespace RealmStudio
         private const int _pictureBoxWidth = 120;
         private const int _pictureBoxHeight = 45;
 
-        internal SymbolUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            _symbolTable = mainForm.SymbolTable;
-            _symbolToolPanel = mainForm.SymbolToolPanel;
-            PropertyChanged += MapSymbolUIMediator_PropertyChanged;
-        }
-
         #region Property Setter/Getters
-
-        internal MapStateMediator? MapState
-        {
-            get { return _mapState; }
-            set { _mapState = value; }
-        }
-
-        internal TableLayoutPanel SymbolTable
-        {
-            get { return _symbolTable; }
-            set { _symbolTable = value; }
-        }
-
-        internal Panel SymbolToolPanel
-        {
-            get { return _symbolToolPanel; }
-        }
 
         // UI value setters/getters
         internal bool Enabled
@@ -215,37 +179,23 @@ namespace RealmStudio
 
         #region Property Change Handler Methods
 
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
-
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            if (MapStateMediator.CurrentMap != null)
-            {
-                UpdateSymbolUI(changedPropertyName);
-                SymbolManager.Update();
-
-                MainForm.SKGLRenderControl.Invalidate();
-            }
-        }
-
+        /*
         private void UpdateSymbolUI(string? changedPropertyName)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             // this methods updates the Main Form Symbol Tab UI
             // based on the property that has changed
+
 
             MapLayer symbollLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER);
             symbollLayer.ShowLayer = Enabled;
@@ -365,20 +315,12 @@ namespace RealmStudio
                 }
             }));
         }
-
+        */
         #endregion
 
         #region Event Handlers
+        /*
 
-        private void MapSymbolUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
 
         // MainForm UI Event handlers //
         private void SymbolPictureBox_Paint(object? sender, PaintEventArgs e)
@@ -459,11 +401,11 @@ namespace RealmStudio
                 }
             }
         }
-
+        */
         #endregion
 
         #region Map Symbol UI Methods
-
+        /*
         internal void Reset()
         {
             // reset symbol UI values to default values
@@ -523,11 +465,11 @@ namespace RealmStudio
 
                     Color paintColor = ((Button)sender).BackColor;
 
-                    Cmd_PaintSymbol cmd = new(MapStateMediator.SelectedMapSymbol,
-                        paintColor.ToSKColor(), SymbolColor1.ToSKColor(), SymbolColor2.ToSKColor(), SymbolColor3.ToSKColor());
+                    //Cmd_PaintSymbol cmd = new(MapStateMediator.SelectedMapSymbol,
+                    //    paintColor.ToSKColor(), SymbolColor1.ToSKColor(), SymbolColor2.ToSKColor(), SymbolColor3.ToSKColor());
 
-                    CommandManager.AddCommand(cmd);
-                    cmd.DoOperation();
+                    //CommandManager.AddCommand(cmd);
+                    //cmd.DoOperation();
                 }
             }
         }
@@ -797,6 +739,7 @@ namespace RealmStudio
 
             MapSymbol? selectedSymbol = null;
 
+            
             List<MapComponent> mapSymbolComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER).MapLayerComponents;
 
             for (int i = 0; i < mapSymbolComponents.Count; i++)
@@ -813,8 +756,13 @@ namespace RealmStudio
             }
 
             RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, selectedSymbol);
+
+            
+
             return selectedSymbol;
         }
+
+        */
 
         #endregion
     }

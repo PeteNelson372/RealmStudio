@@ -21,10 +21,9 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
-using System.Text.Json;
+using RealmStudioX.Properties;
 using WorldAnvilIntegrationLib;
-namespace RealmStudio.WorldAnvilIntegration;
+namespace RealmStudioX.WorldAnvilIntegration;
 
 public partial class WorldAnvilIntegrationParams : Form
 {
@@ -48,7 +47,7 @@ public partial class WorldAnvilIntegrationParams : Form
             }
         }
 
-        if (string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WorldId))
+        if (IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId == Guid.Empty)
         {
             DialogResult result = MessageBox.Show("No World Selected. Close Anyway?", "No World Selected", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result == DialogResult.No)
@@ -84,14 +83,14 @@ public partial class WorldAnvilIntegrationParams : Form
 
         ListViewItem selectedItem = UserWorldsList.SelectedItems[0];
 
-        IntegrationManager.WorldAnvilParameters.WorldTitle = selectedItem.Text;
-        IntegrationManager.WorldAnvilParameters.WorldId = selectedItem.SubItems[1].Text;
+        IntegrationManager.WorldAnvilParameters.WorldAnvilWorldTitle = selectedItem.Text;
+        IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId = Guid.Parse(selectedItem.SubItems[1].Text);
 
-        if (MapStateMediator.MainUIMediator != null)
-        {
-            MapStateMediator.MainUIMediator.MainForm.WorldAnvilMapButton.Visible = true;
-            MapStateMediator.MainUIMediator.MainForm.WorldAnvilMapButton.Enabled = true;
-        }
+        //if (MapStateMediator.MainUIMediator != null)
+        //{
+        //    MapStateMediator.MainUIMediator.MainForm.WorldAnvilMapButton.Visible = true;
+        //    MapStateMediator.MainUIMediator.MainForm.WorldAnvilMapButton.Enabled = true;
+        //}
 
     }
 
@@ -195,7 +194,7 @@ public partial class WorldAnvilIntegrationParams : Form
 
                 foreach (ListViewItem item in UserWorldsList.Items)
                 {
-                    if (item.SubItems[1].Text == IntegrationManager.WorldAnvilParameters.WorldId)
+                    if (item.SubItems[1].Text == IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId.ToString())
                     {
                         item.Selected = true;
                         item.Focused = true;
@@ -232,10 +231,10 @@ public partial class WorldAnvilIntegrationParams : Form
         IntegrationManager.WorldAnvilParameters.WAUserId = string.Empty;
         IntegrationManager.WorldAnvilParameters.ApiKey = string.Empty;
         IntegrationManager.WorldAnvilParameters.ApiToken = string.Empty;
-        IntegrationManager.WorldAnvilParameters.WorldId = string.Empty;
+        IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId = Guid.Empty;
 
-        MapStateMediator.MainUIMediator?.MainForm.WorldAnvilMapButton.Visible = false;
-        MapStateMediator.MainUIMediator?.MainForm.WorldAnvilMapButton.Enabled = false;
+        //MapStateMediator.MainUIMediator?.MainForm.WorldAnvilMapButton.Visible = false;
+        //MapStateMediator.MainUIMediator?.MainForm.WorldAnvilMapButton.Enabled = false;
 
         Settings.Default.Save();
 

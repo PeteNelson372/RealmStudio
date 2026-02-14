@@ -21,17 +21,10 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
-using System.ComponentModel;
-using System.Reflection;
-
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class LabelUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class LabelUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
         private MapStateMediator? _mapState;
 
         bool _enabled = true;
@@ -42,13 +35,6 @@ namespace RealmStudio
         float _outlineWidth;
         Color _labelColor = Color.FromArgb(61, 53, 30);
         Font _selectedLabelFont = MapStateMediator.DefaultLabelFont;
-
-
-        public LabelUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += LabelUIMediator_PropertyChanged;
-        }
 
         #region Property Setters/Getters
         public MapStateMediator? MapState
@@ -126,27 +112,16 @@ namespace RealmStudio
 
         #region Property Change Handler Methods
 
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
-
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            UpdateLabelUI(changedPropertyName);
-            LabelManager.Update();
-            MainForm.SKGLRenderControl.Invalidate();
-        }
-
+        /*
         private void UpdateLabelUI(string? changedPropertyName)
         {
             MainForm.Invoke(new System.Windows.Forms.MethodInvoker(delegate ()
@@ -192,19 +167,13 @@ namespace RealmStudio
 
             }));
         }
+        */
 
         #endregion
 
         #region Event Handlers
-        private void LabelUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
 
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
+        /*
 
 
         internal void LabelTextBox_KeyPress(object? sender, EventArgs e)
@@ -214,7 +183,7 @@ namespace RealmStudio
 
             if (sender != null)
             {
-                MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LABELLAYER);
+                //MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LABELLAYER);
 
                 TextBox tb = (TextBox)sender;
                 tb.BringToFront();
@@ -291,8 +260,8 @@ namespace RealmStudio
                         float xDiff = (tb.Width - bounds.Width) / 2;
                         float yDiff = ((tb.Height - bounds.Height) / 2) + descentPixel / 2;
 
-                        SKPoint zoomedScrolledPoint = new(((tb.Left + xDiff) / MapStateMediator.MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.X,
-                            ((tb.Top + yDiff) / MapStateMediator.MainUIMediator.DrawingZoom) + MapStateMediator.DrawingPoint.Y);
+                        SKPoint zoomedScrolledPoint = new(((tb.Left + xDiff) / MapStateMediator.MainUIMediator.Camera2D.Zoom) + MapStateMediator.DrawingPoint.X,
+                            ((tb.Top + yDiff) / MapStateMediator.MainUIMediator.Camera2D.Zoom) + MapStateMediator.DrawingPoint.Y);
 
                         label.X = (int)zoomedScrolledPoint.X;
                         label.Y = (int)zoomedScrolledPoint.Y;
@@ -317,18 +286,18 @@ namespace RealmStudio
                             LabelManager.CurrentMapLabelPath.Dispose();
                             LabelManager.CurrentMapLabelPath = new();
 
-                            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                            //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
                         }
 
-                        Cmd_AddLabel cmd = new(MapStateMediator.CurrentMap, label);
-                        CommandManager.AddCommand(cmd);
-                        cmd.DoOperation();
+                        //Cmd_AddLabel cmd = new(MapStateMediator.CurrentMap, label);
+                        //CommandManager.AddCommand(cmd);
+                        //cmd.DoOperation();
 
                         RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, label);
 
-                        MapStateMediator.SelectedMapLabel = (MapLabel?)labelLayer.MapLayerComponents.Last();
+                        //MapStateMediator.SelectedMapLabel = (MapLabel?)labelLayer.MapLayerComponents.Last();
 
-                        MapStateMediator.CurrentMap.IsSaved = false;
+                        //MapStateMediator.CurrentMap.IsSaved = false;
                     }
 
                     MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.LabelSelect, 0);
@@ -385,10 +354,12 @@ namespace RealmStudio
                 }
             }
         }
+        */
         #endregion
 
         #region Label UI Methods
 
+        /*
         internal void Reset()
         {
             Enabled = true;
@@ -405,11 +376,13 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            
             MapLayer labellLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LABELLAYER);
             labellLayer.ShowLayer = Enabled;
 
             MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BOXLAYER);
             boxLayer.ShowLayer = Enabled;
+            
         }
 
         internal static MapLabel? SelectLabelAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
@@ -418,6 +391,7 @@ namespace RealmStudio
 
             MapLabel? selectedLabel = null;
 
+            
             List<MapComponent> mapLabelComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LABELLAYER).MapLayerComponents;
 
             for (int i = 0; i < mapLabelComponents.Count; i++)
@@ -434,6 +408,7 @@ namespace RealmStudio
             }
 
             RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, selectedLabel);
+            
 
             return selectedLabel;
         }
@@ -480,6 +455,7 @@ namespace RealmStudio
             }
         }
 
+        */
         #endregion
     }
 }

@@ -21,7 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+namespace RealmStudioX
 {
     // classes that implement this interface mediate between the user interface
     // and MapComponents (objects that make up the realm map)
@@ -29,6 +29,5 @@ namespace RealmStudio
     // the values change
     internal interface IUIMediatorObserver
     {
-        void NotifyUpdate(string? updatedObject);
     }
 }

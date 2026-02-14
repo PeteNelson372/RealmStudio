@@ -21,11 +21,12 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
+using RealmStudioX.Properties;
 using System.ComponentModel;
 using System.IO;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed partial class OpenCreateMap : Form
     {
@@ -103,10 +104,11 @@ namespace RealmStudio
                 }
             }
 
-            AssetManager.LoadThemes();
+            //AssetManager.LoadThemes();
 
             MapThemeList.Items.Clear();
 
+            /*
             List<MapTheme> themes = AssetManager.THEME_LIST;
 
             for (int i = 0; i < themes.Count; i++)
@@ -122,6 +124,7 @@ namespace RealmStudio
                     }
                 }
             }
+            */
 
             ImageList imageList = new()
             {
@@ -140,7 +143,7 @@ namespace RealmStudio
 
             if (string.IsNullOrEmpty(Settings.Default.DefaultRealmDirectory))
             {
-                Settings.Default.DefaultRealmDirectory = UtilityMethods.DEFAULT_REALM_FOLDER;
+                Settings.Default.DefaultRealmDirectory = UtilityMethods.DefaultRealmFolder;
                 Settings.Default.Save();
             }
 
@@ -696,7 +699,7 @@ namespace RealmStudio
         {
             if (MapThemeList.SelectedIndex >= 0)
             {
-                AssetManager.CURRENT_THEME = AssetManager.THEME_LIST[MapThemeList.SelectedIndex];
+                //AssetManager.CURRENT_THEME = AssetManager.THEME_LIST[MapThemeList.SelectedIndex];
             }
         }
 
@@ -916,7 +919,7 @@ namespace RealmStudio
                         DefaultMapAreaWidth = (float)MapAreaWidthUpDown.Value,
                         DefaultMapAreaHeight = float.Parse(MapAreaHeightLabel.Text),
                         DefaultMapAreaUnits = MapAreaUnitCombo.SelectedItem != null ? MapAreaUnitCombo.SelectedItem.ToString() ?? "Miles" : "Miles",
-                        DefaultThemeName = MapThemeList.SelectedItem as string ?? AssetManager.CURRENT_THEME?.ThemeName ?? string.Empty,
+                        //DefaultThemeName = MapThemeList.SelectedItem as string ?? AssetManager.CURRENT_THEME?.ThemeName ?? string.Empty,
                         MapSetPath = "",
                         SetMaps = []
                     };

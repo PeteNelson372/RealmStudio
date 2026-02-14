@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using System.Runtime.InteropServices;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     // custom cursor code adapted from https://csharpindeep.wordpress.com/2013/10/25/c-tutorial-how-to-use-custom-cursors-intermediate/
 

@@ -21,9 +21,9 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
+using RealmStudioX.Properties;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class UserPreferences : Form
     {
@@ -53,7 +53,7 @@ namespace RealmStudio
 
             if (string.IsNullOrEmpty(assetDirectory))
             {
-                Settings.Default.MapAssetDirectory = UtilityMethods.DEFAULT_ASSETS_FOLDER;
+                Settings.Default.MapAssetDirectory = UtilityMethods.DefaultAssetsFolder;
             }
 
             RealmAssetDirectoryTextBox.Text = Settings.Default.MapAssetDirectory;
@@ -63,7 +63,7 @@ namespace RealmStudio
 
             if (string.IsNullOrEmpty(realmDirectory))
             {
-                Settings.Default.DefaultRealmDirectory = UtilityMethods.DEFAULT_REALM_FOLDER;
+                Settings.Default.DefaultRealmDirectory = UtilityMethods.DefaultRealmFolder;
             }
 
             DefaultRealmDirectoryTextbox.Text = Settings.Default.DefaultRealmDirectory;
@@ -73,7 +73,7 @@ namespace RealmStudio
 
             if (string.IsNullOrEmpty(autosaveDirectory))
             {
-                Settings.Default.AutosaveDirectory = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
+                Settings.Default.AutosaveDirectory = UtilityMethods.DefaultAutosaveFolder;
             }
 
             AutosaveDirectoryTextBox.Text = Settings.Default.AutosaveDirectory;
@@ -209,7 +209,7 @@ namespace RealmStudio
 
             if (string.IsNullOrEmpty(realmDirectory))
             {
-                realmDirectory = UtilityMethods.DEFAULT_REALM_FOLDER;
+                realmDirectory = UtilityMethods.DefaultRealmFolder;
             }
 
             FolderBrowserDialog fbd = new()
@@ -255,7 +255,7 @@ namespace RealmStudio
 
             if (string.IsNullOrEmpty(assetDirectory))
             {
-                assetDirectory = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
+                assetDirectory = UtilityMethods.DefaultAutosaveFolder;
             }
 
             FolderBrowserDialog fbd = new()
@@ -286,7 +286,7 @@ namespace RealmStudio
             if (string.IsNullOrEmpty(autosaveDirectory))
             {
                 // realm autosave folder (location where map backups are saved during autosave)
-                autosaveDirectory = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
+                autosaveDirectory = UtilityMethods.DefaultAutosaveFolder;
             }
 
             FolderBrowserDialog fbd = new()
@@ -468,10 +468,10 @@ namespace RealmStudio
             Settings.Default.EnableWAIntegration = EnableWAIntegrationSwitch.Checked;
             Settings.Default.Save();
 
-            if (MapStateMediator.MainUIMediator is not null)
-            {
-                MapStateMediator.MainUIMediator.WorldAnvilIntegrationEnabled = Settings.Default.EnableWAIntegration;
-            }
+            //if (MapStateMediator.MainUIMediator is not null)
+            //{
+            //    MapStateMediator.MainUIMediator.WorldAnvilIntegrationEnabled = Settings.Default.EnableWAIntegration;
+            //}
 
         }
     }

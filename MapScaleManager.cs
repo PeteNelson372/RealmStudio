@@ -1,8 +1,9 @@
 ﻿
 using SkiaSharp;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
+    /*
     internal sealed class MapScaleManager : IMapComponentManager
     {
         private static MapScaleUIMediator? _scaleMediator;
@@ -38,9 +39,9 @@ namespace RealmStudio
                 ScaleNumbersDisplayType = ScaleMediator.ScaleNumbersDisplayType,
             };
 
-            Cmd_AddMapScale cmd = new(MapStateMediator.CurrentMap, mapScale);
-            CommandManager.AddCommand(cmd);
-            cmd.DoOperation();
+            //Cmd_AddMapScale cmd = new(MapStateMediator.CurrentMap, mapScale);
+            //CommandManager.AddCommand(cmd);
+            //cmd.DoOperation();
 
             return mapScale;
         }
@@ -49,6 +50,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            
             // TODO: create and use IMapOperation command class for deleting the scale
 
             for (int i = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OVERLAYLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
@@ -58,6 +60,7 @@ namespace RealmStudio
                     MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OVERLAYLAYER).MapLayerComponents.RemoveAt(i);
                 }
             }
+            
 
             return true;
         }
@@ -68,6 +71,7 @@ namespace RealmStudio
 
             MapScale? mapScale = null;
 
+            
             for (int i = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OVERLAYLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
                 if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OVERLAYLAYER).MapLayerComponents[i] is MapScale ms
@@ -77,6 +81,7 @@ namespace RealmStudio
                     break;
                 }
             }
+            
 
             return mapScale;
         }
@@ -125,6 +130,7 @@ namespace RealmStudio
 
             MapScale? mapScale = null;
 
+            
             for (int i = 0; i < MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OVERLAYLAYER).MapLayerComponents.Count; i++)
             {
                 if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OVERLAYLAYER).MapLayerComponents[i] is MapScale)
@@ -147,7 +153,10 @@ namespace RealmStudio
                 }
             }
 
+            
+
             return mapScale;
         }
     }
+    */
 }

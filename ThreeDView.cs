@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using FontAwesome.Sharp;
 using HelixToolkit.Wpf;
-using RealmStudio.Properties;
+using RealmStudioX.Properties;
 using SharpAvi.Codecs;
 using SharpAvi.Output;
 using SkiaSharp;
@@ -40,8 +40,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Threading;
 using MessageBox = System.Windows.Forms.MessageBox;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     /***
      * This form hosts the ThreeDViwerControl WPF UserControl that displays a 3D model.
@@ -159,10 +160,10 @@ namespace RealmStudio
 
             ModelUpdateQueue?.Clear();
 
-            if (ParentForm != null && HeightMapManager.CurrentHeightMapView == this)
-            {
-                HeightMapManager.CurrentHeightMapView = null;
-            }
+            //if (ParentForm != null && HeightMapManager.CurrentHeightMapView == this)
+            //{
+            //    HeightMapManager.CurrentHeightMapView = null;
+            //}
         }
 
         private void ThreeDView_Load(object sender, EventArgs e)
@@ -3066,7 +3067,7 @@ namespace RealmStudio
                 return;
             }
 
-            string textureBasePath = UtilityMethods.DEFAULT_ASSETS_FOLDER + Path.DirectorySeparatorChar
+            string textureBasePath = UtilityMethods.DefaultAssetsFolder + Path.DirectorySeparatorChar
                 + "Textures" + Path.DirectorySeparatorChar + "Planet" + Path.DirectorySeparatorChar;
 
             string texturePath = textureBasePath;

@@ -21,7 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class Cmd_RemoveRiverPoint(River selectedRiver, MapRiverPoint selectedRiverPoint) : IMapOperation
     {

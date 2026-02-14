@@ -22,9 +22,11 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
+    /*
     internal sealed class HeightMapManager
     {
         public static ThreeDView? CurrentHeightMapView { get; set; }
@@ -59,6 +61,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(map);
 
+            /*
             MapLayer heightMapLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.HEIGHTMAPLAYER);
 
             if (heightMapLayer.MapLayerComponents.Count == 2)
@@ -97,6 +100,7 @@ namespace RealmStudio
                     }
                 }
             }
+            
         }
 
         private static void SetHeightmapPixelHeight(int x, int y, SKBitmap heightMapBitmap, float[,] heightMap, float changeAmount)
@@ -174,6 +178,7 @@ namespace RealmStudio
         internal static void ConvertMapImageToMapHeightMap(RealmStudioMap map)
         {
             // convert MapImage objects in HeightMap layer to MapHeightMap objects
+            
             MapLayer heightMapLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.HEIGHTMAPLAYER);
             if (heightMapLayer != null)
             {
@@ -218,6 +223,7 @@ namespace RealmStudio
                     RealmMapMethods.AddMapImagesToHeightMapLayer(map);
                 }
             }
+            
         }
 
         internal static SKBitmap? GetBitmapForThreeDView(RealmStudioMap map, Landform? landform, SKRect? realmArea)
@@ -235,6 +241,8 @@ namespace RealmStudio
                 {
                     // extract a heightmap bitmap using the area of the selected landform bounds
                     // then create a 3D model from the bitmap and display it in the ThreeDView
+
+                    
                     Cursor.Current = Cursors.WaitCursor;
 
                     landform.ContourPath.GetTightBounds(out SKRect landformBounds);
@@ -247,6 +255,7 @@ namespace RealmStudio
                     SKBitmap? extractedBitmap = ExtractRectFromHeightMap(map, landformBounds);
 
                     heightMapBitmap = extractedBitmap?.Copy();
+                    
                 }
                 else
                 {
@@ -300,4 +309,5 @@ namespace RealmStudio
             }
         }
     }
+    */
 }

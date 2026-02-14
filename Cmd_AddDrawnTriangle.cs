@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddDrawnTriangle(MapLayer mapLayer, DrawnTriangle drawnTriangle) : IMapOperation
     {
@@ -30,22 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            mapLayer.MapLayerComponents.Add(dt);
+
         }
 
         public void UndoOperation()
         {
-            for (int i = mapLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (mapLayer.MapLayerComponents[i] is DrawnTriangle drawnTriangle)
-                {
-                    if (drawnTriangle.DrawnComponentGuid.ToString() == dt.DrawnComponentGuid.ToString())
-                    {
-                        mapLayer.MapLayerComponents.RemoveAt(i);
-                        break;
-                    }
-                }
-            }
+
         }
     }
 }

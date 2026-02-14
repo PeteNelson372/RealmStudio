@@ -21,25 +21,15 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using System.ComponentModel;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class VignetteUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class VignetteUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
-
         private int _vignetteStrength = 148;
         private Color _vignetteColor = Color.FromArgb(201, 151, 123);
         private VignetteShapeType _vignetteShape = VignetteShapeType.Oval;
-
-        public VignetteUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += VignetteUIMediator_PropertyChanged;
-        }
 
         #region Property Setters/Getters
 
@@ -65,27 +55,17 @@ namespace RealmStudio
         #endregion
 
         #region Property Change Handler Methods
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
 
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            UpdateVignetteUI(changedPropertyName);
-            VignetteManager.Update();
-            MainForm.SKGLRenderControl.Invalidate();
-        }
-
+        /*
         private void UpdateVignetteUI(string? changedPropertyName)
         {
             MainForm.Invoke(new MethodInvoker(delegate ()
@@ -104,24 +84,13 @@ namespace RealmStudio
                 }
             }));
         }
-
-        #endregion
-
-        #region Event Handlers
-        private void VignetteUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
+        */
 
         #endregion
 
         #region Vignette UI Methods
 
+        /*
         internal void Initialize(int vignetteStrength, Color vignetteColor, VignetteShapeType shapeType)
         {
             _vignetteStrength = vignetteStrength;
@@ -133,7 +102,7 @@ namespace RealmStudio
             MainForm.RectangleVignetteRadio.Checked = _vignetteShape == VignetteShapeType.Rectangle;
             MainForm.OvalVignetteRadio.Checked = _vignetteShape == VignetteShapeType.Oval;
         }
-
+        */
         #endregion
     }
 }

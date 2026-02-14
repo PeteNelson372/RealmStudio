@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using System.Xml.Serialization;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     [XmlRoot("MapSymbolCollection", Namespace = "RealmStudio", IsNullable = false)]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "The class implements a collection of map symbols, not a c# collection type.")]

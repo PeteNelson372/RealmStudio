@@ -26,8 +26,9 @@ using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.IO;
 using System.Text.Json.Nodes;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class SymbolCollectionForm : Form
     {
@@ -471,12 +472,12 @@ namespace RealmStudio
 
         private void AddTagButton_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(NewTagTextBox.Text) && !AssetManager.SYMBOL_TAGS.Contains(NewTagTextBox.Text))
-            {
-                AssetManager.SYMBOL_TAGS.Add(NewTagTextBox.Text);
+            //if (!string.IsNullOrEmpty(NewTagTextBox.Text) && !AssetManager.SYMBOL_TAGS.Contains(NewTagTextBox.Text))
+            //{
+                //AssetManager.SYMBOL_TAGS.Add(NewTagTextBox.Text);
                 LoadAvailableTags();
                 NewTagTextBox.Clear();
-            }
+            //}
         }
 
         private void AvailableTagButton_MouseUp(object? sender, MouseEventArgs e)
@@ -507,6 +508,7 @@ namespace RealmStudio
 
                     if (result == DialogResult.OK)
                     {
+                        /*
                         if (!string.IsNullOrWhiteSpace(tag) && AssetManager.SYMBOL_TAGS.Contains(tag))
                         {
                             AssetManager.SYMBOL_TAGS.Remove(tag);
@@ -518,6 +520,7 @@ namespace RealmStudio
 
                             LoadAvailableTags();
                         }
+                        */
                     }
                 }
             }
@@ -573,6 +576,7 @@ namespace RealmStudio
         {
             AvailableTagsPanel.Controls.Clear();
 
+            /*
             foreach (string tag in AssetManager.SYMBOL_TAGS)
             {
                 IconButton availableTagButton = new()
@@ -599,6 +603,7 @@ namespace RealmStudio
 
                 AvailableTagsPanel.Controls.Add(availableTagButton);
             }
+            */
         }
 
         private void SetUIFromSymbol(int symbolNumber)
@@ -786,6 +791,7 @@ namespace RealmStudio
                 tagButton.Show();
             }
 
+            /*
             List<string> tags = [.. AssetManager.SYMBOL_TAGS];
 
             if (searchString.Length > 2)
@@ -806,6 +812,7 @@ namespace RealmStudio
                     tagButton.Hide();
                 }
             }
+            */
         }
 
         /******************************************************************************************************

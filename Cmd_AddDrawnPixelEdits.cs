@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddDrawnPixelEdits(MapLayer mapLayer, DrawnPixelEdits drawnPixelEdits) : IMapOperation
     {
@@ -30,22 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            mapLayer.MapLayerComponents.Add(dpe);
+
         }
 
         public void UndoOperation()
         {
-            for (int i = mapLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (mapLayer.MapLayerComponents[i] is DrawnPixelEdits drawnPixelEdits)
-                {
-                    if (drawnPixelEdits.DrawnComponentGuid.ToString() == dpe.DrawnComponentGuid.ToString())
-                    {
-                        mapLayer.MapLayerComponents.RemoveAt(i);
-                        break;
-                    }
-                }
-            }
+
         }
     }
 }

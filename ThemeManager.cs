@@ -22,23 +22,26 @@
 *
 ***************************************************************************************************************************/
 using System.Diagnostics;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class ThemeManager
     {
         internal static MapTheme SaveCurentSettingsToTheme()
         {
-            ArgumentNullException.ThrowIfNull(BackgroundManager.BackgroundMediator);
-            ArgumentNullException.ThrowIfNull(VignetteManager.VignetteMediator);
-            ArgumentNullException.ThrowIfNull(OceanManager.OceanMediator);
-            ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
-            ArgumentNullException.ThrowIfNull(WaterFeatureManager.WaterFeatureMediator);
-            ArgumentNullException.ThrowIfNull(PathManager.PathMediator);
-            ArgumentNullException.ThrowIfNull(SymbolManager.SymbolMediator);
-            ArgumentNullException.ThrowIfNull(LabelManager.LabelMediator);
+            //ArgumentNullException.ThrowIfNull(BackgroundManager.BackgroundMediator);
+            //ArgumentNullException.ThrowIfNull(VignetteManager.VignetteMediator);
+            //ArgumentNullException.ThrowIfNull(OceanManager.OceanMediator);
+            //ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
+            //ArgumentNullException.ThrowIfNull(WaterFeatureManager.WaterFeatureMediator);
+            //ArgumentNullException.ThrowIfNull(PathManager.PathMediator);
+            //ArgumentNullException.ThrowIfNull(SymbolManager.SymbolMediator);
+            //ArgumentNullException.ThrowIfNull(LabelManager.LabelMediator);
 
             // TODO: implement theme mediator and manager
+
+            /*
 
             MapTheme theme = new()
             {
@@ -88,7 +91,7 @@ namespace RealmStudio
             theme.LandformCoastlineColor = LandformManager.LandformMediator.CoastlineColor.ToArgb();
             theme.LandformCoastlineEffectDistance = LandformManager.LandformMediator.CoastlineEffectDistance;
 
-            theme.LandformCoastlineStyle = LandformManager.LandformMediator.CoastlineStyle;
+            theme.LandformCoastlineStyle = LandformManager.LandformMediator.CoastlineStyle.GetDescription();
 
 
             // save land custom colors
@@ -140,10 +143,15 @@ namespace RealmStudio
             }
 
             return theme;
+
+            */
+
+            return new MapTheme();
         }
 
         internal static void ApplyTheme(MapTheme theme, ThemeFilter themeFilter)
         {
+            /*
             if (theme == null || themeFilter == null) return;
             if (MapStateMediator.CurrentMap == null) return;
 
@@ -165,6 +173,7 @@ namespace RealmStudio
 
                     if (theme.BackgroundTexture != null)
                     {
+                        
                         MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
 
                         if (baseLayer.MapLayerComponents.Count == 0)
@@ -205,6 +214,8 @@ namespace RealmStudio
 
                             BackgroundManager.FillBackgroundTexture();
                         }
+
+                        
                     }
 
                     VignetteManager.VignetteMediator.Initialize(
@@ -216,6 +227,7 @@ namespace RealmStudio
 
                 if (themeFilter.ApplyOceanSettings)
                 {
+                    
                     MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
 
                     if (oceanTextureLayer.MapLayerComponents.Count == 0)
@@ -269,8 +281,10 @@ namespace RealmStudio
                                 (bool)(theme.MirrorOceanTexture == null ? false : theme.MirrorOceanTexture));
 
                             OceanManager.ApplyOceanTexture();
-                        }
+                        }                    
                     }
+
+                    
                 }
 
                 if (themeFilter.ApplyOceanColorPaletteSettings)
@@ -339,7 +353,15 @@ namespace RealmStudio
 
                     if (theme.LandformCoastlineStyle != null)
                     {
-                        LandformManager.LandformMediator.CoastlineStyle = theme.LandformCoastlineStyle;
+                        LandformManager.LandformMediator.CoastlineStyle = LandformCoastlineStyle.None;
+                        foreach (var style in Enum.GetValues<LandformCoastlineStyle>())
+                        {
+                            if (style.GetDescription() == theme.LandformCoastlineStyle)
+                            {
+                                LandformManager.LandformMediator.CoastlineStyle = style;
+                                break;
+                            }
+                        }
                     }
                 }
 
@@ -544,6 +566,8 @@ namespace RealmStudio
             {
                 Debug.WriteLine($"Error applying theme: {ex.Message}");
             }
+
+            */
         }
     }
 }

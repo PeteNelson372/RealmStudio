@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Media.Effects;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class GrayscaleEffect : ShaderEffect
     {

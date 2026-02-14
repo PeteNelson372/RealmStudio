@@ -21,17 +21,10 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using System.ComponentModel;
-
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class WindroseUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class WindroseUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
-        private MapStateMediator? _mapState;
-
         private int _innerCircleCount;
         private int _innerCircleRadius;
         private bool _fadeOut;
@@ -40,11 +33,7 @@ namespace RealmStudio
         private Color _windroseColor = Color.FromArgb(127, 61, 55, 40);
         private int _directionCount = 16;
 
-        public WindroseUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += WindroseUIMediator_PropertyChanged;
-        }
+        #region Property Setters/Getters
 
         public int InnerCircleCount
         {
@@ -88,40 +77,20 @@ namespace RealmStudio
             set { SetPropertyField(nameof(DirectionCount), ref _directionCount, value); }
         }
 
-
-        #region Property Setters/Getters
-
-        public MapStateMediator? MapState
-        {
-            get { return _mapState; }
-            set { _mapState = value; }
-        }
-
-
         #endregion
 
         #region Property Change Handler Methods
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
 
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            UpdateWindroseUI();
-            WindroseManager.Update();
-            MainForm.SKGLRenderControl.Invalidate();
-        }
-
+        /*
         public void UpdateWindroseUI()
         {
             MainForm.Invoke(new MethodInvoker(delegate ()
@@ -129,23 +98,12 @@ namespace RealmStudio
                 MainForm.WindroseColorSelectButton.BackColor = WindroseColor;
             }));
         }
-        #endregion
-
-        #region Event Handlers
-        private void WindroseUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
-
+        */
         #endregion
 
         #region Windrose UI Methods
 
+        /*
         internal void Reset()
         {
             // Reset the Windrose UI to its default state
@@ -157,7 +115,7 @@ namespace RealmStudio
             WindroseColor = Color.FromArgb(127, 61, 55, 40);
             DirectionCount = 16;
         }
-
+        */
         #endregion
     }
 }

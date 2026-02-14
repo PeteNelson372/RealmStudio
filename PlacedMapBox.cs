@@ -30,7 +30,7 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class PlacedMapBox : MapComponent, IXmlSerializable
     {
@@ -106,6 +106,7 @@ namespace RealmStudio
 
             string bb64 = Convert.ToBase64String(bbBytes);
 
+            /*
             for (int i = 0; i < AssetManager.MAP_BOX_LIST.Count; i++)
             {
                 if (AssetManager.MAP_BOX_LIST[i].BoxBitmap == null)
@@ -134,6 +135,7 @@ namespace RealmStudio
                     }
                 }
             }
+            */
         }
 
         public XmlSchema? GetSchema()

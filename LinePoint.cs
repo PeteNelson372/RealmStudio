@@ -32,7 +32,7 @@ using System.Xml.Serialization;
  * It is the same as MapPathPoint but both are retained for backward compatibility.
  ****************************************************************/
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class LinePoint : IXmlSerializable
     {

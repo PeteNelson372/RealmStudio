@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using System.IO;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class MapToolMethods
     {
@@ -250,9 +250,9 @@ namespace RealmStudio
         public static void LoadNameGeneratorFiles()
         {
             //string assetDirectory = Settings.Default.MapAssetDirectory;
-            string nameGeneratorsDirectory = AssetManager.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "NameGenerators";
+            string nameGeneratorsDirectory = AssetManager.RootAssetDirectory + Path.DirectorySeparatorChar + "NameGenerators";
 
-            var files = from file in Directory.EnumerateFiles(AssetManager.ASSET_DIRECTORY, "*.*", SearchOption.AllDirectories).Order()
+            var files = from file in Directory.EnumerateFiles(AssetManager.RootAssetDirectory, "*.*", SearchOption.AllDirectories).Order()
                         where file.Contains(".txt")
                             || file.Contains(".csv")
                         select new
@@ -380,9 +380,9 @@ namespace RealmStudio
         internal static void LoadShapingFunctions()
         {
             //string assetDirectory = Settings.Default.MapAssetDirectory;
-            string nameGeneratorsDirectory = AssetManager.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "ShapingFunctions";
+            string nameGeneratorsDirectory = AssetManager.RootAssetDirectory + Path.DirectorySeparatorChar + "ShapingFunctions";
 
-            var files = from file in Directory.EnumerateFiles(AssetManager.ASSET_DIRECTORY, "*.*", SearchOption.AllDirectories).Order()
+            var files = from file in Directory.EnumerateFiles(AssetManager.RootAssetDirectory, "*.*", SearchOption.AllDirectories).Order()
                         where file.Contains(".bmp")
                         select new
                         {
@@ -397,7 +397,7 @@ namespace RealmStudio
 
                 if (shapingFunction != null)
                 {
-                    AssetManager.LANDFORM_SHAPING_FUNCTIONS.Add(shapingFunction);
+                    //AssetManager.LANDFORM_SHAPING_FUNCTIONS.Add(shapingFunction);
                 }
             }
 

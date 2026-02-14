@@ -21,12 +21,12 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.WorldAnvilIntegration;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using WorldAnvilIntegrationLib;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class IntegrationManager
     {

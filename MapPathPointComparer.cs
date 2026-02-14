@@ -21,7 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class MapPathPointComparer : IEqualityComparer<MapPathPoint>
     {

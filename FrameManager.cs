@@ -24,8 +24,9 @@
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
+    /*
     internal sealed class FrameManager : IMapComponentManager
     {
         private static FrameUIMediator? _frameMediator;
@@ -70,7 +71,7 @@ namespace RealmStudio
 
             CompletePlacedFrame(mapFrame);
 
-            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Add(mapFrame);
+            //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Add(mapFrame);
 
             MapStateMediator.CurrentMapFrame = mapFrame;
 
@@ -82,7 +83,7 @@ namespace RealmStudio
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             // there can only be one frame on the map, so remove any existing frame
-            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Clear();
+            //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Clear();
 
             return true;
         }
@@ -92,10 +93,10 @@ namespace RealmStudio
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             // there is only one frame, so ignore componentGuid (pass Guid.Empty to this method)
-            if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Count > 0)
-            {
-                return (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents[0];
-            }
+            //if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Count > 0)
+            //{
+            //    return (PlacedMapFrame)MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents[0];
+            //}
 
             return null;
         }
@@ -105,6 +106,7 @@ namespace RealmStudio
             ArgumentNullException.ThrowIfNull(FrameMediator);
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            /*
             if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Count > 0)
             {
                 // there can only be one frame on the map, so update it
@@ -118,6 +120,7 @@ namespace RealmStudio
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
             }
+            
 
             return true;
         }
@@ -256,4 +259,5 @@ namespace RealmStudio
             }
         }
     }
+    */
 }

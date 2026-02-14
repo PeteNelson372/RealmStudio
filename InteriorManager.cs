@@ -21,15 +21,13 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using AForge.Imaging.Filters;
+using RealmStudioShapeRenderingLib;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
-using System.Drawing.Imaging;
-using Windows.Devices.Geolocation;
 
-
-namespace RealmStudio
+namespace RealmStudioX
 {
+    /*
     internal sealed class InteriorManager : IMapComponentManager
     {
         public static SKPath InteriorFloorErasePath { get; set; } = new SKPath();
@@ -168,6 +166,7 @@ namespace RealmStudio
 
         internal static void MergeInteriorFloors(RealmStudioMap map)
         {
+            
             MapLayer interiorFloorLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.INTERIORLAYER);
 
             List<Guid> mergedInteriorFloorGuids = [];
@@ -206,7 +205,7 @@ namespace RealmStudio
                             }
                         }
                     }
-                }
+                }            
             }
 
             for (int k = interiorFloorLayer.MapLayerComponents.Count - 1; k >= 0; k--)
@@ -219,6 +218,7 @@ namespace RealmStudio
                     interiorFloorLayer.MapLayerComponents.RemoveAt(k);
                 }
             }
+            
         }
 
         private static bool MergeInteriorFloorPaths(SKPath interiorFloorPath2, ref SKPath interiorFloorPath1)
@@ -263,6 +263,7 @@ namespace RealmStudio
 
             MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.None, 0);
 
+            
             MapLayer interiorFloorLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.INTERIORLAYER);
 
             if (interiorFloorLayer.MapLayerComponents.Count > 0)
@@ -283,6 +284,7 @@ namespace RealmStudio
                     glControl.Invalidate();
                 }
             }
+            
         }
 
         internal static void BuildFloorTextureAndShaders(InteriorFloor floor)
@@ -380,6 +382,7 @@ namespace RealmStudio
             ArgumentNullException.ThrowIfNull(InteriorMediator);
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            
             // finalize loading of interior floors
             MapLayer interiorFloorLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.INTERIORLAYER);
             SKImageInfo lfImageInfo = new(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
@@ -425,6 +428,7 @@ namespace RealmStudio
                     }
                 }
             }
+            
         }
 
         internal static InteriorFloor? CreateNewInteriorFloor(RealmStudioMap map, SKPath? floorPath, SKRect realmArea)
@@ -466,6 +470,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
 
             for (int i = landformLayer.MapLayerComponents.Count - 1; i >= 0; i--)
@@ -475,12 +480,14 @@ namespace RealmStudio
                     landformLayer.MapLayerComponents.RemoveAt(i);
                 }
             }
+            
         }
 
         internal static InteriorFloor? GetInteriorFloorIntersectingCircle(SKPoint mapPoint, int circleRadius)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            
             using SKPath circlePath = new();
             circlePath.AddCircle(mapPoint.X, mapPoint.Y, circleRadius);
 
@@ -499,6 +506,7 @@ namespace RealmStudio
                     }
                 }
             }
+            
 
             return null;
         }
@@ -535,6 +543,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            
             // TODO: what should be done about water features and other objects drawn on top of the floor?
             for (int i = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.INTERIORLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
@@ -546,6 +555,7 @@ namespace RealmStudio
                     }
                 }
             }
+            
         }
 
         internal static Landform? SelectInteriorFloorAtPoint(SKPoint mapClickPoint)
@@ -554,6 +564,7 @@ namespace RealmStudio
 
             Landform? selectedLandform = null;
 
+            
             List<MapComponent> landformComponents = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
 
             for (int i = 0; i < landformComponents.Count; i++)
@@ -575,6 +586,8 @@ namespace RealmStudio
             }
 
             RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, selectedLandform);
+            
+
             return selectedLandform;
         }
 
@@ -616,10 +629,10 @@ namespace RealmStudio
 
             MapStateMediator.MainUIMediator.SetDrawingMode(MapDrawingMode.None, 0);
 
-            Cmd_ClearAllInteriorFloors cmd = new(MapStateMediator.CurrentMap);
+            //Cmd_ClearAllInteriorFloors cmd = new(MapStateMediator.CurrentMap);
 
-            CommandManager.AddCommand(cmd);
-            cmd.DoOperation();
+            //CommandManager.Execute(cmd);
+            //cmd.DoOperation();
         }
 
         internal static void StartColorPainting(TimerManager applicationTimerManager, SKGLControl glRenderControl)
@@ -664,9 +677,9 @@ namespace RealmStudio
                     MapStateMediator.CurrentLayerPaintStroke.StrokeBrush = brush;
                 }
 
-                Cmd_AddInteriorFloorPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_AddInteriorFloorPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
 
                 applicationTimerManager.BrushTimerEnabled = true;
             }
@@ -685,9 +698,9 @@ namespace RealmStudio
                     RenderSurface = SKSurface.Create(glRenderControl.GRContext, false, new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
                 };
 
-                Cmd_AddLandPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_AddLandPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
             }
         }
 
@@ -890,7 +903,7 @@ namespace RealmStudio
             // if loops need to be culled or not; however, how to know which
             // points should be culled still has to be determined
 
-            /*
+            
             bool pointsRemoved = false;
 
             if (parallelPoints.Count > 3)
@@ -978,7 +991,7 @@ namespace RealmStudio
                     }
                 }
             }
-            */
+            
 
             return parallelPoints;
         }
@@ -1213,4 +1226,5 @@ namespace RealmStudio
             wall.WallPaint = wallPaint;
         }
     }
+    */
 }

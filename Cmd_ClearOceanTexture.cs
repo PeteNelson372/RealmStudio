@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_ClearOceanTexture(RealmStudioMap map, MapImage textureBitmap) : IMapOperation
     {
@@ -30,22 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.OCEANTEXTURELAYER);
 
-            if (LayerTexture != null)
-            {
-                oceanTextureLayer.MapLayerComponents.Remove(LayerTexture);
-            }
         }
 
         public void UndoOperation()
         {
-            MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.OCEANTEXTURELAYER);
 
-            if (oceanTextureLayer.MapLayerComponents.Count < 1)
-            {
-                oceanTextureLayer.MapLayerComponents.Add(LayerTexture);
-            }
         }
     }
 }

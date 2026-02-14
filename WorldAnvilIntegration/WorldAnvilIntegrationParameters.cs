@@ -21,7 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio.WorldAnvilIntegration
+namespace RealmStudioX.WorldAnvilIntegration
 {
     internal sealed class WorldAnvilIntegrationParameters
     {

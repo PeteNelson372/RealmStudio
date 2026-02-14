@@ -22,8 +22,9 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp.Views.Desktop;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class MapPathInfo : Form
     {
@@ -38,6 +39,7 @@ namespace RealmStudio
 
         public MapPathInfo(RealmStudioMap map, MapPath mapPath, SKGLControl renderControl)
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.PathUIMediator);
             ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
 
@@ -68,6 +70,7 @@ namespace RealmStudio
             }
 
             SetSelectedPathType(MapPath.PathType);
+            */
         }
 
         private void CloseRiverFeatureDataButton_Click(object sender, EventArgs e)
@@ -92,6 +95,7 @@ namespace RealmStudio
 
         private void PreviousPathTextureButton_Click(object sender, EventArgs e)
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.PathUIMediator);
 
             if (SelectedPathTextureIndex > 0)
@@ -106,10 +110,12 @@ namespace RealmStudio
 
             PathTexturePreviewPicture.Image = MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex].TextureBitmap;
             PathTextureNameLabel.Text = MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex].TextureName;
+            */
         }
 
         private void NextPathTextureButton_Click(object sender, EventArgs e)
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.PathUIMediator);
 
             if (SelectedPathTextureIndex < MapStateMediator.PathUIMediator.PathTextureList.Count - 1)
@@ -124,10 +130,12 @@ namespace RealmStudio
 
             PathTexturePreviewPicture.Image = MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex].TextureBitmap;
             PathTextureNameLabel.Text = MapStateMediator.PathUIMediator.PathTextureList[SelectedPathTextureIndex].TextureName;
+            */
         }
 
         private void ApplyChangesButton_Click(object sender, EventArgs e)
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.PathUIMediator);
 
             // TODO: does this dialog need to have a UI mediator or somehow hook into the main form PathMediator?
@@ -178,6 +186,7 @@ namespace RealmStudio
             TOOLTIP.Show("Map path data changes applied", this, new Point(StatusMessageLabel.Left, StatusMessageLabel.Top), 3000);
 
             RenderControl.Invalidate();
+            */
         }
 
         private PathType GetSelectedPathType()

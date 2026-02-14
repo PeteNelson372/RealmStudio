@@ -22,8 +22,8 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
-
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_SetBackgroundTexture(RealmStudioMap map, SKBitmap textureBitmap, bool mirrorBackground = false) : IMapOperation
     {
@@ -34,31 +34,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BASELAYER);
 
-            if (baseLayer.MapLayerComponents.Count < 1)
-            {
-                BackgroundTexture = new()
-                {
-                    X = 0,
-                    Y = 0,
-                    Width = Map.MapWidth,
-                    Height = Map.MapHeight,
-                    MirrorImage = MirrorBackground,
-                    MapImageBitmap = LayerBitmap.Copy()
-                };
-                baseLayer.MapLayerComponents.Add(BackgroundTexture);
-            }
         }
 
         public void UndoOperation()
         {
-            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BASELAYER);
 
-            if (BackgroundTexture != null)
-            {
-                baseLayer.MapLayerComponents.Remove(BackgroundTexture);
-            }
         }
     }
 }

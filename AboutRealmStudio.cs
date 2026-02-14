@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using System.Diagnostics;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class AboutRealmStudio : Form
     {

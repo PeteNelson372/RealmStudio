@@ -1,4 +1,4 @@
-﻿using RealmStudio.WorldAnvilIntegration;
+﻿using RealmStudioX.WorldAnvilIntegration;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.ApplicationModel;
@@ -25,8 +25,8 @@ using Windows.ApplicationModel;
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     public partial class DescriptionEditor : Form
     {
@@ -101,7 +101,7 @@ namespace RealmStudio
             if (string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiToken) ||
                 string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) ||
                 string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId) ||
-                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WorldId))
+                IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId == Guid.Empty)
             {
                 CreateDescriptionArticleButton.Enabled = false;
                 CreateDescriptionArticleButton.Visible = false;
@@ -120,14 +120,14 @@ namespace RealmStudio
             Type mapObjectType = map.GetType();
             MapObjectType = mapObjectType;
             MapObjectName = map.MapName;
-            WorldAnvilArticleId = map.WorldAnvilArticleId;
+            WorldAnvilArticleId = map.WorldAnvilIntegrationParams.WorldAnvilArticleId;
             DescriptionText = existingDescription;
             DescriptionTextbox.Text = existingDescription;
 
             if (string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiToken) ||
                 string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) ||
                 string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId) ||
-                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WorldId))
+                IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId == Guid.Empty)
             {
                 CreateDescriptionArticleButton.Enabled = false;
                 CreateDescriptionArticleButton.Visible = false;
@@ -388,7 +388,7 @@ namespace RealmStudio
         private void CreateDescriptionArticleButton_Click(object sender, EventArgs e)
         {
             WorldAnvilArticleIntegration articleIntegrationForm = new();
-            articleIntegrationForm.WorldAnvilWorldId = IntegrationManager.WorldAnvilParameters.WorldId ?? string.Empty;
+            articleIntegrationForm.WorldAnvilWorldId = IntegrationManager.WorldAnvilParameters.WorldAnvilWorldId.ToString();
             articleIntegrationForm.ArticleContent = DescriptionTextbox.Text;
             articleIntegrationForm.ArticleTitle = MapObjectName;
             articleIntegrationForm.WorldAnvilArticleId = WorldAnvilArticleId;
@@ -411,7 +411,7 @@ namespace RealmStudio
             }
             else if (RealmStudioMap != null)
             {
-                RealmStudioMap.WorldAnvilArticleId = articleIntegrationForm.WorldAnvilArticleId;
+                RealmStudioMap.WorldAnvilIntegrationParams.WorldAnvilArticleId = articleIntegrationForm.WorldAnvilArticleId;
             }
             else
             {

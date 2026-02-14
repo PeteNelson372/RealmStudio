@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class PaintObjects
     {

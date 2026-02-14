@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_DeleteLabelBox(RealmStudioMap map, PlacedMapBox selectedBox) : IMapOperation
     {
@@ -30,25 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            // remove the selected box
-            MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER);
 
-            for (int i = boxLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (boxLayer.MapLayerComponents[i] is PlacedMapBox box && box.BoxGuid.ToString() == SelectedBox.BoxGuid.ToString())
-                {
-                    boxLayer.MapLayerComponents.RemoveAt(i);
-                }
-            }
         }
 
         public void UndoOperation()
         {
-            SelectedBox.IsSelected = false;
 
-            MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BOXLAYER);
-
-            boxLayer.MapLayerComponents.Add(SelectedBox);
         }
     }
 }

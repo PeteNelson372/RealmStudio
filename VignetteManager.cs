@@ -24,7 +24,7 @@
 
 using SkiaSharp;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class VignetteManager : IMapComponentManager
     {
@@ -39,9 +39,10 @@ namespace RealmStudio
 
         public static IMapComponent? Create()
         {
-            ArgumentNullException.ThrowIfNull(VignetteMediator);
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(VignetteMediator);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            /*
             MapLayer? vignetteLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.VIGNETTELAYER);
             RealmStudioMainForm? mainForm = UtilityMethods.GetMainForm();
 
@@ -62,14 +63,16 @@ namespace RealmStudio
                 return vignette;
             }
 
+            */
+
             return null;
         }
 
         public static bool Delete()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
-            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.VIGNETTELAYER).MapLayerComponents.Clear();
+            //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.VIGNETTELAYER).RemoveAllShapes();
             return true;
         }
 
@@ -80,9 +83,10 @@ namespace RealmStudio
 
         public static bool Update()
         {
-            ArgumentNullException.ThrowIfNull(VignetteMediator);
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(VignetteMediator);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            /*
             for (int i = 0; i < MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.VIGNETTELAYER).MapLayerComponents.Count; i++)
             {
                 if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.VIGNETTELAYER).MapLayerComponents[i] is MapVignette v)
@@ -93,17 +97,18 @@ namespace RealmStudio
                     v.IsModified = true;
                 }
             }
+            */
 
             return true;
         }
 
         internal static void FinalizeMapVignette()
         {
-            ArgumentNullException.ThrowIfNull(VignetteMediator);
-            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(VignetteMediator);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
-
+            /*
             // finalize loading of vignette
             MapLayer vignetteLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.VIGNETTELAYER);
             if (vignetteLayer.MapLayerComponents.Count == 1)
@@ -118,6 +123,7 @@ namespace RealmStudio
                 VignetteMediator.Initialize(vignette.VignetteStrength, Color.FromArgb(vignette.VignetteColor), vignette.VignetteShape);
 
             }
+            */
         }
     }
 }

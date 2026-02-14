@@ -1,4 +1,4 @@
-﻿namespace RealmStudio
+﻿namespace RealmStudioX
 {
     partial class NameGeneratorConfiguration
     {

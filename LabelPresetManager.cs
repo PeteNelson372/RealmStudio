@@ -24,7 +24,7 @@
 
 using System.IO;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class LabelPresetManager : IMapComponentManager
     {

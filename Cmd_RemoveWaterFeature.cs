@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_RemoveWaterFeature(RealmStudioMap map, IWaterFeature selectedWaterFeature) : IMapOperation
     {
@@ -30,44 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            for (int i = MapBuilder.GetMapLayerByIndex(_map, MapBuilder.WATERLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (MapBuilder.GetMapLayerByIndex(_map, MapBuilder.WATERLAYER).MapLayerComponents[i] is IWaterFeature iwf)
-                {
-                    if (iwf is WaterFeature wf)
-                    {
-                        if (selectedWaterFeature is WaterFeature swf && wf.WaterFeatureGuid.ToString() == swf.WaterFeatureGuid.ToString())
-                        {
-                            storedWaterFeature = wf;
-                            MapBuilder.GetMapLayerByIndex(_map, MapBuilder.WATERLAYER).MapLayerComponents.RemoveAt(i);
-                        }
-                    }
-                    else if (iwf is River r)
-                    {
-                        if (selectedWaterFeature is River sr && r.MapRiverGuid.ToString() == sr.MapRiverGuid.ToString())
-                        {
-                            storedWaterFeature = r;
-                            MapBuilder.GetMapLayerByIndex(_map, MapBuilder.WATERLAYER).MapLayerComponents.RemoveAt(i);
 
-                        }
-                    }
-                }
-            }
         }
 
         public void UndoOperation()
         {
-            if (storedWaterFeature != null)
-            {
-                if (storedWaterFeature is WaterFeature wf)
-                {
-                    MapBuilder.GetMapLayerByIndex(_map, MapBuilder.WATERLAYER).MapLayerComponents.Add(wf);
-                }
-                else if (storedWaterFeature is River r)
-                {
-                    MapBuilder.GetMapLayerByIndex(_map, MapBuilder.WATERLAYER).MapLayerComponents.Add(r);
-                }
-            }
+
         }
     }
 }

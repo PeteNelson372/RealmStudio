@@ -27,10 +27,12 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using RealmStudioShapeRenderingLib;
+using System.Windows.Navigation;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
-    public class MapImage : MapComponent, IXmlSerializable
+    public class MapImage
     {
         // when a map is loaded, the MapImageBitmap has already been scaled and its opacity is set,
         // to the Scale and Opacity values saved with the MapImageBitmap are only used to
@@ -43,8 +45,10 @@ namespace RealmStudio
         public float Scale { get; set; } = 1.0F;
         public float Opacity { get; set; } = 1.0F;
 
+
         public MapImage() { }
 
+        /*
         public override void Render(SKCanvas canvas)
         {
             if (MapImageBitmap != null)
@@ -77,6 +81,7 @@ namespace RealmStudio
                 }
             }
         }
+        */
 
         public XmlSchema? GetSchema()
         {
@@ -107,8 +112,8 @@ namespace RealmStudio
                         using MemoryStream ms = new(imageBytes);
                         MapImageBitmap = SKBitmap.Decode(ms);
 
-                        Width = MapImageBitmap.Width;
-                        Height = MapImageBitmap.Height;
+                        //Width = MapImageBitmap.Width;
+                        //Height = MapImageBitmap.Height;
                     }
                     catch { }
                 }

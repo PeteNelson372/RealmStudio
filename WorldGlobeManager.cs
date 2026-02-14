@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class WorldGlobeManager
     {
@@ -31,6 +31,7 @@ namespace RealmStudio
 
         internal static void ShowWorldGlobe()
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             SKBitmap worldTexture = new(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
@@ -65,6 +66,7 @@ namespace RealmStudio
 
             tdv.Show();
             tdv.ShowWorldGlobe(resizedBitmap);
+            */
         }
     }
 }

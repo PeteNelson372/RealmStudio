@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using System.Xml.Serialization;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     [XmlRoot("LabelPreset", Namespace = "RealmStudio", IsNullable = false)]
     public class LabelPreset

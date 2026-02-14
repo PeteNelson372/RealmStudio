@@ -21,9 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
-
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_FillMapWithLandform(RealmStudioMap map, Landform filledLandform) : IMapOperation
     {
@@ -32,25 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            SKRect r = new(2, 2, Map.MapWidth - 2, Map.MapHeight - 2);
 
-            FilledLandform.X = 2;
-            FilledLandform.Y = 2;
-            FilledLandform.Width = Map.MapWidth - 2;
-            FilledLandform.Height = Map.MapHeight - 2;
-
-            FilledLandform.DrawPath.AddRect(r);
-
-            LandformManager.CreateAllPathsFromDrawnPath(Map, FilledLandform);
-
-            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER);
-            landformLayer.MapLayerComponents.Add(FilledLandform);
         }
 
         public void UndoOperation()
         {
-            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER);
-            landformLayer.MapLayerComponents.Remove(FilledLandform);
+
         }
     }
 }

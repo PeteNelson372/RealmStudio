@@ -23,8 +23,9 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class AlignmentGrid : MapComponent
     {

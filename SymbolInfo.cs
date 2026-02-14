@@ -22,8 +22,9 @@
 *
 ***************************************************************************************************************************/
 using System.Data;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class SymbolInfo : Form
     {
@@ -35,6 +36,7 @@ namespace RealmStudio
             InitializeComponent();
             this.symbol = symbol;
 
+            /*
             foreach (MapSymbolCollection symbolCollection in AssetManager.MAP_SYMBOL_COLLECTIONS)
             {
                 if (symbolCollection.GetCollectionPath() == symbol.CollectionPath)
@@ -43,6 +45,7 @@ namespace RealmStudio
                     break;
                 }
             }
+            */
 
             SymbolNameLabel.Text = this.symbol.SymbolName;
             CollectionNameLabel.Text = this.symbol.CollectionName;
@@ -79,7 +82,7 @@ namespace RealmStudio
                 UseCustomColorsRadio.Checked = true;
             }
 
-            AddTagsToListBox(AssetManager.SYMBOL_TAGS);
+            //AddTagsToListBox(AssetManager.SYMBOL_TAGS);
 
             foreach (string tag in this.symbol.SymbolTags)
             {
@@ -102,7 +105,7 @@ namespace RealmStudio
                 if (!string.IsNullOrEmpty(newTag))
                 {
                     AddTagToTagList(newTag);
-                    AssetManager.AddSymbolTag(newTag);
+                    //AssetManager.AddSymbolTag(newTag);
 
                     if (collection != null)
                     {

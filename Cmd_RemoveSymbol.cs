@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_RemoveSymbol(RealmStudioMap map, MapSymbol placedSymbol) : IMapOperation
     {
@@ -30,25 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.SYMBOLLAYER);
 
-            for (int i = symbolLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (symbolLayer.MapLayerComponents[i] is MapSymbol ms && ms.SymbolGuid.ToString() == PlacedSymbol.SymbolGuid.ToString())
-                {
-                    symbolLayer.MapLayerComponents.RemoveAt(i);
-                    break;
-                }
-            }
         }
 
         public void UndoOperation()
         {
-            PlacedSymbol.IsSelected = false;
 
-            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.SYMBOLLAYER);
-
-            symbolLayer.MapLayerComponents.Add(PlacedSymbol);
         }
     }
 }

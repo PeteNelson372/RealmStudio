@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_ClearAllLandforms(RealmStudioMap map) : IMapOperation
     {
@@ -31,40 +32,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER);
 
-            for (int i = 0; i < landformLayer.MapLayerComponents.Count; i++)
-            {
-                StoredLandforms.Add((Landform)landformLayer.MapLayerComponents[i]);
-            }
-
-            landformLayer.MapLayerComponents.Clear();
-
-            MapLayer landformDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDDRAWINGLAYER);
-
-            for (int i = 0; i < landformDrawingLayer.MapLayerComponents.Count; i++)
-            {
-                StoredLayerPaintStrokes.Add((LayerPaintStroke)landformDrawingLayer.MapLayerComponents[i]);
-            }
         }
 
         public void UndoOperation()
         {
-            MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER);
 
-            landformLayer.MapLayerComponents.Clear();
-
-            foreach (Landform l in StoredLandforms)
-            {
-                landformLayer.MapLayerComponents.Add(l);
-            }
-
-            MapLayer landformDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDDRAWINGLAYER);
-
-            foreach (LayerPaintStroke lps in StoredLayerPaintStrokes)
-            {
-                landformDrawingLayer.MapLayerComponents.Add(lps);
-            }
         }
     }
 }

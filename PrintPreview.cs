@@ -25,8 +25,9 @@ using AForge.Imaging.Filters;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Drawing.Printing;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class PrintPreview : Form
     {

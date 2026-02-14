@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class Cmd_ChangeLabelAttributes : IMapOperation
     {
@@ -63,6 +63,7 @@ namespace RealmStudio
 
         public void DoOperation()
         {
+            /*
             Label.LabelColor = LabelColor;
             Label.LabelOutlineColor = OutlineColor;
             Label.LabelOutlineWidth = OutlineWidth;
@@ -79,10 +80,12 @@ namespace RealmStudio
 
             Label.Width = (int)skLabelFont.MeasureText(Label.LabelText.AsSpan(), out SKRect bounds, paint);
             Label.Height = (int)bounds.Height;
+            */
         }
 
         public void UndoOperation()
         {
+            /*
             Label.LabelColor = StoredLabelColor;
             Label.LabelOutlineColor = StoredOutlineColor;
             Label.LabelOutlineWidth = StoredOutlineWidth;
@@ -99,6 +102,7 @@ namespace RealmStudio
 
             Label.Width = (int)skLabelFont.MeasureText(Label.LabelText.AsSpan(), out SKRect bounds, paint);
             Label.Height = (int)bounds.Height;
+            */
         }
     }
 }

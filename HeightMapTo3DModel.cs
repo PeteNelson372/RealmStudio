@@ -26,7 +26,7 @@ using System.Globalization;
 using System.IO;
 using System.Numerics;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class HeightMapTo3DModel
     {

@@ -28,8 +28,9 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Extensions = SkiaSharp.Views.Desktop.Extensions;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class MapScale : MapComponent, IXmlSerializable, IDisposable
     {
@@ -438,14 +439,14 @@ namespace RealmStudio
                         catch
                         {
                             // couldn't create the font, so try to find it in the list of embedded fonts
-                            for (int i = 0; i < LabelManager.EMBEDDED_FONTS.Families.Length; i++)
-                            {
-                                if (LabelManager.EMBEDDED_FONTS.Families[i].Name == ff)
-                                {
-                                    scaleFont = new Font(LabelManager.EMBEDDED_FONTS.Families[i], fontsize, FontStyle.Regular, GraphicsUnit.Point);
-                                    break;
-                                }
-                            }
+                            //for (int i = 0; i < LabelManager.EMBEDDED_FONTS.Families.Length; i++)
+                            //{
+                            //    if (LabelManager.EMBEDDED_FONTS.Families[i].Name == ff)
+                            //    {
+                            //        scaleFont = new Font(LabelManager.EMBEDDED_FONTS.Families[i], fontsize, FontStyle.Regular, GraphicsUnit.Point);
+                            //        break;
+                            //    }
+                            //}
                         }
                     }
                 }

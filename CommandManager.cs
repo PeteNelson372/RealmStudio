@@ -21,43 +21,61 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+#nullable enable
+
+namespace RealmStudioX
 {
-    public static class CommandManager
+    public sealed class CommandManager
     {
-        private static readonly Stack<IMapOperation> UndoStack = new(100);
-        private static readonly Stack<IMapOperation> RedoStack = new(100);
+        public event Action? HistoryChanged;
 
-        public static void AddCommand(IMapOperation operation)
+        private readonly Stack<ICommand> _undo = new();
+        private readonly Stack<ICommand> _redo = new();
+
+        public void Execute(ICommand command)
         {
-            UndoStack.Push(operation);
-            RedoStack.Clear();
+            command.Execute();
+            _undo.Push(command);
+            
+            ClearRedo();
+
+            HistoryChanged?.Invoke();
         }
 
-        public static void Undo()
+        public void Undo()
         {
-
-            if (UndoStack.TryPop(out IMapOperation? operation))
+            if (_undo.TryPop(out var cmd))
             {
-                if (operation != null)
-                {
-                    RedoStack.Push(operation);
-                    operation.UndoOperation();
-                }
+                cmd.Undo();
+                _redo.Push(cmd);
 
+                HistoryChanged?.Invoke();
             }
         }
 
-        public static void Redo()
+        public void Redo()
         {
-            if (RedoStack.TryPop(out IMapOperation? operation))
+            if (_redo.TryPop(out var cmd))
             {
-                if (operation != null)
-                {
-                    UndoStack.Push(operation);
-                    operation.DoOperation();
-                }
+                cmd.Execute();
+                _undo.Push(cmd);
+
+                HistoryChanged?.Invoke();
             }
+        }
+
+        private void ClearRedo()
+        {
+            while (_redo.Count > 0)
+            {
+                _redo.Pop().Dispose();
+            }
+        }
+
+        public void ClearAll()
+        {
+            while (_undo.Count > 0) _undo.Pop().Dispose();
+            while (_redo.Count > 0) _redo.Pop().Dispose();
         }
     }
 }

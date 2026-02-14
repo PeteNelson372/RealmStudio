@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_DeleteMapRegionPoint(RealmStudioMap map, MapRegion mapRegion, MapRegionPoint regionPoint) : IMapOperation
     {

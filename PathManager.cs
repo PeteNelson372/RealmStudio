@@ -23,9 +23,11 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
+    /*
     internal sealed class PathManager : IMapComponentManager
     {
         private static PathUIMediator? _pathMediator;
@@ -94,9 +96,9 @@ namespace RealmStudio
 
             if (MapStateMediator.SelectedMapPath != null)
             {
-                Cmd_RemoveMapPath cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapPath);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_RemoveMapPath cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapPath);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
 
                 MapStateMediator.SelectedMapPath = null;
                 MapStateMediator.SelectedMapPathPoint = null;
@@ -534,7 +536,7 @@ namespace RealmStudio
             // if loops need to be culled or not; however, how to know which
             // points should be culled still has to be determined
 
-            /*
+            
             bool pointsRemoved = false;
 
             if (parallelPoints.Count > 3)
@@ -622,7 +624,7 @@ namespace RealmStudio
                     }
                 }
             }
-            */
+            
 
             return parallelPoints;
         }
@@ -837,6 +839,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            
             MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHLOWERLAYER);
             MapLayer pathUpperLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.PATHUPPERLAYER);
 
@@ -897,6 +900,7 @@ namespace RealmStudio
                     }
                 }
             }
+            
         }
 
         internal static MapPath? CreatePath(SKPoint zoomedScrolledPoint, PathType pathType, Color pathColor,
@@ -1023,14 +1027,14 @@ namespace RealmStudio
 
             if (MapStateMediator.SelectedMapPath != null && MapStateMediator.SelectedMapPathPoint != null)
             {
-                Cmd_RemovePathPoint cmd = new(MapStateMediator.SelectedMapPath, MapStateMediator.SelectedMapPathPoint);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_RemovePathPoint cmd = new(MapStateMediator.SelectedMapPath, MapStateMediator.SelectedMapPathPoint);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
 
                 MapStateMediator.SelectedMapPathPoint = null;
-
-                MapStateMediator.CurrentMap.IsSaved = false;
             }
         }
     }
+
+    */
 }

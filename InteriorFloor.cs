@@ -29,8 +29,9 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Extensions = SkiaSharp.Views.Desktop.Extensions;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class InteriorFloor : MapComponent, IXmlSerializable
     {
@@ -256,13 +257,13 @@ namespace RealmStudio
             else
             {
                 // texture is not set in the interior object, so use default
-                if (InteriorManager.InteriorMediator.InteriorFloorTextureList[InteriorManager.InteriorMediator.InteriorFloorTextureIndex].TextureBitmap == null)
-                {
-                    InteriorManager.InteriorMediator.InteriorFloorTextureList[InteriorManager.InteriorMediator.InteriorFloorTextureIndex].TextureBitmap =
-                        (Bitmap?)Bitmap.FromFile(InteriorManager.InteriorMediator.InteriorFloorTextureList[InteriorManager.InteriorMediator.InteriorFloorTextureIndex].TexturePath);
-                }
+                //if (InteriorManager.InteriorMediator.InteriorFloorTextureList[InteriorManager.InteriorMediator.InteriorFloorTextureIndex].TextureBitmap == null)
+                //{
+                //    InteriorManager.InteriorMediator.InteriorFloorTextureList[InteriorManager.InteriorMediator.InteriorFloorTextureIndex].TextureBitmap =
+                //        (Bitmap?)Bitmap.FromFile(InteriorManager.InteriorMediator.InteriorFloorTextureList[InteriorManager.InteriorMediator.InteriorFloorTextureIndex].TexturePath);
+                //}
 
-                InteriorFloorTexture = InteriorManager.InteriorMediator.InteriorFloorTextureList[InteriorManager.InteriorMediator.InteriorFloorTextureIndex];
+                //InteriorFloorTexture = InteriorManager.InteriorMediator.InteriorFloorTextureList[InteriorManager.InteriorMediator.InteriorFloorTextureIndex];
 
                 if (InteriorFloorTexture.TextureBitmap != null)
                 {

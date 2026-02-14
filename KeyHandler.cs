@@ -21,30 +21,32 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class KeyHandler
     {
         internal static void HandleKey(Keys keyCode)
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             switch (keyCode)
             {
                 case Keys.Escape:
                     {
-                        MapStateMediator.ResetUI();
+                        //MapStateMediator.ResetUI();
                     }
                     break;
                 case Keys.Delete:
                     {
-                        MapStateMediator.DeleteSelectedMapObjects();
+                        //MapStateMediator.DeleteSelectedMapObjects();
                     }
                     break;
                 case Keys.PageUp:
                     {
+                        /*
                         switch (MapStateMediator.MainUIMediator.CurrentDrawingMode)
                         {
                             case MapDrawingMode.SymbolSelect:
@@ -65,10 +67,12 @@ namespace RealmStudio
                                 }
                                 break;
                         }
+                        */
                     }
                     break;
                 case Keys.PageDown:
                     {
+                        /*
                         switch (MapStateMediator.MainUIMediator.CurrentDrawingMode)
                         {
                             case MapDrawingMode.SymbolSelect:
@@ -89,10 +93,12 @@ namespace RealmStudio
                                 }
                                 break;
                         }
+                        */
                     }
                     break;
                 case Keys.End:
                     {
+                        /*
                         switch (MapStateMediator.MainUIMediator.CurrentDrawingMode)
                         {
                             case MapDrawingMode.SymbolSelect:
@@ -102,10 +108,12 @@ namespace RealmStudio
                                 }
                                 break;
                         }
+                        */
                     }
                     break;
                 case Keys.Home:
                     {
+                        /*
                         switch (MapStateMediator.MainUIMediator.CurrentDrawingMode)
                         {
                             case MapDrawingMode.SymbolSelect:
@@ -115,10 +123,12 @@ namespace RealmStudio
                                 }
                                 break;
                         }
+                        */
                     }
                     break;
                 case Keys.Down:
                     {
+                        /*
                         switch (MapStateMediator.MainUIMediator.CurrentDrawingMode)
                         {
                             case MapDrawingMode.SymbolSelect:
@@ -136,10 +146,12 @@ namespace RealmStudio
                                     break;
                                 }
                         }
+                        */
                     }
                     break;
                 case Keys.Up:
                     {
+                        /*
                         switch (MapStateMediator.MainUIMediator.CurrentDrawingMode)
                         {
                             case MapDrawingMode.SymbolSelect:
@@ -157,10 +169,12 @@ namespace RealmStudio
                                     break;
                                 }
                         }
+                        */
                     }
                     break;
                 case Keys.Left:
                     {
+                        /*
                         switch (MapStateMediator.MainUIMediator.CurrentDrawingMode)
                         {
                             case MapDrawingMode.SymbolSelect:
@@ -181,10 +195,12 @@ namespace RealmStudio
                                     break;
                                 }
                         }
+                        */
                     }
                     break;
                 case Keys.Right:
                     {
+                        /*
                         switch (MapStateMediator.MainUIMediator.CurrentDrawingMode)
                         {
                             case MapDrawingMode.SymbolSelect:
@@ -202,6 +218,7 @@ namespace RealmStudio
                                     break;
                                 }
                         }
+                        */
                     }
                     break;
             }

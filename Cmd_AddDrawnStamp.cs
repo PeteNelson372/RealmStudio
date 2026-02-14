@@ -21,8 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddDrawnStamp(MapLayer mapLayer, DrawnStamp drawnStamp) : IMapOperation
     {
@@ -31,22 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            mapLayer.MapLayerComponents.Add(ds);
+
         }
 
         public void UndoOperation()
         {
-            for (int i = mapLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (mapLayer.MapLayerComponents[i] is DrawnStamp drawnStamp)
-                {
-                    if (drawnStamp.DrawnComponentGuid.ToString() == ds.DrawnComponentGuid.ToString())
-                    {
-                        mapLayer.MapLayerComponents.RemoveAt(i);
-                        break;
-                    }
-                }
-            }
+
         }
     }
 }

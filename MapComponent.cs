@@ -23,8 +23,11 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using System.Xml.Serialization;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+// THIS CLASS WILL BE REMOVED. IT IS REPLACED BY SHAPE2D
+
+namespace RealmStudioX
 {
     [XmlInclude(typeof(MapLayer))]
     public abstract class MapComponent : IMapComponent

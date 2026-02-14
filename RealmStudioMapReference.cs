@@ -22,8 +22,9 @@
 *
 ***************************************************************************************************************************/
 using System.Xml.Serialization;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     [XmlRoot("RealmStudioMapReference", Namespace = "RealmStudio", IsNullable = false)]
     public class RealmStudioMapReference

@@ -22,8 +22,9 @@
 *
 ***************************************************************************************************************************/
 using System.Xml.Serialization;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     [XmlRoot("RealmStudioMapSet", Namespace = "RealmStudio", IsNullable = false)]
     [XmlInclude(typeof(RealmStudioMapReference))]

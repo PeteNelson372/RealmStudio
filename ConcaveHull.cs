@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     // <summary>
     // Represents the concave hull of a set of points in a 2D plane.

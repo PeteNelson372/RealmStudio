@@ -21,16 +21,12 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using System.ComponentModel;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class InteriorUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class InteriorUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
-
         private readonly List<MapTexture> _interiorWallTextureList = [];
         private int _interiorWallTextureIndex;
 
@@ -66,11 +62,6 @@ namespace RealmStudio
         private Color _customColor5 = Color.White;
         private Color _customColor6 = Color.White;
 
-        public InteriorUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += InteriorUIMediator_PropertyChanged;
-        }
 
         #region Property Setters/Getters
 
@@ -233,27 +224,18 @@ namespace RealmStudio
         #endregion
 
         #region Property Change Handler Methods
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
 
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            UpdateInteriorUI(changedPropertyName);
-            InteriorManager.Update();
-            MainForm.SKGLRenderControl.Invalidate();
-        }
 
+        /*
         private void UpdateInteriorUI(string? changedPropertyName)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
@@ -267,7 +249,7 @@ namespace RealmStudio
 
                 if (MapStateMediator.CurrentLandform != null)
                 {
-                    MapStateMediator.CurrentLandform.FillWithTexture = UseTextureBackground;
+                    MapStateMediator.CurrentLandform.Shading.FillWithTexture = UseTextureBackground;
                 }
 
                 if (!string.IsNullOrEmpty(changedPropertyName))
@@ -278,13 +260,13 @@ namespace RealmStudio
                             {
                                 if (MapStateMediator.CurrentMap != null)
                                 {
-                                    MapLayer interiorOutlineLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.INTERIOROUTLINELAYER);
-                                    MapLayer interiorLayerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.INTERIORLAYER);
-                                    MapLayer interiorDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.INTERIORDRAWINGLAYER);
+                                    //MapLayer interiorOutlineLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.INTERIOROUTLINELAYER);
+                                    //MapLayer interiorLayerLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.INTERIORLAYER);
+                                    //MapLayer interiorDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.INTERIORDRAWINGLAYER);
 
-                                    interiorOutlineLayer.ShowLayer = ShowInteriorLayers;
-                                    interiorLayerLayer.ShowLayer = ShowInteriorLayers;
-                                    interiorDrawingLayer.ShowLayer = ShowInteriorLayers;
+                                    //interiorOutlineLayer.ShowLayer = ShowInteriorLayers;
+                                    //interiorLayerLayer.ShowLayer = ShowInteriorLayers;
+                                    //interiorDrawingLayer.ShowLayer = ShowInteriorLayers;
                                 }
                             }
                             break;
@@ -301,6 +283,8 @@ namespace RealmStudio
                         case "ShowAlignmentGrid":
                             {
                                 MapStateMediator.MainUIMediator.SelectedBrushSize = AlignmentGridSize;
+
+                                
                                 MapLayer gridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER);
 
                                 if (ShowAlignmentGrid)
@@ -332,6 +316,8 @@ namespace RealmStudio
                                 }
 
                                 MainForm.SKGLRenderControl.Invalidate();
+
+                                
                             }
                             break;
                         case "AlignToGrid":
@@ -341,6 +327,7 @@ namespace RealmStudio
                             break;
                         case "AlignmentGridSize":
                             {
+                                
                                 MapLayer gridLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DEFAULTGRIDLAYER);
 
                                 MapStateMediator.MainUIMediator.SelectedBrushSize = AlignmentGridSize;
@@ -353,6 +340,7 @@ namespace RealmStudio
                                     }
                                 }
                                 MainForm.SKGLRenderControl.Invalidate();
+                                
                             }
                             break;
                     }
@@ -361,23 +349,12 @@ namespace RealmStudio
             }));
         }
 
-        #endregion
-
-        #region Event Handlers
-        private void InteriorUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
+        */
 
         #endregion
 
         #region Interior UI Methods
-
+        /*
         internal void Reset()
         {
             InteriorWallTextureIndex = 0;
@@ -437,6 +414,7 @@ namespace RealmStudio
             MainForm.WallTextureNameLabel.Text = InteriorWallTextureList[InteriorWallTextureIndex].TextureName;
         }
 
+        */
 
         #endregion
     }

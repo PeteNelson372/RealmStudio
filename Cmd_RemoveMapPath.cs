@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_RemoveMapPath(RealmStudioMap map, MapPath selectedMapPath) : IMapOperation
     {
@@ -30,45 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            for (int i = MapBuilder.GetMapLayerByIndex(_map, MapBuilder.PATHLOWERLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (MapBuilder.GetMapLayerByIndex(_map, MapBuilder.PATHLOWERLAYER).MapLayerComponents[i] is MapPath mp)
-                {
-                    if (mp.MapPathGuid.ToString() == selectedMapPath.MapPathGuid.ToString())
-                    {
-                        storedMapPath = mp;
-                        MapBuilder.GetMapLayerByIndex(_map, MapBuilder.PATHLOWERLAYER).MapLayerComponents.RemoveAt(i);
 
-                    }
-                }
-            }
-
-            for (int i = MapBuilder.GetMapLayerByIndex(_map, MapBuilder.PATHUPPERLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (MapBuilder.GetMapLayerByIndex(_map, MapBuilder.PATHUPPERLAYER).MapLayerComponents[i] is MapPath mp)
-                {
-                    if (mp.MapPathGuid.ToString() == selectedMapPath.MapPathGuid.ToString())
-                    {
-                        storedMapPath = mp;
-                        MapBuilder.GetMapLayerByIndex(_map, MapBuilder.PATHUPPERLAYER).MapLayerComponents.RemoveAt(i);
-                    }
-                }
-            }
         }
 
         public void UndoOperation()
         {
-            if (storedMapPath != null)
-            {
-                if (storedMapPath.DrawOverSymbols)
-                {
-                    MapBuilder.GetMapLayerByIndex(_map, MapBuilder.PATHUPPERLAYER).MapLayerComponents.Add(storedMapPath);
-                }
-                else
-                {
-                    MapBuilder.GetMapLayerByIndex(_map, MapBuilder.PATHLOWERLAYER).MapLayerComponents.Add(storedMapPath);
-                }
-            }
+
         }
     }
 }

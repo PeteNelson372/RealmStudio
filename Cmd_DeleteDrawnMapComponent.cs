@@ -21,8 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_DeleteDrawnMapComponent(MapLayer layer, DrawnMapComponent drawnComponent) : IMapOperation
     {
@@ -31,23 +31,10 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            for (int i = mapLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (mapLayer.MapLayerComponents[i] is DrawnMapComponent dc)
-                {
-                    if (dc.DrawnComponentGuid.ToString() == dmc.DrawnComponentGuid.ToString())
-                    {
-                        mapLayer.MapLayerComponents.RemoveAt(i);
-                        break;
-                    }
-                }
-            }
-
         }
 
         public void UndoOperation()
         {
-            mapLayer.MapLayerComponents.Add(dmc);
         }
     }
 }

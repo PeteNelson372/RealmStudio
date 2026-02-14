@@ -23,7 +23,9 @@
 ***************************************************************************************************************************/
 using System.Xml;
 using System.Xml.Serialization;
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+
+namespace RealmStudioX
 {
     [XmlRoot("map", Namespace = "RealmStudio", IsNullable = false)]
     public class RealmStudioMapRoot : IRealmStudioMapGroup

@@ -25,8 +25,9 @@
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
+    /*
     internal sealed class MapMeasureManager : IMapComponentManager
     {
         private static MapMeasureUIMediator? _measureUIMediator;
@@ -53,7 +54,7 @@ namespace RealmStudio
             };
 
             MapStateMediator.CurrentMapMeasure = newMapMeasure;
-            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).MapLayerComponents.Add(newMapMeasure);
+            //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).MapLayerComponents.Add(newMapMeasure);
 
             return newMapMeasure;
         }
@@ -62,7 +63,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
-            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).MapLayerComponents.Clear();
+            //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).MapLayerComponents.Clear();
             MapStateMediator.CurrentMapMeasure = null;
             return true;
         }
@@ -73,6 +74,7 @@ namespace RealmStudio
 
             MapScale? component = null;
 
+            
             foreach (MapScale ms in MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).MapLayerComponents.Cast<MapScale>())
             {
                 if (ms.ScaleGuid.ToString() == componentGuid.ToString())
@@ -81,6 +83,8 @@ namespace RealmStudio
                     break;
                 }
             }
+
+            
 
             return component;
         }
@@ -125,6 +129,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            
             MapLayer workLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER);
             workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
@@ -174,12 +179,15 @@ namespace RealmStudio
 
                 mapMeasure.RenderAreaLabel(workLayer.LayerSurface?.Canvas, measureAreaPoint, area);
             }
+
+            
         }
 
         internal static void EndMapMeasure(MapMeasure mapMeasure, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            
             mapMeasure.MeasurePoints.Add(zoomedScrolledPoint);
 
             float lineLength = SKPoint.Distance(previousPoint, zoomedScrolledPoint);
@@ -190,7 +198,10 @@ namespace RealmStudio
             MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
             MapStateMediator.PreviousCursorPoint = SKPoint.Empty;
 
+            
+
             MapStateMediator.CurrentMapMeasure = null;
         }
     }
+    */
 }

@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_ClearAllInteriorFloors(RealmStudioMap map) : IMapOperation
     {
@@ -31,40 +32,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapLayer interiorLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.INTERIORLAYER);
 
-            for (int i = 0; i < interiorLayer.MapLayerComponents.Count; i++)
-            {
-                StoredFloors.Add((InteriorFloor)interiorLayer.MapLayerComponents[i]);
-            }
-
-            interiorLayer.MapLayerComponents.Clear();
-
-            MapLayer interiorDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.INTERIORDRAWINGLAYER);
-
-            for (int i = 0; i < interiorDrawingLayer.MapLayerComponents.Count; i++)
-            {
-                StoredLayerPaintStrokes.Add((LayerPaintStroke)interiorDrawingLayer.MapLayerComponents[i]);
-            }
         }
 
         public void UndoOperation()
         {
-            MapLayer interiorLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.INTERIORLAYER);
 
-            interiorLayer.MapLayerComponents.Clear();
-
-            foreach (InteriorFloor f in StoredFloors)
-            {
-                interiorLayer.MapLayerComponents.Add(f);
-            }
-
-            MapLayer interiorDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.INTERIORDRAWINGLAYER);
-
-            foreach (LayerPaintStroke lps in StoredLayerPaintStrokes)
-            {
-                interiorDrawingLayer.MapLayerComponents.Add(lps);
-            }
         }
     }
 }

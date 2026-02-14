@@ -22,8 +22,8 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
-
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_RemoveSymbolsFromArea(RealmStudioMap map, float eraserRadius, SKPoint eraserPoint) : IMapOperation
     {
@@ -35,34 +35,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.SYMBOLLAYER);
 
-            for (int i = symbolLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (symbolLayer.MapLayerComponents[i] is MapSymbol symbol)
-                {
-                    SKPoint symbolPoint = new(symbol.X, symbol.Y);
-
-                    if (DrawingMethods.PointInCircle(EraserCircleRadius, CenterPoint, symbolPoint))
-                    {
-                        RemovedSymbolList.Add(symbol);
-
-                        symbolLayer.MapLayerComponents.Remove(symbol);
-                    }
-                }
-            }
         }
 
         public void UndoOperation()
         {
-            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.SYMBOLLAYER);
 
-            foreach (MapSymbol symbol in RemovedSymbolList)
-            {
-                symbolLayer.MapLayerComponents.Add(symbol);
-            }
-
-            RemovedSymbolList.Clear();
         }
     }
 }

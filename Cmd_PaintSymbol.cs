@@ -24,7 +24,7 @@
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class Cmd_PaintSymbol(MapSymbol? symbol, SKColor paintColor, SKColor color1, SKColor color2, SKColor color3) : IMapOperation
     {

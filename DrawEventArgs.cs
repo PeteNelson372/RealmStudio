@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class DrawEventArgs(SKCanvas canvas, SKRect bounds) : EventArgs
     {

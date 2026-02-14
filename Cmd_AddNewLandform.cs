@@ -21,9 +21,9 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
-
-namespace RealmStudio
+using RealmStudioX.Properties;
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddNewLandform(RealmStudioMap map, Landform newLandform) : IMapOperation
     {
@@ -32,32 +32,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            bool createPathsWhilePainting = Settings.Default.CalculateContoursWhilePainting;
 
-            if (!createPathsWhilePainting)
-            {
-                // compute contour path and inner and outer paths in a separate thread
-                LandformManager.CreateAllPathsFromDrawnPath(Map, NewLandform);
-            }
-
-            NewLandform.IsModified = true;
-
-            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(NewLandform);
         }
 
         public void UndoOperation()
         {
-            for (int i = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER).MapLayerComponents[i] is Landform l)
-                {
-                    if (l.LandformGuid.ToString() == NewLandform.LandformGuid.ToString())
-                    {
-                        MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDFORMLAYER).MapLayerComponents.RemoveAt(i);
-                        break;
-                    }
-                }
-            }
+
         }
     }
 }

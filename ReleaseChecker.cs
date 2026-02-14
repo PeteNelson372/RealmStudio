@@ -24,7 +24,7 @@
 using System.Net.Http;
 using System.Text.Json;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class ReleaseChecker
     {

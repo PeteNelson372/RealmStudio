@@ -24,7 +24,7 @@
 using SkiaSharp;
 using System.Xml.Serialization;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class MapVector
     {

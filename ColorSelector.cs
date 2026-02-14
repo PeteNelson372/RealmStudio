@@ -23,7 +23,7 @@
 *
 ***************************************************************************************************************************/
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class ColorSelector : Form
     {

@@ -23,12 +23,13 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using System.ComponentModel;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class MapStateMediator
     {
-        public static event PropertyChangedEventHandler? PropertyChanged;
+        public event Action<MapStateMediator>? Changed;
 
         private static RealmStudioMap? _currentMap;
         private static RealmStudioMapSet? _currentMapSet;
@@ -99,121 +100,18 @@ namespace RealmStudio
         private static readonly double _basePaintEventInterval = 10.0;
         private static readonly int _backupCount = 5;
 
-        static MapStateMediator()
-        {
-            PropertyChanged += MapStateMediator_PropertyChanged;
-        }
-
         #region Property Setters/Getters
 
-        internal static RealmStudioMap? CurrentMap
+        internal RealmStudioMap? CurrentMap
         {
             get { return _currentMap; }
             set { SetPropertyField(nameof(CurrentMap), ref _currentMap, value); }
         }
 
-        internal static RealmStudioMapSet? CurrentMapSet
+        internal RealmStudioMapSet? CurrentMapSet
         {
             get { return _currentMapSet; }
             set { SetPropertyField(nameof(CurrentMapSet), ref _currentMapSet, value); }
-        }
-
-        // mediators
-        internal static MainFormUIMediator? MainUIMediator
-        {
-            get { return _mainFormUIMediator; }
-            set { _mainFormUIMediator = value; }
-        }
-
-        internal static BackgroundUIMediator? BackgroundUIMediator
-        {
-            get { return _backgroundMediator; }
-            set { _backgroundMediator = value; }
-        }
-
-        internal static BoxUIMediator? BoxUIMediator
-        {
-            get { return _boxUIMediator; }
-            set { _boxUIMediator = value; }
-        }
-
-        internal static FrameUIMediator? FrameUIMediator
-        {
-            get { return _frameUIMediator; }
-            set { _frameUIMediator = value; }
-        }
-
-        internal static MapGridUIMediator? GridUIMediator
-        {
-            get { return _gridUIMediator; }
-            set { _gridUIMediator = value; }
-        }
-
-        internal static LandformUIMediator? LandformUIMediator
-        {
-            get { return _landformUIMediator; }
-            set { _landformUIMediator = value; }
-        }
-
-
-        internal static MapMeasureUIMediator? MeasureUIMediator
-        {
-            get { return _measureUIMediator; }
-            set { _measureUIMediator = value; }
-        }
-
-        internal static OceanUIMediator? OceanUIMediator
-        {
-            get { return _oceanUIMediator; }
-            set { _oceanUIMediator = value; }
-        }
-
-        internal static PathUIMediator? PathUIMediator
-        {
-            get { return _pathUIMediator; }
-            set { _pathUIMediator = value; }
-        }
-
-        internal static RegionUIMediator? RegionUIMediator
-        {
-            get { return _regionUIMediator; }
-            set { _regionUIMediator = value; }
-        }
-
-        internal static MapScaleUIMediator? ScaleUIMediator
-        {
-            get { return _scaleUIMediator; }
-            set { _scaleUIMediator = value; }
-        }
-
-        internal static SymbolUIMediator? SymbolUIMediator
-        {
-            get { return _symbolUIMediator; }
-            set { _symbolUIMediator = value; }
-        }
-
-        internal static VignetteUIMediator? VignetteUIMediator
-        {
-            get { return _vignetteUIMediator; }
-            set { _vignetteUIMediator = value; }
-        }
-
-        internal static WaterFeatureUIMediator? WaterFeatureUIMediator
-        {
-            get { return _waterFeatureUIMediator; }
-            set { _waterFeatureUIMediator = value; }
-        }
-
-        internal static WindroseUIMediator? WindroseUIMediator
-        {
-            get { return _windroseUIMediator; }
-            set { _windroseUIMediator = value; }
-        }
-
-        internal static InteriorUIMediator? InteriorUIMediator
-        {
-            get { return _interiorUIMediator; }
-            set { _interiorUIMediator = value; }
         }
 
         internal static TimerManager? ApplicationTimerManager
@@ -223,164 +121,7 @@ namespace RealmStudio
         }
 
         // map state properties
-        internal static Landform? CurrentLandform
-        {
-            get { return _currentLandform; }
-            set { _currentLandform = value; }
-        }
-        internal static MapWindrose? CurrentWindrose
-        {
-            get { return _currentWindrose; }
-            set { _currentWindrose = value; }
-        }
-        internal static WaterFeature? CurrentWaterFeature
-        {
-            get { return _currentWaterFeature; }
-            set { _currentWaterFeature = value; }
-        }
-
-        internal static River? CurrentRiver
-        {
-            get { return _currentRiver; }
-            set { _currentRiver = value; }
-        }
-
-        internal static MapPath? CurrentMapPath
-        {
-            get { return _currentMapPath; }
-            set { _currentMapPath = value; }
-        }
-
-        internal static MapGrid? CurrentMapGrid
-        {
-            get { return _currentMapGrid; }
-            set { _currentMapGrid = value; }
-        }
-
-        internal static MapMeasure? CurrentMapMeasure
-        {
-            get { return _currentMapMeasure; }
-            set { _currentMapMeasure = value; }
-        }
-
-        internal static MapScale? CurrentMapScale
-        {
-            get { return _currentMapScale; }
-            set { _currentMapScale = value; }
-        }
-
-        internal static MapRegion? CurrentMapRegion
-        {
-            get { return _currentMapRegion; }
-            set { _currentMapRegion = value; }
-        }
-
-        internal static LayerPaintStroke? CurrentLayerPaintStroke
-        {
-            get { return _currentPaintStroke; }
-            set { _currentPaintStroke = value; }
-        }
-
-        internal static PlacedMapFrame? CurrentMapFrame
-        {
-            get { return _currentMapFrame; }
-            set { _currentMapFrame = value; }
-        }
-
-        internal static InteriorFloor? CurrentInteriorFloor
-        {
-            get { return _currentInteriorFloor; }
-            set { _currentInteriorFloor = value; }
-        }
-
-        internal static InteriorWall? CurrentInteriorWall
-        {
-            get { return _currentInteriorWall; }
-            set { _currentInteriorWall = value; }
-        }
-
-        internal static Landform? SelectedLandform
-        {
-            get { return _selectedLandform; }
-            set { _selectedLandform = value; }
-        }
-
-        internal static MapPath? SelectedMapPath
-        {
-            get { return _selectedMapPath; }
-            set { _selectedMapPath = value; }
-        }
-
-        internal static MapPathPoint? SelectedMapPathPoint
-        {
-            get { return _selectedMapPathPoint; }
-            set { _selectedMapPathPoint = value; }
-        }
-
-        internal static MapSymbol? SelectedMapSymbol
-        {
-            get { return _selectedMapSymbol; }
-            set { _selectedMapSymbol = value; }
-        }
-
-        internal static PlacedMapBox? SelectedPlacedMapBox
-        {
-            get { return _selectedPlacedMapBox; }
-            set { _selectedPlacedMapBox = value; }
-        }
-
-        internal static MapLabel? SelectedMapLabel
-        {
-            get { return _selectedMapLabel; }
-            set { _selectedMapLabel = value; }
-        }
-
-        internal static MapScale? SelectedMapScale
-        {
-            get { return _selectedMapScale; }
-            set { _selectedMapScale = value; }
-        }
-
-        internal static IWaterFeature? SelectedWaterFeature
-        {
-            get { return _selectedWaterFeature; }
-            set { _selectedWaterFeature = value; }
-        }
-
-        internal static MapRiverPoint? SelectedRiverPoint
-        {
-            get { return _selectedRiverPoint; }
-            set { _selectedRiverPoint = value; }
-        }
-        internal static DrawnMapComponent? SelectedDrawnMapComponent
-        {
-            get { return _selectedDrawnMapComponent; }
-            set { _selectedDrawnMapComponent = value; }
-        }
-
-        internal static ColorPaintBrush SelectedColorPaintBrush
-        {
-            get { return _selectedColorPaintBrush; }
-            set { _selectedColorPaintBrush = value; }
-        }
-
-        internal static SKRect SelectedRealmArea
-        {
-            get { return _selectedRealmArea; }
-            set { _selectedRealmArea = value; }
-        }
-
-        internal static SKRect PreviousSelectedRealmArea
-        {
-            get { return _previousSelectedRealmArea; }
-            set { _previousSelectedRealmArea = value; }
-        }
-
-        internal static InteriorFloor? SelectedInteriorFloor
-        {
-            get { return _selectedInteriorFloor; }
-            set { _selectedInteriorFloor = value; }
-        }
+ 
 
         internal static SKPoint ScrollPoint
         {
@@ -438,54 +179,21 @@ namespace RealmStudio
         #endregion
 
         #region Property Change Handler Methods
-        internal static void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(null, e);
-        }
 
-        internal static void SetPropertyField<T>(string propertyName, ref T field, T newValue)
+        internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                Changed?.Invoke(this);
             }
-        }
-
-        public static void NotifyUpdate(string? changedPropertyName)
-        {
-            switch (changedPropertyName)
-            {
-                case "CurrentMap":
-                    {
-                        MainUIMediator?.ConfigureMainTab();
-                        MainUIMediator?.MainForm.MainTab.Invalidate();
-
-                        ScaleUIMediator?.ScaleUnitsText = CurrentMap?.MapAreaUnits;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        #endregion
-
-        #region Event Handlers
-
-        private static void MapStateMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
         }
 
         #endregion
 
         #region UI Methods
+        /*
+
         internal static void ResetUI()
         {
             ArgumentNullException.ThrowIfNull(ApplicationTimerManager);
@@ -522,6 +230,7 @@ namespace RealmStudio
 
                 // unselect anything selected
                 RealmMapMethods.DeselectAllMapComponents(CurrentMap, null);
+                
             }
 
 
@@ -549,12 +258,12 @@ namespace RealmStudio
                 case MapDrawingMode.LandformSelect:
                     if (SelectedLandform != null)
                     {
-                        Cmd_RemoveLandform cmd = new(CurrentMap, SelectedLandform);
-                        CommandManager.AddCommand(cmd);
-                        cmd.DoOperation();
+                        //Cmd_RemoveLandform cmd = new(CurrentMap, SelectedLandform);
+                        //CommandManager.AddCommand(cmd);
+                        //cmd.DoOperation();
 
                         SelectedLandform = null;
-                        CurrentMap.IsSaved = false;
+                        //CurrentMap.IsSaved = false;
                     }
                     break;
                 case MapDrawingMode.WaterFeatureSelect:
@@ -625,7 +334,7 @@ namespace RealmStudio
                     break;
             }
         }
-
+        */
         #endregion
     }
 }

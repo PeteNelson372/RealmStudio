@@ -22,8 +22,9 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp.Views.Desktop;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class RiverInfo : Form
     {

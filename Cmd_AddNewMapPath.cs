@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddNewMapPath(RealmStudioMap map, MapPath newMapPath) : IMapOperation
     {
@@ -30,46 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            if (NewMapPath.DrawOverSymbols)
-            {
-                MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHUPPERLAYER).MapLayerComponents.Add(NewMapPath);
-            }
-            else
-            {
-                MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHLOWERLAYER).MapLayerComponents.Add(NewMapPath);
-            }
+
         }
 
         public void UndoOperation()
         {
-            if (NewMapPath.DrawOverSymbols)
-            {
-                for (int i = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHUPPERLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
-                {
-                    if (MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHUPPERLAYER).MapLayerComponents[i] is MapPath mp)
-                    {
-                        if (mp.MapPathGuid.ToString() == NewMapPath.MapPathGuid.ToString())
-                        {
-                            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHUPPERLAYER).MapLayerComponents.RemoveAt(i);
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                for (int i = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHLOWERLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
-                {
-                    if (MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHLOWERLAYER).MapLayerComponents[i] is MapPath mp)
-                    {
-                        if (mp.MapPathGuid.ToString() == NewMapPath.MapPathGuid.ToString())
-                        {
-                            MapBuilder.GetMapLayerByIndex(Map, MapBuilder.PATHLOWERLAYER).MapLayerComponents.RemoveAt(i);
-                            break;
-                        }
-                    }
-                }
-            }
+
         }
     }
 }

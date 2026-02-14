@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using System.Timers;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class AppSplashScreen : Form
     {

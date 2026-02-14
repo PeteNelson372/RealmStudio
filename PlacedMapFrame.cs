@@ -29,7 +29,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using Extensions = SkiaSharp.Views.Desktop.Extensions;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class PlacedMapFrame : MapComponent, IXmlSerializable
     {

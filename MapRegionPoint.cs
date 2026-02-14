@@ -27,7 +27,7 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class MapRegionPoint : IXmlSerializable
     {

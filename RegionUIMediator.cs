@@ -21,18 +21,12 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
-using System.ComponentModel;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class RegionUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class RegionUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
-        private MapStateMediator? _mapState;
-
         private Color _regionColor = Color.FromArgb(0, 86, 179);
         private int _regionBorderWidth = 8;
         private int _regionBorderSmoothing = 20;
@@ -40,19 +34,7 @@ namespace RealmStudio
         private PathType _regionBorderType;
         private bool _showRegions = true;
 
-        public RegionUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += RegionUIMediator_PropertyChanged;
-        }
-
         #region Property Setters/Getters
-
-        public MapStateMediator? MapState
-        {
-            get { return _mapState; }
-            set { _mapState = value; }
-        }
 
         public Color RegionColor
         {
@@ -99,27 +81,16 @@ namespace RealmStudio
         #endregion
 
         #region Property Change Handler Methods
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
-
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            UpdateRegionUI();
-            RegionManager.Update();
-            MainForm.SKGLRenderControl.Invalidate();
-        }
-
+        /*
         private void UpdateRegionUI()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
@@ -182,31 +153,19 @@ namespace RealmStudio
                         break;
                 }
 
-                MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.REGIONLAYER);
-                MapLayer regionOverlayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.REGIONOVERLAYLAYER);
+                //MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.REGIONLAYER);
+                //MapLayer regionOverlayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.REGIONOVERLAYLAYER);
 
-                regionLayer.ShowLayer = ShowRegions;
-                regionOverlayLayer.ShowLayer = ShowRegions;
+                //regionLayer.ShowLayer = ShowRegions;
+                //regionOverlayLayer.ShowLayer = ShowRegions;
             }));
         }
-
-        #endregion
-
-        #region Event Handlers
-        private void RegionUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
-
+        */
         #endregion
 
         #region Map Region UI methods
 
+        /*
         internal void Reset()
         {
             RegionColor = Color.FromArgb(0, 86, 179);
@@ -220,6 +179,7 @@ namespace RealmStudio
         {
             MapRegion? selectedRegion = null;
 
+            
             List<MapComponent> mapRegionComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.REGIONLAYER).MapLayerComponents;
 
             for (int i = 0; i < mapRegionComponents.Count; i++)
@@ -248,9 +208,12 @@ namespace RealmStudio
 
             MapStateMediator.CurrentMapRegion = selectedRegion;
 
+            
+
             return selectedRegion;
         }
 
+        */
         #endregion
     }
 }

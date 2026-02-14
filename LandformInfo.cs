@@ -23,8 +23,9 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class LandformInfo : Form
     {
@@ -40,7 +41,7 @@ namespace RealmStudio
 
         public LandformInfo(RealmStudioMap map, Landform mapLandform, MapTheme? currentTheme, SKGLControl renderControl)
         {
-            ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
+            //ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
 
             InitializeComponent();
 
@@ -49,83 +50,87 @@ namespace RealmStudio
             RenderControl = renderControl;
             CurrentTheme = currentTheme;
 
-            GuidLabel.Text = Landform.LandformGuid.ToString();
+            //GuidLabel.Text = Landform.LandformGuid.ToString();
             NameTextbox.Text = Landform.LandformName;
 
-            LandformOutlineColorSelectButton.BackColor = Landform.LandformOutlineColor;
-            LandformOutlineWidthTrack.Value = Landform.LandformOutlineWidth;
-            LandformBackgroundColorSelectButton.BackColor = Landform.LandformBackgroundColor;
-            UseTextureForBackgroundCheck.Checked = Landform.FillWithTexture;
+            LandformOutlineColorSelectButton.BackColor = Landform.Shading.LandformOutlineColor.ToDrawingColor();
+            LandformOutlineWidthTrack.Value = Landform.Shading.LandformOutlineWidth;
+            LandformBackgroundColorSelectButton.BackColor = Landform.Shading.LandformBackgroundColor.ToDrawingColor();
+            UseTextureForBackgroundCheck.Checked = Landform.Shading.FillWithTexture;
 
-            if (Landform.LandformTexture != null)
+            /*
+            if (Landform.Shading.LandformTexture != null)
             {
-                if (Landform.LandformTexture.TextureBitmap == null)
+                if (Landform.Shading.LandformTexture.TextureBitmap == null)
                 {
-                    Landform.LandformTexture.TextureBitmap = (Bitmap?)Bitmap.FromFile(LandformManager.LandformMediator.LandTextureList.First().TexturePath);
+                    Landform.ShadingSettings.LandformTexture.TextureBitmap = (Bitmap?)Bitmap.FromFile(LandformManager.LandformMediator.LandTextureList.First().TexturePath);
                 }
 
-                LandformTexturePreviewPicture.Image = Landform.LandformTexture.TextureBitmap;
-                LandTextureNameLabel.Text = Landform.LandformTexture.TextureName;
+                LandformTexturePreviewPicture.Image = Landform.ShadingSettings.LandformTexture.TextureBitmap;
+                LandTextureNameLabel.Text = Landform.ShadingSettings.LandformTexture.TextureName;
 
                 for (int i = 0; i < LandformManager.LandformMediator.LandTextureList.Count; i++)
                 {
-                    if (LandformManager.LandformMediator.LandTextureList[i].TexturePath == Landform.LandformTexture.TexturePath)
+                    if (LandformManager.LandformMediator.LandTextureList[i].TexturePath == Landform.ShadingSettings.LandformTexture.TexturePath)
                     {
                         SelectedLandTextureIndex = i;
                         break;
                     }
                 }
             }
+            */
 
-            CoastlineEffectDistanceTrack.Value = Landform.CoastlineEffectDistance;
-            CoastlineColorSelectionButton.BackColor = Landform.CoastlineColor;
+            /*
+            CoastlineEffectDistanceTrack.Value = Landform.Coastline.CoastlineEffectDistance;
+            CoastlineColorSelectionButton.BackColor = Landform.CoastlineSettings.CoastlineColor;
 
             for (int i = 0; i < CoastlineStyleList.Items.Count; i++)
             {
-                if (CoastlineStyleList.Items[i].ToString() == Landform.CoastlineStyleName)
+                if (CoastlineStyleList.Items[i].ToString() == Landform.CoastlineSettings.CoastlineStyle.ToString())
                 {
                     CoastlineStyleList.SetSelected(i, true);
                     break;
                 }
             }
+            */
 
             Refresh();
         }
 
         private void PreviousTextureButton_Click(object sender, EventArgs e)
         {
-            ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
+            //ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
 
             if (SelectedLandTextureIndex > 0)
             {
                 SelectedLandTextureIndex--;
             }
 
-            if (LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap == null)
-            {
-                LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TexturePath);
-            }
+            //if (LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap == null)
+            //{
+            //    LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TexturePath);
+            //}
 
-            LandformTexturePreviewPicture.Image = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap;
-            LandTextureNameLabel.Text = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureName;
+            //LandformTexturePreviewPicture.Image = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap;
+            //LandTextureNameLabel.Text = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureName;
         }
 
         private void NextTextureButton_Click(object sender, EventArgs e)
         {
-            ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
+            //ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
 
-            if (SelectedLandTextureIndex < LandformManager.LandformMediator.LandTextureList.Count - 1)
+            //if (SelectedLandTextureIndex < LandformManager.LandformMediator.LandTextureList.Count - 1)
             {
                 SelectedLandTextureIndex++;
             }
 
-            if (LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap == null)
-            {
-                LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TexturePath);
-            }
+            //if (LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap == null)
+            //{
+            //    LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap = (Bitmap?)Bitmap.FromFile(LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TexturePath);
+            //}
 
-            LandformTexturePreviewPicture.Image = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap;
-            LandTextureNameLabel.Text = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureName;
+            //LandformTexturePreviewPicture.Image = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureBitmap;
+            //LandTextureNameLabel.Text = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex].TextureName;
         }
 
         private void CloseLandformDataButton_Click(object sender, EventArgs e)
@@ -135,35 +140,36 @@ namespace RealmStudio
 
         private void ApplyChangesButton_Click(object sender, EventArgs e)
         {
-            ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
+            //ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
 
+            /*
             Landform.LandformName = NameTextbox.Text;
-            Landform.LandformOutlineColor = LandformOutlineColorSelectButton.BackColor;
-            Landform.LandformFillColor = Color.FromArgb(Landform.LandformOutlineColor.A / 4, Landform.LandformOutlineColor);
-            Landform.LandformTexture = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex];
-            Landform.LandformOutlineWidth = LandformOutlineWidthTrack.Value;
-            Landform.FillWithTexture = UseTextureForBackgroundCheck.Checked;
-            Landform.LandformBackgroundColor = LandformBackgroundColorSelectButton.BackColor;
+            Landform.ShadingSettings.LandformOutlineColor = LandformOutlineColorSelectButton.BackColor;
+            Landform.ShadingSettings.LandformFillColor = Color.FromArgb(Landform.ShadingSettings.LandformOutlineColor.A / 4, Landform.ShadingSettings.LandformOutlineColor);
+            Landform.ShadingSettings.LandformTexture = LandformManager.LandformMediator.LandTextureList[SelectedLandTextureIndex];
+            Landform.ShadingSettings.LandformOutlineWidth = LandformOutlineWidthTrack.Value;
+            Landform.ShadingSettings.FillWithTexture = UseTextureForBackgroundCheck.Checked;
+            Landform.ShadingSettings.LandformBackgroundColor = LandformBackgroundColorSelectButton.BackColor;
 
-            if (!Landform.FillWithTexture || Landform.LandformTexture == null || Landform.LandformTexture.TextureBitmap == null)
+            if (!Landform.ShadingSettings.FillWithTexture || Landform.ShadingSettings.LandformTexture == null || Landform.ShadingSettings.LandformTexture.TextureBitmap == null)
             {
                 // fill with background color
-                Landform.LandformFillPaint.Shader?.Dispose();
-                Landform.LandformFillPaint.Shader = null;
+                Landform.ShadingSettings.LandformFillPaint.Shader?.Dispose();
+                Landform.ShadingSettings.LandformFillPaint.Shader = null;
 
-                SKShader flpShader = SKShader.CreateColor(Landform.LandformBackgroundColor.ToSKColor());
-                Landform.LandformFillPaint.Shader = flpShader;
+                SKShader flpShader = SKShader.CreateColor(Landform.ShadingSettings.LandformBackgroundColor.ToSKColor());
+                Landform.ShadingSettings.LandformFillPaint.Shader = flpShader;
             }
             else
             {
                 // fill with texture
-                Bitmap resizedBitmap = new(Landform.LandformTexture.TextureBitmap, Map.MapWidth, Map.MapHeight);
+                Bitmap resizedBitmap = new(Landform.ShadingSettings.LandformTexture.TextureBitmap, Map.MapWidth, Map.MapHeight);
 
                 // create and set a shader from the texture
                 SKShader flpShader = SKShader.CreateBitmap(Extensions.ToSKBitmap(resizedBitmap),
                     SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
 
-                Landform.LandformFillPaint.Shader = flpShader;
+                Landform.ShadingSettings.LandformFillPaint.Shader = flpShader;
             }
 
 
@@ -177,7 +183,7 @@ namespace RealmStudio
 
                 Extensions.ToSKBitmap(dashTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
 
-                Landform.DashShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                Landform.CoastlineSettings.DashShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
             }
 
             MapTexture? lineHatchTexture = AssetManager.HATCH_TEXTURE_LIST.Find(x => x.TextureName == "Line Hatch");
@@ -190,18 +196,23 @@ namespace RealmStudio
 
                 Extensions.ToSKBitmap(lineHatchTexture.TextureBitmap).ScalePixels(resizedSKBitmap, SKSamplingOptions.Default);
 
-                Landform.LineHatchBitmapShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
+                Landform.CoastlineSettings.LineHatchBitmapShader = SKShader.CreateBitmap(resizedSKBitmap, SKShaderTileMode.Mirror, SKShaderTileMode.Mirror);
             }
 
 
-            Landform.CoastlineEffectDistance = CoastlineEffectDistanceTrack.Value;
-            Landform.CoastlineColor = CoastlineColorSelectionButton.BackColor;
+            Landform.CoastlineSettings.CoastlineEffectDistance = CoastlineEffectDistanceTrack.Value;
+            Landform.CoastlineSettings.CoastlineColor = CoastlineColorSelectionButton.BackColor;
 
             string? coastlineStyleName = CoastlineStyleList.SelectedItem?.ToString();
 
-            if (!string.IsNullOrEmpty(coastlineStyleName))
+            Landform.CoastlineSettings.CoastlineStyle = LandformCoastlineStyle.None;
+            foreach (var style in Enum.GetValues<LandformCoastlineStyle>())
             {
-                Landform.CoastlineStyleName = coastlineStyleName;
+                if (style.GetDescription() == coastlineStyleName)
+                {
+                    Landform.CoastlineSettings.CoastlineStyle = style;
+                    break;
+                }
             }
 
             TOOLTIP.Show("Landform data changes applied", this, new Point(StatusMessageLabel.Left, StatusMessageLabel.Top), 3000);
@@ -209,6 +220,7 @@ namespace RealmStudio
             Landform.IsModified = true;
 
             RenderControl.Invalidate();
+            */
         }
 
         private void LandformOutlineColorSelectButton_Click(object sender, EventArgs e)
@@ -251,21 +263,22 @@ namespace RealmStudio
 
         private void ApplyThemeSettingsButton_Click(object sender, EventArgs e)
         {
+            /*
             ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
 
             if (CurrentTheme != null)
             {
                 LandformOutlineColorSelectButton.BackColor = (CurrentTheme.LandformOutlineColor != null) ?
-                    Color.FromArgb((int)CurrentTheme.LandformOutlineColor) : Landform.LandformOutlineColor;
+                    Color.FromArgb((int)CurrentTheme.LandformOutlineColor) : Landform.ShadingSettings.LandformOutlineColor;
 
                 LandformOutlineWidthTrack.Value = (int)((CurrentTheme.LandformOutlineWidth != null) ?
-                    CurrentTheme.LandformOutlineWidth : Landform.LandformOutlineWidth);
+                    CurrentTheme.LandformOutlineWidth : Landform.ShadingSettings.LandformOutlineWidth);
 
                 LandformBackgroundColorSelectButton.BackColor = (CurrentTheme.LandformBackgroundColor != null) ?
-                    Color.FromArgb((int)CurrentTheme.LandformBackgroundColor) : Landform.LandformBackgroundColor;
+                    Color.FromArgb((int)CurrentTheme.LandformBackgroundColor) : Landform.ShadingSettings.LandformBackgroundColor;
 
                 UseTextureForBackgroundCheck.Checked = (bool)((CurrentTheme.FillLandformWithTexture != null) ?
-                    CurrentTheme.FillLandformWithTexture : Landform.FillWithTexture);
+                    CurrentTheme.FillLandformWithTexture : Landform.ShadingSettings.FillWithTexture);
 
                 if (CurrentTheme.LandformTexture != null)
                 {
@@ -288,19 +301,27 @@ namespace RealmStudio
                 }
 
                 CoastlineEffectDistanceTrack.Value = (CurrentTheme.LandformCoastlineEffectDistance != null) ?
-                    CurrentTheme.LandformCoastlineEffectDistance.Value : Landform.CoastlineEffectDistance;
+                    CurrentTheme.LandformCoastlineEffectDistance.Value : Landform.CoastlineSettings.CoastlineEffectDistance;
 
                 CoastlineColorSelectionButton.BackColor = (CurrentTheme.LandformCoastlineColor != null) ?
-                    Color.FromArgb((int)CurrentTheme.LandformCoastlineColor) : Landform.CoastlineColor;
+                    Color.FromArgb((int)CurrentTheme.LandformCoastlineColor) : Landform.CoastlineSettings.CoastlineColor;
 
                 if (!string.IsNullOrEmpty(CurrentTheme.LandformCoastlineStyle))
                 {
-                    Landform.CoastlineStyleName = CurrentTheme.LandformCoastlineStyle;
+                    Landform.CoastlineSettings.CoastlineStyle = LandformCoastlineStyle.None;
+                    foreach (var style in Enum.GetValues<LandformCoastlineStyle>())
+                    {
+                        if (style.GetDescription() == CurrentTheme.LandformCoastlineStyle)
+                        {
+                            Landform.CoastlineSettings.CoastlineStyle = style;
+                            break;
+                        }
+                    }
                 }
 
                 for (int i = 0; i < CoastlineStyleList.Items.Count; i++)
                 {
-                    if (CoastlineStyleList.Items[i].ToString() == Landform.CoastlineStyleName)
+                    if (CoastlineStyleList.Items[i].ToString() == Landform.CoastlineSettings.CoastlineStyle.GetDescription())
                     {
                         CoastlineStyleList.SetSelected(i, true);
                         break;
@@ -309,10 +330,12 @@ namespace RealmStudio
 
                 Landform.IsModified = true;
             }
+            */
         }
 
         private void LandformDescriptionButton_Click(object sender, EventArgs e)
         {
+            /*
             DescriptionEditor descriptionEditor = new(Landform, Landform.LandformDescription);
             descriptionEditor.DescriptionEditorOverlay.Text = "Landform Description Editor";
 
@@ -322,6 +345,7 @@ namespace RealmStudio
             {
                 Landform.LandformDescription = descriptionEditor.DescriptionText;
             }
+            */
         }
 
         private void LandformDescriptionButton_MouseHover(object sender, EventArgs e)

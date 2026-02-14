@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using System.Text.RegularExpressions;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public static class StringExtensions
     {

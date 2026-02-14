@@ -21,13 +21,14 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
+using RealmStudioX.Properties;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.IO;
 using System.IO.Compression;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class RealmMapMethods
     {
@@ -44,6 +45,8 @@ namespace RealmStudio
         internal static List<MapComponent> SelectMapComponentsInArea(RealmStudioMap map, SKRect selectedArea)
         {
             List<MapComponent> selectedMapComponents = [];
+
+            /*
 
             MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.SYMBOLLAYER);
             MapLayer pathLowerLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.PATHLOWERLAYER);
@@ -117,6 +120,8 @@ namespace RealmStudio
                 }
             }
 
+            */
+
             return selectedMapComponents;
         }
 
@@ -126,7 +131,7 @@ namespace RealmStudio
 
             if (string.IsNullOrEmpty(autosaveDirectory))
             {
-                autosaveDirectory = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
+                autosaveDirectory = UtilityMethods.DefaultAutosaveFolder;
             }
 
             string fileNameNoExtension = Path.GetFileNameWithoutExtension(filepath);
@@ -149,7 +154,7 @@ namespace RealmStudio
 
                 if (string.IsNullOrEmpty(autosaveDirectory))
                 {
-                    autosaveDirectory = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
+                    autosaveDirectory = UtilityMethods.DefaultAutosaveFolder;
                 }
 
                 string autosaveFilename = map.MapGuid.ToString();
@@ -250,8 +255,8 @@ namespace RealmStudio
                 RealmType = currentMap.RealmType,
             };
 
-            newRealmMap = MapBuilder.CreateMap(newRealmMap, newMapGRContext);
-            newRealmMap.IsSaved = false;
+            //newRealmMap = MapBuilder.CreateMap(newRealmMap, newMapGRContext);
+            //newRealmMap.IsSaved = false;
 
             // scale and delta are calculated from selected area, new map width and height,
             // whether or not current map should be scaled to fit the new map, and anchor point
@@ -273,9 +278,6 @@ namespace RealmStudio
 
             newRealmMap.MapAreaWidth = currentMap.MapAreaWidth * scaleX;
             newRealmMap.MapAreaHeight = currentMap.MapAreaHeight * scaleY;
-
-            newRealmMap.MapPixelWidth = newRealmMap.MapAreaWidth / newRealmMap.MapWidth;
-            newRealmMap.MapPixelHeight = newRealmMap.MapAreaHeight / newRealmMap.MapHeight;
 
             float deltaX = -selectedMapArea.Left * scaleX;
             float deltaY = -selectedMapArea.Top * scaleY;
@@ -462,6 +464,9 @@ namespace RealmStudio
 
 
             // get the landforms and drawn shapes within or intersecting the selected area, then translate and scale them
+
+            /*
+
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.LANDFORMLAYER);
             MapLayer newRealmLandformLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.LANDFORMLAYER);
 
@@ -514,7 +519,11 @@ namespace RealmStudio
                 }
             }
 
+            */
+
             // go through the current map to get textures, painted colors, etc. and assign them to the detail map
+
+            /*
 
             // texture needs to be resized to new map size
             MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.BASELAYER);
@@ -548,6 +557,9 @@ namespace RealmStudio
                 }
             }
 
+            */
+
+            /*
             // texture needs to be resized to new map size
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.OCEANTEXTURELAYER);
             MapLayer newRealmOceanTextureLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.OCEANTEXTURELAYER);
@@ -579,8 +591,9 @@ namespace RealmStudio
                     }
                 }
             }
+            */
 
-
+            /*
             // texture needs to be resized to new map size
             MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
             MapLayer newRealmOceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
@@ -612,8 +625,9 @@ namespace RealmStudio
                     }
                 }
             }
+            */
 
-
+            /*
             // ocean drawing layer
             MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.OCEANDRAWINGLAYER);
             MapLayer newRealmOceanDrawingLayer = MapBuilder.GetMapLayerByIndex(newRealmMap, MapBuilder.OCEANDRAWINGLAYER);
@@ -661,6 +675,9 @@ namespace RealmStudio
                 }
             }
 
+            */
+
+            /*
 
             // land drawing layer
             MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.LANDDRAWINGLAYER);
@@ -1467,6 +1484,9 @@ namespace RealmStudio
                 }
             }
 
+
+            */
+
             return newRealmMap;
 
         }
@@ -1788,6 +1808,7 @@ namespace RealmStudio
 
         internal static void AddMapImagesToHeightMapLayer(RealmStudioMap map)
         {
+            /*
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
             MapLayer heightMapLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.HEIGHTMAPLAYER);
 
@@ -1806,7 +1827,7 @@ namespace RealmStudio
             {
                 if (landformLayer.MapLayerComponents[i] is Landform l)
                 {
-                    l.RenderLandformForHeightMap(canvas);
+                    //l.RenderLandformForHeightMap(canvas);
                 }
             }
 
@@ -1829,12 +1850,13 @@ namespace RealmStudio
             };
 
             heightMapLayer.MapLayerComponents.Add(heightMap);
+            */
         }
 
         internal static void PruneOldBackupsOfMap(RealmStudioMap map, int backupCount)
         {
             // realm autosave folder (location where map backups are saved during autosave)
-            string defaultAutosaveFolder = UtilityMethods.DEFAULT_AUTOSAVE_FOLDER;
+            string defaultAutosaveFolder = UtilityMethods.DefaultAutosaveFolder;
 
             string autosaveDirectory = Settings.Default.AutosaveDirectory;
 
@@ -1891,6 +1913,7 @@ namespace RealmStudio
 
         public static void DeselectAllMapComponents(RealmStudioMap map, MapComponent? selectedComponent)
         {
+            /*
             // when components are deselected, the MapStateMediator selected objexct has to be updated
 
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
@@ -2130,16 +2153,18 @@ namespace RealmStudio
                     }
                 }
             }
+
+            */
         }
 
         internal static SKRect DrawSelectedRealmAreaOnWorkLayer(RealmStudioMap map, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
         {
             SKRect selectedArea = new(previousPoint.X, previousPoint.Y, zoomedScrolledPoint.X, zoomedScrolledPoint.Y);
 
-            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
-            workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            //MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
+            //workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-            workLayer.LayerSurface?.Canvas.DrawRect(selectedArea, PaintObjects.LandformAreaSelectPaint);
+            //workLayer.LayerSurface?.Canvas.DrawRect(selectedArea, PaintObjects.LandformAreaSelectPaint);
 
             return selectedArea;
         }

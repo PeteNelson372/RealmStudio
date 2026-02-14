@@ -24,7 +24,7 @@
 
 using SkiaSharp;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class CutCopyPasteManager
     {
@@ -39,38 +39,44 @@ namespace RealmStudio
 
         internal static void ClearComponentSelection()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            /*
             SelectedMapComponents.Clear();
             MapStateMediator.PreviousSelectedRealmArea = SKRect.Empty;
             MapStateMediator.SelectedRealmArea = SKRect.Empty;
             MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            */
         }
 
         internal static void CopySelectedComponents()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            /*
+        ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
-            if (MapStateMediator.SelectedRealmArea != SKRect.Empty)
-            {
-                // get all objects within the selected area and copy them
-                SelectedMapComponents = RealmMapMethods.SelectMapComponentsInArea(MapStateMediator.CurrentMap, MapStateMediator.SelectedRealmArea);
+        if (MapStateMediator.SelectedRealmArea != SKRect.Empty)
+        {
 
-                // do not cut the selected objects from their layer
-                Cmd_CutOrCopyFromArea cmd = new(MapStateMediator.CurrentMap, SelectedMapComponents, MapStateMediator.SelectedRealmArea, false);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+            // get all objects within the selected area and copy them
+            SelectedMapComponents = RealmMapMethods.SelectMapComponentsInArea(MapStateMediator.CurrentMap, MapStateMediator.SelectedRealmArea);
 
-                MapStateMediator.PreviousSelectedRealmArea = MapStateMediator.SelectedRealmArea;
-                MapStateMediator.SelectedRealmArea = SKRect.Empty;
-                MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
-            }
+            // do not cut the selected objects from their layer
+            Cmd_CutOrCopyFromArea cmd = new(MapStateMediator.CurrentMap, SelectedMapComponents, MapStateMediator.SelectedRealmArea, false);
+            CommandManager.AddCommand(cmd);
+            cmd.DoOperation();
+
+            MapStateMediator.PreviousSelectedRealmArea = MapStateMediator.SelectedRealmArea;
+            MapStateMediator.SelectedRealmArea = SKRect.Empty;
+            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            */
+        //}
         }
 
         internal static void CutSelectedComponents()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            /*
             Cmd_CutOrCopyFromArea cmd = new(MapStateMediator.CurrentMap, SelectedMapComponents, MapStateMediator.SelectedRealmArea, true);
             CommandManager.AddCommand(cmd);
             cmd.DoOperation();
@@ -78,17 +84,18 @@ namespace RealmStudio
             MapStateMediator.PreviousSelectedRealmArea = MapStateMediator.SelectedRealmArea;
             MapStateMediator.SelectedRealmArea = SKRect.Empty;
             MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            */
         }
 
-        internal static void PasteSelectedComponentsAtPoint(SKPoint zoomedScrolledPoint)
+        internal static void PasteSelectedComponentsAtPoint(SKPoint? zoomedScrolledPoint)
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (SelectedMapComponents.Count > 0)
             {
-                Cmd_PasteSelectedComponents cmd = new(MapStateMediator.CurrentMap, SelectedMapComponents, MapStateMediator.PreviousSelectedRealmArea, zoomedScrolledPoint);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_PasteSelectedComponents cmd = new(MapStateMediator.CurrentMap, SelectedMapComponents, MapStateMediator.PreviousSelectedRealmArea, zoomedScrolledPoint);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
             }
         }
     }

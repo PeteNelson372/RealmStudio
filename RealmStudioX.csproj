@@ -2,17 +2,17 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>false</ForceDesignerDpiUnaware>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>1.2026.0-alpha-224</Version>
+    <Version>1.2026.0-alpha-370</Version>
     <SignAssembly>False</SignAssembly>
-    <StartupObject>RealmStudio.Program</StartupObject>
-    <Copyright>Copyright 2025, Peter R. Nelson</Copyright>
+    <StartupObject>RealmStudioX.Program</StartupObject>
+    <Copyright>Copyright 2026, Peter R. Nelson</Copyright>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <SupportedOSPlatformVersion>10.0.26100.0</SupportedOSPlatformVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -29,8 +29,8 @@
     <UseWPF>True</UseWPF>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <ApplicationIcon>realm_studio_icon_1024x1024_g3u_icon.ico</ApplicationIcon>
-    <AssemblyVersion>1.2026.27.1693</AssemblyVersion>
-    <FileVersion>1.2026.27.1693</FileVersion> 
+    <AssemblyVersion>1.2026.45.34494</AssemblyVersion>
+    <FileVersion>1.2026.45.34494</FileVersion> 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -172,15 +172,15 @@
     <PackageReference Include="HelixToolkit.Wpf" Version="3.1.2" />
     <PackageReference Include="HelixToolkit.Wpf.Input" Version="2.27.3" />
     <PackageReference Include="log4net" Version="3.2.0" />
-    <PackageReference Include="ReaLTaiizor" Version="3.8.1.4" />
+    <PackageReference Include="ReaLTaiizor" Version="3.8.1.5" />
     <PackageReference Include="SharpAvi" Version="3.0.1" />
     <PackageReference Include="SimplexNoise" Version="2.0.0" />
-    <PackageReference Include="SkiaSharp" Version="3.119.1" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.119.1" />
-    <PackageReference Include="SkiaSharp.Views" Version="3.119.1" />
-    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.1" />
-    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.119.1" />
-    <PackageReference Include="SkiaSharp.Views.WPF" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp" Version="3.119.2" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.119.2" />
+    <PackageReference Include="SkiaSharp.Views" Version="3.119.2" />
+    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.2" />
+    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.119.2" />
+    <PackageReference Include="SkiaSharp.Views.WPF" Version="3.119.2" />
     <PackageReference Include="Svg.Skia" Version="3.4.1" />
     <PackageReference Include="System.Management" Version="10.0.2" />
   </ItemGroup>
@@ -252,8 +252,13 @@
   </ItemGroup>
 
   <ItemGroup>
+
+    <Reference Include="RealmStudioShapeRenderingLib">
+      <HintPath>..\RealmStudioShapeRenderingLib\bin\Debug\net8.0\RealmStudioShapeRenderingLib.dll</HintPath>
+    </Reference>
+
     <Reference Include="WorldAnvilIntegrationLib">
-      <HintPath>..\WorldAnvilIntegrationLib\bin\Debug\net9.0-windows7.0\WorldAnvilIntegrationLib.dll</HintPath>
+      <HintPath>..\WorldAnvilIntegrationLib\bin\Debug\net8.0-windows7.0\WorldAnvilIntegrationLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -39,8 +39,9 @@ using Pen = System.Drawing.Pen;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class DrawingMethods
     {

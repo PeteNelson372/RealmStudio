@@ -21,9 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
-
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_FillMapWithInteriorFloor(RealmStudioMap map, InteriorFloor floor) : IMapOperation
     {
@@ -32,25 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            SKRect r = new(2, 2, Map.MapWidth - 2, Map.MapHeight - 2);
 
-            FilledFloor.X = 2;
-            FilledFloor.Y = 2;
-            FilledFloor.Width = Map.MapWidth - 2;
-            FilledFloor.Height = Map.MapHeight - 2;
-
-            FilledFloor.DrawPath.AddRect(r);
-
-            InteriorManager.CreateAllPathsFromDrawnPath(Map, FilledFloor);
-
-            MapLayer interiorLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.INTERIORLAYER);
-            interiorLayer.MapLayerComponents.Add(FilledFloor);
         }
 
         public void UndoOperation()
         {
-            MapLayer interiorLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.INTERIORLAYER);
-            interiorLayer.MapLayerComponents.Remove(FilledFloor);
+
         }
     }
 }

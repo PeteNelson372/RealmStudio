@@ -21,52 +21,68 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
+using RealmStudioShapeRenderingLib;
+using RealmStudioX.Properties;
 using SkiaSharp;
 using System.IO;
-using System.Xml.Linq;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class AssetManager
+    internal sealed class AssetManager : IAssetProvider
     {
-        // TODO: refactor AssetManager so map object managers are responsible
-        // for loading assets for the map objects they manage
 
-        public static Cursor? EYEDROPPER_CURSOR { get; set; }
+        public static Cursor? EyedropperCursor { get; set; }
 
-        public static List<MapTexture> WATER_TEXTURE_LIST { get; set; } = [];
+        private readonly List<AssetDescriptor> _assets = [];
+        private readonly Dictionary<string, SKImage> _imageCache = [];
 
-        public static List<MapTexture> HATCH_TEXTURE_LIST { get; set; } = [];
+        private static readonly Dictionary<string, AssetType> _folderTypeMap =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                ["boxes"] = AssetType.Box,
+                ["brushes"] = AssetType.Brush,
+                ["frames"] = AssetType.Frame,
+                ["icons"] = AssetType.Icon,
+                ["labelpresets"] = AssetType.LabelPreset,
+                ["namegenerators"] = AssetType.NameGenerator,
+                ["shapingfunctions"] = AssetType.ShapingFunction,
+                ["stamps"] = AssetType.Stamp,
+                ["symbols"] = AssetType.Symbol,
+                ["backgroundtextures"] = AssetType.BackgroundTexture,
+                ["cloudtextures"] = AssetType.CloudTexture,
+                ["floortextures"] = AssetType.FloorTexture,
+                ["hatchtextures"] = AssetType.HatchTexture,
+                ["landtextures"] = AssetType.LandTexture,
+                ["pathtextures"] = AssetType.PathTexture,
+                ["planettexures"] = AssetType.PlanetTexture,
+                ["starfieldtextures"] = AssetType.StarfieldTexture,
+                ["startextures"] = AssetType.StarTexture,
+                ["walltextures"] = AssetType.WallTexture,
+                ["watertextures"] = AssetType.WaterTexture,
+                ["themes"] = AssetType.Theme,
+                ["vectors"] = AssetType.Vector,
+            };
 
-        public static List<MapBox> MAP_BOX_LIST = [];
+        public IReadOnlyList<AssetDescriptor> Assets => _assets;
+        public int AssetCount => _assets.Count;
 
-        public static List<MapFrame> MAP_FRAME_TEXTURES { get; set; } = [];
+        IAssetMetadataLoader _metadataLoader;
 
-        public static readonly List<RealmStudioApplicationIcon> APPLICATION_ICON_LIST = [];
+        public static readonly string DefaultThemeName = "Medieval Quest";
 
-        public static readonly List<MapBrush> BRUSH_LIST = [];
-        public static readonly List<MapTheme> THEME_LIST = [];
-
-        public static readonly string DEFAULT_THEME_NAME = "Medieval Quest";
-
-        public static List<MapSymbolCollection> MAP_SYMBOL_COLLECTIONS = [];  // TODO: move to SymbolManager
-
-        // the symbols read from symbol collections
-        public static List<MapSymbol> MAP_SYMBOL_LIST { get; set; } = [];   // TODO: move to SymbolManager
 
         // the tags that can be selected in the UI to filter the tags in the tag list box on the UI
-        public static readonly List<string> ORIGINAL_SYMBOL_TAGS = [];
-        public static readonly List<string> SYMBOL_TAGS = [];
-        public static readonly List<string> STRUCTURE_SYNONYMS = [];
-        public static readonly List<string> TERRAIN_SYNONYMS = [];
-        public static readonly List<string> VEGETATION_SYNONYMS = [];
+        public static readonly List<string> OriginalSymbolTags = [];
+        public static readonly List<string> SymbolTags = [];
+        public static readonly List<string> StructureSynonyms = [];
+        public static readonly List<string> TerrainSynonyms = [];
+        public static readonly List<string> VegetationSynonyms = [];
 
-        public static MapTheme? CURRENT_THEME { get; set; }
+        public static MapTheme? CurrentTheme { get; set; }
 
-        public static List<LandformShapingFunction> LANDFORM_SHAPING_FUNCTIONS = [];
+        public static List<LandformShapingFunction> LandformShapingFunctions = [];
 
-        public static string ASSET_DIRECTORY = string.Empty;
+        public static string RootAssetDirectory = string.Empty;
 
         private static string SymbolTagsFilePath = Path.DirectorySeparatorChar + "SymbolTags.txt";
 
@@ -80,15 +96,21 @@ namespace RealmStudio
 
         public static readonly string WonderdraftSymbolsFileName = ".wonderdraft_symbols";
 
-        public static LoadingStatusForm LOADING_STATUS_FORM = new();
+        public static LoadingStatusForm LoadingStatusForm = new();
+
+        public AssetManager(IAssetMetadataLoader metadataLoader)
+        {
+            _metadataLoader = metadataLoader
+                ?? throw new ArgumentNullException(nameof(metadataLoader));
+        }
 
         internal static void InitializeAssetDirectories()
         {
-            ASSET_DIRECTORY = Settings.Default.MapAssetDirectory;
+            RootAssetDirectory = Settings.Default.MapAssetDirectory;
 
-            if (string.IsNullOrEmpty(ASSET_DIRECTORY))
+            if (string.IsNullOrEmpty(RootAssetDirectory))
             {
-                ASSET_DIRECTORY = UtilityMethods.DEFAULT_ASSETS_FOLDER;
+                RootAssetDirectory = UtilityMethods.DefaultAssetsFolder;
             }
 
             DefaultModelsDirectory = Settings.Default.DefaultRealmDirectory + Path.DirectorySeparatorChar + "Models";
@@ -100,12 +122,183 @@ namespace RealmStudio
             VegetationSynonymsFilePath = SymbolManager.DefaultSymbolDirectory + Path.DirectorySeparatorChar + "VegetationSynonyms.txt";
 
             // set map object manager directories
-            SymbolManager.DefaultSymbolDirectory = ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols";
-            LabelPresetManager.LabelPresetsDirectory = ASSET_DIRECTORY + Path.DirectorySeparatorChar + "LabelPresets";
+            SymbolManager.DefaultSymbolDirectory = RootAssetDirectory + Path.DirectorySeparatorChar + "Symbols";
+            LabelPresetManager.LabelPresetsDirectory = RootAssetDirectory + Path.DirectorySeparatorChar + "LabelPresets";
         }
 
-        internal static int LoadAllAssets()
+        // -------------------------------------------------
+        // Async Loading with Progress
+        // -------------------------------------------------
+
+        public async Task LoadAsync(
+            IProgress<AssetLoadProgress>? progress = null,
+            CancellationToken cancellationToken = default)
         {
+            _assets.Clear();
+
+            var files = Directory
+                .EnumerateFiles(RootAssetDirectory, "*.*",
+                    SearchOption.AllDirectories)
+                .ToList();
+
+            int totalFiles = files.Count;
+            int processed = 0;
+
+            foreach (var file in files)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var descriptor = CreateDescriptor(file);
+
+                if (descriptor != null)
+                    _assets.Add(descriptor);
+
+                processed++;
+
+                // Throttle progress updates
+                if (progress != null && (processed % 25 == 0 || processed == totalFiles))
+                {
+                    progress.Report(new AssetLoadProgress
+                    {
+                        ProcessedFiles = processed,
+                        TotalFiles = totalFiles,
+                        CurrentFile = file
+                    });
+
+                    // Yield to UI thread
+                    await Task.Yield();
+                }
+
+                await Task.Delay(5, cancellationToken);
+            }
+        }
+
+
+        private AssetDescriptor? CreateDescriptor(string filePath)
+        {
+            var extension = Path.GetExtension(filePath)
+                .ToLowerInvariant();
+
+            var relativePath = Path.GetRelativePath(RootAssetDirectory, filePath);
+
+            var assetType = ResolveAssetType(relativePath);
+
+            if (assetType == AssetType.None)
+                return null;
+
+            var name = Path.GetFileNameWithoutExtension(filePath);
+
+            object? metadata = null;
+            string? metadataPath = null;
+
+            if (extension == ".xml")
+            {
+                metadata = _metadataLoader.Load(filePath);
+                metadataPath = filePath;
+
+                return new AssetDescriptor(
+                    id: GenerateId(relativePath),
+                    name: name,
+                    type: assetType,
+                    filePath: filePath,
+                    metadataPath: metadataPath,
+                    metadata: metadata,
+                    collection: ExtractCollection(relativePath),
+                    tags: ExtractTags(relativePath));
+            }
+
+            if (IsImageFile(extension) || IsVectorFile(extension))
+            {
+                var xmlCandidate = Path.ChangeExtension(filePath, ".xml");
+
+                if (File.Exists(xmlCandidate))
+                {
+                    metadata = _metadataLoader.Load(xmlCandidate);
+                    metadataPath = xmlCandidate;
+                }
+
+                return new AssetDescriptor(
+                    id: GenerateId(relativePath),
+                    name: name,
+                    type: assetType,
+                    filePath: filePath,
+                    metadataPath: metadataPath,
+                    metadata: metadata,
+                    collection: ExtractCollection(relativePath),
+                    tags: ExtractTags(relativePath));
+            }
+
+            return null;
+        }
+
+
+        // -------------------------------------------------
+        // Helper methods (same as before)
+        // -------------------------------------------------
+
+        private static AssetType ResolveAssetType(string relativePath)
+        {
+            var parts = relativePath
+                .Split(Path.DirectorySeparatorChar,
+                       StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length == 0)
+                return AssetType.None;
+
+            var topFolder = parts[0];
+
+            return _folderTypeMap.TryGetValue(topFolder, out var type)
+                ? type
+                : AssetType.None;
+        }
+
+        private static string GenerateId(string relativePath)
+        {
+            return relativePath
+                .Replace('\\', '/')
+                .ToLowerInvariant();
+        }
+
+        private static string? ExtractCollection(string relativePath)
+        {
+            var parts = relativePath
+                .Split(Path.DirectorySeparatorChar,
+                       StringSplitOptions.RemoveEmptyEntries);
+
+            return parts.Length >= 3 ? parts[1] : null;
+        }
+
+        private static IEnumerable<string> ExtractTags(string relativePath)
+        {
+            return relativePath
+                .Split(Path.DirectorySeparatorChar,
+                       StringSplitOptions.RemoveEmptyEntries)
+                .Select(p => p.ToLowerInvariant());
+        }
+
+        private static bool IsImageFile(string extension)
+            => extension is ".png" or ".jpg" or ".jpeg" or ".bmp" or ".webp";
+
+        private static bool IsVectorFile(string extension)
+            => extension == ".svg";
+
+        // -------------------------------------------------
+        // Runtime image loading (lazy)
+        // -------------------------------------------------
+
+        public SKImage GetImage(string assetId)
+        {
+            var descriptor = _assets.First(a => a.Id == assetId);
+
+            using var bitmap = SKBitmap.Decode(descriptor.FilePath);
+            return SKImage.FromBitmap(bitmap);
+        }
+
+
+        internal static int LoadAssetsFromRoot(string rootAssetDirectory)
+        {
+            int numAssets = 0;
+            /*
             int LoadPercentage = 0;
 
             ResetAssets();
@@ -145,7 +338,7 @@ namespace RealmStudio
             LOADING_STATUS_FORM.SetStatusText("Loading Assets");
 
             // load assets
-            int numAssets = 0;
+
 
             var files = from file in Directory.EnumerateFiles(ASSET_DIRECTORY, "*.*", SearchOption.AllDirectories).Order()
                         where file.Contains(".png")
@@ -395,13 +588,13 @@ namespace RealmStudio
             numAssets += numSymbols;
 
             Thread.Sleep(1000);
-
+            */
             return numAssets;
         }
 
         private static void ResetAssets()
         {
-
+            /*
             ArgumentNullException.ThrowIfNull(BackgroundManager.BackgroundMediator);
             ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
             ArgumentNullException.ThrowIfNull(OceanManager.OceanMediator);
@@ -429,8 +622,10 @@ namespace RealmStudio
             LabelPresetManager.ClearLabelPresets();
 
             MAP_SYMBOL_COLLECTIONS.Clear();
+            */
         }
 
+        /*
         internal static void LoadThemes()
         {
             THEME_LIST.Clear();
@@ -545,9 +740,9 @@ namespace RealmStudio
                 }
             }
         }
+        */
 
-
-
+        /*
         internal static int LoadSymbolCollections()
         {
             MAP_SYMBOL_COLLECTIONS.Clear();
@@ -663,7 +858,9 @@ namespace RealmStudio
 
             return numSymbols;
         }
+        */
 
+        /*
         internal static int LoadFrameAssets()
         {
             MAP_FRAME_TEXTURES.Clear();
@@ -726,7 +923,9 @@ namespace RealmStudio
 
             return numFrames;
         }
+        */
 
+        /*
         internal static int LoadBoxAssets()
         {
             MAP_BOX_LIST.Clear();  // TODO: move to BoxManager
@@ -802,7 +1001,9 @@ namespace RealmStudio
 
             return numBoxes;
         }
+        */
 
+        /*
         public static void LoadSymbolTags()
         {
             SYMBOL_TAGS.Clear();
@@ -824,7 +1025,9 @@ namespace RealmStudio
                 ORIGINAL_SYMBOL_TAGS.Add(tag);
             }
         }
+        */
 
+        /*
         private static void LoadSymbolTypeSynonyms()
         {
             STRUCTURE_SYNONYMS.Clear();
@@ -873,12 +1076,16 @@ namespace RealmStudio
                 }
             }
         }
+        */
 
+        /*
         public static void AddSymbolTag(string tag)
         {
             tag = tag.Trim([' ', ',']).ToLowerInvariant();
             if (SYMBOL_TAGS.Contains(tag)) return;
             SYMBOL_TAGS.Add(tag);
         }
+        */
+
     }
 }

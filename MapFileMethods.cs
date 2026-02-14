@@ -21,11 +21,12 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using RealmStudioShapeRenderingLib;
 using SkiaSharp.Views.Desktop;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-namespace RealmStudio
+namespace RealmStudioX
 {
     [XmlInclude(typeof(MapLayer))]
     internal sealed class MapFileMethods
@@ -101,7 +102,6 @@ namespace RealmStudio
                 // with data from the XML document. */
                 map = serializer.Deserialize(reader) as RealmStudioMap;
 
-                map?.IsSaved = false;
             }
             catch (Exception ex)
             {
@@ -165,7 +165,6 @@ namespace RealmStudio
             {
                 // Serializes the map and closes the TextWriter.
                 serializer.Serialize(writer, map);
-                map.IsSaved = true;
             }
             catch (Exception ex)
             {

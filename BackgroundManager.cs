@@ -22,8 +22,9 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp.Views.Desktop;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class BackgroundManager : IMapComponentManager
     {
@@ -47,6 +48,7 @@ namespace RealmStudio
 
         public static bool Update()
         {
+            /*
             ArgumentNullException.ThrowIfNull(BackgroundMediator);
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
@@ -62,6 +64,7 @@ namespace RealmStudio
             }
             else
             {
+
                 baseLayer.ShowLayer = BackgroundMediator.ShowBackground;
 
                 if (baseLayer.MapLayerComponents.Count == 1 && textureBitmap != null && scale > 0.0F && scale <= 1.0F)
@@ -90,12 +93,14 @@ namespace RealmStudio
                         MapImageBitmap = resizedBitmap.ToSKBitmap(),
                     };
 
-                    baseLayer.MapLayerComponents[0] = BackgroundTexture;
+                    baseLayer.AddShape(BackgroundTexture);
 
                     return true;
-                }
-            }
 
+                }
+
+            }
+            */
             return false;
         }
 
@@ -106,9 +111,11 @@ namespace RealmStudio
 
         internal static void ApplyBackgroundTexture(Bitmap? textureBitmap, float scale, bool mirrorBackground)
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
+
 
             if (baseLayer.MapLayerComponents.Count < 1 && textureBitmap != null && scale > 0.0F && scale <= 1.0F)
             {
@@ -132,13 +139,16 @@ namespace RealmStudio
                     cmd.DoOperation();
                 }
             }
+            */
         }
 
         internal static void ClearBackgroundTexture()
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapLayer backgroundLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
+
 
             if (backgroundLayer.MapLayerComponents.Count > 0)
             {
@@ -148,6 +158,7 @@ namespace RealmStudio
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
             }
+            */
         }
 
         internal static void FillBackgroundTexture()

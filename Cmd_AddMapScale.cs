@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddMapScale(RealmStudioMap map, MapScale mapScale) : IMapOperation
     {
@@ -30,17 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapScaleManager.Delete();
-            MapLayer overlayLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.OVERLAYLAYER);
-            overlayLayer.MapLayerComponents.Add(NewMapScale);
 
-            MapStateMediator.CurrentMapScale = NewMapScale;
         }
 
         public void UndoOperation()
         {
-            MapScaleManager.Delete();
-            MapStateMediator.CurrentMapScale = null;
+
         }
     }
 }

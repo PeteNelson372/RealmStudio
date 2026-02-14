@@ -21,16 +21,16 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
+using RealmStudioX.Properties;
+using SkiaSharp;
 using System.Timers;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class TimerManager(RealmStudioMainForm mainForm) : IDisposable
+    internal sealed class TimerManager() : IDisposable
     {
         private bool disposedValue;
 
-        private readonly RealmStudioMainForm MainForm = mainForm;
         private SymbolUIMediator? _symbolUIMediator;
 
         private System.Timers.Timer? _autosaveTimer;
@@ -38,10 +38,18 @@ namespace RealmStudio
         private System.Timers.Timer? _symbolAreaBrushTimer;
         private System.Timers.Timer? _versionCheckTimer;
 
+        private System.Timers.Timer? _locationUpdateTimer;
+
         private bool _autosaveEnabled;
         private bool _brushTimerEnabled;
         private bool _symbolAreaBrushEnabled;
         private bool _versionCheckEnabled = true;
+
+        private readonly System.Windows.Forms.Timer _viewportTimer = new();
+
+        // Used to compute a stable delta time for pan inertia
+        private DateTime _lastViewportTick;
+
 
         internal SymbolUIMediator? SymbolUIMediator
         {
@@ -112,6 +120,37 @@ namespace RealmStudio
             }
         }
 
+        internal void InitializeViewportTimer()
+        {
+            //if (MapStateMediator.CurrentMap == null)
+            //    return;
+
+            _viewportTimer.Interval = 16; // ~60 FPS
+            _lastViewportTick = DateTime.UtcNow;
+
+            _viewportTimer.Tick += (s, e) =>
+            {
+                DateTime now = DateTime.UtcNow;
+
+                float dt = (float)(now - _lastViewportTick).TotalSeconds;
+                if (dt <= 0f)
+                    return;
+
+                _lastViewportTick = now;
+
+                // Advance inertial pan
+                //MapStateMediator.MainUIMediator?.Camera2D.UpdateInertia(
+                //    dt,
+                //    new SKRect(0, 0, MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight),
+                //    new SKSize(MainForm.SKGLRenderControl.ClientSize.Width, MainForm.SKGLRenderControl.ClientSize.Height)
+                //);
+
+                //MainForm.SKGLRenderControl.Invalidate();
+            };
+
+            _viewportTimer.Start();
+        }
+
         internal void StartAutosaveTimer()
         {
             // stop the autosave timer
@@ -127,7 +166,7 @@ namespace RealmStudio
             {
                 Interval = saveIntervalMillis,
                 AutoReset = true,
-                SynchronizingObject = MainForm,
+                //SynchronizingObject = MainForm,
             };
 
             _autosaveTimer.Elapsed += new ElapsedEventHandler(AutosaveTimerEventHandler);
@@ -143,12 +182,13 @@ namespace RealmStudio
 
         private void AutosaveTimerEventHandler(object? sender, ElapsedEventArgs e)
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             try
             {
-                RealmMapMethods.PruneOldBackupsOfMap(MapStateMediator.CurrentMap, MapStateMediator.BackupCount);
+                //RealmMapMethods.PruneOldBackupsOfMap(MapStateMediator.CurrentMap, MapStateMediator.BackupCount);
 
+                /*
                 if (!MapStateMediator.CurrentMap.IsSaved)
                 {
                     if (!string.IsNullOrWhiteSpace(MapStateMediator.CurrentMap.MapPath))
@@ -168,6 +208,7 @@ namespace RealmStudio
                         //SetStatusText("A backup of the realm has been saved.");
                     }
                 }
+                */
             }
             catch (Exception ex)
             {
@@ -177,21 +218,21 @@ namespace RealmStudio
 
         private void StartBrushTimer()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
 
             // stop the brush timer if it is running
             StopBrushTimer();
 
             // start the brush timer
-            _brushTimer = new System.Timers.Timer
-            {
-                Interval = MapStateMediator.MainUIMediator.CurrentBrushVelocity,
-                AutoReset = true,
-                SynchronizingObject = MainForm.SKGLRenderControl,
-            };
+            //_brushTimer = new System.Timers.Timer
+            //{
+            //    Interval = MapStateMediator.MainUIMediator.CurrentBrushVelocity,
+            //    AutoReset = true,
+            //    SynchronizingObject = MainForm.SKGLRenderControl,
+            //};
 
-            _brushTimer.Elapsed += new ElapsedEventHandler(BrushTimerEventHandler);
-            _brushTimer.Start();
+            //_brushTimer.Elapsed += new ElapsedEventHandler(BrushTimerEventHandler);
+            //_brushTimer.Start();
         }
 
         private void StopBrushTimer()
@@ -203,8 +244,8 @@ namespace RealmStudio
 
         private void BrushTimerEventHandler(object? eventObject, EventArgs eventArgs)
         {
-            MapStateMediator.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(MapStateMediator.CurrentCursorPoint);
-            MainForm.SKGLRenderControl.Invalidate();
+            //MapStateMediator.CurrentLayerPaintStroke?.AddLayerPaintStrokePoint(MapStateMediator.CurrentCursorPoint);
+            //MainForm.SKGLRenderControl.Invalidate();
         }
 
 
@@ -220,7 +261,7 @@ namespace RealmStudio
             {
                 Interval = 200.0F / SymbolUIMediator.SymbolPlacementRate,
                 AutoReset = true,
-                SynchronizingObject = SymbolUIMediator.SymbolTable,
+                //SynchronizingObject = SymbolUIMediator.SymbolTable,
             };
 
             _symbolAreaBrushTimer.Elapsed += new ElapsedEventHandler(SymbolAreaBrushTimerEventHandler);
@@ -236,7 +277,7 @@ namespace RealmStudio
 
         private void SymbolAreaBrushTimerEventHandler(object? sender, ElapsedEventArgs e)
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
             ArgumentNullException.ThrowIfNull(SymbolUIMediator);
 
             if (SymbolUIMediator.AreaBrushSize > 4.0F)
@@ -244,7 +285,7 @@ namespace RealmStudio
                 float symbolScale = SymbolUIMediator.SymbolScale / 100.0F;
                 float symbolRotation = SymbolUIMediator.SymbolRotation;
 
-                MapStateMediator.MainUIMediator.SelectedBrushSize = SymbolUIMediator.AreaBrushSize;
+                //MapStateMediator.MainUIMediator.SelectedBrushSize = SymbolUIMediator.AreaBrushSize;
 
                 SymbolManager.PlaceSelectedSymbolInArea(MapStateMediator.CurrentCursorPoint,
                     symbolScale, symbolRotation, (int)(SymbolUIMediator.AreaBrushSize / 2.0F));
@@ -267,7 +308,7 @@ namespace RealmStudio
             {
                 Interval = 2 * 60 * 1000, // 2 minutes in milliseconds
                 AutoReset = false,
-                SynchronizingObject = MainForm,
+                //SynchronizingObject = MainForm,
             };
             _versionCheckTimer.Elapsed += new ElapsedEventHandler(VersionCheckTimerEventHandler);
             _versionCheckTimer.Start();
@@ -283,22 +324,65 @@ namespace RealmStudio
 
                 if (newReleaseVersion != null)
                 {
-                    MainForm.Invoke(new Action(() =>
-                    {
-                        MainForm.NewVersionButton.Visible = true;
-                    }));
+                    //MainForm.Invoke(new Action(() =>
+                    //{
+                    //    MainForm.NewVersionButton.Visible = true;
+                    //}));
                 }
                 else
                 {
-                    MainForm.Invoke(new Action(() =>
-                    {
-                        MainForm.NewVersionButton.Visible = false;
-                    }));
+                    //MainForm.Invoke(new Action(() =>
+                    //{
+                    //    MainForm.NewVersionButton.Visible = false;
+                    //}));
                 }
             });
         }
 
+        internal void StartLocationUpdateTimer()
+        {
+            // stop the location update timer if it is running
+            StopLocationUpdateTimer();
 
+            // start the location update timer
+            _locationUpdateTimer = new System.Timers.Timer
+            {
+                Interval = 50,
+                AutoReset = true,
+                //SynchronizingObject = MainForm,
+            };
+
+            _locationUpdateTimer.Elapsed += new ElapsedEventHandler(LocationUpdateTimerEventHandler);
+            _locationUpdateTimer.Start();
+        }
+
+        internal void LocationUpdateTimerEventHandler(object? sender, ElapsedEventArgs e)
+        {
+            UpdateDrawingPointLabel();
+        }
+
+        internal void StopLocationUpdateTimer()
+        {
+            _locationUpdateTimer?.Stop();
+            _locationUpdateTimer?.Dispose();
+            _locationUpdateTimer = null;
+        }
+
+        internal void UpdateDrawingPointLabel()
+        {
+            /*
+            MainForm.DrawingPointLabel.Text = "Cursor Point: "
+                + ((int)MapStateMediator.CurrentMouseLocation.X).ToString()
+                + " , "
+                + ((int)MapStateMediator.CurrentMouseLocation.Y).ToString()
+                + "   Map Point: "
+                + ((int)MapStateMediator.CurrentCursorPoint.X).ToString()
+                + " , "
+                + ((int)MapStateMediator.CurrentCursorPoint.Y).ToString();
+
+            MainForm.ApplicationStatusStrip.Invalidate();
+            */
+        }
 
         #region IDisposable Implementation
         internal void Dispose(bool disposing)
@@ -310,6 +394,7 @@ namespace RealmStudio
                     _autosaveTimer?.Dispose();
                     _brushTimer?.Dispose();
                     _symbolAreaBrushTimer?.Dispose();
+                    _locationUpdateTimer?.Dispose();
                 }
                 disposedValue = true;
             }

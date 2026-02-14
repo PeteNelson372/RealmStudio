@@ -21,7 +21,7 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
+using RealmStudioX.Properties;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.IO;
@@ -30,8 +30,9 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Extensions = SkiaSharp.Views.Desktop.Extensions;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class LayerPaintStroke : MapComponent, IXmlSerializable
     {
@@ -140,21 +141,22 @@ namespace RealmStudio
                     if (Settings.Default.ClipLandformColoring)
                     {
                         // clip drawing to the outer path of landforms
-                        List<MapComponent> landformList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
+                        //List<MapComponent> landformList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
 
                         // add contour path of landforms to clip path
-                        for (int i = 0; i < landformList.Count; i++)
-                        {
-                            if (landformList[i] is Landform lf)
-                            {
-                                clipPath.AddPath(lf.ContourPath);
-                            }
-                        }
+                        //for (int i = 0; i < landformList.Count; i++)
+                        //{
+                        //    if (landformList[i] is Landform lf)
+                        //    {
+                        //        clipPath.AddPath(lf.ContourPath);
+                        //    }
+                        //}
                     }
                 }
                 else if (MapLayerIdentifier == MapBuilder.WATERDRAWINGLAYER)
                 {
                     // clip drawing to the outer path of water features and rivers
+                    /*
                     List<MapComponent> waterFeatureList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.WATERLAYER).MapLayerComponents;
 
                     for (int i = 0; i < waterFeatureList.Count; i++)
@@ -178,6 +180,7 @@ namespace RealmStudio
                             }
                         }
                     }
+                    */
                 }
 
                 if (clipPath.PointCount > 2)

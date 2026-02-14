@@ -24,7 +24,7 @@
 using System.ComponentModel;
 using System.IO;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class ThemeList : Form
     {
@@ -110,7 +110,7 @@ namespace RealmStudio
                     string themeName = nameEntryDlg.ThemeNameTextBox.Text;
                     SettingsTheme.ThemeName = themeName;
 
-                    string assetDirectory = AssetManager.ASSET_DIRECTORY;
+                    string assetDirectory = AssetManager.RootAssetDirectory;
                     string themePath = assetDirectory + Path.DirectorySeparatorChar + "Themes" + Path.DirectorySeparatorChar + themeName + ".rstheme";
                     SettingsTheme.ThemePath = themePath;
 
@@ -119,7 +119,7 @@ namespace RealmStudio
                         try
                         {
                             ThemeMethods.SaveTheme(SettingsTheme);
-                            AssetManager.THEME_LIST.Add(SettingsTheme);
+                            //AssetManager.THEME_LIST.Add(SettingsTheme);
                         }
                         catch { }
                     }

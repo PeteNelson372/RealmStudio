@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class ColorQuickPick : Form
     {

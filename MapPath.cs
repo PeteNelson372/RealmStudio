@@ -21,15 +21,15 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using RealmStudioShapeRenderingLib;
 using SkiaSharp;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using Extensions = SkiaSharp.Views.Desktop.Extensions;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class MapPath : MapComponent, IXmlSerializable
     {
@@ -80,6 +80,7 @@ namespace RealmStudio
         {
             if (ParentMap == null) return;
 
+            /*
             // clip the path drawing to the outer path of landforms
             List<MapComponent> landformList = MapBuilder.GetMapLayerByIndex(ParentMap, MapBuilder.LANDFORMLAYER).MapLayerComponents;
 
@@ -406,6 +407,7 @@ namespace RealmStudio
                 }
 
             }
+            */
         }
 
         public List<MapPathPoint> GetMapPathControlPoints()

@@ -21,10 +21,10 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
+using RealmStudioX.Properties;
 using System.IO;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class ThemeMethods
     {

@@ -23,8 +23,9 @@ using System.ComponentModel;
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class MapObjectDetails : Form
     {

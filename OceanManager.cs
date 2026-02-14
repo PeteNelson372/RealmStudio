@@ -24,9 +24,11 @@
 
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
+    /*
     internal sealed class OceanManager : IMapComponentManager
     {
         private static OceanUIMediator? _oceanUIMediator;
@@ -52,6 +54,7 @@ namespace RealmStudio
             ArgumentNullException.ThrowIfNull(OceanMediator);
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
 
             for (int i = 0; i < OceanManager.OceanMediator.OceanTextureList.Count; i++)
@@ -122,6 +125,8 @@ namespace RealmStudio
                 }
             }
 
+            
+
             return false;
         }
 
@@ -140,8 +145,7 @@ namespace RealmStudio
             ArgumentNullException.ThrowIfNull(OceanMediator);
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
-            MapStateMediator.CurrentMap.IsSaved = false;
-
+            
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
             oceanTextureLayer.MapLayerComponents.Clear();
 
@@ -205,12 +209,15 @@ namespace RealmStudio
                     }
                 }
             }
+
+            
         }
 
         internal static void ClearOceanColor()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            
             MapLayer oceanTextureOverlayLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTUREOVERLAYLAYER);
 
             if (oceanTextureOverlayLayer.MapLayerComponents.Count > 0)
@@ -221,14 +228,13 @@ namespace RealmStudio
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
             }
+            
         }
 
         internal static void FillOceanColor()
         {
             ArgumentNullException.ThrowIfNull(OceanMediator);
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
-
-            MapStateMediator.CurrentMap.IsSaved = false;
 
             // get the user-selected ocean color
             Color fillColor = OceanMediator.OceanFillColor;
@@ -239,17 +245,16 @@ namespace RealmStudio
                 canvas.Clear(Extensions.ToSKColor(fillColor));
             }
 
-            Cmd_SetOceanColor cmd = new(MapStateMediator.CurrentMap, b);
-            CommandManager.AddCommand(cmd);
-            cmd.DoOperation();
+            //Cmd_SetOceanColor cmd = new(MapStateMediator.CurrentMap, b);
+            //CommandManager.AddCommand(cmd);
+            //cmd.DoOperation();
         }
 
         internal static void RemoveOceanTexture()
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
-            MapStateMediator.CurrentMap.IsSaved = false;
-
+            
             MapLayer oceanTextureLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
 
             if (oceanTextureLayer.MapLayerComponents.Count > 0)
@@ -260,6 +265,7 @@ namespace RealmStudio
                 CommandManager.AddCommand(cmd);
                 cmd.DoOperation();
             }
+            
         }
 
         internal static void StartColorPainting(TimerManager applicationTimerManager, SKGLControl glRenderControl)
@@ -304,9 +310,9 @@ namespace RealmStudio
                     MapStateMediator.CurrentLayerPaintStroke.StrokeBrush = brush;
                 }
 
-                Cmd_AddOceanPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_AddOceanPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
 
                 applicationTimerManager.BrushTimerEnabled = true;
             }
@@ -325,9 +331,9 @@ namespace RealmStudio
                     RenderSurface = SKSurface.Create(glRenderControl.GRContext, false, new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight))
                 };
 
-                Cmd_AddOceanPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_AddOceanPaintStroke cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentLayerPaintStroke);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
             }
         }
 
@@ -346,4 +352,5 @@ namespace RealmStudio
             MapStateMediator.CurrentLayerPaintStroke = null;
         }
     }
+    */
 }

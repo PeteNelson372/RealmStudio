@@ -23,8 +23,9 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class RegionManager : IMapComponentManager
     {
@@ -82,18 +83,21 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(RegionUIMediator);
 
-            MapStateMediator.CurrentMapRegion = new()
-            {
-                ParentMap = MapStateMediator.CurrentMap,
-            };
+            //MapStateMediator.CurrentMapRegion = new()
+            //{
+            //    ParentMap = MapStateMediator.CurrentMap,
+            //};
 
-            Update();
+            //Update();
 
-            return MapStateMediator.CurrentMapRegion;
+            //return MapStateMediator.CurrentMapRegion;
+
+            return null;
         }
 
         public static bool Update()
         {
+            /*
             ArgumentNullException.ThrowIfNull(RegionUIMediator);
 
             MapRegion? mapRegion = MapStateMediator.CurrentMapRegion;
@@ -108,24 +112,27 @@ namespace RealmStudio
 
             SKPathEffect? regionBorderEffect = ConstructRegionBorderEffect(mapRegion);
             ConstructRegionPaintObjects(mapRegion, regionBorderEffect);
+            */
 
             return true;
         }
 
         public static bool Delete()
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (MapStateMediator.CurrentMapRegion != null)
             {
-                Cmd_DeleteMapRegion cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_DeleteMapRegion cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
 
                 MapStateMediator.CurrentMapRegion = null;
 
                 return true;
             }
+            */
 
             return false;
         }
@@ -219,7 +226,9 @@ namespace RealmStudio
 
         internal static void MoveSelectedRegionInRenderOrder(ComponentMoveDirection direction)
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
+            /*
 
             if (MapStateMediator.CurrentMapRegion != null)
             {
@@ -259,12 +268,15 @@ namespace RealmStudio
                     }
                 }
             }
+
+            */
         }
 
         internal static void FinalizeMapRegions()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            /*
             // finalize loading of regions
             MapLayer regionLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.REGIONLAYER);
             for (int i = 0; i < regionLayer.MapLayerComponents.Count; i++)
@@ -276,12 +288,13 @@ namespace RealmStudio
                     ConstructRegionPaintObjects(region, regionBorderEffect);
                 }
             }
+            */
         }
 
         internal static void SnapRegionToLandformCoastline()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             // find the closest point to the current point
             // on the contour path of a coastline;
@@ -294,12 +307,14 @@ namespace RealmStudio
             // then add all of the points on the coastline contour
             // to the region points
 
-            int coastlinePointIndex = -1;
-            SKPoint coastlinePoint = SKPoint.Empty;
-            Landform? landform1 = null;
-            Landform? landform2 = null;
+            //int coastlinePointIndex = -1;
+            //SKPoint coastlinePoint = SKPoint.Empty;
+            //Landform? landform1 = null;
+            //Landform? landform2 = null;
 
             float currentDistance = float.MaxValue;
+
+            /*
 
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
 
@@ -397,28 +412,33 @@ namespace RealmStudio
                     }
                 }
             }
+
+            */
         }
 
         internal static void EndMapRegion()
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             MapRegionPoint mrp = new(MapStateMediator.CurrentCursorPoint);
             MapStateMediator.CurrentMapRegion.MapRegionPoints.Add(mrp);
 
-            Cmd_AddMapRegion cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion);
-            CommandManager.AddCommand(cmd);
-            cmd.DoOperation();
+            //Cmd_AddMapRegion cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentMapRegion);
+            //CommandManager.AddCommand(cmd);
+            //cmd.DoOperation();
 
             MapStateMediator.CurrentMapRegion.IsSelected = false;
+            */
         }
 
         internal static void DrawRegionOnWorkLayer()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            /*
             MapLayer workLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER);
             workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
@@ -438,6 +458,8 @@ namespace RealmStudio
             {
                 workLayer.LayerSurface?.Canvas.DrawLine(MapStateMediator.PreviousCursorPoint, MapStateMediator.CurrentCursorPoint, MapStateMediator.CurrentMapRegion.RegionBorderPaint);
             }
+
+            */
         }
 
         internal static void MoveRegion(MapRegion mapRegion, SKPoint zoomedScrolledPoint, SKPoint previousPoint)
@@ -482,7 +504,7 @@ namespace RealmStudio
 
         internal static void DrawCoastlinePointOnWorkLayer2()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             // find the closest point to the current point
             // on the contour path of a coastline;
@@ -499,6 +521,8 @@ namespace RealmStudio
             SKPoint coastlinePoint = SKPoint.Empty;
 
             float currentDistance = float.MaxValue;
+
+            /*
 
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.LANDFORMLAYER);
             MapLayer workLayer2 = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER2);
@@ -527,6 +551,8 @@ namespace RealmStudio
             {
                 workLayer2.LayerSurface?.Canvas.DrawCircle(coastlinePoint, _pointCircleRadius, PaintObjects.MapPathSelectedControlPointPaint);
             }
+
+            */
         }
 
         internal static bool IsRegionPointSelected(MapRegion mapRegion, SKPoint zoomedScrolledPoint)
@@ -557,9 +583,12 @@ namespace RealmStudio
 
         internal static void DrawRegionPointOnWorkLayer()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+
+            /*
+             
             MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
             _previousRegionPointIndex = -1;
@@ -600,24 +629,26 @@ namespace RealmStudio
                 MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(MapStateMediator.CurrentCursorPoint, _pointCircleRadius, PaintObjects.RegionNewPointFillPaint);
                 MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawCircle(MapStateMediator.CurrentCursorPoint, _pointCircleRadius, PaintObjects.RegionPointOutlinePaint);
             }
+
+            */
         }
 
         internal static bool DeleteSelectedRegionPoint(MapRegion currentMapRegion)
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMapRegion);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
-            foreach (MapRegionPoint mrp in MapStateMediator.CurrentMapRegion.MapRegionPoints)
-            {
-                if (mrp.IsSelected)
-                {
-                    Cmd_DeleteMapRegionPoint cmd = new(MapStateMediator.CurrentMap, currentMapRegion, mrp);
-                    CommandManager.AddCommand(cmd);
-                    cmd.DoOperation();
+            //foreach (MapRegionPoint mrp in MapStateMediator.CurrentMapRegion.MapRegionPoints)
+            //{
+            //    if (mrp.IsSelected)
+            //    {
+                    //Cmd_DeleteMapRegionPoint cmd = new(MapStateMediator.CurrentMap, currentMapRegion, mrp);
+                    //CommandManager.AddCommand(cmd);
+                    //cmd.DoOperation();
 
-                    return true;
-                }
-            }
+            //        return true;
+            //    }
+            //}
 
             return false;
         }

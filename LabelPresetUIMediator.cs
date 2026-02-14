@@ -1,21 +1,9 @@
-﻿using System.ComponentModel;
-using System.IO;
-
-namespace RealmStudio
+﻿namespace RealmStudioX
 {
-    internal sealed class LabelPresetUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class LabelPresetUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
         private MapStateMediator? _mapState;
         private LabelPreset? _deletingPreset;
-
-        public LabelPresetUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += LabelPresetUIMediator_PropertyChanged;
-        }
 
         #region Proerty Setters/Getters
         internal MapStateMediator? MapState
@@ -33,42 +21,21 @@ namespace RealmStudio
         #endregion
 
         #region Property Change Handler Methods
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
 
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
-        }
-
-        public void NotifyUpdate(string? updatedObject)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region Event Handlers
-        private void LabelPresetUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
         }
 
         #endregion
 
         #region Label Preset UI Methods
 
+        /*
         internal void AddLabelPresets()
         {
             MainForm.LabelPresetsListBox.DisplayMember = "LabelPresetName";
@@ -369,6 +336,7 @@ namespace RealmStudio
             }
         }
 
+        */
         #endregion
     }
 }

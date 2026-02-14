@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddLandPaintStroke(RealmStudioMap map, LayerPaintStroke paintStroke) : IMapOperation
     {
@@ -30,24 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDDRAWINGLAYER);
-            landDrawingLayer.MapLayerComponents.Add(PaintStroke);
+
         }
 
         public void UndoOperation()
         {
-            MapLayer landDrawingLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.LANDDRAWINGLAYER);
 
-            for (int i = landDrawingLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (landDrawingLayer.MapLayerComponents[i] is LayerPaintStroke l && l.StrokeId.ToString() == PaintStroke.StrokeId.ToString())
-                {
-                    l.RenderComponent = false;
-                    l.RenderSurface?.Dispose();
-                    l.RenderSurface = null;
-                    landDrawingLayer.MapLayerComponents.RemoveAt(i);
-                }
-            }
         }
     }
 }

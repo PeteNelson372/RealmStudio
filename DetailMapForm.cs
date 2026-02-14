@@ -23,8 +23,9 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 using System.Globalization;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class DetailMapForm : Form
     {
@@ -106,10 +107,10 @@ namespace RealmStudio
             DetailMapWidthLabel.Text = detailMapWidth.ToString();
             DetailMapHeightLabel.Text = detailMapHeight.ToString();
 
-            MapLayer workLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.WORKLAYER);
-            workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
+            //MapLayer workLayer = MapBuilder.GetMapLayerByIndex(currentMap, MapBuilder.WORKLAYER);
+            //workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-            workLayer.LayerSurface?.Canvas.DrawRect(selectedArea, PaintObjects.LandformAreaSelectPaint);
+            //workLayer.LayerSurface?.Canvas.DrawRect(selectedArea, PaintObjects.LandformAreaSelectPaint);
             mainForm.SKGLRenderControl.Invalidate();
         }
 

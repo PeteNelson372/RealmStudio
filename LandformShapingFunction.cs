@@ -22,8 +22,9 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class LandformShapingFunction
     {

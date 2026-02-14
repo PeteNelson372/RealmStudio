@@ -23,7 +23,7 @@
 ***************************************************************************************************************************/
 using SkiaSharp;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class Cmd_RemovePathPoint(MapPath selectedMapPath, MapPathPoint selectedPathPoint) : IMapOperation
     {
@@ -33,6 +33,7 @@ namespace RealmStudio
 
         public void DoOperation()
         {
+            /*
             pathPointIndex = PathManager.GetMapPathPointIndexById(_mapPath, pathPoint.PointGuid);
 
             if (pathPointIndex > -1)
@@ -45,11 +46,13 @@ namespace RealmStudio
             _mapPath.BoundaryPath?.Dispose();
             _mapPath.BoundaryPath = new(boundarypath);
             boundarypath.Dispose();
+            */
 
         }
 
         public void UndoOperation()
         {
+            /*
             if (pathPointIndex > -1)
             {
                 _mapPath.PathPoints.Insert(pathPointIndex, pathPoint);
@@ -59,6 +62,7 @@ namespace RealmStudio
                 _mapPath.BoundaryPath = new(boundarypath);
                 boundarypath.Dispose();
             }
+            */
         }
     }
 }

@@ -21,18 +21,13 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using System.ComponentModel;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class MapScaleUIMediator : IUIMediatorObserver, INotifyPropertyChanged, IDisposable
+    internal sealed class MapScaleUIMediator : UiMediatorBase, IUIMediatorObserver, IDisposable
     {
         private bool disposedValue;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
-        private MapStateMediator? _mapState;
 
         private bool _scalePanelVisible;
         private int _scaleWidth = 256;
@@ -50,19 +45,7 @@ namespace RealmStudio
         private Color _scaleNumberOutlineColor = Color.White;
         private int _scaleOutlineWidth = 2;
 
-        internal MapScaleUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += MapScaleUIMediator_PropertyChanged;
-        }
-
         #region Property Getters/Setters
-
-        internal MapStateMediator? MapState
-        {
-            get { return _mapState; }
-            set { _mapState = value; }
-        }
 
         internal bool ScalePanelVisible
         {
@@ -157,28 +140,16 @@ namespace RealmStudio
 
         #region Property Change Handler Methods
 
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
-
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            UpdateMapScaleUI();
-            MapScaleManager.Update();
-
-            MainForm.SKGLRenderControl.Invalidate();
-        }
-
+        /*
         private void UpdateMapScaleUI()
         {
             MainForm.Invoke(new MethodInvoker(delegate ()
@@ -196,19 +167,7 @@ namespace RealmStudio
                 }
             }));
         }
-
-        #endregion
-
-        #region Event Handlers
-        private void MapScaleUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
+        */
 
         #endregion
 
@@ -236,6 +195,7 @@ namespace RealmStudio
 
         #region MapScale UI methods
 
+        /*
         internal void Reset()
         {
             ScalePanelVisible = false;
@@ -260,6 +220,7 @@ namespace RealmStudio
             ScaleColor3 = Color.Black;
         }
 
+        */
         #endregion
     }
 }

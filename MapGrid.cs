@@ -27,8 +27,9 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public class MapGrid : MapComponent, IXmlSerializable
     {
@@ -219,6 +220,7 @@ namespace RealmStudio
                     }
                 }
 
+                /*
                 if (ShowGridSize)
                 {
                     float horizontalGridDistance = ParentMap.MapPixelWidth * hexwidth;
@@ -255,6 +257,7 @@ namespace RealmStudio
 
                     canvas.DrawText(gridScaleString, 20, Height - 40, gridLabelFont, paint);
                 }
+                */
             }
         }
 
@@ -308,6 +311,7 @@ namespace RealmStudio
                     }
                 }
 
+                /*
                 if (ShowGridSize)
                 {
                     float horizontalGridDistance = ParentMap.MapPixelWidth * hexwidth;
@@ -344,6 +348,7 @@ namespace RealmStudio
 
                     canvas.DrawText(gridScaleString, 20, Height - 40, gridLabelFont, paint);
                 }
+                */
 
             }
         }

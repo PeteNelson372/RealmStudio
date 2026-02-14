@@ -21,25 +21,25 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
+using RealmStudioX.Properties;
 using SkiaSharp;
 using System.IO;
 using System.Media;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class UtilityMethods
     {
         public static readonly string REALM_STUDIO_MAP_FILE_EXTENSION = ".rsmapx";
         public static readonly string REALM_STUDIO_MAPSET_FILE_EXTENSION = ".rssetx";
 
-        public static readonly string DEFAULT_REALM_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        public static readonly string DefaultRealmFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             + Path.DirectorySeparatorChar
             + "RealmStudio"
             + Path.DirectorySeparatorChar
             + "Realms";
 
-        public static readonly string DEFAULT_AUTOSAVE_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        public static readonly string DefaultAutosaveFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             + Path.DirectorySeparatorChar
             + "RealmStudio"
             + Path.DirectorySeparatorChar
@@ -47,7 +47,7 @@ namespace RealmStudio
             + Path.DirectorySeparatorChar
             + "autosave";
 
-        public static readonly string DEFAULT_ASSETS_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        public static readonly string DefaultAssetsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             + Path.DirectorySeparatorChar
             + "RealmStudio"
             + Path.DirectorySeparatorChar

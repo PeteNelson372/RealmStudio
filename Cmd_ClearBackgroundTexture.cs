@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_ClearBackgroundTexture(RealmStudioMap map, MapImage textureBitmap) : IMapOperation
     {
@@ -30,22 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BASELAYER);
 
-            if (LayerTexture != null)
-            {
-                baseLayer.MapLayerComponents.Remove(LayerTexture);
-            }
         }
 
         public void UndoOperation()
         {
-            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.BASELAYER);
 
-            if (baseLayer.MapLayerComponents.Count <= 1)
-            {
-                baseLayer.MapLayerComponents.Add(LayerTexture);
-            }
         }
     }
 }

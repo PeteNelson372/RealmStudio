@@ -22,7 +22,7 @@
 *
 ***************************************************************************************************************************/using System.Drawing.Printing;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class Printer
     {

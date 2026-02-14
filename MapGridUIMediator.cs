@@ -21,17 +21,12 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using System.ComponentModel;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class MapGridUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class MapGridUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        //https://stackoverflow.com/questions/2246777/raise-an-event-whenever-a-propertys-value-changed
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
         private MapStateMediator? _mapState;
 
         private bool _gridEnabled = true;
@@ -42,12 +37,6 @@ namespace RealmStudio
         private int _gridLineWidth = 2;
         private Color _gridColor = Color.FromArgb(126, 0, 0, 0);
         private bool _showGridSize = true;
-
-        public MapGridUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += MapGridUIMediator_PropertyChanged;
-        }
 
         #region Property Setters/Getters
 
@@ -154,30 +143,16 @@ namespace RealmStudio
 
         #region Property Change Handler Methods
 
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
-
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            if (MapStateMediator.CurrentMap != null)
-            {
-                UpdateGridUI(changedPropertyName);
-                MapGridManager.Update();
-                MainForm.SKGLRenderControl.Invalidate();
-            }
-        }
-
+        /*
         private void UpdateGridUI(string? changedPropertyName)
         {
             // this methods updates the Main Form Symbol Tab UI
@@ -216,24 +191,12 @@ namespace RealmStudio
                 }
             }
         }
-
-        #endregion
-
-        #region Event Handlers
-        private void MapGridUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
-
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
-
+        */
         #endregion
 
         #region Grid UI methods
 
+        /*
         internal void Reset()
         {
             GridEnabled = true;
@@ -311,7 +274,7 @@ namespace RealmStudio
 
             MainForm.GridLayerUpDown.SelectedItem = _gridLayerName;
         }
-
+        */
         #endregion
     }
 }

@@ -24,8 +24,9 @@
 
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class BoxManager : IMapComponentManager
     {
@@ -39,6 +40,8 @@ namespace RealmStudio
 
         public static IMapComponent? Create()
         {
+            PlacedMapBox? newPlacedMapBox = new();
+            /*
             ArgumentNullException.ThrowIfNull(BoxMediator);
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
@@ -75,31 +78,34 @@ namespace RealmStudio
 
             newPlacedMapBox.BoxPaint = PaintObjects.BoxPaint.Clone();
 
-            Cmd_AddLabelBox cmd = new(MapStateMediator.CurrentMap, newPlacedMapBox);
-            CommandManager.AddCommand(cmd);
-            cmd.DoOperation();
-
+            //Cmd_AddLabelBox cmd = new(MapStateMediator.CurrentMap, newPlacedMapBox);
+            //CommandManager.AddCommand(cmd);
+            //cmd.DoOperation();
+            */
             return newPlacedMapBox;
         }
 
         public static bool Delete()
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (MapStateMediator.SelectedPlacedMapBox == null) return false;
 
-            Cmd_DeleteLabelBox cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedPlacedMapBox);
-            CommandManager.AddCommand(cmd);
-            cmd.DoOperation();
+            //Cmd_DeleteLabelBox cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedPlacedMapBox);
+            //CommandManager.AddCommand(cmd);
+            //cmd.DoOperation();
 
             MapStateMediator.SelectedPlacedMapBox = null;
-
+            */
             return true;
         }
 
         public static IMapComponent? GetComponentById(Guid componentGuid)
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
 
             List<MapComponent> mapLabelComponents = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap,
                 MapBuilder.BOXLAYER).MapLayerComponents;
@@ -111,18 +117,21 @@ namespace RealmStudio
                     return mapBox;
                 }
             }
+            */
 
             return null;
         }
 
         public static bool Update()
         {
+            /*
             ArgumentNullException.ThrowIfNull(BoxMediator);
             if (MapStateMediator.SelectedPlacedMapBox == null) return false;
 
             Cmd_ChangeBoxColor cmd = new(MapStateMediator.SelectedPlacedMapBox, BoxMediator.BoxTint);
-            CommandManager.AddCommand(cmd);
+            //CommandManager.AddCommand(cmd);
             cmd.DoOperation();
+            */
 
             return true;
         }
@@ -135,9 +144,13 @@ namespace RealmStudio
 
         internal static PlacedMapBox? SelectMapBoxAtPoint(RealmStudioMap map, SKPoint zoomedScrolledPoint)
         {
+            PlacedMapBox? selectedBox = null;
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
-            PlacedMapBox? selectedBox = null;
+
+
+
 
             List<MapComponent> mapLabelComponents = MapBuilder.GetMapLayerByIndex(map, MapBuilder.BOXLAYER).MapLayerComponents;
 
@@ -185,6 +198,8 @@ namespace RealmStudio
                 MapStateMediator.SelectedPlacedMapBox = null;
             }
 
+            */
+
             return selectedBox;
         }
 
@@ -221,8 +236,9 @@ namespace RealmStudio
 
         internal static void FinalizeMapBoxes()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            /*
             // finalize loading of placed map boxes
             MapLayer boxLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BOXLAYER);
 
@@ -244,6 +260,8 @@ namespace RealmStudio
                     }
                 }
             }
+
+            */
         }
     }
 }

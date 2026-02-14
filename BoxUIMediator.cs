@@ -22,36 +22,17 @@
 *
 ***************************************************************************************************************************/
 using SkiaSharp;
-using SkiaSharp.Views.Desktop;
-using System.ComponentModel;
-using System.IO;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class BoxUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class BoxUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
-        private MapStateMediator? _mapState;
-
         private Color _boxTint = Color.White;
         private MapBox? _box;
         private SKRect _boxRect;
 
-        public BoxUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += BoxUIMediator_PropertyChanged;
-        }
 
         #region Property Setters/Getters
-
-        public MapStateMediator? MapState
-        {
-            get { return _mapState; }
-            set { _mapState = value; }
-        }
 
         public MapBox? Box
         {
@@ -81,48 +62,20 @@ namespace RealmStudio
 
         #region Property Change Handler Methods
 
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
-
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
-        }
-
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            UpdateBoxUI();
-            BoxManager.Update();
-            MainForm.SKGLRenderControl.Invalidate();
-        }
-
-        private void UpdateBoxUI()
-        {
-            MainForm.Invoke(new MethodInvoker(delegate ()
-            {
-                MainForm.SelectBoxTintButton.BackColor = BoxTint;
-            }));
         }
 
         #endregion
 
         #region Event Handlers 
-        private void BoxUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
 
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
-
+        /*
         internal void MapBoxPictureBox_MouseClick(object? sender, EventArgs e)
         {
             if (((System.Windows.Forms.MouseEventArgs)e).Button == MouseButtons.Left)
@@ -159,11 +112,13 @@ namespace RealmStudio
                 }
             }
         }
+        */
 
         #endregion
 
         #region Box UI Methods
 
+        /*
         internal void Reset()
         {
             Box = null;
@@ -209,10 +164,10 @@ namespace RealmStudio
                     MapStateMediator.SelectedPlacedMapBox.Height = resizedBitmap.Height;
 
                     MapLayer workLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER);
-                    workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                    //workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
 
-                    workLayer.LayerSurface?.Canvas.DrawBitmap(resizedBitmap, previousPoint, PaintObjects.BoxPaint);
+                    //workLayer.LayerSurface?.Canvas.DrawBitmap(resizedBitmap, previousPoint, PaintObjects.BoxPaint);
                 }
             }
         }
@@ -249,6 +204,7 @@ namespace RealmStudio
             MainForm.LabelBoxStyleTable.Refresh();
         }
 
+        */
         #endregion
     }
 }

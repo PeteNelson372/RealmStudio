@@ -21,12 +21,13 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-
+using RealmStudioShapeRenderingLib;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
+    /*
     internal sealed class DrawingManager : IMapComponentManager
     {
         private static DrawingUIMediator? _drawingUIMediator;
@@ -136,11 +137,11 @@ namespace RealmStudio
             if (dmc != null)
             {
                 MapLayer drawLayer = DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
-                Cmd_DeleteDrawnMapComponent cmd = new(drawLayer, dmc);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_DeleteDrawnMapComponent cmd = new(drawLayer, dmc);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
             }
-
+            
             return true;
         }
 
@@ -151,6 +152,7 @@ namespace RealmStudio
 
         public static bool Update()
         {
+            
             ArgumentNullException.ThrowIfNull(DrawingMediator);
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
@@ -196,12 +198,13 @@ namespace RealmStudio
                     triangle.Rotation = (int)DrawingMediator.DrawingShapeRotation;
                 }
             }
-
+            
             return true;
         }
 
         internal static void PlaceStampAtCursor(SKPoint currentCursorPoint)
         {
+            
             ArgumentNullException.ThrowIfNull(DrawingMediator);
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
@@ -222,39 +225,41 @@ namespace RealmStudio
                 // use the selected map layer for the painted line
                 MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-                Cmd_AddDrawnStamp cmd = new(drawLayer, drawnStamp);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_AddDrawnStamp cmd = new(drawLayer, drawnStamp);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
             }
+            
         }
 
         internal static DrawnMapComponent? SelectDrawnMapComponentAtPoint(SKPoint mapClickPoint)
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             DrawnMapComponent? selectedDrawnMapComponent = null;
 
-            List<MapComponent>? drawnMapComponents = DrawingLayer?.MapLayerComponents;
+            List<Shape2D>? drawnMapComponents = DrawingLayer?.Shapes?.ToList();
 
-            if (drawnMapComponents != null)
-            {
-                for (int i = 0; i < drawnMapComponents.Count; i++)
-                {
-                    if (drawnMapComponents[i] is DrawnMapComponent dmc)
-                    {
-                        SKRect bounds = dmc.Bounds;
+            //if (drawnMapComponents != null)
+            //{
+            //    for (int i = 0; i < drawnMapComponents.Count; i++)
+            //    {
+            //        if (drawnMapComponents[i] is DrawnMapComponent dmc)
+            //        {
+            //            SKRect bounds = dmc.Bounds;
+            //
+            //            if (bounds.Contains(mapClickPoint.X, mapClickPoint.Y))
+            //            {
+            //                selectedDrawnMapComponent = dmc;
+            //                selectedDrawnMapComponent.IsSelected = true;
+            //                break;
+            //            }
+            //        }
+            //    }
+            //}
 
-                        if (bounds.Contains(mapClickPoint.X, mapClickPoint.Y))
-                        {
-                            selectedDrawnMapComponent = dmc;
-                            selectedDrawnMapComponent.IsSelected = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, selectedDrawnMapComponent);
+            //RealmMapMethods.DeselectAllMapComponents(MapStateMediator.CurrentMap, selectedDrawnMapComponent);
             return selectedDrawnMapComponent;
         }
 
@@ -266,7 +271,8 @@ namespace RealmStudio
 
             MapLayer drawLayer = DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-            List<MapComponent>? drawnMapComponents = drawLayer.MapLayerComponents;
+            
+            List<IShape2D>? drawnMapComponents = drawLayer.Shapes.ToList();
             if (drawnMapComponents != null)
             {
                 for (int i = 0; i < drawnMapComponents.Count; i++)
@@ -278,6 +284,7 @@ namespace RealmStudio
                     }
                 }
             }
+            
             return selectedDrawnMapComponent;
         }
 
@@ -906,4 +913,5 @@ namespace RealmStudio
             return newDmc;
         }
     }
+    */
 }

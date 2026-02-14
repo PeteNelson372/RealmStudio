@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_AddWindrose(RealmStudioMap map, MapWindrose windrose) : IMapOperation
     {
@@ -30,14 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WINDROSELAYER);
-            windroseLayer.MapLayerComponents.Add(Windrose);
+
         }
 
         public void UndoOperation()
         {
-            MapLayer windroseLayer = MapBuilder.GetMapLayerByIndex(Map, MapBuilder.WINDROSELAYER);
-            windroseLayer.MapLayerComponents.Remove(Windrose);
+
         }
     }
 }

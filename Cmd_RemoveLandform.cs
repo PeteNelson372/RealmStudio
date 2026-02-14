@@ -21,7 +21,8 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-namespace RealmStudio
+using RealmStudioShapeRenderingLib;
+namespace RealmStudioX
 {
     internal sealed class Cmd_RemoveLandform(RealmStudioMap map, Landform selectedLandform) : IMapOperation
     {
@@ -30,27 +31,12 @@ namespace RealmStudio
 
         public void DoOperation()
         {
-            for (int i = MapBuilder.GetMapLayerByIndex(_map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (MapBuilder.GetMapLayerByIndex(_map, MapBuilder.LANDFORMLAYER).MapLayerComponents[i] is Landform lf)
-                {
-                    if (lf.LandformGuid.ToString() == selectedLandform.LandformGuid.ToString())
-                    {
-                        storedLandform = lf;
-                        MapBuilder.GetMapLayerByIndex(_map, MapBuilder.LANDFORMLAYER).MapLayerComponents.RemoveAt(i);
-                        break;
-                    }
-                }
-            }
+
         }
 
         public void UndoOperation()
         {
-            if (storedLandform != null)
-            {
-                MapBuilder.GetMapLayerByIndex(_map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Add(storedLandform);
-                LandformManager.MergeLandforms(_map);
-            }
+
         }
     }
 }

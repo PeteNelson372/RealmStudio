@@ -24,8 +24,9 @@
 
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class WindroseManager : IMapComponentManager
     {
@@ -39,15 +40,15 @@ namespace RealmStudio
 
         public static IMapComponent? Create()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
-            ArgumentNullException.ThrowIfNull(WindroseMediator);
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.MainUIMediator);
+            //ArgumentNullException.ThrowIfNull(WindroseMediator);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
-            if (MapStateMediator.MainUIMediator.CurrentDrawingMode == MapDrawingMode.PlaceWindrose)
+            //if (MapStateMediator.MainUIMediator.CurrentDrawingMode == MapDrawingMode.PlaceWindrose)
             {
                 MapWindrose windrose = new()
                 {
-                    ParentMap = MapStateMediator.CurrentMap,
+                    //ParentMap = MapStateMediator.CurrentMap,
                     InnerCircles = WindroseMediator.InnerCircleCount,
                     InnerRadius = WindroseMediator.InnerCircleRadius,
                     FadeOut = WindroseMediator.FadeOut,
@@ -65,7 +66,7 @@ namespace RealmStudio
                     IsAntialias = true,
                 };
 
-                MapStateMediator.CurrentWindrose = windrose;
+                //MapStateMediator.CurrentWindrose = windrose;
                 return windrose;
             }
 
@@ -86,6 +87,7 @@ namespace RealmStudio
         {
             ArgumentNullException.ThrowIfNull(WindroseMediator);
 
+            /*
             if (MapStateMediator.CurrentWindrose != null)
             {
                 MapStateMediator.CurrentWindrose.InnerCircles = WindroseMediator.InnerCircleCount;
@@ -106,12 +108,14 @@ namespace RealmStudio
 
                 return true;
             }
+            */
 
             return false;
         }
 
         internal static void AddWindrowseAtCurrentPoint()
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (MapStateMediator.CurrentWindrose != null)
@@ -119,18 +123,20 @@ namespace RealmStudio
                 MapStateMediator.CurrentWindrose.X = (int)MapStateMediator.CurrentCursorPoint.X;
                 MapStateMediator.CurrentWindrose.Y = (int)MapStateMediator.CurrentCursorPoint.Y;
 
-                Cmd_AddWindrose cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentWindrose);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_AddWindrose cmd = new(MapStateMediator.CurrentMap, MapStateMediator.CurrentWindrose);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
 
                 Create();
             }
+            */
         }
 
         internal static void RemoveAllWindroses()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            /*
             for (int i = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WINDROSELAYER).MapLayerComponents.Count - 1; i >= 0; i--)
             {
                 if (MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WINDROSELAYER).MapLayerComponents[i] is MapWindrose)
@@ -139,7 +145,9 @@ namespace RealmStudio
                 }
             }
 
-            MapStateMediator.CurrentWindrose = null;
+            */
+
+            //MapStateMediator.CurrentWindrose = null;
         }
 
         internal static void MoveWindrose(MapWindrose? windrose, SKPoint zoomedScrolledPoint)

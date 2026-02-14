@@ -21,17 +21,10 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using SkiaSharp;
-using SkiaSharp.Views.Desktop;
-using System.ComponentModel;
-
-namespace RealmStudio
+namespace RealmStudioX
 {
-    internal sealed class FrameUIMediator : IUIMediatorObserver, INotifyPropertyChanged
+    internal sealed class FrameUIMediator : UiMediatorBase, IUIMediatorObserver
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private readonly RealmStudioMainForm MainForm;
         private MapStateMediator? _mapState;
 
         private float _frameScale = 1.0F;
@@ -40,11 +33,6 @@ namespace RealmStudio
 
         private MapFrame? _frame;
 
-        public FrameUIMediator(RealmStudioMainForm mainForm)
-        {
-            MainForm = mainForm;
-            PropertyChanged += FrameUIMediator_PropertyChanged;
-        }
 
         #region Property Setters/Getters
 
@@ -88,56 +76,21 @@ namespace RealmStudio
 
         #region Property Change Handler Methods
 
-        internal void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
-
         internal void SetPropertyField<T>(string propertyName, ref T field, T newValue)
         {
             if (!EqualityComparer<T>.Default.Equals(field))
             {
                 field = newValue;
-                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                RaiseChanged();
             }
         }
 
-        public void NotifyUpdate(string? changedPropertyName)
-        {
-            UpdateFrameUI();
-            FrameManager.Update();
-            MainForm.SKGLRenderControl.Invalidate();
-        }
-
-        private void UpdateFrameUI()
-        {
-            MainForm.Invoke(new MethodInvoker(delegate ()
-            {
-                MainForm.FrameTintColorSelectButton.BackColor = FrameTint;
-
-                PlacedMapFrame? pmf = (PlacedMapFrame?)FrameManager.GetComponentById(Guid.Empty);
-                if (pmf != null)
-                {
-                    pmf.FrameScale = FrameScale;
-                    pmf.FrameEnabled = FrameEnabled;
-                }
-            }));
-        }
 
         #endregion
 
         #region Event Handlers 
-        private void FrameUIMediator_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            // this event handler is called whenever a property is set
-            // using the SetPropertyField method
 
-            // *** Properties that are not set using the SetPropertyField method will not trigger a PropertyChanged event *** //
-
-            NotifyUpdate(e.PropertyName);
-        }
-
-
+        /*
         private void FramePictureBox_MouseClick(object sender, EventArgs e)
         {
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
@@ -167,13 +120,13 @@ namespace RealmStudio
                             // clicked picture box is not selected, so select it
                             pb.BackColor = Color.LightSkyBlue;
 
-                            MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Clear();
+                            //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.FRAMELAYER).MapLayerComponents.Clear();
 
-                            Cmd_CreateMapFrame cmd = new(MapStateMediator.CurrentMap, frame);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
+                            //Cmd_CreateMapFrame cmd = new(MapStateMediator.CurrentMap, frame);
+                            //CommandManager.AddCommand(cmd);
+                            //cmd.DoOperation();
 
-                            MapStateMediator.CurrentMap.IsSaved = false;
+                            //MapStateMediator.CurrentMap.IsSaved = false;
                         }
                         else
                         {
@@ -184,10 +137,12 @@ namespace RealmStudio
                 }
             }
         }
+        */
         #endregion
 
         #region Frame UI Methods
 
+        /*
         internal void Initialize(float frameScale, Color frameTint, bool frameEnabled)
         {
             _frameScale = frameScale;
@@ -248,7 +203,7 @@ namespace RealmStudio
             }
             MainForm.FrameStyleTable.Show();
         }
-
+        */
         #endregion
     }
 }

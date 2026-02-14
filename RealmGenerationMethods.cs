@@ -24,8 +24,9 @@
 using AForge.Imaging.Filters;
 using SkiaSharp;
 using System.Diagnostics;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class RealmGenerationMethods
     {
@@ -96,9 +97,7 @@ namespace RealmStudio
                     break;
             }
 
-            LandformManager.MergeLandforms(map);
-
-            map.IsSaved = false;
+            //LandformManager.MergeLandforms(map);
         }
 
         internal static void GenerateWorldLandforms(RealmStudioMap map, SKSizeI size)
@@ -296,8 +295,8 @@ namespace RealmStudio
 
                     CreateLandformFromGeneratedPaths(map, new SKPoint(rect.MidX, rect.MidY), new SKSize(rect.Width, rect.Height), generateLandformType, false);
 
-                    landformCount = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Count;
-                    progressForm.SetStatusPercentage(landformCount * progressStep);
+                    //landformCount = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER).MapLayerComponents.Count;
+                    //progressForm.SetStatusPercentage(landformCount * progressStep);
                 }
             }
 
@@ -308,13 +307,14 @@ namespace RealmStudio
 
         internal static void CreateLandformFromGeneratedPaths(RealmStudioMap map, SKPoint location, SKSize size, GeneratedLandformType selectedLandformType, bool flipVertical = false)
         {
-            ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
+            //ArgumentNullException.ThrowIfNull(LandformManager.LandformMediator);
 
             const int minimumGeneratedLandformContourPathPoints = 10;
 
 
             List<SKPath> generatedLandformPaths = GenerateRandomLandformPaths(location, size, selectedLandformType, flipVertical);
 
+            /*
             MapLayer landformLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LANDFORMLAYER);
 
             foreach (SKPath path in generatedLandformPaths)
@@ -341,6 +341,7 @@ namespace RealmStudio
                     }
                 }
             }
+            */
         }
 
         internal static List<SKPath> GenerateRandomLandformPaths(SKPoint location, SKSize size, GeneratedLandformType selectedLandformType, bool flipVertical = false)

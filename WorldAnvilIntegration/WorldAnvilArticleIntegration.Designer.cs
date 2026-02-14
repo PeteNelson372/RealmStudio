@@ -1,4 +1,4 @@
-﻿namespace RealmStudio.WorldAnvilIntegration
+﻿namespace RealmStudioX.WorldAnvilIntegration
 {
     partial class WorldAnvilArticleIntegration
     {

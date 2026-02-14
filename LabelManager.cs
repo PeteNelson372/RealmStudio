@@ -26,9 +26,11 @@ using SkiaSharp.Views.Desktop;
 using System.Drawing.Text;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
+    /*
     internal sealed class LabelManager : IMapComponentManager
     {
         public static PrivateFontCollection EMBEDDED_FONTS { get; } = new();
@@ -86,9 +88,9 @@ namespace RealmStudio
             if (MapStateMediator.SelectedMapLabel != null)
             {
                 // update label rotation
-                Cmd_ChangeLabelRotation cmd = new(MapStateMediator.SelectedMapLabel, LabelMediator.LabelRotation);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_ChangeLabelRotation cmd = new(MapStateMediator.SelectedMapLabel, LabelMediator.LabelRotation);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
 
                 // update other attributes
                 Color labelColor = LabelMediator.LabelColor;
@@ -100,9 +102,9 @@ namespace RealmStudio
                 Font tbFont = new(LabelMediator.SelectedLabelFont.FontFamily,
                     LabelMediator.SelectedLabelFont.Size * 0.75F, LabelMediator.SelectedLabelFont.Style, GraphicsUnit.Point);
 
-                Cmd_ChangeLabelAttributes cmd2 = new(MapStateMediator.SelectedMapLabel, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, tbFont);
-                CommandManager.AddCommand(cmd2);
-                cmd2.DoOperation();
+                //Cmd_ChangeLabelAttributes cmd2 = new(MapStateMediator.SelectedMapLabel, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, tbFont);
+                //CommandManager.AddCommand(cmd2);
+                //cmd2.DoOperation();
 
                 return true;
             }
@@ -116,9 +118,9 @@ namespace RealmStudio
 
             if (MapStateMediator.SelectedMapLabel != null)
             {
-                Cmd_DeleteLabel cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapLabel);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_DeleteLabel cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapLabel);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
 
                 return true;
             }
@@ -273,15 +275,15 @@ namespace RealmStudio
         internal static void DeleteLabel(RealmStudioMap map, MapLabel label)
         {
             // delete the currently selected label
-            MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LABELLAYER);
+            //MapLayer labelLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.LABELLAYER);
 
-            for (int i = labelLayer.MapLayerComponents.Count - 1; i >= 0; i--)
-            {
-                if (labelLayer.MapLayerComponents[i] is MapLabel l && l.LabelGuid.ToString() == label.LabelGuid.ToString())
-                {
-                    labelLayer.MapLayerComponents.RemoveAt(i);
-                }
-            }
+            //for (int i = labelLayer.MapLayerComponents.Count - 1; i >= 0; i--)
+            //{
+            //    if (labelLayer.MapLayerComponents[i] is MapLabel l && l.LabelGuid.ToString() == label.LabelGuid.ToString())
+            //    {
+            //        labelLayer.MapLayerComponents.RemoveAt(i);
+            //    }
+            //}
         }
 
         internal static void MoveLabel(MapLabel label, SKPoint zoomedScrolledPoint)
@@ -340,10 +342,12 @@ namespace RealmStudio
 
         internal static void DrawLabelPathOnWorkLayer(RealmStudioMap map, SKPath mapLabelPath)
         {
+            
             MapLayer workLayer = MapBuilder.GetMapLayerByIndex(map, MapBuilder.WORKLAYER);
             workLayer.LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
             workLayer.LayerSurface?.Canvas.DrawPath(mapLabelPath, PaintObjects.LabelPathPaint);
+            
         }
 
         internal static Rectangle GetLabelTextBoxRect(MapLabel mapLabel, SKPoint drawingPoint, float drawingZoom, Size labelSize)
@@ -392,4 +396,5 @@ namespace RealmStudio
             CurrentMapPathLabelPoints.Clear();
         }
     }
+    */
 }

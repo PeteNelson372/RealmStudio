@@ -27,16 +27,17 @@ using Svg.Skia;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
+using RealmStudioShapeRenderingLib;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     internal sealed class SymbolManager : IMapComponentManager
     {
         private static SymbolUIMediator? _symbolMediator;
 
         private static MapSymbolType _selectedSymbolType = MapSymbolType.NotSet;
-        private static string _defaultSymbolDirectory = AssetManager.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols";
-        private static string _symbolTagsFilePath = AssetManager.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Symbols" + Path.DirectorySeparatorChar + "SymbolTags.txt";
+        private static string _defaultSymbolDirectory = AssetManager.RootAssetDirectory + Path.DirectorySeparatorChar + "Symbols";
+        private static string _symbolTagsFilePath = AssetManager.RootAssetDirectory + Path.DirectorySeparatorChar + "Symbols" + Path.DirectorySeparatorChar + "SymbolTags.txt";
         private static readonly List<Tuple<string, List<MapSymbol>>> _tagSymbolAssociationList = [];
         private static MapSymbol? _selectedSymbolTableMapSymbol;
         private static readonly List<MapSymbol> _secondarySelectedSymbols = [];
@@ -103,29 +104,30 @@ namespace RealmStudio
 
         public static bool Delete()
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (MapStateMediator.SelectedMapSymbol != null)
             {
-                Cmd_RemoveSymbol cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapSymbol);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_RemoveSymbol cmd = new(MapStateMediator.CurrentMap, MapStateMediator.SelectedMapSymbol);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
 
                 MapStateMediator.SelectedMapSymbol = null;
 
                 return true;
             }
-
+            */
             return false;
         }
 
         internal static void PlaceSymbolOnMap(MapSymbol? mapSymbol, SKBitmap? bitmap, SKPoint cursorPoint)
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (mapSymbol != null && bitmap != null)
             {
-                MapStateMediator.CurrentMap.IsSaved = false;
 
                 MapSymbol placedSymbol = new(mapSymbol)
                 {
@@ -139,19 +141,20 @@ namespace RealmStudio
 
                 placedSymbol.SetPlacedBitmap(bitmap);
 
-                Cmd_PlaceSymbol cmd = new(MapStateMediator.CurrentMap, placedSymbol);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_PlaceSymbol cmd = new(MapStateMediator.CurrentMap, placedSymbol);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
             }
+            */
         }
 
         internal static void PlaceVectorSymbolOnMap(MapSymbol? mapSymbol, SKBitmap vectorBitmap, SKPoint cursorPoint)
         {
+            /*
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
             if (mapSymbol != null)
             {
-                MapStateMediator.CurrentMap.IsSaved = false;
                 MapSymbol placedSymbol = new(mapSymbol)
                 {
                     X = (int)cursorPoint.X,
@@ -176,19 +179,20 @@ namespace RealmStudio
 
                 placedSymbol.SymbolPaint = vectorPaint;
 
-                Cmd_PlaceSymbol cmd = new(MapStateMediator.CurrentMap, placedSymbol);
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //Cmd_PlaceSymbol cmd = new(MapStateMediator.CurrentMap, placedSymbol);
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
             }
+            */
         }
 
         internal static void RemovePlacedSymbolsFromArea(SKPoint centerPoint, float eraserCircleRadius)
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
-            Cmd_RemoveSymbolsFromArea cmd = new(MapStateMediator.CurrentMap, eraserCircleRadius, centerPoint);
-            CommandManager.AddCommand(cmd);
-            cmd.DoOperation();
+            //Cmd_RemoveSymbolsFromArea cmd = new(MapStateMediator.CurrentMap, eraserCircleRadius, centerPoint);
+            //CommandManager.AddCommand(cmd);
+            //cmd.DoOperation();
         }
 
         internal static void AnalyzeSymbolBitmapColors(MapSymbol symbol)
@@ -359,18 +363,21 @@ namespace RealmStudio
 
         internal static List<MapSymbol> GetMapSymbolsWithType(MapSymbolType symbolType)
         {
-            List<MapSymbol> typeSymbols = AssetManager.MAP_SYMBOL_LIST.FindAll(x => x.SymbolType == symbolType);
-            return typeSymbols;
+            //List<MapSymbol> typeSymbols = AssetManager.MAP_SYMBOL_LIST.FindAll(x => x.SymbolType == symbolType);
+            //return typeSymbols;
+
+            return [];
         }
 
         internal static bool CanPlaceSymbol(SKPoint cursorPoint, float placementDensityRadius)
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+
 
             // if there are any symbols within the placementDensityRadius around the cursor point, then the symbol cannot be placed at the cursor point
 
             bool canPlace = true;
-
+            /*
             MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER);
 
             for (int i = 0; i < symbolLayer.MapLayerComponents.Count; i++)
@@ -385,14 +392,15 @@ namespace RealmStudio
                     break;
                 }
             }
-
+            */
             return canPlace;
         }
 
         internal static void ColorSymbolsInArea(SKPoint colorCursorPoint, int colorBrushRadius, Color[] symbolColors, bool randomizeColors)
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            /*
             List<MapComponent> components = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER).MapLayerComponents;
 
             foreach (MapComponent component in components)
@@ -436,18 +444,21 @@ namespace RealmStudio
                     symbol.CustomSymbolColors[2] = Extensions.ToSKColor(symbolColors[2]);
                 }
             }
+
+            */
         }
 
         public static void SaveSymbolTags()
         {
-            if (AssetManager.SYMBOL_TAGS.Count > 0 && AssetManager.SYMBOL_TAGS.Count >= AssetManager.ORIGINAL_SYMBOL_TAGS.Count)
-            {
-                File.WriteAllLines(SymbolTagsFilePath, AssetManager.SYMBOL_TAGS);
-            }
+            //if (AssetManager.SYMBOL_TAGS.Count > 0 && AssetManager.SYMBOL_TAGS.Count >= AssetManager.ORIGINAL_SYMBOL_TAGS.Count)
+            //{
+            //    File.WriteAllLines(SymbolTagsFilePath, AssetManager.SYMBOL_TAGS);
+            //}
         }
 
         internal static void SaveCollections()
         {
+            /*
             foreach (MapSymbolCollection collection in AssetManager.MAP_SYMBOL_COLLECTIONS)
             {
                 if (collection != null && collection.IsModified)
@@ -458,6 +469,7 @@ namespace RealmStudio
                     MapFileMethods.SerializeSymbolCollection(collection);
                 }
             }
+            */
         }
 
         internal static List<string> AutoTagSymbol(MapSymbol symbol)
@@ -502,6 +514,7 @@ namespace RealmStudio
                 string potentialTag = potentialTags[i];
                 bool tagMatched = false;
 
+                /*
                 foreach (string tag in AssetManager.SYMBOL_TAGS)
                 {
                     if (tag.Contains(potentialTag) || potentialTag.Contains(tag))
@@ -509,6 +522,7 @@ namespace RealmStudio
                         tagMatched = true;
                     }
                 }
+                */
 
                 if (!tagMatched)
                 {
@@ -526,19 +540,19 @@ namespace RealmStudio
             {
                 if (!string.IsNullOrEmpty(tag))
                 {
-                    if (AssetManager.STRUCTURE_SYNONYMS.Contains(tag))
+                    if (AssetManager.StructureSynonyms.Contains(tag))
                     {
                         mapSymbol.SymbolType = MapSymbolType.Structure;
                         return;
                     }
 
-                    if (AssetManager.TERRAIN_SYNONYMS.Contains(tag))
+                    if (AssetManager.TerrainSynonyms.Contains(tag))
                     {
                         mapSymbol.SymbolType = MapSymbolType.Terrain;
                         return;
                     }
 
-                    if (AssetManager.VEGETATION_SYNONYMS.Contains(tag))
+                    if (AssetManager.VegetationSynonyms.Contains(tag))
                     {
                         mapSymbol.SymbolType = MapSymbolType.Vegetation;
                         return;
@@ -601,8 +615,9 @@ namespace RealmStudio
 
         internal static void FinalizeMapSymbols()
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            /*
             // finalize loading of symbols
             MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER);
 
@@ -638,90 +653,95 @@ namespace RealmStudio
                     }
                 }
             }
+            */
         }
 
         internal static void MoveSelectedSymbolInRenderOrder(ComponentMoveDirection direction, int amount = 1, bool toTopBottom = false)
         {
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
+            /*
             if (MapStateMediator.SelectedMapSymbol != null)
             {
-                // find the selected symbol in the Symbol Layer MapComponents
-                MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER);
 
-                List<MapComponent> symbolComponents = symbolLayer.MapLayerComponents;
-                MapSymbol? selectedSymbol = null;
+            // find the selected symbol in the Symbol Layer MapComponents
+            MapLayer symbolLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.SYMBOLLAYER);
 
-                int selectedSymbolIndex = 0;
+            List<MapComponent> symbolComponents = symbolLayer.MapLayerComponents;
+            MapSymbol? selectedSymbol = null;
 
-                for (int i = 0; i < symbolComponents.Count; i++)
+            int selectedSymbolIndex = 0;
+
+            for (int i = 0; i < symbolComponents.Count; i++)
+            {
+                MapComponent symbolComponent = symbolComponents[i];
+                if (symbolComponent is MapSymbol symbol && symbol.SymbolGuid.ToString() == MapStateMediator.SelectedMapSymbol.SymbolGuid.ToString())
                 {
-                    MapComponent symbolComponent = symbolComponents[i];
-                    if (symbolComponent is MapSymbol symbol && symbol.SymbolGuid.ToString() == MapStateMediator.SelectedMapSymbol.SymbolGuid.ToString())
-                    {
-                        selectedSymbolIndex = i;
-                        selectedSymbol = symbol;
-                        break;
-                    }
+                    selectedSymbolIndex = i;
+                    selectedSymbol = symbol;
+                    break;
                 }
+            }
 
-                if (direction == ComponentMoveDirection.Up)
+            if (direction == ComponentMoveDirection.Up)
+            {
+                // moving a symbol up in render order means increasing its index
+                if (selectedSymbol != null && selectedSymbolIndex < symbolComponents.Count - 1)
                 {
-                    // moving a symbol up in render order means increasing its index
-                    if (selectedSymbol != null && selectedSymbolIndex < symbolComponents.Count - 1)
+                    if (toTopBottom)
                     {
-                        if (toTopBottom)
+                        symbolComponents.RemoveAt(selectedSymbolIndex);
+                        symbolComponents.Add(selectedSymbol);
+                    }
+                    else
+                    {
+                        int moveLocation;
+
+                        if (selectedSymbolIndex + amount < symbolComponents.Count - 1)
                         {
-                            symbolComponents.RemoveAt(selectedSymbolIndex);
-                            symbolComponents.Add(selectedSymbol);
+                            moveLocation = selectedSymbolIndex + amount;
                         }
                         else
                         {
-                            int moveLocation;
-
-                            if (selectedSymbolIndex + amount < symbolComponents.Count - 1)
-                            {
-                                moveLocation = selectedSymbolIndex + amount;
-                            }
-                            else
-                            {
-                                moveLocation = symbolComponents.Count - 1;
-                            }
-
-                            symbolComponents[selectedSymbolIndex] = symbolComponents[moveLocation];
-                            symbolComponents[moveLocation] = selectedSymbol;
+                            moveLocation = symbolComponents.Count - 1;
                         }
-                    }
-                }
-                else if (direction == ComponentMoveDirection.Down)
-                {
-                    // moving a symbol down in render order means decreasing its index
-                    if (selectedSymbol != null && selectedSymbolIndex > 0)
-                    {
-                        if (toTopBottom)
-                        {
-                            symbolComponents.RemoveAt(selectedSymbolIndex);
-                            symbolComponents.Insert(0, selectedSymbol);
-                        }
-                        else
-                        {
-                            int moveLocation;
 
-                            if (selectedSymbolIndex - amount >= 0)
-                            {
-                                moveLocation = selectedSymbolIndex - amount;
-                            }
-                            else
-                            {
-                                moveLocation = 0;
-                            }
-
-                            symbolComponents[selectedSymbolIndex] = symbolComponents[moveLocation];
-                            symbolComponents[moveLocation] = selectedSymbol;
-                        }
+                        symbolComponents[selectedSymbolIndex] = symbolComponents[moveLocation];
+                        symbolComponents[moveLocation] = selectedSymbol;
                     }
                 }
             }
+            else if (direction == ComponentMoveDirection.Down)
+            {
+                // moving a symbol down in render order means decreasing its index
+                if (selectedSymbol != null && selectedSymbolIndex > 0)
+                {
+                    if (toTopBottom)
+                    {
+                        symbolComponents.RemoveAt(selectedSymbolIndex);
+                        symbolComponents.Insert(0, selectedSymbol);
+                    }
+                    else
+                    {
+                        int moveLocation;
+
+                        if (selectedSymbolIndex - amount >= 0)
+                        {
+                            moveLocation = selectedSymbolIndex - amount;
+                        }
+                        else
+                        {
+                            moveLocation = 0;
+                        }
+
+                        symbolComponents[selectedSymbolIndex] = symbolComponents[moveLocation];
+                        symbolComponents[moveLocation] = selectedSymbol;
+                    }
+                }
+            }
+
+            }
+            */
         }
 
         internal static void MoveSymbol(MapSymbol? mapSymbol, SKPoint zoomedScrolledPoint)
@@ -950,7 +970,7 @@ namespace RealmStudio
                 }
                 */
 
-                if (skSvg.Picture != null)
+            if (skSvg.Picture != null)
                 {
                     SKMatrix matrix = SKMatrix.CreateScale((SymbolUIMediator.SymbolPictureBoxHeight - 8) / skSvg.Picture.CullRect.Width,
                         (SymbolUIMediator.SymbolPictureBoxHeight - 8) / skSvg.Picture.CullRect.Height);
@@ -975,37 +995,37 @@ namespace RealmStudio
 
             if (selectedMapSymbol.IsGrayscale || selectedMapSymbol.UseCustomColors)
             {
-                Cmd_PaintSymbol cmd = new(selectedMapSymbol,
-                    SymbolMediator.SymbolColor1.ToSKColor(), SymbolMediator.SymbolColor1.ToSKColor(),
-                    SymbolMediator.SymbolColor2.ToSKColor(), SymbolMediator.SymbolColor3.ToSKColor());
+                //Cmd_PaintSymbol cmd = new(selectedMapSymbol,
+                //    SymbolMediator.SymbolColor1.ToSKColor(), SymbolMediator.SymbolColor1.ToSKColor(),
+                //    SymbolMediator.SymbolColor2.ToSKColor(), SymbolMediator.SymbolColor3.ToSKColor());
 
-                CommandManager.AddCommand(cmd);
-                cmd.DoOperation();
+                //CommandManager.AddCommand(cmd);
+                //cmd.DoOperation();
             }
 
             selectedMapSymbol.IsSelected = false;
-            MapStateMediator.SelectedMapSymbol = null;
+            //MapStateMediator.SelectedMapSymbol = null;
         }
 
         internal static void ColorSymbolAtPoint()
         {
-            ArgumentNullException.ThrowIfNull(SymbolMediator);
-            ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
+            //ArgumentNullException.ThrowIfNull(SymbolMediator);
+            //ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
 
-            MapSymbol? symbolAtPoint = SymbolUIMediator.SelectMapSymbolAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint.ToDrawingPoint());
+            //MapSymbol? symbolAtPoint = SymbolUIMediator.SelectMapSymbolAtPoint(MapStateMediator.CurrentMap, MapStateMediator.CurrentCursorPoint.ToDrawingPoint());
 
-            if (symbolAtPoint != null)
-            {
-                if (symbolAtPoint.IsGrayscale)
-                {
-                    Cmd_PaintSymbol cmd = new(symbolAtPoint,
-                        SymbolMediator.SymbolColor1.ToSKColor(), SymbolMediator.SymbolColor1.ToSKColor(),
-                        SymbolMediator.SymbolColor2.ToSKColor(), SymbolMediator.SymbolColor3.ToSKColor());
+            //if (symbolAtPoint != null)
+            //{
+            //    if (symbolAtPoint.IsGrayscale)
+            //    {
+                    //Cmd_PaintSymbol cmd = new(symbolAtPoint,
+                    //    SymbolMediator.SymbolColor1.ToSKColor(), SymbolMediator.SymbolColor1.ToSKColor(),
+                    //    SymbolMediator.SymbolColor2.ToSKColor(), SymbolMediator.SymbolColor3.ToSKColor());
 
-                    CommandManager.AddCommand(cmd);
-                    cmd.DoOperation();
-                }
-            }
+                    //CommandManager.AddCommand(cmd);
+                    //cmd.DoOperation();
+            //    }
+            //}
         }
     }
 }

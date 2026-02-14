@@ -25,7 +25,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media.Effects;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     // this class and other effect classes derived from ShaderEffect
     // are based on the example from https://bursjootech.blogspot.com/2008/06/grayscale-effect-pixel-shader-effect-in.html

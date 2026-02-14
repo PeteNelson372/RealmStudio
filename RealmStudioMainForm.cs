@@ -21,25 +21,23 @@
 * support@brookmonte.com
 *
 ***************************************************************************************************************************/
-using RealmStudio.Properties;
-using RealmStudio.WorldAnvilIntegration;
+using RealmStudioShapeRenderingLib;
+using RealmStudioX.Properties;
+using RealmStudioX.WorldAnvilIntegration;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.IO;
-using System.Timers;
 using WorldAnvilIntegrationLib;
 using ComboBox = System.Windows.Forms.ComboBox;
 
-namespace RealmStudio
+namespace RealmStudioX
 {
     public partial class RealmStudioMainForm : Form
     {
-        private readonly string RELEASE_STATE = "Pre-Release";
-
-        private static System.Timers.Timer? LOCATION_UPDATE_TIMER;
+        private static string ReleaseState { get { return "Pre-Release"; } }
 
         internal static readonly ToolTip TOOLTIP = new();
 
@@ -51,69 +49,80 @@ namespace RealmStudio
 
         private static string MapCommandLinePath = string.Empty;
 
-        private static float SELECTED_PATH_ANGLE = -1;
+        private EditorController _editor = null!;
 
-        // UI Mediators
+        private AssetManager _assetManager = null!;
+
+        private readonly XmlAssetMetadataLoader _xmlAssetMetadataLoader = new();
 
         // UI mediator for the UI controls and values on the RealmStudioMainFOrm
-        // not related to any map object (e.g. DrawingZoom)
-        private MainFormUIMediator MainMediator { get; set; }
+        private MainFormUIMediator MainMediator { get; set; } = new();
 
         // UI mediator for map background
-        private BackgroundUIMediator BackgroundMediator { get; set; }
+        private BackgroundUIMediator BackgroundMediator { get; set; } = new();
 
         // UI mediator for map boxes
-        private BoxUIMediator BoxMediator { get; set; }
+        private BoxUIMediator BoxMediator { get; set; } = new();
+
+        private CameraUIMediator CameraMediator { get; set; } = new();
 
         // UI mediator for drawing layer
-        private DrawingUIMediator DrawingMediator { get; set; }
+        private DrawingUIMediator DrawingMediator { get; set; } = new();
 
         // UI mediator for the map frame
-        private FrameUIMediator FrameMediator { get; set; }
+        private FrameUIMediator FrameMediator { get; set; } = new();
 
         // UI mediator for MapGrid
-        private MapGridUIMediator GridMediator { get; set; }
+        private MapGridUIMediator GridMediator { get; set; } = new();
 
         // UI mediator for Interior Floors
-        private InteriorUIMediator InteriorMediator { get; set; }
+        private InteriorUIMediator InteriorMediator { get; set; } = new();
 
         // UI mediator for Labels
-        private LabelUIMediator LabelMediator { get; set; }
+        private LabelUIMediator LabelMediator { get; set; } = new();
+
+        // UI mediator for the Main Menu
+        private MenuUIMediator MenuMediator { get; set; } = new();
 
         // UI mediator for the Ocean tab
-        private OceanUIMediator OceanMediator { get; set; }
+        private OceanUIMediator OceanMediator { get; set; } = new();
 
         // UI mediator for Map Paths
-        private PathUIMediator PathMediator { get; set; }
+        private PathUIMediator PathMediator { get; set; } = new();
 
         // UI Mediator for Label Presets
-        private LabelPresetUIMediator PresetMediator { get; set; }
+        private LabelPresetUIMediator PresetMediator { get; set; } = new();
 
         // UI Mediator for Landforms
-        private LandformUIMediator LandformMediator { get; set; }
+        private LandformUIMediator LandformMediator { get; set; } = new();
 
         // UI mediator for MapMeasure
-        private MapMeasureUIMediator MeasureMediator { get; set; }
+        private MapMeasureUIMediator MeasureMediator { get; set; } = new();
 
         // UI mediator for MapScale
-        private MapScaleUIMediator ScaleMediator { get; set; }
+        private MapScaleUIMediator ScaleMediator { get; set; } = new();
 
         // UI mediator for MapSymbols
-        private SymbolUIMediator SymbolMediator { get; set; }
+        private SymbolUIMediator SymbolMediator { get; set; } = new();
 
         // UI mediator for MapRegions
-        private RegionUIMediator RegionMediator { get; set; }
+        private RegionUIMediator RegionMediator { get; set; } = new();
 
         // UI mediator for the map vignette
-        private VignetteUIMediator VignetteMediator { get; set; }
+        private VignetteUIMediator VignetteMediator { get; set; } = new();
 
         // UI mediator for WaterFeatures (not Rivers)
-        private WaterFeatureUIMediator WaterFeatureMediator { get; set; }
+        private WaterFeatureUIMediator WaterFeatureMediator { get; set; } = new();
 
         // UI mediator for Windroses
-        private WindroseUIMediator WindroseMediator { get; set; }
+        private WindroseUIMediator WindroseMediator { get; set; } = new();
 
-        private TimerManager ApplicationTimerManager { get; set; }
+        private TimerManager ApplicationTimerManager { get; set; } = new();
+
+        private StatusBarPresenter StatusPresenter { get; set; } = null!;
+
+        private TabAndPanelPresenter TabPresenter { get; set; } = null!;
+
 
         #region Constructor
         /******************************************************************************************************* 
@@ -121,8 +130,6 @@ namespace RealmStudio
         *******************************************************************************************************/
         public RealmStudioMainForm(string[] args)
         {
-            AssetManager.InitializeAssetDirectories();
-
             InitializeComponent();
 
             if (args.Length > 0)
@@ -134,117 +141,71 @@ namespace RealmStudio
                     MapCommandLinePath = string.Empty;
                 }
             }
-
-            SKGLRenderControl.Hide();
-            SKGLRenderControl.MouseWheel += SKGLRenderControl_MouseWheel;
-
-            // make sure the loading status form displays at the center of the main window
-            AssetManager.LOADING_STATUS_FORM.Top = Top + (Height / 2) - (AssetManager.LOADING_STATUS_FORM.Height / 2);
-            AssetManager.LOADING_STATUS_FORM.Left = Left + (Width / 2) - (AssetManager.LOADING_STATUS_FORM.Width / 2);
-
-            string assetDirectory = AssetManager.ASSET_DIRECTORY;
-
-            if (string.IsNullOrEmpty(assetDirectory))
-            {
-                Settings.Default.MapAssetDirectory = UtilityMethods.DEFAULT_ASSETS_FOLDER;
-                AssetManager.ASSET_DIRECTORY = UtilityMethods.DEFAULT_ASSETS_FOLDER;
-            }
-            else
-            {
-                Settings.Default.MapAssetDirectory = assetDirectory;
-            }
-
-            Settings.Default.Save();
-
-            // create and initialize managers and UI mediators
-            MainMediator = new(this);
-            MapStateMediator.MainUIMediator = MainMediator;
-
-            BackgroundMediator = new(this);
-            BackgroundManager.BackgroundMediator = BackgroundMediator;
-
-            BoxMediator = new BoxUIMediator(this);
-            BoxManager.BoxMediator = BoxMediator;
-
-            DrawingMediator = new DrawingUIMediator(this);
-            DrawingManager.DrawingMediator = DrawingMediator;
-
-            FrameMediator = new FrameUIMediator(this);
-            FrameManager.FrameMediator = FrameMediator;
-
-            GridMediator = new MapGridUIMediator(this);
-            MapGridManager.GridUIMediator = GridMediator;
-
-            InteriorMediator = new InteriorUIMediator(this);
-            InteriorManager.InteriorMediator = InteriorMediator;
-
-            LabelMediator = new LabelUIMediator(this);
-            LabelManager.LabelMediator = LabelMediator;
-
-            LandformMediator = new LandformUIMediator(this);
-            LandformManager.LandformMediator = LandformMediator;
-
-            MeasureMediator = new(this);
-            MapMeasureManager.MeasureUIMediator = MeasureMediator;
-
-            OceanMediator = new(this);
-            OceanManager.OceanMediator = OceanMediator;
-
-            PathMediator = new PathUIMediator(this);
-            PathManager.PathMediator = PathMediator;
-
-            PresetMediator = new(this);
-            LabelPresetManager.PresetMediator = PresetMediator;
-
-            RegionMediator = new(this);
-            RegionManager.RegionUIMediator = RegionMediator;
-
-            ScaleMediator = new(this);
-            MapScaleManager.ScaleMediator = ScaleMediator;
-
-            SymbolMediator = new SymbolUIMediator(this);
-            SymbolManager.SymbolMediator = SymbolMediator;
-
-            VignetteMediator = new VignetteUIMediator(this);
-            VignetteManager.VignetteMediator = VignetteMediator;
-
-            WaterFeatureMediator = new WaterFeatureUIMediator(this);
-            WaterFeatureManager.WaterFeatureMediator = WaterFeatureMediator;
-
-            WindroseMediator = new(this);
-            WindroseManager.WindroseMediator = WindroseMediator;
-
-            ApplicationTimerManager = new(this)
-            {
-                SymbolUIMediator = SymbolMediator
-            };
-
-
-            // register map object mediators with the MapStateMediator so
-            // they can be notified when the current map is changed
-            // or other changes are made; in most cases, the map object
-            // mediators handle changes directly with the associated manager
-            // but in some cases, changes to the current map (and maybe to other objects)
-            // result in UI changes that the map object mediators don't know about
-
-            MapStateMediator.MainUIMediator = MainMediator;
-            MapStateMediator.BoxUIMediator = BoxMediator;
-            MapStateMediator.FrameUIMediator = FrameMediator;
-            MapStateMediator.GridUIMediator = GridMediator;
-            MapStateMediator.InteriorUIMediator = InteriorMediator;
-            MapStateMediator.LandformUIMediator = LandformMediator;
-            MapStateMediator.MeasureUIMediator = MeasureMediator;
-            MapStateMediator.PathUIMediator = PathMediator;
-            MapStateMediator.RegionUIMediator = RegionMediator;
-            MapStateMediator.ScaleUIMediator = ScaleMediator;
-            MapStateMediator.SymbolUIMediator = SymbolMediator;
-            MapStateMediator.VignetteUIMediator = VignetteMediator;
-            MapStateMediator.WaterFeatureUIMediator = WaterFeatureMediator;
-            MapStateMediator.WindroseUIMediator = WindroseMediator;
-
-            MapStateMediator.ApplicationTimerManager = ApplicationTimerManager;
         }
 
+        private void CreateUserInterfacePresenters()
+        {
+            StatusPresenter = new(MapStatusStrip, ApplicationStatusStrip);
+            TabPresenter = new(this);
+        }
+
+        private void WireSkiaInput()
+        {
+            // Mouse buttons
+            SKGLRenderControl.MouseDown += (s, e) =>
+            {
+                if (_editor.Scene == null)
+                    return;
+
+                var screen = new SKPoint(e.X, e.Y);
+
+                _editor.OnMouseDown(
+                    screen,
+                    e.Button);
+            };
+
+            SKGLRenderControl.MouseMove += (s, e) =>
+            {
+                if (_editor.Scene == null)
+                    return;
+
+                var screen = new SKPoint(e.X, e.Y);
+
+                _editor.OnMouseMove(screen, e.Button);
+            };
+
+            SKGLRenderControl.MouseUp += (s, e) =>
+            {
+                if (_editor.Scene == null)
+                    return;
+
+                var screen = new SKPoint(e.X, e.Y);
+
+                _editor.OnMouseUp(
+                    screen,
+                    e.Button);
+            };
+
+            // Mouse wheel (zoom)
+            /*
+            SKGLRenderControl.MouseWheel += (s, e) =>
+            {
+                if (_editor.Scene == null)
+                    return;
+
+                var screen = new SKPoint(e.X, e.Y);
+
+                _editor.OnMouseWheel(
+                    e.Delta,
+                    screen);
+            };
+            */
+
+            SKGLRenderControl.Resize += (s, e) =>
+            {
+                _editor.SetViewportSize(new SKSize(SKGLRenderControl.Width, SKGLRenderControl.Height));
+            };
+        }
         #endregion
 
         #region Main Form Event Handlers
@@ -253,41 +214,13 @@ namespace RealmStudio
         *******************************************************************************************************/
         private void RealmStudioMainForm_Load(object sender, EventArgs e)
         {
-            MainMediator.BackGroundTabPage = MainTab.TabPages[0];
-            MainMediator.OceanTabPage = MainTab.TabPages[1];
-            MainMediator.LandformTabPage = MainTab.TabPages[2];
-            MainMediator.WaterFeaturesTabPage = MainTab.TabPages[3];
-            MainMediator.PathsTabPage = MainTab.TabPages[4];
-            MainMediator.SymbolsTabPage = MainTab.TabPages[5];
-            MainMediator.LabelsTabPage = MainTab.TabPages[6];
-            MainMediator.OverlaysTabPage = MainTab.TabPages[7];
-            MainMediator.RegionsTabPage = MainTab.TabPages[8];
-            MainMediator.DrawingTabPage = MainTab.TabPages[9];
-            MainMediator.InteriorTabPage = MainTab.TabPages[10];
-            MainMediator.DungeonTabPage = MainTab.TabPages[11];
-            MainMediator.ShipTabPage = MainTab.TabPages[12];
-            MainMediator.PlanetTabPage = MainTab.TabPages[13];
+            SKGLRenderControl.CreateControl();
+            SKGLRenderControl.Show();
+            SKGLRenderControl.BackColor = Color.White;
+            SKGLRenderControl.Select();
+            SKGLRenderControl.Enabled = true;
 
-            MainTab.TabPages.RemoveAt(13);
-            MainTab.TabPages.RemoveAt(12);
-            MainTab.TabPages.RemoveAt(11);
-            MainTab.TabPages.RemoveAt(10);
-
-            MainTab.TabPages.RemoveAt(2);
-            MainTab.TabPages.RemoveAt(1);
-
-
-            BackgroundToolPanel.Visible = true;
-            OceanToolPanel.Visible = false;
-            LandToolPanel.Visible = false;
-            WaterToolPanel.Visible = false;
-            PathToolPanel.Visible = false;
-            SymbolToolPanel.Visible = false;
-            LabelToolPanel.Visible = false;
-            OverlayToolPanel.Visible = false;
-            RegionToolPanel.Visible = false;
-            DrawingToolPanel.Visible = false;
-            InteriorToolPanel.Visible = false;
+            SKGLRenderControl.Refresh();
 
             LogoPictureBox.Hide();
 
@@ -297,11 +230,11 @@ namespace RealmStudio
 
             if (version != null)
             {
-                SPLASH_SCREEN.VersionLabel.Text = string.Concat(RELEASE_STATE + " Version ", version);
+                SPLASH_SCREEN.VersionLabel.Text = string.Concat(ReleaseState + " Version ", version);
             }
             else
             {
-                SPLASH_SCREEN.VersionLabel.Text = RELEASE_STATE + " Version Unknown";
+                SPLASH_SCREEN.VersionLabel.Text = ReleaseState + " Version Unknown";
             }
 
             SPLASH_SCREEN.ShowDialog(this);
@@ -312,24 +245,18 @@ namespace RealmStudio
             }
         }
 
-        private void RealmStudioMainForm_Shown(object sender, EventArgs e)
+        private async void RealmStudioMainForm_Shown(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap != null)
-            {
-                MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
-            }
 
             MainMediator.WorldAnvilIntegrationEnabled = Settings.Default.EnableWAIntegration;
 
             // force the UI to reflect the current World Anvil integration setting
-            MainMediator.EnableDisableWorldAnvilIntegration();
+            //MainMediator.EnableDisableWorldAnvilIntegration();
 
             WorldAnvilMapButton.Visible = false;
             WorldAnvilMapButton.Enabled = false;
 
-            SKGLRenderControl.CreateControl();
-            SKGLRenderControl.Show();
-            SKGLRenderControl.Select();
+            InitializeEditorInfrastructure();   // Create MapScene, Controller, etc.
 
             Cursor = Cursors.WaitCursor;
 
@@ -339,17 +266,14 @@ namespace RealmStudio
 
             Refresh();
 
-            AssetManager.LOADING_STATUS_FORM.Show(this);
-
-            int assetCount = AssetManager.LoadAllAssets();
-
-            AssetManager.LOADING_STATUS_FORM.Hide();
+            await InitializeApplicationAsync();
 
             LogoPictureBox.Hide();
 
-            MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
+            MainMediator.CurrentDrawingMode = MapDrawingMode.None;
+            MainTab.SelectedIndex = 0;
 
-            PopulateControlsWithAssets(assetCount);
+            PopulateControlsWithAssets(_assetManager.AssetCount);
             PopulateFontPanelUI();
             LoadNameGeneratorConfigurationDialog();
 
@@ -374,16 +298,127 @@ namespace RealmStudio
 
             ApplicationTimerManager.StartAutosaveTimer();
 
-            StartLocationUpdateTimer();
+            ApplicationTimerManager.StartLocationUpdateTimer();
 
             if (Settings.Default.AutoCheckForUpdates)
             {
                 ApplicationTimerManager.StartVersionCheckTimer();
             }
 
+            if (_editor?.Scene?.Map != null)
+            {
+                // timer for updating inertia while panning
+                ApplicationTimerManager.InitializeViewportTimer();
+            }
+
             SKGLRenderControl.Invalidate();
 
             Cursor = Cursors.Default;
+        }
+
+        private async Task InitializeApplicationAsync()
+        {
+            AssetManager.LoadingStatusForm.Show(this);
+
+            const int estimatedTotalFiles = 2500;
+
+            var progress = new Progress<AssetLoadProgress>(p =>
+            {
+                int percentage = 0;
+
+                if (estimatedTotalFiles > 0)
+                {
+                    // compute percentage from processed files and clamp to [0,100]
+                    percentage = (int)((double)p.ProcessedFiles / estimatedTotalFiles * 100.0);
+                    if (percentage < 0) percentage = 0;
+                    if (percentage > 100) percentage = 100;
+                }
+
+                AssetManager.LoadingStatusForm.SetStatusPercentage(percentage);
+            });
+
+
+
+            await _assetManager.LoadAsync(progress);
+
+            AssetManager.LoadingStatusForm.Hide();
+
+        }
+
+        private void InitializeEditorInfrastructure()
+        {
+            AssetManager.InitializeAssetDirectories();
+
+            _assetManager = new(_xmlAssetMetadataLoader);
+
+            // make sure the loading status form displays at the center of the main window
+            AssetManager.LoadingStatusForm.Top = Top + (Height / 2) - (AssetManager.LoadingStatusForm.Height / 2);
+            AssetManager.LoadingStatusForm.Left = Left + (Width / 2) - (AssetManager.LoadingStatusForm.Width / 2);
+
+            string assetDirectory = AssetManager.RootAssetDirectory;
+
+            if (string.IsNullOrEmpty(assetDirectory))
+            {
+                Settings.Default.MapAssetDirectory = UtilityMethods.DefaultAssetsFolder;
+                AssetManager.RootAssetDirectory = UtilityMethods.DefaultAssetsFolder;
+            }
+            else
+            {
+                Settings.Default.MapAssetDirectory = assetDirectory;
+            }
+
+            Settings.Default.Save();
+
+            ApplicationTimerManager.SymbolUIMediator = SymbolMediator;
+
+            MapStateMediator.ApplicationTimerManager = ApplicationTimerManager;
+
+            SKGLRenderControl.MouseWheel += SKGLRenderControl_MouseWheel;
+
+            // construct editor controller and inject mediators
+            _editor = new EditorController()
+            {
+                MainMediator = MainMediator,
+                BackgroundMediator = BackgroundMediator,
+                BoxMediator = BoxMediator,
+                CameraMediator = CameraMediator,
+                DrawingMediator = DrawingMediator,
+                FrameMediator = FrameMediator,
+                GridMediator = GridMediator,
+                InteriorMediator = InteriorMediator,
+                LabelMediator = LabelMediator,
+                OceanMediator = OceanMediator,
+                PathMediator = PathMediator,
+                LabelPresetMediator = PresetMediator,
+                LandformMediator = LandformMediator,
+                MeasureMediator = MeasureMediator,
+                ScaleMediator = ScaleMediator,
+                SymbolMediator = SymbolMediator,
+                RegionMediator = RegionMediator,
+                VignetteMediator = VignetteMediator,
+                WaterFeatureMediator = WaterFeatureMediator,
+                WindroseMediator = WindroseMediator,
+                MenuMediator = MenuMediator,
+            };
+
+            _editor.SetViewportSize(new SKSize(SKGLRenderControl.Width, SKGLRenderControl.Height));
+
+            _editor.WireMediatorEvents();
+            _editor.StatusBarUpdated += UpdateStatusBar;
+
+            CreateUserInterfacePresenters();
+
+            // Wire editor to UI
+            _editor.UiStateChanged += ApplyUiState;
+            _editor.RequestRedraw += () => SKGLRenderControl.Invalidate();
+
+            // Wire control input to editor
+            WireSkiaInput();
+        }
+
+        private void UpdateStatusBar(AppStatusBarUiState state)
+        {
+            (new StatusBarPresenter(MapStatusStrip, ApplicationStatusStrip)).Apply(state);
         }
 
         private void OpenOrCreateMapOrMapSet()
@@ -431,6 +466,7 @@ namespace RealmStudio
 
         private void FinalizeOpenedMap()
         {
+            /*
             ArgumentNullException.ThrowIfNull(OceanManager.OceanMediator);
             ArgumentNullException.ThrowIfNull(FrameManager.FrameMediator);
             ArgumentNullException.ThrowIfNull(MapStateMediator.CurrentMap);
@@ -471,12 +507,12 @@ namespace RealmStudio
 
             MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
 
-            if (baseLayer.MapLayerComponents.Count > 0)
+            if (baseLayer.Shapes.Count > 0)
             {
-                BackgroundMediator.Initialize(
-                    BackgroundMediator.BackgroundTextureIndex,
-                    ((MapImage)baseLayer.MapLayerComponents[0]).Scale,
-                    ((MapImage)baseLayer.MapLayerComponents[0]).MirrorImage);
+                //BackgroundMediator.Initialize(
+                //    BackgroundMediator.BackgroundTextureIndex,
+                //    ((MapImage)baseLayer.Shapes[0]).Scale,
+                //    ((MapImage)baseLayer.Shapes[0]).MirrorImage);
             }
 
             // *** INITIALIZE OCEAN ***
@@ -489,98 +525,98 @@ namespace RealmStudio
             MapLayer oceanLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANTEXTURELAYER);
             MapLayer oceanDrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.OCEANDRAWINGLAYER);
 
-            if (oceanLayer.MapLayerComponents.Count > 0)
+            if (oceanLayer.Shapes.Count > 0)
             {
                 int oceanTextureIndex = -1;
 
-                if (string.IsNullOrEmpty(((MapImage)oceanLayer.MapLayerComponents[0]).ImageName) && theme != null && theme.OceanTexture != null)
-                {
-                    // no ocean texture selected; set to theme default
-                    ((MapImage)oceanLayer.MapLayerComponents[0]).ImageName = theme.OceanTexture.TextureName;
-                }
+                //if (string.IsNullOrEmpty(((MapImage)oceanLayer.Shapes[0]).ImageName) && theme != null && theme.OceanTexture != null)
+                //{
+                //    // no ocean texture selected; set to theme default
+                //    ((MapImage)oceanLayer.Shapes[0]).ImageName = theme.OceanTexture.TextureName;
+                //}
 
                 for (int i = 0; i < OceanManager.OceanMediator.OceanTextureList.Count; i++)
                 {
-                    if (OceanManager.OceanMediator.OceanTextureList[i].TextureName == ((MapImage)oceanLayer.MapLayerComponents[0]).ImageName)
+                    if (OceanManager.OceanMediator.OceanTextureList[i].TextureName == ((MapImage)oceanLayer.Shapes[0]).ImageName)
                     {
                         oceanTextureIndex = i;
                         break;
                     }
                 }
 
-                OceanMediator.Initialize(
-                    oceanTextureIndex,
-                    ((MapImage)oceanLayer.MapLayerComponents[0]).ImageName,
-                    ((MapImage)oceanLayer.MapLayerComponents[0]).Scale,
-                    ((MapImage)oceanLayer.MapLayerComponents[0]).Opacity,
-                    ((MapImage)oceanLayer.MapLayerComponents[0]).MirrorImage);
+                //OceanMediator.Initialize(
+                //    oceanTextureIndex,
+                //    ((MapImage)oceanLayer.Shapes[0]).ImageName,
+                //    ((MapImage)oceanLayer.Shapes[0]).Scale,
+                //    ((MapImage)oceanLayer.Shapes[0]).Opacity,
+                //    ((MapImage)oceanLayer.Shapes[0]).MirrorImage);
 
-                OceanManager.ApplyOceanTexture();
+                //OceanManager.ApplyOceanTexture();
             }
 
             // finalize loading of ocean drawing layer
-            for (int i = 0; i < oceanDrawingLayer.MapLayerComponents.Count; i++)
-            {
-                if (oceanDrawingLayer.MapLayerComponents[i] is LayerPaintStroke paintStroke)
-                {
-                    paintStroke.ParentMap = MapStateMediator.CurrentMap;
-
-                    if (!paintStroke.Erase)
-                    {
-                        paintStroke.ShaderPaint = PaintObjects.OceanPaint;
-                    }
-                    else
-                    {
-                        paintStroke.ShaderPaint = PaintObjects.OceanEraserPaint;
-                    }
-                }
-            }
+            //for (int i = 0; i < oceanDrawingLayer.Shapes.Count; i++)
+            //{
+            //    if (oceanDrawingLayer.Shapes[i] is LayerPaintStroke paintStroke)
+            //    {
+            //        paintStroke.ParentMap = MapStateMediator.CurrentMap;
+            //
+            //        if (!paintStroke.Erase)
+            //        {
+            //            paintStroke.ShaderPaint = PaintObjects.OceanPaint;
+            //        }
+            //        else
+            //        {
+            //            paintStroke.ShaderPaint = PaintObjects.OceanEraserPaint;
+            //        }
+            //    }
+            //}
 
 
             // *** INITIALIZE LANDFORMS ***
             // landform texture index and other UI control values come from the selected theme
-            LandformManager.FinalizeLandforms(SKGLRenderControl);
+            //LandformManager.FinalizeLandforms(SKGLRenderControl);
 
             // *** INITIALIZE WATER FEATURES ***
             // water feature UI control values come from the selected theme
-            WaterFeatureManager.FinalizeWaterFeatures();
-            WaterFeatureManager.FinalizeWindroses();
+            //WaterFeatureManager.FinalizeWaterFeatures();
+            //WaterFeatureManager.FinalizeWindroses();
 
             // *** INITIALIZE PATHS ***
             // path UI control values come from the selected theme
-            PathManager.FinalizeMapPaths();
+            //PathManager.FinalizeMapPaths();
 
             // *** INITIALIZE SYMBOLS ***
             // symbol UI control values come from the selected theme
-            SymbolManager.FinalizeMapSymbols();
+            //SymbolManager.FinalizeMapSymbols();
 
             // *** INITIALIZE LABELS AND BOXES ***
             // label UI control values come from the selected theme
-            BoxManager.FinalizeMapBoxes();
+            //BoxManager.FinalizeMapBoxes();
 
             // *** INITIALIZE OVERLAYS ***
             // *** FINALIZE MAP FRAME ***
-            MapStateMediator.CurrentMapFrame = (PlacedMapFrame?)FrameManager.GetComponentById(Guid.Empty);
+            //MapStateMediator.CurrentMapFrame = (PlacedMapFrame?)FrameManager.GetComponentById(Guid.Empty);
 
-            if (MapStateMediator.CurrentMapFrame != null)
-            {
-                FrameManager.FrameMediator.Initialize(MapStateMediator.CurrentMapFrame.FrameScale,
-                    MapStateMediator.CurrentMapFrame.FrameTint,
-                    MapStateMediator.CurrentMapFrame.FrameEnabled);
-            }
+            //if (MapStateMediator.CurrentMapFrame != null)
+            //{
+            //    FrameManager.FrameMediator.Initialize(MapStateMediator.CurrentMapFrame.FrameScale,
+            //        MapStateMediator.CurrentMapFrame.FrameTint,
+            //        MapStateMediator.CurrentMapFrame.FrameEnabled);
+            //}
 
             // *** FINALIZE MAP GRID ***
-            MapGridManager.FinalizeMapGrid();
+            //MapGridManager.FinalizeMapGrid();
 
             // *** FINALIZE MAP REGIONS ***
-            RegionManager.FinalizeMapRegions();
+            //RegionManager.FinalizeMapRegions();
 
             // *** FINALIZE MAP VIGNETTE ***
-            VignetteManager.FinalizeMapVignette();
+            //VignetteManager.FinalizeMapVignette();
 
-            HeightMapManager.ConvertMapImageToMapHeightMap(MapStateMediator.CurrentMap);
+            //HeightMapManager.ConvertMapImageToMapHeightMap(MapStateMediator.CurrentMap);
 
-            SetStatusText("Loaded: " + MapStateMediator.CurrentMap.MapName);
+            //SetStatusText("Loaded: " + MapStateMediator.CurrentMap.MapName);
 
             UpdateMapNameAndSize();
 
@@ -596,6 +632,7 @@ namespace RealmStudio
             {
                 LoadWorldAnvilMapDataForCurrentMap();
             }
+            */
         }
 
         private void RealmStudioMainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -604,7 +641,7 @@ namespace RealmStudio
             ApplicationTimerManager.BrushTimerEnabled = false;
             // stop timers
 
-            StopLocationUpdateTimer();
+            ApplicationTimerManager.StopLocationUpdateTimer();
 
             // save user preferences
             Settings.Default.Save();
@@ -617,7 +654,7 @@ namespace RealmStudio
             NAME_GENERATOR_CONFIG.Close();
 
             // save the map
-            if (MapStateMediator.CurrentMap != null && !MapStateMediator.CurrentMap.IsSaved)
+            if (_editor?.Scene?.Map != null && !_editor.Scene.Map.IsSaved)
             {
                 DialogResult result =
                     MessageBox.Show("The map has not been saved. Do you want to save the map?", "Exit Application", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
@@ -631,22 +668,11 @@ namespace RealmStudio
                         // cancel application shutdown if the user cancels
                         e.Cancel = true;
                     }
-                    else
-                    {
-                        MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
-                    }
                 }
                 else if (result == DialogResult.Cancel)
                 {
                     // cancel application shutdown if the user cancels
                     e.Cancel = true;
-                }
-            }
-            else
-            {
-                if (MapStateMediator.CurrentMap != null)
-                {
-                    MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
                 }
             }
         }
@@ -661,10 +687,10 @@ namespace RealmStudio
 
         private void RealmStudioMainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (LabelManager.CreatingLabel)
-            {
-                return; // do not handle key presses if creating a label
-            }
+            //if (LabelManager.CreatingLabel)
+            //{
+            //    return; // do not handle key presses if creating a label
+            //}
 
             KeyHandler.HandleKey(e.KeyCode);
             e.Handled = true;
@@ -716,38 +742,12 @@ namespace RealmStudio
 
         private void ResetButton_Click(object sender, EventArgs e)
         {
-            MainMediator.DrawingZoom = 1.0F;
-            ZoomLevelTrack.Value = 10;
-
-            MapStateMediator.ScrollPoint = new SKPoint(0, 0);
-            MapStateMediator.DrawingPoint = new SKPoint(0, 0);
-
-            MapRenderHScroll.Value = 0;
-            MapRenderVScroll.Value = 0;
-
-            SKGLRenderControl.Invalidate();
+            _editor.ResetCamera();
         }
 
         private void ZoomToFitButton_Click(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap == null)
-            {
-                return;
-            }
-
-            float horizontalAspect = (float)SKGLRenderControl.Width / MapStateMediator.CurrentMap.MapWidth;
-            float verticalAspect = (float)SKGLRenderControl.Height / MapStateMediator.CurrentMap.MapHeight;
-
-            MainMediator.DrawingZoom = Math.Min(horizontalAspect, verticalAspect);
-            ZoomLevelTrack.Value = Math.Max(1, (int)MainMediator.DrawingZoom);
-
-            MapStateMediator.ScrollPoint = new SKPoint(0, 0);
-            MapStateMediator.DrawingPoint = new SKPoint(0, 0);
-
-            MapRenderHScroll.Value = 0;
-            MapRenderVScroll.Value = 0;
-
-            SKGLRenderControl.Invalidate();
+            _editor.ZoomToFit();
         }
 
         private void WorlAnvilIntegrationButton_Click(object sender, EventArgs e)
@@ -771,8 +771,7 @@ namespace RealmStudio
 
             if (string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiToken) ||
                 string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) ||
-                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId) ||
-                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WorldId))
+                string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId))
             {
                 MessageBox.Show("World Anvil integration parameters are not set. Please set the World Anvil integration parameters before opening the World Anvil Map Integration dialog.", "World Anvil Integration Parameters Not Set", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 return;
@@ -800,7 +799,7 @@ namespace RealmStudio
 
         private void AreaSelectButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.RealmAreaSelect, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.RealmAreaSelect, 0);
         }
 
         private void AreaSelectButton_MouseHover(object sender, EventArgs e)
@@ -863,27 +862,27 @@ namespace RealmStudio
                         {
                             if (LandCustomColorButton1.Text == "")
                             {
-                                LandformMediator.CustomColor1 = selectedColor;
+                                LandformMediator.CustomColor1 = selectedColor.ToSKColor();
                             }
                             else if (LandCustomColorButton2.Text == "")
                             {
-                                LandformMediator.CustomColor2 = selectedColor;
+                                LandformMediator.CustomColor2 = selectedColor.ToSKColor();
                             }
                             else if (LandCustomColorButton3.Text == "")
                             {
-                                LandformMediator.CustomColor3 = selectedColor;
+                                LandformMediator.CustomColor3 = selectedColor.ToSKColor();
                             }
                             else if (LandCustomColorButton4.Text == "")
                             {
-                                LandformMediator.CustomColor4 = selectedColor;
+                                LandformMediator.CustomColor4 = selectedColor.ToSKColor();
                             }
                             else if (LandCustomColorButton5.Text == "")
                             {
-                                LandformMediator.CustomColor5 = selectedColor;
+                                LandformMediator.CustomColor5 = selectedColor.ToSKColor();
                             }
                             else if (LandCustomColorButton6.Text == "")
                             {
-                                LandformMediator.CustomColor6 = selectedColor;
+                                LandformMediator.CustomColor6 = selectedColor.ToSKColor();
                             }
                         }
                     }
@@ -940,7 +939,7 @@ namespace RealmStudio
 
         private void SelectColorButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.ColorSelect, 0);
+            MainMediator.CurrentDrawingMode = MapDrawingMode.ColorSelect;
         }
 
         private void SelectColorButton_MouseHover(object sender, EventArgs e)
@@ -950,7 +949,16 @@ namespace RealmStudio
 
         private void ZoomLevelTrack_Scroll(object sender, EventArgs e)
         {
-            MainMediator.DrawingZoom = ZoomLevelTrack.Value / 10.0F;
+            float zoom = ZoomLevelTrack.Value / 100f;
+
+            var center = new SKPoint(
+                SKGLRenderControl.Width / 2f,
+                SKGLRenderControl.Height / 2f);
+
+            _editor.ZoomAtScreenPoint(zoom, center);
+
+            UpdateScrollbars();
+
             SKGLRenderControl.Invalidate();
         }
 
@@ -960,14 +968,14 @@ namespace RealmStudio
             {
                 string selectedName = ngc.SelectedName;
 
-                if (LabelManager.CreatingLabel && !string.IsNullOrEmpty(selectedName))
-                {
-                    if (LabelManager.LabelTextBox != null && !LabelManager.LabelTextBox.IsDisposed)
-                    {
-                        LabelManager.LabelTextBox.Text = selectedName;
-                        LabelManager.LabelTextBox.Refresh();
-                    }
-                }
+                //if (LabelManager.CreatingLabel && !string.IsNullOrEmpty(selectedName))
+                //{
+                //    if (LabelManager.LabelTextBox != null && !LabelManager.LabelTextBox.IsDisposed)
+                //    {
+                //        LabelManager.LabelTextBox.Text = selectedName;
+                //        LabelManager.LabelTextBox.Refresh();
+                //    }
+                //}
             }
         }
 
@@ -982,25 +990,25 @@ namespace RealmStudio
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap == null || MapStateMediator.CurrentMap.IsSaved)
+            if (_editor?.Scene?.Map == null || _editor.Scene.Map.IsSaved)
             {
                 return;
             }
 
-            if (!string.IsNullOrEmpty(MapStateMediator.CurrentMap.MapPath))
+            if (!string.IsNullOrEmpty(_editor.Scene.Map.MapPath))
             {
                 try
                 {
-                    MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).MapLayerComponents.Clear();
+                    //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).RemoveAllShapes();
 
                     // serialize the map to disk as an XML file
-                    MapFileMethods.SaveMap(MapStateMediator.CurrentMap);
-                    MapStateMediator.CurrentMap.IsSaved = true;
+                    //MapFileMethods.SaveMap(MapStateMediator.CurrentMap);
+                    //MapStateMediator.CurrentMap.IsSaved = true;
 
                     if (Settings.Default.PlaySoundOnSave)
                     {
                         UtilityMethods.PlaySaveSound();
-                        SetStatusText("Realm " + Path.GetFileNameWithoutExtension(MapStateMediator.CurrentMap.MapPath) + " has been saved.");
+                        SetStatusText("Realm " + Path.GetFileNameWithoutExtension(_editor.Scene.Map.MapPath) + " has been saved.");
                     }
                 }
                 catch (Exception ex)
@@ -1022,7 +1030,7 @@ namespace RealmStudio
 
         private void ExportMapMenuItem_Click(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene?.Map == null)
             {
                 return;
             }
@@ -1090,30 +1098,30 @@ namespace RealmStudio
                     ExportHeightMap(exportFormat);
                     break;
                 case RealmExportType.HeightMap3DModel:
-                    HeightMapManager.ExportHeightMap3DModel(MapStateMediator.CurrentMap);
+                    //HeightMapManager.ExportHeightMap3DModel(_editor.Scene.Map);
                     break;
             }
         }
 
         private void PrintToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
 
-            PrintPreview printPreview = new(MapStateMediator.CurrentMap);
+            PrintPreview printPreview = new(_editor.Scene.Map);
             printPreview.ShowDialog();
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
 
-            if (!MapStateMediator.CurrentMap.IsSaved)
+            if (!_editor.Scene.Map.IsSaved)
             {
                 DialogResult result =
                     MessageBox.Show("The map has not been saved. Do you want to save the map?", "Exit Application", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
@@ -1125,57 +1133,49 @@ namespace RealmStudio
                     if (saveResult == DialogResult.OK)
                     {
                         Close();
-                        MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
                         Application.Exit();
                     }
                 }
                 else if (result == DialogResult.No)
                 {
-                    MapStateMediator.CurrentMap.IsSaved = true;
+                    //MapStateMediator.CurrentMap.IsSaved = true;
                     Close();
-                    MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
                     Application.Exit();
                 }
-            }
-            else
-            {
-                Close();
-                MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
-                Application.Exit();
             }
         }
 
         private void UndoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CommandManager.Undo();
+            _editor.Commands.Undo();
             SKGLRenderControl.Invalidate();
         }
 
         private void RedoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CommandManager.Redo();
+            _editor.Commands.Redo();
             SKGLRenderControl.Invalidate();
         }
 
         private void CutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
 
-            if (MapStateMediator.SelectedRealmArea != SKRect.Empty)
-            {
-                // get all objects within the selected area and cut them
+            //if (MapStateMediator.SelectedRealmArea != SKRect.Empty)
+            //{
+            // get all objects within the selected area and cut them
 
-                // the object that is cut/copied must lie completely within the selected area
-                // if it is not a "point" object (e.g. a symbol)
+            // the object that is cut/copied must lie completely within the selected area
+            // if it is not a "point" object (e.g. a symbol)
 
-                CutCopyPasteManager.SelectedMapComponents = RealmMapMethods.SelectMapComponentsInArea(MapStateMediator.CurrentMap, MapStateMediator.SelectedRealmArea);
-                CutCopyPasteManager.CutSelectedComponents();
+            //CutCopyPasteManager.SelectedMapComponents = RealmMapMethods.SelectMapComponentsInArea(MapStateMediator.CurrentMap, MapStateMediator.SelectedRealmArea);
+            //CutCopyPasteManager.CutSelectedComponents();
 
-                SKGLRenderControl.Invalidate();
-            }
+            //SKGLRenderControl.Invalidate();
+            //}
         }
 
         private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1189,8 +1189,7 @@ namespace RealmStudio
             // if the list of copied items is not empty
             // then paste them at the cursor point, updating their position
             Point cursorPosition = SKGLRenderControl.PointToClient(Cursor.Position);
-            SKPoint zoomedScrolledPoint = new((cursorPosition.X / MainMediator.DrawingZoom) + MapStateMediator.DrawingPoint.X,
-                (cursorPosition.Y / MainMediator.DrawingZoom) + MapStateMediator.DrawingPoint.Y);
+            SKPoint? zoomedScrolledPoint = _editor.Scene?.Camera.DrawingPoint;
 
             CutCopyPasteManager.PasteSelectedComponentsAtPoint(zoomedScrolledPoint);
             SKGLRenderControl.Invalidate();
@@ -1204,7 +1203,8 @@ namespace RealmStudio
 
         private void ThemeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap == null)
+            /*
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
@@ -1231,36 +1231,38 @@ namespace RealmStudio
                     AssetManager.CURRENT_THEME = selectedTheme;
                     ThemeFilter themeFilter = themeList.GetThemeFilter();
                     ThemeManager.ApplyTheme(selectedTheme, themeFilter);
-                    MapStateMediator.CurrentMap.MapTheme = AssetManager.CURRENT_THEME.ThemeName;
+                    _editor.Scene.Map.MapTheme = AssetManager.CURRENT_THEME.ThemeName;
                 }
             }
+            */
         }
 
         private void MapPropertiesMenuItem_Click(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
 
-            RealmProperties propertiesDialog = new(MapStateMediator.CurrentMap);
-            DialogResult result = propertiesDialog.ShowDialog();
+            //RealmProperties propertiesDialog = new(MapStateMediator.CurrentMap);
+            //DialogResult result = propertiesDialog.ShowDialog();
 
-            if (result == DialogResult.OK)
+            //if (result == DialogResult.OK)
             {
-                MapStateMediator.CurrentMap.MapName = propertiesDialog.NameTextbox.Text;
-                UpdateMapNameAndSize();
+                //MapStateMediator.CurrentMap.MapName = propertiesDialog.NameTextbox.Text;
+                //UpdateMapNameAndSize();
             }
         }
 
         private void ChangeMapSizeMenuItem_Click(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
 
-            if (!MapStateMediator.CurrentMap.IsSaved)
+
+            if (!_editor.Scene.Map.IsSaved)
             {
                 DialogResult result =
                     MessageBox.Show("The map has not been saved. Do you want to save the map?", "Save Map", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
@@ -1280,11 +1282,12 @@ namespace RealmStudio
                 }
             }
 
-            RealmStudioMap? resizedMap = RealmMapMethods.CreateResizedMap(this, MapStateMediator.CurrentMap);
+
+            /*
+            RealmStudioMap? resizedMap = RealmMapMethods.CreateResizedMap(this, _editor.Scene.Map);
 
             if (resizedMap != null)
             {
-                MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
                 MapStateMediator.CurrentMap = resizedMap;
 
                 MapRenderHScroll.Maximum = MapStateMediator.CurrentMap.MapWidth;
@@ -1299,16 +1302,18 @@ namespace RealmStudio
 
                 SKGLRenderControl.Invalidate();
             }
+            */
         }
 
         private void CreateDetailMapMenuItem_Click(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
 
-            if (!MapStateMediator.CurrentMap.IsSaved)
+
+            if (!_editor.Scene.Map.IsSaved)
             {
                 DialogResult result =
                     MessageBox.Show("The map has not been saved. Do you want to save the map?", "Save Map", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
@@ -1328,11 +1333,12 @@ namespace RealmStudio
                 }
             }
 
-            RealmStudioMap? detailMap = RealmMapMethods.CreateDetailMap(this, MapStateMediator.CurrentMap, MapStateMediator.SelectedRealmArea);
+
+            /*
+            RealmStudioMap? detailMap = RealmMapMethods.CreateDetailMap(this, _editor.Scene.Map, MapStateMediator.SelectedRealmArea);
 
             if (detailMap != null)
             {
-                MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
                 MapStateMediator.CurrentMap = detailMap;
 
                 MapRenderHScroll.Maximum = MapStateMediator.CurrentMap.MapWidth;
@@ -1343,19 +1349,21 @@ namespace RealmStudio
 
                 UpdateMapNameAndSize();
 
-                DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(_editor.Scene.Map, MapBuilder.DRAWINGLAYER);
 
                 SKGLRenderControl.Invalidate();
             }
+            */
         }
 
         private void TraceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
 
+            /*
             try
             {
                 OpenFileDialog ofd = new()
@@ -1371,6 +1379,7 @@ namespace RealmStudio
 
                 if (ofd.ShowDialog(this) == DialogResult.OK)
                 {
+
                     if (ofd.FileName != "")
                     {
                         try
@@ -1393,16 +1402,18 @@ namespace RealmStudio
                                     //landformPath.Transform(SKMatrix.CreateScale((float)MapStateMediator.CurrentMap.MapWidth / b.Width, (float)MapStateMediator.CurrentMap.MapHeight / b.Height));
                                 }
 
-                                Landform? landform = LandformManager.CreateNewLandform(MapStateMediator.CurrentMap, landformPath, MapStateMediator.SelectedRealmArea);
+                                //Landform? landform = LandformManager.CreateNewLandform(MapStateMediator.CurrentMap, landformPath, MapStateMediator.SelectedRealmArea);
 
+                                
                                 if (landform != null)
                                 {
-                                    landformLayer.MapLayerComponents.Add(landform);
+                                    //landformLayer.AddShape(landform);
                                 }
                                 else
                                 {
                                     MessageBox.Show("Failed to trace map outline from " + ofd.FileName, "Map Trace Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                                 }
+                                
                             }
                             else
                             {
@@ -1418,43 +1429,30 @@ namespace RealmStudio
                         SKGLRenderControl.Invalidate();
                     }
                 }
+
             }
             catch { }
+            */
         }
 
         private void RenderAsHeightMapMenuItem_CheckedChanged(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
 
             if (RenderAsHeightMapMenuItem.Checked)
             {
-                MainMediator.SetDrawingMode(MapDrawingMode.HeightMapPaint, 0);
-
-                // if needed, render landforms to height map layer as a map image
-                // and add a mapheightmap to the height map layer to hold the height map;
-                // as the user paints on the map, the height map image will be updated
-
-                RealmMapMethods.AddMapImagesToHeightMapLayer(MapStateMediator.CurrentMap);
-
-                // force maintab selected index change
-                MainTab.SelectedIndex = 2;  // select landform tab
-                MainTab.SelectedIndex = 0;
-                MainTab.SelectedIndex = 2;  // select landform tab
-                MainTab.Refresh();
+                //MainMediator.SetDrawingMode(MapDrawingMode.HeightMapPaint, 0);
             }
             else
             {
-                MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
-
-                // force maintab selected index change
-                MainTab.SelectedIndex = 2;  // select landform tab
-                MainTab.SelectedIndex = 0;
-                MainTab.SelectedIndex = 2;  // select landform tab
-                MainTab.Refresh();
+                //MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
             }
+
+            MenuMediator.RenderAsHeightMap = RenderAsHeightMapMenuItem.Checked;
+            //ApplyUiState();
 
             SKGLRenderControl.Invalidate();
         }
@@ -1484,6 +1482,7 @@ namespace RealmStudio
 
         private void ReloadAllAssetsMenuItem_Click(object sender, EventArgs e)
         {
+            /*
             Cursor = Cursors.WaitCursor;
 
             AssetManager.LOADING_STATUS_FORM.ResetLoadingProgress();
@@ -1497,6 +1496,7 @@ namespace RealmStudio
             AssetManager.LOADING_STATUS_FORM.Hide();
 
             Cursor = Cursors.Default;
+            */
         }
 
         private void PreferencesMenuItem_Click(object sender, EventArgs e)
@@ -1536,11 +1536,11 @@ namespace RealmStudio
 
             if (!string.IsNullOrEmpty(version))
             {
-                aboutRealmStudio.RealmStudioVersionLabel.Text = string.Concat(RELEASE_STATE + " Version ", version);
+                aboutRealmStudio.RealmStudioVersionLabel.Text = string.Concat(ReleaseState + " Version ", version);
             }
             else
             {
-                aboutRealmStudio.RealmStudioVersionLabel.Text = RELEASE_STATE + " Version Unknown";
+                aboutRealmStudio.RealmStudioVersionLabel.Text = ReleaseState + " Version Unknown";
             }
 
             aboutRealmStudio.ShowDialog();
@@ -1573,44 +1573,8 @@ namespace RealmStudio
          * MAIN FORM METHODS
          *******************************************************************************************************/
 
-        private void PanMap(MouseEventArgs e)
-        {
-            if (MapStateMediator.CurrentMap == null)
-            {
-                return;
-            }
-
-            // pan the map when middle button (mouse wheel) is held down and dragged
-            if (MapStateMediator.PreviousMouseLocation == SKPoint.Empty)
-            {
-                MapStateMediator.PreviousMouseLocation = e.Location.ToSKPoint();
-            }
-
-            int xDelta = (int)(e.Location.X - MapStateMediator.PreviousMouseLocation.X);
-            int yDelta = (int)(e.Location.Y - MapStateMediator.PreviousMouseLocation.Y);
-
-            SKPoint scrollPoint = MapStateMediator.ScrollPoint;
-            SKPoint drawPoint = MapStateMediator.DrawingPoint;
-
-            scrollPoint.X += xDelta;
-            scrollPoint.Y += yDelta;
-
-            drawPoint.X += -xDelta;
-            drawPoint.Y += -yDelta;
-
-            MapStateMediator.ScrollPoint = scrollPoint;
-            MapStateMediator.DrawingPoint = drawPoint;
-
-            MapRenderHScroll.Value = Math.Max(0, Math.Min((int)MapStateMediator.DrawingPoint.X, MapStateMediator.CurrentMap.MapWidth));
-            MapRenderVScroll.Value = Math.Max(0, Math.Min((int)MapStateMediator.DrawingPoint.Y, MapStateMediator.CurrentMap.MapHeight));
-
-            MapStateMediator.PreviousMouseLocation = e.Location.ToSKPoint();
-        }
-
         private void CreateNewMap(RealmStudioMapRoot mapRoot)
         {
-            ArgumentNullException.ThrowIfNull(FrameManager.FrameMediator);
-            ArgumentNullException.ThrowIfNull(OceanManager.OceanMediator);
 
             // create new map
             try
@@ -1621,24 +1585,29 @@ namespace RealmStudio
 
                 try
                 {
-                    MapStateMediator.CurrentMap = new(mapRoot);
-
-                    if (MapStateMediator.CurrentMap != null)
+                    RealmStudioMap map = new()
                     {
-                        SKImageInfo imageInfo = new(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
+                        MapName = mapRoot.MapName,
+                        MapPath = mapRoot.MapPath,
+                        MapWidth = mapRoot.MapWidth,
+                        MapHeight = mapRoot.MapHeight,
+                        MapAreaWidth = mapRoot.MapAreaWidth,
+                        MapAreaHeight = mapRoot.MapAreaHeight,
+                        RealmType = mapRoot.RealmType,
+                        MapTheme = mapRoot.MapTheme,
+                    };
 
-                        if (MapStateMediator.CurrentMap.MapLayers.Count < MapBuilder.MAP_LAYER_COUNT)
+                    MapBuilder.CreateMapLayersForMap(map);
+
+                    MapScene scene = new(map);
+
+                    _editor.OpenScene(scene);
+
+                    if (_editor.Scene != null && _editor.Scene?.Map != null)
+                    {
+
+                        foreach (MapLayer ml in map.MapLayers)
                         {
-                            if (MapStateMediator.CurrentMap.MapLayers.Count < MapBuilder.MAP_LAYER_COUNT)
-                            {
-                                MapBuilder.ConstructMissingLayersForMap(MapStateMediator.CurrentMap, SKGLRenderControl.GRContext);
-                            }
-                        }
-
-                        foreach (MapLayer ml in MapStateMediator.CurrentMap.MapLayers)
-                        {
-                            ml.LayerSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, false, imageInfo);
-
                             if (LayerListBox.Items.Contains(ml.MapLayerName.ToUpperInvariant()))
                             {
                                 // layer is drawable
@@ -1650,8 +1619,6 @@ namespace RealmStudio
                                 ml.Drawable = false;
                             }
                         }
-
-                        DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
                     }
                 }
                 catch (Exception ex)
@@ -1660,22 +1627,45 @@ namespace RealmStudio
                     throw;
                 }
 
-                FinalizeOpenedMap();
-
                 SKGLRenderControl.Invalidate();
             }
             catch
             {
                 MessageBox.Show("An error has occurred while creating the map.", "Error Creating Map", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
-                MapStateMediator.CurrentMap = MapBuilder.CreateMap("", "DEFAULT", MapBuilder.MAP_DEFAULT_WIDTH, MapBuilder.MAP_DEFAULT_HEIGHT, SKGLRenderControl.GRContext);
+                RealmStudioMap map = new()
+                {
+                    MapName = "DEFAULT",
+                    MapPath = "",
+                    MapWidth = MapBuilder.MAP_DEFAULT_WIDTH,
+                    MapHeight = MapBuilder.MAP_DEFAULT_HEIGHT,
+                    RealmType = RealmMapType.World,
+                    MapTheme = mapRoot.MapTheme,
+                };
 
-                VignetteManager.Delete();
-                VignetteManager.Create();
+                MapBuilder.CreateMapLayersForMap(map);
 
-                MapStateMediator.CurrentMap.IsSaved = false;
+                MapScene scene = new(map);
 
-                DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                _editor.OpenScene(scene);
+
+                if (_editor.Scene != null && _editor.Scene?.Map != null)
+                {
+
+                    foreach (MapLayer ml in map.MapLayers)
+                    {
+                        if (LayerListBox.Items.Contains(ml.MapLayerName.ToUpperInvariant()))
+                        {
+                            // layer is drawable
+                            ml.Drawable = true;
+                        }
+                        else
+                        {
+                            // layer is not drawable
+                            ml.Drawable = false;
+                        }
+                    }
+                }
 
                 throw;
             }
@@ -1730,7 +1720,7 @@ namespace RealmStudio
 
                 initialSetMap.MapAreaUnits = mapSet.DefaultMapAreaUnits;
 
-                initialSetMap.MapTheme = mapSet.DefaultThemeName != null ? mapSet.DefaultThemeName : AssetManager.CURRENT_THEME != null ? AssetManager.CURRENT_THEME.ThemeName : AssetManager.DEFAULT_THEME_NAME;
+                //initialSetMap.MapTheme = mapSet.DefaultThemeName != null ? mapSet.DefaultThemeName : AssetManager.CURRENT_THEME != null ? AssetManager.CURRENT_THEME.ThemeName : AssetManager.DEFAULT_THEME_NAME;
 
                 switch (mapSet.MapSetType)
                 {
@@ -1773,12 +1763,12 @@ namespace RealmStudio
                 // CreateNewMap creates the MapLayer and assigns it as MapStateMediator.CurrentMap
                 CreateNewMap(initialSetMap);
 
-                if (MapStateMediator.CurrentMap == null)
+                if (_editor.Scene?.Map == null)
                 {
                     throw new Exception("Failed to create initial map for map set.");
                 }
 
-                MapStateMediator.CurrentMap.IsSaved = false;
+                //MapStateMediator.CurrentMap.IsSaved = false;
 
                 // serialize the map
                 SaveMap();
@@ -1786,10 +1776,10 @@ namespace RealmStudio
                 // serialize the map set                
                 MapFileMethods.SaveMapSet(mapSet);
 
-                MapStateMediator.CurrentMapSet = mapSet;
+                //MapStateMediator.CurrentMapSet = mapSet;
 
-                RealmSetComboBox.Items.Clear();
-                RealmSetComboBox.Items.Add(MapStateMediator.CurrentMap.MapName);
+                //RealmSetComboBox.Items.Clear();
+                //RealmSetComboBox.Items.Add(MapStateMediator.CurrentMap.MapName);
             }
             catch (Exception ex)
             {
@@ -1797,300 +1787,147 @@ namespace RealmStudio
             }
         }
 
-        private void StartLocationUpdateTimer()
+
+        private void ApplyUiState(UserInterfaceState state)
         {
-            // stop the location update timer if it is running
-            StopLocationUpdateTimer();
+            if (state == null) return;
 
-            // start the location update timer
-            LOCATION_UPDATE_TIMER = new System.Timers.Timer
-            {
-                Interval = 50,
-                AutoReset = true,
-                SynchronizingObject = this,
-            };
-
-            LOCATION_UPDATE_TIMER.Elapsed += new ElapsedEventHandler(LocationUpdateTimerEventHandler);
-            LOCATION_UPDATE_TIMER.Start();
+            // call apply on UI presenters to update the UI (while Changed events are suspended to avoid UI churn)
+            TabPresenter.Apply(state.MainTabUiState);
         }
 
-        private void LocationUpdateTimerEventHandler(object? sender, ElapsedEventArgs e)
-        {
-            UpdateDrawingPointLabel();
-        }
-
-        private static void StopLocationUpdateTimer()
-        {
-            LOCATION_UPDATE_TIMER?.Stop();
-            LOCATION_UPDATE_TIMER?.Dispose();
-            LOCATION_UPDATE_TIMER = null;
-        }
 
         private void MainTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             // clear the drawing mode (and uncheck all drawing, paint, and erase buttons) when switching tabs
-            MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
 
-            BackgroundToolPanel.Visible = true;
-            OceanToolPanel.Visible = false;
-            LandToolPanel.Visible = false;
-            WaterToolPanel.Visible = false;
-            PathToolPanel.Visible = false;
-            SymbolToolPanel.Visible = false;
-            LabelToolPanel.Visible = false;
-            OverlayToolPanel.Visible = false;
-            RegionToolPanel.Visible = false;
-            DrawingToolPanel.Visible = false;
-            HeightMapToolsPanel.Visible = false;
-            DungeonToolPanel.Visible = false;
-            InteriorToolPanel.Visible = false;
-            PlanetToolPanel.Visible = false;
-            ShipToolPanel.Visible = false;
+            using (new MediatorUpdateScope(MainMediator))
+            {
+                MainMediator.CurrentDrawingMode = MapDrawingMode.None;
+                MainMediator.ActiveTab = TabFromTabPage(MainTab.SelectedTab);
+            }
 
-            if (MapStateMediator.CurrentMap == null)
+            //MainTab.Invalidate();
+        }
+
+        private static EditorTab TabFromTabPage(TabPage? tab)
+        {
+            return tab?.Name switch
+            {
+                "BackgroundTab" => EditorTab.Background,
+                "OceanTab" => EditorTab.Ocean,
+                "LandTab" => EditorTab.Land,
+                "WaterTab" => EditorTab.Water,
+                "PathTab" => EditorTab.Paths,
+                "SymbolTab" => EditorTab.Symbols,
+                "LabelTab" => EditorTab.Labels,
+                "OverlayTab" => EditorTab.Overlays,
+                "RegionTab" => EditorTab.Regions,
+                "DrawingTab" => EditorTab.Drawing,
+                "InteriorTab" => EditorTab.Interior,
+                "DungeonTab" => EditorTab.Dungeon,
+                "ShipTab" => EditorTab.Ship,
+                "PlanetTab" => EditorTab.Planet,
+                _ => EditorTab.None
+            };
+        }
+
+        private void UpdateScrollbars()
+        {
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
 
-            switch (MapStateMediator.CurrentMap.RealmType)
-            {
-                case RealmMapType.World:
-                case RealmMapType.Region:
-                case RealmMapType.City:
-                case RealmMapType.Other:
-                    {
-                        switch (MainTab.SelectedIndex)
-                        {
-                            case 0:
-                                BackgroundToolPanel.Visible = true;
-                                BackgroundMediator.NotifyUpdate(null);
-                                break;
-                            case 1:
-                                OceanToolPanel.Visible = true;
-                                OceanMediator.NotifyUpdate(null);
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                            case 2:
-                                BackgroundToolPanel.Visible = false;
-                                LandformMediator.NotifyUpdate(null);
+            int viewW = SKGLRenderControl.Width;
+            int viewH = SKGLRenderControl.Height;
 
-                                if (RenderAsHeightMapMenuItem.Checked)
-                                {
-                                    MainMediator.SetDrawingMode(MapDrawingMode.HeightMapPaint, 0);
+            MapRenderHScroll.Minimum = 0;
+            MapRenderHScroll.Maximum = _editor.Scene.Map.MapWidth;
+            MapRenderHScroll.LargeChange = (int)viewW;
 
-                                    LandToolPanel.Visible = false;
-                                    LandToolStrip.Visible = false;
-                                    BackgroundToolPanel.Visible = true;
-                                    HeightMapToolsPanel.Visible = true;
-                                }
-                                else
-                                {
-                                    LandToolPanel.Visible = true;
-                                    LandToolStrip.Visible = true;
-                                    BackgroundToolPanel.Visible = false;
-                                    HeightMapToolsPanel.Visible = false;
-                                }
-                                break;
-                            case 3:
-                                WaterToolPanel.Visible = true;
-                                WaterFeatureMediator.NotifyUpdate(null);
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                            case 4:
-                                PathToolPanel.Visible = true;
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                            case 5:
-                                SymbolToolPanel.Visible = true;
-                                SymbolMediator.NotifyUpdate(null);
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                            case 6:
-                                LabelToolPanel.Visible = true;
-                                LabelMediator.NotifyUpdate(null);
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                            case 7:
-                                OverlayToolPanel.Visible = true;
-                                FrameMediator.NotifyUpdate(null);
-                                GridMediator.NotifyUpdate(null);
-                                ScaleMediator.NotifyUpdate(null);
-                                MeasureMediator.NotifyUpdate(null);
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                            case 8:
-                                RegionToolPanel.Visible = true;
-                                RegionMediator.NotifyUpdate(null);
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                            case 9:
-                                DrawingToolPanel.Visible = true;
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                        }
+            MapRenderVScroll.Minimum = 0;
+            MapRenderVScroll.Maximum = _editor.Scene.Map.MapHeight;
+            MapRenderVScroll.LargeChange = (int)viewH;
 
-                    }
-                    break;
+            MapRenderHScroll.Value = Math.Max(
+                MapRenderHScroll.Minimum,
+                Math.Min(MapRenderHScroll.Maximum,
+                    (int)(-_editor.Scene.Camera.Pan.X / _editor.Scene.Camera.Zoom))
+            );
 
-                case RealmMapType.DungeonLevel:
-                case RealmMapType.InteriorFloor:
-                case RealmMapType.ShipDeck:
-                case RealmMapType.SolarSystemBody:
-                    {
-                        switch (MainTab.SelectedIndex)
-                        {
-                            case 0:
-                                BackgroundToolPanel.Visible = true;
-                                BackgroundMediator.NotifyUpdate(null);
-                                break;
-                            case 1:
-                                WaterToolPanel.Visible = true;
-                                WaterFeatureMediator.NotifyUpdate(null);
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                            case 2:
-                                switch (MapStateMediator.CurrentMap.RealmType)
-                                {
-                                    case RealmMapType.DungeonLevel:
-                                        DungeonToolPanel.Visible = true;
-                                        //DungeonMediator.NotifyUpdate(null);
-                                        break;
-                                    case RealmMapType.InteriorFloor:
-                                        InteriorToolPanel.Visible = true;
-                                        InteriorMediator.NotifyUpdate(null);
-                                        break;
-                                    case RealmMapType.SolarSystemBody:
-                                        PlanetToolPanel.Visible = true;
-                                        //SolarSystemMediator.NotifyUpdate(null);
-                                        break;
-                                    case RealmMapType.ShipDeck:
-                                        ShipToolPanel.Visible = true;
-                                        //ShipMediator.NotifyUpdate(null);
-                                        break;
-                                    default:
-
-                                        break;
-                                }
-
-                                BackgroundToolPanel.Visible = false;
-                                LandToolPanel.Visible = false;
-                                LandToolStrip.Visible = false;
-                                BackgroundToolPanel.Visible = false;
-                                HeightMapToolsPanel.Visible = false;
-                                break;
-                            case 3:
-                                PathToolPanel.Visible = true;
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                            case 4:
-                                SymbolToolPanel.Visible = true;
-                                SymbolMediator.NotifyUpdate(null);
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                            case 5:
-                                LabelToolPanel.Visible = true;
-                                LabelMediator.NotifyUpdate(null);
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                            case 6:
-                                OverlayToolPanel.Visible = true;
-                                FrameMediator.NotifyUpdate(null);
-                                GridMediator.NotifyUpdate(null);
-                                ScaleMediator.NotifyUpdate(null);
-                                MeasureMediator.NotifyUpdate(null);
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                            case 7:
-                                RegionToolPanel.Visible = true;
-                                RegionMediator.NotifyUpdate(null);
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                            case 8:
-                                DrawingToolPanel.Visible = true;
-                                BackgroundToolPanel.Visible = false;
-                                break;
-                        }
-                    }
-
-                    break;
-                default:
-
-                    break;
-            }
-
-            MainTab.Invalidate();
-        }
-
-        private void SetZoomLevel(int upDown)
-        {
-            MainMediator.ChangeDrawingZoom(upDown);
+            MapRenderVScroll.Value = Math.Max(
+                MapRenderVScroll.Minimum,
+                Math.Min(MapRenderVScroll.Maximum,
+                    (int)(-_editor.Scene.Camera.Pan.Y / _editor.Scene.Camera.Zoom))
+            );
         }
 
         private void PopulateControlsWithAssets(int assetCount)
         {
             SetStatusText("Loaded: " + assetCount + " assets.");
 
-            CoastlineStyleList.SelectedIndex = 6;  // default is dash pattern
+            //CoastlineStyleList.SelectedIndex = 6;  // default is dash pattern
 
             // symbol collections
-            SymbolCollectionsListBox.Items.Clear();
-            foreach (MapSymbolCollection collection in AssetManager.MAP_SYMBOL_COLLECTIONS)
-            {
-                SymbolCollectionsListBox.Items.Add(collection.GetCollectionName());
-            }
+            //SymbolCollectionsListBox.Items.Clear();
+            //foreach (MapSymbolCollection collection in AssetManager.MAP_SYMBOL_COLLECTIONS)
+            //{
+            //    SymbolCollectionsListBox.Items.Add(collection.GetCollectionName());
+            //}
 
             // symbol tags
-            SymbolTagsListBox.Items.Clear();
-            foreach (string tag in AssetManager.SYMBOL_TAGS)
-            {
-                SymbolTagsListBox.Items.Add(tag);
-            }
+            //SymbolTagsListBox.Items.Clear();
+            //foreach (string tag in AssetManager.SYMBOL_TAGS)
+            //{
+            //    SymbolTagsListBox.Items.Add(tag);
+            //}
 
-            PresetMediator.AddLabelPresets();
+            //PresetMediator.AddLabelPresets();
 
-            BoxMediator.AddMapBoxesToLabelBoxTable(AssetManager.MAP_BOX_LIST);
+            //BoxMediator.AddMapBoxesToLabelBoxTable(AssetManager.MAP_BOX_LIST);
 
-            FrameMediator.AddMapFramesToFrameTable(AssetManager.MAP_FRAME_TEXTURES);
+            //FrameMediator.AddMapFramesToFrameTable(AssetManager.MAP_FRAME_TEXTURES);
 
             // apply default theme in main form
-            if (AssetManager.CURRENT_THEME != null)
-            {
-                ThemeFilter tf = new();
-                ThemeManager.ApplyTheme(AssetManager.CURRENT_THEME, tf);
-            }
+            //if (AssetManager.CURRENT_THEME != null)
+            //{
+            //    ThemeFilter tf = new();
+            //    ThemeManager.ApplyTheme(AssetManager.CURRENT_THEME, tf);
+            //}
 
             // background texture
-            BackgroundTextureBox.Image = BackgroundMediator.BackgroundTextureList[BackgroundMediator.BackgroundTextureIndex].TextureBitmap;
-            BackgroundTextureNameLabel.Text = BackgroundMediator.BackgroundTextureList[BackgroundMediator.BackgroundTextureIndex].TextureName;
+            //BackgroundTextureBox.Image = BackgroundMediator.BackgroundTextureList[BackgroundMediator.BackgroundTextureIndex].TextureBitmap;
+            //BackgroundTextureNameLabel.Text = BackgroundMediator.BackgroundTextureList[BackgroundMediator.BackgroundTextureIndex].TextureName;
 
             // landform texture
-            LandformTexturePreviewPicture.Image = LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TextureBitmap;
-            LandTextureNameLabel.Text = LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TextureName;
+            //LandformTexturePreviewPicture.Image = LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TextureBitmap;
+            //LandTextureNameLabel.Text = LandformMediator.LandTextureList[LandformMediator.LandformTextureIndex].TextureName;
 
             // ocean texture
-            OceanTextureBox.Image = OceanMediator.OceanTextureList[OceanMediator.OceanTextureIndex].TextureBitmap;
-            OceanTextureNameLabel.Text = OceanMediator.OceanTextureList[OceanMediator.OceanTextureIndex].TextureName;
+            //OceanTextureBox.Image = OceanMediator.OceanTextureList[OceanMediator.OceanTextureIndex].TextureBitmap;
+            //OceanTextureNameLabel.Text = OceanMediator.OceanTextureList[OceanMediator.OceanTextureIndex].TextureName;
 
             // path texture
-            if (PathMediator.PathTextureList.First().TextureBitmap == null)
-            {
-                PathMediator.PathTextureList.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(PathMediator.PathTextureList.First().TexturePath);
-            }
+            //if (PathMediator.PathTextureList.First().TextureBitmap == null)
+            //{
+            //    PathMediator.PathTextureList.First().TextureBitmap = (Bitmap?)Bitmap.FromFile(PathMediator.PathTextureList.First().TexturePath);
+            //}
 
-            PathTexturePreviewPicture.Image = PathMediator.PathTextureList.First().TextureBitmap;
-            PathTextureNameLabel.Text = PathMediator.PathTextureList.First().TextureName;
+            //PathTexturePreviewPicture.Image = PathMediator.PathTextureList.First().TextureBitmap;
+            //PathTextureNameLabel.Text = PathMediator.PathTextureList.First().TextureName;
 
             // drawing texture
-            DrawingFillTextureBox.Image = DrawingMediator.DrawingTextureList[DrawingMediator.DrawingTextureIndex].TextureBitmap;
-            DrawingFillTextureNameLabel.Text = DrawingMediator.DrawingTextureList[DrawingMediator.DrawingTextureIndex].TextureName;
+            //DrawingFillTextureBox.Image = DrawingMediator.DrawingTextureList[DrawingMediator.DrawingTextureIndex].TextureBitmap;
+            //DrawingFillTextureNameLabel.Text = DrawingMediator.DrawingTextureList[DrawingMediator.DrawingTextureIndex].TextureName;
 
             // interior wall texture
-            WallTexturePreviewPicture.Image = InteriorMediator.InteriorWallTextureList[InteriorMediator.InteriorWallTextureIndex].TextureBitmap;
-            WallTextureNameLabel.Text = InteriorMediator.InteriorWallTextureList[InteriorMediator.InteriorWallTextureIndex].TextureName;
+            //WallTexturePreviewPicture.Image = InteriorMediator.InteriorWallTextureList[InteriorMediator.InteriorWallTextureIndex].TextureBitmap;
+            //WallTextureNameLabel.Text = InteriorMediator.InteriorWallTextureList[InteriorMediator.InteriorWallTextureIndex].TextureName;
 
             // interior floor texture
-            InteriorFloorTexturePreviewPicture.Image = InteriorMediator.InteriorFloorTextureList[InteriorMediator.InteriorFloorTextureIndex].TextureBitmap;
-            InteriorFloorTextureNameLabel.Text = InteriorMediator.InteriorFloorTextureList[InteriorMediator.InteriorFloorTextureIndex].TextureName;
+            //InteriorFloorTexturePreviewPicture.Image = InteriorMediator.InteriorFloorTextureList[InteriorMediator.InteriorFloorTextureIndex].TextureBitmap;
+            //InteriorFloorTextureNameLabel.Text = InteriorMediator.InteriorFloorTextureList[InteriorMediator.InteriorFloorTextureIndex].TextureName;
         }
 
         public void LoadNameGeneratorConfigurationDialog()
@@ -2154,36 +1991,22 @@ namespace RealmStudio
             ApplicationStatusStrip.Items[0].Text = text;
         }
 
-        private void UpdateDrawingPointLabel()
-        {
-            DrawingPointLabel.Text = "Cursor Point: "
-                + ((int)MapStateMediator.CurrentMouseLocation.X).ToString()
-                + " , "
-                + ((int)MapStateMediator.CurrentMouseLocation.Y).ToString()
-                + "   Map Point: "
-                + ((int)MapStateMediator.CurrentCursorPoint.X).ToString()
-                + " , "
-                + ((int)MapStateMediator.CurrentCursorPoint.Y).ToString();
-
-            ApplicationStatusStrip.Invalidate();
-        }
-
         private void UpdateMapNameAndSize()
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
 
-            MapNameLabel.Text = MapStateMediator.CurrentMap.MapName;
-            MapSizeLabel.Text = "Map Size: " + MapStateMediator.CurrentMap.MapWidth.ToString() + " x " + MapStateMediator.CurrentMap.MapHeight.ToString();
+            MapNameLabel.Text = _editor.Scene.Map.MapName;
+            MapSizeLabel.Text = "Map Size: " + _editor.Scene.Map.MapWidth.ToString() + " x " + _editor.Scene.Map.MapHeight.ToString();
 
             MapStatusStrip.Refresh();
         }
 
         private void ExportMapAsImage(RealmMapExportFormat exportFormat, bool upscale = false)
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
@@ -2225,15 +2048,15 @@ namespace RealmStudio
                     ApplicationTimerManager.BrushTimerEnabled = false;
                     ApplicationTimerManager.SymbolAreaBrushTimerEnabled = false;
 
-                    StopLocationUpdateTimer();
+                    ApplicationTimerManager.StopLocationUpdateTimer();
 
 
-                    SKSurface s = SKSurface.Create(new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight));
+                    SKSurface s = SKSurface.Create(new SKImageInfo(_editor.Scene.Map.MapWidth, _editor.Scene.Map.MapHeight));
                     s.Canvas.Clear();
 
-                    LandformManager.RemoveDeletedLandforms();
+                    //LandformManager.RemoveDeletedLandforms();
 
-                    MapRenderMethods.RenderMapForExport(MapStateMediator.CurrentMap, s.Canvas);
+                    MapRenderMethods.RenderMapForExport(_editor.Scene.Map, s.Canvas);
 
                     Bitmap bitmap = s.Snapshot().ToBitmap();
 
@@ -2260,14 +2083,14 @@ namespace RealmStudio
                 finally
                 {
                     ApplicationTimerManager.AutosaveEnabled = true;
-                    StartLocationUpdateTimer();
+                    ApplicationTimerManager.StartLocationUpdateTimer();
                 }
             }
         }
 
         private void ExportMapAsLayers(RealmMapExportFormat exportFormat)
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
@@ -2304,13 +2127,13 @@ namespace RealmStudio
                     ApplicationTimerManager.BrushTimerEnabled = false;
                     ApplicationTimerManager.SymbolAreaBrushTimerEnabled = false;
 
-                    StopLocationUpdateTimer();
+                    ApplicationTimerManager.StopLocationUpdateTimer();
 
-                    LandformManager.RemoveDeletedLandforms();
+                    //LandformManager.RemoveDeletedLandforms();
 
                     using (FileStream fileStream = new(filename, FileMode.OpenOrCreate))
                     {
-                        RealmMapMethods.ExportMapLayersAsZipFile(fileStream, MapStateMediator.CurrentMap, exportFormat);
+                        //RealmMapMethods.ExportMapLayersAsZipFile(fileStream, MapStateMediator.CurrentMap, exportFormat);
                     }
 
                     MessageBox.Show("Map layers exported to " + ofd.FileName, "Map Exported", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
@@ -2323,14 +2146,14 @@ namespace RealmStudio
                 finally
                 {
                     ApplicationTimerManager.AutosaveEnabled = true;
-                    StartLocationUpdateTimer();
+                    ApplicationTimerManager.StartLocationUpdateTimer();
                 }
             }
         }
 
         private void ExportHeightMap(RealmMapExportFormat exportFormat)
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
@@ -2373,22 +2196,22 @@ namespace RealmStudio
                     ApplicationTimerManager.BrushTimerEnabled = false;
                     ApplicationTimerManager.SymbolAreaBrushTimerEnabled = false;
 
-                    StopLocationUpdateTimer();
+                    ApplicationTimerManager.StopLocationUpdateTimer();
 
-                    LandformManager.RemoveDeletedLandforms();
+                    //LandformManager.RemoveDeletedLandforms();
 
-                    SKSurface s = SKSurface.Create(new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight));
-                    s.Canvas.Clear(SKColors.Black);
+                    //SKSurface s = SKSurface.Create(new SKImageInfo(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight));
+                    //s.Canvas.Clear(SKColors.Black);
 
                     // render the map as a height map
-                    HeightMapManager.RenderHeightMapToCanvas(MapStateMediator.CurrentMap, s.Canvas, new SKPoint(0, 0), null);
+                    //HeightMapManager.RenderHeightMapToCanvas(MapStateMediator.CurrentMap, s.Canvas, new SKPoint(0, 0), null);
 
-                    Bitmap bitmap = s.Snapshot().ToBitmap();
+                    //Bitmap bitmap = s.Snapshot().ToBitmap();
 
-                    bitmap.Save(filename);
+                    //bitmap.Save(filename);
 
                     ApplicationTimerManager.AutosaveEnabled = true;
-                    StartLocationUpdateTimer();
+                    ApplicationTimerManager.StartLocationUpdateTimer();
                     MessageBox.Show("Height map exported to " + ofd.FileName, "Height Map Exported", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
                 catch (Exception ex)
@@ -2408,32 +2231,34 @@ namespace RealmStudio
 
         private DialogResult SaveMap()
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return DialogResult.Abort;
             }
 
+            /*
             if (MapStateMediator.CurrentMap.IsSaved)
             {
                 return DialogResult.OK;
             }
+            */
 
-            if (!string.IsNullOrEmpty(MapStateMediator.CurrentMap.MapPath) && MapStateMediator.CurrentMap.MapName != "Default")
+            if (!string.IsNullOrEmpty(_editor.Scene.Map.MapPath) && _editor.Scene.Map.MapName != "Default")
             {
                 try
                 {
-                    MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).MapLayerComponents.Clear();
-                    LandformManager.RemoveDeletedLandforms();
+                    //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).RemoveAllShapes();
+                    //LandformManager.RemoveDeletedLandforms();
 
-                    MapFileMethods.SaveMap(MapStateMediator.CurrentMap);
-                    MapStateMediator.CurrentMap.IsSaved = true;
+                    //MapFileMethods.SaveMap(MapStateMediator.CurrentMap);
+                    //MapStateMediator.CurrentMap.IsSaved = true;
 
                     if (Settings.Default.PlaySoundOnSave)
                     {
                         UtilityMethods.PlaySaveSound();
                     }
 
-                    SetStatusText("Realm " + Path.GetFileNameWithoutExtension(MapStateMediator.CurrentMap.MapPath) + " has been saved.");
+                    SetStatusText("Realm " + Path.GetFileNameWithoutExtension(_editor.Scene.Map.MapPath) + " has been saved.");
                     return DialogResult.OK;
                 }
                 catch (Exception ex)
@@ -2452,7 +2277,7 @@ namespace RealmStudio
 
         private DialogResult SaveMapAs()
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return DialogResult.Abort;
             }
@@ -2469,13 +2294,13 @@ namespace RealmStudio
                 Title = "Save Map",
             };
 
-            if (!string.IsNullOrEmpty(MapStateMediator.CurrentMap.MapPath))
+            if (!string.IsNullOrEmpty(_editor.Scene.Map.MapPath))
             {
-                sfd.FileName = MapStateMediator.CurrentMap.MapPath;
+                sfd.FileName = _editor.Scene.Map.MapPath;
             }
-            else if (!string.IsNullOrEmpty(MapStateMediator.CurrentMap.MapName))
+            else if (!string.IsNullOrEmpty(_editor.Scene.Map.MapName))
             {
-                sfd.FileName = MapStateMediator.CurrentMap.MapName;
+                sfd.FileName = _editor.Scene.Map.MapName;
             }
 
             DialogResult result = sfd.ShowDialog();
@@ -2484,18 +2309,18 @@ namespace RealmStudio
             {
                 if (!string.IsNullOrEmpty(sfd.FileName))
                 {
-                    MapStateMediator.CurrentMap.MapPath = sfd.FileName;
-                    MapStateMediator.CurrentMap.MapName = Path.GetFileNameWithoutExtension(sfd.FileName);
+                    _editor.Scene.Map.MapPath = sfd.FileName;
+                    _editor.Scene.Map.MapName = Path.GetFileNameWithoutExtension(sfd.FileName);
 
                     UpdateMapNameAndSize();
 
                     try
                     {
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).MapLayerComponents.Clear();
-                        LandformManager.RemoveDeletedLandforms();
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.MEASURELAYER).RemoveAllShapes();
+                        //LandformManager.RemoveDeletedLandforms();
 
-                        MapFileMethods.SaveMap(MapStateMediator.CurrentMap);
-                        MapStateMediator.CurrentMap.IsSaved = true;
+                        //MapFileMethods.SaveMap(MapStateMediator.CurrentMap);
+                        //MapStateMediator.CurrentMap.IsSaved = true;
 
                         if (Settings.Default.PlaySoundOnSave)
                         {
@@ -2517,6 +2342,7 @@ namespace RealmStudio
 
         private void OpenOrCreateMap()
         {
+            /*
             if (MapStateMediator.CurrentMap != null && !MapStateMediator.CurrentMap.IsSaved)
             {
                 DialogResult result =
@@ -2559,13 +2385,11 @@ namespace RealmStudio
 
                 Cursor = Cursors.Default;
             }
+            */
         }
 
         private void OpenMap(string mapFilePath)
         {
-            ArgumentNullException.ThrowIfNull(FrameManager.FrameMediator);
-            ArgumentNullException.ThrowIfNull(OceanManager.OceanMediator);
-
             // open an existing map
             try
             {
@@ -2575,11 +2399,6 @@ namespace RealmStudio
 
                 try
                 {
-                    if (MapStateMediator.CurrentMap != null)
-                    {
-                        MapBuilder.DisposeMap(MapStateMediator.CurrentMap);
-                    }
-
                     // make a backup of the map to be opened in case it fails on open
                     RealmMapMethods.SaveRealmFileBackup(mapFilePath);
 
@@ -2587,22 +2406,21 @@ namespace RealmStudio
 
                     if (openedMap != null)
                     {
-                        MapStateMediator.CurrentMap = openedMap;
+                        //MapStateMediator.CurrentMap = openedMap;
 
-                        SKImageInfo imageInfo = new(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
+                        //SKImageInfo imageInfo = new(MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight);
 
-                        if (MapStateMediator.CurrentMap.MapLayers.Count < MapBuilder.MAP_LAYER_COUNT)
-                        {
-                            if (MapStateMediator.CurrentMap.MapLayers.Count < MapBuilder.MAP_LAYER_COUNT)
-                            {
-                                MapBuilder.ConstructMissingLayersForMap(MapStateMediator.CurrentMap, SKGLRenderControl.GRContext);
-                            }
-                        }
+                        //if (MapStateMediator.CurrentMap.MapLayers.Count < MapBuilder.MAP_LAYER_COUNT)
+                        //{
+                        //    if (MapStateMediator.CurrentMap.MapLayers.Count < MapBuilder.MAP_LAYER_COUNT)
+                        //    {
+                        //        MapBuilder.ConstructMissingLayersForMap(MapStateMediator.CurrentMap);
+                        //    }
+                        //}
 
+                        /*
                         foreach (MapLayer ml in MapStateMediator.CurrentMap.MapLayers)
                         {
-                            ml.LayerSurface ??= SKSurface.Create(SKGLRenderControl.GRContext, false, imageInfo);
-
                             if (LayerListBox.Items.Contains(ml.MapLayerName.ToUpperInvariant()))
                             {
                                 // layer is drawable
@@ -2614,8 +2432,9 @@ namespace RealmStudio
                                 ml.Drawable = false;
                             }
                         }
+                        */
 
-                        DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                        //DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
 
                         RealmSetComboBox.Items.Clear();
@@ -2641,14 +2460,12 @@ namespace RealmStudio
             {
                 MessageBox.Show("An error has occurred while opening the map. The map file may be corrupt.", "Error Loading Map", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
-                MapStateMediator.CurrentMap = MapBuilder.CreateMap("", "DEFAULT", MapBuilder.MAP_DEFAULT_WIDTH, MapBuilder.MAP_DEFAULT_HEIGHT, SKGLRenderControl.GRContext);
+                //MapStateMediator.CurrentMap = MapBuilder.CreateMap("", "DEFAULT", MapBuilder.MAP_DEFAULT_WIDTH, MapBuilder.MAP_DEFAULT_HEIGHT);
 
-                VignetteManager.Delete();
-                VignetteManager.Create();
 
-                MapStateMediator.CurrentMap.IsSaved = false;
+                //MapStateMediator.CurrentMap.IsSaved = false;
 
-                DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                //DrawingManager.DrawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
                 throw;
             }
@@ -2685,9 +2502,9 @@ namespace RealmStudio
             OpenMapSet(mapSet.MapSetPath);
         }
 
-        private static void LoadWorldAnvilMapDataForCurrentMap()
+        private void LoadWorldAnvilMapDataForCurrentMap()
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
             {
                 return;
             }
@@ -2700,15 +2517,15 @@ namespace RealmStudio
                     !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.WAUserId) &&
                     !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiKey) &&
                     !string.IsNullOrEmpty(IntegrationManager.WorldAnvilParameters.ApiToken) &&
-                    MapStateMediator.CurrentMap.WorldAnvilWorldId != Guid.Empty &&
-                    MapStateMediator.CurrentMap.WorldAnvilMapId != Guid.Empty)
+                    _editor.Scene.Map.WorldAnvilIntegrationParams.WorldAnvilWorldId != Guid.Empty &&
+                    _editor.Scene.Map.WorldAnvilIntegrationParams.WorldAnvilMapId != Guid.Empty)
                 {
                     WorldAnvilUser? WAUser = IntegrationManager.WorldAnvilApi.GetWorldAnvilUserObjectById(
                         IntegrationManager.WorldAnvilParameters.WAUserId, 0);
 
                     if (WAUser != null)
                     {
-                        Guid? WAMapId = MapStateMediator.CurrentMap.WorldAnvilMapId;
+                        Guid? WAMapId = _editor.Scene.Map.WorldAnvilIntegrationParams.WorldAnvilMapId;
                         string? waMapId = WAMapId?.ToString();
 
                         if (WAMapId != null && WAMapId != Guid.Empty && !string.IsNullOrEmpty(waMapId))
@@ -2717,10 +2534,10 @@ namespace RealmStudio
                             if (waMap != null)
                             {
                                 // load map description from World Anvil
-                                MapStateMediator.CurrentMap.RealmDescription = waMap.description ?? string.Empty;
+                                _editor.Scene.Map.RealmDescription = waMap.description ?? string.Empty;
                             }
 
-                            foreach (Landform landform in MapStateMediator.CurrentMap.MapLayers[MapBuilder.LANDFORMLAYER].MapLayerComponents.OfType<Landform>())
+                            foreach (Landform landform in _editor.Scene.Map.MapLayers[MapBuilder.LANDFORMLAYER].Shapes.OfType<Landform>())
                             {
                                 if (!string.IsNullOrEmpty(landform.WorldAnvilArticleId))
                                 {
@@ -2754,6 +2571,7 @@ namespace RealmStudio
             FontFamilyCombo.DrawItem += FontFamilyCombo_DrawItem;
             FontFamilyCombo.DisplayMember = "Name";
 
+            /*
             // add embedded fonts
             LabelManager.AddEmbeddedResourceFont(Properties.Resources.Aladin_Regular);
             LabelManager.AddEmbeddedResourceFont(Properties.Resources.BarlowCondensed_Regular);
@@ -2802,6 +2620,7 @@ namespace RealmStudio
             FontFamilyCombo.Items.Add(merriweatherFont);
             FontFamilyCombo.Items.Add(metamorphousFont);
             FontFamilyCombo.Items.Add(uncialAntiquaFont);
+            */
 
             // Get the array of FontFamily objects.
             foreach (FontFamily t in installedFontCollection.Families.Where(t => t.IsStyleAvailable(FontStyle.Regular) && t.IsStyleAvailable(FontStyle.Underline) && t.IsStyleAvailable(FontStyle.Italic) && t.IsStyleAvailable(FontStyle.Bold)))
@@ -2911,22 +2730,22 @@ namespace RealmStudio
                 {
                     e.DrawBackground();
 
-                    PanoseFontFamilyTypes familyType = LabelManager.PanoseFontFamilyType(e.Graphics, font);
+                    //PanoseFontFamilyTypes familyType = LabelManager.PanoseFontFamilyType(e.Graphics, font);
 
                     // Marlett is a special case of a font family that does not render as text, but its PanoseFontFamily indicates it does
-                    if (familyType == PanoseFontFamilyTypes.PanFamilyDecorative
-                        || familyType == PanoseFontFamilyTypes.PanFamilyPictorial
-                        || familyType == PanoseFontFamilyTypes.PanNoFit
-                        || font.Name == "Marlett")
-                    {
-                        Font f = new("Segoe UI", 12, FontStyle.Regular, GraphicsUnit.Point);
-                        e.Graphics.DrawString(font.Name, f, Brushes.Black, e.Bounds.X, e.Bounds.Y, StringFormat.GenericTypographic);
-
-                    }
-                    else
-                    {
-                        e.Graphics.DrawString(font.Name, font, Brushes.Black, e.Bounds.X, e.Bounds.Y, StringFormat.GenericTypographic);
-                    }
+                    //if (familyType == PanoseFontFamilyTypes.PanFamilyDecorative
+                    //    || familyType == PanoseFontFamilyTypes.PanFamilyPictorial
+                    //    || familyType == PanoseFontFamilyTypes.PanNoFit
+                    //    || font.Name == "Marlett")
+                    //{
+                    //    Font f = new("Segoe UI", 12, FontStyle.Regular, GraphicsUnit.Point);
+                    //    e.Graphics.DrawString(font.Name, f, Brushes.Black, e.Bounds.X, e.Bounds.Y, StringFormat.GenericTypographic);
+                    //
+                    //}
+                    //else
+                    //{
+                    //    e.Graphics.DrawString(font.Name, font, Brushes.Black, e.Bounds.X, e.Bounds.Y, StringFormat.GenericTypographic);
+                    //}
                 }
             }
         }
@@ -3026,22 +2845,22 @@ namespace RealmStudio
 
                         LabelMediator.SelectedLabelFont = FontPanelManager.FontPanelSelectedFont.SelectedFont;
 
-                        if (MapStateMediator.SelectedMapLabel != null)
-                        {
-                            Font newFont = new(FontPanelManager.FontPanelSelectedFont.SelectedFont.FontFamily, FontPanelManager.FontPanelSelectedFont.SelectedFont.Size * 0.75F, FontPanelManager.FontPanelSelectedFont.SelectedFont.Style, GraphicsUnit.Point);
+                        //if (MapStateMediator.SelectedMapLabel != null)
+                        //{
+                        //    Font newFont = new(FontPanelManager.FontPanelSelectedFont.SelectedFont.FontFamily, FontPanelManager.FontPanelSelectedFont.SelectedFont.Size * 0.75F, FontPanelManager.FontPanelSelectedFont.SelectedFont.Style, GraphicsUnit.Point);
+                        //
+                        //    Color labelColor = FontColorSelectButton.BackColor;
+                        //    Color outlineColor = OutlineColorSelectButton.BackColor;
+                        //    float outlineWidth = OutlineWidthTrack.Value / 10F;
+                        //    Color glowColor = GlowColorSelectButton.BackColor;
+                        //    int glowStrength = GlowStrengthTrack.Value;
+                        //
+                        //Cmd_ChangeLabelAttributes cmd = new(MapStateMediator.SelectedMapLabel, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, newFont);
+                        //CommandManager.AddCommand(cmd);
+                        //cmd.DoOperation();
 
-                            Color labelColor = FontColorSelectButton.BackColor;
-                            Color outlineColor = OutlineColorSelectButton.BackColor;
-                            float outlineWidth = OutlineWidthTrack.Value / 10F;
-                            Color glowColor = GlowColorSelectButton.BackColor;
-                            int glowStrength = GlowStrengthTrack.Value;
-
-                            Cmd_ChangeLabelAttributes cmd = new(MapStateMediator.SelectedMapLabel, labelColor, outlineColor, outlineWidth, glowColor, glowStrength, newFont);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
-
-                            SKGLRenderControl.Invalidate();
-                        }
+                        //    SKGLRenderControl.Invalidate();
+                        //}
                     }
                     break;
                 default:
@@ -3068,19 +2887,32 @@ namespace RealmStudio
 
         private void MapRenderVScroll_Scroll(object sender, ScrollEventArgs e)
         {
-            MapStateMediator.ScrollPoint = new SKPoint(MapStateMediator.ScrollPoint.X, -e.NewValue);
-            MapStateMediator.DrawingPoint = new SKPoint(MapStateMediator.DrawingPoint.X, e.NewValue);
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
+            {
+                return;
+            }
+
+            _editor.Scene.Camera.SetPan(new SKPoint(
+                _editor.Scene.Camera.Pan.X,
+                -e.NewValue * _editor.Scene.Camera.Zoom));
 
             SKGLRenderControl.Invalidate();
         }
 
         private void MapRenderHScroll_Scroll(object sender, ScrollEventArgs e)
         {
-            MapStateMediator.ScrollPoint = new SKPoint(-e.NewValue, MapStateMediator.ScrollPoint.Y);
-            MapStateMediator.DrawingPoint = new SKPoint(e.NewValue, MapStateMediator.DrawingPoint.Y);
+            if (_editor.Scene == null || _editor.Scene?.Map == null)
+            {
+                return;
+            }
+
+            _editor.Scene.Camera.SetPan(new SKPoint(
+                -e.NewValue * _editor.Scene.Camera.Zoom,
+                _editor.Scene.Camera.Pan.Y));
 
             SKGLRenderControl.Invalidate();
         }
+
         #endregion
 
         #region SKGLRenderControl Event Handlers
@@ -3090,53 +2922,84 @@ namespace RealmStudio
 
         private void SKGLRenderControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
         {
-            // handle zoom-in and zoom-out (TODO: zoom in and out from center of map - how?)
-            e.Surface.Canvas.Scale(MainMediator.DrawingZoom);
-
-            // paint the SKGLRenderControl surface, compositing the surfaces from all of the layers
             e.Surface.Canvas.Clear(SKColors.White);
 
-            if (SKGLRenderControl.GRContext != null
-                && MapStateMediator.CurrentMap != null
-                && MapStateMediator.CurrentMap.MapLayers.Count == MapBuilder.MAP_LAYER_COUNT)
+            if (_editor != null && _editor.Scene != null || _editor?.Scene?.Map != null)
             {
-                if (RenderAsHeightMapMenuItem.Checked)
-                {
-                    HeightMapManager.RenderHeightMapToCanvas(MapStateMediator.CurrentMap,
-                        e.Surface.Canvas,
-                        MapStateMediator.ScrollPoint,
-                        MapStateMediator.SelectedRealmArea);
-                }
-                else
-                {
-                    MapRenderMethods.RenderMapToCanvas(MapStateMediator.CurrentMap, e.Surface.Canvas, MapStateMediator.ScrollPoint);
-                }
+                // paint the SKGLRenderControl surface, compositing all of the layers
 
-                if (MainMediator.CurrentDrawingMode != MapDrawingMode.ColorSelect
-                    && MainMediator.CurrentDrawingMode != MapDrawingMode.None)
+                e.Surface.Canvas.Save();
+
+                e.Surface.Canvas.ResetMatrix();
+                e.Surface.Canvas.Translate(_editor.Scene.Camera.Pan.X, _editor.Scene.Camera.Pan.Y);
+                e.Surface.Canvas.Scale(_editor.Scene.Camera.Zoom);
+
+                if (SKGLRenderControl.GRContext != null
+                    && _editor.Scene.Map != null
+                    && _editor.Scene.Map.MapLayers.Count == MapBuilder.MAP_LAYER_COUNT)
                 {
-                    float symbolScale = (float)(SymbolMediator.SymbolScale / 100.0F);
-                    float symbolRotation = SymbolMediator.SymbolRotation;
-                    bool mirrorSymbol = SymbolMediator.MirrorSymbol;
-                    bool useAreaBrush = SymbolMediator.UseAreaBrush;
+                    // Draw shapes
+                    foreach (var layer in _editor.Scene.Map.MapLayers)
+                    {
 
-                    MapRenderMethods.DrawCursor(e.Surface.Canvas,
-                        MainMediator.CurrentDrawingMode,
-                        new SKPoint(MapStateMediator.CurrentCursorPoint.X + MapStateMediator.ScrollPoint.X,
-                            MapStateMediator.CurrentCursorPoint.Y + MapStateMediator.ScrollPoint.Y),
-                        MainMediator.SelectedBrushSize,
-                        symbolScale,
-                        symbolRotation,
-                        mirrorSymbol,
-                        useAreaBrush);
+                        foreach (var shape in layer.Shapes)
+                        {
+                            shape.Render(e.Surface.Canvas);
+                            //if (shape is Landform l)
+                            //{
+                            //    l.Render(e.Surface.Canvas);
+                            //}
+                            //else if (shape is PaintedShape painted)
+                            //{
+                            //    painted.Render(e.Surface.Canvas);
+                            //}
+                        }
+                    }
+
+
+                    e.Surface.Canvas.Restore();
+
+                    /*
+                    if (RenderAsHeightMapMenuItem.Checked)
+                    {
+                        HeightMapManager.RenderHeightMapToCanvas(MapStateMediator.CurrentMap,
+                            e.Surface.Canvas,
+                            MapStateMediator.ScrollPoint,
+                            MapStateMediator.SelectedRealmArea);
+                    }
+                    else
+                    {
+                        MapRenderMethods.RenderMapToCanvas(MapStateMediator.CurrentMap, e.Surface.Canvas, MapStateMediator.ScrollPoint);
+                    }
+
+                    if (MainMediator.CurrentDrawingMode != MapDrawingMode.ColorSelect
+                        && MainMediator.CurrentDrawingMode != MapDrawingMode.None)
+                    {
+                        float symbolScale = (float)(SymbolMediator.SymbolScale / 100.0F);
+                        float symbolRotation = SymbolMediator.SymbolRotation;
+                        bool mirrorSymbol = SymbolMediator.MirrorSymbol;
+                        bool useAreaBrush = SymbolMediator.UseAreaBrush;
+
+                        MapRenderMethods.DrawCursor(e.Surface.Canvas,
+                            MainMediator.CurrentDrawingMode,
+                            new SKPoint(MapStateMediator.CurrentCursorPoint.X + MapStateMediator.ScrollPoint.X,
+                                MapStateMediator.CurrentCursorPoint.Y + MapStateMediator.ScrollPoint.Y),
+                            MainMediator.SelectedBrushSize,
+                            symbolScale,
+                            symbolRotation,
+                            mirrorSymbol,
+                            useAreaBrush);
+                    }
+
+                    // work layer
+                    MapRenderMethods.RenderWorkLayer(MapStateMediator.CurrentMap, e.Surface.Canvas, MapStateMediator.ScrollPoint);
+                    MapRenderMethods.RenderWorkLayer2(MapStateMediator.CurrentMap, e.Surface.Canvas, MapStateMediator.ScrollPoint);
+                    */
                 }
-
-                // work layer
-                MapRenderMethods.RenderWorkLayer(MapStateMediator.CurrentMap, e.Surface.Canvas, MapStateMediator.ScrollPoint);
-                MapRenderMethods.RenderWorkLayer2(MapStateMediator.CurrentMap, e.Surface.Canvas, MapStateMediator.ScrollPoint);
             }
         }
 
+        /*
         private void SKGLRenderControl_MouseDown(object sender, MouseEventArgs e)
         {
             if (LabelManager.CreatingLabel)
@@ -3144,24 +3007,22 @@ namespace RealmStudio
                 return; // do not handle mouse move if creating a label
             }
 
-            MapStateMediator.CurrentMouseLocation = e.Location.ToSKPoint();
-            MapStateMediator.CurrentCursorPoint = MainFormUIMediator.CalculateCursorPoint(e);
+            MapStateMediator.CurrentMouseLocation = e.Location.ToSKPoint();  // the mouse location in SKGLRenderControl coordinates
+            MapStateMediator.CurrentCursorPoint = MainMediator.CalculateCursorPoint(e); // the mouse location in map coordinates
+
+            if (e.Button == MouseButtons.Middle)
+            {
+                MainMediator.Camera2D.IsPanning = true;
+                MapStateMediator.PreviousMouseLocation = new SKPoint(e.X, e.Y);
+                SKGLRenderControl.Cursor = Cursors.Hand;
+            }
 
             // objects are created and/or initialized on mouse down
-            if (e.Button == MouseButtons.Left)
-            {
-                LeftButtonMouseDownHandler(MainMediator.SelectedBrushSize);
-            }
-            else if (e.Button == MouseButtons.Middle)
-            {
-                MiddleButtonMouseDownHandler(e);
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-                RightButtonMouseDownHandler();
-            }
+            MainMediator.ActiveEditorTool?.OnMouseDown(MapStateMediator.CurrentCursorPoint, e.Button);
         }
+        */
 
+        /*
         private void SKGLRenderControl_MouseMove(object sender, MouseEventArgs e)
         {
             if (MainMediator.CurrentDrawingMode == MapDrawingMode.ColorSelect)
@@ -3175,12 +3036,14 @@ namespace RealmStudio
             }
 
             MapStateMediator.CurrentMouseLocation = e.Location.ToSKPoint();
-            MapStateMediator.CurrentCursorPoint = MainFormUIMediator.CalculateCursorPoint(e);
+            MapStateMediator.CurrentCursorPoint = MainMediator.CalculateCursorPoint(e);
 
             // objects are drawn or moved on mouse move
+            MainMediator.ActiveEditorTool?.OnMouseMove(MapStateMediator.CurrentCursorPoint, e.Button);
+
             if (e.Button == MouseButtons.Left)
             {
-                LeftButtonMouseMoveHandler();
+
             }
             else if (e.Button == MouseButtons.Right)
             {
@@ -3192,12 +3055,15 @@ namespace RealmStudio
             }
             else if (e.Button == MouseButtons.None)
             {
-                NoButtonMouseMoveHandler();
+                //NoButtonMouseMoveHandler();
             }
+
 
             SKGLRenderControl.Invalidate();
         }
+        */
 
+        /*
         private void SKGLRenderControl_MouseUp(object sender, MouseEventArgs e)
         {
             if (LabelManager.CreatingLabel)
@@ -3206,38 +3072,39 @@ namespace RealmStudio
             }
 
             MapStateMediator.CurrentMouseLocation = e.Location.ToSKPoint();
-            MapStateMediator.CurrentCursorPoint = MainFormUIMediator.CalculateCursorPoint(e);
+            MapStateMediator.CurrentCursorPoint = MainMediator.CalculateCursorPoint(e);
+
+            if (e.Button == MouseButtons.Middle)
+            {
+                MainMediator.Camera2D.IsPanning = false;
+                SKGLRenderControl.Cursor = Cursors.Default;
+            }
 
             // objects are finalized or reset on mouse up
-            if (e.Button == MouseButtons.Left)
-            {
-                LeftButtonMouseUpHandler(e);
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-                RightButtonMouseUpHandler(sender, e);
-            }
-            else if (e.Button == MouseButtons.Middle)
-            {
-                MiddleButtonMouseUpHandler(sender, e);
-            }
+            MainMediator.ActiveEditorTool?.OnMouseUp(MapStateMediator.CurrentCursorPoint, e.Button);
+
+            SKGLRenderControl.Invalidate();
         }
+        */
 
         private void SKGLRenderControl_MouseEnter(object sender, EventArgs e)
         {
             if (MainMediator.CurrentDrawingMode == MapDrawingMode.ColorSelect)
             {
-                Cursor = AssetManager.EYEDROPPER_CURSOR;
+                Cursor = AssetManager.EyedropperCursor;
             }
             else
             {
                 Cursor = Cursors.Cross;
             }
+
+
         }
 
         private void SKGLRenderControl_MouseLeave(object sender, EventArgs e)
         {
             Cursor = Cursors.Default;
+
         }
 
         private void SKGLRenderControl_MouseWheel(object? sender, MouseEventArgs e)
@@ -3252,6 +3119,11 @@ namespace RealmStudio
             else if (ModifierKeys == Keys.None && MainMediator.CurrentDrawingMode == MapDrawingMode.LandPaint)
             {
                 MainMediator.SelectedBrushSize = RealmMapMethods.GetNewBrushSize(LandBrushSizeTrack, sizeDelta);
+
+                //if (MainMediator.ActiveEditorTool is PaintedShapeTool tool)
+                //{
+                //    tool.BrushRadius = MainMediator.SelectedBrushSize;
+                //}
             }
             else if (ModifierKeys == Keys.None && MainMediator.CurrentDrawingMode == MapDrawingMode.LandColor)
             {
@@ -3354,17 +3226,28 @@ namespace RealmStudio
             }
             else if (ModifierKeys != Keys.Control && MainMediator.CurrentDrawingMode == MapDrawingMode.LabelSelect)
             {
-                if (MapStateMediator.SelectedMapLabel != null)
-                {
-                    int newBrushSize = RealmMapMethods.GetNewBrushSize(LabelRotationTrack, sizeDelta);
-                    LabelRotationUpDown.Value = Math.Min(LabelRotationUpDown.Maximum, newBrushSize);
-                }
+                //if (MapStateMediator.SelectedMapLabel != null)
+                //{
+                //    int newBrushSize = RealmMapMethods.GetNewBrushSize(LabelRotationTrack, sizeDelta);
+                //    LabelRotationUpDown.Value = Math.Min(LabelRotationUpDown.Maximum, newBrushSize);
+                //}
             }
             else if (ModifierKeys == Keys.Control)
             {
-                SetZoomLevel(e.Delta);
+                if (_editor.Scene == null)
+                {
+                    return;
+                }
 
-                ZoomLevelTrack.Value = (int)(MainMediator.DrawingZoom * 10.0F);
+                const float zoomStep = 1.1f;
+
+                float factor = e.Delta > 0 ? zoomStep : 1f / zoomStep;
+
+                _editor.Scene.Camera.ZoomAtScreenPoint(
+                    _editor.Scene.Camera.Zoom * factor,
+                    new SKPoint(e.X, e.Y));
+
+                UpdateScrollbars();
             }
 
             SKGLRenderControl.Invalidate();
@@ -3374,7 +3257,7 @@ namespace RealmStudio
         {
             if (MainMediator.CurrentDrawingMode == MapDrawingMode.ColorSelect)
             {
-                Cursor = AssetManager.EYEDROPPER_CURSOR;
+                Cursor = AssetManager.EyedropperCursor;
             }
             else
             {
@@ -3395,12 +3278,14 @@ namespace RealmStudio
                 e.IsInputKey = true;
             }
         }
+
         #endregion
 
         #region SKGLRenderControl Mouse Down Event Handling Methods (called from event handlers)
 
         #region Left Button Down Handler
 
+        /*
         private void LeftButtonMouseDownHandler(int brushSize)
         {
             if (MapStateMediator.CurrentMap == null)
@@ -3421,7 +3306,7 @@ namespace RealmStudio
             {
                 case MapDrawingMode.OceanPaint:
                     {
-                        MapStateMediator.CurrentMap.IsSaved = false;
+                        //MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
                         OceanManager.StartColorPainting(ApplicationTimerManager, SKGLRenderControl);
@@ -3453,23 +3338,6 @@ namespace RealmStudio
                         MapStateMediator.SelectedLandform = LandformManager.SelectLandformAtPoint(MapStateMediator.CurrentCursorPoint);
 
                         SKGLRenderControl.Invalidate();
-                    }
-                    break;
-                case MapDrawingMode.LandPaint:
-                    {
-                        MapStateMediator.CurrentMap.IsSaved = false;
-
-                        Cursor = Cursors.Cross;
-
-                        Landform? newLandform = LandformManager.CreateNewLandform(MapStateMediator.CurrentMap, null, SKRect.Empty);
-
-                        if (newLandform != null)
-                        {
-                            MapStateMediator.CurrentLandform = newLandform;
-                            MapStateMediator.CurrentLandform.DrawPath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, brushSize / 2);
-                        }
-
-                        SKGLRenderControl.Refresh();
                     }
                     break;
                 case MapDrawingMode.LandErase:
@@ -3658,7 +3526,7 @@ namespace RealmStudio
                         LabelManager.ResetLabelPath();
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
                     }
                     break;
                 case MapDrawingMode.DrawBezierLabelPath:
@@ -3669,7 +3537,7 @@ namespace RealmStudio
 
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
                     }
                     break;
                 case MapDrawingMode.DrawBox:
@@ -3771,8 +3639,8 @@ namespace RealmStudio
                         MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
 
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
@@ -3790,7 +3658,7 @@ namespace RealmStudio
                         };
 
                         DrawingManager.CurrentPaintedLine = pl;
-                        DrawingManager.CurrentPaintedLine.Render(canvas);
+                        //DrawingManager.CurrentPaintedLine.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3810,8 +3678,8 @@ namespace RealmStudio
                         // temporarily add the DrawingErase object to the drawing layer
                         // TODO: erase on the selected layer
                         DrawingManager.CurrentDrawingErase = drawingErase;
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER)
-                            .MapLayerComponents.Add(DrawingManager.CurrentDrawingErase);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER)
+                        //    .MapLayerComponents.Add(DrawingManager.CurrentDrawingErase);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3822,8 +3690,8 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         DrawnRectangle drawnRectangle = new()
                         {
@@ -3849,7 +3717,7 @@ namespace RealmStudio
                         }
 
                         DrawingManager.CurrentDrawnRectangle = drawnRectangle;
-                        DrawingManager.CurrentDrawnRectangle.Render(canvas);
+                        //DrawingManager.CurrentDrawnRectangle.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3860,8 +3728,8 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         DrawnRectangle drawnRectangle = new()
                         {
@@ -3889,7 +3757,7 @@ namespace RealmStudio
                         }
 
                         DrawingManager.CurrentDrawnRectangle = drawnRectangle;
-                        DrawingManager.CurrentDrawnRectangle.Render(canvas);
+                        //DrawingManager.CurrentDrawnRectangle.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3900,8 +3768,8 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         DrawnEllipse drawnEllipse = new()
                         {
@@ -3929,7 +3797,7 @@ namespace RealmStudio
 
 
                         DrawingManager.CurrentDrawnEllipse = drawnEllipse;
-                        DrawingManager.CurrentDrawnEllipse.Render(canvas);
+                        //DrawingManager.CurrentDrawnEllipse.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3940,8 +3808,8 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         if (DrawingManager.CurrentDrawnPolygon == null)
                         {
@@ -3971,7 +3839,7 @@ namespace RealmStudio
                         }
 
                         DrawingManager.CurrentDrawnPolygon.Points.Add(MapStateMediator.CurrentCursorPoint);
-                        DrawingManager.CurrentDrawnPolygon.Render(canvas);
+                        //DrawingManager.CurrentDrawnPolygon.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -3996,8 +3864,8 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         DrawnTriangle drawnTriangle = new()
                         {
@@ -4024,7 +3892,7 @@ namespace RealmStudio
                         }
 
                         DrawingManager.CurrentDrawnTriangle = drawnTriangle;
-                        DrawingManager.CurrentDrawnTriangle.Render(canvas);
+                        //DrawingManager.CurrentDrawnTriangle.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4035,8 +3903,8 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         DrawnTriangle drawnTriangle = new()
                         {
@@ -4064,7 +3932,7 @@ namespace RealmStudio
                         }
 
                         DrawingManager.CurrentDrawnTriangle = drawnTriangle;
-                        DrawingManager.CurrentDrawnTriangle.Render(canvas);
+                        //DrawingManager.CurrentDrawnTriangle.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4075,8 +3943,8 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         DrawnRegularPolygon drawnPentagon = new()
                         {
@@ -4104,7 +3972,7 @@ namespace RealmStudio
                         }
 
                         DrawingManager.CurrentDrawnRegularPolygon = drawnPentagon;
-                        DrawingManager.CurrentDrawnRegularPolygon.Render(canvas);
+                        //DrawingManager.CurrentDrawnRegularPolygon.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4115,8 +3983,8 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         DrawnRegularPolygon drawnHexagon = new()
                         {
@@ -4144,7 +4012,7 @@ namespace RealmStudio
                         }
 
                         DrawingManager.CurrentDrawnRegularPolygon = drawnHexagon;
-                        DrawingManager.CurrentDrawnRegularPolygon.Render(canvas);
+                        //DrawingManager.CurrentDrawnRegularPolygon.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4155,8 +4023,8 @@ namespace RealmStudio
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
 
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         DrawnDiamond drawnDiamond = new()
                         {
@@ -4183,7 +4051,7 @@ namespace RealmStudio
                         }
 
                         DrawingManager.CurrentDrawnDiamond = drawnDiamond;
-                        DrawingManager.CurrentDrawnDiamond.Render(canvas);
+                        //DrawingManager.CurrentDrawnDiamond.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4193,9 +4061,9 @@ namespace RealmStudio
                         MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
 
-                        if (canvas == null) return;
+                        //if (canvas == null) return;
 
                         DrawnArrow drawnArrow = new()
                         {
@@ -4220,7 +4088,7 @@ namespace RealmStudio
                             }
                         }
                         DrawingManager.CurrentDrawnArrow = drawnArrow;
-                        DrawingManager.CurrentDrawnArrow.Render(canvas);
+                        //DrawingManager.CurrentDrawnArrow.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4230,9 +4098,9 @@ namespace RealmStudio
                         MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
 
-                        if (canvas == null) return;
+                        //if (canvas == null) return;
 
                         DrawnFivePointStar drawnStar = new()
                         {
@@ -4258,7 +4126,7 @@ namespace RealmStudio
                             }
                         }
                         DrawingManager.CurrentDrawnFivePointStar = drawnStar;
-                        DrawingManager.CurrentDrawnFivePointStar.Render(canvas);
+                        //DrawingManager.CurrentDrawnFivePointStar.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4268,9 +4136,9 @@ namespace RealmStudio
                         MapStateMediator.CurrentMap.IsSaved = false;
                         Cursor = Cursors.Cross;
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
 
-                        if (canvas == null) return;
+                        //if (canvas == null) return;
 
                         DrawnSixPointStar drawnStar = new()
                         {
@@ -4296,7 +4164,7 @@ namespace RealmStudio
                             }
                         }
                         DrawingManager.CurrentDrawnSixPointStar = drawnStar;
-                        DrawingManager.CurrentDrawnSixPointStar.Render(canvas);
+                        //DrawingManager.CurrentDrawnSixPointStar.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4342,11 +4210,11 @@ namespace RealmStudio
                                 MapPixelEdits = [.. pixelEditForm.BitmapEdits],
                             };
 
-                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                            //MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-                            Cmd_AddDrawnPixelEdits cmd = new(drawLayer, drawnPixelEdits);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
+                            //Cmd_AddDrawnPixelEdits cmd = new(drawLayer, drawnPixelEdits);
+                            //CommandManager.AddCommand(cmd);
+                            //cmd.DoOperation();
 
                             MapStateMediator.CurrentMap.IsSaved = false;
                             SKGLRenderControl.Invalidate();
@@ -4406,6 +4274,7 @@ namespace RealmStudio
                     break;
             }
         }
+        */
 
         #endregion
 
@@ -4420,6 +4289,7 @@ namespace RealmStudio
 
         #region Right Button Down Handler
 
+        /*
         private void RightButtonMouseDownHandler()
         {
             if (MapStateMediator.CurrentMap == null)
@@ -4436,7 +4306,7 @@ namespace RealmStudio
                             LabelManager.CreatingLabel = true;
 
                             Font labelFont = new(MapStateMediator.SelectedMapLabel.LabelFont.FontFamily,
-                                MapStateMediator.SelectedMapLabel.LabelFont.Size * MainMediator.DrawingZoom,
+                                MapStateMediator.SelectedMapLabel.LabelFont.Size * MainMediator.Viewport2D.Zoom,
                                 MapStateMediator.SelectedMapLabel.LabelFont.Style, GraphicsUnit.Pixel);
 
                             Size labelSize = TextRenderer.MeasureText(MapStateMediator.SelectedMapLabel.LabelText, labelFont,
@@ -4444,7 +4314,7 @@ namespace RealmStudio
                                 TextFormatFlags.Default | TextFormatFlags.SingleLine | TextFormatFlags.TextBoxControl);
 
                             Rectangle textBoxRect = LabelManager.GetLabelTextBoxRect(MapStateMediator.SelectedMapLabel,
-                                MapStateMediator.DrawingPoint, MainMediator.DrawingZoom, labelSize);
+                                MapStateMediator.DrawingPoint, MainMediator.Viewport2D.Zoom, labelSize);
 
                             LabelManager.LabelTextBox = LabelManager.CreateLabelEditTextBox(SKGLRenderControl, MapStateMediator.SelectedMapLabel, textBoxRect);
 
@@ -4483,8 +4353,8 @@ namespace RealmStudio
                         MapStateMediator.CurrentMap.IsSaved = false;
 
                         // reset everything
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER2).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER2).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         MapStateMediator.CurrentMapRegion = null;
                         MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
@@ -4493,6 +4363,7 @@ namespace RealmStudio
                     break;
             }
         }
+        */
 
         #endregion
 
@@ -4502,6 +4373,7 @@ namespace RealmStudio
 
         #region Left Button Move Handler Method
 
+        /*
         private void LeftButtonMouseMoveHandler()
         {
             if (MapStateMediator.CurrentMap == null)
@@ -4532,7 +4404,7 @@ namespace RealmStudio
                             MapStateMediator.CurrentMap.IsSaved = false;
                             MapStateMediator.CurrentLandform.IsModified = true;
 
-                            MapStateMediator.CurrentLandform.DrawPath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, MainMediator.SelectedBrushSize / 2);
+                            //MapStateMediator.CurrentLandform.DrawPath.AddCircle(MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y, MainMediator.SelectedBrushSize / 2);
 
                             bool createPathsWhilePainting = Settings.Default.CalculateContoursWhilePainting;
 
@@ -4849,8 +4721,8 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingLine:
                     {
                         // draw a line from the previous cursor point to the current cursor point
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
@@ -4865,7 +4737,7 @@ namespace RealmStudio
                             StrokeCap = SKStrokeCap.Round
                         };
 
-                        canvas.DrawLine(MapStateMediator.PreviousCursorPoint, MapStateMediator.CurrentCursorPoint, paint);
+                        //canvas.DrawLine(MapStateMediator.PreviousCursorPoint, MapStateMediator.CurrentCursorPoint, paint);
 
                         // update the previous cursor point
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
@@ -4875,14 +4747,14 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingPaint:
                     {
                         // draw with a brush at the current cursor point
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
-                        canvas.Clear(SKColors.Transparent);
+                        //canvas.Clear(SKColors.Transparent);
                         DrawingManager.CurrentPaintedLine?.Points.Add(MapStateMediator.CurrentCursorPoint);
-                        DrawingManager.CurrentPaintedLine?.Render(canvas);
+                        //DrawingManager.CurrentPaintedLine?.Render(canvas);
 
                         SKGLRenderControl.Invalidate();
                     }
@@ -4890,10 +4762,10 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingRectangle:
                     {
                         // draw a rectangle from the previous cursor point to the current cursor point
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
-                        canvas.Clear(SKColors.Transparent);
+                        //canvas.Clear(SKColors.Transparent);
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
@@ -4911,7 +4783,7 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnRectangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            DrawingManager.CurrentDrawnRectangle.Render(canvas);
+                            //DrawingManager.CurrentDrawnRectangle.Render(canvas);
                         }
 
                         // update the previous cursor point
@@ -4922,11 +4794,11 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingRoundedRectangle:
                     {
                         // draw a rectangle from the previous cursor point to the current cursor point
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         MapStateMediator.CurrentMap.IsSaved = false;
-                        canvas.Clear(SKColors.Transparent);
+                        //canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnRectangle != null)
                         {
@@ -4942,7 +4814,7 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnRectangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            DrawingManager.CurrentDrawnRectangle.Render(canvas);
+                            //DrawingManager.CurrentDrawnRectangle.Render(canvas);
                         }
 
                         // update the previous cursor point
@@ -4953,11 +4825,11 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingErase:
                     {
                         // TODO: erase on the selected layer
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         MapStateMediator.CurrentMap.IsSaved = false;
-                        canvas.Clear(SKColors.Transparent);
+                        //canvas.Clear(SKColors.Transparent);
 
                         // add the current cursor point to the current drawing erase object
                         DrawingManager.CurrentDrawingErase?.Points.Add(MapStateMediator.CurrentCursorPoint);
@@ -4968,9 +4840,9 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingEllipse:
                     {
                         // draw an ellipse from the previous cursor point to the current cursor point
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        canvas?.Clear(SKColors.Transparent);
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //canvas?.Clear(SKColors.Transparent);
+                        //if (canvas == null) return;
 
                         if (DrawingManager.CurrentDrawnEllipse != null)
                         {
@@ -4986,7 +4858,7 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnEllipse.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            DrawingManager.CurrentDrawnEllipse.Render(canvas);
+                            //DrawingManager.CurrentDrawnEllipse.Render(canvas);
                         }
 
                         // update the previous cursor point
@@ -4997,15 +4869,15 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingPolygon:
                     {
                         // draw a polygon from the previous cursor point to the current cursor point
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        canvas?.Clear(SKColors.Transparent);
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //canvas?.Clear(SKColors.Transparent);
+                        //if (canvas == null) return;
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
                         DrawingManager.CurrentDrawnPolygon?.Points.Add(MapStateMediator.CurrentCursorPoint);
 
-                        DrawingManager.CurrentDrawnPolygon?.Render(canvas);
+                        //DrawingManager.CurrentDrawnPolygon?.Render(canvas);
 
                         DrawingManager.CurrentDrawnPolygon?.Points.Remove(DrawingManager.CurrentDrawnPolygon.Points.Last());
 
@@ -5017,10 +4889,10 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingTriangle:
                     {
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
-                        canvas.Clear(SKColors.Transparent);
+                        //canvas.Clear(SKColors.Transparent);
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
@@ -5031,7 +4903,7 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnTriangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            DrawingManager.CurrentDrawnTriangle.Render(canvas);
+                            //DrawingManager.CurrentDrawnTriangle.Render(canvas);
                         }
 
                         // update the previous cursor point
@@ -5041,12 +4913,12 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingRightTriangle:
                     {
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
-                        canvas.Clear(SKColors.Transparent);
+                        //canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnTriangle != null)
                         {
@@ -5055,7 +4927,7 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnTriangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            DrawingManager.CurrentDrawnTriangle.Render(canvas);
+                            //DrawingManager.CurrentDrawnTriangle.Render(canvas);
                         }
 
                         // update the previous cursor point
@@ -5065,12 +4937,12 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingPentagon:
                     {
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
-                        canvas.Clear(SKColors.Transparent);
+                        //canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnRegularPolygon != null)
                         {
@@ -5079,7 +4951,7 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnRegularPolygon.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            DrawingManager.CurrentDrawnRegularPolygon.Render(canvas);
+                            //DrawingManager.CurrentDrawnRegularPolygon.Render(canvas);
                         }
 
                         // update the previous cursor point
@@ -5089,12 +4961,12 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingHexagon:
                     {
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
-                        canvas.Clear(SKColors.Transparent);
+                        //canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnRegularPolygon != null)
                         {
@@ -5103,7 +4975,7 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnRegularPolygon.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            DrawingManager.CurrentDrawnRegularPolygon.Render(canvas);
+                            //DrawingManager.CurrentDrawnRegularPolygon.Render(canvas);
                         }
 
                         // update the previous cursor point
@@ -5114,12 +4986,12 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingDiamond:
                     {
                         // draw a diamond from the previous cursor point to the current cursor point
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
-                        canvas.Clear(SKColors.Transparent);
+                        //canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnDiamond != null)
                         {
@@ -5128,7 +5000,7 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnDiamond.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            DrawingManager.CurrentDrawnDiamond.Render(canvas);
+                            //DrawingManager.CurrentDrawnDiamond.Render(canvas);
                         }
 
                         // update the previous cursor point
@@ -5139,19 +5011,19 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingArrow:
                     {
                         // draw an arrow from the previous cursor point to the current cursor point
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
-                        canvas.Clear(SKColors.Transparent);
+                        //canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnArrow != null)
                         {
                             SKRect rect = new(DrawingManager.CurrentDrawnArrow.TopLeft.X, DrawingManager.CurrentDrawnArrow.TopLeft.Y,
                                 MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
                             DrawingManager.CurrentDrawnArrow.BottomRight = new SKPoint(rect.Right, rect.Bottom);
-                            DrawingManager.CurrentDrawnArrow.Render(canvas);
+                            //DrawingManager.CurrentDrawnArrow.Render(canvas);
                         }
 
                         // update the previous cursor point
@@ -5161,17 +5033,17 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingFivePointStar:
                     {
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
-                        canvas.Clear(SKColors.Transparent);
+                        //canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnFivePointStar != null)
                         {
                             DrawingManager.CurrentDrawnFivePointStar.Radius = SKPoint.Distance(MapStateMediator.CurrentCursorPoint, DrawingManager.CurrentDrawnFivePointStar.Center);
-                            DrawingManager.CurrentDrawnFivePointStar.Render(canvas);
+                            //DrawingManager.CurrentDrawnFivePointStar.Render(canvas);
                         }
 
                         // update the previous cursor point
@@ -5181,17 +5053,17 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingSixPointStar:
                     {
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //if (canvas == null) return;
 
                         MapStateMediator.CurrentMap.IsSaved = false;
 
-                        canvas.Clear(SKColors.Transparent);
+                        //canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnSixPointStar != null)
                         {
                             DrawingManager.CurrentDrawnSixPointStar.Radius = SKPoint.Distance(MapStateMediator.CurrentCursorPoint, DrawingManager.CurrentDrawnSixPointStar.Center);
-                            DrawingManager.CurrentDrawnSixPointStar.Render(canvas);
+                            //DrawingManager.CurrentDrawnSixPointStar.Render(canvas);
                         }
 
                         // update the previous cursor point
@@ -5266,14 +5138,43 @@ namespace RealmStudio
             }
 
         }
+        */
 
         #endregion
 
         #region Middle Button Move Handler Method
+        /*
         private void MiddleButtonMouseMoveHandler(object sender, MouseEventArgs e)
         {
+            if (MapStateMediator.CurrentMap == null)
+                return;
+
+            if (!MainMediator.Camera2D.IsPanning)
+                return;
+
             Cursor = Cursors.Hand;
-            PanMap(e);
+
+            DateTime now = DateTime.UtcNow;
+
+            float dt = (float)(now - MainMediator.Camera2D.LastMouseMoveTime).TotalSeconds;
+            if (dt <= 0f)
+                return;
+
+            int dx = (int)(e.X - MapStateMediator.PreviousMouseLocation.X);
+            int dy = (int)(e.Y - MapStateMediator.PreviousMouseLocation.Y);
+
+            MainMediator.Camera2D.PanBy(new SKPoint(dx, dy));
+
+            // pixels / second
+            MainMediator.Camera2D.AddVelocity(new SKPoint(dx / dt, dy / dt));
+
+            MapStateMediator.PreviousMouseLocation = new SKPoint(e.X, e.Y);
+            MainMediator.Camera2D.LastMouseMoveTime = now;
+
+            MainMediator.Camera2D.ClampToWorld(new SKRect(0, 0, MapStateMediator.CurrentMap.MapWidth, MapStateMediator.CurrentMap.MapHeight), new SKSize(SKGLRenderControl.ClientSize.Width, SKGLRenderControl.ClientSize.Height));
+
+            UpdateScrollbars();
+
             SKGLRenderControl.Invalidate();
         }
 
@@ -5344,7 +5245,7 @@ namespace RealmStudio
 
             SKGLRenderControl.Invalidate();
         }
-
+        */
         #endregion
 
         #endregion
@@ -5353,6 +5254,7 @@ namespace RealmStudio
 
         #region Left Button Up Handler
 
+        /*
         private void LeftButtonMouseUpHandler(MouseEventArgs e)
         {
             if (MapStateMediator.CurrentMap == null)
@@ -5526,7 +5428,7 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawBox:
                     // clear the work layer
-                    MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                    //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                     // finalize box drawing and add the box
                     BoxManager.Create();
@@ -5612,9 +5514,9 @@ namespace RealmStudio
                         MapStateMediator.SelectedRealmArea = new(MapStateMediator.PreviousCursorPoint.X, MapStateMediator.PreviousCursorPoint.Y, MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
 
                         MapLayer workLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER);
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawRect((SKRect)MapStateMediator.SelectedRealmArea, PaintObjects.LandformAreaSelectPaint);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.DrawRect((SKRect)MapStateMediator.SelectedRealmArea, PaintObjects.LandformAreaSelectPaint);
                     }
                     break;
                 case MapDrawingMode.MapHeightIncrease:
@@ -5693,7 +5595,7 @@ namespace RealmStudio
                     }
                 case MapDrawingMode.DrawingLine:
                     {
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         DrawnLine dl = new()
                         {
@@ -5705,11 +5607,11 @@ namespace RealmStudio
                         DrawingMediator.LinePoints.Clear();
 
                         // use the selected map layer for the drawn line
-                        MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                        //MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-                        Cmd_AddDrawnLine cmd = new(drawLayer, dl);
-                        CommandManager.AddCommand(cmd);
-                        cmd.DoOperation();
+                        //Cmd_AddDrawnLine cmd = new(drawLayer, dl);
+                        //CommandManager.AddCommand(cmd);
+                        //cmd.DoOperation();
 
                         MapStateMediator.CurrentMap.IsSaved = false;
                     }
@@ -5717,16 +5619,16 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingPaint:
                     {
                         // finalize paint drawing and add the drawn paint
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentPaintedLine != null)
                         {
                             // use the selected map layer for the painted line
-                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                            //MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-                            Cmd_AddPaintedLine cmd = new(drawLayer, DrawingManager.CurrentPaintedLine);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
+                            //Cmd_AddPaintedLine cmd = new(drawLayer, DrawingManager.CurrentPaintedLine);
+                            //CommandManager.AddCommand(cmd);
+                            //cmd.DoOperation();
                         }
 
                         DrawingMediator.PaintPoints.Clear();
@@ -5736,7 +5638,7 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingErase:
                     {
                         // finalize erasing and add the drawn erase
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         // remove the temporarily added DrawingErase from the drawing layer,
                         // the add it to the command manager so it can be undone/redone
@@ -5759,6 +5661,7 @@ namespace RealmStudio
                             Cmd_AddDrawnErase cmd = new(drawLayer, DrawingManager.CurrentDrawingErase);
                             CommandManager.AddCommand(cmd);
                             cmd.DoOperation();
+                            
                         }
 
                         DrawingManager.CurrentDrawingErase = null;
@@ -5767,6 +5670,7 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingRectangle:
                     {
                         // finalize rectangle drawing and add the rectangle
+                        
                         MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnRectangle != null)
@@ -5791,11 +5695,13 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnRectangle = null;
                         }
+                        
                     }
                     break;
                 case MapDrawingMode.DrawingRoundedRectangle:
                     {
                         // finalize rectangle drawing and add the rectangle
+                        
                         MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnRectangle != null)
@@ -5820,11 +5726,13 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnRectangle = null;
                         }
+                        
                     }
                     break;
                 case MapDrawingMode.DrawingEllipse:
                     {
                         // finalize ellipse drawing and add the ellipse
+                        
                         MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnEllipse != null)
@@ -5849,18 +5757,19 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnEllipse = null;
                         }
+                        
                     }
                     break;
                 case MapDrawingMode.DrawingPolygon:
                     {
-                        SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
-                        canvas?.Clear(SKColors.Transparent);
-                        if (canvas == null) return;
+                        //SKCanvas? canvas = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas;
+                        //canvas?.Clear(SKColors.Transparent);
+                        //if (canvas == null) return;
 
                         // add a point to the polygon
                         DrawingManager.CurrentDrawnPolygon?.Points.Add(MapStateMediator.CurrentCursorPoint);
 
-                        DrawingManager.CurrentDrawnPolygon?.Render(canvas);
+                        //DrawingManager.CurrentDrawnPolygon?.Render(canvas);
 
                         // update the previous cursor point
                         MapStateMediator.PreviousCursorPoint = MapStateMediator.CurrentCursorPoint;
@@ -5871,7 +5780,7 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingTriangle:
                     {
                         // finalize triangle drawing and add the triangle
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnTriangle != null)
                         {
@@ -5880,11 +5789,11 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnTriangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                            //MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-                            Cmd_AddDrawnTriangle cmd = new(drawLayer, DrawingManager.CurrentDrawnTriangle);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
+                            //Cmd_AddDrawnTriangle cmd = new(drawLayer, DrawingManager.CurrentDrawnTriangle);
+                            //CommandManager.AddCommand(cmd);
+                            //cmd.DoOperation();
 
                             DrawingManager.CurrentDrawnTriangle = null;
                         }
@@ -5893,7 +5802,7 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingRightTriangle:
                     {
                         // finalize triangle drawing and add the triangle
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnTriangle != null)
                         {
@@ -5902,11 +5811,11 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnTriangle.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                            //MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-                            Cmd_AddDrawnTriangle cmd = new(drawLayer, DrawingManager.CurrentDrawnTriangle);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
+                            //Cmd_AddDrawnTriangle cmd = new(drawLayer, DrawingManager.CurrentDrawnTriangle);
+                            //CommandManager.AddCommand(cmd);
+                            //cmd.DoOperation();
 
                             DrawingManager.CurrentDrawnTriangle = null;
                         }
@@ -5915,7 +5824,7 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingPentagon:
                     {
                         // finalize pentagon drawing and add the pentagon
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnRegularPolygon != null)
                         {
@@ -5924,11 +5833,11 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnRegularPolygon.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                            //MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-                            Cmd_AddDrawnRegularPolygon cmd = new(drawLayer, DrawingManager.CurrentDrawnRegularPolygon);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
+                            //Cmd_AddDrawnRegularPolygon cmd = new(drawLayer, DrawingManager.CurrentDrawnRegularPolygon);
+                            //CommandManager.AddCommand(cmd);
+                            //cmd.DoOperation();
 
                             DrawingManager.CurrentDrawnRegularPolygon = null;
                         }
@@ -5937,7 +5846,7 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingHexagon:
                     {
                         // finalize hexagon drawing and add the hexagon
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnRegularPolygon != null)
                         {
@@ -5946,11 +5855,11 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnRegularPolygon.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                            //MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-                            Cmd_AddDrawnRegularPolygon cmd = new(drawLayer, DrawingManager.CurrentDrawnRegularPolygon);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
+                            //Cmd_AddDrawnRegularPolygon cmd = new(drawLayer, DrawingManager.CurrentDrawnRegularPolygon);
+                            //CommandManager.AddCommand(cmd);
+                            //cmd.DoOperation();
 
                             DrawingManager.CurrentDrawnRegularPolygon = null;
                         }
@@ -5959,7 +5868,7 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingDiamond:
                     {
                         // finalize rectangle drawing and add the rectangle
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnDiamond != null)
                         {
@@ -5968,11 +5877,11 @@ namespace RealmStudio
 
                             DrawingManager.CurrentDrawnDiamond.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                            //MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-                            Cmd_AddDrawnDiamond cmd = new(drawLayer, DrawingManager.CurrentDrawnDiamond);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
+                            //Cmd_AddDrawnDiamond cmd = new(drawLayer, DrawingManager.CurrentDrawnDiamond);
+                            //CommandManager.AddCommand(cmd);
+                            //cmd.DoOperation();
 
                             DrawingManager.CurrentDrawnDiamond = null;
                         }
@@ -5981,7 +5890,7 @@ namespace RealmStudio
                 case MapDrawingMode.DrawingArrow:
                     {
                         // finalize arrow drawing and add the arrow
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnArrow != null)
                         {
@@ -5989,11 +5898,11 @@ namespace RealmStudio
                                 MapStateMediator.CurrentCursorPoint.X, MapStateMediator.CurrentCursorPoint.Y);
                             DrawingManager.CurrentDrawnArrow.BottomRight = new SKPoint(rect.Right, rect.Bottom);
 
-                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                            //MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-                            Cmd_AddDrawnArrow cmd = new(drawLayer, DrawingManager.CurrentDrawnArrow);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
+                            //Cmd_AddDrawnArrow cmd = new(drawLayer, DrawingManager.CurrentDrawnArrow);
+                            //CommandManager.AddCommand(cmd);
+                            //cmd.DoOperation();
 
                             DrawingManager.CurrentDrawnArrow = null;
                         }
@@ -6001,17 +5910,17 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingFivePointStar:
                     {
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnFivePointStar != null)
                         {
                             DrawingManager.CurrentDrawnFivePointStar.Radius = SKPoint.Distance(MapStateMediator.CurrentCursorPoint, DrawingManager.CurrentDrawnFivePointStar.Center);
 
-                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                            //MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-                            Cmd_AddDrawnFivePointStar cmd = new(drawLayer, DrawingManager.CurrentDrawnFivePointStar);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
+                            //Cmd_AddDrawnFivePointStar cmd = new(drawLayer, DrawingManager.CurrentDrawnFivePointStar);
+                            //CommandManager.AddCommand(cmd);
+                            //cmd.DoOperation();
 
                             DrawingManager.CurrentDrawnFivePointStar = null;
                         }
@@ -6019,17 +5928,17 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingSixPointStar:
                     {
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         if (DrawingManager.CurrentDrawnSixPointStar != null)
                         {
                             DrawingManager.CurrentDrawnSixPointStar.Radius = SKPoint.Distance(MapStateMediator.CurrentCursorPoint, DrawingManager.CurrentDrawnSixPointStar.Center);
 
-                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                            //MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-                            Cmd_AddDrawnSixPointStar cmd = new(drawLayer, DrawingManager.CurrentDrawnSixPointStar);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
+                            //Cmd_AddDrawnSixPointStar cmd = new(drawLayer, DrawingManager.CurrentDrawnSixPointStar);
+                            //CommandManager.AddCommand(cmd);
+                            //cmd.DoOperation();
 
                             DrawingManager.CurrentDrawnSixPointStar = null;
                         }
@@ -6064,6 +5973,8 @@ namespace RealmStudio
                     break;
             }
         }
+        */
+
 
         #endregion
 
@@ -6078,6 +5989,7 @@ namespace RealmStudio
 
         #region Right Button Up Handler
 
+        /*
         private void RightButtonMouseUpHandler(object sender, MouseEventArgs e)
         {
             if (MapStateMediator.CurrentMap == null)
@@ -6149,17 +6061,17 @@ namespace RealmStudio
                     break;
                 case MapDrawingMode.DrawingPolygon:
                     {
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
 
                         // finalize polygon drawing and add the polygon
-                        MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
+                        //MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.WORKLAYER).LayerSurface?.Canvas.Clear(SKColors.Transparent);
                         if (DrawingManager.CurrentDrawnPolygon != null && DrawingManager.CurrentDrawnPolygon.Points.Count > 2)
                         {
-                            MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                            //MapLayer drawLayer = DrawingManager.DrawingLayer ?? MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
 
-                            Cmd_AddDrawnPolygon cmd = new(drawLayer, DrawingManager.CurrentDrawnPolygon);
-                            CommandManager.AddCommand(cmd);
-                            cmd.DoOperation();
+                            //Cmd_AddDrawnPolygon cmd = new(drawLayer, DrawingManager.CurrentDrawnPolygon);
+                            //CommandManager.AddCommand(cmd);
+                            //cmd.DoOperation();
 
                             DrawingManager.CurrentDrawnPolygon = null;
                         }
@@ -6171,7 +6083,7 @@ namespace RealmStudio
 
             SKGLRenderControl.Invalidate();
         }
-
+        */
         #endregion
 
         #endregion
@@ -6192,14 +6104,15 @@ namespace RealmStudio
         /******************************************************************************************************* 
         * BACKGROUND TAB EVENT HANDLERS
         *******************************************************************************************************/
+
         private void ShowBaseLayerSwitch_CheckedChanged()
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene.Map == null)
             {
                 return;
             }
 
-            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.BASELAYER);
+            MapLayer baseLayer = MapBuilder.GetMapLayerByIndex(_editor.Scene.Map, MapBuilder.BASELAYER);
             baseLayer.ShowLayer = ShowBaseLayerSwitch.Checked;
             SKGLRenderControl.Invalidate();
         }
@@ -6227,19 +6140,19 @@ namespace RealmStudio
 
         private void FillBackgroundButton_Click(object sender, EventArgs e)
         {
-            BackgroundManager.FillBackgroundTexture();
+            //BackgroundManager.FillBackgroundTexture();
             SKGLRenderControl.Invalidate();
         }
 
         private void ClearBackgroundButton_Click(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap == null)
+            if (_editor.Scene == null || _editor.Scene.Map == null)
             {
                 return;
             }
 
-            MapStateMediator.CurrentMap.IsSaved = false;
-            BackgroundManager.ClearBackgroundTexture();
+            //MapStateMediator.CurrentMap.IsSaved = false;
+            //BackgroundManager.ClearBackgroundTexture();
             SKGLRenderControl.Invalidate();
         }
 
@@ -6267,6 +6180,7 @@ namespace RealmStudio
         #endregion
 
         #region Ocean Tab Event Handlers
+
 
         private void ShowOceanLayerSwitch_CheckedChanged()
         {
@@ -6302,12 +6216,12 @@ namespace RealmStudio
 
         private void OceanApplyTextureButton_Click(object sender, EventArgs e)
         {
-            OceanManager.ApplyOceanTexture();
+            //OceanManager.ApplyOceanTexture();
             SKGLRenderControl.Invalidate();
         }
         private void OceanRemoveTextureButton_Click(object sender, EventArgs e)
         {
-            OceanManager.RemoveOceanTexture();
+            //OceanManager.RemoveOceanTexture();
             SKGLRenderControl.Invalidate();
         }
 
@@ -6318,24 +6232,24 @@ namespace RealmStudio
 
         private void OceanColorFillButton_Click(object sender, EventArgs e)
         {
-            OceanManager.FillOceanColor();
+            //OceanManager.FillOceanColor();
             SKGLRenderControl.Invalidate();
         }
 
         private void OceanColorClearButton_Click(object sender, EventArgs e)
         {
-            OceanManager.ClearOceanColor();
+            //OceanManager.ClearOceanColor();
             SKGLRenderControl.Invalidate();
         }
 
         private void OceanPaintButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.OceanPaint, OceanMediator.OceanPaintBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.OceanPaint, OceanMediator.OceanPaintBrushSize);
         }
 
         private void OceanColorEraseButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.OceanErase, OceanMediator.OceanPaintBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.OceanErase, OceanMediator.OceanPaintBrushSize);
         }
 
         private void OceanPaintColorSelectButton_Click(object sender, EventArgs e)
@@ -6351,82 +6265,76 @@ namespace RealmStudio
 
         private void OceanSoftBrushButton_Click(object sender, EventArgs e)
         {
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.SoftBrush;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.SoftBrush;
             OceanMediator.OceanPaintBrush = ColorPaintBrush.SoftBrush;
         }
 
         private void OceanHardBrushButton_Click(object sender, EventArgs e)
         {
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
             OceanMediator.OceanPaintBrush = ColorPaintBrush.HardBrush;
         }
 
         private void OceanPatternBrush1Button_Click(object sender, EventArgs e)
         {
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush1;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush1;
             OceanMediator.OceanPaintBrush = ColorPaintBrush.PatternBrush1;
         }
 
         private void OceanPatternBrush2Button_Click(object sender, EventArgs e)
         {
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush2;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush2;
             OceanMediator.OceanPaintBrush = ColorPaintBrush.PatternBrush2;
         }
 
         private void OceanPatternBrush3Button_Click(object sender, EventArgs e)
         {
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush3;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush3;
             OceanMediator.OceanPaintBrush = ColorPaintBrush.PatternBrush3;
         }
 
         private void OceanPatternBrush4Button_Click(object sender, EventArgs e)
         {
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush4;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush4;
             OceanMediator.OceanPaintBrush = ColorPaintBrush.PatternBrush4;
         }
 
-        private void OceanBrushSizeTrack_ValueChanged(object sender, EventArgs e)
+        private void OceanBrushSizeTrack_Scroll(object sender, EventArgs e)
         {
             OceanMediator.OceanPaintBrushSize = OceanBrushSizeTrack.Value;
-            MainMediator.SelectedBrushSize = OceanMediator.OceanPaintBrushSize;
-
             TOOLTIP.Show(OceanMediator.OceanPaintBrushSize.ToString(), OceanToolPanel, new Point(OceanBrushSizeTrack.Right - 30, OceanBrushSizeTrack.Top - 20), 2000);
         }
 
-        private void OceanEraserSizeTrack_ValueChanged(object sender, EventArgs e)
+        private void OceanEraserSizeTrack_Scroll(object sender, EventArgs e)
         {
             OceanMediator.OceanPaintEraserSize = OceanEraserSizeTrack.Value;
-            MainMediator.SelectedBrushSize = OceanMediator.OceanPaintEraserSize;
-
             TOOLTIP.Show(OceanMediator.OceanPaintEraserSize.ToString(), OceanToolPanel, new Point(OceanEraserSizeTrack.Right - 30, OceanEraserSizeTrack.Top - 20), 2000);
         }
 
-        private void OceanBrushVelocityTrack_ValueChanged(object sender, EventArgs e)
+        private void OceanBrushVelocityTrack_Scroll(object sender, EventArgs e)
         {
             OceanMediator.OceanBrushVelocity = OceanBrushVelocityTrack.Value / 100.0F;
-            MainMediator.CurrentBrushVelocity = Math.Max(1, MapStateMediator.BasePaintEventInterval / OceanMediator.OceanBrushVelocity);
-
             TOOLTIP.Show(OceanMediator.OceanBrushVelocity.ToString(), OceanToolPanel, new Point(OceanBrushVelocityTrack.Right - 30, OceanBrushVelocityTrack.Top - 20), 2000);
         }
 
         private void OceanButton91CBB8_Click(object sender, EventArgs e)
         {
-            OceanMediator.SetOceanColorFromPreset("#91CBB8");
+            //OceanMediator.SetOceanColorFromPreset("#91CBB8");
         }
 
         private void OceanButton88B5BB_Click(object sender, EventArgs e)
         {
-            OceanMediator.SetOceanColorFromPreset("#88B5BB");
+            //OceanMediator.SetOceanColorFromPreset("#88B5BB");
         }
 
         private void OceanButton6BA5B9_Click(object sender, EventArgs e)
         {
-            OceanMediator.SetOceanColorFromPreset("#6BA5B9");
+            //OceanMediator.SetOceanColorFromPreset("#6BA5B9");
         }
 
         private void OceanButton42718D_Click(object sender, EventArgs e)
         {
-            OceanMediator.SetOceanColorFromPreset("#42718D");
+            //OceanMediator.SetOceanColorFromPreset("#42718D");
         }
 
         private void OceanCustomColorButton1_Click(object sender, MouseEventArgs e)
@@ -6529,30 +6437,56 @@ namespace RealmStudio
 
         private void LandformSelectButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.LandformSelect, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.LandformSelect, 0);
         }
 
         private void LandformPaintButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.LandPaint, LandformMediator.LandformBrushSize);
+            if (_editor.Scene == null || _editor.Scene.Map == null)
+            {
+                return;
+            }
+
+            using (new MediatorUpdateScope(MainMediator))
+            {
+                if (MainMediator.ActiveEditorTool != null)
+                {
+                    MainMediator.ActiveEditorTool.Deactivate();
+                }
+
+                MainMediator.CurrentDrawingMode = MapDrawingMode.LandPaint;
+                MainMediator.ActiveMapLayer = MapBuilder.GetMapLayerByIndex(_editor.Scene.Map, MapBuilder.LANDFORMLAYER);
+
+                LandformTool tool = new(_editor.Commands, MainMediator.ActiveMapLayer);
+                MainMediator.ActiveEditorTool = tool;
+
+                tool.BrushRadius = LandformMediator.LandPaintBrushSize / 2;
+                tool.Activate();
+            }
+
+
+
         }
 
         private void LandformEraseButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.LandErase, LandformMediator.LandformEraserSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.LandErase, LandformMediator.LandformEraserSize);
         }
 
         private void LandBrushSizeTrack_ValueChanged(object sender, EventArgs e)
         {
             LandformMediator.LandformBrushSize = LandBrushSizeTrack.Value;
-            MainMediator.SelectedBrushSize = LandformMediator.LandformBrushSize;
-
             TOOLTIP.Show(LandformMediator.LandformBrushSize.ToString(), LandformValuesGroup, new Point(LandBrushSizeTrack.Right - 30, LandBrushSizeTrack.Top - 20), 2000);
+        }
+
+        private void ShadingDepthTrack_Scroll(object sender, EventArgs e)
+        {
+            LandformMediator.LandShadingDepth = ShadingDepthTrack.Value;
         }
 
         private void LandformOutlineColorSelectButton_MouseUp(object sender, MouseEventArgs e)
         {
-            LandformMediator.LandOutlineColor = UtilityMethods.SelectColor(this, e, LandformOutlineColorSelectButton.BackColor);
+            LandformMediator.LandOutlineColor = UtilityMethods.SelectColor(this, e, LandformOutlineColorSelectButton.BackColor).ToSKColor();
         }
 
         private void LandformOutlineWidthTrack_ValueChanged(object sender, EventArgs e)
@@ -6563,7 +6497,7 @@ namespace RealmStudio
 
         private void LandformBackgroundColorSelectButton_MouseUp(object sender, MouseEventArgs e)
         {
-            LandformMediator.LandBackgroundColor = UtilityMethods.SelectColor(this, e, LandformBackgroundColorSelectButton.BackColor);
+            LandformMediator.LandBackgroundColor = UtilityMethods.SelectColor(this, e, LandformBackgroundColorSelectButton.BackColor).ToSKColor();
         }
 
         private void PreviousTextureButton_Click(object sender, EventArgs e)
@@ -6589,14 +6523,27 @@ namespace RealmStudio
 
         private void CoastlineColorSelectionButton_MouseUp(object sender, MouseEventArgs e)
         {
-            LandformMediator.CoastlineColor = UtilityMethods.SelectColor(this, e, CoastlineColorSelectionButton.BackColor);
+            LandformMediator.CoastlineColor = UtilityMethods.SelectColor(this, e, CoastlineColorSelectionButton.BackColor).ToSKColor();
         }
 
         private void CoastlineStyleList_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_editor.Scene == null || _editor.Scene.Map == null)
+            {
+                return;
+            }
+
             if (CoastlineStyleList.SelectedIndex > -1)
             {
-                LandformMediator.CoastlineStyle = (string)CoastlineStyleList.Items[CoastlineStyleList.SelectedIndex];
+                LandformMediator.CoastlineStyle = LandformCoastlineStyle.None;
+                foreach (var style in Enum.GetValues<LandformCoastlineStyle>())
+                {
+                    if (style.GetDescription() == CoastlineStyleList.Items[CoastlineStyleList.SelectedIndex].ToString())
+                    {
+                        LandformMediator.CoastlineStyle = style;
+                        break;
+                    }
+                }
             }
         }
 
@@ -6610,65 +6557,65 @@ namespace RealmStudio
 
         private void LandformFillButton_Click(object sender, EventArgs e)
         {
-            LandformManager.FillMapWithLandForm(SKGLRenderControl);
+            //LandformManager.FillMapWithLandForm(SKGLRenderControl);
         }
 
         private void LandformClearButton_Click(object sender, EventArgs e)
         {
-            LandformManager.ClearAllLandforms();
+            //LandformManager.ClearAllLandforms();
             SKGLRenderControl.Invalidate();
         }
 
         private void LandColorButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.LandColor, LandformMediator.LandPaintBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.LandColor, LandformMediator.LandPaintBrushSize);
         }
 
         private void LandColorEraseButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.LandColorErase, LandformMediator.LandPaintEraserSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.LandColorErase, LandformMediator.LandPaintEraserSize);
         }
 
         private void LandColorSelectionButton_MouseUp(object sender, MouseEventArgs e)
         {
-            LandformMediator.LandPaintColor = UtilityMethods.SelectColor(this, e, LandColorSelectionButton.BackColor);
+            LandformMediator.LandPaintColor = UtilityMethods.SelectColor(this, e, LandColorSelectionButton.BackColor).ToSKColor();
         }
 
         private void LandButtonE6D0AB_Click(object sender, EventArgs e)
         {
-            LandformMediator.SetLandColorFromPreset("#E6D0AB");
+            //LandformMediator.SetLandColorFromPreset("#E6D0AB");
         }
 
         private void LandButtonD8B48F_Click(object sender, EventArgs e)
         {
-            LandformMediator.SetLandColorFromPreset("#D8B48F");
+            //LandformMediator.SetLandColorFromPreset("#D8B48F");
         }
 
         private void LandButtonBEBB8E_Click(object sender, EventArgs e)
         {
-            LandformMediator.SetLandColorFromPreset("#BEBB8E");
+            //LandformMediator.SetLandColorFromPreset("#BEBB8E");
         }
 
         private void LandButtonD7C293_Click(object sender, EventArgs e)
         {
-            LandformMediator.SetLandColorFromPreset("#D7C293");
+            //LandformMediator.SetLandColorFromPreset("#D7C293");
         }
 
         private void LandButtonAD9C7E_Click(object sender, EventArgs e)
         {
-            LandformMediator.SetLandColorFromPreset("#AD9C7E");
+            //LandformMediator.SetLandColorFromPreset("#AD9C7E");
         }
 
         private void LandButton3D3728_Click(object sender, EventArgs e)
         {
-            LandformMediator.SetLandColorFromPreset("#3D3728");
+            //LandformMediator.SetLandColorFromPreset("#3D3728");
         }
 
         private void LandCustomColorButton1_Click(object sender, EventArgs e)
         {
             if (ModifierKeys == Keys.Control)
             {
-                LandformMediator.CustomColor1 = Color.White;
+                LandformMediator.CustomColor1 = SKColors.White;
                 return;
             }
 
@@ -6679,7 +6626,7 @@ namespace RealmStudio
         {
             if (ModifierKeys == Keys.Control)
             {
-                LandformMediator.CustomColor2 = Color.White;
+                LandformMediator.CustomColor2 = SKColors.White;
                 return;
             }
 
@@ -6690,7 +6637,7 @@ namespace RealmStudio
         {
             if (ModifierKeys == Keys.Control)
             {
-                LandformMediator.CustomColor3 = Color.White;
+                LandformMediator.CustomColor3 = SKColors.White;
                 return;
             }
 
@@ -6701,7 +6648,7 @@ namespace RealmStudio
         {
             if (ModifierKeys == Keys.Control)
             {
-                LandformMediator.CustomColor4 = Color.White;
+                LandformMediator.CustomColor4 = SKColors.White;
                 return;
             }
 
@@ -6712,7 +6659,7 @@ namespace RealmStudio
         {
             if (ModifierKeys == Keys.Control)
             {
-                LandformMediator.CustomColor5 = Color.White;
+                LandformMediator.CustomColor5 = SKColors.White;
                 return;
             }
 
@@ -6723,7 +6670,7 @@ namespace RealmStudio
         {
             if (ModifierKeys == Keys.Control)
             {
-                LandformMediator.CustomColor6 = Color.White;
+                LandformMediator.CustomColor6 = SKColors.White;
                 return;
             }
 
@@ -6733,58 +6680,66 @@ namespace RealmStudio
         private void LandSoftBrushButton_Click(object sender, EventArgs e)
         {
             LandformMediator.LandPaintBrush = ColorPaintBrush.SoftBrush;
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.SoftBrush;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.SoftBrush;
         }
 
         private void LandHardBrushButton_Click(object sender, EventArgs e)
         {
             LandformMediator.LandPaintBrush = ColorPaintBrush.HardBrush;
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
         }
 
         private void LandPatternBrush1Button_Click(object sender, EventArgs e)
         {
             LandformMediator.LandPaintBrush = ColorPaintBrush.PatternBrush1;
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush1;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush1;
         }
 
         private void LandPatternBrush2Button_Click(object sender, EventArgs e)
         {
             LandformMediator.LandPaintBrush = ColorPaintBrush.PatternBrush2;
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush2;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush2;
         }
 
         private void LandPatternBrush3Button_Click(object sender, EventArgs e)
         {
             LandformMediator.LandPaintBrush = ColorPaintBrush.PatternBrush3;
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush3;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush3;
         }
 
         private void LandPatternBrush4Button_Click(object sender, EventArgs e)
         {
             LandformMediator.LandPaintBrush = ColorPaintBrush.PatternBrush4;
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush4;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush4;
         }
 
-        private void LandColorBrushSizeTrack_ValueChanged(object sender, EventArgs e)
+        private void LandColorBrushSizeTrack_Scroll(object sender, EventArgs e)
         {
             LandformMediator.LandPaintBrushSize = LandColorBrushSizeTrack.Value;
-            MainMediator.SelectedBrushSize = LandformMediator.LandPaintBrushSize;
             TOOLTIP.Show(LandformMediator.LandPaintBrushSize.ToString(), LandToolPanel, new Point(LandColorBrushSizeTrack.Right - 30, LandColorBrushSizeTrack.Top - 20), 2000);
+
         }
 
         private void LandBrushVelocityTrack_ValueChanged(object sender, EventArgs e)
         {
+        }
+
+        private void LandBrushVelocityTrack_Scroll(object sender, EventArgs e)
+        {
             TOOLTIP.Show((LandBrushVelocityTrack.Value / 100.0F).ToString(), LandToolPanel, new Point(LandBrushVelocityTrack.Right - 30, LandBrushVelocityTrack.Top - 20), 2000);
             MainMediator.CurrentBrushVelocity = Math.Max(1, MapStateMediator.BasePaintEventInterval / (LandBrushVelocityTrack.Value / 100.0));
+
         }
 
         private void LandColorEraserSizeTrack_ValueChanged(object sender, EventArgs e)
         {
-            LandformMediator.LandPaintEraserSize = LandColorEraserSizeTrack.Value;
-            MainMediator.SelectedBrushSize = LandformMediator.LandPaintEraserSize;
+        }
 
+        private void LandColorEraserSizeTrack_Scroll(object sender, EventArgs e)
+        {
+            LandformMediator.LandPaintEraserSize = LandColorEraserSizeTrack.Value;
             TOOLTIP.Show(LandformMediator.LandPaintEraserSize.ToString(), LandToolPanel, new Point(LandColorEraserSizeTrack.Right - 20, LandColorEraserSizeTrack.Top - 20), 2000);
+
         }
 
         #endregion
@@ -6793,7 +6748,7 @@ namespace RealmStudio
 
         private void LandformGenerateButton_Click(object sender, EventArgs e)
         {
-            LandformManager.GenerateRandomLandform();
+            //LandformManager.GenerateRandomLandform();
             SKGLRenderControl.Invalidate();
         }
 
@@ -6833,22 +6788,22 @@ namespace RealmStudio
 
         private void HeightMapLandformSelectButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.LandformHeightMapSelect, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.LandformHeightMapSelect, 0);
         }
 
         private void HeightUpButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.MapHeightIncrease, LandformMediator.LandformBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.MapHeightIncrease, LandformMediator.LandformBrushSize);
         }
 
         private void HeightDownButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.MapHeightDecrease, LandformMediator.LandformBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.MapHeightDecrease, LandformMediator.LandformBrushSize);
         }
 
         private void Show3DViewButton_Click(object sender, EventArgs e)
         {
-            HeightMapManager.ShowHeightMap3DModel();
+            //HeightMapManager.ShowHeightMap3DModel();
         }
 
         #endregion
@@ -6857,8 +6812,8 @@ namespace RealmStudio
 
         private void WindrosePlaceButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MainMediator.CurrentDrawingMode == MapDrawingMode.PlaceWindrose ?
-                MapDrawingMode.None : MapDrawingMode.PlaceWindrose, 0);
+            //MainMediator.SetDrawingMode(MainMediator.CurrentDrawingMode == MapDrawingMode.PlaceWindrose ?
+            //    MapDrawingMode.None : MapDrawingMode.PlaceWindrose, 0);
 
             if (MainMediator.CurrentDrawingMode == MapDrawingMode.PlaceWindrose)
             {
@@ -6866,7 +6821,7 @@ namespace RealmStudio
             }
             else
             {
-                MapStateMediator.CurrentWindrose = null;
+                //MapStateMediator.CurrentWindrose = null;
             }
 
         }
@@ -6922,27 +6877,27 @@ namespace RealmStudio
 
         private void WaterFeatureSelectButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.WaterFeatureSelect, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.WaterFeatureSelect, 0);
         }
 
         private void WaterFeaturePaintButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.WaterPaint, WaterFeatureMediator.WaterFeatureBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.WaterPaint, WaterFeatureMediator.WaterFeatureBrushSize);
         }
 
         private void WaterFeatureLakeButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.LakePaint, WaterFeatureMediator.WaterFeatureBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.LakePaint, WaterFeatureMediator.WaterFeatureBrushSize);
         }
 
         private void WaterFeatureRiverButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.RiverPaint, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.RiverPaint, 0);
         }
 
         private void WaterFeatureEraseButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.WaterErase, WaterFeatureMediator.WaterFeatureEraserSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.WaterErase, WaterFeatureMediator.WaterFeatureEraserSize);
         }
 
         private void WaterBrushSizeTrack_ValueChanged(object sender, EventArgs e)
@@ -6981,7 +6936,7 @@ namespace RealmStudio
         private void EditRiverPointsSwitch_CheckedChanged()
         {
             WaterFeatureMediator.EditRiverPoints = EditRiverPointsSwitch.Checked;
-            MainMediator.SetDrawingMode(MapDrawingMode.RiverEdit, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.RiverEdit, 0);
         }
 
         private void WaterEraseSizeTrack_ValueChanged(object sender, EventArgs e)
@@ -6994,67 +6949,66 @@ namespace RealmStudio
         private void WaterSoftBrushButton_Click(object sender, EventArgs e)
         {
             WaterFeatureMediator.WaterPaintBrush = ColorPaintBrush.SoftBrush;
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.SoftBrush;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.SoftBrush;
         }
 
         private void WaterHardBrushButton_Click(object sender, EventArgs e)
         {
             WaterFeatureMediator.WaterPaintBrush = ColorPaintBrush.HardBrush;
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
         }
 
         private void WaterPatternBrush1Button_Click(object sender, EventArgs e)
         {
             WaterFeatureMediator.WaterPaintBrush = ColorPaintBrush.PatternBrush1;
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush1;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush1;
         }
 
         private void WaterPatternBrush2Button_Click(object sender, EventArgs e)
         {
             WaterFeatureMediator.WaterPaintBrush = ColorPaintBrush.PatternBrush2;
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush2;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush2;
         }
 
         private void WaterPatternBrush3Button_Click(object sender, EventArgs e)
         {
             WaterFeatureMediator.WaterPaintBrush = ColorPaintBrush.PatternBrush3;
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush3;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush3;
         }
 
         private void WaterPatternBrush4Button_Click(object sender, EventArgs e)
         {
             WaterFeatureMediator.WaterPaintBrush = ColorPaintBrush.PatternBrush4;
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush4;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush4;
         }
 
-        private void WaterColorBrushSizeTrack_ValueChanged(object sender, EventArgs e)
+
+        private void WaterColorBrushSizeTrack_Scroll(object sender, EventArgs e)
         {
             WaterFeatureMediator.WaterColorBrushSize = WaterColorBrushSizeTrack.Value;
             TOOLTIP.Show(WaterFeatureMediator.WaterColorBrushSize.ToString(), WaterToolPanel, new Point(WaterColorBrushSizeTrack.Right - 30, WaterColorBrushSizeTrack.Top - 20), 2000);
-            MainMediator.SelectedBrushSize = WaterFeatureMediator.WaterColorBrushSize;
         }
 
-        private void WaterBrushVelocityTrack_ValueChanged(object sender, EventArgs e)
+        private void WaterBrushVelocityTrack_Scroll(object sender, EventArgs e)
         {
             TOOLTIP.Show((WaterBrushVelocityTrack.Value / 100.0F).ToString(), WaterToolPanel, new Point(WaterBrushVelocityTrack.Right - 30, WaterBrushVelocityTrack.Top - 20), 2000);
-            MainMediator.CurrentBrushVelocity = Math.Max(1, MapStateMediator.BasePaintEventInterval / (WaterBrushVelocityTrack.Value / 100.0));
+            WaterFeatureMediator.WaterCurrentBrushVelocity = (float)Math.Max(1, MapStateMediator.BasePaintEventInterval / (WaterBrushVelocityTrack.Value / 100.0));
         }
 
-        private void WaterColorEraserSizeTrack_ValueChanged(object sender, EventArgs e)
+        private void WaterColorEraserSizeTrack_Scroll(object sender, EventArgs e)
         {
             WaterFeatureMediator.WaterColorEraserSize = WaterColorEraserSizeTrack.Value;
             TOOLTIP.Show(WaterFeatureMediator.WaterColorEraserSize.ToString(), WaterToolPanel, new Point(WaterColorEraserSizeTrack.Right - 30, WaterColorEraserSizeTrack.Top - 20), 2000);
-            MainMediator.SelectedBrushSize = WaterFeatureMediator.WaterColorEraserSize;
         }
 
         private void WaterColorButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.WaterColor, WaterFeatureMediator.WaterColorBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.WaterColor, WaterFeatureMediator.WaterColorBrushSize);
         }
 
         private void WaterColorEraseButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.WaterColorErase, WaterFeatureMediator.WaterColorEraserSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.WaterColorErase, WaterFeatureMediator.WaterColorEraserSize);
         }
 
         private void WaterPaintColorSelectButton_MouseUp(object sender, MouseEventArgs e)
@@ -7064,22 +7018,22 @@ namespace RealmStudio
 
         private void WaterButton91CBB8_Click(object sender, EventArgs e)
         {
-            WaterFeatureMediator.SetWaterColorFromPreset("#91CBB8");
+            //WaterFeatureMediator.SetWaterColorFromPreset("#91CBB8");
         }
 
         private void WaterButton88B5BB_Click(object sender, EventArgs e)
         {
-            WaterFeatureMediator.SetWaterColorFromPreset("#88B5BB");
+            //WaterFeatureMediator.SetWaterColorFromPreset("#88B5BB");
         }
 
         private void WaterButton6BA5B9_Click(object sender, EventArgs e)
         {
-            WaterFeatureMediator.SetWaterColorFromPreset("#6BA5B9");
+            //WaterFeatureMediator.SetWaterColorFromPreset("#6BA5B9");
         }
 
         private void WaterButton42718D_Click(object sender, EventArgs e)
         {
-            WaterFeatureMediator.SetWaterColorFromPreset("#42718D");
+            //WaterFeatureMediator.SetWaterColorFromPreset("#42718D");
         }
 
         private void WaterCustomColor1_Click(object sender, EventArgs e)
@@ -7181,15 +7135,15 @@ namespace RealmStudio
 
         private void PathSelectButton_Click(object sender, EventArgs e)
         {
-            PathMediator.EnableDisablePathSelection();
+            //PathMediator.EnableDisablePathSelection();
         }
 
         private void DrawPathButton_Click(object sender, EventArgs e)
         {
             Cursor = Cursors.Cross;
-            MainMediator.SetDrawingMode(MapDrawingMode.PathPaint, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.PathPaint, 0);
 
-            PathUIMediator.ClearPathPointSelection();
+            //PathUIMediator.ClearPathPointSelection();
         }
 
         private void DrawOverSymbolsSwitch_CheckedChanged()
@@ -7212,7 +7166,7 @@ namespace RealmStudio
         {
             Cursor = Cursors.Default;
             PathMediator.EditPathPoints = EditPathPointSwitch.Checked;
-            PathMediator.SelectOrEditPaths();
+            //PathMediator.SelectOrEditPaths();
         }
 
         private void PreviousPathTextureButton_Click(object sender, EventArgs e)
@@ -7241,7 +7195,7 @@ namespace RealmStudio
 
             if (pathTypeButton.Checked)
             {
-                PathMediator.SetPathTypeFromButtonName(pathTypeButton.Name);
+                //PathMediator.SetPathTypeFromButtonName(pathTypeButton.Name);
             }
         }
 
@@ -7351,43 +7305,43 @@ namespace RealmStudio
 
         private void SymbolSelectButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.SymbolSelect, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.SymbolSelect, 0);
         }
 
         private void EraseSymbolsButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.SymbolErase, AreaBrushSizeTrack.Value);
+            //MainMediator.SetDrawingMode(MapDrawingMode.SymbolErase, AreaBrushSizeTrack.Value);
             SymbolMediator.AreaBrushSize = MainMediator.SelectedBrushSize;
         }
 
         private void ColorSymbolsButton_Click(object sender, EventArgs e)
         {
-            SymbolMediator.ColorSymbols();
+            //SymbolMediator.ColorSymbols();
         }
 
         private void StructuresSymbolButton_Click(object sender, EventArgs e)
         {
-            SymbolMediator.SelectSymbolsOfType(MapSymbolType.Structure);
+            //SymbolMediator.SelectSymbolsOfType(MapSymbolType.Structure);
         }
 
         private void VegetationSymbolsButton_Click(object sender, EventArgs e)
         {
-            SymbolMediator.SelectSymbolsOfType(MapSymbolType.Vegetation);
+            //SymbolMediator.SelectSymbolsOfType(MapSymbolType.Vegetation);
         }
 
         private void TerrainSymbolsButton_Click(object sender, EventArgs e)
         {
-            SymbolMediator.SelectSymbolsOfType(MapSymbolType.Terrain);
+            //SymbolMediator.SelectSymbolsOfType(MapSymbolType.Terrain);
         }
 
         private void MarkerSymbolsButton_Click(object sender, EventArgs e)
         {
-            SymbolMediator.SelectSymbolsOfType(MapSymbolType.Marker);
+            //SymbolMediator.SelectSymbolsOfType(MapSymbolType.Marker);
         }
 
         private void OtherSymbolsButton_Click(object sender, EventArgs e)
         {
-            SymbolMediator.SelectSymbolsOfType(MapSymbolType.Other);
+            //SymbolMediator.SelectSymbolsOfType(MapSymbolType.Other);
         }
 
         private void SymbolScaleTrack_Scroll(object sender, EventArgs e)
@@ -7408,24 +7362,24 @@ namespace RealmStudio
 
         private void ResetSymbolColorsButton_Click(object sender, EventArgs e)
         {
-            SymbolMediator.ResetSymbolColorButtons();
+            //SymbolMediator.ResetSymbolColorButtons();
         }
 
         private void SymbolColor1Button_MouseUp(object sender, MouseEventArgs e)
         {
-            SymbolMediator.ColorButtonMouseUp(sender, e);
+            //SymbolMediator.ColorButtonMouseUp(sender, e);
             SKGLRenderControl.Invalidate();
         }
 
         private void SymbolColor2Button_MouseUp(object sender, MouseEventArgs e)
         {
-            SymbolMediator.ColorButtonMouseUp(sender, e);
+            //SymbolMediator.ColorButtonMouseUp(sender, e);
             SKGLRenderControl.Invalidate();
         }
 
         private void SymbolColor3Button_MouseUp(object sender, MouseEventArgs e)
         {
-            SymbolMediator.ColorButtonMouseUp(sender, e);
+            //SymbolMediator.ColorButtonMouseUp(sender, e);
             SKGLRenderControl.Invalidate();
         }
 
@@ -7479,17 +7433,17 @@ namespace RealmStudio
 
         private void SymbolCollectionsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            SymbolMediator.SymbolCollectionsListItemCheck(e);
+            //SymbolMediator.SymbolCollectionsListItemCheck(e);
         }
 
         private void SymbolTagsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            SymbolMediator.SymbolTagsListItemCheck(e);
+            //SymbolMediator.SymbolTagsListItemCheck(e);
         }
 
         private void SymbolSearchTextBox_TextChanged(object sender, EventArgs e)
         {
-            SymbolMediator.SearchSymbols(SymbolSearchTextBox.Text);
+            //SymbolMediator.SearchSymbols(SymbolSearchTextBox.Text);
         }
 
         #endregion
@@ -7503,17 +7457,17 @@ namespace RealmStudio
 
         private void LabelPresetsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PresetMediator.SelectPreset(LabelPresetsListBox.SelectedIndex);
+            //PresetMediator.SelectPreset(LabelPresetsListBox.SelectedIndex);
         }
 
         private void AddPresetButton_Click(object sender, EventArgs e)
         {
-            PresetMediator.AddNewLabelPreset();
+            //PresetMediator.AddNewLabelPreset();
         }
 
         private void RemovePresetButton_Click(object sender, EventArgs e)
         {
-            PresetMediator.RemoveSelectedPreset();
+            //PresetMediator.RemoveSelectedPreset();
         }
 
         private void SelectLabelFontButton_Click(object sender, EventArgs e)
@@ -7562,27 +7516,27 @@ namespace RealmStudio
 
         private void CircleTextPathButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawArcLabelPath, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawArcLabelPath, 0);
         }
 
         private void BezierTextPathButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawBezierLabelPath, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawBezierLabelPath, 0);
         }
 
         private void LabelSelectButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.LabelSelect, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.LabelSelect, 0);
         }
 
         private void PlaceLabelButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawLabel, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawLabel, 0);
         }
 
         private void CreateBoxButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawBox, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawBox, 0);
         }
 
         private void SelectBoxTintButton_MouseUp(object sender, MouseEventArgs e)
@@ -7597,14 +7551,14 @@ namespace RealmStudio
                 List<INameGenerator> generators = NAME_GENERATOR_CONFIG.GetSelectedNameGenerators();
                 string generatedName = MapToolMethods.GenerateRandomPlaceName(generators);
 
-                if (LabelManager.CreatingLabel)
-                {
-                    if (LabelManager.LabelTextBox != null && !LabelManager.LabelTextBox.IsDisposed)
-                    {
-                        LabelManager.LabelTextBox.Text = generatedName;
-                        LabelManager.LabelTextBox.Refresh();
-                    }
-                }
+                //if (LabelManager.CreatingLabel)
+                //{
+                //    if (LabelManager.LabelTextBox != null && !LabelManager.LabelTextBox.IsDisposed)
+                //    {
+                //        LabelManager.LabelTextBox.Text = generatedName;
+                //        LabelManager.LabelTextBox.Refresh();
+                //    }
+                //}
             }
             else if (ModifierKeys == Keys.Shift)
             {
@@ -7649,14 +7603,14 @@ namespace RealmStudio
 
         private void CreateScaleButton_Click(object sender, EventArgs e)
         {
-            MapScaleManager.Create();
+            //MapScaleManager.Create();
             SKGLRenderControl.Invalidate();
         }
 
         private void DeleteScaleButton_Click(object sender, EventArgs e)
         {
             // remove any existing scale
-            MapScaleManager.Delete();
+            //MapScaleManager.Delete();
             SKGLRenderControl.Invalidate();
         }
 
@@ -7716,7 +7670,7 @@ namespace RealmStudio
 
         private void ScaleColorsResetButton_Click(object sender, EventArgs e)
         {
-            ScaleMediator.ResetScaleColors();
+            //ScaleMediator.ResetScaleColors();
         }
 
         private void ScaleColor1Button_MouseUp(object sender, MouseEventArgs e)
@@ -7762,7 +7716,7 @@ namespace RealmStudio
 
         private void GridButton_Click(object sender, EventArgs e)
         {
-            MapGridManager.Create();
+            //MapGridManager.Create();
             SKGLRenderControl.Invalidate();
         }
 
@@ -7789,7 +7743,7 @@ namespace RealmStudio
         private void GridLayerUpDown_SelectedItemChanged(object sender, EventArgs e)
         {
             GridMediator.GridLayerName = (string?)GridLayerUpDown.SelectedItem;
-            MapGridManager.Create();
+            //MapGridManager.Create();
         }
 
         private void GridSizeTrack_ValueChanged(object sender, EventArgs e)
@@ -7820,7 +7774,7 @@ namespace RealmStudio
 
         private void MeasureButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawMapMeasure, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawMapMeasure, 0);
         }
 
         private void SelectMeasureColorButton_MouseUp(object sender, MouseEventArgs e)
@@ -7840,7 +7794,7 @@ namespace RealmStudio
 
         private void ClearMeasureButton_Click(object sender, EventArgs e)
         {
-            MapMeasureManager.Delete();
+            //MapMeasureManager.Delete();
             SKGLRenderControl.Invalidate();
         }
 
@@ -7857,13 +7811,13 @@ namespace RealmStudio
 
         private void SelectRegionButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.RegionSelect, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.RegionSelect, 0);
         }
 
         private void CreateRegionButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.RegionPaint, 0);
-            MapStateMediator.CurrentMapRegion = null;
+            //MainMediator.SetDrawingMode(MapDrawingMode.RegionPaint, 0);
+            //MapStateMediator.CurrentMapRegion = null;
         }
 
         private void RegionColorSelectButton_MouseUp(object sender, MouseEventArgs e)
@@ -8017,49 +7971,49 @@ namespace RealmStudio
 
         private void DrawingSelectButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingSelect, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingSelect, 0);
         }
 
         private void PencilDrawButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingLine, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingLine, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void PaintDrawButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingPaint, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingPaint, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void PlaceRectangleButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingRectangle, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingRectangle, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void PlaceEllipseButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingEllipse, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingEllipse, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void PlacePolygonButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingPolygon, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingPolygon, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void PlaceStampButton_Click(object sender, EventArgs e)
         {
             if (MainMediator.CurrentDrawingMode != MapDrawingMode.DrawingStamp)
             {
-                MainMediator.SetDrawingMode(MapDrawingMode.DrawingStamp, 0);
+                //MainMediator.SetDrawingMode(MapDrawingMode.DrawingStamp, 0);
             }
             else
             {
-                MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
+                //MainMediator.SetDrawingMode(MapDrawingMode.None, 0);
             }
         }
 
         private void EraseDrawingButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingErase, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingErase, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void LineBrushSizeTrack_Scroll(object sender, EventArgs e)
@@ -8077,37 +8031,37 @@ namespace RealmStudio
 
         private void DrawingSoftBrushButton_Click(object sender, EventArgs e)
         {
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.SoftBrush;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.SoftBrush;
             DrawingMediator.DrawingPaintBrush = ColorPaintBrush.SoftBrush;
         }
 
         private void DrawingHardBrushButton_Click(object sender, EventArgs e)
         {
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.HardBrush;
             DrawingMediator.DrawingPaintBrush = ColorPaintBrush.HardBrush;
         }
 
         private void DrawingPatternBrush1Button_Click(object sender, EventArgs e)
         {
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush1;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush1;
             DrawingMediator.DrawingPaintBrush = ColorPaintBrush.PatternBrush1;
         }
 
         private void DrawingPatternBrush2Button_Click(object sender, EventArgs e)
         {
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush2;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush2;
             DrawingMediator.DrawingPaintBrush = ColorPaintBrush.PatternBrush2;
         }
 
         private void DrawingPatternBrush3Button_Click(object sender, EventArgs e)
         {
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush3;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush3;
             DrawingMediator.DrawingPaintBrush = ColorPaintBrush.PatternBrush3;
         }
 
         private void DrawingPatternBrush4Button_Click(object sender, EventArgs e)
         {
-            MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush4;
+            //MapStateMediator.SelectedColorPaintBrush = ColorPaintBrush.PatternBrush4;
             DrawingMediator.DrawingPaintBrush = ColorPaintBrush.PatternBrush4;
         }
 
@@ -8160,7 +8114,7 @@ namespace RealmStudio
             {
                 ColorMenuItem.Checked = false;
                 DrawingMediator.FillType = DrawingFillType.Texture;
-                DrawingMediator.DrawingPaintBrush = MapStateMediator.SelectedColorPaintBrush;
+                //DrawingMediator.DrawingPaintBrush = MapStateMediator.SelectedColorPaintBrush;
             }
         }
 
@@ -8169,7 +8123,7 @@ namespace RealmStudio
         {
             try
             {
-                string defaultStampDir = AssetManager.ASSET_DIRECTORY + Path.DirectorySeparatorChar + "Stamps" + Path.DirectorySeparatorChar;
+                string defaultStampDir = AssetManager.RootAssetDirectory + Path.DirectorySeparatorChar + "Stamps" + Path.DirectorySeparatorChar;
 
                 OpenFileDialog ofd = new()
                 {
@@ -8227,7 +8181,8 @@ namespace RealmStudio
 
         private void LayerListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (MapStateMediator.CurrentMap == null)
+            // TODO: change this to set MainMediator ActiveLayer
+            if (_editor.Scene == null || _editor.Scene.Map == null)
             {
                 return;
             }
@@ -8236,73 +8191,73 @@ namespace RealmStudio
 
             if (!string.IsNullOrEmpty(selectedLayerName))
             {
-                MapLayer? selectedLayer = MapBuilder.GetMapLayerByName(MapStateMediator.CurrentMap, selectedLayerName);
+                //MapLayer? selectedLayer = MapBuilder.GetMapLayerByName(MapStateMediator.CurrentMap, selectedLayerName);
 
-                if (selectedLayer != null && selectedLayer.Drawable)
-                {
-                    MainMediator.SetDrawingLayerLabel(selectedLayer.MapLayerName);
-                    DrawingManager.DrawingLayer = selectedLayer;
-                }
-                else
-                {
-                    MapLayer drawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
-                    if (drawingLayer != null && drawingLayer.LayerSurface != null)
-                    {
-                        DrawingManager.DrawingLayer = drawingLayer;
-                        MainMediator.SetDrawingLayerLabel(drawingLayer.MapLayerName);
-                    }
-                    else
-                    {
-                        MessageBox.Show("No drawable layer selected or available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-                }
+                //if (selectedLayer != null && selectedLayer.Drawable)
+                //{
+                //MainMediator.SetDrawingLayerLabel(selectedLayer.MapLayerName);
+                //DrawingManager.DrawingLayer = selectedLayer;
+                //}
+                //else
+                //{
+                //MapLayer drawingLayer = MapBuilder.GetMapLayerByIndex(MapStateMediator.CurrentMap, MapBuilder.DRAWINGLAYER);
+                //    if (drawingLayer != null)
+                //    {
+                //DrawingManager.DrawingLayer = drawingLayer;
+                //MainMediator.SetDrawingLayerLabel(drawingLayer.MapLayerName);
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show("No drawable layer selected or available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //        return;
+                //    }
+                //}
             }
         }
 
         private void RoundRectButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingRoundedRectangle, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingRoundedRectangle, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void TriangleButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingTriangle, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingTriangle, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void RightTriangleButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingRightTriangle, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingRightTriangle, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void DiamondButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingDiamond, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingDiamond, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void PentagonButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingPentagon, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingPentagon, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void HexagonButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingHexagon, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingHexagon, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void ArrowButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingArrow, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingArrow, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void FivePointStarButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingFivePointStar, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingFivePointStar, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void SixPointStarButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingSixPointStar, DrawingMediator.DrawingLineBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingSixPointStar, DrawingMediator.DrawingLineBrushSize);
         }
 
         private void DrawingShapeRotationTrack_Scroll(object sender, EventArgs e)
@@ -8312,7 +8267,7 @@ namespace RealmStudio
 
         private void PixelEditButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.DrawingPixelEdit, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.DrawingPixelEdit, 0);
         }
 
         #endregion
@@ -8357,7 +8312,7 @@ namespace RealmStudio
             {
                 InteriorMediator.InteriorBrushSize = AlignmentGridSizeTrack.Value;
             }
-            MainMediator.SetDrawingMode(MapDrawingMode.InteriorFloorPaint, InteriorMediator.InteriorBrushSize);
+            //MainMediator.SetDrawingMode(MapDrawingMode.InteriorFloorPaint, InteriorMediator.InteriorBrushSize);
         }
 
         private void ShowAlignmentGridSwitch_CheckedChanged()
@@ -8382,7 +8337,7 @@ namespace RealmStudio
 
         private void InteriorDrawWallButton_Click(object sender, EventArgs e)
         {
-            MainMediator.SetDrawingMode(MapDrawingMode.InteriorWallDraw, 0);
+            //MainMediator.SetDrawingMode(MapDrawingMode.InteriorWallDraw, 0);
         }
 
         private void WallSolidLineRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -8501,8 +8456,6 @@ namespace RealmStudio
         }
 
         #endregion
-
-
 
 
     }
